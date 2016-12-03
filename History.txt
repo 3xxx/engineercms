@@ -1,0 +1,9 @@
+                       EngineerCMS revision history
+2, Merit 0.91 (Sep 7, 2016)
+	+) Add datepicker
+	+) Add category select
+	+) Add userdefined category
+	*) Fixed bug of send
+1, Merit 0.9 (Sep 1, 2016)
+	+) Initial public released edition
+	*) Fixed bug of secoffice

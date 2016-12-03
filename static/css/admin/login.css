@@ -1,0 +1,87 @@
+/*登录页面*/
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    min-height: 730px;
+    overflow: hidden;
+    overflow-y: auto;
+    background: #373737 url(/images/admin/bg.png) repeat;
+}
+
+#login-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.login-main {
+    position: relative;
+    width: 1020px;
+    height: 100%;
+    margin: auto;
+    background: url(/images/admin/LoginBgLine.png) 0 350px no-repeat;
+}
+
+.login-logo {
+    width: 290px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 120px;
+    /*background: url(/images/admin/LoginLogo.png) 0 280px no-repeat;*/
+}
+
+.login-form {
+    display: block;
+    position: absolute;
+    top: 200px;
+    right: 160px;
+    width: 374px;
+    padding: 20px;
+    border-radius: 5px;
+    background: white;
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.login-form-header {
+    text-align: center;
+    padding: 0 30px 10px;
+}
+
+.login-form-header p {
+    color: #434343;
+    font-size: 24px;
+    font-family: "微软雅黑";
+}
+
+#login-wrapper .form-horizontal .form-group label {
+    color: #434343;
+    font-size: 15px;
+    font-family: "微软雅黑";
+    font-weight: 300;
+}
+
+.msg-info,
+.msg-success,
+.msg-error {
+    font-size: 14px;
+    font-family: "微软雅黑";
+    font-weight: 300;
+    letter-spacing: 3px;
+}
+
+.msg-info {
+    color: #31708f;
+}
+
+.msg-success {
+    color: #3c763d
+}
+
+.msg-error {
+    color: #a94442
+}
