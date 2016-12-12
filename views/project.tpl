@@ -16,7 +16,7 @@
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
 </head>
 
@@ -134,6 +134,8 @@
             // $("#regis").css("color","black");
             //点击任何一级，都是显示这一级下的成果
           document.getElementById("iframepage").src="/project/{{.Id}}/"+data.id;
+          
+          // $("#iframepage").contents().find("#table0").bootstrapTable('refresh', {url:'/project/products/'+data.id});
           //?secid="+data.Id+"&level="+data.Level;
           //这里用刷新右侧表格中的数据refresh行不通！！！！
         }); 
@@ -168,22 +170,21 @@
       </li>
       <li>
         <a href="javascript:void(0)"> <i class="fa '. $parents['picon'] .' " aria-hidden="true"></i>
-          parents['ptitle']
+          项目建议书
         </a>
       </li>
       <li>
         <a href="javascript:void(0)">
           <i class="fa '. $parents['icon'] .' " aria-hidden="true"></i>
-          parents['title']
+          水工
         </a>
       </li>
       <li>
         <a href="javascript:void(0)">
           <i class="fa '. $parents['act_icon'] .' " aria-hidden="true"></i>
-          parents['act_title']
+          技术报告
         </a>
       </li>
-      }
     </ol>
   </div>
     <!-- <div class="form-group"> -->
@@ -192,7 +193,7 @@
         <!-- <iframe src="/secofficeshow" name='main' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onLoad="iFrameHeight()"></iframe> -->
         <!-- <iframe src="/secofficeshow" name='main' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onload="changeFrameHeight()"></iframe> -->
         <!-- 默认显示所有成果？还是项目简介？当为项目id时，判断是一级，显示里面的成果 -->
-       <iframe src="/project/{{.Id}}/{{.Id}}" name='main' frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=800"></iframe> 
+       <iframe src="/project/{{.Id}}/{{.Id}}" name='iframepage' id="iframepage" frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0"  onload="this.height=800"></iframe> 
 </div>  
 
 

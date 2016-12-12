@@ -130,7 +130,7 @@
             var data = 
             [
               {
-                text: "欢迎您~", 
+                text: "欢迎您~土豪", 
                 selectable: false,
               },
               {

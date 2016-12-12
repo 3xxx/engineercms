@@ -29,7 +29,7 @@
   <!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
   
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
   
   <!-- <script src="/static/js/jquery.form.js"></script> -->
@@ -538,10 +538,17 @@ $(document).ready(function() {
   // ******试验提交选择的表格************
   $("#submitButton1").click(function() {
     var selectRow3=$('#table1').bootstrapTable('getSelections');
+    // var obj = selectRow3.parseJSON();
+    // var obj = jQuery.parseJSON(selectRow3);
+    console.log(selectRow3[0].Code);
     if (selectRow3.length<1){
       alert("请先勾选目录！");
       return;
     }
+    var obj = JSON.stringify(selectRow3);
+    alert(selectRow3);
+    alert(obj);
+    console.log(obj);
     // var ids=$.map(selectRow3,function(row){
     //     return row.Id;
     //   })
@@ -558,7 +565,7 @@ $(document).ready(function() {
     $.ajax({
       type:"post",
       url:"/project/category/addcategory",
-      data: {rows2:ids},
+      data: {rows:selectRow3},
       success:function(data,status){
         alert("添加“"+data+"”成功！(status:"+status+".)");
       }
@@ -594,11 +601,10 @@ $(document).ready(function() {
         data-unique-id="id"
         data-pagination="true"
         data-side-pagination="client"
-        data-single-select="true"
         data-click-to-select="true">
     <thead>        
       <tr>
-        <th data-width="10" data-radio="true"></th>
+        <th data-width="10" data-checkbox="true"></th>
         <th data-formatter="index1">#</th>
         <th data-field="Title">名称</th>
         <th data-field="Code">代码</th>

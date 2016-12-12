@@ -32,12 +32,25 @@ func init() {
 	//根据项目id进入一个具体项目的侧栏
 	beego.Router("/project/:id:string", &controllers.ProjController{}, "*:GetProject")
 	//根据项目侧栏id显示这个id下的成果界面
-	beego.Router("/project/:id:string/:id:string", &controllers.ProjController{}, "*:GetProjProd")
+	beego.Router("/project/:id:string/:id:string", &controllers.ProdController{}, "*:GetProjProd")
 	//给上面那个页面提供table所用的json数据
-	beego.Router("/project/products/:id:string", &controllers.ProjController{}, "*:GetProducts")
+	beego.Router("/project/products/:id:string", &controllers.ProdController{}, "*:GetProducts")
 	//向项目侧栏id下添加成果project/addprod
-	beego.Router("/project/addproduct", &controllers.ProjController{}, "post:AddProduct")
+	beego.Router("/project/addproduct", &controllers.ProdController{}, "post:AddProduct")
+	//取得成果中所有附件的pdf列表
+	beego.Router("/project/product/attachment/:id:string", &controllers.AttachController{}, "*:GetAttachments")
+	//取得成果中所有附件的pdf列表
+	beego.Router("/project/product/pdf/:id:string", &controllers.AttachController{}, "*:GetPdfs")
 	//查看一个成果
 	// beego.Router("/project/product/?:id:string"
+
+	//向成果里添加附件
+	beego.Router("/project/product/addattachment", &controllers.AttachController{}, "post:AddAttachment")
+	//附件下载"/attachment/*", &controllers.AttachController{}
+	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
+	beego.Router("/attachment/*", &controllers.AttachController{}, "get:DownloadAttachment")
+	//上面用attachment.ImageFilter是不行的，必须是package.func
+	//ue富文本编辑器
 	beego.Router("/controller", &controllers.UeditorController{}, "*:ControllerUE")
+
 }

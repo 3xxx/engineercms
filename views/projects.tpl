@@ -16,8 +16,9 @@
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
+  <script type="text/javascript" src="/static/js/moment.min.js"></script>
 </head>
 
 <body>
@@ -65,7 +66,7 @@
         <th data-field="Label">标签</th>
         <th data-field="Principal">负责人</th>
         <th data-field="Product">成果数量</th>
-        <th data-field="Created">建立时间</th>
+        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
       </tr>
     </thead>
 </table>
@@ -96,7 +97,9 @@
   // alert( "Data Loaded: " + index );
             return index+1
   }
-
+function localDateFormatter(value) {
+     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  }
 function setCode(value,row,index){
   return "<a href='/project/"+row.Id+"'>" + value + "</a>";
 }
@@ -416,24 +419,24 @@ function save(){
             </div>
 
             <div id="details" style="display:none">
-            <h3>工程目录分级</h3>
-            <table id="table1"
-                  data-page-size="5"
-                  data-page-list="[5, 25, 50, All]"
-                  data-unique-id="id"
-                  data-pagination="true"
-                  data-side-pagination="client"
-                  data-click-to-select="true">
-                <thead>        
-                <tr>
-                  <th data-width="10" data-checkbox="true"></th>
-                  <th data-formatter="index1">#</th>
-                  <th data-field="Title">名称</th>
-                  <th data-field="Code">代码</th>
-                  <th data-field="Grade" data-sortable="true">级别</th>
-                </tr>
-              </thead>
-            </table>
+              <h3>工程目录分级</h3>
+              <table id="table1"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-click-to-select="true">
+                  <thead>        
+                  <tr>
+                    <th data-width="10" data-checkbox="true"></th>
+                    <th data-formatter="index1">#</th>
+                    <th data-field="Title">名称</th>
+                    <th data-field="Code">代码</th>
+                    <th data-field="Grade" data-sortable="true">级别</th>
+                  </tr>
+                </thead>
+              </table>
             </div>
           </div>
           <div class="modal-footer">

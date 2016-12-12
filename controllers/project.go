@@ -127,61 +127,61 @@ func (c *ProjController) GetProjProd() {
 }
 
 //取得某个侧栏id下的成果给table
-func (c *ProjController) GetProducts() {
-	id := c.Ctx.Input.Param(":id")
-	beego.Info(id)
-	c.Data["Id"] = id
-	var idNum int64
-	var err error
-	if id != "" {
-		//id转成64为
-		idNum, err = strconv.ParseInt(id, 10, 64)
-		if err != nil {
-			beego.Error(err)
-		}
+// func (c *ProjController) GetProducts() {
+// 	id := c.Ctx.Input.Param(":id")
+// 	beego.Info(id)
+// 	c.Data["Id"] = id
+// 	var idNum int64
+// 	var err error
+// 	if id != "" {
+// 		//id转成64为
+// 		idNum, err = strconv.ParseInt(id, 10, 64)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
 
-	} else {
+// 	} else {
 
-	}
-	//根据id取得所有成果
-	products, err := models.GetProducts(idNum)
-	if err != nil {
-		beego.Error(err)
-	}
-	c.Data["json"] = products
-	c.ServeJSON()
-	// c.Data["json"] = root
-	// c.ServeJSON()
-}
+// 	}
+// 	//根据id取得所有成果
+// 	products, err := models.GetProducts(idNum)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	c.Data["json"] = products
+// 	c.ServeJSON()
+// 	// c.Data["json"] = root
+// 	// c.ServeJSON()
+// }
 
-//向某个侧栏id下添加成果
-func (c *ProjController) AddProduct() {
-	id := c.Ctx.Input.Param(":id")
-	pid := c.Input().Get("pid")
-	code := c.Input().Get("code")
-	title := c.Input().Get("title")
-	label := c.Input().Get("label")
-	principal := c.Input().Get("principal")
-	content := c.Input().Get("content")
-	// beego.Info(id)
-	c.Data["Id"] = id
-	//id转成64为
-	idNum, err := strconv.ParseInt(pid, 10, 64)
-	if err != nil {
-		beego.Error(err)
-	}
-	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, idNum)
-	if err != nil {
-		beego.Error(err)
-	}
-	c.Data["json"] = "ok"
-	c.ServeJSON()
-	// c.Data["json"] = root
-	// c.ServeJSON()
-}
+// //向某个侧栏id下添加成果
+// func (c *ProjController) AddProduct() {
+// 	id := c.Ctx.Input.Param(":id")
+// 	pid := c.Input().Get("pid")
+// 	code := c.Input().Get("code")
+// 	title := c.Input().Get("title")
+// 	label := c.Input().Get("label")
+// 	principal := c.Input().Get("principal")
+// 	content := c.Input().Get("content")
+// 	// beego.Info(id)
+// 	c.Data["Id"] = id
+// 	//id转成64为
+// 	idNum, err := strconv.ParseInt(pid, 10, 64)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	//根据id添加成果code, title, label, principal, content string, projectid int64
+// 	_, err = models.AddProduct(code, title, label, principal, content, idNum)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	c.Data["json"] = "ok"
+// 	c.ServeJSON()
+// 	// c.Data["json"] = root
+// 	// c.ServeJSON()
+// }
 
-//添加项目和项目目录，缺物理目录，应该是addproj
+//添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
 	// rows := c.Input().Get("rows2[0][0]")
 	// beego.Info(rows)

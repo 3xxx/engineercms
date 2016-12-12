@@ -1,0 +1,17 @@
+.DS_Store
+.idea
+/pages
+/node_modules
+/doc
+server/*
+!server/preview.php
+!server/fileupload.php
+!server/fileupload2.php
+!server/crossdomain.xml
+.tags
+.tags_sorted_by_file
+/flash/bin-debug
+/flash/html-template
+/.grunt
+/jekyll/_site/
+/dist/*.zip

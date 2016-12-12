@@ -22,37 +22,37 @@ type Project struct {
 	Updated      time.Time `orm:"index","auto_now_add;type(datetime)"`
 }
 
-type Product struct {
-	Id        int64
-	Code      string    `orm:"null"`                                              //编号                                             //编号
-	Title     string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	Label     string    `orm:"null"`                                              //关键字                                           //标签
-	Uid       int64     `orm:"null"`
-	Principal string    `orm:"null"`      //提供人                                            //负责人id
-	ProjectId int64     `orm:"null"`      //侧栏id
-	Content   string    `orm:"sie(5000)"` //内容
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
-	Views     int64
-	// ReplyTime         time.Time
-	// ReplyCount        int64
-	// ReplyLastUserName string
-	// Attachments     []*Attachment `orm:"reverse(many)"` // fk 的反向关系
-}
+// type Product struct {
+// 	Id        int64
+// 	Code      string    `orm:"null"`                                              //编号                                             //编号
+// 	Title     string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+// 	Label     string    `orm:"null"`                                              //关键字                                           //标签
+// 	Uid       int64     `orm:"null"`
+// 	Principal string    `orm:"null"`      //提供人                                            //负责人id
+// 	ProjectId int64     `orm:"null"`      //侧栏id
+// 	Content   string    `orm:"sie(5000)"` //内容
+// 	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
+// 	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
+// 	Views     int64
+// 	// ReplyTime         time.Time
+// 	// ReplyCount        int64
+// 	// ReplyLastUserName string
+// 	// Attachments     []*Attachment `orm:"reverse(many)"` // fk 的反向关系
+// }
 
-//附件,attachment 和 topic 是 ManyToOne 关系，也就是 ForeignKey 为 topic
-type Attachment struct {
-	Id        int64
-	FileName  string
-	FileSize  string
-	Downloads int64
-	ProductId int64     //*Topic    `orm:"rel(fk)"`
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
-}
+// //附件,attachment 和 topic 是 ManyToOne 关系，也就是 ForeignKey 为 topic
+// type Attachment struct {
+// 	Id        int64
+// 	FileName  string
+// 	FileSize  string
+// 	Downloads int64
+// 	ProductId int64     //*Topic    `orm:"rel(fk)"`
+// 	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
+// 	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
+// }
 
 func init() {
-	orm.RegisterModel(new(Project), new(Product), new(Attachment)) //, new(Article)
+	orm.RegisterModel(new(Project)) //, new(Article)
 	// orm.RegisterDriver("sqlite", orm.DRSqlite)
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
@@ -127,6 +127,16 @@ func GetProj(id int64) (proj Project, err error) {
 	return proj, err
 }
 
+//根据id取得项目文件夹_未使用
+// func GetProjPath(id int64) (path string, err error) {
+// 	o := orm.NewOrm()
+// 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
+// 	err = qs.Filter("id", id).One(&proj)
+// 	if err != nil {
+// 		return proj, err
+// 	}
+// 	return proj, err
+// }
 //根据id查出所有子孙——这个不对，要用ParentIdPath
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
@@ -188,37 +198,37 @@ func GetProjectTitle(title string) (cate Project, err error) {
 }
 
 //添加成果到项目侧栏某个id下
-func AddProduct(code, title, label, principal, content string, projectid int64) (id int64, err error) {
-	o := orm.NewOrm()
-	// var project Project
-	// if pid == "" {
-	product := &Product{
-		Code:      code,
-		Title:     title,
-		Label:     label,
-		Principal: principal,
-		ProjectId: projectid,
-		Content:   content,
-		Created:   time.Now(),
-		Updated:   time.Now(),
-	}
-	id, err = o.Insert(product)
-	if err != nil {
-		return 0, err
-	}
-	// } else {
+// func AddProduct(code, title, label, principal, content string, projectid int64) (id int64, err error) {
+// 	o := orm.NewOrm()
+// 	// var project Project
+// 	// if pid == "" {
+// 	product := &Product{
+// 		Code:      code,
+// 		Title:     title,
+// 		Label:     label,
+// 		Principal: principal,
+// 		ProjectId: projectid,
+// 		Content:   content,
+// 		Created:   time.Now(),
+// 		Updated:   time.Now(),
+// 	}
+// 	id, err = o.Insert(product)
+// 	if err != nil {
+// 		return 0, err
+// 	}
+// 	// } else {
 
-	// }
-	return id, nil
-}
+// 	// }
+// 	return id, nil
+// }
 
 //根据侧栏id查出所有成果
-func GetProducts(id int64) (products []*Product, err error) {
-	o := orm.NewOrm()
-	qs := o.QueryTable("Product")                      //这个表名AchievementTopic需要用驼峰式，
-	_, err = qs.Filter("projectid", id).All(&products) //而这个字段parentid为何又不用呢
-	if err != nil {
-		return nil, err
-	}
-	return products, err
-}
+// func GetProducts(id int64) (products []*Product, err error) {
+// 	o := orm.NewOrm()
+// 	qs := o.QueryTable("Product")                      //这个表名AchievementTopic需要用驼峰式，
+// 	_, err = qs.Filter("projectid", id).All(&products) //而这个字段parentid为何又不用呢
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return products, err
+// }
