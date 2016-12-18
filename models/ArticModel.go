@@ -23,17 +23,17 @@ func init() {
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
 
-//添加项目
-func AddArticle(code, title, label, principal string, parentid int64, parentidpath string, grade int) (id int64, err error) {
+//添加文章作为成果的附件
+func AddArticle(content string, productid int64) (id int64, err error) {
 	o := orm.NewOrm()
 	// var Article Article
 	// if pid == "" {
 	Article := &Article{
-		// Code:         code,
+		Content: content,
 		// Title:        title,
 		// Label:        label,
 		// Principal:    principal,
-		// ParentId:     parentid,
+		ProductId: productid,
 		// ParentIdPath: parentidpath,
 		// Grade:        grade,
 		Created: time.Now(),
@@ -72,18 +72,28 @@ func UpdateArticle(cid int64, title, code string, grade int) error {
 }
 
 //取得所有项目
-func GetArticles() (Artic []*Article, err error) {
+// func GetArticles() (Artic []*Article, err error) {
+// 	o := orm.NewOrm()
+// 	qs := o.QueryTable("Article") //这个表名AchievementTopic需要用驼峰式，
+// 	_, err = qs.Filter("parentid", 0).All(&Artic)
+// 	if err != nil {
+// 		return Artic, err
+// 	}
+// 	return Artic, err
+// }
+//根据id取得所有文章
+func GetArticles(pid int64) (Articles []*Article, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable("Article") //这个表名AchievementTopic需要用驼峰式，
-	_, err = qs.Filter("parentid", 0).All(&Artic)
+	qs := o.QueryTable("Article")
+	_, err = qs.Filter("Productid", pid).All(&Articles)
 	if err != nil {
-		return Artic, err
+		return nil, err
 	}
-	return Artic, err
+	return Articles, err
 }
 
-//根据id取得项目目录
-func GetArtic(id int64) (Artic Article, err error) {
+//根据id取得文章
+func GetArticle(id int64) (Artic Article, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Article") //这个表名AchievementTopic需要用驼峰式，
 	err = qs.Filter("id", id).One(&Artic)
@@ -113,21 +123,6 @@ func GetArticSonbyId(id int64) (Articles []*Article, err error) {
 		return nil, err
 	}
 	return Articles, err
-}
-
-//根据id查是否有下级
-func Artichasson(id int64) bool {
-	o := orm.NewOrm()
-	// qs := o.QueryTable("Article")
-	Artic := Article{ProductId: id}
-	err := o.Read(&Artic, "ProductId")
-	if err == orm.ErrNoRows {
-		return false
-	} else if err == orm.ErrMissPK {
-		return false
-	} else {
-		return true
-	}
 }
 
 //根据名字title查询到项目目录

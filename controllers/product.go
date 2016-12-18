@@ -29,6 +29,7 @@ type ProductLink struct {
 	Views          int64
 	Pdflink        []PdfLink
 	Attachmentlink []AttachmentLink
+	Articlecontent []ArticleContent
 }
 
 type AttachmentLink struct {
@@ -50,6 +51,14 @@ type PdfLink struct {
 	Created   time.Time
 	Updated   time.Time
 }
+type ArticleContent struct {
+	Id      int64
+	Content string
+	// Link    string
+	// Views   int64
+	Created time.Time
+	Updated time.Time
+}
 
 //根据项目侧栏id查看这个id下的成果页面，数据用GetProducts
 //任何一级目录下都可以放成果
@@ -57,6 +66,8 @@ func (c *ProdController) GetProjProd() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
 	c.Data["Id"] = id
+	role := Getiprole(c.Ctx.Input.IP())
+	c.Data["role"] = role
 	// var categories []*models.ProjCategory
 	// var err error
 	//id转成64为
@@ -123,10 +134,11 @@ func (c *ProdController) GetProducts() {
 	if err != nil {
 		beego.Error(err)
 	}
-	beego.Info(Url)
+	// beego.Info(Url)
 	link := make([]ProductLink, 0)
 	Attachslice := make([]AttachmentLink, 0)
 	Pdfslice := make([]PdfLink, 0)
+	Articleslice := make([]ArticleContent, 0)
 	for _, w := range products {
 		//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
 		//循环成果
@@ -172,6 +184,21 @@ func (c *ProdController) GetProducts() {
 		linkarr[0].Attachmentlink = Attachslice
 		Attachslice = make([]AttachmentLink, 0) //再把slice置0
 		Pdfslice = make([]PdfLink, 0)           //再把slice置0
+		// link = append(link, linkarr...)
+		//取得文章
+		Articles, err := models.GetArticles(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, x := range Articles {
+			articlearr := make([]ArticleContent, 1)
+			articlearr[0].Id = x.Id
+			articlearr[0].Content = x.Content
+			// articlearr[0].Link = Url
+			Articleslice = append(Articleslice, articlearr...)
+		}
+		linkarr[0].Articlecontent = Articleslice
+		Articleslice = make([]ArticleContent, 0)
 		link = append(link, linkarr...)
 	}
 
@@ -193,12 +220,12 @@ func (c *ProdController) AddProduct() {
 	// beego.Info(id)
 	c.Data["Id"] = id
 	//id转成64为
-	idNum, err := strconv.ParseInt(pid, 10, 64)
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
 		beego.Error(err)
 	}
 	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, idNum)
+	_, err = models.AddProduct(code, title, label, principal, content, pidNum)
 	if err != nil {
 		beego.Error(err)
 	}

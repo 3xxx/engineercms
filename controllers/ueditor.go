@@ -57,14 +57,11 @@ func (c *UeditorController) ControllerUE() {
 	// key := c.Input().Get("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
 	switch op {
 	case "config": //这里还是要优化成conf/config.json
-
 		// $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
 		// $action = $_GET['action'];
-
 		// switch ($action) {
 		//     case 'config':
 		//         $result =  json_encode($CONFIG);
-
 		// var configJson []byte // 当客户端请求/controller?action=config 返回的json内容
 		file, err := os.Open("conf/config.json")
 		if err != nil {
@@ -87,17 +84,14 @@ func (c *UeditorController) ControllerUE() {
 		//当把<和>换成/*和*\时，斜杠/和*之间加双斜杠\\才行。
 		src = re.ReplaceAllString(src, "")
 		tt := []byte(src)
-
 		// buf := bytes.NewBuffer(nil)
 		// buf.ReadFrom(file)
 		// configJson = buf.Bytes()
-		// beego.Info(configJson)
 		// w.Write(configJson)
 		var r interface{}
 		json.Unmarshal(tt, &r) //这个byte要解码
 		c.Data["json"] = r
 		c.ServeJSON()
-
 		//下面这段是测试用的
 		// b := []byte(`{
 		//             "imageActionName": "uploadimage",
@@ -115,29 +109,24 @@ func (c *UeditorController) ControllerUE() {
 		// c.Data["json"] = r
 		// c.ServeJSON()
 	case "uploadimage", "uploadfile", "uploadvideo":
-		// file, header, err := c.GetFile("upfile") // r.FormFile("upfile")
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// defer file.Close()
-		// filename := strings.Replace(uuid.NewUUID().String(), "-", "", -1) + path.Ext(header.Filename)
-		// title := c.Input().Get("title")
-		// tnumber := c.Input().Get("tnumber")
-		// content := c.Input().Get("content")
-		// category := c.Input().Get("category")
-		// categoryid := c.Input().Get("categoryid")
-		//保存上传的图片
+		//解析表单
+		pid := c.Input().Get("pid")
+		// beego.Info(pid)
+		//pid转成64为
+		pidNum, err := strconv.ParseInt(pid, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//根据proj的parentIdpath
+		Url, DiskDirectory, err := GetUrlPath(pidNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		//获取上传的文件
 		_, h, err := c.GetFile("upfile")
 		if err != nil {
 			beego.Error(err)
 		}
-
-		// category1, err := models.GetCategory(categoryid)
-		// if err != nil {
-		// 	beego.Error(err)
-		// 	return
-		// }
-		// var filesize int64
 		fileSuffix := path.Ext(h.Filename)
 		// random_name
 		newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
@@ -146,21 +135,28 @@ func (c *UeditorController) ControllerUE() {
 		// 	beego.Error(err)
 		// }
 		year, month, _ := time.Now().Date()
-
-		err = os.MkdirAll(".\\attachment\\wiki\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+		err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
 			beego.Error(err)
 		}
-		path1 := ".\\attachment\\wiki\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
-		Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
-		err = c.SaveToFile("upfile", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
-		if err != nil {
-			beego.Error(err)
+		var path string
+		var filesize int64
+		if h != nil {
+			//保存附件
+			path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
+			Url = Url + "/" + strconv.Itoa(year) + month.String() + "/"
+			err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+			if err != nil {
+				beego.Error(err)
+			}
+			filesize, _ = FileSize(path)
+			filesize = filesize / 1000.0
+			c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": Url + newname, "title": h.Filename, "original": h.Filename}
+			c.ServeJSON()
+		} else {
+			c.Data["json"] = map[string]interface{}{"state": "ERROR", "url": "", "title": "", "original": ""}
+			c.ServeJSON()
 		}
-		// filesize, _ = FileSize(path1)
-		// filesize = filesize / 1000.0
-		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": Url + newname, "title": h.Filename, "original": h.Filename}
-		c.ServeJSON()
 	case "uploadscrawl":
 		number := c.Input().Get("number")
 
@@ -195,7 +191,6 @@ func (c *UeditorController) ControllerUE() {
 			// Source string
 			// State  string
 		}
-
 		type Listimage struct {
 			State string `json:"state"` //这些第一个字母要大写，否则不出结果
 			List  []List `json:"list"`
@@ -209,13 +204,11 @@ func (c *UeditorController) ControllerUE() {
 			// MapStruct   map[string][]List //map:key类型是string或struct，value类型是切片，切片的类型是string或struct
 			//	Desks  List
 		}
-
 		// var m map[string]string = make(map[string]string)
 		// m["Go"] = "No.1"
 		// m["Java"] = "No.2"
 		// m["C"] = "No.3"
 		// fmt.Println(m)
-
 		list := []List{
 			{"/static/upload/1.jpg"},
 			{"/static/upload/2.jpg"},
@@ -226,7 +219,6 @@ func (c *UeditorController) ControllerUE() {
 		// mm["Go"] = list
 		// mm["Java"] = list
 		// fmt.Println(mm)
-
 		listimage := Listimage{"SUCCESS", list, 1, 21}
 		// beego.Info(listimage){SUCCESS [{/static/upload/1.jpg} {/static/upload/2.jpg}] 1 21}
 		// fmt.Println(listimage)
@@ -238,7 +230,6 @@ func (c *UeditorController) ControllerUE() {
 		c.Data["json"] = listimage
 		c.ServeJSON()
 		// c.Data["json"] = map[string]interface{}{"State":"SUCCESS","List":[{"Url":"/static/upload/1.jpg"},{"Url":"/static/upload/2.jpg"}],"Start":1,"Total":21}
-
 		// 需要支持callback参数,返回jsonp格式
 		// {
 		//     "state": "SUCCESS",
@@ -251,13 +242,11 @@ func (c *UeditorController) ControllerUE() {
 		//     "total": 100
 		// }
 	case "catchimage":
-
 		type List struct {
 			Url    string `json:"url"`
 			Source string `json:"source"`
 			State  string `json:"state"`
 		}
-
 		type Catchimage struct {
 			State string `json:"state"` //这些第一个字母要大写，否则不出结果
 			List  []List `json:"list"`
@@ -271,13 +260,11 @@ func (c *UeditorController) ControllerUE() {
 			// MapStruct   map[string][]List //map:key类型是string或struct，value类型是切片，切片的类型是string或struct
 			//	Desks  List
 		}
-
 		// var m map[string]string = make(map[string]string)
 		// m["Go"] = "No.1"
 		// m["Java"] = "No.2"
 		// m["C"] = "No.3"
 		// fmt.Println(m)
-
 		list := []List{
 			{"/static/upload/1.jpg", "https://pic2.zhimg.com/7c4a389acaa008a6d1fe5a0083c86975_b.png", "SUCCESS"},
 			{"/static/upload/2.jpg", "https://pic2.zhimg.com/7c4a389acaa008a6d1fe5a0083c86975_b.png", "SUCCESS"},
@@ -288,7 +275,6 @@ func (c *UeditorController) ControllerUE() {
 		// mm["Go"] = list
 		// mm["Java"] = list
 		// fmt.Println(mm)
-
 		catchimage := Catchimage{"SUCCESS", list}
 		// beego.Info(catchimage){SUCCESS [{/static/upload/1.jpg} {/static/upload/2.jpg}] 1 21}
 		// fmt.Println(catchimage)
@@ -317,9 +303,7 @@ func (c *UeditorController) ControllerUE() {
 		}
 		defer outFile.Close()
 		io.Copy(outFile, file)
-
 	}
-
 }
 
 func UploadImage(w http.ResponseWriter, r *http.Request) { //这个没用
@@ -353,7 +337,6 @@ func UploadImage(w http.ResponseWriter, r *http.Request) { //这个没用
 }
 
 func (c *UeditorController) UploadImage() { //对应这个路由 beego.Router("/controller", &controllers.UeditorController{}, "post:UploadImage")
-
 	file, header, err := c.GetFile("upfile") // r.FormFile("upfile")
 	if err != nil {
 		panic(err)
@@ -372,21 +355,4 @@ func (c *UeditorController) UploadImage() { //对应这个路由 beego.Router("/
 	io.Copy(outFile, file)
 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": "/static/upload/" + filename, "title": "111", "original": "demo.jpg"}
 	c.ServeJSON()
-	// "state": "SUCCESS",
-	// "url": "upload/demo.jpg",
-	// "title": "demo.jpg",
-	// "original": "demo.jpg"
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println(string(b))
-	// w.Write(b)
-	// 	c.Data["json"] = map[string]string{
-	// 	"url":      fmt.Sprintf("/attachment/test/%s", h.Filename), //保存后的文件路径
-	// 	"title":    "",                                             //文件描述，对图片来说在前端会添加到title属性上
-	// 	"original": h.Filename,                                     //原始文件名
-	// 	"state":    "SUCCESS",                                      //上传状态，成功时返回SUCCESS,其他任何值将原样返回至图片上传框中
-	// }
-	// c.Data["json"] = b
-	// c.ServeJSON()
 }

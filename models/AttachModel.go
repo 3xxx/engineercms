@@ -27,27 +27,36 @@ func init() {
 }
 
 //添加附件到成果id下
+//如果附件名称已经存在，则不再追加写入数据库
+//应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
+
 func AddAttachment(filename string, filesize, downloads, productid int64) (id int64, err error) {
 	o := orm.NewOrm()
-	// var Attachment Attachment
-	// if pid == "" {
-	Attachment := &Attachment{
-		FileName:  filename,
-		FileSize:  filesize,
-		Downloads: downloads,
-		ProductId: productid,
-		Created:   time.Now(),
-		Updated:   time.Now(),
-	}
-	id, err = o.Insert(Attachment)
-	if err != nil {
+	var attach Attachment
+	err = o.QueryTable("Attachment").Filter("filename", filename).One(&attach)
+	if err == orm.ErrNoRows { // 没有找到记录
+		attachment := &Attachment{
+			FileName:  filename,
+			FileSize:  filesize,
+			Downloads: downloads,
+			ProductId: productid,
+			Created:   time.Now(),
+			Updated:   time.Now(),
+		}
+		id, err = o.Insert(attachment)
+		if err != nil {
+			return 0, err
+		}
+	} else if err == orm.ErrMultiRows {
 		return 0, err
+	} else if err == nil {
+		return attach.Id, err
 	}
-	return id, nil
+	return id, err
 }
 
 //修改——还没改
-func UpdateAttachment(cid int64, title, code string, grade int) error {
+func UpdateAttachment(cid int64, title, code string, grade int) (err error) {
 	o := orm.NewOrm()
 	//id转成64为
 	// cidNum, err := strconv.ParseInt(cid, 10, 64)
@@ -65,7 +74,7 @@ func UpdateAttachment(cid int64, title, code string, grade int) error {
 			return err
 		}
 	}
-	return nil
+	return err
 }
 
 //根据id取得所有附件

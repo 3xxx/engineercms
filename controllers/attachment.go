@@ -47,7 +47,7 @@ func (c *AttachController) GetAttachments() {
 		if err != nil {
 			beego.Error(err)
 		}
-		beego.Info(Url)
+		// beego.Info(Url)
 	} else {
 
 	}
@@ -136,7 +136,7 @@ func (c *AttachController) GetPdfs() {
 	c.ServeJSON()
 }
 
-//向某个侧栏id下添加成果
+//向某个侧栏id下添加成果——用于第一种批量添加一对一模式
 func (c *AttachController) AddAttachment() {
 	//解析表单
 	pid := c.Input().Get("pid")
@@ -153,7 +153,7 @@ func (c *AttachController) AddAttachment() {
 	if err != nil {
 		beego.Error(err)
 	}
-	//根据proj的parentIdpath
+	//根据proj的parentIdpath——这个已经有了专门函数，下列可以简化！
 	var path, DiskDirectory, Url string
 	if proj.ParentIdPath != "" { //如果不是根目录
 		patharray := strings.Split(proj.ParentIdPath, "-")
@@ -221,7 +221,8 @@ func (c *AttachController) AddAttachment() {
 	code := filename1
 	title := filename2
 
-	//存入附件数据库
+	//存入成果数据库
+	//如果编号重复，则不写入，值返回Id值。
 	//根据id添加成果code, title, label, principal, content string, projectid int64
 	prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", pidNum)
 	if err != nil {
@@ -229,7 +230,79 @@ func (c *AttachController) AddAttachment() {
 	}
 	//存入文件夹
 
-	//取出附件的名称等信息存入成果数据库
+	//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
+	//如果附件名称相同，则覆盖上传，但数据库不追加
+	_, err = models.AddAttachment(attachment, filesize, 0, prodId)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": attachment, "original": attachment, "url": Url + "/" + attachment}
+		c.ServeJSON()
+	}
+	// c.TplName = "topic_one_add.tpl" //不加这句上传出错，虽然可以成功上传
+	// c.Redirect("/topic", 302)
+	// success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
+	//    message : "提示的信息，上传成功或上传失败及错误信息等。",
+	//    url     : "图片地址"        // 上传成功时才返回
+}
+
+//向某个侧栏id下添加成果——用于第二种添加，对附件模式
+func (c *AttachController) AddAttachment2() {
+	//解析表单
+	pid := c.Input().Get("pid")
+	// beego.Info(pid)
+	//pid转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	prodcode := c.Input().Get("prodcode")
+	prodname := c.Input().Get("prodname")
+	prodlabel := c.Input().Get("prodlabel")
+	prodprincipal := c.Input().Get("prodprincipal")
+
+	// proj, err := models.GetProj(pidNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	//根据proj的parentIdpath
+	Url, DiskDirectory, err := GetUrlPath(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//获取上传的文件
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+	var path, attachment string
+	var filesize int64
+	if h != nil {
+		//保存附件
+		attachment = h.Filename
+		// beego.Info(attachment)
+		// path = ".\\attachment\\" + categoryproj.Number + categoryproj.Title + "\\" + categoryphase.Title + "\\" + categoryspec.Title + "\\" + category + "\\" + h.Filename
+		path = DiskDirectory + "\\" + h.Filename
+		// path := c.Input().Get("url")  //存文件的路径
+		// path = path[3:]
+		// path = "./attachment" + "/" + h.Filename
+		// f.Close()                                             // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+		}
+		filesize, _ = FileSize(path)
+		filesize = filesize / 1000.0
+	}
+	//存入成果数据库
+	//如果编号重复，则不写入，值返回Id值。
+	//根据id添加成果code, title, label, principal, content string, projectid int64
+	prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
+	//如果附件名称相同，则覆盖上传，但数据库不追加
 	_, err = models.AddAttachment(attachment, filesize, 0, prodId)
 	if err != nil {
 		beego.Error(err)
@@ -288,13 +361,32 @@ func ImageFilter(ctx *context.Context) {
 }
 
 func (c *AttachController) DownloadAttachment() {
+	role := Getiprole(c.Ctx.Input.IP())
+	// beego.Info(c.Ctx.Input.IP())
+	// beego.Info(role)
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(ctx.Request.RequestURI)
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
 		beego.Error(err)
 	}
-	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	fileext := path.Ext(filePath)
+	switch fileext {
+	case ".pdf", ".PDF":
+		if role <= 3 {
+			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+		} else {
+			c.Data["json"] = "权限不够！"
+			c.ServeJSON()
+		}
+	default:
+		if role <= 2 {
+			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+		} else {
+			c.Data["json"] = "权限不够！"
+			c.ServeJSON()
+		}
+	}
 }
 
 //返回文件大小
@@ -341,7 +433,7 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 		// beego.Info(Url)
 	} else { //如果是根目录
 		DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
-		Url = "/attachment/" + proj.Title
+		Url = "/attachment/" + proj.Code + proj.Title
 	}
 	return Url, DiskDirectory, err
 }

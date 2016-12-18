@@ -18,9 +18,18 @@ type Pidstruct struct {
 	ParentIdPath string
 }
 
+//成果页导航条
+type Navbartruct struct {
+	Id    int64
+	Title string
+}
+
 //项目列表页面
 func (c *ProjController) Get() {
 	c.Data["IsCategory"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	role := Getiprole(c.Ctx.Input.IP())
+	c.Data["role"] = role
 	c.TplName = "projects.tpl"
 	//取得项目类别，给添加项目模态框选项用
 	var slice1 []string
@@ -29,10 +38,11 @@ func (c *ProjController) Get() {
 		beego.Error(err)
 	}
 	for _, v := range categories {
-		aa := make([]string, 1)
-		aa[0] = v.Title //名称
+		// aa := make([]string, 1)
+		// aa[0] = v.Title //名称
 		// cc[0].Selectable = false
-		slice1 = append(slice1, aa...)
+		// slice1 = append(slice1, aa...)当aa为slice的时候要...,
+		slice1 = append(slice1, v.Title) //当v.title为值的时候不用...
 	}
 	c.Data["Select2"] = slice1
 }
@@ -86,6 +96,7 @@ func (c *ProjController) GetProject() {
 	// beego.Info(root)
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
+	c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.ServeJSON()
 	c.Data["Category"] = category
 	c.TplName = "project.tpl"
@@ -93,6 +104,7 @@ func (c *ProjController) GetProject() {
 
 //根据项目侧栏id查看这个id下的成果，不含子目录中的成果
 //任何一级目录下都可以放成果
+//这个作废
 func (c *ProjController) GetProjProd() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -124,6 +136,54 @@ func (c *ProjController) GetProjProd() {
 	// c.Data["json"] = root
 	// c.ServeJSON()
 	c.TplName = "project_products.tpl"
+}
+
+//取得某个侧栏id下的导航条
+func (c *ProjController) GetProjNav() {
+	id := c.Ctx.Input.Param(":id")
+	// beego.Info(id)
+	c.Data["Id"] = id
+	// var categories []*models.ProjCategory
+	// var err error
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目本身
+	proj, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//将项目id路径转为名称路径
+
+	//根据proj的parentIdpath
+	navslice := make([]Navbartruct, 0)
+	nav := make([]Navbartruct, 1)
+	if proj.ParentIdPath != "" { //如果不是根目录
+		patharray := strings.Split(proj.ParentIdPath, "-")
+		for _, v := range patharray {
+			//pid转成64为
+			idNum1, err := strconv.ParseInt(v, 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			proj1, err := models.GetProj(idNum1)
+			if err != nil {
+				beego.Error(err)
+			}
+			if proj1.ParentId != 0 { //如果是项目名称，则不要
+				nav[0].Id = proj1.Id
+				nav[0].Title = proj1.Title
+				navslice = append(navslice, nav...)
+			}
+		}
+		nav[0].Id = proj.Id
+		nav[0].Title = proj.Title
+		navslice = append(navslice, nav...) //加上自身名称
+	}
+	c.Data["json"] = navslice
+	c.ServeJSON()
 }
 
 //取得某个侧栏id下的成果给table

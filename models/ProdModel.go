@@ -56,28 +56,48 @@ func UpdateProduct(cid int64, title, code string, grade int) error {
 }
 
 //添加成果到项目侧栏某个id下
+//如果编号已经存在，则返回id
+////应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
 func AddProduct(code, title, label, principal, content string, Projectid int64) (id int64, err error) {
 	o := orm.NewOrm()
+	// err := o.QueryTable("user").Filter("name", "slene").One(&user)
+	// if err == orm.ErrMultiRows {
+	// 	// 多条的时候报错——单条呢？没有错误，错误为nil
+	// 	fmt.Printf("Returned Multi Rows Not One")
+	// }
+	// if err == orm.ErrNoRows {
+	// 	// 没有找到记录
+	// 	fmt.Printf("Not row found")
+	// }
+	var prod Product
+	err = o.QueryTable("Product").Filter("code", code).One(&prod)
+	if err == orm.ErrNoRows { // 没有找到记录
+		product := &Product{
+			Code:      code,
+			Title:     title,
+			Label:     label,
+			Principal: principal,
+			ProjectId: Projectid,
+			Content:   content,
+			Created:   time.Now(),
+			Updated:   time.Now(),
+		}
+		id, err = o.Insert(product)
+		if err != nil {
+			return 0, err
+		}
+	} else if err == orm.ErrMultiRows {
+		return 0, err
+	} else if err == nil {
+		return prod.Id, err
+	}
 	// var Product Product
 	// if pid == "" {
-	product := &Product{
-		Code:      code,
-		Title:     title,
-		Label:     label,
-		Principal: principal,
-		ProjectId: Projectid,
-		Content:   content,
-		Created:   time.Now(),
-		Updated:   time.Now(),
-	}
-	id, err = o.Insert(product)
-	if err != nil {
-		return 0, err
-	}
+
 	// } else {
 
 	// }
-	return id, nil
+	return id, err
 }
 
 //根据侧栏id查出所有成果
