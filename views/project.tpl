@@ -2,12 +2,13 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目详细-EngiCMS</title>
+<!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/> -->
 <!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
   <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
+  
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
@@ -136,8 +137,25 @@
           document.getElementById("iframepage").src="/project/{{.Id}}/"+data.id;
           
           // $("#iframepage").contents().find("#table0").bootstrapTable('refresh', {url:'/project/products/'+data.id});
+          // $('#table0').bootstrapTable('refresh', {url:'/project/products/'+data.id});
           //?secid="+data.Id+"&level="+data.Level;
           //这里用刷新右侧表格中的数据refresh行不通！！！！
+          $.ajax({
+            type:"get",
+            url:"/project/navbar/"+data.id,
+            // data: { uname: $("#uname").val()},
+            // dataType:'json',//dataType:JSON,这种是jquerylatest版本的表达方法。不支持新版jquery。
+            success:function(data,status){
+              // $.each(data,function(i,d){
+                $(".breadcrumb #nav").remove();
+                for (i=0;i<data.length;i++)
+                  {
+                // $(".breadcrumb").append('<li><a href="javascript:void(0)"><i class="fa fa-home">项目编号：' + {{.Category.Code}}+ '</a></li>');
+                    $(".breadcrumb").append('<li id="nav"><a href="javascript:void(0)">' + data[i].Title + '</a></li>');
+                  }
+              // });
+            }
+          });
         }); 
 
 
@@ -168,23 +186,13 @@
           项目编号：{{.Category.Code}}
         </a>
       </li>
-      <li>
-        <a href="javascript:void(0)"> <i class="fa '. $parents['picon'] .' " aria-hidden="true"></i>
-          项目建议书
-        </a>
-      </li>
+<!--       {{range $index, $elem :=.jishu}}
       <li>
         <a href="javascript:void(0)">
-          <i class="fa '. $parents['icon'] .' " aria-hidden="true"></i>
-          水工
+          jibie.title
         </a>
       </li>
-      <li>
-        <a href="javascript:void(0)">
-          <i class="fa '. $parents['act_icon'] .' " aria-hidden="true"></i>
-          技术报告
-        </a>
-      </li>
+      {{end}} -->
     </ol>
   </div>
     <!-- <div class="form-group"> -->

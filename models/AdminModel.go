@@ -29,13 +29,16 @@ type AdminIpsegment struct {
 	Updated time.Time `orm:"index","auto_now_add;type(datetime)"`
 }
 
-type AdminCalenda struct {
-	Id        int64     `form:"-"`
-	Title     string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
-	starttime time.Time `orm:"not null;type(datetime)"`
-	endtime   time.Time `orm:"null;type(datetime)"`
-	allday    int8      `orm:"not null;default(0)"`
-	color     string    `orm:"null"`
+type AdminCalendar struct {
+	Id        int64     `json:"id",form:"-"`
+	Title     string    `json:"title",form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
+	Content   string    `json:"content",orm:"sie(20)"`
+	Starttime time.Time `json:"start",orm:"not null;type(datetime)"`
+	Endtime   time.Time `json:"end",orm:"null;type(datetime)"`
+	Allday    bool      `json:"allDay",orm:"not null;default(0)"`
+	Color     string    `json:"color",orm:"null"`
+	// Color     string    `json:"backgroundColor",orm:"null"`
+	// BColor    string    `json:"borderColor",orm:"null"`
 }
 
 // `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -46,7 +49,7 @@ type AdminCalenda struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment)) //, new(Article)
+	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminCalendar)) //, new(Article)
 	orm.RegisterDriver("sqlite", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
@@ -109,6 +112,26 @@ func UpdateAdminCategory(cid int64, title, code string, grade int) error {
 			return err
 		}
 	}
+	return nil
+}
+
+//删除
+func DeleteAdminCategory(cid int64) error {
+	o := orm.NewOrm()
+	category := &AdminCategory{Id: cid}
+	if o.Read(category) == nil {
+		_, err := o.Delete(category)
+		if err != nil {
+			return err
+		}
+	}
+	// catalog := Catalog{Id: cidNum}
+	// if o.Read(&catalog) == nil {
+	// 	_, err = o.Delete(&catalog)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 	return nil
 }
 
@@ -211,6 +234,19 @@ func UpdateAdminIpsegment(cid int64, title, startip, endip string, iprole int) e
 	return nil
 }
 
+//删除
+func DeleteAdminIpsegment(cid int64) error {
+	o := orm.NewOrm()
+	ipsegment := &AdminIpsegment{Id: cid}
+	if o.Read(ipsegment) == nil {
+		_, err := o.Delete(ipsegment)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 //查询所有Ip地址段
 func GetAdminIpsegment() (ipsegments []*AdminIpsegment, err error) {
 	o := orm.NewOrm()
@@ -236,4 +272,119 @@ func GetAdminIpsegment() (ipsegments []*AdminIpsegment, err error) {
 	// }
 	// return categories, err
 	// }
+}
+
+//********日历********
+//添加
+func AddAdminCalendar(title, content, color string, allday bool, start, end time.Time) (id int64, err error) {
+	o := orm.NewOrm()
+	calendar := &AdminCalendar{
+		Title:   title,
+		Content: content,
+		Color:   color,
+		Allday:  allday,
+		// BColor:    color,
+		Starttime: start,
+		Endtime:   end,
+	}
+	id, err = o.Insert(calendar)
+	if err != nil {
+		return id, err
+	}
+	// }
+	return id, err
+}
+
+//取所有——要修改为支持时间段的，比如某个月份
+func GetAdminCalendar(start, end time.Time) (calendars []*AdminCalendar, err error) {
+	cond := orm.NewCondition()
+	cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
+	o := orm.NewOrm()
+	qs := o.QueryTable("AdminCalendar")
+	qs = qs.SetCond(cond1)
+
+	// o := orm.NewOrm()
+	calendars = make([]*AdminCalendar, 0)
+	// qs := o.QueryTable("AdminCalendar")
+	_, err = qs.All(&calendars)
+	if err != nil {
+		return calendars, err
+	}
+	return calendars, err
+}
+
+//修改
+func UpdateAdminCalendar(cid int64, title, content, color string, allday bool, start, end time.Time) error {
+	o := orm.NewOrm()
+	calendar := &AdminCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		calendar.Title = title
+		calendar.Content = content
+		calendar.Color = color
+		calendar.Allday = allday
+		// calendar.BColor = color
+		calendar.Starttime = start
+		calendar.Endtime = end
+		// calendar.Updated = time.Now()
+		_, err := o.Update(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//拖曳
+func DropAdminCalendar(cid int64, start, end time.Time) error {
+	o := orm.NewOrm()
+	calendar := &AdminCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		calendar.Starttime = start
+		calendar.Endtime = end
+		_, err := o.Update(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//resize
+func ResizeAdminCalendar(cid int64, start, end time.Time) error {
+	o := orm.NewOrm()
+	calendar := &AdminCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		calendar.Starttime = start
+		calendar.Endtime = end
+		// calendar.Updated = time.Now()
+		_, err := o.Update(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//根据id查询事件
+func GetAdminCalendarbyid(id int64) (calendar AdminCalendar, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("AdminCalendar")
+	err = qs.Filter("id", id).One(&calendar)
+	if err != nil {
+		return calendar, err
+	}
+	return calendar, err
+}
+
+//删除
+func DeleteAdminCalendar(cid int64) error {
+	o := orm.NewOrm()
+	calendar := &AdminCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		_, err := o.Delete(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

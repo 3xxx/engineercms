@@ -33,21 +33,30 @@ func init() {
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
 
-//修改——还没改
-func UpdateProduct(cid int64, title, code string, grade int) error {
+//修改成果信息
+func UpdateProduct(cid int64, code, title, label, principal string) error {
 	o := orm.NewOrm()
-	//id转成64为
-	// cidNum, err := strconv.ParseInt(cid, 10, 64)
-	// if err != nil {
-	// 	return err
-	// }
-	Product := &Product{Id: cid}
-	if o.Read(Product) == nil {
-		// Product.Title = title
-		// Product.Code = code
-		// Product.Grade = grade
-		Product.Updated = time.Now()
-		_, err := o.Update(Product)
+	product := &Product{Id: cid}
+	if o.Read(product) == nil {
+		product.Code = code
+		product.Title = title
+		product.Label = label
+		product.Principal = principal
+		product.Updated = time.Now()
+		_, err := o.Update(product)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//删除_把附件也一并删除（在controllers中实现吧）
+func DeleteProduct(cid int64) error {
+	o := orm.NewOrm()
+	product := &Product{Id: cid}
+	if o.Read(product) == nil {
+		_, err := o.Delete(product)
 		if err != nil {
 			return err
 		}

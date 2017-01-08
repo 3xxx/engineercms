@@ -39,7 +39,7 @@
   <!-- <script src="/static/js/admin/validate.js"></script> -->
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/admin/layout.css"/> -->
 </head>
-
+<body>
 
 <script type="text/javascript">
   function index1(value,row,index){
@@ -57,6 +57,8 @@
          $(".info").removeClass("info");
          $(ele).addClass("info");
          rowid=row.Id;//全局变量
+         rowtitle=row.Title
+         $("#rowtitle").html("工程目录分级-"+rowtitle);
          $("#details").show();
          $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+row.Id});
      });
@@ -67,7 +69,7 @@
 </script>
 
 <div class="col-lg-12">
-<h3>工程类别代码表{{.Id}}</h3>
+<h3>工程类别代码表</h3>
 <div id="toolbar1" class="btn-group">
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
@@ -101,6 +103,7 @@
         <!-- radiobox data-checkbox="true"-->
         <th data-width="10" data-radio="true"></th>
         <th data-formatter="index1">#</th>
+        <!-- <th data-field="Id">Id</th> -->
         <th data-field="Title">类别名称</th>
         <th data-field="Code">类别代码</th>
       </tr>
@@ -211,7 +214,7 @@
         return;
       }
       if (selectRow.length>1){
-      alert("请不要勾选一个以上目录！");
+      alert("请不要勾选一个以上类别！");
       return;
       }
       $("input#cid").remove();
@@ -232,27 +235,36 @@
 
     $("#deleteButton").click(function() {
       var selectRow=$('#table0').bootstrapTable('getSelections');
-      // if (selectRow.length<1){
-      //   alert("请先勾选类别！");
-      //   return;
-      // }
       if (selectRow.length<=0) {
         alert("请先勾选类别！");
         return false;
       }
-      var ids=$.map(selectRow,function(row){
-        return row.id;
+      var title=$.map(selectRow,function(row){
+        return row.Title;
       })
-      //删除已选数据
-      $('$table0').bootstrapTable('remove',{
-        field:'id',
-        values:ids
-      });
+      var ids="";
+      for(var i=0;i<selectRow.length;i++){
+        if(i==0){
+          ids=selectRow[i].Id;
+        }else{
+          ids=ids+","+selectRow[i].Id;
+        }  
+      }
+      $.ajax({
+        type:"post",
+        url:"/admin/category/deletecategory",
+        data: {ids:ids},
+        success:function(data,status){
+          alert("删除“"+data+"”成功！(status:"+status+".)");
+          //删除已选数据
+          $('#table0').bootstrapTable('remove',{
+            field:'Title',
+            values:title
+          });
+        }
+      });  
     })
-
   })
-
-
 
   // 来自群，保留，批量
   // var rows= $('#account-table').bootstrapTable('getSelections');
@@ -495,6 +507,7 @@ function format_status(status,row,index) {
 }
 
 $(document).ready(function() {
+  //添加分级
   $("#addButton1").click(function() {
         // alert("添加pip"+rowid);
         // if (rowid=""){
@@ -510,15 +523,15 @@ $(document).ready(function() {
           backdrop:'static'
         });
   })
-
+  //编辑分级目录
   $("#editorButton1").click(function() {
     var selectRow3=$('#table1').bootstrapTable('getSelections');
     if (selectRow3.length<1){
-      alert("请先勾选目录！");
+      alert("请先勾选分级！");
       return;
     }
     if (selectRow3.length>1){
-      alert("请不要勾选一个以上目录！");
+      alert("请不要勾选一个以上分级！");
       return;
     }
     $("input#cid").remove();
@@ -533,6 +546,41 @@ $(document).ready(function() {
       show:true,
       backdrop:'static'
     });
+  })
+  //删除分级
+  $("#deleteButton1").click(function() {
+     var selectRow=$('#table1').bootstrapTable('getSelections');
+     if (selectRow.length<=0) {
+       alert("请先勾选分级！");
+       return false;
+     }
+     var titles=$.map(selectRow,function(row){
+       // alert(row.Id);
+       // return row.Id;
+       // alert(row.Title);
+       return row.Title;
+     })
+     var ids="";
+     for(var i=0;i<selectRow.length;i++){
+       if(i==0){
+         ids=selectRow[i].Id;
+       }else{
+         ids=ids+","+selectRow[i].Id;
+       }  
+     }
+     $.ajax({
+       type:"post",
+       url:"/admin/category/deletecategory",
+       data: {ids:ids},
+       success:function(data,status){
+         alert("删除“"+data+"”成功！(status:"+status+".)");
+         //删除已选数据
+         $('#table1').bootstrapTable('remove',{
+           field:'Title',
+           values:titles
+         });
+       }
+     }); 
   })
 
   // ******试验提交选择的表格************
@@ -575,6 +623,7 @@ $(document).ready(function() {
 
 </script>
 
+<!-- 工程目录分级表 -->
 <toolbar id="btn_toolbar1" class="toolbar">
 <div class="btn-group">
         <button type="button" data-name="addButton1" id="addButton1" class="btn btn-default" data-target="modal"><i class="fa fa-plus" aria-hidden="true"> </i>添加</button>
@@ -585,17 +634,15 @@ $(document).ready(function() {
 </toolbar>
 <!-- data-query-params="queryParams" data-content-type="application/json"-->
 <div id="details" style="display:none">
-<h3>工程目录分级</h3>
+<h3 id="rowtitle"></h3>
+<!-- data-url="/admin/category/2" 没有了这个，当然table1表格无法支持刷新了！！！data-show-refresh="true"-->
 <table id="table1"
         data-toggle="table"
         data-search="true"
-        data-show-refresh="true"
         data-show-toggle="true"
         data-show-columns="true"
         data-toolbar="#btn_toolbar1"
-        
-        data-sort-name="ProjectName"
-        data-sort-order="desc"
+        data-sort-name="Grade"
         data-page-size="5"
         data-page-list="[5, 25, 50, All]"
         data-unique-id="id"

@@ -55,21 +55,16 @@ func AddAttachment(filename string, filesize, downloads, productid int64) (id in
 	return id, err
 }
 
-//修改——还没改
-func UpdateAttachment(cid int64, title, code string, grade int) (err error) {
+//修改_这个意义不大，对于附件的修改，一般是追加或删除
+func UpdateAttachment(cid int64, filename string, filesize, downloads int64) (err error) {
 	o := orm.NewOrm()
-	//id转成64为
-	// cidNum, err := strconv.ParseInt(cid, 10, 64)
-	// if err != nil {
-	// 	return err
-	// }
-	Attachment := &Attachment{Id: cid}
-	if o.Read(Attachment) == nil {
-		// Attachment.Title = title
-		// Attachment.Code = code
-		// Attachment.Grade = grade
-		Attachment.Updated = time.Now()
-		_, err := o.Update(Attachment)
+	attachment := &Attachment{Id: cid}
+	if o.Read(attachment) == nil {
+		attachment.FileName = filename
+		attachment.FileSize = filesize
+		attachment.Downloads = downloads
+		attachment.Updated = time.Now()
+		_, err := o.Update(attachment)
 		if err != nil {
 			return err
 		}
@@ -77,7 +72,20 @@ func UpdateAttachment(cid int64, title, code string, grade int) (err error) {
 	return err
 }
 
-//根据id取得所有附件
+//删除
+func DeleteAttachment(cid int64) error {
+	o := orm.NewOrm()
+	attachment := &Attachment{Id: cid}
+	if o.Read(attachment) == nil {
+		_, err := o.Delete(attachment)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//根据成果id取得所有附件
 func GetAttachments(id int64) (attachments []*Attachment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Attachment")
@@ -88,7 +96,7 @@ func GetAttachments(id int64) (attachments []*Attachment, err error) {
 	return attachments, err
 }
 
-//根据名字title查询到项目目录
+//根据名字title查询到附件
 func GetAttachmentTitle(title string) (cate Attachment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Attachment")
@@ -109,4 +117,12 @@ func GetAttachmentTitle(title string) (cate Attachment, err error) {
 	// }
 	// return categories, err
 	// }
+}
+
+//根据附件id查询附件
+func GetAttachbyId(Id int64) (attach Attachment, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Attachment")
+	err = qs.Filter("id", Id).One(&attach)
+	return attach, err
 }

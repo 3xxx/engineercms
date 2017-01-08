@@ -84,20 +84,29 @@ func AddProject(code, title, label, principal string, parentid int64, parentidpa
 }
 
 //修改——还没改
-func UpdateProject(cid int64, title, code string, grade int) error {
+func UpdateProject(cid int64, code, title, label, principal string) error {
 	o := orm.NewOrm()
-	//id转成64为
-	// cidNum, err := strconv.ParseInt(cid, 10, 64)
-	// if err != nil {
-	// 	return err
-	// }
 	project := &Project{Id: cid}
 	if o.Read(project) == nil {
-		project.Title = title
 		project.Code = code
-		project.Grade = grade
+		project.Title = title
+		project.Label = label
+		project.Principal = principal
 		project.Updated = time.Now()
 		_, err := o.Update(project)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//删除
+func DeleteProject(id int64) error {
+	o := orm.NewOrm()
+	project := &Project{Id: id}
+	if o.Read(project) == nil {
+		_, err := o.Delete(project)
 		if err != nil {
 			return err
 		}
@@ -137,11 +146,11 @@ func GetProj(id int64) (proj Project, err error) {
 // 	}
 // 	return proj, err
 // }
-//根据id查出所有子孙——这个不对，要用ParentIdPath
+//根据id查出所有子孙，用ParentIdPath
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable("Project")                         //这个表名AchievementTopic需要用驼峰式，
-	_, err = qs.Filter("ParentIdPath", id).All(&projects) //而这个字段parentid为何又不用呢
+	qs := o.QueryTable("Project")
+	_, err = qs.Filter("ParentIdPath__contains", id).All(&projects)
 	if err != nil {
 		return nil, err
 	}
@@ -151,8 +160,8 @@ func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 //根据id查出所有儿子
 func GetProjSonbyId(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable("Project")                     //这个表名AchievementTopic需要用驼峰式，
-	_, err = qs.Filter("parentid", id).All(&projects) //而这个字段parentid为何又不用呢
+	qs := o.QueryTable("Project")
+	_, err = qs.Filter("parentid", id).All(&projects)
 	if err != nil {
 		return nil, err
 	}

@@ -15,10 +15,8 @@ type ArticleController struct {
 }
 
 //取得某个成果id下的文章给table
-//还没改
 func (c *ArticleController) GetArticles() {
 	pid := c.Ctx.Input.Param(":id")
-	// beego.Info(id)
 	c.Data["Id"] = pid
 	var pidNum int64
 	var err error
@@ -28,29 +26,17 @@ func (c *ArticleController) GetArticles() {
 		if err != nil {
 			beego.Error(err)
 		}
-		//由成果id（后台传过来的行id）取得侧栏目录id
-		prod, err := models.GetProd(pidNum)
-		if err != nil {
-			beego.Error(err)
-		}
-		//根据成果id取得所有附件
+		//根据成果id取得所有文章
 		Articles, err := models.GetArticles(pidNum)
 		if err != nil {
 			beego.Error(err)
 		}
-		//对成果进行循环
+		//对文章进行循环
 		//赋予url
-		//如果是一个成果，直接给url;如果大于1个，则是数组:这个在前端实现
+		//如果是一个文章，直接给url;如果大于1个，则是数组:这个在前端实现
 		// http.ServeFile(ctx.ResponseWriter, ctx.Request, filePath)
 		content := make([]ProductLink, 0)
 		contentarr := make([]ProductLink, 1)
-		contentarr[0].Content = prod.Content
-		contentarr[0].Code = prod.Code
-		contentarr[0].Title = prod.Title
-		contentarr[0].Label = prod.Label
-		contentarr[0].Uid = prod.Uid
-		contentarr[0].Principal = prod.Principal
-		contentarr[0].Views = prod.Views
 		for _, v := range Articles {
 			// fileext := path.Ext(v.FileName)
 			contentarr[0].Id = v.Id
@@ -112,10 +98,12 @@ func (c *ArticleController) AddArticle() {
 	pid := c.Input().Get("pid")
 	code := c.Input().Get("code")
 	title := c.Input().Get("title")
+	subtext := c.Input().Get("subtext")
 	label := c.Input().Get("label")
 	principal := c.Input().Get("principal")
 	content := c.Input().Get("content")
 	// c.Data["Id"] = id
+	// beego.Info(subtext)
 	//id转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
@@ -127,7 +115,46 @@ func (c *ArticleController) AddArticle() {
 		beego.Error(err)
 	}
 	//将文章添加到成果id下
-	_, err = models.AddArticle(content, Id)
+	_, err = models.AddArticle(subtext, content, Id)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//向成果id下添加文章
+func (c *ArticleController) AddProdArticle() {
+	// id := c.Ctx.Input.Param(":id")
+	pid := c.Input().Get("pid")
+	subtext := c.Input().Get("subtext")
+	content := c.Input().Get("content")
+	//id转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//将文章添加到成果id下
+	_, err = models.AddArticle(subtext, content, pidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//根据文章id删除文章
+func (c *ArticleController) DeleteArticle() {
+	// id := c.Ctx.Input.Param(":id")
+	aid := c.Input().Get("aid")
+	//id转成64为
+	aidNum, err := strconv.ParseInt(aid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.DeleteArticle(aidNum)
 	if err != nil {
 		beego.Error(err)
 	} else {

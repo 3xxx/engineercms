@@ -26,7 +26,7 @@ type Navbartruct struct {
 
 //项目列表页面
 func (c *ProjController) Get() {
-	c.Data["IsCategory"] = true
+	c.Data["IsProject"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	role := Getiprole(c.Ctx.Input.IP())
 	c.Data["role"] = role
@@ -65,6 +65,7 @@ func (c *ProjController) GetProjects() {
 
 //根据ip查看项目，查出项目目录
 func (c *ProjController) GetProject() {
+	c.Data["IsProject"] = true
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
@@ -309,7 +310,7 @@ func (c *ProjController) AddProject() {
 }
 
 //还没改，应该是updateproj
-func (c *ProjController) UpdateCategory() {
+func (c *ProjController) UpdateProject() {
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
 	title := c.Input().Get("title")
@@ -331,6 +332,98 @@ func (c *ProjController) UpdateCategory() {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
 	}
+}
+
+//根据id删除proj
+func (c *ProjController) DeleteProject() {
+	//查所有子孙项目，循环删除
+	ids := c.GetString("ids")
+	beego.Info(ids)
+	array := strings.Split(ids, ",")
+	//循环项目id
+	for _, v := range array {
+		//id转成64位
+		projid, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//根据项目id取得所有子孙id
+		projs, err := models.GetProjectsbyPid(projid)
+		if err != nil {
+			beego.Error(err)
+		}
+		//循环子孙项目
+		for _, w := range projs {
+			//取得子孙项目的成果列表
+			//根据项目id取得所有成果
+			products, err := models.GetProducts(w.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			for _, x := range products {
+				//删除子孙成果表
+				//循环删除成果
+				//根据成果id取得所有附件
+				attachments, err := models.GetAttachments(x.Id)
+				if err != nil {
+					beego.Error(err)
+				}
+				//删除附件表
+				for _, y := range attachments {
+					//删除附件数据表
+					err = models.DeleteAttachment(y.Id)
+					if err != nil {
+						beego.Error(err)
+					}
+				}
+
+				//删除子孙文章表
+				//取得成果id下所有文章
+				articles, err := models.GetArticles(x.Id)
+				if err != nil {
+					beego.Error(err)
+				}
+				//删除文章表
+				for _, z := range articles {
+					//删除文章数据表
+					err = models.DeleteArticle(z.Id)
+					if err != nil {
+						beego.Error(err)
+					}
+				}
+				//删除成果表自身
+				err = models.DeleteProduct(x.Id) //删除成果数据表
+				if err != nil {
+					beego.Error(err)
+				}
+			}
+			//删除子孙proj数据表
+			err = models.DeleteProject(w.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			//删除子孙文章图片文件夹（下面已经全部删除了）
+		}
+		//根据proj的id——这个放deleteproject前面，否则项目数据表删除了就取不到路径了
+		_, DiskDirectory, err := GetUrlPath(projid)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(DiskDirectory)
+		path := DiskDirectory
+		//直接删除这个文件夹，remove删除文件
+		err = os.RemoveAll(path)
+		if err != nil {
+			beego.Error(err)
+		}
+		//删除项目自身数据表
+		err = models.DeleteProject(projid)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = "ok"
+	c.ServeJSON()
 }
 
 //求出[]int最大值

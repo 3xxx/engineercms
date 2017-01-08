@@ -6,6 +6,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type AdminController struct {
@@ -13,8 +14,6 @@ type AdminController struct {
 }
 
 func (c *AdminController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
 	role := Getiprole(c.Ctx.Input.IP())
 	if role == 1 {
 		c.TplName = "admin.tpl"
@@ -105,6 +104,7 @@ func (c *AdminController) CategoryTitle() {
 	// c.TplName = "admin_category.tpl"
 }
 
+//添加
 func (c *AdminController) AddCategory() {
 	// pid := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
@@ -135,6 +135,7 @@ func (c *AdminController) AddCategory() {
 	}
 }
 
+//修改
 func (c *AdminController) UpdateCategory() {
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
@@ -156,6 +157,39 @@ func (c *AdminController) UpdateCategory() {
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *AdminController) DeleteCategory() {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//查询下级，即分级
+		categories, err := models.GetAdminCategory(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			for _, v1 := range categories {
+				err = models.DeleteAdminCategory(v1.Id)
+				if err != nil {
+					beego.Error(err)
+				}
+			}
+		}
+		err = models.DeleteAdminCategory(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
 	}
 }
 
@@ -205,6 +239,27 @@ func (c *AdminController) UpdateIpsegment() {
 		c.ServeJSON()
 	}
 	Createip()
+}
+
+//删除
+func (c *AdminController) DeleteIpsegment() {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		err = models.DeleteAdminIpsegment(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
+	}
 }
 
 //查询IP地址段
@@ -437,3 +492,215 @@ func processFlag(arg []string) (maps map[string]int) {
 	return m1
 	//	close(ipAddrs)
 }
+
+//添加日历
+func (c *AdminController) AddCalendar() {
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	_, err = models.AddAdminCalendar(title, content, color, allday, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+}
+
+//返回日历json数据
+func (c *AdminController) Calendar() {
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	const lll = "2006-01-02"
+	startdate, err := time.Parse(lll, start)
+	if err != nil {
+		beego.Error(err)
+	}
+	enddate, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	calendars, err := models.GetAdminCalendar(startdate, enddate)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+	// c.TplName = "admin_category.tpl"
+}
+
+//修改
+func (c *AdminController) UpdateCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdateAdminCalendar(cidNum, title, content, color, allday, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+	// pid := c.Ctx.Input.Param(":id")
+	//
+	// title := c.Input().Get("title")
+	// code := c.Input().Get("code")
+	// grade := c.Input().Get("grade")
+	// //pid转成64为
+	// cidNum, err := strconv.ParseInt(cid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// } else {
+	// 	c.Data["json"] = "ok"
+	// 	c.ServeJSON()
+	// }
+}
+
+//拖曳
+func (c *AdminController) DropCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	daltaint, err := strconv.Atoi(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	calendar, err := models.GetAdminCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	t1 := calendar.Starttime.AddDate(0, 0, daltaint)
+	t2 := calendar.Endtime.AddDate(0, 0, daltaint)
+	err = models.DropAdminCalendar(idNum, t1, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//resize
+func (c *AdminController) ResizeCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	delta = delta + "h"
+	deltahour, err := time.ParseDuration(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	// starttime.Add(-time.Duration(hours) * time.Hour)
+	calendar, err := models.GetAdminCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	t1 := calendar.Starttime.Add(deltahour)
+	t2 := calendar.Endtime.Add(deltahour)
+	err = models.DropAdminCalendar(idNum, t1, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *AdminController) DeleteCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	err = models.DeleteAdminCalendar(cidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+// include_once('connect.php');//连接数据库
+//   $sql = "select * from calendar";
+//    $query = mysql_query($sql);
+//     while($row=mysql_fetch_array($query)){
+//     $allday = $row['allday'];
+//     $is_allday = $allday==1?true:false;
+//     $data[] = array(
+//     'id' => $row['id'],//事件id
+//     'title' => $row['title'],//事件标题
+//     'start' => date('Y-m-d H:i',$row['starttime']),//事件开始时间
+//      'end' => date('Y-m-d H:i',$row['endtime']),//结束时间
+//     'allDay' => $is_allday, //是否为全天事件
+//     'color' => $row['color'] //事件的背景色
+//      );
+//    }
+//    echo json_encode($data);
+
+//删除日历

@@ -2,11 +2,12 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目列表-EngiCMS</title>
+<!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
 <!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
   <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
+  
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
@@ -46,7 +47,7 @@
         data-show-columns="true"
         data-toolbar="#toolbar1"
         data-query-params="queryParams"
-        data-sort-name="ProjectName"
+        data-sort-name="Created"
         data-sort-order="desc"
         data-page-size="5"
         data-page-list="[5,20, 50, 100, All]"
@@ -63,7 +64,7 @@
         <th data-formatter="index1">#</th>
         <th data-field="Code" data-formatter="setCode">编号</th>
         <th data-field="Title">名称</th>
-        <th data-field="Label">标签</th>
+        <th data-field="Label" data-formatter="setLable">标签</th>
         <th data-field="Principal">负责人</th>
         <th data-field="Product">成果数量</th>
         <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
@@ -95,15 +96,23 @@
         });
   function index1(value,row,index){
   // alert( "Data Loaded: " + index );
-            return index+1
+    return index+1
   }
-function localDateFormatter(value) {
-     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  function localDateFormatter(value) {
+    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }
-function setCode(value,row,index){
-  return "<a href='/project/"+row.Id+"'>" + value + "</a>";
-}
-
+  function setCode(value,row,index){
+    return "<a href='/project/"+row.Id+"'>" + value + "</a>";
+  }
+  function setLable(value,row,index){
+    array=value.split(",")
+    var labelarray = new Array() 
+    for (i=0;i<array.length;i++)
+    {
+      labelarray[i]="<a href='/project/search/"+array[i]+"'>" + array[i] + "</a>";
+    }
+    return labelarray.join(",");
+  } 
   // 改变点击行颜色
   $(function(){
      // $("#table").bootstrapTable('destroy').bootstrapTable({
@@ -190,6 +199,10 @@ function setCode(value,row,index){
 
   $(document).ready(function() {
     $("#addButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
         $('#modalTable').modal({
         show:true,
         backdrop:'static'
@@ -197,6 +210,10 @@ function setCode(value,row,index){
     })
 
     $("#editorButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选类别！");
@@ -222,25 +239,54 @@ function setCode(value,row,index){
         });
     })
 
+    // 删除项目
     $("#deleteButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
+      
       var selectRow=$('#table0').bootstrapTable('getSelections');
-      // if (selectRow.length<1){
-      //   alert("请先勾选类别！");
-      //   return;
-      // }
       if (selectRow.length<=0) {
-        alert("请先勾选类别！");
+        alert("请先勾选项目！");
         return false;
       }
-      var ids=$.map(selectRow,function(row){
-        return row.id;
-      })
-      //删除已选数据
-      $('$table0').bootstrapTable('remove',{
-        field:'id',
-        values:ids
-      });
+      if(confirm("确定删除项目吗？第一次提示！")){
+      }else{
+        return false;
+      }
+      if(confirm("确定删除项目吗？第二次提示！")){
+      }else{
+        return false;
+      }
+      if(confirm("确定删除项目吗？一旦删除将无法恢复！")){
+        var title=$.map(selectRow,function(row){
+          return row.Title;
+        })
+        var ids="";
+        for(var i=0;i<selectRow.length;i++){
+          if(i==0){
+            ids=selectRow[i].Id;
+          }else{
+            ids=ids+","+selectRow[i].Id;
+          }  
+        }
+        $.ajax({
+          type:"post",
+          url:"/project/deleteproject",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#table0').bootstrapTable('remove',{
+              field:'Title',
+              values:title
+            });
+          }
+        });
+      }  
     })
+
   })
 
    /*数据json*/
@@ -315,7 +361,9 @@ function save(){
             data: {code:projcode,name:projname,label:projlabel,principal:projprincipal,ids:ids},//
             success:function(data,status){
               alert("添加“"+data+"”成功！(status:"+status+".)");
-              //按确定后再刷新 
+              //按确定后再刷新
+              $('#modalTable').modal('hide');
+              $('#table0').bootstrapTable('refresh', {url:'/project/getprojects'});
             }
           });  
         }else{
@@ -323,8 +371,6 @@ function save(){
           return;
         } 
         // $(function(){$('#myModal').modal('hide')}); 
-          $('#modalTable').modal('hide');
-          $('#table0').bootstrapTable('refresh', {url:'/project/getprojects'});
           // "/category/modifyfrm?cid="+cid
           // window.location.reload();//刷新页面
   }
@@ -424,6 +470,7 @@ function save(){
                     data-page-size="5"
                     data-page-list="[5, 25, 50, All]"
                     data-unique-id="id"
+                    data-sort-name="Grade"
                     data-pagination="true"
                     data-side-pagination="client"
                     data-click-to-select="true">

@@ -81,6 +81,72 @@ func (c *AttachController) GetAttachments() {
 	// c.ServeJSON()
 }
 
+//取得某个成果id下的所有附件(包含pdf和文章)给table
+func (c *AttachController) GetAllAttachments() {
+	id := c.Ctx.Input.Param(":id")
+	c.Data["Id"] = id
+	var idNum int64
+	var err error
+	var Url string
+	//id转成64为
+	idNum, err = strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//由成果id（后台传过来的行id）取得侧栏目录id
+	prod, err := models.GetProd(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//由proj id取得url
+	Url, _, err = GetUrlPath(prod.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(Url)
+
+	//根据成果id取得所有附件
+	Attachments, err := models.GetAttachments(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//对成果进行循环
+	//赋予url
+	//如果是一个成果，直接给url;如果大于1个，则是数组:这个在前端实现
+	// http.ServeFile(ctx.ResponseWriter, ctx.Request, filePath)
+	link := make([]AttachmentLink, 0)
+	for _, v := range Attachments {
+		// fileext := path.Ext(v.FileName)
+		linkarr := make([]AttachmentLink, 1)
+		linkarr[0].Id = v.Id
+		linkarr[0].Title = v.FileName
+		linkarr[0].FileSize = v.FileSize
+		linkarr[0].Downloads = v.Downloads
+		linkarr[0].Created = v.Created
+		linkarr[0].Updated = v.Updated
+		linkarr[0].Link = Url + "/" + v.FileName
+		link = append(link, linkarr...)
+	}
+	//根据成果id取得所有文章
+	Articles, err := models.GetArticles(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	for _, x := range Articles {
+		linkarr := make([]AttachmentLink, 1)
+		linkarr[0].Id = x.Id
+		linkarr[0].Title = x.Subtext
+		linkarr[0].Created = x.Created
+		linkarr[0].Updated = x.Updated
+		linkarr[0].Link = "/project/product/article/" + strconv.FormatInt(x.Id, 10)
+		link = append(link, linkarr...)
+	}
+	c.Data["json"] = link
+	c.ServeJSON()
+	// c.Data["json"] = root
+	// c.ServeJSON()
+}
+
 //取得某个成果id下的附件中的pdf给table
 func (c *AttachController) GetPdfs() {
 	id := c.Ctx.Input.Param(":id")
@@ -265,7 +331,7 @@ func (c *AttachController) AddAttachment2() {
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
-	//根据proj的parentIdpath
+	//根据proj的Id
 	Url, DiskDirectory, err := GetUrlPath(pidNum)
 	if err != nil {
 		beego.Error(err)
@@ -310,11 +376,95 @@ func (c *AttachController) AddAttachment2() {
 		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": attachment, "original": attachment, "url": Url + "/" + attachment}
 		c.ServeJSON()
 	}
-	// c.TplName = "topic_one_add.tpl" //不加这句上传出错，虽然可以成功上传
-	// c.Redirect("/topic", 302)
-	// success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
-	//    message : "提示的信息，上传成功或上传失败及错误信息等。",
-	//    url     : "图片地址"        // 上传成功时才返回
+}
+
+//向一个成果id下追加附件
+func (c *AttachController) UpdateAttachment() {
+	//解析表单
+	pid := c.Input().Get("pid")
+	// beego.Info(pid)
+	//pid转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	prod, err := models.GetProd(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据proj的Id
+	Url, DiskDirectory, err := GetUrlPath(prod.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+	//获取上传的文件
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+	var path, attachment string
+	var filesize int64
+	if h != nil {
+		//保存附件
+		attachment = h.Filename
+		path = DiskDirectory + "\\" + h.Filename // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		err = c.SaveToFile("file", path)         //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+		}
+		filesize, _ = FileSize(path)
+		filesize = filesize / 1000.0
+	}
+	//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
+	//如果附件名称相同，则覆盖上传，但数据库不追加
+	_, err = models.AddAttachment(attachment, filesize, 0, pidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": attachment, "original": attachment, "url": Url + "/" + attachment}
+		c.ServeJSON()
+	}
+}
+
+//删除附件——这个用于针对删除一个附件
+func (c *AttachController) DeleteAttachment() {
+	//解析表单
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//取得附件的成果id——再取得成果的项目目录id——再取得路径
+		attach, err := models.GetAttachbyId(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		prod, err := models.GetProd(attach.ProductId)
+		if err != nil {
+			beego.Error(err)
+		}
+		//根据proj的id
+		_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
+		if err != nil {
+			beego.Error(err)
+		}
+		path := DiskDirectory + "\\" + attach.FileName
+		err = os.Remove(path)
+		if err != nil {
+			beego.Error(err)
+		}
+		err = models.DeleteAttachment(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = "ok"
+	c.ServeJSON()
 }
 
 // 下载附件
@@ -423,9 +573,9 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 				Url = "/attachment/" + proj1.Code + proj1.Title
 			} else {
 				path = proj1.Title
+				DiskDirectory = DiskDirectory + "\\" + path
+				Url = Url + "/" + path
 			}
-			DiskDirectory = DiskDirectory + "\\" + path
-			Url = Url + "/" + path
 		}
 		DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
 		Url = Url + "/" + proj.Title

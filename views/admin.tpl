@@ -1,4 +1,4 @@
-<!-- iframe里展示个人待处理的详细情况-->
+<!-- 后台主页面，其他为子页面-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,12 +10,7 @@
   <script src="/static/js/bootstrap-treeview.js"></script>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
-  <!-- <script type="text/javascript" src="/static/js/moment.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/daterangepicker.js"></script> -->
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/daterangepicker.css" /> -->
-  <!-- <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js"></script> -->
-  <!-- <link rel="stylesheet" type="text/css" href="/static/bootstrap-datepicker/bootstrap-datepicker3.css"/> -->
+
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
 <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
@@ -23,17 +18,12 @@
 <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-<!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/> -->
-<!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
-<!-- <link rel="stylesheet" type="text/css" href="/static/font-awesome/css/font-awesome.min.css"/> -->
+
 <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
 <script src="/static/js/tableExport.js"></script>
-<!-- <script src="/static/js/jquery.form.js"></script> -->
-<!-- <script src="/static/js/admin/main.js"></script> -->
-<!-- <script src="/static/js/admin/gridview.js"></script> -->
-<!-- <script src="/static/js/admin/validate.js"></script> -->
-<link rel="stylesheet" type="text/css" href="/static/css/admin/layout.css"/>
+
 </head>
+<body>
 <div class="col-lg-2">
   <div id="tree"></div>
 </div>
@@ -44,21 +34,24 @@
   <!-- <div class="container-fill"> -->
   <!-- <div class="main-panel"> -->
   <div class="col-lg-10">
-    <!-- <div class="main-panel-top"> -->
+      
       <div class="navbar navbar-top">
           <ul class="nav navbar-nav navbar-right">
+          <!-- <ul class="nav navbar-nav"> -->
               <li>
-                  <a href="/admin/user/detail">Account</a>
+                  <a href="/project">项目</a>
+              </li>
+              <li>
+                  <a href="/admin/user/detail">{{.Ip}}</a>
               </li>
               <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<b class="caret"></b></a>
                   <ul class="dropdown-menu">
-                      <li><a href="http://shijinrong.cn/" target="_blank">Aierui</a></li>
-                      <li><a href="https://github.com/Aierui" target="_blank">Aierui github</a></li>
-                      <li><a href="http://weibo.com/imlander" target="_blank">Weibo</a></li>
+                      <li><a href="https://github.com/3xxx" target="_blank">3xxx github</a></li>
+                      <li><a href="http://www.sina.com/xc-qin" target="_blank">Weibo</a></li>
                       <li><a href="#">Something</a></li>
                       <li class="divider"></li>
-                      <li><a href="http://blog.shijinrong.cn/" target="_blank">Blog</a></li>
+                      <li><a href="http://blog.csdn.net/hotqin888" target="_blank">Blog</a></li>
                   </ul>
               </li>
               <li>
@@ -66,6 +59,8 @@
               </li>
           </ul>
       </div>
+    <!-- </nav> -->
+
     <!-- </div> -->
     <!-- 面包屑导航 -->
     <!-- <div class="main-panel-breadcrumb"> -->
@@ -85,22 +80,21 @@
       </li>
       <li>
         <a href="javascript:void(0)"> <i class="fa '. $parents['picon'] .' " aria-hidden="true"></i>
-          parents['ptitle']
+          日历
         </a>
       </li>
-      <li>
+<!--       <li>
         <a href="javascript:void(0)">
           <i class="fa '. $parents['icon'] .' " aria-hidden="true"></i>
-          parents['title']
+          分级目录
         </a>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a href="javascript:void(0)">
           <i class="fa '. $parents['act_icon'] .' " aria-hidden="true"></i>
-          parents['act_title']
+          parents
         </a>
-      </li>
-      }
+      </li> -->
     </ol>
   </div>
 <!-- </div> -->
@@ -130,8 +124,9 @@
             var data = 
             [
               {
-                text: "欢迎您~土豪", 
-                selectable: false,
+                text: "欢迎您~{{.Ip}}土豪", 
+                selectable: true,
+                id: '010',
               },
               {
                 text: "系统设置",
@@ -139,7 +134,7 @@
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
                 selectable: true,
-                id: '00',
+                id: '01',
                 selectable: false,
                 // state: {
                   // checked: true,
@@ -152,39 +147,109 @@
                 [
                   { 
                     icon: "fa fa-cog",
-                    text: "目录设置",
-                    id: '01',
-                    nodeId: '01'
+                    text: "基本设置",
+                    id: '011',
+                    nodeId: '011'
+                  },
+                  { 
+                    icon: "fa fa-align-right",
+                    text: "分级目录",
+                    id: '012',
+                    nodeId: '012'
                   }, 
                   { 
                     icon: "fa fa-bug",
-                    text: "爬虫设置",
-                    id: '02'
-                  }, 
-                  { 
-                    icon: "fa fa-th-list",
-                    text: "项目权限",
-                    id: '03'
-                  }, 
-                  { 
-                    icon: "fa fa-user",
-                    text: "账号管理",
-                    id: '04',
-                    selectable: false,
-                    nodes: 
-                    [
-                      { icon: "fa fa-users",
-                        text: '用户组',
-                        id: '05'
-                      },
-                      { icon: "fa fa-user",
-                        text: 'IP权限',
-                        id: '06'
-                      }
-                    ]
+                    text: "搜索IP",
+                    id: '013'
+                  }
+                ] 
+              },
+              {
+                text: "权限管理",
+                icon: "fa fa-balance-scale",
+                // selectedIcon: "glyphicon glyphicon-stop",
+                href: "#node-1",
+                selectable: true,
+                id: '02',
+                selectable: false,
+                // state: {
+                  // checked: true,
+                  // disabled: true,
+                  // expanded: true,
+                  // selected: true
+                // },
+                tags: ['available'],
+                nodes: 
+                [
+                  { icon: "fa fa-safari",
+                    text: '系统权限',
+                    id: '021'
+                  },
+                  { icon: "fa fa-navicon",
+                    text: '项目权限',
+                    id: '022'
                   }
                 ]
-              }
+              },
+              {
+                text: "账号管理",
+                icon: "fa fa-users icon",
+                // selectedIcon: "glyphicon glyphicon-stop",
+                href: "#node-1",
+                selectable: true,
+                id: '03',
+                selectable: false,
+                // state: {
+                  // checked: true,
+                  // disabled: true,
+                  // expanded: true,
+                  // selected: true
+                // },
+                tags: ['available'],
+                nodes: 
+                [
+                  { icon: "fa fa-users",
+                    text: '用户',
+                    id: '031'
+                  },
+                  { icon: "fa fa-th",
+                    text: 'IP地址段',
+                    id: '032'
+                  },
+                  { icon: "fa fa-group",
+                    text: '用户组',
+                    id: '033'
+                  },
+                ]
+              }, 
+              {
+                text: "项目设置",
+                icon: "fa fa-list-alt icon",
+                // selectedIcon: "glyphicon glyphicon-stop",
+                href: "#node-1",
+                selectable: true,
+                id: '04',
+                selectable: false,
+                tags: ['available'],
+                nodes: 
+                [
+                  { 
+                    icon: "fa fa-edit",
+                    text: "编辑",
+                    id: '041'
+                  },
+                  { 
+                    icon: "fa fa-copy",
+                    text: "同步IP",
+                    id: '042'
+                  },
+                  { 
+                    icon: "fa fa-lock",
+                    text: "项目权限",
+                    id: '043'
+                  }
+                ]
+              } 
             ]
             // return data;
 
@@ -215,6 +280,31 @@
             // $("#regis").html(data.text);//显示部门名称
             // $("#regis").css("color","black");
           document.getElementById("iframepage").src="/admin/"+data.id;
+          if (data.id=="010"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;日历")
+          }else if (data.id=="011"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统设置&gt;"+data.text)
+          }else if(data.id=="012"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统设置&gt;"+data.text)
+          }else if(data.id=="013"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统设置&gt;"+data.text)
+          }else if(data.id=="021"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
+          }else if(data.id=="022"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
+          }else if(data.id=="031"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
+          }else if(data.id=="032"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
+          }else if(data.id=="033"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
+          }else if(data.id=="041"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
+          }else if(data.id=="042"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
+          }else if(data.id=="043"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
+          }
           //?secid="+data.Id+"&level="+data.Level;
         }); 
 

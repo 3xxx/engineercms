@@ -1,12 +1,14 @@
 <!-- 具体一个项目侧栏id下所有成果，不含子目录下的成果 -->
 <!DOCTYPE html>
-<script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <script src="/static/js/bootstrap-treeview.js"></script>
-  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
+  
+  <script src="/static/js/bootstrap-treeview.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
+  
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
@@ -34,8 +36,8 @@
 <body>
 
 <div class="col-lg-12">
-  <h3>成果列表{{.Id}}</h3>
-              <!--SWF在初始化的时候指定，在后面将展示-->
+  <h3>成果列表</h3>
+              <!--{{.Id}}SWF在初始化的时候指定，在后面将展示-->
               <!-- <div id="uploader" class="wu-example"> -->
               <!--用来存放文件信息-->
                 <!-- <div id="thelist" class="uploader-list"></div> -->
@@ -45,16 +47,18 @@
                 <!-- </div> -->
               <!-- </div> -->
 <div id="toolbar1" class="btn-group">
-        <!-- 添加文章 -->
+        <!-- 多文件批量上传 -->
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
         </button>
-        <!-- 多文件批量上传 -->
+        <!-- 多附件上传 -->
         <button type="button" data-name="addButton1" id="addButton1" class="btn btn-default"> <i class="fa fa-plus-square-o" title="多附件模式">添加</i>
         </button>
-        <!-- 多附件上传 -->
+        <!-- 添加文章 -->
         <button type="button" data-name="addButton2" id="addButton2" class="btn btn-default"> <i class="fa fa-plus-square" title="文章模式">添加</i>
         </button>
-        <button type="button" data-name="editorButton" id="editorButton" class="btn btn-default"> <i class="fa fa-edit">编辑</i>
+        <button type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
+        </button>
+        <button type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
         </button>
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
@@ -70,26 +74,27 @@
         data-show-columns="true"
         data-toolbar="#toolbar1"
         data-query-params="queryParams"
-        data-sort-name="ProjectName"
+        data-sort-name="Code"
         data-sort-order="desc"
-        data-page-size="5"
-        data-page-list="[5,20, 50, 100, All]"
+        data-page-size="15"
+        data-page-list="[10,15, 50, 100, All]"
         data-unique-id="id"
         data-pagination="true"
         data-side-pagination="client"
         data-single-select="true"
         data-click-to-select="true"
+        data-show-export="true"
         >
     <thead>        
       <tr>
-        <!-- radiobox data-checkbox="true"-->
+        <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
         <th data-width="10" data-radio="true"></th>
         <th data-formatter="index1">#</th>
-        <th data-field="Code" data-formatter="setCode">编号</th>
-        <th data-field="Title" data-formatter="setTitle">名称</th>
+        <th data-field="Code">编号</th>
+        <th data-field="Title">名称</th>
         <th data-field="Label" data-formatter="setLable">关键字</th>
         <th data-field="Principal">设计</th>
-        <th data-field="Content" data-formatter="setArticle" data-events="actionEvents">文章</th>
+        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents">文章</th>
         <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents">附件</th>
         <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents">PDF</th>
         <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
@@ -200,7 +205,16 @@
     return "<a href='/project/product/"+row.Id+"'>" + value + "</a>";
   }
   function setArticle(value,row,index){
-    return '<a class="article" href="javascript:void(0)" title="article"><i class="fa fa-file-text-o"></i></a>';
+    // return '<a class="article" href="javascript:void(0)" title="article"><i class="fa fa-file-text-o"></i></a>';
+    if (value.length==1){
+      articleUrl= '<a href="/project/product/article/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
+      return articleUrl;
+    }else if(value.length==0){
+                    
+    }else if(value.length>1){
+      articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
+      return articleUrl;
+    }
   }
 // var bb;
   function setAttachment(value,row,index){
@@ -241,7 +255,7 @@
     // return value;
     // alert(value[0].Link);
     if (value.length==1){
-      pdfUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+      pdfUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
       return pdfUrl;
     }else if(value.length==0){
                     
@@ -271,14 +285,19 @@
             // }
     // });
   }
-  //最后面弹出附件列表中的
+  //最后面弹出文章列表中用的
+  function setArticlecontent(value,row,index){
+    articleUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+      return articleUrl;
+  }
+  //最后面弹出附件列表中用的
   function setAttachlink(value,row,index){
-  attachUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+    attachUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
       return attachUrl;
   }
   //最后面弹出pdf列表中用的
   function setPdflink(value,row,index){
-  pdfUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+    pdfUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
       return pdfUrl;
   }
   //这个没用
@@ -296,18 +315,22 @@
   //   ].join('');
   // }
 // '<a class="edit ml10" href="javascript:void(0)" title="退回">','<i class="glyphicon glyphicon-edit"></i>','</a>'
-window.actionEvents = {
+  window.actionEvents = {
     'click .article': function (e, value, row, index) {
-        if(confirm("暂时不支持查看文章！土豪~")){
- 
-        }
+        // if(confirm("暂时不支持查看文章！土豪~")){
+        // }
+      $('#articles').bootstrapTable('refresh', {url:'/project/product/articles/'+row.Id});
+      $('#modalarticle').modal({
+        show:true,
+        backdrop:'static'
+      }); 
     },
     'click .attachment': function (e, value, row, index) {
-        $('#attachs').bootstrapTable('refresh', {url:'/project/product/attachment/'+row.Id});
-              $('#modalattach').modal({
-                show:true,
-                backdrop:'static'
-              });
+      $('#attachs').bootstrapTable('refresh', {url:'/project/product/attachment/'+row.Id});
+      $('#modalattach').modal({
+        show:true,
+        backdrop:'static'
+      });
     },
     'click .pdf': function (e, value, row, index) {
       // alert("商品名称：" +row.Id);
@@ -329,7 +352,7 @@ window.actionEvents = {
           // });  
         // }
     },
-};
+  };
   // 改变点击行颜色
   // $(function(){
      // $("#table").bootstrapTable('destroy').bootstrapTable({
@@ -417,6 +440,10 @@ window.actionEvents = {
   $(document).ready(function() {
     // 批量上传
     $("#addButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！"+{{.role}});
+        return;
+      }
       $("input#pid").remove();
       var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
         $(".modal-body").append(th1);
@@ -429,48 +456,52 @@ window.actionEvents = {
 
     var uploader;
     $('#modalTable').on('shown.bs.modal',function(){
-        // var $ = jQuery,
-        $list = $('#thelist'),
-        $btn = $('#ctlBtn'),
-        state = 'pending',
-        // uploader;
-        uploader = WebUploader.create({
-          // 不压缩image
-          resize: false,
-          // swf文件路径
-          swf: '/static/fex-team-webuploader/dist/Uploader.swf',
-          // 文件接收服务端。
-          server: '/project/product/addattachment',
-          // 选择文件的按钮。可选。
-          // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-          pick: '#picker'
-        });
-    // 当有文件添加进来的时候
-    uploader.on( 'fileQueued', function( file ) {
+      // var $ = jQuery,
+      $list = $('#thelist'),
+      $btn = $('#ctlBtn'),
+      state = 'pending',
+      // uploader;
+      uploader = WebUploader.create({
+        // 不压缩image
+        resize: false,
+        // swf文件路径
+        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        // 文件接收服务端。
+        server: '/project/product/addattachment',
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker'
+      });
+      // 当有文件添加进来的时候
+      uploader.on( 'fileQueued', function( file ) {
       $list.append( '<div id="' + file.id + '" class="item">' +
             '<h4 class="info">' + file.name + '</h4>' +
             '<p class="state">等待上传...</p>' +
         '</div>' );
-    }); 
+      }); 
 
-    //传递参数——成果id
-    uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
-      var pid = $('#pid').val();
-      var prodlabel = $('#prodlabel').val();
-      var prodprincipal = $('#prodprincipal').val();
-      // var html = ue.getContent();
-      // alert(html);
-      uploader.option('formData', {
-        "pid":pid,
-        "prodlabel":prodlabel,
-        "prodprincipal":prodprincipal
-        // 'content':html,
-        // {'tnumber':a,'title':b,'categoryid':c,'category':d,'content':e}
-      });        
-    });
+      //传递参数——成果id
+      uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
+      // if (prodlabel){
+        var pid = $('#pid').val();
+        var prodlabel = $('#prodlabel').val();
+        var prodprincipal = $('#prodprincipal').val();
+        // var html = ue.getContent();
+        // alert(html);
+        uploader.option('formData', {
+          "pid":pid,
+          "prodlabel":prodlabel,
+          "prodprincipal":prodprincipal
+          // 'content':html,
+          // {'tnumber':a,'title':b,'categoryid':c,'category':d,'content':e}
+        });
+        // }else{
+        //     alert("名称不能为空");
+        // }         
+      });
 
     // 文件上传过程中创建进度条实时显示。
-    uploader.on( 'uploadProgress', function( file, percentage ) {
+      uploader.on( 'uploadProgress', function( file, percentage ) {
         var $li = $( '#'+file.id ),
             $percent = $li.find('.progress .progress-bar');
         // 避免重复创建
@@ -482,22 +513,22 @@ window.actionEvents = {
         }
         $li.find('p.state').text('上传中');
         $percent.css( 'width', percentage * 100 + '%' );
-    });
+      });
 
-    uploader.on( 'uploadSuccess', function( file ) {
+      uploader.on( 'uploadSuccess', function( file ) {
         $( '#'+file.id ).find('p.state').text('已上传');
-    });
+      });
 
-    uploader.on( 'uploadError', function( file ) {
+      uploader.on( 'uploadError', function( file ) {
         $( '#'+file.id ).find('p.state').text('上传出错');
-    });
+      });
 
-    uploader.on( 'uploadComplete', function( file ) {
+      uploader.on( 'uploadComplete', function( file ) {
         $( '#'+file.id ).find('.progress').fadeOut();
         $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
-    });
+      });
 
-    uploader.on( 'all', function( type ) {
+      uploader.on( 'all', function( type ) {
         if ( type === 'startUpload' ) {
             state = 'uploading';
         } else if ( type === 'stopUpload' ) {
@@ -510,107 +541,112 @@ window.actionEvents = {
         } else {
             $btn.text('开始上传');
         }
-    });
+      });
     
-    $btn.on( 'click', function() {
+      $btn.on( 'click', function() {
         if ( state === 'uploading' ) {
             uploader.stop();
         } else {
             uploader.upload();
         }
-    });
+      });
+    })
 
-})
+    $('#modalTable').on('hide.bs.modal',function(){
+      $list.text("");
+      uploader.destroy();//销毁uploader
+    })
 
-$('#modalTable').on('hide.bs.modal',function(){
-  $list.text("");
-  uploader.destroy();//销毁uploader
-})
-
-
-// 多附件模式
+    // 多附件模式
     $("#addButton1").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
       $("input#pid").remove();
       var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
         $(".modal-body").append(th1);
-
         $('#modalTable1').modal({
-        show:true,
-        backdrop:'static'
+          show:true,
+          backdrop:'static'
         });
     })
 
     var uploader;
     $('#modalTable1').on('shown.bs.modal',function(){
-        // var $ = jQuery,
-        $list = $('#thelist1'),
-        $btn = $('#ctlBtn1'),
-        state = 'pending',
-        // uploader;
-        uploader = WebUploader.create({
-          // 不压缩image
-          resize: false,
-          // swf文件路径
-          swf: '/static/fex-team-webuploader/dist/Uploader.swf',
-          // 文件接收服务端。
-          server: '/project/product/addattachment',
-          // 选择文件的按钮。可选。
-          // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-          pick: '#picker1'
-        });
-    // 当有文件添加进来的时候
-    uploader.on( 'fileQueued', function( file ) {
-      $list.append( '<div id="' + file.id + '" class="item">' +
-            '<h4 class="info">' + file.name + '</h4>' +
-            '<p class="state">等待上传...</p>' +
-        '</div>' );
-    }); 
+      // var $ = jQuery,
+      $list = $('#thelist1'),
+      $btn = $('#ctlBtn1'),
+      state = 'pending',
+      // uploader;
+      uploader = WebUploader.create({
+        // 不压缩image
+        resize: false,
+        // swf文件路径
+        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        // 文件接收服务端。
+        server: '/project/product/addattachment2',
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker1'
+      });
+      // 当有文件添加进来的时候
+      uploader.on( 'fileQueued', function( file ) {
+        $list.append( '<div id="' + file.id + '" class="item">' +
+              '<h4 class="info">' + file.name + '</h4>' +
+              '<p class="state">等待上传...</p>' +
+          '</div>' );
+      }); 
 
-    //传递参数——成果id
-    uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
-      var pid = $('#pid').val();
-      var prodlabel = $('#prodlabel').val();
-      var prodprincipal = $('#prodprincipal').val();
-      // var html = ue.getContent();
-      // alert(html);
-      uploader.option('formData', {
-        "pid":pid,
-        "prodlabel":prodlabel,
-        "prodprincipal":prodprincipal
-        // 'content':html,
-        // {'tnumber':a,'title':b,'categoryid':c,'category':d,'content':e}
-      });        
-    });
+      //传递参数——成果id
+      uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
+        var pid = $('#pid').val();
+        var prodcode = $('#prodcode').val();
+        var prodname = $('#prodname').val();
+        var prodlabel = $('#prodlabel').val();
+        var prodprincipal = $('#prodprincipal').val();
+        // var html = ue.getContent();
+        // alert(html);
+        uploader.option('formData', {
+          "pid":pid,
+          "prodcode":prodcode,
+          "prodname":prodname,
+          "prodlabel":prodlabel,
+          "prodprincipal":prodprincipal
+          // 'content':html,
+          // {'tnumber':a,'title':b,'categoryid':c,'category':d,'content':e}
+        });        
+      });
 
-    // 文件上传过程中创建进度条实时显示。
-    uploader.on( 'uploadProgress', function( file, percentage ) {
+      // 文件上传过程中创建进度条实时显示。
+      uploader.on( 'uploadProgress', function( file, percentage ) {
         var $li = $( '#'+file.id ),
-            $percent = $li.find('.progress .progress-bar');
+        $percent = $li.find('.progress .progress-bar');
         // 避免重复创建
         if ( !$percent.length ) {
-            $percent = $('<div class="progress progress-striped active">' +
-              '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+          $percent = $('<div class="progress progress-striped active">' +
+                '<div class="progress-bar" role="progressbar" style="width: 0%">' +
               '</div>' +
-            '</div>').appendTo( $li ).find('.progress-bar');
+              '</div>').appendTo( $li ).find('.progress-bar');
         }
         $li.find('p.state').text('上传中');
         $percent.css( 'width', percentage * 100 + '%' );
-    });
+      });
 
-    uploader.on( 'uploadSuccess', function( file ) {
-        $( '#'+file.id ).find('p.state').text('已上传');
-    });
+      uploader.on( 'uploadSuccess', function( file ) {
+          $( '#'+file.id ).find('p.state').text('已上传');
+      });
 
-    uploader.on( 'uploadError', function( file ) {
-        $( '#'+file.id ).find('p.state').text('上传出错');
-    });
+      uploader.on( 'uploadError', function( file ) {
+          $( '#'+file.id ).find('p.state').text('上传出错');
+      });
 
-    uploader.on( 'uploadComplete', function( file ) {
-        $( '#'+file.id ).find('.progress').fadeOut();
-        $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
-    });
+      uploader.on( 'uploadComplete', function( file ) {
+          $( '#'+file.id ).find('.progress').fadeOut();
+          $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
+      });
 
-    uploader.on( 'all', function( type ) {
+      uploader.on( 'all', function( type ) {
         if ( type === 'startUpload' ) {
             state = 'uploading';
         } else if ( type === 'stopUpload' ) {
@@ -623,24 +659,34 @@ $('#modalTable').on('hide.bs.modal',function(){
         } else {
             $btn.text('开始上传');
         }
-    });
+      });
     
-    $btn.on( 'click', function() {
-        if ( state === 'uploading' ) {
-            uploader.stop();
-        } else {
-            uploader.upload();
+      $btn.on( 'click', function() {
+        var prodcode = $('#prodcode').val();
+        var prodname = $('#prodname').val();
+        if (prodcode&&prodname){
+          if ( state === 'uploading' ) {
+              uploader.stop();
+          } else {
+              uploader.upload();
+          }
+        }else{
+            alert("编号和名称不能为空"+prodcode+prodname);
         }
-    });
+      });
+    })
 
-})
+    $('#modalTable1').on('hide.bs.modal',function(){
+      $list.text("");
+      uploader.destroy();//销毁uploader
+    })
 
-$('#modalTable1').on('hide.bs.modal',function(){
-  $list.text("");
-  uploader.destroy();//销毁uploader
-})
-// 添加文章
+    //****添加文章
     $("#addButton2").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
       $("input#pid").remove();
       var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
         $(".modal-body").append(th1);
@@ -650,8 +696,14 @@ $('#modalTable1').on('hide.bs.modal',function(){
         backdrop:'static'
         });
     })
-// 编辑成果
-    $("#editorButton").click(function() {
+
+
+    // 编辑成果信息
+    $("#editorProdButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选成果！");
@@ -664,38 +716,174 @@ $('#modalTable1').on('hide.bs.modal',function(){
       $("input#cid").remove();
       var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
       $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $("#projcatename1").val(selectRow[0].Title);
-      $("#projcatecode1").val(selectRow[0].Code);
-      // alert(JSON.stringify(selectRow));
-      // alert(selectRow[0].Id);
-      // var title = $('#'+id).attr("value");
-      // var title = $('#'+id).attr("href");
-      // var categoryid = $('#categoryid').val();
-        $('#modalTable1').modal({
-        show:true,
-        backdrop:'static'
-        });
+      $("#prodcode3").val(selectRow[0].Code);
+      $("#prodname3").val(selectRow[0].Title);
+      $("#prodlabel3").val(selectRow[0].Label);
+      $("#prodprincipal3").val(selectRow[0].Principal);
+
+      $('#modalProdEditor').modal({
+      show:true,
+      backdrop:'static'
+      });
     })
-// 删除成果
-    $("#deleteButton").click(function() {
+
+    // 编辑成果附件——删除附件、文章或追加附件
+    var selectrowid;
+    $("#editorAttachButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
       var selectRow=$('#table0').bootstrapTable('getSelections');
-      // if (selectRow.length<1){
-      //   alert("请先勾选类别！");
-      //   return;
-      // }
+      if (selectRow.length<1){
+        alert("请先勾选成果！");
+        return;
+      }
+      if (selectRow.length>1){
+      alert("请不要勾选一个以上成果！");
+      return;
+      }
+      selectrowid=selectRow[0].Id;
+      $("input#pid").remove();
+      var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
+      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+      $('#attachments').bootstrapTable('refresh', {url:'/project/product/allattachments/'+selectRow[0].Id});//取得所有附件列表和文章列表
+      $('#modalAttachEditor').modal({
+      show:true,
+      backdrop:'static'
+      });
+    })
+
+    var uploader;
+    $('#modalAttachEditor').on('shown.bs.modal',function(){
+      // var $ = jQuery,
+      $list = $('#thelist2'),
+      $btn = $('#ctlBtn2'),
+      state = 'pending',
+      // uploader;
+      uploader = WebUploader.create({
+        // 不压缩image
+        resize: false,
+        // swf文件路径
+        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        // 文件接收服务端。
+        server: '/project/product/updateattachment',
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker2'
+      });
+      // 当有文件添加进来的时候
+      uploader.on( 'fileQueued', function( file ) {
+        $list.append( '<div id="' + file.id + '" class="item">' +
+              '<h4 class="info">' + file.name + '</h4>' +
+              '<p class="state">等待上传...</p>' +
+          '</div>' );
+      }); 
+
+      //传递参数——成果id
+      uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
+        var pid = $('#pid').val();
+        uploader.option('formData', {
+          "pid":pid,
+        });        
+      });
+
+      // 文件上传过程中创建进度条实时显示。
+      uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+        $percent = $li.find('.progress .progress-bar');
+        // 避免重复创建
+        if ( !$percent.length ) {
+          $percent = $('<div class="progress progress-striped active">' +
+                '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+              '</div>' +
+              '</div>').appendTo( $li ).find('.progress-bar');
+        }
+        $li.find('p.state').text('上传中');
+        $percent.css( 'width', percentage * 100 + '%' );
+      });
+
+      uploader.on( 'uploadSuccess', function( file ) {
+          $( '#'+file.id ).find('p.state').text('已上传');
+      });
+
+      uploader.on( 'uploadError', function( file ) {
+          $( '#'+file.id ).find('p.state').text('上传出错');
+      });
+
+      uploader.on( 'uploadComplete', function( file ) {
+          $( '#'+file.id ).find('.progress').fadeOut();
+          $('#attachments').bootstrapTable('refresh', {url:'/project/product/allattachments/'+selectrowid});
+          $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
+      });
+
+      uploader.on( 'all', function( type ) {
+        if ( type === 'startUpload' ) {
+            state = 'uploading';
+        } else if ( type === 'stopUpload' ) {
+            state = 'paused';
+        } else if ( type === 'uploadFinished' ) {
+            state = 'done';
+        }
+        if ( state === 'uploading' ) {
+            $btn.text('暂停上传');
+        } else {
+            $btn.text('开始上传');
+        }
+      });
+    
+      $btn.on( 'click', function() {
+          if ( state === 'uploading' ) {
+              uploader.stop();
+          } else {
+              uploader.upload();
+          }
+      });
+    })
+
+    $('#modalAttachEditor').on('hide.bs.modal',function(){
+      $list.text("");
+      uploader.destroy();//销毁uploader
+    })
+    // 删除成果
+    $("#deleteButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
+      var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<=0) {
         alert("请先勾选成果！");
         return false;
       }
-      var ids=$.map(selectRow,function(row){
-        return row.id;
-      })
-      //删除已选数据
-      $('$table0').bootstrapTable('remove',{
-        field:'id',
-        values:ids
-      });
+      if(confirm("确定删除成果吗？一旦删除将无法恢复！")){
+        var title=$.map(selectRow,function(row){
+          return row.Title;
+        })
+        var ids="";
+        for(var i=0;i<selectRow.length;i++){
+          if(i==0){
+            ids=selectRow[i].Id;
+          }else{
+            ids=ids+","+selectRow[i].Id;
+          }  
+        }
+        $.ajax({
+          type:"post",
+          url:"/project/product/deleteproduct",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#table0').bootstrapTable('remove',{
+              field:'Title',
+              values:title
+            });
+          }
+        });
+      }  
     })
+
   })
 
    /*数据json*/
@@ -830,12 +1018,12 @@ $('#modalTable1').on('hide.bs.modal',function(){
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel" name="prodlabel"></div>
+                  <input type="tel" class="form-control" id="prodlabel1" name="prodlabel1"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodprincipal" name="prodprincipal"></div>
+                  <input type="tel" class="form-control" id="prodprincipal1" name="prodprincipal1"></div>
               </div>
               <!--SWF在初始化的时候指定，在后面将展示-->
               <div id="uploader1" style="position:relative;text-align: center;">
@@ -853,8 +1041,8 @@ $('#modalTable1').on('hide.bs.modal',function(){
               </div> -->
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary" onclick="save1()">保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <!-- <button type="button" class="btn btn-primary" onclick="save1()">保存</button> -->
           </div>
         </div>
       </div>
@@ -864,7 +1052,7 @@ $('#modalTable1').on('hide.bs.modal',function(){
   <!-- 添加文章 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable2">
-      <div class="modal-dialog">
+      <div class="modal-dialog" style="width: 100%">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -877,22 +1065,27 @@ $('#modalTable1').on('hide.bs.modal',function(){
               <div class="form-group must">
                 <label class="col-sm-3 control-label">编号</label>
                 <div class="col-sm-7">
-                  <input type="text" class="form-control" id="prodcode" name="prodcode"></div>
+                  <input type="text" class="form-control" id="prodcode1" name="prodcode1"></div>
               </div>
               <div class="form-group must">
-                <label class="col-sm-3 control-label">名称</label>
+                <label class="col-sm-3 control-label">标题</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodname" name="prodname"></div>
+                  <input type="tel" class="form-control" id="prodname1" name="prodname1"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">副标题</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="subtext1" name="subtext1"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel" name="prodlabel"></div>
+                  <input type="tel" class="form-control" id="prodlabel2" name="prodlabel2"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodprincipal" name="prodprincipal"></div>
+                  <input type="tel" class="form-control" id="prodprincipal2" name="prodprincipal2"></div>
               </div>
             </div>
             <label>文章正文:</label>
@@ -903,6 +1096,51 @@ $('#modalTable1').on('hide.bs.modal',function(){
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             <button type="button" class="btn btn-primary" onclick="save2()">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 文章列表 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalarticle">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">文章列表</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <!-- <div id="pdfs" style="display:none"> -->
+                <!-- <h3>工程目录分级</h3> -->
+                <table id="articles"
+                      data-toggle="table"
+                      data-page-size="5"
+                      data-page-list="[5, 25, 50, All]"
+                      data-unique-id="id"
+                      data-pagination="true"
+                      data-side-pagination="client"
+                      data-click-to-select="true">
+                    <thead>     
+                    <tr>
+                      <th data-width="10" data-checkbox="true"></th>
+                      <th data-formatter="index1">#</th>
+                      <th data-field="Title">名称</th>
+                      <th data-field="FileSize">大小</th>
+                      <th data-field="Content" data-formatter="setArticlecontent">查看</th>
+                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                    </tr>
+                  </thead>
+                </table>
+              <!-- </div> -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
           </div>
         </div>
       </div>
@@ -922,7 +1160,7 @@ $('#modalTable1').on('hide.bs.modal',function(){
           <div class="modal-body">
             <div class="modal-body-content">
               <!-- <div id="pdfs" style="display:none"> -->
-                <h3>工程目录分级</h3>
+                <!-- <h3>工程目录分级</h3> -->
                 <table id="attachs"
                       data-toggle="table"
                       data-page-size="5"
@@ -967,7 +1205,7 @@ $('#modalTable1').on('hide.bs.modal',function(){
           <div class="modal-body">
             <div class="modal-body-content">
               <!-- <div id="pdfs" style="display:none"> -->
-                <h3>工程目录分级</h3>
+                <!-- <h3>工程目录分级</h3> -->
                 <table id="pdfs"
                       data-toggle="table"
                       data-page-size="5"
@@ -998,96 +1236,219 @@ $('#modalTable1').on('hide.bs.modal',function(){
       </div>
     </div>
   </div>
+  <!-- 编辑成果名称等信息 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalProdEditor">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">编辑成果信息</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">编号</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="prodcode3" name="prodcode3"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">标题</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="prodname3" name="prodname3"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">关键字</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="prodlabel3" name="prodlabel3"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">设计</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="prodprincipal3" name="prodprincipal3"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" onclick="updateprod()">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑成果附件 删除附件、文章或追加附件-->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalAttachEditor">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">编辑成果附件</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <div id="attachtoolbar" class="btn-group">
+                <button type="button" data-name="deleteAttachButton" id="deleteAttachButton" class="btn btn-default">
+                <i class="fa fa-trash">删除</i>
+                </button>
+              </div>
+              <table id="attachments"
+                    data-toggle="table"
+                    data-toolbar="#attachtoolbar"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-click-to-select="true">
+                  <thead>     
+                  <tr>
+                    <th data-width="10" data-checkbox="true"></th>
+                    <th data-formatter="index1">#</th>
+                    <th data-field="Title">名称</th>
+                    <th data-field="FileSize">大小</th>
+                    <th data-field="Link" data-formatter="setAttachlink">下载</th>
+                    <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
+                    <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                  </tr>
+                </thead>
+              </table>
+              <!--SWF在初始化的时候指定，在后面将展示-->
+              <div id="uploader1" style="position:relative;text-align: center;">
+              <!--用来存放文件信息-->
+                <div id="thelist2"></div>
+                <div class="btns">
+                  <div id="picker2">选择文件</div>
+                  <button id="ctlBtn2" class="btn btn-default">开始上传</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
 <script type="text/javascript">
 //实例化编辑器
-    //议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
-    // var ue = UE.getEditor('container');
     var ue = UE.getEditor('container', {
-    // toolbars: [
-    //     ['fullscreen', 'source', 'undo', 'redo', 'bold']
-    // ],
-    toolbars: [[
-            'fullscreen', 'source', '|', 'undo', 'redo', '|',
-            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-            'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-            'directionalityltr', 'directionalityrtl', 'indent', '|',
-            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-            'emotion', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
-            'horizontal', 'date', 'time', 'spechars', 'wordimage', '|',
-            'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
-            'print', 'preview', 'searchreplace', 'help', 'drafts'
-        ]],
-    autoHeightEnabled: true,
-    autoFloatEnabled: true
-});
+      autoHeightEnabled: true,
+      autoFloatEnabled: true
+    });
+  /* 2.传入参数表,添加到已有参数表里 通过携带参数，实现不同的页面使用不同controllers*/
+    ue.ready(function () {
+        ue.addListener('focus', function () {//startUpload start-upload startUpload beforeExecCommand是在插入图片之前触发
+            var pid = $('#pid').val();
+            // var html = ue.getContent();
+            ue.execCommand('serverparam', {
+              "pid":pid 
+            });
+        });
+    });
 
-// 批量上传
-function save(){
-      // var radio =$("input[type='radio']:checked").val();
-      var prodname = $('#prodname').val();
-      var prodcode = $('#prodcode').val();
-      var projectid = $('#pid').val();
-      var prodprincipal = $('#prodprincipal').val();
-      var prodlabel = $('#prodlabel').val();
-      var html = ue.getContent();
-      // $('#myModal').on('hide.bs.modal', function () {  
-      if (prodname&&prodcode)
-        {  
-            $.ajax({
-                type:"post",
-                url:"/project/addproduct",
-                data: {pid:projectid,title:prodname,code:prodcode,label:prodlabel,content:html,principal:prodprincipal},//父级id
-                success:function(data,status){
-                  alert("添加“"+data+"”成功！(status:"+status+".)");
-                 }
-            });  
-        }else{
-          alert("请填写编号和名称！");
-          return;
-        } 
-        // $(function(){$('#myModal').modal('hide')}); 
-          $('#modalTable').modal('hide');
+  //添加文章
+  function save2(){
+    // var radio =$("input[type='radio']:checked").val();
+    var projectid = $('#pid').val();
+    var prodcode = $('#prodcode1').val();
+    var prodname = $('#prodname1').val();
+    var subtext = $('#subtext1').val();
+    var prodprincipal = $('#prodprincipal2').val();
+    var prodlabel = $('#prodlabel2').val();
+    var html = ue.getContent();
+    // $('#myModal').on('hide.bs.modal', function () {  
+    if (prodname&&prodcode){  
+      $.ajax({
+        type:"post",
+        url:"/project/product/addarticle",
+        data: {pid:projectid,code:prodcode,title:prodname,subtext:subtext,label:prodlabel,content:html,principal:prodprincipal},//父级id
+        success:function(data,status){
+          alert("添加“"+data+"”成功！(status:"+status+".)");
+          $('#modalTable2').modal('hide');
           $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
-          // "/category/modifyfrm?cid="+cid
-          // window.location.reload();//刷新页面
+        },
+        
+      });
+    }else{
+      alert("请填写编号和名称！");
+      return;
+    }
   }
-// 多附件模式
+  // 编辑成果信息
+  function updateprod(){
+    // var radio =$("input[type='radio']:checked").val();
+    var projectid = $('#cid').val();
+    var prodcode = $('#prodcode3').val();
+    var prodname = $('#prodname3').val();
+    var prodlabel = $('#prodlabel3').val();
+    var prodprincipal = $('#prodprincipal3').val();
+ 
+    if (prodname&&prodcode){  
+      $.ajax({
+        type:"post",
+        url:"/project/product/updateproduct",
+        data: {pid:projectid,code:prodcode,title:prodname,label:prodlabel,principal:prodprincipal},//父级id
+        success:function(data,status){
+          alert("添加“"+data+"”成功！(status:"+status+".)");
+          $('#modalProdEditor').modal('hide');
+          $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
+        },
+        
+      });
+    }else{
+      alert("请填写编号和名称！");
+      return;
+    }
+  }
+  // 删除附件
+    $("#deleteAttachButton").click(function() {
+      if ({{.role}}!=1){
+        alert("权限不够！");
+        return;
+      }
+      var selectRow=$('#attachments').bootstrapTable('getSelections');
+      if (selectRow.length<=0) {
+        alert("请先勾选成果！");
+        return false;
+      }
+      if(confirm("确定删除成果吗？一旦删除将无法恢复！")){
+        var title=$.map(selectRow,function(row){
+          return row.Title;
+        })
+        var ids="";
+        for(var i=0;i<selectRow.length;i++){
+          if(i==0){
+            ids=selectRow[i].Id;
+          }else{
+            ids=ids+","+selectRow[i].Id;
+          }  
+        }
+        $.ajax({
+          type:"post",
+          url:"/project/product/deleteattachment",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#attachments').bootstrapTable('remove',{
+              field:'Title',
+              values:title
+            });
+          }
+        });
+      }  
+    })
 
-// 添加文章
-function save2(){
-      // var radio =$("input[type='radio']:checked").val();
-      var prodname = $('#prodname').val();
-      var prodcode = $('#prodcode').val();
-      var projectid = $('#pid').val();
-      var prodprincipal = $('#prodprincipal').val();
-      var prodlabel = $('#prodlabel').val();
-      var html = ue.getContent();
-      // $('#myModal').on('hide.bs.modal', function () {  
-      if (prodname&&prodcode)
-        {  
-            $.ajax({
-                type:"post",
-                url:"/project/addproduct",
-                data: {pid:projectid,title:prodname,code:prodcode,label:prodlabel,content:html,principal:prodprincipal},//父级id
-                success:function(data,status){
-                  alert("添加“"+data+"”成功！(status:"+status+".)");
-                 }
-            });  
-        }else{
-          alert("请填写编号和名称！");
-          return;
-        } 
-        // $(function(){$('#myModal').modal('hide')}); 
-          $('#modalTable').modal('hide');
-          $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
-          // "/category/modifyfrm?cid="+cid
-          // window.location.reload();//刷新页面
-  }
 </script>
 
 </body>

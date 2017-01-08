@@ -4,11 +4,11 @@ import (
 	// "encoding/json"
 	"engineercms/models"
 	"github.com/astaxie/beego"
-	// "os"
+	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
-	// "strings"
 )
 
 type ProdController struct {
@@ -63,6 +63,7 @@ type ArticleContent struct {
 //根据项目侧栏id查看这个id下的成果页面，数据用GetProducts
 //任何一级目录下都可以放成果
 func (c *ProdController) GetProjProd() {
+	c.Data["IsProject"] = true
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
 	c.Data["Id"] = id
@@ -124,7 +125,7 @@ func (c *ProdController) GetProducts() {
 	} else {
 
 	}
-	//根据id取得所有成果
+	//根据项目id取得所有成果
 	products, err := models.GetProducts(idNum)
 	if err != nil {
 		beego.Error(err)
@@ -208,7 +209,7 @@ func (c *ProdController) GetProducts() {
 	// c.ServeJSON()
 }
 
-//向某个侧栏id下添加成果
+//向某个侧栏id下添加成果——这个没用，用attachment里的addattachment
 func (c *ProdController) AddProduct() {
 	id := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
@@ -233,6 +234,96 @@ func (c *ProdController) AddProduct() {
 	c.ServeJSON()
 	// c.Data["json"] = root
 	// c.ServeJSON()
+}
+
+//编辑成果信息
+func (c *ProdController) UpdateProduct() {
+	id := c.Input().Get("pid")
+	code := c.Input().Get("code")
+	title := c.Input().Get("title")
+	label := c.Input().Get("label")
+	principal := c.Input().Get("principal")
+
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据id添加成果code, title, label, principal, content string, projectid int64
+	err = models.UpdateProduct(idNum, code, title, label, principal)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = "ok"
+	c.ServeJSON()
+}
+
+//删除
+func (c *ProdController) DeleteProduct() {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//循环删除成果
+		//根据成果id取得所有附件
+		attachments, err := models.GetAttachments(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, w := range attachments {
+			//取得附件的成果id——再取得成果的项目目录id——再取得路径
+			attach, err := models.GetAttachbyId(w.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			prod, err := models.GetProd(attach.ProductId)
+			if err != nil {
+				beego.Error(err)
+			}
+			//根据proj的id
+			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
+			if err != nil {
+				beego.Error(err)
+			}
+			path := DiskDirectory + "\\" + attach.FileName
+			//删除附件
+			err = os.Remove(path)
+			if err != nil {
+				beego.Error(err)
+			}
+			//删除附件数据表
+			err = models.DeleteAttachment(w.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		//删除文章，文章中的图片无法删除
+		//取得成果id下所有文章
+		articles, err := models.GetArticles(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		//删除文章表
+		for _, z := range articles {
+			//删除文章数据表
+			err = models.DeleteArticle(z.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		err = models.DeleteProduct(idNum) //删除成果数据表
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
+	}
 }
 
 // {
