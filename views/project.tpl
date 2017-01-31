@@ -6,6 +6,7 @@
 <!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
   <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
   
@@ -110,7 +111,7 @@
             // data: data,         // data is not optional
             data:[{{.json}}],
             levels: 2,
-            enableLinks: true,
+            // enableLinks: true,
             // multiSelect: true
           });  
         // }
@@ -210,7 +211,7 @@
   var iframe = document.getElementById("iframepage");
    try{
     var bHeight = iframe.contentWindow.document.body.scrollHeight;
-     var dHeight = iframe.contentWindow.document.documentElement.scrollHeight; var height = Math.max(bHeight, dHeight); iframe.height = height;
+     var dHeight = iframe.contentWindow.document.documentElement.scrollHeight; var height = Math.max(bHeight, dHeight,800); iframe.height = height;
       // console.log(height);//这个显示老是在变化
        }catch (ex){
         } 

@@ -7,7 +7,8 @@
 
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <script src="/static/js/bootstrap-treeview.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 
@@ -125,11 +126,13 @@
             [
               {
                 text: "欢迎您~{{.Ip}}土豪", 
+                text1: "欢迎您~{{.Ip}}土豪",
                 selectable: true,
                 id: '010',
               },
               {
                 text: "系统设置",
+                text1: "欢迎您~{{.Ip}}土豪",
                 icon: "fa fa-tachometer icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
@@ -148,6 +151,7 @@
                   { 
                     icon: "fa fa-cog",
                     text: "基本设置",
+                    text1: "欢迎您~{{.Ip}}土豪",
                     id: '011',
                     nodeId: '011'
                   },
@@ -183,11 +187,23 @@
                 [
                   { icon: "fa fa-safari",
                     text: '系统权限',
-                    id: '021'
+                    id: '021',
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    }
                   },
                   { icon: "fa fa-navicon",
                     text: '项目权限',
-                    id: '022'
+                    id: '022',
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    }
                   }
                 ]
               },
@@ -208,6 +224,11 @@
                 tags: ['available'],
                 nodes: 
                 [
+                  { 
+                    icon: "fa fa-align-right",
+                    text: "组织结构",
+                    id: '030'
+                  },
                   { icon: "fa fa-users",
                     text: '用户',
                     id: '031'
@@ -235,11 +256,11 @@
                 [
                   { 
                     icon: "fa fa-edit",
-                    text: "编辑",
+                    text: "编辑目录",
                     id: '041'
                   },
                   { 
-                    icon: "fa fa-copy",
+                    icon: "fa fa-edit",
                     text: "同步IP",
                     id: '042'
                   },
@@ -247,16 +268,28 @@
                     icon: "fa fa-lock",
                     text: "项目权限",
                     id: '043'
+                  },
+                  { 
+                    icon: "fa fa-copy",
+                    text: "快捷编辑",
+                    id: '044'
                   }
                 ]
               } 
             ]
             // return data;
 
-          $('#tree').treeview({
+        $('#tree').treeview({
             data: data,         // data is not optional
             levels: 2,
             enableLinks: true,
+            // showCheckbox: true,
+            state: {
+              checked: true,
+              disabled: true,
+              expanded: true,
+              selected: true
+            }
             // multiSelect: true
           });  
         // }
@@ -292,6 +325,8 @@
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
           }else if(data.id=="022"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
+          }else if(data.id=="030"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
           }else if(data.id=="031"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
           }else if(data.id=="032"){
@@ -304,27 +339,26 @@
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
           }else if(data.id=="043"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
+          }else if(data.id=="044"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
           }
           //?secid="+data.Id+"&level="+data.Level;
-        }); 
+        });
 
-
-        var obj = {};
-        obj.text = "123";
-        
-
-        $("#btn").click(function (e) {
-            var arr = $('#tree').treeview('getSelected');
-            for (var key in arr) {
-                c.innerHTML = c.innerHTML + "," + arr[key].id;
-            }
-        })
+        // var obj = {};
+        // obj.text = "123";
+        // $("#btn").click(function (e) {
+        //     var arr = $('#tree').treeview('getSelected');
+        //     for (var key in arr) {
+        //         c.innerHTML = c.innerHTML + "," + arr[key].id;
+        //     }
+        // })
     }) 
 
     function index1(value,row,index){
     // alert( "Data Loaded: " + index );
-            return index+1
-          }
+      return index+1
+    }
 </script>
 
 <div class="col-lg-10">
@@ -338,16 +372,18 @@
 
 
 <script type="text/javascript">
- function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
-  var iframe = document.getElementById("iframepage");
-   try{
-    var bHeight = iframe.contentWindow.document.body.scrollHeight;
-     var dHeight = iframe.contentWindow.document.documentElement.scrollHeight; var height = Math.max(bHeight, dHeight); iframe.height = height;
-      // console.log(height);//这个显示老是在变化
-       }catch (ex){
-        } 
-        } 
-        window.setInterval("reinitIframe()", 200);
+  function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
+    var iframe = document.getElementById("iframepage");
+    try{
+      var bHeight = iframe.contentWindow.document.body.scrollHeight;
+      var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+      var height = Math.max(bHeight, dHeight,800);
+      iframe.height = height;
+       // console.log(height);//这个显示老是在变化
+     }catch (ex){
+     } 
+  } 
+  window.setInterval("reinitIframe()", 200);
  </script>
 
 </body>

@@ -1,5 +1,6 @@
 <!-- 具体一个项目侧栏id下所有成果，不含子目录下的成果 -->
 <!DOCTYPE html>
+<head>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -30,22 +31,13 @@
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css"> -->
   <!-- <script type="text/javascript" src="/static/js/webuploader.js"></script> -->
   <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
-<script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+  <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
 </head>
 
 <body>
 
 <div class="col-lg-12">
   <h3>成果列表</h3>
-              <!--{{.Id}}SWF在初始化的时候指定，在后面将展示-->
-              <!-- <div id="uploader" class="wu-example"> -->
-              <!--用来存放文件信息-->
-                <!-- <div id="thelist" class="uploader-list"></div> -->
-                <!-- <div class="btns"> -->
-                  <!-- <div id="picker">选择文件</div> -->
-                  <!-- <button id="ctlBtn" class="btn btn-default">开始上传</button> -->
-                <!-- </div> -->
-              <!-- </div> -->
 <div id="toolbar1" class="btn-group">
         <!-- 多文件批量上传 -->
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
@@ -63,8 +55,11 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
+        <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
+        <i class="fa fa-refresh">同步</i>
+        </button>
 </div>
-<!--        data-click-to-select="true" -->
+<!--data-click-to-select="true" -->
 <table id="table0" 
         data-toggle="table" 
         data-url="/project/products/{{.Id}}"
@@ -90,6 +85,7 @@
         <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
         <th data-width="10" data-radio="true"></th>
         <th data-formatter="index1">#</th>
+        <!-- <th data-field="Id">编号</th> -->
         <th data-field="Code">编号</th>
         <th data-field="Title">名称</th>
         <th data-field="Label" data-formatter="setLable">关键字</th>
@@ -102,47 +98,12 @@
       </tr>
     </thead>
 </table>
-<!-- <table id="tabletest" 
-        data-search="true"
-        data-show-refresh="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-query-params="queryParams"
-        data-sort-name="ProjectName"
-        data-sort-order="desc"
-        data-page-size="5"
-        data-page-list="[5,20, 50, 100, All]"
-        data-unique-id="id"
-        data-pagination="true"
-        data-side-pagination="client"
-        data-single-select="true"
-        >
-    <thead>        
-      <tr>
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Code" data-formatter="setCodetest">编号</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Label" data-formatter="setLable">关键字</th>
-        <th data-field="Principal">设计</th>
-        <th data-field="Content">文章</th>
-        <th data-field="Attachment">附件</th>
-        <th data-field="PDF">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-      </tr>
-    </thead>
-</table> -->
-<!-- <div class="gridview2"></div> -->
 
 <script type="text/javascript">
   /*数据json使用json数据要删除data-toggle="table"*/
   // var json =
      // 保留***[{"Id":"1","Code":[这个数组也行"SL0001-510-08","SL0001-510-08"],"Title":"水利枢纽布置图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      // [{"Id":"2","Code":"SL0002-530-10,SL0002-530-10","Title":"电力布置图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      // {"Id":"3","Code":"SL0003-650-20","Title":"市政布置图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      // {"Id":"4","Code":"SL0004-750-60","Title":"建筑平面图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      // {"Id":"5","Code":"SL0005-870-20","Title":"交通纵面图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      // {"Id":"6","Code":"SL0006-230-25","Title":"境外鸟瞰图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"}];
+
         /*初始化table数据*/
         // $(function(){
         //     $("#tabletest").bootstrapTable({
@@ -166,13 +127,16 @@
     return "<a href='/project/product/attachment/"+row.Id+"'>" + value + "</a>";
   }
   function setLable(value,row,index){
-    array=value.split(",")
-    var labelarray = new Array() 
-    for (i=0;i<array.length;i++)
-    {
-      labelarray[i]="<a href='/project/product/search/"+array[i]+"'>" + array[i] + "</a>";
-    }
-    return labelarray.join(",");
+    // alert(value);
+    if (value){//注意这里如果value未定义则出错，一定要加这个判断。
+      var array=value.split(",")
+      var labelarray = new Array() 
+      for (i=0;i<array.length;i++)
+      {
+        labelarray[i]="<a href='/project/product/keysearch?keyword="+array[i]+"'>" + array[i] + "</a>";
+      }
+        return labelarray.join(",");
+      }
   }  
   function setCodetest(value,row,index){
     //保留，数组和字符串以及循环的处理
@@ -183,13 +147,15 @@
     //   labelarray[i]="<a href='/project/product/attachment/"+value[i]+"'>" + value[i] + "</a>";
     // }
     // if (value.match(",")!=null){
-    array=value.split(",")
-    var labelarray = new Array() 
-    for (i=0;i<array.length;i++)
-    {
-      labelarray[i]="<a href='/project/product/attachment/"+array[i]+"'>" + array[i] + "</a>";
+    if (value){
+      array=value.split(",")
+      var labelarray = new Array() 
+      for (i=0;i<array.length;i++)
+      {
+        labelarray[i]="<a href='/project/product/attachment/"+array[i]+"'>" + array[i] + "</a>";
+      }
+      return labelarray.join(",");
     }
-    return labelarray.join(",");
   // }else{
     // return "<a href='/project/product/attachment/"+value+"'>" + value + "</a>";
   // }
@@ -206,26 +172,30 @@
   }
   function setArticle(value,row,index){
     // return '<a class="article" href="javascript:void(0)" title="article"><i class="fa fa-file-text-o"></i></a>';
-    if (value.length==1){
-      articleUrl= '<a href="/project/product/article/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
-      return articleUrl;
-    }else if(value.length==0){
+    if (value){
+      if (value.length==1){//'<a href="/project/product/article/'
+        articleUrl= '<a href="'+value[0].Link+'/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
+        return articleUrl;
+      }else if(value.length==0){
                     
-    }else if(value.length>1){
-      articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
-      return articleUrl;
+      }else if(value.length>1){
+        articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
+        return articleUrl;
+      }
     }
   }
 // var bb;
   function setAttachment(value,row,index){
-    if (value.length==1){
-      attachUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
-      return attachUrl;
-    }else if(value.length==0){
+    if (value){
+      if (value.length==1){
+        attachUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        return attachUrl;
+      }else if(value.length==0){
                     
-    }else if(value.length>1){
-      attachUrl= "<a class='attachment' href='javascript:void(0)' title='查看附件列表'><i class='fa fa-list-ol'></i></a>";
-      return attachUrl;
+      }else if(value.length>1){
+        attachUrl= "<a class='attachment' href='javascript:void(0)' title='查看附件列表'><i class='fa fa-list-ol'></i></a>";
+        return attachUrl;
+      }
     }
           // $.ajax({//这种同步加载行不通，会混乱。异步又无法传出返回值data
             // type:"get",//这里是否一定要用post？？？
@@ -252,42 +222,71 @@
 
   // var pdfUrl;
   function setPdf(value,row,index){
-    // return value;
-    // alert(value[0].Link);
-    if (value.length==1){
-      pdfUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
-      return pdfUrl;
-    }else if(value.length==0){
+    if (value){
+      if (value.length==1){
+        pdfUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+        return pdfUrl;
+      }else if(value.length==0){
                     
-    }else if(value.length>1){
-      pdfUrl= "<a class='pdf' href='javascript:void(0)' title='查看pdf列表'><i class='fa fa-list-ol'></i></a>";
-      return pdfUrl;
-    } 
-    // $.ajax({
-            // type:"get",//这里是否一定要用post？？？
-            // url:"/project/product/pdf/"+row.Id,
-            // data: {CatalogId:row.Id},
-            // dataType:'json',
-            // async:false,//必须加这个异步为否定，即同步，否则bb传不出去
-            // success:function(data,status){//数据提交成功时返回数据
-                // $.each(data,function(i,d){
-                //     $("#cars").append('<option value="' + data[i].Username + '"></option>');
-                  // });
-            //       if (data.length==1){
-            //         pdfUrl= '<a href="'+data[0].Link+'/'+data[0].Title+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
-            //         return pdfUrl;
-            //       }else if(data.length==0){
-                    
-            //       }else if(data.length>1){
-            //         pdfUrl= "<a class='pdf' href='javascript:void(0)' title='查看pdf列表'><i class='fa fa-list-ol'></i></a>";
-            //         return pdfUrl;
-            //       } 
-            // }
-    // });
+      }else if(value.length>1){
+        pdfUrl= "<a class='pdf' href='javascript:void(0)' title='查看pdf列表'><i class='fa fa-list-ol'></i></a>";
+        return pdfUrl;
+      }
+    }
   }
-  //最后面弹出文章列表中用的
+
+  window.actionEvents = {
+    'click .article': function (e, value, row, index) {
+      var site=/http:\/\/.*?\//.exec(value[1].Link);//非贪婪模式 
+      if (site){
+        $('#articles').bootstrapTable('refresh', {url:'/project/product/syncharticles?site='+site+'&id='+row.Id});
+      }else{
+        $('#articles').bootstrapTable('refresh', {url:'/project/product/articles/'+row.Id});
+      }
+      $('#modalarticle').modal({
+        show:true,
+        backdrop:'static'
+      }); 
+    },
+    'click .attachment': function (e, value, row, index) {
+      // for(var i=0;i<value.length;i++)
+      // alert(value[i].Link);
+      // var ret=/http:(.*)\:/.exec(value[i].Link);//http://127.0.0.1:
+      var site=/http:\/\/.*?\//.exec(value[1].Link);//非贪婪模式 
+      if (site){//跨域
+        // alert("1");
+        // $.getJSON(ret+'project/product/attachment/'+row.Id,function(){
+          // $('#attachs').bootstrapTable('load', randomData());
+        // })
+        $('#attachs').bootstrapTable('refresh', {url:'/project/product/synchattachment?site='+site+'&id='+row.Id});
+        // $('#attachs').bootstrapTable('refresh', {url:site+'project/product/attachment/'+row.Id});
+      }else{
+        // alert("2");
+        $('#attachs').bootstrapTable('refresh', {url:'/project/product/attachment/'+row.Id});
+        }
+        $('#modalattach').modal({
+          show:true,
+          backdrop:'static'
+        });
+    },
+
+    'click .pdf': function (e, value, row, index) {
+      var site=/http:\/\/.*?\//.exec(value[1].Link);//非贪婪模式 
+      if (site){//跨域
+        $('#pdfs').bootstrapTable('refresh', {url:'/project/product/synchpdf?site='+site+'&id='+row.Id});
+      }else{
+        $('#pdfs').bootstrapTable('refresh', {url:'/project/product/pdf/'+row.Id});
+      }
+      $('#modalpdf').modal({
+        show:true,
+        backdrop:'static'
+      }); 
+    },
+  };
+
+  //最后面弹出文章列表中用的_根据上面的click，弹出模态框，给模态框中的链接赋值
   function setArticlecontent(value,row,index){
-    articleUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+    articleUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-text-o"></i></a>';
       return articleUrl;
   }
   //最后面弹出附件列表中用的
@@ -300,59 +299,6 @@
     pdfUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
       return pdfUrl;
   }
-  //这个没用
-  // function actionFormatter(value, row, index) {
-  //   return [
-  //       '<a class="send" href="javascript:void(0)" title="提交">',
-  //       '<i class="glyphicon glyphicon-step-forward"></i>',
-  //       '</a>&nbsp;',
-  //       '<a class="downsend" href="javascript:void(0)" title="退回">',
-  //       '<i class="glyphicon glyphicon-step-backward"></i>',
-  //       '</a>&nbsp;',
-  //       '<a class="remove" href="javascript:void(0)" title="删除">',
-  //       '<i id="delete" class="glyphicon glyphicon-remove"></i>',
-  //       '</a>'
-  //   ].join('');
-  // }
-// '<a class="edit ml10" href="javascript:void(0)" title="退回">','<i class="glyphicon glyphicon-edit"></i>','</a>'
-  window.actionEvents = {
-    'click .article': function (e, value, row, index) {
-        // if(confirm("暂时不支持查看文章！土豪~")){
-        // }
-      $('#articles').bootstrapTable('refresh', {url:'/project/product/articles/'+row.Id});
-      $('#modalarticle').modal({
-        show:true,
-        backdrop:'static'
-      }); 
-    },
-    'click .attachment': function (e, value, row, index) {
-      $('#attachs').bootstrapTable('refresh', {url:'/project/product/attachment/'+row.Id});
-      $('#modalattach').modal({
-        show:true,
-        backdrop:'static'
-      });
-    },
-    'click .pdf': function (e, value, row, index) {
-      // alert("商品名称：" +row.Id);
-        // if(confirm("确定提交该行吗？")){
-        //后台获取附件——如果大于一个，则打开模态框，否则直接打开/下载
-        // var removeline=$(this).parents("tr")
-          // $.ajax({
-          // type:"get",//这里是否一定要用post？？？
-          // url:"/project/product/pdf/"+row.Id,
-          // data: {CatalogId:row.Id},
-            // success:function(data,status){//数据提交成功时返回数据
-              $('#pdfs').bootstrapTable('refresh', {url:'/project/product/pdf/'+row.Id});
-              $('#modalpdf').modal({
-                show:true,
-                backdrop:'static'
-              }); 
-              // alert("提交“"+data+"”成功！(status:"+status+".)");
-            // }
-          // });  
-        // }
-    },
-  };
   // 改变点击行颜色
   // $(function(){
      // $("#table").bootstrapTable('destroy').bootstrapTable({
@@ -420,23 +366,6 @@
   //     });
   // });
 
-
-  // $(document).ready(function() {
-  // $("#addButton").click(function() {
-    
-  // var selectRow=$('#table').bootstrapTable('getSelections');  
-  // if (selectRow.length<1){
-  // selectRow=$('#table').bootstrapTable('getSelections');
-  // alert("请选择"+selectRow.length);
-  // return;
-  // }
-        // $('#modalTable').modal({
-        // show:true,
-        // backdrop:'static'
-        // });
-    // })
-  // })
-
   $(document).ready(function() {
     // 批量上传
     $("#addButton").click(function() {
@@ -486,21 +415,14 @@
         var pid = $('#pid').val();
         var prodlabel = $('#prodlabel').val();
         var prodprincipal = $('#prodprincipal').val();
-        // var html = ue.getContent();
-        // alert(html);
         uploader.option('formData', {
           "pid":pid,
           "prodlabel":prodlabel,
           "prodprincipal":prodprincipal
-          // 'content':html,
-          // {'tnumber':a,'title':b,'categoryid':c,'category':d,'content':e}
-        });
-        // }else{
-        //     alert("名称不能为空");
-        // }         
+        }); 
       });
 
-    // 文件上传过程中创建进度条实时显示。
+      // 文件上传过程中创建进度条实时显示。
       uploader.on( 'uploadProgress', function( file, percentage ) {
         var $li = $( '#'+file.id ),
             $percent = $li.find('.progress .progress-bar');
@@ -710,9 +632,23 @@
         return;
       }
       if (selectRow.length>1){
-      alert("请不要勾选一个以上成果！");
-      return;
+        alert("请不要勾选一个以上成果！");
+        return;
       }
+      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+      }
+      if (selectRow[0].Articlecontent[0]){
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+      }
+      if (selectRow[0].Pdflink[0]){
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+      }
+      if (site){
+        alert("同步成果不允许！");
+        return;
+      }
+        
       $("input#cid").remove();
       var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
       $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
@@ -742,6 +678,19 @@
       if (selectRow.length>1){
       alert("请不要勾选一个以上成果！");
       return;
+      }
+      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+      }
+      if (selectRow[0].Articlecontent[0]){
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+      }
+      if (selectRow[0].Pdflink[0]){
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+      }
+      if (site){
+        alert("同步成果不允许！");
+        return;
       }
       selectrowid=selectRow[0].Id;
       $("input#pid").remove();
@@ -855,6 +804,19 @@
       if (selectRow.length<=0) {
         alert("请先勾选成果！");
         return false;
+      }
+      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+      }
+      if (selectRow[0].Articlecontent[0]){
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+      }
+      if (selectRow[0].Pdflink[0]){
+      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+      }
+      if (site){
+        alert("同步成果不允许！");
+        return;
       }
       if(confirm("确定删除成果吗？一旦删除将无法恢复！")){
         var title=$.map(selectRow,function(row){
@@ -1129,8 +1091,8 @@
                       <th data-width="10" data-checkbox="true"></th>
                       <th data-formatter="index1">#</th>
                       <th data-field="Title">名称</th>
-                      <th data-field="FileSize">大小</th>
-                      <th data-field="Content" data-formatter="setArticlecontent">查看</th>
+                      <th data-field="Subtext">副标题</th>
+                      <th data-field="Link" data-formatter="setArticlecontent">查看</th>
                       <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
                       <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
                     </tr>
@@ -1279,7 +1241,7 @@
       </div>
     </div>
   </div>
-  <!-- 编辑成果附件 删除附件、文章或追加附件-->
+  <!-- 编辑成果附件 删除附件或追加附件-->
   <div class="form-horizontal">
     <div class="modal fade" id="modalAttachEditor">
       <div class="modal-dialog">
@@ -1449,6 +1411,49 @@
       }  
     })
 
+    //******表格追加项目同步ip中的数据*******
+    $(function () {
+        $('#synchIP').click(function () {
+          // alert("ha ");
+          $.ajax({
+            type:"get",
+            url:"/project/synchproducts/"+{{.Id}},
+            // data: {ids:ids},
+            success:function(data,status){
+              alert("同步成功！(status:"+status+".)");
+              //追加数据
+              $('#table0').bootstrapTable('append', data);
+              $('#table0').bootstrapTable('scrollTo', 'bottom');
+            }
+          });
+        });
+    });
+    // $(document).ready(function() {
+    //   $('#table0').bootstrapTable({
+    //     // onLoadSuccess: function(){
+    //       onPostBody: function(){
+    //       alert("加载成功");
+    //     $('#table0').bootstrapTable('append', randomData());
+    //     $('#table0').bootstrapTable('scrollTo', 'bottom'); 
+    //          return false;
+    //       }
+    //     });
+    // });
+    function randomData() {
+        var startId = ~~(Math.random() * 100),
+                rows = [];
+        for (var i = 0; i < 10; i++) {
+            rows.push({
+              Id: startId + i,
+              Code:startId + i,
+              Title: 'test' + (startId + i),
+                // id: startId + i,
+                // name: 'test' + (startId + i),
+                // price: '$' + (startId + i)
+            });
+        }
+        return rows;
+    }
 </script>
 
 </body>

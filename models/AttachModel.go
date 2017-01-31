@@ -29,11 +29,10 @@ func init() {
 //添加附件到成果id下
 //如果附件名称已经存在，则不再追加写入数据库
 //应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
-
 func AddAttachment(filename string, filesize, downloads, productid int64) (id int64, err error) {
 	o := orm.NewOrm()
 	var attach Attachment
-	err = o.QueryTable("Attachment").Filter("filename", filename).One(&attach)
+	err = o.QueryTable("Attachment").Filter("productid", productid).Filter("filename", filename).One(&attach)
 	if err == orm.ErrNoRows { // 没有找到记录
 		attachment := &Attachment{
 			FileName:  filename,

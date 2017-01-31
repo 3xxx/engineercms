@@ -1,3 +1,4 @@
+//project只能是运行ip权限下操作，即只判断iprole，不提供远程操作
 package controllers
 
 import (
@@ -5,6 +6,7 @@ import (
 	"engineercms/models"
 	"github.com/astaxie/beego"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -14,8 +16,10 @@ type ProjController struct {
 }
 
 type Pidstruct struct {
-	ParentId     int64
-	ParentIdPath string
+	ParentId        int64
+	ParentTitle     string
+	ParentIdPath    string
+	ParentTitlePath string
 }
 
 //成果页导航条
@@ -26,9 +30,18 @@ type Navbartruct struct {
 
 //项目列表页面
 func (c *ProjController) Get() {
-	c.Data["IsProject"] = true
+	role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role <= 1 && role > 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+
+	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
-	role := Getiprole(c.Ctx.Input.IP())
 	c.Data["role"] = role
 	c.TplName = "projects.tpl"
 	//取得项目类别，给添加项目模态框选项用
@@ -63,9 +76,22 @@ func (c *ProjController) GetProjects() {
 	}
 }
 
-//根据ip查看项目，查出项目目录
+//根据id查看项目，查出项目目录
 func (c *ProjController) GetProject() {
+	role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role <= 1 && role > 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+
 	c.Data["IsProject"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
@@ -92,20 +118,202 @@ func (c *ProjController) GetProject() {
 	// }
 	// height := intmax(grade[0], grade[1:]...)
 	//递归生成目录json
-	root := FileNode{category.Id, category.Title, []*FileNode{}}
+	root := FileNode{category.Id, category.Title, "", []*FileNode{}}
 	walk(category.Id, &root)
 	// beego.Info(root)
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
-	c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.ServeJSON()
 	c.Data["Category"] = category
 	c.TplName = "project.tpl"
 }
 
+//后台根据id查出项目目录，以便进行编辑
+func (c *ProjController) GetProjectCate() {
+	id := c.Ctx.Input.Param(":id")
+	// id := c.Input().Get("id")
+	var err error
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目本身
+	category, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//递归生成目录json
+	root := FileNode{category.Id, category.Title, category.Code, []*FileNode{}}
+	walk(category.Id, &root)
+
+	c.Data["json"] = root //data
+	c.ServeJSON()
+}
+
+//后台添加项目id的子节点
+func (c *ProjController) AddProjectCate() {
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+	// id := c.Ctx.Input.Param(":id")
+	// pid := c.Input().Get("pid")//项目id
+	nodeid := c.Input().Get("id") //节点nodeid
+	// beego.Info(nodeid)
+	var err error
+	//id转成64为
+	idNum, err := strconv.ParseInt(nodeid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取节点id——
+	category, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//直接添加子节点
+	title := c.Input().Get("name")
+	code := c.Input().Get("code")
+	parentid := category.Id
+	var parentidpath, parenttitlepath string
+	if category.ParentIdPath != "" {
+		parentidpath = category.ParentIdPath + "-" + strconv.FormatInt(category.Id, 10)
+		parenttitlepath = category.ParentTitlePath + "-" + category.Title
+
+	} else {
+		parentidpath = strconv.FormatInt(category.Id, 10)
+		parenttitlepath = category.Title
+	}
+	grade := category.Grade + 1
+	Id, err := models.AddProject(code, title, "", "", parentid, parentidpath, parenttitlepath, grade)
+	if err != nil {
+		beego.Error(err)
+	}
+	//添加文件夹
+	//根据proj的id——这个放deleteproject前面，否则项目数据表删除了就取不到路径了
+	_, DiskDirectory, err := GetUrlPath(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(DiskDirectory)
+	parentpath := DiskDirectory
+	// beego.Info(newpath)
+	//建立目录，并返回作为父级目录
+	err = os.MkdirAll(parentpath+"\\"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	if err != nil {
+		beego.Error(err)
+	}
+
+	c.Data["json"] = Id
+	c.ServeJSON()
+}
+
+//后台修改项目目录节点名称
+func (c *ProjController) UpdateProjectCate() {
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+	// id := c.Ctx.Input.Param(":id")
+	id := c.Input().Get("id")
+	code := c.Input().Get("code")
+	title := c.Input().Get("name")
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据proj的id——这个放deleteproject前面，否则项目数据表删除了就取不到路径了
+	_, DiskDirectory, err := GetUrlPath(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(DiskDirectory)
+	path1 := DiskDirectory
+	newpath1 := filepath.Dir(DiskDirectory)
+	// beego.Info(newpath1)
+	newpath := newpath1 + "\\" + title
+	// beego.Info(newpath)
+	err = os.Rename(path1, newpath)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdateProject(idNum, code, title, "", "")
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = id //data
+	c.ServeJSON()
+}
+
+//后台删除项目目录节点——这个用删除项目代替了。
+//删除多节点
+//删除多节点的子节点
+func (c *ProjController) DeleteProjectCate() {
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+	// id := c.Ctx.Input.Param(":id")
+	// id := c.Input().Get("id")
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	beego.Info(array)
+	for _, v2 := range array {
+		//id转成64为
+		idNum, err := strconv.ParseInt(v2, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//取出所有下级
+		cates, err := models.GetProjectsbyPid(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, v1 := range cates { //删除下级目录
+			err = models.DeleteProject(v1.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		//根据proj的id——这个放deleteproject前面，否则项目数据表删除了就取不到路径了
+		_, DiskDirectory, err := GetUrlPath(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(DiskDirectory)
+		path := DiskDirectory
+		//直接删除这个文件夹，remove删除文件
+		err = os.RemoveAll(path)
+		if err != nil {
+			beego.Error(err)
+		}
+		//删除目录本身
+		err = models.DeleteProject(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = "ok" //data
+	c.ServeJSON()
+}
+
 //根据项目侧栏id查看这个id下的成果，不含子目录中的成果
 //任何一级目录下都可以放成果
-//这个作废
+//这个作废——以product中的GetProducts
 func (c *ProjController) GetProjProd() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -244,6 +452,14 @@ func (c *ProjController) GetProjNav() {
 
 //添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// rows := c.Input().Get("rows2[0][0]")
 	// beego.Info(rows)
 	projcode := c.Input().Get("code")
@@ -253,7 +469,7 @@ func (c *ProjController) AddProject() {
 	//先保存项目名称到数据库，parentid为0，返回id作为下面二级三级四级……的parentid
 	//然后递归保存二级三级……到数据库
 	//最后递归生成硬盘目录
-	Id, err := models.AddProject(projcode, projname, projlabe, principal, 0, "", 1)
+	Id, err := models.AddProject(projcode, projname, projlabe, principal, 0, "", "", 1)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -299,7 +515,9 @@ func (c *ProjController) AddProject() {
 	//可以递归了
 	idarr := make([]Pidstruct, 1)
 	idarr[0].ParentId = Id
+	idarr[0].ParentTitle = projcode + projname
 	idarr[0].ParentIdPath = "" //strconv.FormatInt(Id, 10)
+	idarr[0].ParentTitlePath = ""
 	write(idarr, nodes, 2, height)
 	//递归创建文件夹
 	patharr := make([]Pathstruct, 1)
@@ -311,6 +529,14 @@ func (c *ProjController) AddProject() {
 
 //还没改，应该是updateproj
 func (c *ProjController) UpdateProject() {
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
 	title := c.Input().Get("title")
@@ -335,10 +561,19 @@ func (c *ProjController) UpdateProject() {
 }
 
 //根据id删除proj
+//后台删除目录，
 func (c *ProjController) DeleteProject() {
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	//查所有子孙项目，循环删除
 	ids := c.GetString("ids")
-	beego.Info(ids)
+	// beego.Info(ids)
 	array := strings.Split(ids, ",")
 	//循环项目id
 	for _, v := range array {
@@ -442,21 +677,29 @@ func write(pid []Pidstruct, nodes []*models.AdminCategory, igrade, height int) (
 		for _, v1 := range nodes {
 			if v1.Grade == igrade {
 				title := v1.Title
+				code := v1.Code
 				parentid := v.ParentId
+
 				var parentidpath string
+				var parenttitlepath string
 				if v.ParentIdPath != "" {
 					parentidpath = v.ParentIdPath + "-" + strconv.FormatInt(v.ParentId, 10)
+					parenttitlepath = v.ParentTitlePath + "-" + v.ParentTitle
 				} else {
 					parentidpath = strconv.FormatInt(v.ParentId, 10)
+					parenttitlepath = v.ParentTitle
 				}
+
 				grade := igrade
-				Id, err := models.AddProject("", title, "", "", parentid, parentidpath, grade)
+				Id, err := models.AddProject(code, title, "", "", parentid, parentidpath, parenttitlepath, grade)
 				if err != nil {
 					beego.Error(err)
 				}
 				var cid1 Pidstruct
 				cid1.ParentId = Id
+				cid1.ParentTitle = title
 				cid1.ParentIdPath = parentidpath
+				cid1.ParentTitlePath = parenttitlepath
 				cid = append(cid, cid1) //每次要清0吗？
 			}
 		}
@@ -471,6 +714,7 @@ func write(pid []Pidstruct, nodes []*models.AdminCategory, igrade, height int) (
 type FileNode struct {
 	Id        int64       `json:"id"`
 	Title     string      `json:"text"`
+	Code      string      `json:"code"` //分级目录代码
 	FileNodes []*FileNode `json:"nodes"`
 }
 
@@ -485,8 +729,9 @@ func walk(id int64, node *FileNode) {
 	for _, proj := range files {
 		id := proj.Id
 		title := proj.Title
+		code := proj.Code
 		// 将当前名和id作为子节点添加到目录下
-		child := FileNode{id, title, []*FileNode{}}
+		child := FileNode{id, title, code, []*FileNode{}}
 		node.FileNodes = append(node.FileNodes, &child)
 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
 		if models.Projhasson(proj.Id) {

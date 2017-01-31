@@ -1,9 +1,19 @@
                        EngineerCMS revision history
-2, Merit 0.91 (Sep 7, 2016)
-	+) Add datepicker
-	+) Add category select
-	+) Add userdefined category
-	*) Fixed bug of send
-1, Merit 0.9 (Sep 1, 2016)
+4, EngineerCMS 0.92 (Feb 10, 2017)
+	+) Add project role
+	+) Add cms service
+	*) Fixed bug of product editor
+3, EngineerCMS 0.92 (Jan 29, 2017)
+	+) Add treeview editor
+	+) Add user login
+	+) Add index tpl
+	+) Add product synchronization
+	*) Fixed bug of ipmap
+2, EngineerCMS 0.91 (Sep 7, 2016)
+	+) Add admin ipsegment
+	+) Add admin secoffice
+	+) Add admin calendar
+	*) Fixed bug of project
+1, EngineerCMS 0.9 (Sep 1, 2016)
 	+) Initial public released edition
-	*) Fixed bug of secoffice
+	*) Fixed bug of product attachment

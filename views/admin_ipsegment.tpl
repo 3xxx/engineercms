@@ -184,19 +184,22 @@
           ids=ids+","+selectRow[i].Id;
         }  
       }
-      $.ajax({
-        type:"post",
-        url:"/admin/ipsegment/deleteipsegment",
-        data: {ids:ids},
-        success:function(data,status){
-          alert("删除“"+data+"”成功！(status:"+status+".)");
-          //删除已选数据
-          $('#table0').bootstrapTable('remove',{
-            field:'Title',
-            values:title
-          });
-        }
-      });  
+
+      if(confirm("确定删除吗？一旦删除将无法恢复！")){
+        $.ajax({
+          type:"post",
+          url:"/admin/ipsegment/deleteipsegment",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#table0').bootstrapTable('remove',{
+              field:'Title',
+              values:title
+            });
+          }
+        }); 
+      } 
     })
 
   })

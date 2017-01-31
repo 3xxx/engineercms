@@ -14,13 +14,21 @@ type AdminController struct {
 }
 
 func (c *AdminController) Get() {
-	role := Getiprole(c.Ctx.Input.IP())
-	if role == 1 {
-		c.TplName = "admin.tpl"
-	} else {
-		c.Data["json"] = "权限不够！"
-		c.ServeJSON()
+	iprole := Getiprole(c.Ctx.Input.IP())
+	if iprole != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
 	}
+	// role := Getiprole(c.Ctx.Input.IP())
+	// if role == 1 {
+	c.TplName = "admin.tpl"
+	// } else {
+	// 	c.Data["json"] = "权限不够！"
+	// 	c.ServeJSON()
+	// }
 	c.Data["Ip"] = c.Ctx.Input.IP()
 }
 
@@ -43,6 +51,8 @@ func (c *AdminController) Admin() {
 		c.TplName = "admin_systemrole.tpl"
 	case "022": //项目权限
 		c.TplName = "admin_projectrole.tpl"
+	case "030": //组织结构
+		c.TplName = "admin_department.tpl"
 	case "031": //用户
 		c.TplName = "admin_users.tpl"
 	case "032": //IP地址段
@@ -50,11 +60,13 @@ func (c *AdminController) Admin() {
 	case "033": //用户组
 		c.TplName = "admin_usergroup.tpl"
 	case "041": //项目编辑
-		c.TplName = "admin_projectseditor.tpl"
+		c.TplName = "admin_projectstree.tpl"
 	case "042": //同步IP async
 		c.TplName = "admin_projectsynch.tpl"
 	case "043": //项目权限
-		c.TplName = "admin_projectcaterole.tpl"
+		c.TplName = "admin_projectsrole.tpl"
+	case "044": //项目目录快捷编辑
+		c.TplName = "admin_projectseditor.tpl"
 	default:
 		c.TplName = "admin_calendar.tpl"
 	}
@@ -241,7 +253,7 @@ func (c *AdminController) UpdateIpsegment() {
 	Createip()
 }
 
-//删除
+//删除ip
 func (c *AdminController) DeleteIpsegment() {
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
@@ -260,6 +272,7 @@ func (c *AdminController) DeleteIpsegment() {
 			c.ServeJSON()
 		}
 	}
+	Createip()
 }
 
 //查询IP地址段
@@ -361,8 +374,19 @@ func Createip() {
 
 //取得访问者的权限
 func Getiprole(ip string) (role int) {
-	role = Iprolemaps[ip]
-	return role
+	role, ok := Iprolemaps[ip]
+	if ok {
+		return role
+	} else {
+		return 5
+	}
+	//元素查找，这是通用的使用方法
+	// v, ok := personDB["test1"]
+	// if !ok {
+	//     fmt.Println(" 没有找到信息")
+	//     return
+	// }
+
 }
 
 //获取下一个IP
@@ -683,6 +707,228 @@ func (c *AdminController) DeleteCalendar() {
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
+	}
+}
+
+//******编辑项目同步ip**********
+//根据项目id查询ip
+func (c *AdminController) SynchIp() {
+	id := c.Ctx.Input.Param(":id")
+	c.Data["Id"] = id
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	// var categories []*models.AdminCategory
+	var err error
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	synchips, err := models.GetAdminSynchIp(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	c.Data["json"] = synchips
+	c.ServeJSON()
+}
+
+//添加
+func (c *AdminController) AddsynchIp() {
+	// pid := c.Ctx.Input.Param(":id")
+	pid := c.Input().Get("pid")
+	username := c.Input().Get("username")
+	ip := c.Input().Get("ip")
+	port := c.Input().Get("port")
+	//pid转成64为
+	var pidNum int64
+	var err error
+	// if pid != "" {
+	pidNum, err = strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	// } else {
+	// 	pidNum = 0
+	// }
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	_, err = models.AddAdminSynchIp(pidNum, username, ip, port)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//修改
+func (c *AdminController) UpdatesynchIp() {
+	// pid := c.Ctx.Input.Param(":id")
+	cid := c.Input().Get("cid")
+	username := c.Input().Get("username")
+	ip := c.Input().Get("ip")
+	port := c.Input().Get("port")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	err = models.UpdateAdminSynchIp(cidNum, username, ip, port)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//删除
+func (c *AdminController) DeletesynchIp() {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+
+		err = models.DeleteAdminSynchIp(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
+	}
+}
+
+//******后台部门结构********
+//根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
+func (c *AdminController) Department() {
+	id := c.Ctx.Input.Param(":id")
+	c.Data["Id"] = id
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	// var categories []*models.AdminDepartment
+	var err error
+	if id == "" { //如果id为空，则查询类别
+		id = "0"
+	}
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	categories, err := models.GetAdminDepart(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	c.Data["json"] = categories
+	c.ServeJSON()
+	// c.TplName = "admin_category.tpl"
+}
+
+//根据名称title查询分级表
+func (c *AdminController) DepartmentTitle() {
+	// title := c.Ctx.Input.Param(":id")
+	title := c.Input().Get("title")
+	// beego.Info(title)
+	categories, err := models.GetAdminDepartTitle(title)
+	// beego.Info(categories)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = categories
+	c.ServeJSON()
+	// c.TplName = "admin_category.tpl"
+}
+
+//添加
+func (c *AdminController) AddDepartment() {
+	// pid := c.Ctx.Input.Param(":id")
+	pid := c.Input().Get("pid")
+	title := c.Input().Get("title")
+	code := c.Input().Get("code")
+	//pid转成64为
+	var pidNum int64
+	var err error
+	if pid != "" {
+		pidNum, err = strconv.ParseInt(pid, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		pidNum = 0
+	}
+
+	_, err = models.AddAdminDepart(pidNum, title, code)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//修改
+func (c *AdminController) UpdateDepartment() {
+	// pid := c.Ctx.Input.Param(":id")
+	cid := c.Input().Get("cid")
+	title := c.Input().Get("title")
+	code := c.Input().Get("code")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	err = models.UpdateAdminDepart(cidNum, title, code)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *AdminController) DeleteDepartment() {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//查询下级，即分级
+		categories, err := models.GetAdminDepart(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			for _, v1 := range categories {
+				err = models.DeleteAdminDepart(v1.Id)
+				if err != nil {
+					beego.Error(err)
+				}
+			}
+		}
+		err = models.DeleteAdminDepart(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
 	}
 }
 

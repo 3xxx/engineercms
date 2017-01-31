@@ -105,13 +105,15 @@
     return "<a href='/project/"+row.Id+"'>" + value + "</a>";
   }
   function setLable(value,row,index){
-    array=value.split(",")
-    var labelarray = new Array() 
-    for (i=0;i<array.length;i++)
-    {
-      labelarray[i]="<a href='/project/search/"+array[i]+"'>" + array[i] + "</a>";
+    if (value){
+      array=value.split(",")
+      var labelarray = new Array() 
+      for (i=0;i<array.length;i++)
+      {
+        labelarray[i]="<a href='/project/keysearch?keyword="+array[i]+"'>" + array[i] + "</a>";
+      }
+      return labelarray.join(",");
     }
-    return labelarray.join(",");
   } 
   // 改变点击行颜色
   $(function(){

@@ -10,16 +10,17 @@ import (
 )
 
 type Project struct {
-	Id           int64     `form:"-"`
-	Code         string    `orm:"null"`                                              //编号
-	Title        string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	Label        string    `orm:"null"`                                              //标签
-	Principal    string    `orm:"null"`                                              //负责人id
-	ParentId     int64     `orm:"null"`
-	ParentIdPath string    `orm:"null"`
-	Grade        int       `orm:"null"`
-	Created      time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated      time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Id              int64     `form:"-"`
+	Code            string    `orm:"null"`                                              //编号
+	Title           string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	Label           string    `orm:"null"`                                              //标签
+	Principal       string    `orm:"null"`                                              //负责人id
+	ParentId        int64     `orm:"null"`
+	ParentIdPath    string    `orm:"null"`
+	ParentTitlePath string    `orm:"null"`
+	Grade           int       `orm:"null"`
+	Created         time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Updated         time.Time `orm:"index","auto_now_add;type(datetime)"`
 }
 
 // type Product struct {
@@ -58,20 +59,21 @@ func init() {
 }
 
 //添加项目
-func AddProject(code, title, label, principal string, parentid int64, parentidpath string, grade int) (id int64, err error) {
+func AddProject(code, title, label, principal string, parentid int64, parentidpath, parenttitlepath string, grade int) (id int64, err error) {
 	o := orm.NewOrm()
 	// var project Project
 	// if pid == "" {
 	project := &Project{
-		Code:         code,
-		Title:        title,
-		Label:        label,
-		Principal:    principal,
-		ParentId:     parentid,
-		ParentIdPath: parentidpath,
-		Grade:        grade,
-		Created:      time.Now(),
-		Updated:      time.Now(),
+		Code:            code,
+		Title:           title,
+		Label:           label,
+		Principal:       principal,
+		ParentId:        parentid,
+		ParentIdPath:    parentidpath,
+		ParentTitlePath: parenttitlepath,
+		Grade:           grade,
+		Created:         time.Now(),
+		Updated:         time.Now(),
 	}
 	id, err = o.Insert(project)
 	if err != nil {
@@ -204,6 +206,20 @@ func GetProjectTitle(title string) (cate Project, err error) {
 	// }
 	// return categories, err
 	// }
+}
+
+//根据目录id取得第一级项目
+//用parentidpath的第一个数字就行了。
+
+//根据parenttitlepath和title取得proj目录
+func GetProjbyParenttitlepath(parenttitlepath, title string) (proj Project, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
+	err = qs.Filter("ParentTitlePath", parenttitlepath).Filter("title", title).One(&proj)
+	if err != nil {
+		return proj, err
+	}
+	return proj, err
 }
 
 //添加成果到项目侧栏某个id下

@@ -404,7 +404,7 @@ $(document).ready(function() {
             $.ajax({
                 type:"post",
                 url:"/admin/calendar/updatecalendar",
-                data: {cid:cid,title:title,content:content,start:start,end:end,color:rgbToHex(currColor)},
+                data: {cid:cid,title:title,content:content,allday:allday,start:start,end:end,color:rgbToHex(currColor)},
                 success:function(data,status){
                   alert("修改“"+data+"”成功！(status:"+status+".)");
 					       $('#calendar').fullCalendar('refetchEvents'); //重新获取所有事件数据 // stick? = true 
@@ -465,8 +465,15 @@ $(document).ready(function() {
                 <div class="col-sm-7 checkbox">
                   <label>
                   <input type="checkbox" value="true" id="isallday"></label>
+                  <label>
+                  <input type="radio" value="isprivate" name="radio" checked="checked">公开</label>
+                  <label>
+                  <input type="radio" value="ispublic" name="radio">私有</label>
                 </div>
-              </div> 
+              </div>
+              <!-- $('input:radio:checked').val()；
+              $("input[type='radio']:checked").val();
+              $("input[name='rd']:checked").val(); --> 
               <div class="form-group must">
                 <label class="col-sm-3 control-label">开始时间</label>
                 <div class="input-group date form_datetime col-sm-7" data-link-field="dtp_input1">

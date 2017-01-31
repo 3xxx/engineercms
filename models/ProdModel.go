@@ -65,7 +65,7 @@ func DeleteProduct(cid int64) error {
 }
 
 //添加成果到项目侧栏某个id下
-//如果编号已经存在，则返回id
+//如果这个侧栏id下的这个成果编号已经存在，则返回id
 ////应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
 func AddProduct(code, title, label, principal, content string, Projectid int64) (id int64, err error) {
 	o := orm.NewOrm()
@@ -79,7 +79,7 @@ func AddProduct(code, title, label, principal, content string, Projectid int64) 
 	// 	fmt.Printf("Not row found")
 	// }
 	var prod Product
-	err = o.QueryTable("Product").Filter("code", code).One(&prod)
+	err = o.QueryTable("Product").Filter("Projectid", Projectid).Filter("code", code).One(&prod)
 	if err == orm.ErrNoRows { // 没有找到记录
 		product := &Product{
 			Code:      code,

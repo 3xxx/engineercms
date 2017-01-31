@@ -250,19 +250,21 @@
           ids=ids+","+selectRow[i].Id;
         }  
       }
-      $.ajax({
-        type:"post",
-        url:"/admin/category/deletecategory",
-        data: {ids:ids},
-        success:function(data,status){
-          alert("删除“"+data+"”成功！(status:"+status+".)");
-          //删除已选数据
-          $('#table0').bootstrapTable('remove',{
-            field:'Title',
-            values:title
-          });
-        }
-      });  
+      if(confirm("确定删除吗？一旦删除将无法恢复！")){
+        $.ajax({
+          type:"post",
+          url:"/admin/category/deletecategory",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#table0').bootstrapTable('remove',{
+              field:'Title',
+              values:title
+            });
+          }
+        });
+      }  
     })
   })
 
@@ -568,19 +570,22 @@ $(document).ready(function() {
          ids=ids+","+selectRow[i].Id;
        }  
      }
-     $.ajax({
-       type:"post",
-       url:"/admin/category/deletecategory",
-       data: {ids:ids},
-       success:function(data,status){
-         alert("删除“"+data+"”成功！(status:"+status+".)");
-         //删除已选数据
-         $('#table1').bootstrapTable('remove',{
-           field:'Title',
-           values:titles
-         });
-       }
-     }); 
+
+      if(confirm("确定删除吗？一旦删除将无法恢复！")){
+        $.ajax({
+          type:"post",
+          url:"/admin/category/deletecategory",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#table1').bootstrapTable('remove',{
+              field:'Title',
+              values:titles
+            });
+          }
+        }); 
+      }
   })
 
   // ******试验提交选择的表格************
