@@ -198,6 +198,7 @@ func (c *UserController) AddUser() {
 	user.Department = c.Input().Get("department")
 	user.Secoffice = c.Input().Get("secoffice")
 	user.Ip = c.Input().Get("ip")
+	user.Port = c.Input().Get("port")
 	statusint, err := strconv.Atoi(c.Input().Get("status"))
 	if err != nil {
 		beego.Error(err)
@@ -464,7 +465,13 @@ func (c *UserController) ImportUsers() {
 					}
 				}
 				if len(row.Cells) >= 9 {
-					status, err := row.Cells[j+7].String()
+					user.Port, err = row.Cells[j+7].String()
+					if err != nil {
+						beego.Error(err)
+					}
+				}
+				if len(row.Cells) >= 10 {
+					status, err := row.Cells[j+8].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -474,8 +481,8 @@ func (c *UserController) ImportUsers() {
 					}
 					user.Status = status1
 				}
-				if len(row.Cells) >= 10 {
-					role, err := row.Cells[j+8].String()
+				if len(row.Cells) >= 11 {
+					role, err := row.Cells[j+9].String()
 					if err != nil {
 						beego.Error(err)
 					}

@@ -26,14 +26,14 @@ func (c *AdminController) Get() {
 	// if role == 1 {
 	c.TplName = "admin.tpl"
 	// } else {
-	// 	c.Data["json"] = "权限不够！"
+	c.Data["role"] = iprole
 	// 	c.ServeJSON()
 	// }
 	c.Data["Ip"] = c.Ctx.Input.IP()
 }
 
 func (c *AdminController) Admin() {
-	// role := Getiprole(c.Ctx.Input.IP())
+	role := Getiprole(c.Ctx.Input.IP())
 	// if role == 1 {
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -71,7 +71,7 @@ func (c *AdminController) Admin() {
 		c.TplName = "admin_calendar.tpl"
 	}
 	// } else {
-	// 	c.Data["json"] = "权限不够！"
+	c.Data["role"] = role
 	// 	c.ServeJSON()
 	// }
 }
@@ -531,6 +531,13 @@ func (c *AdminController) AddCalendar() {
 	} else {
 		allday = false
 	}
+	public1 := c.Input().Get("public")
+	var public bool
+	if public1 == "true" {
+		public = true
+	} else {
+		public = false
+	}
 	const lll = "2006-01-02 15:04"
 	starttime, err := time.Parse(lll, start)
 	// beego.Info(start)
@@ -542,7 +549,7 @@ func (c *AdminController) AddCalendar() {
 	if err != nil {
 		beego.Error(err)
 	}
-	_, err = models.AddAdminCalendar(title, content, color, allday, starttime, endtime)
+	_, err = models.AddAdminCalendar(title, content, color, allday, public, starttime, endtime)
 	if err != nil {
 		beego.Error(err)
 	} else {
@@ -552,6 +559,7 @@ func (c *AdminController) AddCalendar() {
 }
 
 //返回日历json数据
+//如果是管理员，则显示全部，非管理员，显示公开
 func (c *AdminController) Calendar() {
 	start := c.Input().Get("start")
 	end := c.Input().Get("end")
@@ -564,9 +572,17 @@ func (c *AdminController) Calendar() {
 	if err != nil {
 		beego.Error(err)
 	}
-	calendars, err := models.GetAdminCalendar(startdate, enddate)
-	if err != nil {
-		beego.Error(err)
+	var calendars []*models.AdminCalendar
+	if checkprodRole(c.Ctx) == 1 {
+		calendars, err = models.GetAdminCalendar(startdate, enddate, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.GetAdminCalendar(startdate, enddate, true)
+		if err != nil {
+			beego.Error(err)
+		}
 	}
 	c.Data["json"] = calendars
 	c.ServeJSON()
@@ -593,6 +609,13 @@ func (c *AdminController) UpdateCalendar() {
 	} else {
 		allday = false
 	}
+	public1 := c.Input().Get("public")
+	var public bool
+	if public1 == "true" {
+		public = true
+	} else {
+		public = false
+	}
 	const lll = "2006-01-02 15:04"
 	starttime, err := time.Parse(lll, start)
 	// beego.Info(start)
@@ -604,7 +627,7 @@ func (c *AdminController) UpdateCalendar() {
 	if err != nil {
 		beego.Error(err)
 	}
-	err = models.UpdateAdminCalendar(cidNum, title, content, color, allday, starttime, endtime)
+	err = models.UpdateAdminCalendar(cidNum, title, content, color, allday, public, starttime, endtime)
 	if err != nil {
 		beego.Error(err)
 	} else {
@@ -930,6 +953,57 @@ func (c *AdminController) DeleteDepartment() {
 			c.ServeJSON()
 		}
 	}
+}
+
+//批量上传首页轮播图片
+func (c *AdminController) AddCarousel() {
+	if checkprodRole(c.Ctx) == 1 {
+		//获取上传的文件
+		_, h, err := c.GetFile("file")
+		if err != nil {
+			beego.Error(err)
+		}
+		// var attachment string
+		// var filesize int64
+		if h != nil {
+			//保存附件
+			// attachment = h.Filename
+			// beego.Info(attachment)
+			path := ".\\attachment\\carousel\\" // + h.Filename
+			url := "/attachment/carousel"       //+ h.Filename
+			//存入成果数据库
+			//如果编号重复，则不写入，值返回Id值。
+			//根据id添加成果code, title, label, principal, content string, projectid int64
+			_, err := models.AddAdminCarousel(h.Filename, url)
+			if err != nil {
+				beego.Error(err)
+			} else {
+				//存入文件夹
+				err = c.SaveToFile("file", path+h.Filename) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+				if err != nil {
+					beego.Error(err)
+				}
+				c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": h.Filename, "original": h.Filename, "url": url + "/" + h.Filename}
+				c.ServeJSON()
+			}
+		}
+	} else {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+}
+
+//查询所有轮播图片
+func (c *AdminController) Carousel() {
+	carousels, err := models.GetAdminCarousel()
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = carousels
+	c.ServeJSON()
 }
 
 // include_once('connect.php');//连接数据库

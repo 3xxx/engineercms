@@ -759,7 +759,7 @@ func (c *AttachController) DownloadAttachment() {
 		role = userrole
 	}
 	// beego.Info(c.Ctx.Input.IP())
-	beego.Info(role)
+	// beego.Info(role)
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(ctx.Request.RequestURI)
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf

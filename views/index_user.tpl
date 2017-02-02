@@ -28,8 +28,7 @@
         {{end}} 
       </ol> -->
       <div class="carousel-inner">
-        <div class="item active" align=center>
-        <!-- <div style="width:200px;float:left"> -->
+        <!-- <div class="item active" align=center>
             <img src="/attachment/SL2019parenttitlepath/2017January/1.jpg" alt="Second slide" style="height:300px;">
         </div>
         <div class="item" align=center>
@@ -61,16 +60,15 @@
         </div>
         <div class="item" align=center>
             <img src="/attachment/SL2019parenttitlepath/2017January/11.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <!-- {{range $index, $elem :=.Photo}}
+        </div> -->
+        {{range $index, $elem :=.Carousel}}
           <div {{if eq 0 $index}} class="item active" {{else}}class="item"{{end}}  align=center>
-            <img src="{{.Route}}" alt="First slide" width="40%">
+            <img src="{{.Url}}/{{.Title}}" alt="First slide" style="height:300px;">
               <div class="carousel-caption">
-                <h3>{{.FileName}}</h3>
-                <p>{{.Content}}</p>
+                <h3>{{.Title}}</h3>
               </div>
           </div>
-         {{end}} --> 
+        {{end}} 
       </div>
       <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
           <span class="glyphicon glyphicon-chevron-left"></span>

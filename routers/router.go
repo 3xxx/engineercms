@@ -24,6 +24,11 @@ func init() {
 	//显示对应侧栏id的右侧界面
 	beego.Router("/admin/:id:string", &controllers.AdminController{}, "*:Admin")
 
+	//批量添加首页轮播图片
+	beego.Router("/admin/base/addcarousel", &controllers.AdminController{}, "*:AddCarousel")
+	//获取首页轮播图片填充表格
+	beego.Router("/admin/base/carousel", &controllers.AdminController{}, "*:Carousel")
+
 	//根据数字id查询类别或目录分级表
 	beego.Router("/admin/category/?:id:string", &controllers.AdminController{}, "*:Category")
 	//根据名字查询目录分级表

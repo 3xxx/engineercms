@@ -37,6 +37,7 @@ type AdminCalendar struct {
 	Endtime   time.Time `json:"end",orm:"null;type(datetime)"`
 	Allday    bool      `json:"allDay",orm:"not null;default(0)"`
 	Color     string    `json:"color",orm:"null"`
+	Public    bool      `default(true)`
 	// Color     string    `json:"backgroundColor",orm:"null"`
 	// BColor    string    `json:"borderColor",orm:"null"`
 }
@@ -62,6 +63,15 @@ type AdminDepartment struct {
 	Updated  time.Time `orm:"index","auto_now_add;type(datetime)"`
 }
 
+//首页轮播图片
+type AdminCarousel struct {
+	Id      int64     `form:"-"`
+	Title   string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	Url     string    `orm:"null"`
+	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"index","auto_now_add;type(datetime)"`
+}
+
 // `id` int(11) NOT NULL AUTO_INCREMENT,
 //   `title` varchar(100) NOT NULL,
 //   `starttime` int(11) NOT NULL,
@@ -70,7 +80,7 @@ type AdminDepartment struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminCalendar), new(AdminSynchIp), new(AdminDepartment)) //, new(Article)
+	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminCalendar), new(AdminSynchIp), new(AdminDepartment), new(AdminCarousel)) //, new(Article)
 	orm.RegisterDriver("sqlite", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
@@ -297,13 +307,14 @@ func GetAdminIpsegment() (ipsegments []*AdminIpsegment, err error) {
 
 //********日历********
 //添加
-func AddAdminCalendar(title, content, color string, allday bool, start, end time.Time) (id int64, err error) {
+func AddAdminCalendar(title, content, color string, allday, public bool, start, end time.Time) (id int64, err error) {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{
 		Title:   title,
 		Content: content,
 		Color:   color,
 		Allday:  allday,
+		Public:  public,
 		// BColor:    color,
 		Starttime: start,
 		Endtime:   end,
@@ -317,7 +328,7 @@ func AddAdminCalendar(title, content, color string, allday bool, start, end time
 }
 
 //取所有——要修改为支持时间段的，比如某个月份
-func GetAdminCalendar(start, end time.Time) (calendars []*AdminCalendar, err error) {
+func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
 	o := orm.NewOrm()
@@ -327,15 +338,22 @@ func GetAdminCalendar(start, end time.Time) (calendars []*AdminCalendar, err err
 	// o := orm.NewOrm()
 	calendars = make([]*AdminCalendar, 0)
 	// qs := o.QueryTable("AdminCalendar")
-	_, err = qs.All(&calendars)
-	if err != nil {
-		return calendars, err
+	if public { //只取公开的
+		_, err = qs.Filter("public", true).All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	} else { //取全部
+		_, err = qs.All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
 	}
 	return calendars, err
 }
 
 //修改
-func UpdateAdminCalendar(cid int64, title, content, color string, allday bool, start, end time.Time) error {
+func UpdateAdminCalendar(cid int64, title, content, color string, allday, public bool, start, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{Id: cid}
 	if o.Read(calendar) == nil {
@@ -343,6 +361,7 @@ func UpdateAdminCalendar(cid int64, title, content, color string, allday bool, s
 		calendar.Content = content
 		calendar.Color = color
 		calendar.Allday = allday
+		calendar.Public = public
 		// calendar.BColor = color
 		calendar.Starttime = start
 		calendar.Endtime = end
@@ -592,4 +611,33 @@ func GetAdminDepartbyidtitle(id int64, title string) (*AdminDepartment, error) {
 		return nil, err
 	}
 	return category, err
+}
+
+//添加
+func AddAdminCarousel(title, url string) (id int64, err error) {
+	o := orm.NewOrm()
+	carousel := &AdminCarousel{
+		Title: title,
+		// Path:    code,
+		Url:     url,
+		Created: time.Now(),
+		Updated: time.Now(),
+	}
+	id, err = o.Insert(carousel)
+	if err != nil {
+		return 0, err
+	}
+	// }
+	return id, nil
+}
+
+func GetAdminCarousel() (carousels []*AdminCarousel, err error) {
+	o := orm.NewOrm()
+	carousels = make([]*AdminCarousel, 0)
+	qs := o.QueryTable("AdminCarousel")
+	_, err = qs.OrderBy("-created").All(&carousels)
+	if err != nil {
+		return nil, err
+	}
+	return carousels, err
 }

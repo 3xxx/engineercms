@@ -20,12 +20,13 @@ type User struct {
 	Username      string `orm:"unique"` //这个拼音的简写
 	Nickname      string //中文名，注意这里，很多都要查询中文名才行`orm:"unique;size(32)" form:"Nickname" valid:"Required;MaxSize(20);MinSize(2)"`
 	Password      string
-	Repassword    string    `orm:"-" form:"Repassword" valid:"Required" form:"-"`
-	Email         string    `orm:"size(32)" form:"Email" valid:"Email"`
-	Department    string    //分院
-	Secoffice     string    //科室,这里应该用科室id，才能保证即时重名也不怕。否则，查看科室必须要上溯到分院才能避免科室名称重复问题
-	Remark        string    `orm:"null;size(200)" form:"Remark" valid:"MaxSize(200)"`
-	Ip            string    //ip地址
+	Repassword    string `orm:"-" form:"Repassword" valid:"Required" form:"-"`
+	Email         string `orm:"size(32)" form:"Email" valid:"Email"`
+	Department    string //分院
+	Secoffice     string //科室,这里应该用科室id，才能保证即时重名也不怕。否则，查看科室必须要上溯到分院才能避免科室名称重复问题
+	Remark        string `orm:"null;size(200)" form:"Remark" valid:"MaxSize(200)"`
+	Ip            string //ip地址
+	Port          string
 	Status        int       `orm:"default(2)" form:"Status" valid:"Range(1,2)"`
 	Lastlogintime time.Time `orm:"type(datetime);auto_now_add" form:"-"`
 	Createtime    time.Time `orm:"type(datetime);auto_now_add" `
@@ -230,6 +231,23 @@ func GetUsersbySec(department, secoffice string) (users []*User, count int, err 
 	return users, count, err
 }
 
+//根据分院名称查所有用户——适用于没有科室的部门
+//查出所有人员，只有分院（部门）而没科室字段的人员
+func GetUsersbySecOnly(department string) (users []*User, count int, err error) {
+	o := orm.NewOrm()
+	// cates := make([]*Category, 0)
+	qs := o.QueryTable("user")
+	//这里进行过滤
+	_, err = qs.Filter("Department", department).Filter("Secoffice", "").OrderBy("Username").All(&users)
+	if err != nil {
+		return nil, 0, err
+	}
+	// _, err = qs.OrderBy("-created").All(&cates)
+	// _, err := qs.All(&cates)
+	count = len(users)
+	return users, count, err
+}
+
 //根据科室id查所有用户
 func GetUsersbySecId(secofficeid string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
@@ -389,6 +407,14 @@ func UpdateUser(cid int64, fieldname, value string) error {
 		case "Ip":
 			user.Ip = value
 			_, err := o.Update(&user, "Ip", "Updated") //这里不能用&user
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Port":
+			user.Port = value
+			_, err := o.Update(&user, "Port", "Updated") //这里不能用&user
 			if err != nil {
 				return err
 			} else {

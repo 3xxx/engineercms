@@ -76,7 +76,7 @@
           data: {{.json}},//[{{.json}}]——有时候加个中括号就行了。
           // data:alternateData,
           levels: 2,// expanded to 5 levels
-          enableLinks:true,
+          // enableLinks:true,
           showTags:true,
         });
         $('#treeview').on('nodeSelected', function(event, data) {
@@ -87,7 +87,11 @@
           $("#regis").html(data.text);//显示部门名称
           $("#regis").css("color","black");
           //点击菜单，右侧显示那个人的主页
-          document.getElementById("iframepage").src="/index/main/"+data.Id;
+          // document.getElementById("iframepage").src="/index/main/"+data.Id;
+          //点击菜单，打开新标签页个人主页
+          window.open('http://'+data.href)
+          //当前窗口打开这个个人主页：
+          // parent.location.href='/index/main/'+data.Id
         });   
     });
   </script>

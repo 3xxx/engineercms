@@ -110,66 +110,66 @@
         });
     })
     //用表格在线编辑比较好
-    $("#editorButton").click(function() {
-      var selectRow=$('#table0').bootstrapTable('getSelections');
-      if (selectRow.length<1){
-        alert("请先勾选类别！");
-        return;
-      }
-      if (selectRow.length>1){
-      alert("请不要勾选一个以上类别！");
-      return;
-      }
-      $("input#cid").remove();
-      var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $("#Username1").val(selectRow[0].Username);
-      $("#Nickname1").val(selectRow[0].Nickname);
-      $("#Password1").val(selectRow[0].Password);
-      $("#Repassword1").val(selectRow[0].Repassword);
-      $("#Email1").val(selectRow[0].Email);
-      $("#Department1").val(selectRow[0].Department);
-      $("#Secoffice1").val(selectRow[0].Secoffice);
-      $("#Ip1").val(selectRow[0].Ip);
-      $("#Status1").val(selectRow[0].Status);
-      $("#Role1").val(selectRow[0].Role);
-        $('#modalTable1').modal({
-        show:true,
-        backdrop:'static'
-        });
-    })
+    // $("#editorButton").click(function() {
+    //   var selectRow=$('#table0').bootstrapTable('getSelections');
+    //   if (selectRow.length<1){
+    //     alert("请先勾选类别！");
+    //     return;
+    //   }
+    //   if (selectRow.length>1){
+    //   alert("请不要勾选一个以上类别！");
+    //   return;
+    //   }
+    //   $("input#cid").remove();
+    //   var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
+    //   $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+    //   $("#Username1").val(selectRow[0].Username);
+    //   $("#Nickname1").val(selectRow[0].Nickname);
+    //   $("#Password1").val(selectRow[0].Password);
+    //   $("#Repassword1").val(selectRow[0].Repassword);
+    //   $("#Email1").val(selectRow[0].Email);
+    //   $("#Department1").val(selectRow[0].Department);
+    //   $("#Secoffice1").val(selectRow[0].Secoffice);
+    //   $("#Ip1").val(selectRow[0].Ip);
+    //   $("#Status1").val(selectRow[0].Status);
+    //   $("#Role1").val(selectRow[0].Role);
+    //     $('#modalTable1').modal({
+    //     show:true,
+    //     backdrop:'static'
+    //     });
+    // })
 
-    $("#deleteButton").click(function() {
-      var selectRow=$('#table0').bootstrapTable('getSelections');
-      if (selectRow.length<=0) {
-        alert("请先勾选类别！");
-        return false;
-      }
-      var title=$.map(selectRow,function(row){
-        return row.Title;
-      })
-      var ids="";
-      for(var i=0;i<selectRow.length;i++){
-        if(i==0){
-          ids=selectRow[i].Id;
-        }else{
-          ids=ids+","+selectRow[i].Id;
-        }  
-      }
-      $.ajax({
-        type:"post",
-        url:"/admin/category/deletecategory",
-        data: {ids:ids},
-        success:function(data,status){
-          alert("删除“"+data+"”成功！(status:"+status+".)");
-          //删除已选数据
-          $('#table0').bootstrapTable('remove',{
-            field:'Title',
-            values:title
-          });
-        }
-      });  
-    })
+    // $("#deleteButton").click(function() {
+    //   var selectRow=$('#table0').bootstrapTable('getSelections');
+    //   if (selectRow.length<=0) {
+    //     alert("请先勾选类别！");
+    //     return false;
+    //   }
+    //   var title=$.map(selectRow,function(row){
+    //     return row.Title;
+    //   })
+    //   var ids="";
+    //   for(var i=0;i<selectRow.length;i++){
+    //     if(i==0){
+    //       ids=selectRow[i].Id;
+    //     }else{
+    //       ids=ids+","+selectRow[i].Id;
+    //     }  
+    //   }
+    //   $.ajax({
+    //     type:"post",
+    //     url:"/admin/category/deletecategory",
+    //     data: {ids:ids},
+    //     success:function(data,status){
+    //       alert("删除“"+data+"”成功！(status:"+status+".)");
+    //       //删除已选数据
+    //       $('#table0').bootstrapTable('remove',{
+    //         field:'Title',
+    //         values:title
+    //       });
+    //     }
+    //   });  
+    // })
   })
 
 </script>
@@ -196,43 +196,47 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">昵称</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Nickname"></div>
+                  <input type="text" class="form-control" id="Nickname"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">密码</label>
                 <div class="col-sm-7">
-                  <input type="password" class="form-control" id="password" maxlength="32" placeholder="至多32个字符" required></div>
+                  <input type="password" class="form-control" id="password" maxlength="32" placeholder="至多32个字符"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">确认密码</label>
                 <div class="col-sm-7">
-                  <input type="password" class="form-control equalto" name="password2" maxlength="32" placeholder="至多32个字符" required data-rule-equalto="#password" data-msg-equalto="密码不一致"></div>
+                  <input type="password" class="form-control equalto" name="password2" maxlength="32" placeholder="至多32个字符" data-rule-equalto="#password" data-msg-equalto="密码不一致"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">邮箱</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Email"></div>
+                  <input type="text" class="form-control" id="Email"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">部门</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Department"></div>
+                  <input type="text" class="form-control" id="Department"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">科室</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Secoffice"></div>
+                  <input type="text" class="form-control" id="Secoffice"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">IP</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Ip"></div>
+                  <input type="text" class="form-control" id="Ip"></div>
               </div>
-              
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">CMS端口Port</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="Port"></div>
+              </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-7">
-                  <select id="Status" class="form-control" required>
+                  <select id="Status" class="form-control">
                     <option value="1" >显示</option>
                     <option value="2" >隐藏</option>
                     <option value="0" >禁用</option>
@@ -242,7 +246,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">权限</label>
                 <div class="col-sm-7">
-                <input type="number" class="form-control digits" id="Role" maxlength="20" placeholder="至多20个字符" required></div>
+                <input type="number" class="form-control digits" id="Role" maxlength="20" placeholder="至多20个字符"></div>
               </div>
           </div>
         </div>
@@ -300,6 +304,7 @@
       var Department = $('#Department').val();
       var Secoffice  = $('#Secoffice').val();
       var Ip         = $('#Ip').val();
+      var Port         = $('#Port').val();
       // var Status     = $('#Status option:selected').text();
       var Status     = $('#Status option:selected').val();
       var Role       = $('#Role').val();
@@ -308,7 +313,7 @@
             $.ajax({
                 type:"post",
                 url:"/admin/user/adduser",
-                data: {username:Username,nickname:Nickname,password:Password,repassword:Repassword,email:Email,department:Department,secoffice:Secoffice,ip:Ip,status:Status,role:Role},
+                data: {username:Username,nickname:Nickname,password:Password,repassword:Repassword,email:Email,department:Department,secoffice:Secoffice,ip:Ip,port:Port,status:Status,role:Role},
                 success:function(data,status){
                   alert("添加“"+data+"”成功！(status:"+status+".)");
                  }
@@ -427,6 +432,15 @@
                 pk: 1,
                 url: '/admin/user/updateuser',
                 title: 'Enter Count'  
+            }
+          },{
+            field: 'Port',
+            title: 'CMS端口Port',
+            editable: {
+                type: 'text',
+                pk: 1,
+                url: '/admin/user/updateuser',
+                title: 'Enter Port'  
             }
           },{
             field: 'Status',

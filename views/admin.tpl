@@ -136,7 +136,7 @@
                 icon: "fa fa-tachometer icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
-                selectable: true,
+                // selectable: true,
                 id: '01',
                 selectable: false,
                 // state: {
@@ -173,7 +173,7 @@
                 icon: "fa fa-balance-scale",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
-                selectable: true,
+                // selectable: true,
                 id: '02',
                 selectable: false,
                 // state: {
@@ -212,7 +212,7 @@
                 icon: "fa fa-users icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
-                selectable: true,
+                // selectable: true,
                 id: '03',
                 selectable: false,
                 // state: {
@@ -248,16 +248,18 @@
                 icon: "fa fa-list-alt icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
-                selectable: true,
+                // selectable: true,
                 id: '04',
                 selectable: false,
+                showTags:false,
                 tags: ['available'],
                 nodes: 
                 [
                   { 
                     icon: "fa fa-edit",
                     text: "编辑目录",
-                    id: '041'
+                    id: '041',
+                    tags: [''],
                   },
                   { 
                     icon: "fa fa-edit",
@@ -272,7 +274,7 @@
                   { 
                     icon: "fa fa-copy",
                     text: "快捷编辑",
-                    id: '044'
+                    id: '044',
                   }
                 ]
               } 
@@ -283,6 +285,7 @@
             data: data,         // data is not optional
             levels: 2,
             enableLinks: true,
+            showTags:false,
             // showCheckbox: true,
             state: {
               checked: true,

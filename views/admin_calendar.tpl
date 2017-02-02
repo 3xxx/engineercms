@@ -270,9 +270,18 @@ $(document).ready(function() {
       				$("#title1").val(data.title);
       				$("#content1").val(data.content);
               $("#isallday1").prop('checked',data.allDay);
+                $("#ispublic1").prop('checked',false);
+                // $("#ispublic1[name='private']").prop('checked',false);
+              if (data.Public==true){
+                $("#ispublic1[value='true']").prop('checked',true);
+              }else{
+                $("#ispublic1[value='false']").prop('checked',true);
+              }
+              // $("#ispublic1").prop('checked',data.Public);
+
       				$("#start1").val(data.start.format('YYYY-MM-DD HH:mm'));
       				$("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
-					$('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
+					    $('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
         			$('#modalTable1').modal({
         				show:true,
         				backdrop:'static'
@@ -362,11 +371,14 @@ $(document).ready(function() {
     var start = $('#start').val();
     var end = $('#end').val();
     var allday=document.getElementById("isallday").checked;
+    var public=document.getElementById("ispublic").checked;
+    // alert(allday);
+    // alert(public);
       if (title){  
             $.ajax({
                 type:"post",
                 url:"/admin/calendar/addcalendar",
-                data: {title:title,content:content,allday:allday,start:start,end:end,color:rgbToHex(currColor)},
+                data: {title:title,content:content,allday:allday,public:public,start:start,end:end,color:rgbToHex(currColor)},
                 success:function(data,status){
                   alert("添加“"+data+"”成功！(status:"+status+".)");
                   var eventData;
@@ -399,12 +411,13 @@ $(document).ready(function() {
       var end = $('#end1').val();
       var cid = $('#cid').val();
       var allday=document.getElementById("isallday1").checked;
+      var public=document.getElementById("ispublic1").checked;
       var currColor=$('#add-new-event1').css("background-color");
       if (title){  
             $.ajax({
                 type:"post",
                 url:"/admin/calendar/updatecalendar",
-                data: {cid:cid,title:title,content:content,allday:allday,start:start,end:end,color:rgbToHex(currColor)},
+                data: {cid:cid,title:title,content:content,allday:allday,public:public,start:start,end:end,color:rgbToHex(currColor)},
                 success:function(data,status){
                   alert("修改“"+data+"”成功！(status:"+status+".)");
 					       $('#calendar').fullCalendar('refetchEvents'); //重新获取所有事件数据 // stick? = true 
@@ -466,9 +479,9 @@ $(document).ready(function() {
                   <label>
                   <input type="checkbox" value="true" id="isallday"></label>
                   <label>
-                  <input type="radio" value="isprivate" name="radio" checked="checked">公开</label>
+                  <input type="radio" id="ispublic" value="true" name="public" checked="checked">公开</label>
                   <label>
-                  <input type="radio" value="ispublic" name="radio">私有</label>
+                  <input type="radio" id="ispublic" value="false" name="public">私有</label>
                 </div>
               </div>
               <!-- $('input:radio:checked').val()；
@@ -556,6 +569,10 @@ $(document).ready(function() {
                 <div class="col-sm-7 checkbox">
                   <label>
                   <input type="checkbox" value="true" id="isallday1"></label>
+                  <label>
+                  <input type="radio" id="ispublic1" value="true" name="public1" checked="checked">公开</label>
+                  <label>
+                  <input type="radio" id="ispublic1" value="false" name="public1">私有</label>
                 </div>
               </div> 
                <div class="form-group must">

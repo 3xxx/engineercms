@@ -184,7 +184,7 @@ h3 {line-height: 150%;
           success:function(data,status){
             alert("删除“"+data+"”成功！(status:"+status+".)");
             //关闭标签
-
+            window.close();
           }
         });
       }  
