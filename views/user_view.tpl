@@ -6,7 +6,7 @@
   <title>EngineerCMS</title>
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <script src="/static/js/bootstrap-treeview.js"></script>
+  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
@@ -19,15 +19,18 @@
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
-  <script src="/static/js/jquery.form.js"></script>
+  <!-- <script src="/static/js/jquery.form.js"></script> -->
   <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
   <script type="text/javascript" src="/static/js/select2.js"></script>
 </head>
 <body>
+  <div class="navbar navba-default navbar-fixed-top">
+    <div class="container-fill">{{template "navbar" .}}</div>
+  </div>
 
-<div class="col-lg-12">
-<h3>用户表-{{.User}}</h3>
-  <div id="toolbar1" class="btn-group">
+  <div class="col-lg-12">
+  <h3>用户表-{{.User}}</h3>
+    <div id="toolbar1" class="btn-group">
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
         <button type="button" data-name="importButton" id="importButton" class="btn btn-default"> <i class="fa fa-plus">导入</i>
@@ -37,9 +40,9 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
-  </div>
+    </div>
 
-  <table id="table0"
+    <table id="table0"
         data-search="true"
         data-show-refresh="true"
         data-show-toggle="true"
@@ -58,7 +61,7 @@
         data-click-to-select="true"
         data-show-export="true"
         >
-    <!-- <thead>        
+      <!-- <thead>        
       <tr>       
         radiobox data-checkbox="true"
         <th data-width="10" data-radio="true"></th>
@@ -75,8 +78,8 @@
         <th data-field="Createtime" data-formatter="localDateFormatter">建立</th>
         <th data-field="Role">权限</th>
       </tr>
-    </thead> -->
-  </table>
+      </thead> -->
+    </table>
 
 <!-- 添加用户 -->
 <div class="container">
@@ -320,11 +323,6 @@
      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
          $(ele).addClass("info");
-         rowid=row.Id;//全局变量
-         rowtitle=row.Nickname
-         $("#rowtitle").html("用户详情-"+rowtitle);
-         $("#details").show();
-         $('#table1').bootstrapTable('refresh', {url:'/admin/user/'+row.Id});
      });
   });
 

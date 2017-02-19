@@ -80,19 +80,22 @@ func SaveUser(user User) (uid int64, err error) {
 }
 
 func ValidateUser(user User) error {
+	cond := orm.NewCondition()
+	cond1 := cond.Or("status", 1).Or("status", 2)
+	cond2 := cond.AndCond(cond1).And("username", user.Username).And("password", user.Password)
+	// _, err = qs.Distinct().OrderBy("-created").All(&proj) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	orm := orm.NewOrm()
 	var u User
-
 	// user = new(User)
 	qs := orm.QueryTable("user")
-	err := qs.Filter("username", user.Username).Filter("password", user.Password).One(&u)
+	qs = qs.SetCond(cond2)
+	err := qs.One(&u)
 	if err != nil {
 		return err
 	}
-
 	// orm.Where("username=? and pwd=?", user.Username, user.Pwd).Find(&u)
 	if u.Username == "" {
-		return errors.New("用户名或密码错误！")
+		return errors.New("用户名或密码错误！或用户被禁止！")
 	}
 	return nil
 }
@@ -215,13 +218,13 @@ func GetAllusers(page int64, page_size int64, sort string) (users []*User, count
 	return users, count
 }
 
-//根据分院和科室名称查所有用户
+//根据分院和科室名称查所有用户，只有状态1的
 func GetUsersbySec(department, secoffice string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
 	// cates := make([]*Category, 0)
 	qs := o.QueryTable("user")
 	//这里进行过滤
-	_, err = qs.Filter("Department", department).Filter("Secoffice", secoffice).OrderBy("Username").All(&users)
+	_, err = qs.Filter("Department", department).Filter("Secoffice", secoffice).Filter("Status", 1).OrderBy("Username").All(&users)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -232,13 +235,13 @@ func GetUsersbySec(department, secoffice string) (users []*User, count int, err 
 }
 
 //根据分院名称查所有用户——适用于没有科室的部门
-//查出所有人员，只有分院（部门）而没科室字段的人员
+//查出所有人员，只有分院（部门）而没科室字段的人员，只有状态1的
 func GetUsersbySecOnly(department string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
 	// cates := make([]*Category, 0)
 	qs := o.QueryTable("user")
 	//这里进行过滤
-	_, err = qs.Filter("Department", department).Filter("Secoffice", "").OrderBy("Username").All(&users)
+	_, err = qs.Filter("Department", department).Filter("Secoffice", "").Filter("Status", 1).OrderBy("Username").All(&users)
 	if err != nil {
 		return nil, 0, err
 	}

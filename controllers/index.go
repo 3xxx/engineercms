@@ -71,16 +71,16 @@ type Employee struct { //职员的分院和科室属性
 
 //显示侧栏结构，科室里员工
 func (c *IndexController) GetIndex() {
-	role := checkprodRole(c.Ctx)
+	username, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		c.Data["IsAdmin"] = true
-	} else if role <= 1 && role > 5 {
+	} else if role > 1 && role < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
 		c.Data["IsLogin"] = false
 	}
-
+	c.Data["Username"] = username
 	c.Data["IsIndex"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
@@ -131,7 +131,7 @@ func (c *IndexController) GetIndex() {
 				if err != nil {
 					beego.Error(err)
 				}
-				beego.Info(count)
+				// beego.Info(count)
 				for i3, _ := range users {
 					cc := make([]AchEmployee, 1)
 					cc[0].Id = users[i3].Id
@@ -180,10 +180,9 @@ func (c *IndexController) GetIndex() {
 		achsecoffice = make([]AchSecoffice, 0) //再把slice置0
 		achdepart = append(achdepart, aa...)
 	}
-
 	c.Data["json"] = achdepart
 	c.TplName = "index.tpl"
-	beego.Info(achdepart)
+	// beego.Info(achdepart)
 }
 
 //上面那个是显示侧栏
@@ -216,5 +215,17 @@ func (c *IndexController) Product() {
 }
 
 func (c *IndexController) Calendar() {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsCalendar"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.TplName = "index_calendar.tpl"
 }

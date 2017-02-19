@@ -373,7 +373,8 @@ func (c *AttachController) ProvidePdfs() {
 
 //向某个侧栏id下添加成果——用于第一种批量添加一对一模式
 func (c *AttachController) AddAttachment() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		//解析表单
 		pid := c.Input().Get("pid")
 		// beego.Info(pid)
@@ -493,7 +494,8 @@ func (c *AttachController) AddAttachment() {
 
 //向某个侧栏id下添加成果——用于第二种添加，多附件模式
 func (c *AttachController) AddAttachment2() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		//解析表单
 		pid := c.Input().Get("pid")
 		// beego.Info(pid)
@@ -572,7 +574,8 @@ func (c *AttachController) AddAttachment2() {
 
 //向一个成果id下追加附件
 func (c *AttachController) UpdateAttachment() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		//解析表单
 		pid := c.Input().Get("pid")
 		size := c.Input().Get("size")
@@ -635,7 +638,8 @@ func (c *AttachController) UpdateAttachment() {
 
 //删除附件——这个用于针对删除一个附件
 func (c *AttachController) DeleteAttachment() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		//解析表单
 		ids := c.GetString("ids")
 		array := strings.Split(ids, ",")
@@ -659,15 +663,16 @@ func (c *AttachController) DeleteAttachment() {
 			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 			if err != nil {
 				beego.Error(err)
-			}
-			path := DiskDirectory + "\\" + attach.FileName
-			err = os.Remove(path)
-			if err != nil {
-				beego.Error(err)
-			}
-			err = models.DeleteAttachment(idNum)
-			if err != nil {
-				beego.Error(err)
+			} else {
+				path := DiskDirectory + "\\" + attach.FileName
+				err = os.Remove(path)
+				if err != nil {
+					beego.Error(err)
+				}
+				err = models.DeleteAttachment(idNum)
+				if err != nil {
+					beego.Error(err)
+				}
 			}
 		}
 		c.Data["json"] = "ok"
@@ -795,6 +800,17 @@ func (c *AttachController) DownloadAttachment() {
 	}
 }
 
+//首页轮播图片给予任何权限
+func (c *AttachController) GetCarousel() {
+	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
+	// filePath := path.Base(ctx.Request.RequestURI)
+	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
+	if err != nil {
+		beego.Error(err)
+	}
+	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+}
+
 //返回文件大小
 func FileSize(file string) (int64, error) {
 	f, e := os.Stat(file)
@@ -809,37 +825,40 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 	proj, err := models.GetProj(id)
 	if err != nil {
 		beego.Error(err)
-	}
-	//根据proj的parentIdpath
-	var path string
-	if proj.ParentIdPath != "" { //如果不是根目录
-		patharray := strings.Split(proj.ParentIdPath, "-")
-		for _, v := range patharray {
-			//pid转成64为
-			idNum, err := strconv.ParseInt(v, 10, 64)
-			if err != nil {
-				beego.Error(err)
+		return "", "", err
+	} else {
+		//根据proj的parentIdpath
+		var path string
+		if proj.ParentIdPath != "" { //如果不是根目录
+			patharray := strings.Split(proj.ParentIdPath, "-")
+			for _, v := range patharray {
+				//pid转成64为
+				idNum, err := strconv.ParseInt(v, 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				proj1, err := models.GetProj(idNum)
+				if err != nil {
+					beego.Error(err)
+				}
+				if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
+					DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
+					Url = "/attachment/" + proj1.Code + proj1.Title
+				} else {
+					path = proj1.Title
+					DiskDirectory = DiskDirectory + "\\" + path
+					Url = Url + "/" + path
+				}
 			}
-			proj1, err := models.GetProj(idNum)
-			if err != nil {
-				beego.Error(err)
-			}
-			if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
-				DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
-				Url = "/attachment/" + proj1.Code + proj1.Title
-			} else {
-				path = proj1.Title
-				DiskDirectory = DiskDirectory + "\\" + path
-				Url = Url + "/" + path
-			}
+			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
+			Url = Url + "/" + proj.Title
+			// beego.Info(DiskDirectory)
+			// beego.Info(Url)
+		} else { //如果是根目录
+			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
+			Url = "/attachment/" + proj.Code + proj.Title
 		}
-		DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
-		Url = Url + "/" + proj.Title
-		// beego.Info(DiskDirectory)
-		// beego.Info(Url)
-	} else { //如果是根目录
-		DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
-		Url = "/attachment/" + proj.Code + proj.Title
+		return Url, DiskDirectory, err
 	}
-	return Url, DiskDirectory, err
+
 }

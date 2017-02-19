@@ -199,6 +199,9 @@ func init() {
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
 	beego.Router("/attachment/*", &controllers.AttachController{}, "get:DownloadAttachment")
 	//上面用attachment.ImageFilter是不行的，必须是package.func
+	//首页轮播图片的权限
+	beego.Router("/attachment/carousel/*.*", &controllers.AttachController{}, "get:GetCarousel")
+
 	//ue富文本编辑器
 	beego.Router("/controller", &controllers.UeditorController{}, "*:ControllerUE")
 

@@ -7,19 +7,19 @@
   <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
-  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script> -->
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
   
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
-  <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script> -->
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script> -->
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script> -->
   
-  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/> -->
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
-  <script src="/static/js/tableExport.js"></script>
+  <!-- <script src="/static/js/tableExport.js"></script> -->
 </head>
 
 <body>

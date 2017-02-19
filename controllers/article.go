@@ -152,7 +152,7 @@ func (c *ArticleController) ProvideArticles() {
 //根据id查看，查出文章
 func (c *ArticleController) GetArticle() {
 	id := c.Ctx.Input.Param(":id")
-	role := checkprodRole(c.Ctx)
+	_, role := checkprodRole(c.Ctx)
 	c.Data["role"] = role
 	// var categories []*models.ProjCategory
 	var err error
@@ -178,7 +178,8 @@ func (c *ArticleController) GetArticle() {
 
 //向某个侧栏id下添加文章
 func (c *ArticleController) AddArticle() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.Input().Get("pid")
 		code := c.Input().Get("code")
@@ -218,7 +219,8 @@ func (c *ArticleController) AddArticle() {
 
 //向成果id下添加文章
 func (c *ArticleController) AddProdArticle() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.Input().Get("pid")
 		subtext := c.Input().Get("subtext")
@@ -247,7 +249,8 @@ func (c *ArticleController) AddProdArticle() {
 
 //编辑 成果id
 func (c *ArticleController) UpdateArticle() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.Input().Get("pid")
 		subtext := c.Input().Get("subtext")
@@ -276,7 +279,8 @@ func (c *ArticleController) UpdateArticle() {
 
 //根据文章id删除文章_没删除文章中的图片
 func (c *ArticleController) DeleteArticle() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.Input().Get("pid")
 		//id转成64为

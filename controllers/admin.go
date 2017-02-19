@@ -573,7 +573,8 @@ func (c *AdminController) Calendar() {
 		beego.Error(err)
 	}
 	var calendars []*models.AdminCalendar
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		calendars, err = models.GetAdminCalendar(startdate, enddate, false)
 		if err != nil {
 			beego.Error(err)
@@ -957,7 +958,8 @@ func (c *AdminController) DeleteDepartment() {
 
 //批量上传首页轮播图片
 func (c *AdminController) AddCarousel() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		//获取上传的文件
 		_, h, err := c.GetFile("file")
 		if err != nil {

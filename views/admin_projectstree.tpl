@@ -431,6 +431,10 @@
           alert("请先勾选！");
           return;
         }
+        // if (arr.length>=2){
+        //   alert("请不要勾选一个以上！");
+        //   return;
+        // }
       var ids="";
       for(var i=0;i<arr.length;i++){
         if(i==0){
@@ -440,21 +444,25 @@
         }  
       }
     // var obj = JSON.stringify(arr);
-    // alert(arr);
+    // alert(ids);
     // alert(obj);
       if(confirm("确定删除吗？第一次提示！")){
       }else{
         return false;
       }
-
       if(confirm("确定删除吗？一旦删除将无法恢复！")){
         $.ajax({
           type:"post",
           url:"/admin/project/deleteprojectcate",
           data: {ids:ids},
           success:function(data,status){
-            alert("删除“"+data+"”成功！(status:"+status+".)");
-            $('#tree').treeview('removeNode', [ arr, { silent: true } ]);
+            if(data=="no"){
+              alert("删除出错！");
+            }else{
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              $('#tree').treeview('removeNode', [ arr, { silent: true } ]);
+              // $('#tree').treeview('revealNode', [ nodes, { silent: true } ]);
+            }
           }
         });
       }

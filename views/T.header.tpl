@@ -14,9 +14,9 @@
 <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
  
-<script src="/static/js/respond.min.js"></script>
-<script src="/static/js/html5shiv.min.js"></script>
- <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAi20lEQVR42u2dD4xcx13HZ5OWOE3a
+<!-- <script src="/static/js/respond.min.js"></script> -->
+<!-- <script src="/static/js/html5shiv.min.js"></script> -->
+ <!-- <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAi20lEQVR42u2dD4xcx13HZ5OWOE3a
 nCvanJVS75G0uQNBLi0k5xSoA4LYUMgZIWyLolwaLJ8rpF4KbWyk4guo+FwKvlSiuQhdcwGJnClV
 HFTwWVXJlarNhhbloH/stJfmUhrs0D9xoY0vVZPl930zv3ezu+/tvt333s7um99Hmpu3e2/fvpk3
 v+/On9/MlJQgCN5Scn0DgiC4QwRAEDxGBEAQPEYEQBA8RgRAEDxGBEAQPEYEQBA8RgRAEDxGBEAQ
@@ -173,7 +173,7 @@ vFxzneBu42vByoqGX6o6sHhFZGdUK8RpJWTCxGn6A2I/Z/7vrXegzwUrC0QA8mfCxCIAOeBzwcoS
 VNe5gNb42mewIIg9A9BneJEVNLe4eZQof638xHLsy+aYl2BDE4EFwLt8FgHIHvQL3GaOR5udaBfe
 iH6DnSZeUoINalrsGTmR4jqcr5h+vOI6Ua4QAcgeEYB8EQHIEBGAfCmrjarrrdZxHDxKcFR5XCjb
 oKw2RNYWWzhM8ZDpmvKwdz8pIgD5UlYiAHlSViIAqRABEASPEQEQBI8RARAEjxEBEASPEQEQBI8R
-ARAEjxEBEASP+X87oVIPorbKnwAAAABJRU5ErkJggg==" type="image/x-icon" />
+ARAEjxEBEASP+X87oVIPorbKnwAAAABJRU5ErkJggg==" type="image/x-icon" /> -->
 <div class="page-header"></div>
 <!--这是一条横线-->
 {{end}}

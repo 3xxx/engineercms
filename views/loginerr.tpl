@@ -3,10 +3,10 @@
 <html>
 <head>
  <meta charset="UTF-8">
-  <title>Merit价值管理系统</title>
+  <title>EngineerCMS</title>
 <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
- <script src="/static/js/bootstrap-treeview.js"></script>
+ <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 </head>
 <body>
@@ -15,7 +15,7 @@
     <div class="col-md-6 auth-page">
       <h3 class="title">
         <span class="glyphicon glyphicon-remove"></span>
-        密码或用户名错误！
+        密码或用户名错误！或用户被禁止！
       </h3><p class="well">请重新登陆。</p>
     <form method="POST" action="/login">
       <span style="color: #ff0000;"><input type="hidden" name="url" value="{{.Url}}"/></span>

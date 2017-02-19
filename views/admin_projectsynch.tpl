@@ -112,11 +112,11 @@ $(document).ready(function() {
   $("#editoripButton").click(function() {
     var selectipRow=$('#iptable').bootstrapTable('getSelections');
     if (selectipRow.length<1){
-      alert("请先勾选分级！");
+      alert("请先勾选！");
       return;
     }
     if (selectipRow.length>1){
-      alert("请不要勾选一个以上分级！");
+      alert("请不要勾选一个以上！");
       return;
     }
     $("input#cid").remove();

@@ -111,7 +111,7 @@ func (c *UeditorController) ControllerUE() {
 	case "uploadimage", "uploadfile", "uploadvideo":
 		//解析表单
 		pid := c.Input().Get("pid")
-		// beego.Info(pid)
+		beego.Info(pid)
 		//pid转成64为
 		pidNum, err := strconv.ParseInt(pid, 10, 64)
 		if err != nil {
@@ -122,6 +122,7 @@ func (c *UeditorController) ControllerUE() {
 		if err != nil {
 			beego.Error(err)
 		}
+		beego.Info(DiskDirectory)
 		//获取上传的文件
 		_, h, err := c.GetFile("upfile")
 		if err != nil {

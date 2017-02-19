@@ -125,14 +125,14 @@
             var data = 
             [
               {
-                text: "欢迎您~{{.Ip}}土豪", 
-                text1: "欢迎您~{{.Ip}}土豪",
+                text: "欢迎您~{{.Ip}}", 
+                text1: "欢迎您~{{.Ip}}",
                 selectable: true,
                 id: '010',
               },
               {
                 text: "系统设置",
-                text1: "欢迎您~{{.Ip}}土豪",
+                text1: "欢迎您~{{.Ip}}",
                 icon: "fa fa-tachometer icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
@@ -151,7 +151,7 @@
                   { 
                     icon: "fa fa-cog",
                     text: "基本设置",
-                    text1: "欢迎您~{{.Ip}}土豪",
+                    text1: "欢迎您~{{.Ip}}",
                     id: '011',
                     nodeId: '011'
                   },

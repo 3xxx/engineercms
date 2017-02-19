@@ -287,7 +287,7 @@
     var Iprole1 = $('#Iprole1').val();
     var cid = $('#cid').val();
     // $('#myModal').on('hide.bs.modal', function () {  
-    if (Iptitle1)
+    if (StartIp1)
       {  
           $.ajax({
               type:"post",
@@ -298,7 +298,7 @@
                }
           });  
       }else{
-        alert("名称不能为空");
+        alert("开始IP不能为空");
       } 
       // $(function(){$('#myModal').modal('hide')});
         $('#modalTable1').modal('hide');

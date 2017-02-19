@@ -305,7 +305,7 @@ func (c *UserController) DeleteUser() {
 
 //用户查看自己，修改密码等
 func (c *UserController) GetUserByUsername() {
-	role := checkprodRole(c.Ctx)
+	_, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		c.Data["IsAdmin"] = true
 	} else if role <= 1 && role > 5 {

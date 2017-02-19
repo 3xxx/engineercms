@@ -6,14 +6,14 @@
 <!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
   <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
-  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script> -->
   
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
+  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
@@ -49,8 +49,8 @@
         data-query-params="queryParams"
         data-sort-name="Created"
         data-sort-order="desc"
-        data-page-size="5"
-        data-page-list="[5,20, 50, 100, All]"
+        data-page-size="15"
+        data-page-list="[15,20, 50, 100, All]"
         data-unique-id="id"
         data-pagination="true"
         data-side-pagination="client"
@@ -205,6 +205,8 @@
         alert("权限不够！");
         return;
       }
+      $("labe1#info").remove();
+      $("#saveproj").removeClass("disabled")
         $('#modalTable').modal({
         show:true,
         backdrop:'static'
@@ -222,7 +224,7 @@
         return;
       }
       if (selectRow.length>1){
-      alert("请不要勾选一个以上目录！");
+      alert("请不要勾选一个以上！");
       return;
       }
       $("input#cid").remove();
@@ -345,6 +347,11 @@ function save(){
         alert("请先勾选目录！");
         return;
       }
+
+      var lab="<labe1 id='info'>建立项目中，请耐心等待几秒/分钟……</label>"
+      $(".modal-footer").prepend(lab);//这里是否要换名字$("p").remove();
+      $("#saveproj").addClass("disabled");
+
       var ids="";
       for(var i=0;i<selectRow3.length;i++){
         if(i==0){
@@ -490,7 +497,7 @@ function save(){
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary" onclick="save()">保存</button>
+            <button type="button" class="btn btn-primary" id="saveproj" onclick="save()">保存</button><!--  style="display:none" -->
           </div>
         </div>
       </div>

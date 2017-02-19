@@ -48,12 +48,12 @@
 		padding: 0 10px;
 	}
 
-	body {
+	/*body {这个导致窗口挪动，不好
 		margin: 40px 10px;
 		padding: 0;
 		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
 		font-size: 14px;
-	}
+	}*/
 
 	/*#calendar {
 		max-width: 900px;

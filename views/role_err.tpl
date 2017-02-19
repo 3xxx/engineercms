@@ -6,7 +6,7 @@
   <title>EngineerCMS</title>
 <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
- <script src="/static/js/bootstrap-treeview.js"></script>
+ <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 </head>
 <body>

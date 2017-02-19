@@ -7,34 +7,12 @@
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
-    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
     <script src="/static/ueditor/ueditor.parse.js"></script>
 <style type="text/css">
-img{max-width:100%}
-/*nav {
-  background: #4682B4;
-}
-h3 {line-height: 150%;
-  color: #DC143C;#000000
-  color:#FFFFFF;
-  background: #4682B4;#fff
-  margin: 0;
-  padding: 0;
-  font-family: Georgia, Palatino, serif;
-  }
-  h3 a {color: inherit;}h3标签里面的a标签继承父级颜色
+  img{max-width:100%}
 
-   h4{
-      color: #DC143C;
-  font-family: georgia, palatino, "New Century Schoolbook",
-  times, serif;
-  font-weight: normal;
-  /*font-size: 2em;
-  margin-top: 1em;
-  margin-bottom: 0;
-  }*/
 
 </style>
 </head>
@@ -55,17 +33,6 @@ h3 {line-height: 150%;
   </div>
 </div>
 <script type="text/javascript">
-  // function label(){//http://caibaojian.com/frame-adjust-content-height.html
-  //   value={{.product.Label}};
-  //   array=value.split(",");
-  //   var labelarray = new Array(); 
-  //   for (i=0;i<array.length;i++){
-  //     // labelarray[i]="<a href='/project/search/"+array[i]+"'>" + array[i] + "</a>";
-  //     var th1="&nbsp;<a href='/project/product/article/keysearch?keyword="+ array[i]+"'><span class='label label-info'>" +array[i] + "</span></a>";
-  //     $("small#publish").after(th1);
-  //   }
-  // }
-
   $(function(){//这个和$(document).ready(function()等价
     value={{.product.Label}};
     array=value.split(",");
@@ -85,21 +52,15 @@ h3 {line-height: 150%;
       autoHeightEnabled: true,
       autoFloatEnabled: true
     });
-    // 语法
-    // uParse(selector,[option])
-    /*
-    selector支持
-    id,class,tagName
-    */
-    /*
-    目前支持的参数
-    option:
-    highlightJsUrl 代码高亮相关js的路径 如果展示有代码高亮，必须给定该属性
-    highlightCssUrl 代码高亮相关css的路径 如果展示有代码高亮，必须给定该属性
-    liiconpath 自定义列表样式的图标路径，可以不给定，默认'http://bs.baidu.com/listicon/',
-    listDefaultPaddingLeft : 自定义列表样式的左边宽度 默认'20',
-    customRule 可以传入你自己的处理规则函数，函数第一个参数是容器节点
-    */
+    ue.ready(function () {
+        ue.addListener('focus', function () {//startUpload start-upload startUpload beforeExecCommand是在插入图片之前触发
+            var pid = $('#pid').val();
+            // var html = ue.getContent();
+            ue.execCommand('serverparam', {
+              "pid":pid 
+            });
+        });
+    });
     uParse('.content',{
       rootPath : '/static/ueditor/'
     })
@@ -110,9 +71,12 @@ h3 {line-height: 150%;
         alert("权限不够！");
         return;
       }
-      $("input#cid").remove();
+      $("input#cid").remove();//文章id
+      $("input#pid").remove();//项目目录id
       var th1="<input id='cid' type='hidden' name='cid' value='" +{{.article.Id}}+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+      var th2="<input id='pid' type='hidden' name='pid' value='" +{{.product.ProjectId}}+"'/>"
+      $(".modal-body").append(th1);
+      $(".modal-body").append(th2);
       $("#prodcode1").val({{.product.Code}});
       $("#prodname1").val({{.product.Title}});
       $('#subtext1').val({{.article.Subtext}})
@@ -134,10 +98,10 @@ h3 {line-height: 150%;
         });
     });
 
-  //添加文章
+  //编辑文章
   function updatearticle(){
     // var radio =$("input[type='radio']:checked").val();
-    var articleid = $('#cid').val();
+    var articleid = $('#cid').val();//文章id
     var prodcode = $('#prodcode1').val();
     var prodname = $('#prodname1').val();
     var subtext = $('#subtext1').val();
@@ -162,21 +126,13 @@ h3 {line-height: 150%;
     }
   }
 
-    // 删除项目
+    // 删除文章
     $("#deletearticle").click(function() {
       if ({{.role}}!=1){
         alert("权限不够！");
         return;
       }
-      // if(confirm("确定删除吗？第一次提示！")){
-      // }else{
-      //   return false;
-      // }
-      // if(confirm("确定删除项目吗？第二次提示！")){
-      // }else{
-      //   return false;
-      // }
-      if(confirm("确定删除项目吗？一旦删除将无法恢复！")){
+      if(confirm("确定删除吗？一旦删除将无法恢复！")){
         $.ajax({
           type:"post",
           url:"/project/product/deletearticle",
@@ -199,45 +155,39 @@ h3 {line-height: 150%;
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title">添加文章</h3>
+            <h3 class="modal-title">编辑文章</h3>
           </div>
           <div class="modal-body">
             <div class="modal-body-content">
               <div class="form-group must">
                 <label class="col-sm-3 control-label">编号</label>
                 <div class="col-sm-7">
-                  <input type="text" class="form-control" id="prodcode1" name="prodcode1"></div>
+                  <input type="text" readonly="readonly" class="form-control" id="prodcode1" name="prodcode1"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">标题</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodname1" name="prodname1"></div>
+                  <input type="text" readonly="readonly" class="form-control" id="prodname1" name="prodname1"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">副标题</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="subtext1" name="subtext1"></div>
+                  <input type="text" class="form-control" id="subtext1" name="subtext1"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel1" name="prodlabel2"></div>
+                  <input type="text" readonly="readonly" class="form-control" id="prodlabel1" name="prodlabel2"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodprincipal1" name="prodprincipal2"></div>
+                  <input type="text" readonly="readonly" class="form-control" id="prodprincipal1" name="prodprincipal2"></div>
               </div>
             </div>
-
-            <!-- <label>成果内容:</label>
-            <div id="content">
-                <script id="editor" type="text/plain" style="height:500px;"></script>
-            </div> -->
-
             <label>文章正文:</label>
               <div id="content">
-                <script id="container" type="text/plain" style="height:200px;"></script><!-- width:1024px; -->
+                <script id="container" type="text/plain" style="height:200px;width: 100%"></script><!-- width:1024px; -->
               </div>
           </div>
           <div class="modal-footer">

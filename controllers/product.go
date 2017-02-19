@@ -73,7 +73,7 @@ func (c *ProdController) GetProjProd() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
 	c.Data["Id"] = id
-	role := checkprodRole(c.Ctx)
+	_, role := checkprodRole(c.Ctx)
 	c.Data["role"] = role
 	// var categories []*models.ProjCategory
 	// var err error
@@ -405,7 +405,8 @@ func (c *ProdController) AddProduct() {
 
 //编辑成果信息
 func (c *ProdController) UpdateProduct() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		id := c.Input().Get("pid")
 		code := c.Input().Get("code")
 		title := c.Input().Get("title")
@@ -435,7 +436,8 @@ func (c *ProdController) UpdateProduct() {
 
 //删除成果，包含成果里的附件。删除附件用attachment中的
 func (c *ProdController) DeleteProduct() {
-	if checkprodRole(c.Ctx) == 1 {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
 		ids := c.GetString("ids")
 		array := strings.Split(ids, ",")
 		for _, v := range array {
@@ -465,17 +467,18 @@ func (c *ProdController) DeleteProduct() {
 				_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 				if err != nil {
 					beego.Error(err)
-				}
-				path := DiskDirectory + "\\" + attach.FileName
-				//删除附件
-				err = os.Remove(path)
-				if err != nil {
-					beego.Error(err)
-				}
-				//删除附件数据表
-				err = models.DeleteAttachment(w.Id)
-				if err != nil {
-					beego.Error(err)
+				} else {
+					path := DiskDirectory + "\\" + attach.FileName
+					//删除附件
+					err = os.Remove(path)
+					if err != nil {
+						beego.Error(err)
+					}
+					//删除附件数据表
+					err = models.DeleteAttachment(w.Id)
+					if err != nil {
+						beego.Error(err)
+					}
 				}
 			}
 			//删除文章，文章中的图片无法删除
@@ -509,8 +512,8 @@ func (c *ProdController) DeleteProduct() {
 	}
 }
 
-func checkprodRole(ctx *context.Context) (role int) {
-	var uname string
+func checkprodRole(ctx *context.Context) (uname string, role int) {
+	// var uname string
 	sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
 	defer sess.SessionRelease(ctx.ResponseWriter)
 	v := sess.Get("uname")
@@ -524,6 +527,7 @@ func checkprodRole(ctx *context.Context) (role int) {
 		userrole = user.Role
 	} else {
 		userrole = 5
+		uname = ctx.Input.IP()
 	}
 	iprole := Getiprole(ctx.Input.IP())
 	if iprole <= userrole {
@@ -531,7 +535,7 @@ func checkprodRole(ctx *context.Context) (role int) {
 	} else {
 		role = userrole
 	}
-	return role
+	return uname, role
 }
 
 // {

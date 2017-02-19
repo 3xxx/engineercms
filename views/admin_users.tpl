@@ -481,7 +481,8 @@
                 source: [
                       {id: '1', text: '1级',value:1},
                       {id: '2', text: '2级',value:2},
-                      {id: '3', text: '3级',value:3}
+                      {id: '3', text: '3级',value:3},
+                      {id: '4', text: '4级',value:4}
                    ],
         //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
                 select2: {
@@ -584,11 +585,11 @@ $(document).ready(function() {
   $("#editorButton1").click(function() {
     var selectRow3=$('#table1').bootstrapTable('getSelections');
     if (selectRow3.length<1){
-      alert("请先勾选分级！");
+      alert("请先勾选！");
       return;
     }
     if (selectRow3.length>1){
-      alert("请不要勾选一个以上分级！");
+      alert("请不要勾选一个以上！");
       return;
     }
     $("input#cid").remove();
@@ -608,7 +609,7 @@ $(document).ready(function() {
   $("#deleteButton1").click(function() {
      var selectRow=$('#table1').bootstrapTable('getSelections');
      if (selectRow.length<=0) {
-       alert("请先勾选分级！");
+       alert("请先勾选！");
        return false;
      }
      var titles=$.map(selectRow,function(row){

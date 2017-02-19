@@ -30,16 +30,16 @@ type Navbartruct struct {
 
 //项目列表页面
 func (c *ProjController) Get() {
-	role := checkprodRole(c.Ctx)
+	username, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		c.Data["IsAdmin"] = true
-	} else if role <= 1 && role > 5 {
+	} else if role > 1 && role < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
 		c.Data["IsLogin"] = false
 	}
-
+	c.Data["Username"] = username
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
@@ -78,16 +78,16 @@ func (c *ProjController) GetProjects() {
 
 //根据id查看项目，查出项目目录
 func (c *ProjController) GetProject() {
-	role := checkprodRole(c.Ctx)
+	username, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		c.Data["IsAdmin"] = true
-	} else if role <= 1 && role > 5 {
+	} else if role > 1 && role < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
 		c.Data["IsLogin"] = false
 	}
-
+	c.Data["Username"] = username
 	c.Data["IsProject"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
@@ -107,10 +107,12 @@ func (c *ProjController) GetProject() {
 		beego.Error(err)
 	}
 	//取项目所有子孙
-	// categories, err := models.GetProjectsbyPid(idNum)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
+	categories, err := models.GetProjectsbyPid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据id取出下级
+	cates := getsons(idNum, categories)
 	//算出最大级数
 	// grade := make([]int, 0)
 	// for _, v := range categories {
@@ -119,7 +121,8 @@ func (c *ProjController) GetProject() {
 	// height := intmax(grade[0], grade[1:]...)
 	//递归生成目录json
 	root := FileNode{category.Id, category.Title, "", []*FileNode{}}
-	walk(category.Id, &root)
+	// walk(category.Id, &root)
+	maketreejson(cates, categories, &root)
 	// beego.Info(root)
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
@@ -143,9 +146,17 @@ func (c *ProjController) GetProjectCate() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//取项目所有子孙
+	categories, err := models.GetProjectsbyPid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据id取出下级
+	cates := getsons(idNum, categories)
 	//递归生成目录json
 	root := FileNode{category.Id, category.Title, category.Code, []*FileNode{}}
-	walk(category.Id, &root)
+	// walk(category.Id, &root)
+	maketreejson(cates, categories, &root)
 
 	c.Data["json"] = root //data
 	c.ServeJSON()
@@ -571,6 +582,7 @@ func (c *ProjController) DeleteProject() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
+	// var err error
 	//查所有子孙项目，循环删除
 	ids := c.GetString("ids")
 	// beego.Info(ids)
@@ -643,22 +655,28 @@ func (c *ProjController) DeleteProject() {
 		_, DiskDirectory, err := GetUrlPath(projid)
 		if err != nil {
 			beego.Error(err)
-		}
-		// beego.Info(DiskDirectory)
-		path := DiskDirectory
-		//直接删除这个文件夹，remove删除文件
-		err = os.RemoveAll(path)
-		if err != nil {
-			beego.Error(err)
-		}
-		//删除项目自身数据表
-		err = models.DeleteProject(projid)
-		if err != nil {
-			beego.Error(err)
+		} else {
+			beego.Info(DiskDirectory)
+			path := DiskDirectory
+			//直接删除这个文件夹，remove删除文件
+			err = os.RemoveAll(path)
+			if err != nil {
+				beego.Error(err)
+			}
+			//删除项目自身数据表
+			err = models.DeleteProject(projid)
+			if err != nil {
+				beego.Error(err)
+			}
 		}
 	}
+	// if err != nil {
+	// 	c.Data["json"] = "no"
+	// 	c.ServeJSON()
+	// } else {
 	c.Data["json"] = "ok"
 	c.ServeJSON()
+	// }
 }
 
 //求出[]int最大值
@@ -739,6 +757,36 @@ func walk(id int64, node *FileNode) {
 		}
 	}
 	return
+}
+
+//递归构造项目树状目录
+func maketreejson(cates, categories []*models.Project, node *FileNode) {
+	// 遍历目录
+	for _, proj := range cates {
+		id := proj.Id
+		title := proj.Title
+		code := proj.Code
+		// 将当前名和id作为子节点添加到目录下
+		child := FileNode{id, title, code, []*FileNode{}}
+		node.FileNodes = append(node.FileNodes, &child)
+		slice := getsons(id, categories)
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			maketreejson(slice, categories, &child)
+		}
+	}
+	return
+}
+
+//取得数组的下级目录
+func getsons(idNum int64, categories []*models.Project) (slice []*models.Project) {
+	// slice := make([]*models.Project, 0)
+	for _, k := range categories {
+		if k.ParentId == idNum {
+			slice = append(slice, k)
+		}
+	}
+	return slice
 }
 
 type Pathstruct struct {

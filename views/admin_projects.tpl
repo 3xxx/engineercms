@@ -1,4 +1,4 @@
-<!-- 项目列表页 -->
+<!-- 项目列表页 这个没用-->
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目列表-EngiCMS</title>
@@ -196,11 +196,11 @@ function setCode(value,row,index){
     $("#editorButton").click(function() {
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
-        alert("请先勾选类别！");
+        alert("请先勾选！");
         return;
       }
       if (selectRow.length>1){
-      alert("请不要勾选一个以上目录！");
+      alert("请不要勾选一个以上！");
       return;
       }
       $("input#cid").remove();
@@ -226,7 +226,7 @@ function setCode(value,row,index){
       //   return;
       // }
       if (selectRow.length<=0) {
-        alert("请先勾选类别！");
+        alert("请先勾选！");
         return false;
       }
       var ids=$.map(selectRow,function(row){
@@ -291,7 +291,7 @@ function save(){
 
       var selectRow3=$('#table1').bootstrapTable('getSelections');
       if (selectRow3.length<1){
-        alert("请先勾选目录！");
+        alert("请先勾选！");
         return;
       }
       var ids="";
