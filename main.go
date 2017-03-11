@@ -10,7 +10,7 @@ import (
 
 func main() {
 	//开启orm调试模式
-	// orm.Debug = true
+	orm.Debug = true
 	//创建附件目录
 	os.Mkdir("attachment", os.ModePerm)
 	//创建轮播图片存放目录

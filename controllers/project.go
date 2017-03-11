@@ -15,13 +15,6 @@ type ProjController struct {
 	beego.Controller
 }
 
-type Pidstruct struct {
-	ParentId        int64
-	ParentTitle     string
-	ParentIdPath    string
-	ParentTitlePath string
-}
-
 //成果页导航条
 type Navbartruct struct {
 	Id    int64
@@ -524,12 +517,13 @@ func (c *ProjController) AddProject() {
 	height := intmax(grade[0], grade[1:]...)
 	// beego.Info(height)
 	//可以递归了
-	idarr := make([]Pidstruct, 1)
+	idarr := make([]models.Pidstruct, 1)
 	idarr[0].ParentId = Id
 	idarr[0].ParentTitle = projcode + projname
 	idarr[0].ParentIdPath = "" //strconv.FormatInt(Id, 10)
 	idarr[0].ParentTitlePath = ""
-	write(idarr, nodes, 2, height)
+	// write(idarr, nodes, 2, height)
+	models.Insertproj(idarr, nodes, 2, height)
 	//递归创建文件夹
 	patharr := make([]Pathstruct, 1)
 	patharr[0].ParentPath = ".\\attachment\\" + projcode + projname
@@ -656,7 +650,7 @@ func (c *ProjController) DeleteProject() {
 		if err != nil {
 			beego.Error(err)
 		} else {
-			beego.Info(DiskDirectory)
+			// beego.Info(DiskDirectory)
 			path := DiskDirectory
 			//直接删除这个文件夹，remove删除文件
 			err = os.RemoveAll(path)
@@ -690,7 +684,7 @@ func intmax(first int, args ...int) int {
 }
 
 //递归将目录写入数据库
-func write(pid []Pidstruct, nodes []*models.AdminCategory, igrade, height int) (cid []Pidstruct) {
+func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height int) (cid []models.Pidstruct) {
 	for _, v := range pid {
 		for _, v1 := range nodes {
 			if v1.Grade == igrade {
@@ -713,7 +707,7 @@ func write(pid []Pidstruct, nodes []*models.AdminCategory, igrade, height int) (
 				if err != nil {
 					beego.Error(err)
 				}
-				var cid1 Pidstruct
+				var cid1 models.Pidstruct
 				cid1.ParentId = Id
 				cid1.ParentTitle = title
 				cid1.ParentIdPath = parentidpath

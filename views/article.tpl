@@ -90,7 +90,7 @@
     })
 
     $(function(){
-        var content =$('#content').val();
+        // var content =$('#content').val();
         //判断ueditor 编辑器是否创建成功
         ue.addListener("ready", function () {
         // editor准备好之后才可以使用

@@ -1,11 +1,11 @@
 package models
 
 import (
-	// "github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/mattn/go-sqlite3"
-	// "strconv"
+	"strconv"
 	// "strings"
+	"fmt"
 	"time"
 )
 
@@ -19,8 +19,15 @@ type Project struct {
 	ParentIdPath    string    `orm:"null"`
 	ParentTitlePath string    `orm:"null"`
 	Grade           int       `orm:"null"`
-	Created         time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated         time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created         time.Time `orm:"null;index","auto_now_add;type(datetime)"`
+	Updated         time.Time `orm:"null;index","auto_now_add;type(datetime)"`
+}
+
+type Pidstruct struct {
+	ParentId        int64
+	ParentTitle     string
+	ParentIdPath    string
+	ParentTitlePath string
 }
 
 // type Product struct {
@@ -61,6 +68,8 @@ func init() {
 //添加项目
 func AddProject(code, title, label, principal string, parentid int64, parentidpath, parenttitlepath string, grade int) (id int64, err error) {
 	o := orm.NewOrm()
+	//关闭写同步
+	// o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 	// var project Project
 	// if pid == "" {
 	project := &Project{
@@ -220,6 +229,68 @@ func GetProjbyParenttitlepath(parenttitlepath, title string) (proj Project, err 
 		return proj, err
 	}
 	return proj, err
+}
+
+//递归将目录写入数据库
+func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (cid []Pidstruct) {
+	o := orm.NewOrm() //实例化数据库操作对象
+	// o.Using("default")
+	//关闭写同步
+	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
+	// var project models.Project
+	var Id int64
+	for _, v := range pid {
+		for _, v1 := range nodes {
+			if v1.Grade == igrade {
+				title := v1.Title
+				code := v1.Code
+				parentid := v.ParentId
+
+				var parentidpath string
+				var parenttitlepath string
+				if v.ParentIdPath != "" {
+					parentidpath = v.ParentIdPath + "-" + strconv.FormatInt(v.ParentId, 10)
+					parenttitlepath = v.ParentTitlePath + "-" + v.ParentTitle
+				} else {
+					parentidpath = strconv.FormatInt(v.ParentId, 10)
+					parenttitlepath = v.ParentTitle
+				}
+
+				grade := igrade
+				//通过事务方式来进行数据插入
+				// err := o.Begin()
+				const lll = "2006-01-02 15:04:05.000"
+				date := time.Now().Format(lll)
+				sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
+					" values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
+				res, err := o.Raw(sql).Exec()
+				if err != nil {
+					o.Rollback()
+					// beego.Info("插入t_studentInfo表出错,事务回滚")
+				} else {
+					// o.Commit()
+					// beego.Info("插入t_studenInfo表成功,事务提交")
+					// num, _ = res.RowsAffected()
+					Id, _ = res.LastInsertId()
+				}
+				// Id, err := models.AddProject(code, title, "", "", parentid, parentidpath, parenttitlepath, grade)
+				// if err != nil {
+				// 	beego.Error(err)
+				// }
+				var cid1 Pidstruct
+				cid1.ParentId = Id
+				cid1.ParentTitle = title
+				cid1.ParentIdPath = parentidpath
+				cid1.ParentTitlePath = parenttitlepath
+				cid = append(cid, cid1) //每次要清0吗？
+			}
+		}
+	}
+	igrade = igrade + 1
+	if igrade <= height {
+		Insertproj(cid, nodes, igrade, height)
+	}
+	return
 }
 
 //添加成果到项目侧栏某个id下

@@ -58,7 +58,7 @@
          $(ele).addClass("info");
          rowid=row.Id;//全局变量
          rowtitle=row.Title
-         $("#rowtitle").html("工程目录分级-"+rowtitle);
+         $("#rowtitle").html(rowtitle+"-工程目录分级");
          $("#details").show();
          $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+row.Id});
      });

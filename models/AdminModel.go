@@ -390,11 +390,11 @@ func DropAdminCalendar(cid int64, start, end time.Time) error {
 }
 
 //resize
-func ResizeAdminCalendar(cid int64, start, end time.Time) error {
+func ResizeAdminCalendar(cid int64, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{Id: cid}
 	if o.Read(calendar) == nil {
-		calendar.Starttime = start
+		// calendar.Starttime = start
 		calendar.Endtime = end
 		// calendar.Updated = time.Now()
 		_, err := o.Update(calendar)

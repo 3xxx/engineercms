@@ -209,14 +209,14 @@
 <script type="text/javascript">
  function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
   var iframe = document.getElementById("iframepage");
-   try{
+    try{
     var bHeight = iframe.contentWindow.document.body.scrollHeight;
-     var dHeight = iframe.contentWindow.document.documentElement.scrollHeight; var height = Math.max(bHeight, dHeight,800); iframe.height = height;
+    var dHeight = iframe.contentWindow.document.documentElement.scrollHeight; var height = Math.max(bHeight, dHeight,800); iframe.height = height;
       // console.log(height);//这个显示老是在变化
-       }catch (ex){
-        } 
-        } 
-        window.setInterval("reinitIframe()", 200);
+    }catch (ex){
+    } 
+    } 
+    window.setInterval("reinitIframe()", 200);
  </script>
 
 </body>

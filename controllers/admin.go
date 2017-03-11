@@ -705,9 +705,9 @@ func (c *AdminController) ResizeCalendar() {
 	if err != nil {
 		beego.Error(err)
 	}
-	t1 := calendar.Starttime.Add(deltahour)
+	// t1 := calendar.Starttime.Add(deltahour)
 	t2 := calendar.Endtime.Add(deltahour)
-	err = models.DropAdminCalendar(idNum, t1, t2)
+	err = models.ResizeAdminCalendar(idNum, t2)
 	if err != nil {
 		beego.Error(err)
 	} else {

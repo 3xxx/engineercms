@@ -299,74 +299,7 @@
     pdfUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
       return pdfUrl;
   }
-  // 改变点击行颜色
-  // $(function(){
-     // $("#table").bootstrapTable('destroy').bootstrapTable({
-     //     columns:columns,
-     //     data:json
-     // });
-     // $("#table0").on("click-row.bs.table",function(e,row,ele){
-         // $(".info").removeClass("info");
-         // $(ele).addClass("info");
-         // rowid=row.Id//全局变量
-         // $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+row.Id});
-     // });
-     // $("#get").click(function(){
-     //     alert("商品名称：" + getContent().TuanGouName);
-     // })
-  // });
-  // $(function () {
-  //     var $result = $('#eventsResult');
-  //     var selectRow=$('#table').bootstrapTable('getSelections');
-  
-  //     $('#table').on('all.bs.table', function (e, name, args) {
-  //         console.log('Event:', name, ', data:', args);
-  //     })
-  //     .on('click-row.bs.table', function (e, row, $element) {
-  //       alert("选择！"+row.Id);
-  //       if (selectRow.length<1){
-  //         selectRow=$('#table').bootstrapTable('getSelections');
-  //         alert("请选择"+selectRow.length);
-  //         // return;
-  //         }
-  //         $result.text('Event: click-row.bs.table');
-  //     })
-  //     .on('dbl-click-row.bs.table', function (e, row, $element) {
-  //         $result.text('Event: dbl-click-row.bs.table');
-  //     })
-  //     .on('sort.bs.table', function (e, name, order) {
-  //         $result.text('Event: sort.bs.table');
-  //     })
-  //     .on('check.bs.table', function (e, row) {
-  //         $result.text('Event: check.bs.table');
-  //     })
-  //     .on('uncheck.bs.table', function (e, row) {
-  //         $result.text('Event: uncheck.bs.table');
-  //     })
-  //     .on('check-all.bs.table', function (e) {
-  //         $result.text('Event: check-all.bs.table');
-  //     })
-  //     .on('uncheck-all.bs.table', function (e) {
-  //         $result.text('Event: uncheck-all.bs.table');
-  //     })
-  //     .on('load-success.bs.table', function (e, data) {
-  //         $result.text('Event: load-success.bs.table');
-  //     })
-  //     .on('load-error.bs.table', function (e, status) {
-  //         $result.text('Event: load-error.bs.table');
-  //     })
-  //     .on('column-switch.bs.table', function (e, field, checked) {
-  //         $result.text('Event: column-switch.bs.table');
-  //     })
-  //     .on('page-change.bs.table', function (e, number, size) {
-  //         $result.text('Event: page-change.bs.table');
-  //     })
-  //     .on('search.bs.table', function (e, text) {
-  //         $result.text('Event: search.bs.table');
-  //     });
-  // });
 
-  $(document).ready(function() {
     // 批量上传
     $("#addButton").click(function() {
       if ({{.role}}!=1){
@@ -383,14 +316,12 @@
         });
     })
 
-    var uploader;
-    $('#modalTable').on('shown.bs.modal',function(){
-      // var $ = jQuery,
-      $list = $('#thelist'),
-      $btn = $('#ctlBtn'),
-      state = 'pending',
-      // uploader;
-      uploader = WebUploader.create({
+  $(document).ready(function() {
+    $list1 = $('#thelist');
+    $btn = $('#ctlBtn');
+    state = 'pending';
+    // $('#modalTable').on('shown.bs.modal',function(e){
+      var uploader=WebUploader.create({
         // 不压缩image
         resize: false,
         // swf文件路径
@@ -401,9 +332,10 @@
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: '#picker'
       });
+
       // 当有文件添加进来的时候
       uploader.on( 'fileQueued', function( file ) {
-      	$list.append( '<div id="' + file.id + '" class="item">' +
+       $list1.append( '<div id="' + file.id + '" class="item">' +
             '<h4 class="info">' + file.name + '</h4>' +
             '<p class="state">等待上传...</p>' +
         '</div>' );
@@ -472,12 +404,17 @@
             uploader.upload();
         }
       });
-    })
 
-    $('#modalTable').on('hide.bs.modal',function(){
-      $list.text("");
-      uploader.destroy();//销毁uploader
-    })
+      $('#picker').mouseenter(function(){
+        uploader.refresh();
+      })
+
+      $('#modalTable').on('hide.bs.modal',function(){
+        $list1.text("");
+        // uploader.destroy();//销毁uploader
+      })
+    // });
+  })      
 
     // 多附件模式
     $("#addButton1").click(function() {
@@ -494,14 +431,12 @@
         });
     })
 
-    var uploader;
-    $('#modalTable1').on('shown.bs.modal',function(){
-      // var $ = jQuery,
-      $list = $('#thelist1'),
-      $btn = $('#ctlBtn1'),
-      state = 'pending',
-      // uploader;
-      uploader = WebUploader.create({
+  $(document).ready(function() {
+      $list = $('#thelist1');
+      $btn = $('#ctlBtn1');
+      state = 'pending';
+    $('#modalTable1').on('shown.bs.modal',function(e){
+      var uploader=WebUploader.create({
         // 不压缩image
         resize: false,
         // swf文件路径
@@ -512,15 +447,16 @@
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: '#picker1'
       });
+
       // 当有文件添加进来的时候
       uploader.on( 'fileQueued', function( file ) {
-        $list.append( '<div id="' + file.id + '" class="item">' +
-              '<h4 class="info">' + file.name + '</h4>' +
-              '<p class="state">等待上传...</p>' +
-          '</div>' );
+       $list.append( '<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">等待上传...</p>' +
+        '</div>' );
       }); 
 
-      //传递参数——成果id
+          //传递参数——成果id
       uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
         var pid = $('#pid').val();
         var prodcode = $('#prodcode').val();
@@ -543,29 +479,29 @@
       // 文件上传过程中创建进度条实时显示。
       uploader.on( 'uploadProgress', function( file, percentage ) {
         var $li = $( '#'+file.id ),
-        $percent = $li.find('.progress .progress-bar');
+            $percent = $li.find('.progress .progress-bar');
         // 避免重复创建
         if ( !$percent.length ) {
-          $percent = $('<div class="progress progress-striped active">' +
-                '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+            $percent = $('<div class="progress progress-striped active">' +
+              '<div class="progress-bar" role="progressbar" style="width: 0%">' +
               '</div>' +
-              '</div>').appendTo( $li ).find('.progress-bar');
+            '</div>').appendTo( $li ).find('.progress-bar');
         }
         $li.find('p.state').text('上传中');
         $percent.css( 'width', percentage * 100 + '%' );
       });
 
       uploader.on( 'uploadSuccess', function( file ) {
-          $( '#'+file.id ).find('p.state').text('已上传');
+        $( '#'+file.id ).find('p.state').text('已上传');
       });
 
       uploader.on( 'uploadError', function( file ) {
-          $( '#'+file.id ).find('p.state').text('上传出错');
+        $( '#'+file.id ).find('p.state').text('上传出错');
       });
 
       uploader.on( 'uploadComplete', function( file ) {
-          $( '#'+file.id ).find('.progress').fadeOut();
-          $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
+        $( '#'+file.id ).find('.progress').fadeOut();
+        $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
       });
 
       uploader.on( 'all', function( type ) {
@@ -582,7 +518,7 @@
             $btn.text('开始上传');
         }
       });
-    
+
       $btn.on( 'click', function() {
         var prodcode = $('#prodcode').val();
         var prodname = $('#prodname').val();
@@ -596,12 +532,13 @@
             alert("编号和名称不能为空"+prodcode+prodname);
         }
       });
-    })
 
     $('#modalTable1').on('hide.bs.modal',function(){
       $list.text("");
       uploader.destroy();//销毁uploader
     })
+  });
+  }) 
 
     //****添加文章
     $("#addButton2").click(function() {
@@ -703,10 +640,11 @@
       });
     })
 
+  $(document).ready(function() {
     var uploader;
     $('#modalAttachEditor').on('shown.bs.modal',function(){
       // var $ = jQuery,
-      $list = $('#thelist2'),
+      $list2 = $('#thelist2'),
       $btn = $('#ctlBtn2'),
       state = 'pending',
       // uploader;
@@ -723,7 +661,7 @@
       });
       // 当有文件添加进来的时候
       uploader.on( 'fileQueued', function( file ) {
-        $list.append( '<div id="' + file.id + '" class="item">' +
+        $list2.append( '<div id="' + file.id + '" class="item">' +
               '<h4 class="info">' + file.name + '</h4>' +
               '<p class="state">等待上传...</p>' +
           '</div>' );
@@ -791,9 +729,11 @@
     })
 
     $('#modalAttachEditor').on('hide.bs.modal',function(){
-      $list.text("");
+      $list2.text("");
       uploader.destroy();//销毁uploader
     })
+  })
+    
     // 删除成果
     $("#deleteButton").click(function() {
       if ({{.role}}!=1){
@@ -845,23 +785,6 @@
         });
       }  
     })
-
-  })
-
-   /*数据json*/
-  // var json1 = [{"Id":"1","Title":"规划","Code":"A","Grade":"1"},
-  //             {"Id":"7","Title":"可研","Code":"B","Grade":"1"},
-  //             {"Id":"2","Title":"报告","Code":"B","Grade":"2"},
-  //             {"Id":"3","Title":"图纸","Code":"T","Grade":"2"},
-  //             {"Id":"4","Title":"水工","Code":"5","Grade":"3"},
-  //             {"Id":"5","Title":"机电","Code":"6","Grade":"3"},
-  //             {"Id":"6","Title":"施工","Code":"7","Grade":"3"}];
-  /*初始化table数据*/
-  // $(function(){
-  //     $("#table1").bootstrapTable({
-  //         data:json1
-  //     });
-  // });
 
 
   //模态框可拖曳—要引入ui-jquery.js
