@@ -339,12 +339,12 @@ func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCale
 	calendars = make([]*AdminCalendar, 0)
 	// qs := o.QueryTable("AdminCalendar")
 	if public { //只取公开的
-		_, err = qs.Filter("public", true).All(&calendars)
+		_, err = qs.Filter("public", true).OrderBy("-Starttime").All(&calendars)
 		if err != nil {
 			return calendars, err
 		}
 	} else { //取全部
-		_, err = qs.All(&calendars)
+		_, err = qs.OrderBy("-Starttime").All(&calendars)
 		if err != nil {
 			return calendars, err
 		}

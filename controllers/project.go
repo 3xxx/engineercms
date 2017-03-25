@@ -5,10 +5,13 @@ import (
 	// "encoding/json"
 	"engineercms/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/utils/pagination"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type ProjController struct {
@@ -672,6 +675,533 @@ func (c *ProjController) DeleteProject() {
 	c.ServeJSON()
 	// }
 }
+
+//*******项目日历*****
+//添加日历
+func (c *ProjController) AddCalendar() {
+	projectid := c.Ctx.Input.Param(":id")
+	pid, err := strconv.ParseInt(projectid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(pid)
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	url := c.Input().Get("url")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	public1 := c.Input().Get("public")
+	var public bool
+	if public1 == "true" {
+		public = true
+	} else {
+		public = false
+	}
+	memorabilia1 := c.Input().Get("memorabilia")
+	var memorabilia bool
+	if memorabilia1 == "true" {
+		memorabilia = true
+	} else {
+		memorabilia = false
+	}
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	_, err = models.AddProjCalendar(pid, title, content, color, url, allday, public, memorabilia, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+}
+
+func (c *ProjController) GetCalendar() {
+	c.Data["ProjectId"] = c.Ctx.Input.Param(":id")
+	// beego.Info(c.Ctx.Input.Param(":id"))
+	c.TplName = "project_calendar.tpl"
+}
+
+//返回日历json数据
+//如果是管理员，则显示全部，非管理员，显示公开
+func (c *ProjController) Calendar() {
+	projectid := c.Ctx.Input.Param(":id")
+	pid, err := strconv.ParseInt(projectid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	const lll = "2006-01-02"
+	startdate, err := time.Parse(lll, start)
+	if err != nil {
+		beego.Error(err)
+	}
+	enddate, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	var calendars []*models.ProjCalendar
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		calendars, err = models.GetProjCalendar(pid, startdate, enddate, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.GetProjCalendar(pid, startdate, enddate, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+	// c.TplName = "Proj_category.tpl"
+}
+
+//修改
+func (c *ProjController) UpdateCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	url := c.Input().Get("url")
+	memorabilia1 := c.Input().Get("memorabilia")
+	var memorabilia bool
+	if memorabilia1 == "true" {
+		memorabilia = true
+	} else {
+		memorabilia = false
+	}
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	public1 := c.Input().Get("public")
+	var public bool
+	if public1 == "true" {
+		public = true
+	} else {
+		public = false
+	}
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdateProjCalendar(cidNum, title, content, color, url, allday, public, memorabilia, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+	// pid := c.Ctx.Input.Param(":id")
+	//
+	// title := c.Input().Get("title")
+	// code := c.Input().Get("code")
+	// grade := c.Input().Get("grade")
+	// //pid转成64为
+	// cidNum, err := strconv.ParseInt(cid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// err = models.UpdateProjCategory(cidNum, title, code, gradeNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// } else {
+	// 	c.Data["json"] = "ok"
+	// 	c.ServeJSON()
+	// }
+}
+
+//拖曳
+func (c *ProjController) DropCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	daltaint, err := strconv.Atoi(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	calendar, err := models.GetProjCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	t1 := calendar.Starttime.AddDate(0, 0, daltaint)
+	t2 := calendar.Endtime.AddDate(0, 0, daltaint)
+	err = models.DropProjCalendar(idNum, t1, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//resize
+func (c *ProjController) ResizeCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	delta = delta + "h"
+	deltahour, err := time.ParseDuration(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	// starttime.Add(-time.Duration(hours) * time.Hour)
+	calendar, err := models.GetProjCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// t1 := calendar.Starttime.Add(deltahour)
+	t2 := calendar.Endtime.Add(deltahour)
+	err = models.ResizeProjCalendar(idNum, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *ProjController) DeleteCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	err = models.DeleteProjCalendar(cidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//****项目时间轴——大事记
+type List struct {
+	Name string `json:"name"`
+}
+type Listimage struct {
+	Id        int64    `json:"id"`
+	UserNo    string   `json:"userNo"`
+	DiagTime  string   `json:"diagTime"`
+	DiagDoc   string   `json:"diagDoc"`
+	Feature   string   `json:"feature"`
+	MatchList string   `json:"matchList"`
+	Result    string   `json:"result"`
+	Desc      string   `json:"desc"`
+	Images    []string `json:"images"`
+	Ctime     string   `json:"ctime"`
+	Utime     string   `json:"utime"`
+}
+
+//项目时间轴
+func (c *ProjController) ProjectTimeline() {
+	projectid := c.Ctx.Input.Param(":id")
+	pid, err := strconv.ParseInt(projectid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	var calendars []*models.ProjCalendar
+	// var err error
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 { //显示公开和私有的大事记
+		calendars, err = models.GetAllProjCalendar(pid, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else { //只显示公开的大事记
+		calendars, err = models.GetAllProjCalendar(pid, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	count := len(calendars)
+	// beego.Info(count)
+	// count1 := strconv.Itoa(count)
+	// count2, err := strconv.ParseInt(count1, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	project, err := models.GetProj(pid)
+	c.Data["ProjectId"] = c.Ctx.Input.Param(":id")
+	c.Data["ProjectTile"] = project.Title
+	c.Data["Count"] = count
+	c.TplName = "project_timeline.tpl"
+	// c.Data["json"] = map[string]interface{}{
+	// 	"id":    2,
+	// 	"name":  "111",
+	// 	"price": "demo.jpg",
+	// }
+}
+
+//要分页
+func (c *ProjController) Timeline() {
+	// page := c.Input().Get("p")
+	// pagenum, err := strconv.Atoi(page)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	projectid := c.Ctx.Input.Param(":id")
+	pid, err := strconv.ParseInt(projectid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	var calendars []*models.ProjCalendar
+	// var err error
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 { //显示公开和私有的大事记
+		calendars, err = models.GetAllProjCalendar(pid, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else { //只显示公开的大事记
+		calendars, err = models.GetAllProjCalendar(pid, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	count := len(calendars)
+	// beego.Info(count)
+	count1 := strconv.Itoa(count)
+	count2, err := strconv.ParseInt(count1, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	// sets this.Data["paginator"] with the current offset (from the url query param)
+	postsPerPage := 2
+	paginator := pagination.SetPaginator(c.Ctx, postsPerPage, count2)
+	// beego.Info(c.Ctx)
+	// beego.Info(paginator.Offset()) //0
+	// p := pagination.NewPaginator(c.Ctx.Request, 10, 9)
+	// beego.Info(p.Offset())   0
+	// fetch the next 5 posts
+
+	if role == 1 { //显示公开和私有的大事记
+		calendars, err = models.ListPostsByOffsetAndLimit(pid, paginator.Offset(), postsPerPage, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else { //显示公开的大事记
+		calendars, err = models.ListPostsByOffsetAndLimit(pid, paginator.Offset(), postsPerPage, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
+	// start := "2016-11-01" //c.Input().Get("start")
+	// end := "2017-04-10"   //c.Input().Get("end")
+
+	// const lll = "2006-01-02"
+	// startdate, err := time.Parse(lll, start)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// enddate, err := time.Parse(lll, end)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// var calendars []*models.ProjCalendar
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 { //显示公开和私有的大事记
+	// 	calendars, err = models.GetProjCalendar(false, true)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// } else { //显示公开的大事记
+	// 	calendars, err = models.GetProjCalendar(true, true)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	c.Data["json"] = calendars
+	c.ServeJSON()
+}
+
+func (c *ProjController) UploadImage() {
+	id := c.Input().Get("pid")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//由proj id取得url
+	Url, DiskDirectory, err := GetUrlPath(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//保存上传的图片
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+
+	var filesize int64
+	fileSuffix := path.Ext(h.Filename)
+	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix
+	year, month, _ := time.Now().Date()
+
+	err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	if err != nil {
+		beego.Error(err)
+	}
+	path1 := DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
+	Url1 := Url + "/" + strconv.Itoa(year) + month.String() + "/"
+	err = c.SaveToFile("file", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+	if err != nil {
+		beego.Error(err)
+	}
+	filesize, _ = FileSize(path1)
+	filesize = filesize / 1000.0
+	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": Url1 + newname, "title": h.Filename, "original": h.Filename}
+	c.ServeJSON()
+}
+
+// c.TplName = "Proj_category.tpl"
+// func (c *ProjController) Timeline() {
+// 	imagelist1 := []string{"/static/img/1.jpg", "/static/img/2.jpg", "/static/img/3.jpg"}
+// 	imagelist2 := []string{"/static/img/4.jpg", "/static/img/5.jpg", "/static/img/6.jpg"}
+// 	imagelist3 := []string{"/static/img/7.jpg", "/static/img/8.jpg", "/static/img/9.jpg"}
+// 	imagelist4 := []string{"/static/img/10.jpg", "/static/img/11.jpg", "/static/img/12.jpg"}
+// 	imagelist5 := []string{"/static/img/13.jpg", "/static/img/14.jpg", "/static/img/15.jpg"}
+// 	imagelist6 := []string{"/static/img/16.jpg", "/static/img/17.jpg", "/static/img/18.jpg"}
+
+// 	listimage1 := Listimage{
+// 		1,
+// 		"uer0001",
+// 		"2017/03/18",
+// 		"秦晓川",
+// 		"通过图像识别获得眼像特征",
+// 		"知识库自动获取的饼子",
+// 		"根据病症信息分析结果",
+// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
+// 		imagelist1,
+// 		"2017-03-18",
+// 		"",
+// 	}
+// 	listimage2 := Listimage{
+// 		2,
+// 		"uer0002",
+// 		"2017/03/14",
+// 		"秦晓川2",
+// 		"识别技术更新",
+// 		"来自库",
+// 		"分析结果",
+// 		"\n\t对综合\n\t\t\t 详细描述",
+// 		imagelist2,
+// 		"2017-03-13",
+// 		"",
+// 	}
+// 	listimage3 := Listimage{
+// 		3,
+// 		"uer0003",
+// 		"2017/03/10",
+// 		"秦晓川3",
+// 		"特征",
+// 		"自动获取",
+// 		"根据结果",
+// 		"\n\t进行\n\t\t\t 详细描述",
+// 		imagelist3,
+// 		"2017-03-10",
+// 		"",
+// 	}
+// 	listimage4 := Listimage{
+// 		4,
+// 		"uer0004",
+// 		"2017/03/02",
+// 		"秦晓川4",
+// 		"通过特征",
+// 		"知识库",
+// 		"分析结果",
+// 		"\n\t综合揭露\n\t\t\t 描述",
+// 		imagelist4,
+// 		"2014-07-13",
+// 		"",
+// 	}
+// 	listimage5 := Listimage{
+// 		5,
+// 		"uer0005",
+// 		"2016/07/14",
+// 		"秦晓川5",
+// 		"通过图像识别获得眼像特征",
+// 		"知识库自动获取的饼子",
+// 		"根据病症信息分析结果",
+// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
+// 		imagelist5,
+// 		"2014-07-13",
+// 		"",
+// 	}
+// 	listimage6 := Listimage{
+// 		6,
+// 		"uer0006",
+// 		"2015/07/14",
+// 		"秦晓川6",
+// 		"眼像特征",
+// 		"获取",
+// 		"信息结果",
+// 		"\n\t揭露进行\n\t\t\t 详细描述",
+// 		imagelist6,
+// 		"2014-07-13",
+// 		"",
+// 	}
+// 	listimage := []Listimage{listimage1, listimage2, listimage3, listimage4, listimage5, listimage6}
+// 	c.Data["json"] = listimage
+// 	// c.Data["json"] = catalogs
+// 	c.ServeJSON()
+// }
 
 //求出[]int最大值
 func intmax(first int, args ...int) int {

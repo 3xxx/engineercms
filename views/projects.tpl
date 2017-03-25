@@ -67,6 +67,7 @@
         <th data-field="Label" data-formatter="setLable">标签</th>
         <th data-field="Principal">负责人</th>
         <th data-field="Product">成果数量</th>
+        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents">时间轴</th>
         <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
       </tr>
     </thead>
@@ -98,6 +99,35 @@
   // alert( "Data Loaded: " + index );
     return index+1
   }
+
+  //详细，提交，删除
+  function actionFormatter(value, row, index) {
+    return [
+        '<a class="memorabilia" href="javascript:void(0)" title="大事记">',
+        '&nbsp;&nbsp;<i class="fa fa-ellipsis-v"></i>&nbsp;&nbsp;</a>&nbsp;&nbsp;',
+        '<a class="log" href="javascript:void(0)" title="日志">',
+        '<i class="fa fa-calendar"></i>',
+        '</a>&nbsp;&nbsp;',
+        '<a class="operate" href="javascript:void(0)" title="操作记录">',
+        '<i id="delete" class="fa fa-wrench"></i>',
+        '</a>'
+    ].join('');
+  }
+  window.actionEvents = {
+  //大事记
+    'click .memorabilia': function (e, value, row, index) {
+      window.open('/project/'+row.Id+'/gettimeline');
+    },
+    //日志
+    'click .log': function (e, value, row, index) {
+      window.open('/project/'+row.Id+'/getcalendar');
+    },
+    //操作记录
+    'click .operate': function (e, value, row, index) {
+        // alert('You click remove icon, row: ' + JSON.stringify(row));
+        // console.log(value, row, index);
+    }
+  };
   function localDateFormatter(value) {
     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }

@@ -30,6 +30,22 @@ type Pidstruct struct {
 	ParentTitlePath string
 }
 
+type ProjCalendar struct {
+	Id          int64     `json:"id",form:"-"`
+	ProjectId   int64     `json:"projectid"`
+	Title       string    `json:"title",form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
+	Content     string    `json:"content",orm:"sie(20)"`
+	Starttime   time.Time `json:"start",orm:"not null;type(datetime)"`
+	Endtime     time.Time `json:"end",orm:"null;type(datetime)"`
+	Allday      bool      `json:"allDay",orm:"not null;default(true)"`
+	Memorabilia bool      `json:"memorabilia",orm:"not null;default(false)"` //是否属于大事记
+	Image       string    `json:"image",orm:"null"`                          //图片链接地址
+	Color       string    `json:"color",orm:"null"`
+	Public      bool      `default(true)` //是否公开
+	// Color     string    `json:"backgroundColor",orm:"null"`
+	// BColor    string    `json:"borderColor",orm:"null"`
+}
+
 // type Product struct {
 // 	Id        int64
 // 	Code      string    `orm:"null"`                                              //编号                                             //编号
@@ -60,7 +76,7 @@ type Pidstruct struct {
 // }
 
 func init() {
-	orm.RegisterModel(new(Project)) //, new(Article)
+	orm.RegisterModel(new(Project), new(ProjCalendar)) //, new(Article)
 	// orm.RegisterDriver("sqlite", orm.DRSqlite)
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
@@ -291,6 +307,176 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 		Insertproj(cid, nodes, igrade, height)
 	}
 	return
+}
+
+//************项目日历
+//********日历********
+//添加
+func AddProjCalendar(pid int64, title, content, color, imgurl string, allday, public, memorabilia bool, start, end time.Time) (id int64, err error) {
+	o := orm.NewOrm()
+	calendar := &ProjCalendar{
+		ProjectId:   pid,
+		Title:       title,
+		Content:     content,
+		Color:       color,
+		Allday:      allday,
+		Public:      public,
+		Memorabilia: memorabilia,
+		Image:       imgurl,
+		// BColor:    color,
+		Starttime: start,
+		Endtime:   end,
+	}
+	id, err = o.Insert(calendar)
+	if err != nil {
+		return id, err
+	}
+	// }
+	return id, err
+}
+
+//取所有——要修改为支持时间段的，比如某个月份
+func GetProjCalendar(pid int64, start, end time.Time, public bool) (calendars []*ProjCalendar, err error) {
+	cond := orm.NewCondition()
+	cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
+	o := orm.NewOrm()
+	qs := o.QueryTable("ProjCalendar")
+	qs = qs.SetCond(cond1)
+
+	// o := orm.NewOrm()
+	calendars = make([]*ProjCalendar, 0)
+	// qs := o.QueryTable("ProjCalendar")
+	if public { //只取公开的
+		_, err = qs.Filter("ProjectId", pid).Filter("public", true).OrderBy("-Starttime").All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	} else { //取全部
+		_, err = qs.Filter("ProjectId", pid).OrderBy("-Starttime").All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	}
+	return calendars, err
+}
+
+//取出所有日历日程
+func GetAllProjCalendar(pid int64, public bool) (calendars []*ProjCalendar, err error) {
+	// cond := orm.NewCondition()
+	// cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
+	o := orm.NewOrm()
+	qs := o.QueryTable("ProjCalendar")
+	// qs = qs.SetCond(cond1)
+
+	// o := orm.NewOrm()
+	calendars = make([]*ProjCalendar, 0)
+	// qs := o.QueryTable("ProjCalendar")
+	if public { //只取公开的
+		_, err = qs.Filter("ProjectId", pid).Filter("public", true).Filter("memorabilia", true).OrderBy("-Starttime").All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	} else { //取全部
+		_, err = qs.Filter("ProjectId", pid).Filter("memorabilia", true).OrderBy("-Starttime").All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	}
+	return calendars, err
+}
+
+//取出分页的日历
+func ListPostsByOffsetAndLimit(pid int64, set, postsPerPage int, public bool) ([]*ProjCalendar, error) {
+	o := orm.NewOrm()
+	calendars := make([]*ProjCalendar, 0)
+	qs := o.QueryTable("ProjCalendar")
+	var err error
+	if public { //只取公开的
+		_, err = qs.Filter("ProjectId", pid).Filter("public", true).Filter("memorabilia", true).Limit(postsPerPage, set).OrderBy("-Starttime").All(&calendars)
+		return calendars, err
+	} else { //取全部
+		_, err = qs.Filter("ProjectId", pid).Filter("memorabilia", true).Limit(postsPerPage, set).OrderBy("-Starttime").All(&calendars)
+		return calendars, err
+	}
+}
+
+//修改
+func UpdateProjCalendar(cid int64, title, content, color, url string, allday, public, memorabilia bool, start, end time.Time) error {
+	o := orm.NewOrm()
+	calendar := &ProjCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		calendar.Title = title
+		calendar.Content = content
+		calendar.Color = color
+		calendar.Image = url
+		calendar.Allday = allday
+		calendar.Public = public
+		calendar.Memorabilia = memorabilia
+		// calendar.BColor = color
+		calendar.Starttime = start
+		calendar.Endtime = end
+		// calendar.Updated = time.Now()
+		_, err := o.Update(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//拖曳
+func DropProjCalendar(cid int64, start, end time.Time) error {
+	o := orm.NewOrm()
+	calendar := &ProjCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		calendar.Starttime = start
+		calendar.Endtime = end
+		_, err := o.Update(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//resize
+func ResizeProjCalendar(cid int64, end time.Time) error {
+	o := orm.NewOrm()
+	calendar := &ProjCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		// calendar.Starttime = start
+		calendar.Endtime = end
+		// calendar.Updated = time.Now()
+		_, err := o.Update(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//根据id查询事件
+func GetProjCalendarbyid(id int64) (calendar ProjCalendar, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("ProjCalendar")
+	err = qs.Filter("id", id).One(&calendar)
+	if err != nil {
+		return calendar, err
+	}
+	return calendar, err
+}
+
+//删除事件
+func DeleteProjCalendar(cid int64) error {
+	o := orm.NewOrm()
+	calendar := &ProjCalendar{Id: cid}
+	if o.Read(calendar) == nil {
+		_, err := o.Delete(calendar)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 //添加成果到项目侧栏某个id下

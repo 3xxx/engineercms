@@ -533,11 +533,11 @@
         }
       });
 
-    $('#modalTable1').on('hide.bs.modal',function(){
-      $list.text("");
-      uploader.destroy();//销毁uploader
-    })
-  });
+      $('#modalTable1').on('hide.bs.modal',function(){
+        $list.text("");
+        uploader.destroy();//销毁uploader
+      })
+    });
   }) 
 
     //****添加文章

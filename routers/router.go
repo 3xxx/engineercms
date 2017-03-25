@@ -54,9 +54,9 @@ func init() {
 	beego.Router("/admin/calendar/addcalendar", &controllers.AdminController{}, "*:AddCalendar")
 	//查询
 	beego.Router("/admin/calendar", &controllers.AdminController{}, "*:Calendar")
-	//修改IP地址段
+	//修改
 	beego.Router("/admin/calendar/updatecalendar", &controllers.AdminController{}, "*:UpdateCalendar")
-	//删除IP地址段
+	//删除
 	beego.Router("/admin/calendar/deletecalendar", &controllers.AdminController{}, "*:DeleteCalendar")
 	//拖曳事件
 	beego.Router("/admin/calendar/dropcalendar", &controllers.AdminController{}, "*:DropCalendar")
@@ -126,9 +126,29 @@ func init() {
 	beego.Router("/project/updateproject", &controllers.ProjController{}, "*:UpdateProject")
 	//删除项目
 	beego.Router("/project/deleteproject", &controllers.ProjController{}, "*:DeleteProject")
+	//项目时间轴
+	beego.Router("/project/:id([0-9]+)/gettimeline", &controllers.ProjController{}, "get:ProjectTimeline")
+	beego.Router("/project/:id([0-9]+)/timeline", &controllers.ProjController{}, "get:Timeline")
 
 	//根据项目id进入一个具体项目的侧栏
 	beego.Router("/project/:id([0-9]+)", &controllers.ProjController{}, "*:GetProject")
+	//进入项目日历
+	beego.Router("/project/:id([0-9]+)/getcalendar", &controllers.ProjController{}, "*:GetCalendar")
+	//取得日历数据
+	beego.Router("/project/:id([0-9]+)/calendar", &controllers.ProjController{}, "*:Calendar")
+	//添加日历
+	beego.Router("/project/:id([0-9]+)/calendar/addcalendar", &controllers.ProjController{}, "*:AddCalendar")
+	//修改
+	beego.Router("/project/calendar/updatecalendar", &controllers.ProjController{}, "*:UpdateCalendar")
+	//删除
+	beego.Router("/project/calendar/deletecalendar", &controllers.ProjController{}, "*:DeleteCalendar")
+	//拖曳事件
+	beego.Router("/project/calendar/dropcalendar", &controllers.ProjController{}, "*:DropCalendar")
+	//resize事件
+	beego.Router("/project/calendar/resizecalendar", &controllers.ProjController{}, "*:ResizeCalendar")
+	//日历中传照片
+	beego.Router("/project/calendar/uploadimage", &controllers.ProjController{}, "*:UploadImage")
+
 	//点击侧栏，根据id返回json数据给导航条
 	beego.Router("/project/navbar/:id:string", &controllers.ProjController{}, "*:GetProjNav")
 
