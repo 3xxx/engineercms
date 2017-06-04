@@ -143,6 +143,7 @@
 			addNodeBefore: $.proxy(this.addNodeBefore, this),
 			removeNode: $.proxy(this.removeNode, this),
 			updateNode: $.proxy(this.updateNode, this),
+			editNode: $.proxy(this.editNode, this),
 
 			// Select methods
 			selectNode: $.proxy(this.selectNode, this),
@@ -1436,6 +1437,7 @@
 			.done(this._render.bind(this));
 	};
 
+
 	/**
 		Selects given tree nodes
 		@param {Array} nodes - An array of nodes
@@ -1887,6 +1889,29 @@
 			}
 		}
 	};
+	
+    /** 
+     des:扩展bootstrap-treeview的编辑节点方法
+     编辑节点 
+     author:qlx 2017-3-31
+     */
+	Tree.prototype.editNode = function (identifiers, options) {
+	    $.each(identifiers,$.proxy(function (i, node) {
+	        this.setEditNode(node, options);
+	    }, this));
+	    this._setInitialStates({ nodes: this._tree }, 0);
+	    this._render();
+	}
+
+    /** 
+    * 编辑节点 
+    */
+	Tree.prototype.setEditNode = function (node, options) {
+	    if (options) {
+	        $.extend(node, options);
+	    };
+	};
+
 
 	var logError = function (message) {
 		if (window.console) {

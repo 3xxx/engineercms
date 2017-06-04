@@ -16,8 +16,8 @@ type Attachment struct {
 	FileSize  int64
 	Downloads int64
 	ProductId int64     //*Topic    `orm:"rel(fk)"`
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now;type(datetime)"`
 }
 
 func init() {

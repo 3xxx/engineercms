@@ -187,7 +187,7 @@
           项目编号：{{.Category.Code}}
         </a>
       </li>
-<!--       {{range $index, $elem :=.jishu}}
+      <!-- {{range $index, $elem :=.jishu}}
       <li>
         <a href="javascript:void(0)">
           jibie.title

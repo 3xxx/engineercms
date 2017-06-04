@@ -24,6 +24,17 @@ type Navbartruct struct {
 	Title string
 }
 
+type Project1 struct {
+	Id        int64
+	Code      string
+	Title     string
+	Label     string
+	Principal string
+	Number    int
+	Created   time.Time
+	Updated   time.Time
+}
+
 //项目列表页面
 func (c *ProjController) Get() {
 	username, role := checkprodRole(c.Ctx)
@@ -65,7 +76,26 @@ func (c *ProjController) GetProjects() {
 		if err != nil {
 			beego.Error(err)
 		}
-		c.Data["json"] = projects
+		//取得每个项目的成果数量
+		projects1 := make([]Project1, 0) //这里不能加*号
+		for _, v := range projects {
+			aa := make([]Project1, 1)
+			aa[0].Id = v.Id
+			aa[0].Code = v.Code
+			aa[0].Title = v.Title
+			aa[0].Label = v.Label
+			aa[0].Principal = v.Principal
+			//取得项目所有成果——速度太慢
+			products, err := models.GetProjProducts(v.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			aa[0].Number = len(products)
+			aa[0].Created = v.Created
+			aa[0].Updated = v.Updated
+			projects1 = append(projects1, aa...)
+		}
+		c.Data["json"] = projects1
 		c.ServeJSON()
 	} else {
 		//根据标签查询
@@ -125,6 +155,42 @@ func (c *ProjController) GetProject() {
 	// c.ServeJSON()
 	c.Data["Category"] = category
 	c.TplName = "project.tpl"
+}
+
+//点击项目名称，根据id查看项目下所有成果
+//这个只是页面。表格内的数据填充用product controllers里的getprojproducts方法
+func (c *ProjController) GetProjProducts() {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProject"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
+	id := c.Ctx.Input.Param(":id")
+	c.Data["Id"] = id
+	// var categories []*models.ProjCategory
+	var err error
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目本身
+	category, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	c.Data["Category"] = category
+	c.TplName = "project_allproducts.tpl"
 }
 
 //后台根据id查出项目目录，以便进行编辑
@@ -535,37 +601,40 @@ func (c *ProjController) AddProject() {
 	c.ServeJSON()
 }
 
-//还没改，应该是updateproj
+//修改项目名称、负责人等，
 func (c *ProjController) UpdateProject() {
 	iprole := Getiprole(c.Ctx.Input.IP())
 	if iprole != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
 		return
 	}
-	// pid := c.Ctx.Input.Param(":id")
-	cid := c.Input().Get("cid")
-	title := c.Input().Get("title")
-	code := c.Input().Get("code")
-	grade := c.Input().Get("grade")
-	//cid转成64为
-	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	var err error
+	projcode := c.Input().Get("code")
+	projname := c.Input().Get("name")
+	projlabe := c.Input().Get("label")
+	principal := c.Input().Get("principal")
+	pid := c.GetString("pid")
+	//id转成64位
+	idNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
 		beego.Error(err)
 	}
-	gradeNum, err := strconv.Atoi(grade)
+	err = models.UpdateProject(idNum, projcode, projname, projlabe, principal)
 	if err != nil {
 		beego.Error(err)
 	}
-	err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
+
 	if err != nil {
-		beego.Error(err)
+		c.Data["json"] = "no"
+		c.ServeJSON()
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
 	}
+	// c.Data["json"] = "ok"
+	// c.ServeJSON()
 }
 
 //根据id删除proj

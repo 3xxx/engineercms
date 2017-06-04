@@ -19,8 +19,8 @@ type Project struct {
 	ParentIdPath    string    `orm:"null"`
 	ParentTitlePath string    `orm:"null"`
 	Grade           int       `orm:"null"`
-	Created         time.Time `orm:"null;index","auto_now_add;type(datetime)"`
-	Updated         time.Time `orm:"null;index","auto_now_add;type(datetime)"`
+	Created         time.Time `orm:"null","auto_now_add;type(datetime)"`
+	Updated         time.Time `orm:"null","auto_now_add;type(datetime)"`
 }
 
 type Pidstruct struct {
@@ -35,11 +35,11 @@ type ProjCalendar struct {
 	ProjectId   int64     `json:"projectid"`
 	Title       string    `json:"title",form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
 	Content     string    `json:"content",orm:"sie(20)"`
-	Starttime   time.Time `json:"start",orm:"not null;type(datetime)"`
+	Starttime   time.Time `json:"start",orm:"type(datetime)"`
 	Endtime     time.Time `json:"end",orm:"null;type(datetime)"`
-	Allday      bool      `json:"allDay",orm:"not null;default(true)"`
-	Memorabilia bool      `json:"memorabilia",orm:"not null;default(false)"` //是否属于大事记
-	Image       string    `json:"image",orm:"null"`                          //图片链接地址
+	Allday      bool      `json:"allDay",orm:"default(true)"`
+	Memorabilia bool      `json:"memorabilia",orm:"default(false)"` //是否属于大事记
+	Image       string    `json:"image",orm:"null"`                 //图片链接地址
 	Color       string    `json:"color",orm:"null"`
 	Public      bool      `default(true)` //是否公开
 	// Color     string    `json:"backgroundColor",orm:"null"`

@@ -277,6 +277,41 @@
                     id: '044',
                   }
                 ]
+              }, 
+              {
+                text: "成果清单",
+                icon: "fa fa-list-alt icon",
+                // selectedIcon: "glyphicon glyphicon-stop",
+                href: "#node-1",
+                // selectable: true,
+                id: '05',
+                selectable: false,
+                showTags:false,
+                tags: ['available'],
+                nodes: 
+                [
+                  { 
+                    icon: "fa fa-edit",
+                    text: "Merit基本信息",
+                    id: '051',
+                    tags: [''],
+                  },
+                  { 
+                    icon: "fa fa-edit",
+                    text: "未提交清单",
+                    id: '052'
+                  },
+                  { 
+                    icon: "fa fa-lock",
+                    text: "已提交清单",
+                    id: '053'
+                  },
+                  { 
+                    icon: "fa fa-copy",
+                    text: "预留",
+                    id: '054',
+                  }
+                ]
               } 
             ]
             // return data;
@@ -344,6 +379,12 @@
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
           }else if(data.id=="044"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
+          }else if(data.id=="051"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;成果清单&gt;"+data.text)
+          }else if(data.id=="052"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;成果清单&gt;"+data.text)
+          }else if(data.id=="053"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;成果清单&gt;"+data.text)
           }
           //?secid="+data.Id+"&level="+data.Level;
         });

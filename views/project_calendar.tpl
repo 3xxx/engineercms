@@ -284,10 +284,26 @@ $(document).ready(function() {
               }
               // $("#ispublic1").prop('checked',data.Public);
       				$("#start1").val(data.start.format('YYYY-MM-DD HH:mm'));
-      				$("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
+              if (data.allDay){
+
+              }else{
+                $("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
+              }
 					    $('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
+              var $list1 = $('#fileList1');
+              $("img").remove();
+              // $("input#imgurl").remove();
               if (data.image){
-                $("#uploader-demo1").append($("<img style='width:100%'/>").attr("src",data.image));
+                var $li = $(
+                  '<div id="' + data.id + '" class="file-item thumbnail">' +
+                  '<img>' +
+                  '<div class="info">' + data.title + '</div>' +
+                  '</div>'
+                  ),
+                img = $li.find('img');
+                $list1.append( $li );
+                img.attr( 'src', data.image );
+                // $("#uploader-demo1").append($("<img style='width:100%'/>").attr("src",data.image));
               }
         			$('#modalTable1').modal({
         				show:true,
@@ -423,7 +439,7 @@ $(document).ready(function() {
       var allday=document.getElementById("isallday1").checked;
       var public=document.getElementById("ispublic1").checked;
       var memorabilia=document.getElementById("ismemorabilia1").checked;
-      var url=$('#imgurl1').val();
+      var url=$('img').attr('src');
       var currColor=$('#add-new-event1').css("background-color");
       if (title){  
             $.ajax({
@@ -734,22 +750,22 @@ $(document).ready(function() {
       //Add color effect to button
       $('#add-new-event1').css({"background-color": currColor, "border-color": currColor});
     });
+  });
 
-
-  //   $("#isallday").click(function(){//是否是全天事件
-  //     if($("#sel_start").css("display")=="none"){
-  //       $("#sel_start,#sel_end").show();
-  //     }else{
-  //        $("#sel_start,#sel_end").hide();
-  //     }
-  //   });
-  //   $("#isend").click(function(){//是否有结束时间
-  //     if($("#p_endtime").css("display")=="none"){
-  //       $("#p_endtime").show();
-  //     }else{
-  //       $("#p_endtime").hide();
-  //     }
-  // });
+    // $("#isallday").click(function(){//是否是全天事件
+    //   if($("#sel_start").css("display")=="none"){
+    //     $("#sel_start,#sel_end").show();
+    //   }else{
+    //      $("#sel_start,#sel_end").hide();
+    //   }
+    // });
+    // $("#isend").click(function(){//是否有结束时间
+    //   if($("#p_endtime").css("display")=="none"){
+    //     $("#p_endtime").show();
+    //   }else{
+    //     $("#p_endtime").hide();
+    //   }
+    //});
 
     // $("#add-new-event").click(function (e) {
     //   e.preventDefault();
@@ -771,59 +787,63 @@ $(document).ready(function() {
     //   //Remove event from text input
     //   $("#new-event").val("");
     // });
-  });
-
-  // 图片上传demo
-  // jQuery(function() {
+    //修改日程
   $(document).ready(function() {
     // var $ = jQuery,
-        $list1 = $('#fileList');
-        // $btn = $('#ctlBtn');
-        // 优化retina, 在retina下这个值是2
-        ratio = window.devicePixelRatio || 1;
-        // 缩略图大小
-        thumbnailWidth = 100 * ratio;
-        thumbnailHeight = 100 * ratio;
-        // Web Uploader实例
-        uploader;
+    // var $index=0,
+    // $image,
+    $list1 = $('#fileList1');
+    // $btn = $('#ctlBtn');
+    // 优化retina, 在retina下这个值是2
+    ratio = window.devicePixelRatio || 1;
+    // 缩略图大小
+    thumbnailWidth = 100 * ratio;
+    thumbnailHeight = 100 * ratio;
+    // Web Uploader实例
+    uploader;
     // 初始化Web Uploader
     var uploader = WebUploader.create({
-        // 自动上传。
-        auto: true,
-        // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
-        // 文件接收服务端。
-        server: '/project/calendar/uploadimage',
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#filePicker',
-        // 只允许选择文件，可选。
-        accept: {
-            title: 'Images',
-            extensions: 'gif,jpg,jpeg,bmp,png',
-            mimeTypes: 'image/*'
-        }
+      // 自动上传。
+      auto: true,
+      // swf文件路径
+      swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+      // 文件接收服务端。
+      server: '/project/calendar/uploadimage',
+      // 选择文件的按钮。可选。
+      // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+      pick: '#filePicker1',
+      // 只允许选择文件，可选。
+      accept: {
+        title: 'Images',
+        extensions: 'gif,jpg,jpeg,bmp,png',
+        mimeTypes: 'image/gif,image/jpg,image/jpeg,image/bmp,image/png'
+      }
     });
 
+    // uploader.addButton({
+    //   id: '#filePicker1',
+    //   innerHTML: '选择文件'
+    // });
     // 当有文件添加进来的时候
     uploader.on( 'fileQueued', function( file ) {
-        var $li = $(
-                '<div id="' + file.id + '" class="file-item thumbnail">' +
-                    '<img>' +
-                    '<div class="info">' + file.name + '</div>' +
-                '</div>'
-                ),
-            $img = $li.find('img');
-        $list1.append( $li );
+      var $li = $(
+        '<div id="' + file.id + '" class="file-item thumbnail">' +
+            '<img>' +
+            '<div class="info">' + file.name + '</div>' +
+        '</div>'
+      ),
+      $img = $li.find('img');
+      $("div.file-item").remove();
+      $list1.append( $li );
 
-        // 创建缩略图
-        uploader.makeThumb( file, function( error, src ) {
-            if ( error ) {
-                $img.replaceWith('<span>不能预览</span>');
-                return;
-            }
-            $img.attr( 'src', src );
-        }, thumbnailWidth, thumbnailHeight );
+      // 创建缩略图
+      uploader.makeThumb( file, function( error, src ) {
+        if ( error ) {
+          $img.replaceWith('<span>不能预览</span>');
+          return;
+        }
+        $img.attr( 'src', src );
+      }, thumbnailWidth, thumbnailHeight );
     });
 
     uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
@@ -835,153 +855,284 @@ $(document).ready(function() {
 
     // 文件上传过程中创建进度条实时显示。
     uploader.on( 'uploadProgress', function( file, percentage ) {
-        var $li = $( '#'+file.id ),
-            $percent = $li.find('.progress span');
-        // 避免重复创建
-        if ( !$percent.length ) {
-            $percent = $('<p class="progress"><span></span></p>')
-                    .appendTo( $li )
-                    .find('span');
-        }
-        $percent.css( 'width', percentage * 100 + '%' );
+      var $li = $( '#'+file.id ),
+          $percent = $li.find('.progress span');
+      // 避免重复创建
+      if ( !$percent.length ) {
+        $percent = $('<p class="progress"><span></span></p>')
+                  .appendTo( $li )
+                  .find('span');
+      }
+      $percent.css( 'width', percentage * 100 + '%' );
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on( 'uploadSuccess', function( file,response ) {
-        $( '#'+file.id ).addClass('upload-state-done');
-        $("input#imgurl").remove();
-        var th1="<input id='imgurl' type='hidden' value='" +response.url+"'/>";
-        $list1.append(th1);
+      // $img=$image.find('img');
+      // $img.arrt('src',response.url);
+      $( '#'+file.id ).addClass('upload-state-done');
+      $("input#imgurl").remove();
+      var th1="<input id='imgurl' type='hidden' value='" +response.url+"'/>";
+      $list1.append(th1);
     });
 
     // 文件上传失败，显示上传出错。
     uploader.on( 'uploadError', function( file ) {
-        var $li = $( '#'+file.id ),
-            $error = $li.find('div.error');
-        // 避免重复创建
-        if ( !$error.length ) {
-            $error = $('<div class="error"></div>').appendTo( $li );
-        }
-        $error.text('上传失败');
+      var $li = $( '#'+file.id ),
+          $error = $li.find('div.error');
+      // 避免重复创建
+      if ( !$error.length ) {
+          $error = $('<div class="error"></div>').appendTo( $li );
+      }
+      $error.text('上传失败');
     });
 
     // 完成上传完了，成功或者失败，先删除进度条。
     uploader.on( 'uploadComplete', function( file ) {
-        $( '#'+file.id ).find('.progress').remove();
+      $( '#'+file.id ).find('.progress').remove();
     });
 
-    $('#filePicker').mouseenter(function(){
-        uploader.refresh();
+    // $('#filePicker').on('click',function(){
+    //   $index=$(this).index('#filePicker');
+    //   $image=$($('.img').get($index));
+    //   uploader.reset();
+    // })
+
+    $('#filePicker1').mouseenter(function(){
+      uploader.refresh();
+    })
+    $('#modalTable').on('hide.bs.modal',function(){
+      $list1.text("");
+      $("input#imgurl").remove();
     })
   })
 
-      // 日程编辑中的图片上传demo
-      // jQuery(function() {
-      // var $ = jQuery,
+  // 图片上传demo
+  // jQuery(function() {
   $(document).ready(function() {
-    $list = $('#fileList1');
+    // var $ = jQuery,
+    // var $index=0,
+    // $image,
+    $list = $('#fileList');
     // $btn = $('#ctlBtn');
     // 优化retina, 在retina下这个值是2
     ratio = window.devicePixelRatio || 1;
     // 缩略图大小
     thumbnailWidth = 100 * ratio;
     thumbnailHeight = 100 * ratio;
-    $('#modalTable1').on('shown.bs.modal',function(e){
-      // Web Uploader实例
-      uploader;
-      // 初始化Web Uploader
-      var uploader = WebUploader.create({
-        // 自动上传。
-        auto: true,
-        // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
-        // 文件接收服务端。
-        server: '/project/calendar/uploadimage',
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#filePicker1',
-        // 只允许选择文件，可选。
-        accept: {
-            title: 'Images',
-            extensions: 'gif,jpg,jpeg,bmp,png',
-            mimeTypes: 'image/*'
+    // Web Uploader实例
+    uploader;
+    // 初始化Web Uploader
+    var uploader = WebUploader.create({
+      // 自动上传。
+      auto: true,
+      // swf文件路径
+      swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+      // 文件接收服务端。
+      server: '/project/calendar/uploadimage',
+      // 选择文件的按钮。可选。
+      // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+      pick: '#filePicker',
+      // 只允许选择文件，可选。
+      accept: {
+        title: 'Images',
+        extensions: 'gif,jpg,jpeg,bmp,png',
+        mimeTypes: 'image/gif,image/jpg,image/jpeg,image/bmp,image/png'
+      }
+    });
+
+    // uploader.addButton({
+    //   id: '#filePicker1',
+    //   innerHTML: '选择文件'
+    // });
+    // 当有文件添加进来的时候
+    uploader.on( 'fileQueued', function( file ) {
+      var $li = $(
+        '<div id="' + file.id + '" class="file-item thumbnail">' +
+            '<img>' +
+            '<div class="info">' + file.name + '</div>' +
+        '</div>'
+      ),
+      $img = $li.find('img');
+      $list.append( $li );
+
+      // 创建缩略图
+      uploader.makeThumb( file, function( error, src ) {
+        if ( error ) {
+          $img.replaceWith('<span>不能预览</span>');
+          return;
         }
-      });
-      // 当有文件添加进来的时候
-      uploader.on( 'fileQueued', function( file ) {
-          var $li = $(
-                  '<div id="' + file.id + '" class="file-item thumbnail">' +
-                      '<img>' +
-                      '<div class="info">' + file.name + '</div>' +
-                  '</div>'
-                  ),
-              $img = $li.find('img');
-          $list.append( $li );
+        $img.attr( 'src', src );
+      }, thumbnailWidth, thumbnailHeight );
+    });
 
-          // 创建缩略图
-          uploader.makeThumb( file, function( error, src ) {
-              if ( error ) {
-                  $img.replaceWith('<span>不能预览</span>');
-                  return;
-              }
-              $img.attr( 'src', src );
-          }, thumbnailWidth, thumbnailHeight );
-      });
+    uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
+      var pid = {{.ProjectId}};
+      uploader.option('formData', {
+        "pid":pid,
+      });        
+    });
 
-      uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
-        var pid = {{.ProjectId}};
-        uploader.option('formData', {
-          "pid":pid,
-        });        
-      });
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+      var $li = $( '#'+file.id ),
+          $percent = $li.find('.progress span');
+      // 避免重复创建
+      if ( !$percent.length ) {
+        $percent = $('<p class="progress"><span></span></p>')
+                  .appendTo( $li )
+                  .find('span');
+      }
+      $percent.css( 'width', percentage * 100 + '%' );
+    });
 
-      // 文件上传过程中创建进度条实时显示。
-      uploader.on( 'uploadProgress', function( file, percentage ) {
-           var $li = $( '#'+file.id ),
-               $percent = $li.find('.progress span');
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on( 'uploadSuccess', function( file,response ) {
+      // $img=$image.find('img');
+      // $img.arrt('src',response.url);
+      $( '#'+file.id ).addClass('upload-state-done');
+      $("input#imgurl").remove();
+      var th1="<input id='imgurl' type='hidden' value='" +response.url+"'/>";
+      $list.append(th1);
+    });
 
-          // 避免重复创建
-          if ( !$percent.length ) {
-              $percent = $('<p class="progress"><span></span></p>')
-                      .appendTo( $li )
-                      .find('span');
-          }
-          $percent.css( 'width', percentage * 100 + '%' );
-      });
+    // 文件上传失败，显示上传出错。
+    uploader.on( 'uploadError', function( file ) {
+      var $li = $( '#'+file.id ),
+          $error = $li.find('div.error');
+      // 避免重复创建
+      if ( !$error.length ) {
+          $error = $('<div class="error"></div>').appendTo( $li );
+      }
+      $error.text('上传失败');
+    });
 
-      // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-      uploader.on( 'uploadSuccess', function( file,response ) {
-          $( '#'+file.id ).addClass('upload-state-done');
-          $("input#imgurl1").remove();
-          var th1="<input id='imgurl1' type='hidden' value='" +response.url+"'/>";
-          $list.append(th1);
-      });
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on( 'uploadComplete', function( file ) {
+      $( '#'+file.id ).find('.progress').remove();
+    });
 
-      // 文件上传失败，显示上传出错。
-      uploader.on( 'uploadError', function( file ) {
-          var $li = $( '#'+file.id ),
-              $error = $li.find('div.error');
-          // 避免重复创建
-          if ( !$error.length ) {
-              $error = $('<div class="error"></div>').appendTo( $li );
-          }
-          $error.text('上传失败');
-      });
+    // $('#filePicker').on('click',function(){
+    //   $index=$(this).index('#filePicker');
+    //   $image=$($('.img').get($index));
+    //   uploader.reset();
+    // })
 
-      // 完成上传完了，成功或者失败，先删除进度条。
-      uploader.on( 'uploadComplete', function( file ) {
-          $( '#'+file.id ).find('.progress').remove();
-      });
-
-      // $('#filePicker1').mouseenter(function(){
-      //     uploader.refresh();
-      // })
-      $('#modalTable1').on('hide.bs.modal',function(){
-        $list.text("");
-        uploader.destroy();//销毁uploader
-      })
+    $('#filePicker').mouseenter(function(){
+      uploader.refresh();
+    })
+    $('#modalTable').on('hide.bs.modal',function(){
+      $list.text("");
     })
   })
+
+      // 日程编辑中的图片上传demo——这个也有效
+      // jQuery(function() {
+      // var $ = jQuery,
+  // $(document).ready(function() {
+  //   $list1 = $('#fileList1');
+  //   // $btn = $('#ctlBtn');
+  //   // 优化retina, 在retina下这个值是2
+  //   ratio = window.devicePixelRatio || 1;
+  //   // 缩略图大小
+  //   thumbnailWidth = 100 * ratio;
+  //   thumbnailHeight = 100 * ratio;
+  //   $('#modalTable1').on('shown.bs.modal',function(e){
+  //     // Web Uploader实例
+  //     uploader;
+  //     // 初始化Web Uploader
+  //     var uploader = WebUploader.create({
+  //       // 自动上传。
+  //       auto: true,
+  //       // swf文件路径
+  //       swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+  //       // 文件接收服务端。
+  //       server: '/project/calendar/uploadimage',
+  //       // 选择文件的按钮。可选。
+  //       // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+  //       pick: '#filePicker1',
+  //       // 只允许选择文件，可选。
+  //       accept: {
+  //           title: 'Images',
+  //           extensions: 'gif,jpg,jpeg,bmp,png',
+  //           mimeTypes: 'image/*'
+  //       }
+  //     });
+  //     // 当有文件添加进来的时候
+  //     uploader.on( 'fileQueued', function( file ) {
+  //         var $li = $(
+  //                 '<div id="' + file.id + '" class="file-item thumbnail">' +
+  //                     '<img>' +
+  //                     '<div class="info">' + file.name + '</div>' +
+  //                 '</div>'
+  //                 ),
+  //             $img = $li.find('img');
+  //         $list1.append( $li );
+
+  //         // 创建缩略图
+  //         uploader.makeThumb( file, function( error, src ) {
+  //             if ( error ) {
+  //                 $img.replaceWith('<span>不能预览</span>');
+  //                 return;
+  //             }
+  //             $img.attr( 'src', src );
+  //         }, thumbnailWidth, thumbnailHeight );
+  //     });
+
+  //     uploader.on( 'startUpload', function() {//uploadBeforeSend——这个居然不行？
+  //       var pid = {{.ProjectId}};
+  //       uploader.option('formData', {
+  //         "pid":pid,
+  //       });        
+  //     });
+
+  //     // 文件上传过程中创建进度条实时显示。
+  //     uploader.on( 'uploadProgress', function( file, percentage ) {
+  //          var $li = $( '#'+file.id ),
+  //              $percent = $li.find('.progress span');
+
+  //         // 避免重复创建
+  //         if ( !$percent.length ) {
+  //             $percent = $('<p class="progress"><span></span></p>')
+  //                     .appendTo( $li )
+  //                     .find('span');
+  //         }
+  //         $percent.css( 'width', percentage * 100 + '%' );
+  //     });
+
+  //     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+  //     uploader.on( 'uploadSuccess', function( file,response ) {
+  //         $( '#'+file.id ).addClass('upload-state-done');
+  //         $("input#imgurl1").remove();
+  //         var th1="<input id='imgurl1' type='hidden' value='" +response.url+"'/>";
+  //         $list1.append(th1);
+  //     });
+
+  //     // 文件上传失败，显示上传出错。
+  //     uploader.on( 'uploadError', function( file ) {
+  //         var $li = $( '#'+file.id ),
+  //             $error = $li.find('div.error');
+  //         // 避免重复创建
+  //         if ( !$error.length ) {
+  //             $error = $('<div class="error"></div>').appendTo( $li );
+  //         }
+  //         $error.text('上传失败');
+  //     });
+
+  //     // 完成上传完了，成功或者失败，先删除进度条。
+  //     uploader.on( 'uploadComplete', function( file ) {
+  //         $( '#'+file.id ).find('.progress').remove();
+  //     });
+
+  //     // $('#filePicker1').mouseenter(function(){
+  //     //     uploader.reset();
+  //     // })
+  //     $('#modalTable1').on('hide.bs.modal',function(){
+  //       $list1.text("");
+  //       uploader.destroy();//销毁uploader
+  //     })
+  //   })
+  // })
 </script>
 
 <!-- <canvas id="canvas" width="200" height="200">你的浏览器不支持canvas元素，请更换更先进的浏览器。</canvas>

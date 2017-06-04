@@ -30,11 +30,11 @@
 <div class="col-lg-12">
   <h3>项目列表</h3>
 <div id="toolbar1" class="btn-group">
-        <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
+        <button type="button" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
-        <button type="button" data-name="editorButton" id="editorButton" class="btn btn-default"> <i class="fa fa-edit">编辑</i>
+        <button type="button" id="editorButton" class="btn btn-default"> <i class="fa fa-edit">编辑</i>
         </button>
-        <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
+        <button type="button" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
 </div>
@@ -63,10 +63,10 @@
         <th data-width="10" data-radio="true"></th>
         <th data-formatter="index1">#</th>
         <th data-field="Code" data-formatter="setCode">编号</th>
-        <th data-field="Title">名称</th>
+        <th data-field="Title" data-formatter="setTitle">名称</th>
         <th data-field="Label" data-formatter="setLable">标签</th>
         <th data-field="Principal">负责人</th>
-        <th data-field="Product">成果数量</th>
+        <th data-field="Number">成果数量</th>
         <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents">时间轴</th>
         <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
       </tr>
@@ -133,6 +133,9 @@
   }
   function setCode(value,row,index){
     return "<a href='/project/"+row.Id+"'>" + value + "</a>";
+  }
+  function setTitle(value,row,index){
+    return "<a href='/project/allproducts/"+row.Id+"'>" + value + "</a>";
   }
   function setLable(value,row,index){
     if (value){
@@ -235,7 +238,7 @@
         alert("权限不够！");
         return;
       }
-      $("labe1#info").remove();
+      $("label#info").remove();
       $("#saveproj").removeClass("disabled")
         $('#modalTable').modal({
         show:true,
@@ -254,19 +257,17 @@
         return;
       }
       if (selectRow.length>1){
-      alert("请不要勾选一个以上！");
-      return;
+        alert("请不要勾选一个以上！");
+        return;
       }
       $("input#cid").remove();
       var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
       $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $("#projcatename1").val(selectRow[0].Title);
-      $("#projcatecode1").val(selectRow[0].Code);
-      // alert(JSON.stringify(selectRow));
-      // alert(selectRow[0].Id);
-      // var title = $('#'+id).attr("value");
-      // var title = $('#'+id).attr("href");
-      // var categoryid = $('#categoryid').val();
+      $("#projcode1").val(selectRow[0].Code);
+      $("#projname1").val(selectRow[0].Title);
+      $("#projlabel1").val(selectRow[0].Label);
+      $("#projprincipal1").val(selectRow[0].Principal);
+
         $('#modalTable1').modal({
         show:true,
         backdrop:'static'
@@ -364,8 +365,8 @@ function refreshtable(){
   $("#details").show();
 }
 
-//保存
-function save(){
+  //保存
+  function save(){
       // var radio =$("input[type='radio']:checked").val();
       var projcode = $('#projcode').val();
       var projname = $('#projname').val();
@@ -378,7 +379,7 @@ function save(){
         return;
       }
 
-      var lab="<labe1 id='info'>建立项目中，请耐心等待几秒/分钟……</label>"
+      var lab="<label id='info'>建立项目中，请耐心等待几秒/分钟……</label>"
       $(".modal-footer").prepend(lab);//这里是否要换名字$("p").remove();
       $("#saveproj").addClass("disabled");
 
@@ -414,6 +415,33 @@ function save(){
           // window.location.reload();//刷新页面
   }
 
+  //修改项目
+  function update(){
+      // var radio =$("input[type='radio']:checked").val();
+      var pid = $('#cid').val();
+      var projcode = $('#projcode1').val();
+      var projname = $('#projname1').val();
+      var projlabel = $('#projlabel1').val();
+      var projprincipal = $('#projprincipal1').val();
+
+      if (projname&&projcode)
+        {  
+          $.ajax({
+            type:"post",
+            url:"/project/updateproject",
+            data: {code:projcode,name:projname,label:projlabel,principal:projprincipal,pid:pid},//
+            success:function(data,status){
+              alert("修改“"+data+"”成功！(status:"+status+".)");
+              //按确定后再刷新
+              $('#modalTable1').modal('hide');
+              $('#table0').bootstrapTable('refresh', {url:'/project/getprojects'});
+            }
+          });  
+        }else{
+          alert("请填写编号和名称！");
+          return;
+        } 
+  }
   //模态框可拖曳—要引入ui-jquery.js
   // $("#modalTable").draggable({
   //   handle:".modal-header",
@@ -534,6 +562,49 @@ function save(){
     </div>
   </div>
 
+  <!-- 编辑项目 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalTable1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">编辑项目</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">编号</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="projcode1" name="projcode"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">名称</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="projname1" name="projname"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">标签</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="projlabel1" name="projlabel"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">负责人</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="projprincipal1" name="projprincipal"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="updateproj" onclick="update()">更新</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 </body>

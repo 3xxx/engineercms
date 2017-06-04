@@ -1,3 +1,4 @@
+//成果里的附件操作
 package controllers
 
 import (
@@ -374,6 +375,11 @@ func (c *AttachController) ProvidePdfs() {
 //向某个侧栏id下添加成果——用于第一种批量添加一对一模式
 func (c *AttachController) AddAttachment() {
 	_, role := checkprodRole(c.Ctx)
+	meritbasic, err := models.GetMeritBasic()
+	if err != nil {
+		beego.Error(err)
+	}
+
 	if role == 1 {
 		//解析表单
 		pid := c.Input().Get("pid")
@@ -397,8 +403,49 @@ func (c *AttachController) AddAttachment() {
 		}
 		//根据proj的parentIdpath——这个已经有了专门函数，下列可以简化！
 		var path, DiskDirectory, Url string
+		var catalog models.PostMerit
+
 		if proj.ParentIdPath != "" { //如果不是根目录
 			patharray := strings.Split(proj.ParentIdPath, "-")
+
+			//pid转成64位
+			meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			meritproj, err := models.GetProj(meritNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			catalog.ProjectNumber = meritproj.Code
+			catalog.ProjectName = meritproj.Title
+
+			if len(proj.ParentIdPath) > 1 {
+				//pid转成64位
+				meritNum1, err := strconv.ParseInt(patharray[1], 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				meritproj1, err := models.GetProj(meritNum1)
+				if err != nil {
+					beego.Error(err)
+				}
+				catalog.DesignStage = meritproj1.Title
+			}
+
+			if len(proj.ParentIdPath) > 2 {
+				//pid转成64位
+				meritNum2, err := strconv.ParseInt(patharray[2], 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				meritproj2, err := models.GetProj(meritNum2)
+				if err != nil {
+					beego.Error(err)
+				}
+				catalog.Section = meritproj2.Title
+			}
+
 			for _, v := range patharray {
 				//pid转成64位
 				idNum, err := strconv.ParseInt(v, 10, 64)
@@ -425,6 +472,8 @@ func (c *AttachController) AddAttachment() {
 		} else { //如果是根目录
 			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
 			Url = "/attachment/" + proj.Title
+			catalog.ProjectNumber = proj.Code
+			catalog.ProjectName = proj.Title
 		}
 		//获取上传的文件
 		_, h, err := c.GetFile("file")
@@ -463,6 +512,42 @@ func (c *AttachController) AddAttachment() {
 			if err != nil {
 				beego.Error(err)
 			}
+
+			//成果写入postmerit表，准备提交merit*********
+			catalog.Tnumber = code
+			catalog.Name = title
+			// catalog.Category = c.Input().Get("Category")
+			// catalog.Page = c.Input().Get("Page")
+			catalog.Count = 1
+			catalog.Drawn = meritbasic.Nickname
+			catalog.Designd = meritbasic.Nickname
+			catalog.Author = meritbasic.Username
+			catalog.Drawnratio = 0.4
+			catalog.Designdratio = 0.4
+
+			const lll = "2006-01-02"
+			convdate := time.Now().Format(lll)
+			t1, err := time.Parse(lll, convdate) //这里t1要是用t1:=就不是前面那个t1了
+			if err != nil {
+				beego.Error(err)
+			}
+			catalog.Datestring = convdate
+			catalog.Date = t1
+
+			catalog.Created = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+			catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+			var news string
+			catalog.Complex = 1
+			catalog.State = 0
+			_, err, news = models.AddPostMerit(catalog)
+			if err != nil {
+				beego.Error(err)
+			} else {
+				data := news
+				c.Ctx.WriteString(data)
+			}
+			//生成提交merit的清单结束*******************
+
 			//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
 			//如果附件名称相同，则覆盖上传，但数据库不追加
 			_, err = models.AddAttachment(attachment, filesize, 0, prodId)
@@ -733,9 +818,7 @@ func (c *AttachController) DownloadAttachment() {
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	v := c.GetSession("uname")
 	var role, userrole int
 	if v != nil {
 		uname = v.(string)

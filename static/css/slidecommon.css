@@ -1,0 +1,106 @@
+/*slide用的，可以改名*/
+#speaker-note {
+  position:absolute;
+  left: 0;
+  top: 80%;
+  width: 100%;
+  height: 20%;
+  z-index: 8;
+  opacity: 0.75;
+  background-color: white;
+  overflow: auto;
+  padding: 2px 20px;
+  -webkit-transition: top 0.5s ease-in-out;
+  -moz-transition: top 0.5s ease-in-out;
+  -o-transition: top 0.5s ease-in-out;
+  transition: top 0.5s ease-in-out;
+}
+#speaker-note.invisible {
+  top: 101%;
+}
+.sidebar {
+  z-index: 999;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  top: 0;
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 10px 16px;
+  overflow: auto;
+  -webkit-transition: margin 0.2s ease-in-out;
+  -moz-transition: margin 0.2s ease-in-out;
+  -o-transition: margin 0.2s ease-in-out;
+  transition: margin 0.2s ease-in-out;
+}
+.sidebar.invisible {
+  margin-left: -400px;
+}
+.sidebar table {
+  border-collapse: collapse;
+}
+.sidebar caption {
+  text-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 55px;
+}
+.sidebar tr {
+  margin: 2px 0;
+  border-bottom: 1px solid #CCC;
+}
+.sidebar th{
+  text-align: left;
+  max-width: 300px;
+}
+.sidebar td {
+  text-align: right;
+  padding-left: 20px;
+  padding-right: 5px;
+  font-family: Monospace;
+}
+
+nav#helpers {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+  left: 50%;
+  margin-left: -200px;
+  width: 400px;
+  background-color: black;
+  opacity: 0.1;
+}
+nav#helpers:hover {
+  opacity: 0.5;
+}
+nav#helpers button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.toc {
+  font-size: 10px;
+  position: relative;
+  top: -3px;
+}
+nav#helpers button#slide-no, #no-goodbye, #no-1 {
+  font-size: 10px;
+  border: 1px solid white;
+  padding: 4px;
+  margin-bottom: 4px;
+}
+#nav-last {
+  margin-right: 20px;
+}
+menu {
+  display: inline;
+}
+.share{font-size: 11px;}
+
+#title-slide h2 .trans{font-size: 20px;}
+#title-slide h2 .trans a{ text-decoration: none; border-bottom: 0;}

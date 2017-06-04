@@ -4,7 +4,7 @@ import (
 	// "github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/mattn/go-sqlite3"
-	// "strconv"
+	"strconv"
 	// "strings"
 	"time"
 )
@@ -18,8 +18,8 @@ type Product struct {
 	Principal string    `orm:"null"`      //提供人                                            //负责人id
 	ProjectId int64     `orm:"null"`      //侧栏id
 	Content   string    `orm:"sie(5000)"` //内容
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now;type(datetime)"`
 	Views     int64
 	// ReplyTime         time.Time
 	// ReplyCount        int64
@@ -113,14 +113,44 @@ func AddProduct(code, title, label, principal, content string, Projectid int64) 
 func GetProducts(id int64) (products []*Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	_, err = qs.Filter("Projectid", id).OrderBy("-created").All(&products)
+	_, err = qs.Filter("ProjectId", id).OrderBy("-created").All(&products)
 	if err != nil {
 		return nil, err
 	}
 	return products, err
 }
 
-//根据id取得成果
+//根据项目id查出所有成果
+func GetProjProducts(id int64) (products []*Product, err error) {
+	idstring := strconv.FormatInt(id, 10)
+	projects := make([]*Project, 0)
+
+	cond := orm.NewCondition()
+	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring)
+	o := orm.NewOrm()
+	//先查出所有项目parent id path中包含id的数据
+	qs := o.QueryTable("Project")
+	qs = qs.SetCond(cond1)
+
+	_, err = qs.All(&projects)
+	if err != nil {
+		return nil, err
+	}
+	//循环数据的id，查出成果product
+	qs1 := o.QueryTable("Product")
+	products1 := make([]*Product, 0)
+	for _, v := range projects {
+		_, err = qs1.Filter("ProjectId", v.Id).OrderBy("-created").All(&products1)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, products1...)
+		products1 = make([]*Product, 0)
+	}
+	return products, err
+}
+
+//根据成果id取得成果
 func GetProd(id int64) (prod Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product") //这个表名AchievementTopic需要用驼峰式，

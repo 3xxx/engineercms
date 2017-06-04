@@ -7,6 +7,7 @@ import (
 
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
 	beego.Router("/", &controllers.ProjController{}, "*:Get")
 	//显示首页
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
@@ -14,6 +15,10 @@ func init() {
 	beego.Router("/index/user", &controllers.IndexController{}, "*:GetUser")
 	//这里显示用户查看主人日程
 	beego.Router("/calendar", &controllers.IndexController{}, "*:Calendar")
+	//会议室预定日程
+	beego.Router("/meetingroom", &controllers.IndexController{}, "*:MeetingroomCalendar")
+	//车辆预定日程
+	beego.Router("/car", &controllers.IndexController{}, "*:GetCarCalendar")
 	//首页搜索项目或成果
 	beego.Router("/index/searchproject", &controllers.SearchController{}, "*:SearchProject")
 	beego.Router("/index/searchproduct", &controllers.SearchController{}, "*:SearchProduct")
@@ -105,6 +110,15 @@ func init() {
 	beego.Router("/admin/user/updateuser", &controllers.UserController{}, "*:UpdateUser")
 	//删除用户
 	beego.Router("/admin/user/deleteuser", &controllers.UserController{}, "*:DeleteUser")
+	//meritbasic表格数据填充
+	beego.Router("/admin/merit/meritbasic", &controllers.AdminController{}, "*:MeritBasic")
+	//修改meritbasic表格数据
+	beego.Router("/admin/merit/updatemeritbasic", &controllers.AdminController{}, "*:UpdateMeritBasic")
+	//未提交merit的成果列表
+	beego.Router("/admin/merit/meritlist/:id:int", &controllers.AdminController{}, "*:GetPostMerit")
+	//提交成果给merit
+	beego.Router("/admin/merit/sendmeritlist", &controllers.AdminController{}, "post:SendMeritlist")
+
 	//用户修改自己密码
 	beego.Router("/user", &controllers.UserController{}, "get:GetUserByUsername")
 	//用户登录后查看自己的资料
@@ -157,7 +171,10 @@ func init() {
 
 	//给上面那个页面提供table所用的json数据
 	beego.Router("/project/products/:id:string", &controllers.ProdController{}, "*:GetProducts")
-
+	//点击项目名称，显示这个项目下所有成果
+	beego.Router("/project/allproducts/:id:string", &controllers.ProjController{}, "*:GetProjProducts")
+	//这个对应上面的页面进行表格内数据填充，用的是prodcontrollers中的方法
+	beego.Router("/project/products/all/:id:string", &controllers.ProdController{}, "*:GetProjProducts")
 	//给上面那个页面提供项目同步ip的json数据
 	beego.Router("/project/synchproducts/:id:string", &controllers.ProdController{}, "*:GetsynchProducts")
 
@@ -224,5 +241,31 @@ func init() {
 
 	//ue富文本编辑器
 	beego.Router("/controller", &controllers.UeditorController{}, "*:ControllerUE")
+
+	//添加日历
+	beego.Router("/index/carcalendar/addcalendar", &controllers.IndexController{}, "*:AddCarCalendar")
+	//查询
+	beego.Router("/index/carcalendar", &controllers.IndexController{}, "*:CarCalendar")
+	//修改
+	beego.Router("/index/carcalendar/updatecalendar", &controllers.IndexController{}, "*:UpdateCarCalendar")
+	//删除
+	beego.Router("/index/carcalendar/deletecalendar", &controllers.IndexController{}, "*:DeleteCarCalendar")
+	//拖曳事件
+	beego.Router("/index/carcalendar/dropcalendar", &controllers.IndexController{}, "*:DropCarCalendar")
+	//resize事件
+	beego.Router("/index/carcalendar/resizecalendar", &controllers.IndexController{}, "*:ResizeCarCalendar")
+
+	//添加日历
+	beego.Router("/index/meetingroomcalendar/addcalendar", &controllers.IndexController{}, "*:AddMeetCalendar")
+	//查询
+	beego.Router("/index/meetingroomcalendar", &controllers.IndexController{}, "*:MeetCalendar")
+	//修改
+	beego.Router("/index/meetingroomcalendar/updatecalendar", &controllers.IndexController{}, "*:UpdateMeetCalendar")
+	//删除
+	beego.Router("/index/meetingroomcalendar/deletecalendar", &controllers.IndexController{}, "*:DeleteMeetCalendar")
+	//拖曳事件
+	beego.Router("/index/meetingroomcalendar/dropcalendar", &controllers.IndexController{}, "*:DropMeetCalendar")
+	//resize事件
+	beego.Router("/index/meetingroomcalendar/resizecalendar", &controllers.IndexController{}, "*:ResizeMeetCalendar")
 
 }

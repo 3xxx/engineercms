@@ -42,7 +42,13 @@
         <a href="http://192.168.9.13:8081/legislation" target="_blank">对标</a>
       </li>
       <li>
-        <a href="http://192.168.9.13:8080" target="_blank">Merit</a>
+        <a href="http://192.168.9.13:8080" target="_blank">MeritMS</a>
+      </li>
+      <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
+        <a href="/meetingroom">会议室</a>
+      </li>
+      <li {{if .IsCarCalendar}}class="active"{{end}}>
+        <a href="/car">车辆</a>
       </li>
     </ul>
 

@@ -13,7 +13,7 @@ import (
 	// "sort"
 	"strconv"
 	// "strings"
-	// "time"
+	"time"
 )
 
 type IndexController struct {
@@ -228,4 +228,476 @@ func (c *IndexController) Calendar() {
 	c.Data["IsCalendar"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.TplName = "index_calendar.tpl"
+}
+
+func (c *IndexController) MeetingroomCalendar() {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsMeetingroomCalendar"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.TplName = "meetingroom_calendar.tpl"
+}
+
+func (c *IndexController) GetCarCalendar() {
+	username, role := checkprodRole(c.Ctx)
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsCarCalendar"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.TplName = "car_calendar.tpl"
+}
+
+//*******汽车
+//添加日历
+func (c *IndexController) AddCarCalendar() {
+	// username, _ := checkprodRole(c.Ctx)
+	ip := c.Ctx.Input.IP()
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	// public1 := c.Input().Get("public")
+	var public bool
+	// if public1 == "true" {
+	public = true
+	// } else {
+	// 	public = false
+	// }
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	_, err = models.AddCarCalendar(title, content, color, ip, allday, public, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+}
+
+//返回日历json数据
+//如果是管理员，则显示全部，非管理员，显示公开
+func (c *IndexController) CarCalendar() {
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	const lll = "2006-01-02"
+	startdate, err := time.Parse(lll, start)
+	if err != nil {
+		beego.Error(err)
+	}
+	enddate, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	var calendars []*models.CarCalendar
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		calendars, err = models.GetCarCalendar(startdate, enddate, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.GetCarCalendar(startdate, enddate, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+	// c.TplName = "admin_category.tpl"
+}
+
+//修改
+func (c *IndexController) UpdateCarCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	// public1 := c.Input().Get("public")
+	var public bool
+	// if public1 == "true" {
+	public = true
+	// } else {
+	// 	public = false
+	// }
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdateCarCalendar(cidNum, title, content, color, allday, public, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+	// pid := c.Ctx.Input.Param(":id")
+	//
+	// title := c.Input().Get("title")
+	// code := c.Input().Get("code")
+	// grade := c.Input().Get("grade")
+	// //pid转成64为
+	// cidNum, err := strconv.ParseInt(cid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// } else {
+	// 	c.Data["json"] = "ok"
+	// 	c.ServeJSON()
+	// }
+}
+
+//拖曳
+func (c *IndexController) DropCarCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	daltaint, err := strconv.Atoi(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	calendar, err := models.GetCarCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	t1 := calendar.Starttime.AddDate(0, 0, daltaint)
+	t2 := calendar.Endtime.AddDate(0, 0, daltaint)
+	err = models.DropCarCalendar(idNum, t1, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//resize
+func (c *IndexController) ResizeCarCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	delta = delta + "h"
+	deltahour, err := time.ParseDuration(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	// starttime.Add(-time.Duration(hours) * time.Hour)
+	calendar, err := models.GetCarCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// t1 := calendar.Starttime.Add(deltahour)
+	t2 := calendar.Endtime.Add(deltahour)
+	err = models.ResizeCarCalendar(idNum, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *IndexController) DeleteCarCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	err = models.DeleteCarCalendar(cidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+//*****会议室
+//添加日历
+func (c *IndexController) AddMeetCalendar() {
+	ip := c.Ctx.Input.IP()
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	// public1 := c.Input().Get("public")
+	var public bool
+	// if public1 == "true" {
+	public = true
+	// } else {
+	// 	public = false
+	// }
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	_, err = models.AddMeetCalendar(title, content, color, ip, allday, public, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+}
+
+//返回日历json数据
+//如果是管理员，则显示全部，非管理员，显示公开
+func (c *IndexController) MeetCalendar() {
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	const lll = "2006-01-02"
+	startdate, err := time.Parse(lll, start)
+	if err != nil {
+		beego.Error(err)
+	}
+	enddate, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	var calendars []*models.MeetCalendar
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		calendars, err = models.GetMeetCalendar(startdate, enddate, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.GetMeetCalendar(startdate, enddate, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+	// c.TplName = "admin_category.tpl"
+}
+
+//修改
+func (c *IndexController) UpdateMeetCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	// public1 := c.Input().Get("public")
+	var public bool
+	// if public1 == "true" {
+	public = true
+	// } else {
+	// 	public = false
+	// }
+	const lll = "2006-01-02 15:04"
+	starttime, err := time.Parse(lll, start)
+	// beego.Info(start)
+	// beego.Info(starttime)
+	if err != nil {
+		beego.Error(err)
+	}
+	endtime, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdateMeetCalendar(cidNum, title, content, color, allday, public, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+	// pid := c.Ctx.Input.Param(":id")
+	//
+	// title := c.Input().Get("title")
+	// code := c.Input().Get("code")
+	// grade := c.Input().Get("grade")
+	// //pid转成64为
+	// cidNum, err := strconv.ParseInt(cid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// } else {
+	// 	c.Data["json"] = "ok"
+	// 	c.ServeJSON()
+	// }
+}
+
+//拖曳
+func (c *IndexController) DropMeetCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	daltaint, err := strconv.Atoi(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	calendar, err := models.GetMeetCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	t1 := calendar.Starttime.AddDate(0, 0, daltaint)
+	t2 := calendar.Endtime.AddDate(0, 0, daltaint)
+	err = models.DropMeetCalendar(idNum, t1, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//resize
+func (c *IndexController) ResizeMeetCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	delta = delta + "h"
+	deltahour, err := time.ParseDuration(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	// starttime.Add(-time.Duration(hours) * time.Hour)
+	calendar, err := models.GetMeetCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// t1 := calendar.Starttime.Add(deltahour)
+	t2 := calendar.Endtime.Add(deltahour)
+	err = models.ResizeMeetCalendar(idNum, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *IndexController) DeleteMeetCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	err = models.DeleteMeetCalendar(cidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
 }

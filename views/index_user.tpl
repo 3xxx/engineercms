@@ -92,6 +92,12 @@
   <p class="large">
     系统结合了档案管理系统形式、SharePoint‘点-平台’理念、ProjectWise协同设计需求。
   </p>
+  <p class="large">
+    如果说基于服务器的系统体现了产品特性。
+  </p>
+  <p class="large">
+    那么基于个人的CMS我说体现了文艺:)
+  </p>
 <div class="col-lg-4">
   <!-- <p class="large">
   </p> -->

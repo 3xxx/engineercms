@@ -1,8 +1,13 @@
 package controllers
 
 import (
+	// "crypto/md5"
+	// "encoding/hex"
+	"encoding/json"
 	"engineercms/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/httplib"
+	"github.com/astaxie/beego/logs"
 	"net"
 	"strconv"
 	"strings"
@@ -67,6 +72,12 @@ func (c *AdminController) Admin() {
 		c.TplName = "admin_projectsrole.tpl"
 	case "044": //项目目录快捷编辑
 		c.TplName = "admin_projectseditor.tpl"
+	case "051": //merit基本信息
+		c.TplName = "admin_meritbasic.tpl"
+	case "052": //未提交成果清单
+		c.TplName = "admin_meritlist.tpl"
+	case "053": //预留
+		c.TplName = "admin_merit.tpl"
 	default:
 		c.TplName = "admin_calendar.tpl"
 	}
@@ -1006,6 +1017,114 @@ func (c *AdminController) Carousel() {
 	}
 	c.Data["json"] = carousels
 	c.ServeJSON()
+}
+
+//merit基本信息*************************************
+//IP，用户名，姓名，密码
+func (c *AdminController) MeritBasic() {
+	meritbasic, err := models.GetMeritBasic()
+	if err != nil {
+		beego.Error(err)
+	}
+	//取到一个数据，不是数组，所以table无法显示
+	merits := make([]*models.MeritBasic, 1)
+	merits[0] = &meritbasic
+	c.Data["json"] = &merits
+	c.ServeJSON()
+}
+
+//在线修改保存某个字段
+func (c *AdminController) UpdateMeritBasic() {
+	name := c.Input().Get("name")
+	value := c.Input().Get("value")
+	pk := c.Input().Get("pk")
+	id, err := strconv.ParseInt(pk, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdateMeritBasic(id, name, value)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		data := "ok!"
+		c.Ctx.WriteString(data)
+	}
+
+	logs := logs.NewLogger(1000)
+	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
+	logs.EnableFuncCallDepth(true)
+	logs.Info(c.Ctx.Input.IP() + " " + "修改保存meritbasic" + pk)
+	logs.Close()
+}
+
+//取得成果给table
+//成果清单
+//未提交status=0和已提交status=1
+func (c *AdminController) GetPostMerit() {
+	id := c.Ctx.Input.Param(":id")
+	idint, err := strconv.Atoi(id)
+	if err != nil {
+		beego.Error(err)
+	}
+	var postmerits []*models.PostMerit
+	if idint == 0 {
+		//取得这个id下的所有merittopic
+		postmerits, err = models.GetPostMerits(0)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else if idint == 1 {
+		postmerits, err = models.GetPostMerits(1)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
+	c.Data["json"] = postmerits //products
+	c.ServeJSON()
+}
+
+//提交meritlist给merit，这个是关键代码
+func (c *AdminController) SendMeritlist() {
+	//1——将state从0变为1
+	pk := c.Input().Get("cid")
+	beego.Info(pk)
+	id, err := strconv.ParseInt(pk, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	err = models.UpdatePostMerit(id, "State", "1")
+	if err != nil {
+		beego.Error(err)
+	} else {
+		data := "ok!"
+		c.Ctx.WriteString(data)
+	}
+	//2——将meritlist提交给merit服务器
+	meritbasic, err := models.GetMeritBasic()
+	if err != nil {
+		beego.Error(err)
+	}
+	postmerit, err := models.GetPostMerit(id)
+	if err != nil {
+		beego.Error(err)
+	}
+	// postmerit.Author = meritbasic.Username
+	//编码JSON
+	body, err := json.Marshal(postmerit)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	req := httplib.Post("http://" + meritbasic.Ip + ":" + meritbasic.Port + "/getecmspost")
+	req.Param("username", meritbasic.Username)
+	req.Param("password", meritbasic.Password)
+	req.Body(body)
+	str, err := req.String()
+	if err != nil {
+		beego.Error(err)
+	}
+	beego.Info(str)
 }
 
 // include_once('connect.php');//连接数据库

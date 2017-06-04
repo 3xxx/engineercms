@@ -1,4 +1,5 @@
 //提供iprole和用户登录操作功能
+//成果操作
 package controllers
 
 import (
@@ -149,6 +150,117 @@ func (c *ProdController) GetProducts() {
 	Pdfslice := make([]PdfLink, 0)
 	Articleslice := make([]ArticleContent, 0)
 	for _, w := range products {
+		//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
+		//循环成果
+		//每个成果取到所有附件
+		//一个附件则直接打开/下载；2个以上则打开模态框
+		Attachments, err := models.GetAttachments(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		//对成果进行循环
+		//赋予url
+		//如果是一个成果，直接给url;如果大于1个，则是数组:这个在前端实现
+		// http.ServeFile(ctx.ResponseWriter, ctx.Request, filePath)
+		linkarr := make([]ProductLink, 1)
+		linkarr[0].Id = w.Id
+		linkarr[0].Code = w.Code
+		linkarr[0].Title = w.Title
+		linkarr[0].Label = w.Label
+		linkarr[0].Uid = w.Uid
+		linkarr[0].Principal = w.Principal
+		linkarr[0].ProjectId = w.ProjectId
+		linkarr[0].Content = w.Content
+		linkarr[0].Created = w.Created
+		linkarr[0].Updated = w.Updated
+		linkarr[0].Views = w.Views
+		for _, v := range Attachments {
+			// fileext := path.Ext(v.FileName)
+			if path.Ext(v.FileName) != ".pdf" && path.Ext(v.FileName) != ".PDF" {
+				attacharr := make([]AttachmentLink, 1)
+				attacharr[0].Id = v.Id
+				attacharr[0].Title = v.FileName
+				attacharr[0].Link = Url
+				Attachslice = append(Attachslice, attacharr...)
+			} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
+				pdfarr := make([]PdfLink, 1)
+				pdfarr[0].Id = v.Id
+				pdfarr[0].Title = v.FileName
+				pdfarr[0].Link = Url
+				Pdfslice = append(Pdfslice, pdfarr...)
+			}
+		}
+		linkarr[0].Pdflink = Pdfslice
+		linkarr[0].Attachmentlink = Attachslice
+		Attachslice = make([]AttachmentLink, 0) //再把slice置0
+		Pdfslice = make([]PdfLink, 0)           //再把slice置0
+		// link = append(link, linkarr...)
+		//取得文章
+		Articles, err := models.GetArticles(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, x := range Articles {
+			articlearr := make([]ArticleContent, 1)
+			articlearr[0].Id = x.Id
+			articlearr[0].Content = x.Content
+			articlearr[0].Link = "/project/product/article"
+			Articleslice = append(Articleslice, articlearr...)
+		}
+		linkarr[0].Articlecontent = Articleslice
+		Articleslice = make([]ArticleContent, 0)
+		link = append(link, linkarr...)
+	}
+
+	c.Data["json"] = link //products
+	c.ServeJSON()
+	// c.Data["json"] = root
+	// c.ServeJSON()
+}
+
+//取出项目下所有成果——这个修改
+func (c *ProdController) GetProjProducts() {
+	id := c.Ctx.Input.Param(":id")
+	// beego.Info(id)
+	c.Data["Id"] = id
+	var idNum int64
+	var err error
+	if id != "" {
+		//id转成64为
+		idNum, err = strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+
+	}
+	//根据项目id取得项目下所有成果
+	products, err := models.GetProjProducts(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据项目侧栏id取得项目下所有成果
+	// products, err := models.GetProducts(idNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
+	//由proj id取得url
+	// Url, _, err := GetUrlPath(idNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
+	link := make([]ProductLink, 0)
+	Attachslice := make([]AttachmentLink, 0)
+	Pdfslice := make([]PdfLink, 0)
+	Articleslice := make([]ArticleContent, 0)
+	for _, w := range products {
+		//根据product的projid取得url
+		Url, _, err := GetUrlPath(w.ProjectId)
+		if err != nil {
+			beego.Error(err)
+		}
 		//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
 		//循环成果
 		//每个成果取到所有附件
@@ -514,9 +626,9 @@ func (c *ProdController) DeleteProduct() {
 
 func checkprodRole(ctx *context.Context) (uname string, role int) {
 	// var uname string
-	sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	defer sess.SessionRelease(ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
+	// defer sess.SessionRelease(ctx.ResponseWriter)
+	v := ctx.Input.CruSession.Get("uname")
 	var userrole int
 	if v != nil {
 		uname = v.(string)

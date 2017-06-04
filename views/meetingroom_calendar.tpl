@@ -1,20 +1,17 @@
-<!-- iframe里日历-->
+
 <!DOCTYPE html>
-<html>
-<head>
+{{template "header"}}
+<title>会议室预定</title>
 <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
-<script src='/static/js/jquery-2.1.3.min.js'></script>
-  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 <script src='/static/js/moment.min.js'></script>
 <script src='/static/js/fullcalendar.min.js'></script>
 <script src='/static/js/fullcalendar.zh-cn.js'></script>
 <script src='/static/js/bootstrap-datetimepicker.min.js'></script>
 <script src='/static/js/bootstrap-datetimepicker.zh-CN.js'></script>
-
 <link rel='stylesheet' href='/static/css/bootstrap-datetimepicker.min.css'/>
 <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-
+<link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
+<script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
 <style>
 	/*body {
 		margin: 0;
@@ -169,8 +166,8 @@ $(document).ready(function() {
 			// 	$('#calendar').fullCalendar('unselect');
 			// },
 			select: function(start, end, jsEvent, view){  
-                    //添加日程事件
-                    // $("input#cid").remove();
+        //添加日程事件
+        // $("input#cid").remove();
       				// var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
       				// $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
       				$("#start").val(start.format('YYYY-MM-DD HH:mm'));
@@ -181,17 +178,17 @@ $(document).ready(function() {
         			});
             },
 			editable: true,
-			// events: '/admin/calendar',
+			// events: '/project/calendar',
 			// eventSources: [  
       //      		'/feed1.php',  
       //      		'/feed2.php'  
       //  		]
 			events: {  
-        		url: '/admin/calendar',  
+        		url: '/index/meetingroomcalendar',  
         		type: 'post'  
     		},
 			// events: {
-			// 	url: '/admin/getcalendar',
+			// 	url: '/project/getcalendar',
 			// 	error: function() {
 			// 		$('#script-warning').show();
 			// 	}
@@ -263,42 +260,54 @@ $(document).ready(function() {
         		// $(this).css('background-color', getRandomColor());
     	},
     	eventClick: function(data, jsEvent, view){  
-                    //修改日程事件 
+        //修改日程事件 
         $("input#cid").remove();
+        // var allday=document.getElementById("isallday").checked;
+        // $("img").remove();
+        // $(".file-item").remove();
       	var th1="<input id='cid' type='hidden' name='cid' value='" +data.id+"'/>"
+      	var th2="<input id='ip' type='hidden' value='" +data.ip+"'/>"
       				$(".modal-body").append(th1);
+      				$(".modal-body").append(th2);
       				$("#title1").val(data.title);
       				$("#content1").val(data.content);
               $("#isallday1").prop('checked',data.allDay);
-                $("#ispublic1").prop('checked',false);
+              // $("#ismemorabilia1").prop('checked',data.memorabilia);
+              // $("#ispublic1").prop('checked',false);
                 // $("#ispublic1[name='private']").prop('checked',false);
-              if (data.Public==true){
-                $("#ispublic1[value='true']").prop('checked',true);
-              }else{
-                $("#ispublic1[value='false']").prop('checked',true);
-              }
+              // if (data.Public==true){
+              //   $("#ispublic1[value='true']").prop('checked',true);
+              // }else{
+              //   $("#ispublic1[value='false']").prop('checked',true);
+              // }
               // $("#ispublic1").prop('checked',data.Public);
-
+              // alert(data.end);
       				$("#start1").val(data.start.format('YYYY-MM-DD HH:mm'));
-              if (data.allDay){
+      				if (data.allDay){
 
-              }else{
-                $("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
-              }
+      				}else{
+								$("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
+      				}
+      				
 					    $('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
+              // var $list1 = $('#fileList1');
+              // $("img").remove();
+              // $("input#imgurl").remove();
+              
         			$('#modalTable1').modal({
         				show:true,
         				backdrop:'static'
         			});  
             },
         eventDrop: function(event,delta,revertFunc) {
-          // alert(event.id+event.title+delta.days());
-          // var url = "/admin/calendar/dropcalendar";
-          // $.post(url,{id:event.id,dalta:delta.days()},function(msg){
-          //   });
+          if (event.ip!={{.Ip}}){
+						alert("非本人创建，不能修改！");
+      			return;
+      		}
+
           $.ajax({
                 type:"post",
-                url:"/admin/calendar/dropcalendar",
+                url:"/index/meetingroomcalendar/dropcalendar",
                 data: {id:event.id,delta:delta.days()},
                 success:function(data,status){
                   alert("修改“"+data+"”成功！(status:"+status+".)");
@@ -310,10 +319,13 @@ $(document).ready(function() {
             });
         },
         eventResize: function(event,delta,revertFunc) {
-          // alert(delta.asHours());
+          if (event.ip!={{.Ip}}){
+						alert("非本人创建，不能修改！");
+      			return;
+      		}
           $.ajax({
                 type:"post",
-                url:"/admin/calendar/resizecalendar",
+                url:"/index/meetingroomcalendar/resizecalendar",
                 data: {id:event.id,delta:delta.asHours()},
                 success:function(data,status){
                   alert("修改“"+data+"”成功！(status:"+status+".)");
@@ -370,19 +382,22 @@ $(document).ready(function() {
 	}
 
 	function save(){
+    var projectid = {{.ProjectId}};
     var title = $('#title').val();
     var content = $('#content').val();
     var start = $('#start').val();
     var end = $('#end').val();
     var allday=document.getElementById("isallday").checked;
-    var public=document.getElementById("ispublic").checked;
+    // var public=document.getElementById("ispublic").checked;
+    // var memorabilia=document.getElementById("ismemorabilia").checked;
+    // var url=$('#imgurl').val();
     // alert(allday);
     // alert(public);
       if (title){  
             $.ajax({
                 type:"post",
-                url:"/admin/calendar/addcalendar",
-                data: {title:title,content:content,allday:allday,public:public,start:start,end:end,color:rgbToHex(currColor)},
+                url:"/index/meetingroomcalendar/addcalendar",
+                data: {projectid:projectid,title:title,content:content,allday:allday,start:start,end:end,color:rgbToHex(currColor)},
                 success:function(data,status){
                   alert("添加“"+data+"”成功！(status:"+status+".)");
                   var eventData;
@@ -399,7 +414,7 @@ $(document).ready(function() {
    			            className: 'done',
 					         };
 					         // $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true要用下面这个，否则添加后立即删除，无法删除
-            $('#calendar').fullCalendar('refetchEvents'); //重新获取所有事件数据
+            	$('#calendar').fullCalendar('refetchEvents'); //重新获取所有事件数据
 				    }
 				    $('#calendar').fullCalendar('unselect'); 
           			$('#modalTable').modal('hide');
@@ -414,14 +429,22 @@ $(document).ready(function() {
       var start = $('#start1').val();
       var end = $('#end1').val();
       var cid = $('#cid').val();
+      var ip = $('#ip').val();
+
+      if (ip!={{.Ip}}){
+				alert("非本人创建，不能修改！");
+      	return;
+      }
       var allday=document.getElementById("isallday1").checked;
-      var public=document.getElementById("ispublic1").checked;
+      // var public=document.getElementById("ispublic1").checked;
+      // var memorabilia=document.getElementById("ismemorabilia1").checked;
+      // var url=$('img').attr('src');
       var currColor=$('#add-new-event1').css("background-color");
       if (title){  
             $.ajax({
                 type:"post",
-                url:"/admin/calendar/updatecalendar",
-                data: {cid:cid,title:title,content:content,allday:allday,public:public,start:start,end:end,color:rgbToHex(currColor)},
+                url:"/index/meetingroomcalendar/updatecalendar",
+                data: {cid:cid,title:title,content:content,allday:allday,start:start,end:end,color:rgbToHex(currColor)},
                 success:function(data,status){
                   alert("修改“"+data+"”成功！(status:"+status+".)");
 					       $('#calendar').fullCalendar('refetchEvents'); //重新获取所有事件数据 // stick? = true 
@@ -436,7 +459,7 @@ $(document).ready(function() {
             var cid = $("#cid").val();  
               $.ajax({
                 type:"post",
-                url:"/admin/calendar/deletecalendar",
+                url:"/index/meetingroomcalendar/deletecalendar",
                 data: {cid:cid},
                 success:function(data,status){
                   alert("删除“"+data+"”成功！(status:"+status+".)");
@@ -462,7 +485,7 @@ $(document).ready(function() {
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title">添加日程</h3>
+            <h3 class="modal-title">添加会议室预约</h3>
           </div>
           <div class="modal-body">
             <div class="modal-body-content">
@@ -482,15 +505,19 @@ $(document).ready(function() {
                 <div class="col-sm-7 checkbox">
                   <label>
                   <input type="checkbox" value="true" id="isallday"></label>
-                  <label>
+                  <!-- <label>
                   <input type="radio" id="ispublic" value="true" name="public" checked="checked">公开</label>
                   <label>
-                  <input type="radio" id="ispublic" value="false" name="public">私有</label>
+                  <input type="radio" id="ispublic" value="false" name="public">私有</label> -->
                 </div>
               </div>
-              <!-- $('input:radio:checked').val()；
-              $("input[type='radio']:checked").val();
-              $("input[name='rd']:checked").val(); --> 
+              <!-- <div class="form-group must">
+                <label class="col-sm-3 control-label">是否作为大事记</label>
+                <div class="col-sm-7 checkbox">
+                  <label>
+                  <input type="checkbox" value="true" id="ismemorabilia"></label>
+                </div>
+              </div> -->
               <div class="form-group must">
                 <label class="col-sm-3 control-label">开始时间</label>
                 <div class="input-group date form_datetime col-sm-7" data-link-field="dtp_input1">
@@ -531,6 +558,10 @@ $(document).ready(function() {
                   </div>
                 </div>
               </div>
+              <!-- <div id="uploader-demo" style="position:relative;text-align: center;">
+                <div id="fileList" class="uploader-list"></div>
+                <div id="filePicker">选择图片</div>
+              </div> -->
           </div>
         </div>
         <div class="modal-footer">
@@ -553,7 +584,7 @@ $(document).ready(function() {
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title">编辑日程</h3>
+            <h3 class="modal-title">编辑会议室预约</h3>
           </div>
           <div class="modal-body">
             <div class="modal-body-content">
@@ -570,15 +601,23 @@ $(document).ready(function() {
                </div>
                <div class="form-group must">
                 <label class="col-sm-3 control-label">全天事件</label>
-                <div class="col-sm-7 checkbox">
+                <div class="col-sm-3 checkbox">
                   <label>
                   <input type="checkbox" value="true" id="isallday1"></label>
-                  <label>
+                  <!-- <label>
                   <input type="radio" id="ispublic1" value="true" name="public1" checked="checked">公开</label>
                   <label>
-                  <input type="radio" id="ispublic1" value="false" name="public1">私有</label>
+                  <input type="radio" id="ispublic1" value="false" name="public1">私有</label> -->
                 </div>
-              </div> 
+                <label class="col-sm-4 control-label">创建人：{{.Ip}}</label>
+              </div>
+              <!-- <div class="form-group must">
+                <label class="col-sm-3 control-label">是否作为大事记</label>
+                <div class="col-sm-7 checkbox">
+                  <label>
+                  <input type="checkbox" value="true" id="ismemorabilia1"></label>
+                </div>
+              </div> -->
                <div class="form-group must">
                 <label class="col-sm-3 control-label">开始时间</label>
                 <!-- <div class="col-sm-7">
@@ -628,6 +667,10 @@ $(document).ready(function() {
                   </div>
                 </div>
               </div>
+              <!-- <div id="uploader-demo1" style="position:relative;text-align: center;">
+                <div id="fileList1" class="uploader-list"></div>
+                <div id="filePicker1">选择图片</div>
+              </div>  --> 
           </div>
         </div>
         <div class="modal-footer">
@@ -695,120 +738,15 @@ $(document).ready(function() {
       //Add color effect to button
       $('#add-new-event1').css({"background-color": currColor, "border-color": currColor});
     });
-
-
-  //   $("#isallday").click(function(){//是否是全天事件
-  //     if($("#sel_start").css("display")=="none"){
-  //       $("#sel_start,#sel_end").show();
-  //     }else{
-  //        $("#sel_start,#sel_end").hide();
-  //     }
-  //   });
-  //   $("#isend").click(function(){//是否有结束时间
-  //     if($("#p_endtime").css("display")=="none"){
-  //       $("#p_endtime").show();
-  //     }else{
-  //       $("#p_endtime").hide();
-  //     }
-  // });
-
-    // $("#add-new-event").click(function (e) {
-    //   e.preventDefault();
-    //   //Get value and make sure it is not null
-    //   var val = $("#new-event").val();
-    //   if (val.length == 0) {
-    //     return;
-    //   }
-
-    //   //Create events
-    //   var event = $("<div />");
-    //   event.css({"background-color": currColor, "border-color": currColor, "color": "#fff"}).addClass("external-event");
-    //   event.html(val);
-    //   $('#external-events').prepend(event);
-
-    //   //Add draggable funtionality
-    //   ini_events(event);
-
-    //   //Remove event from text input
-    //   $("#new-event").val("");
-    // });
   });
+
 </script>
-
-<!-- <canvas id="canvas" width="200" height="200">你的浏览器不支持canvas元素，请更换更先进的浏览器。</canvas>
-<script>
-var canvas = document.getElementById('canvas');
-if (canvas.getContext) {
-    var ctx = canvas.getContext('2d');
-    ctx.lineWidth = 8;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
-    ctx.shadowBlur = 2;
-    ctx.font = '16px monospace';
-    var startAngle = -Math.PI / 2;
-
-    function drawClock() {
-        var time = new Date();
-        var hours = time.getHours();
-        var am = true;
-        if (hours >= 12) {
-            hours -= 12;
-            am = false;
-        }
-        var minutes = time.getMinutes();
-        var seconds = time.getSeconds();
-
-        ctx.clearRect(0, 0, 200, 200);
-
-        ctx.beginPath();
-        ctx.strokeStyle = "rgb(255, 0, 0)";
-        ctx.shadowColor = "rgba(255, 128, 128, 0.5)";
-        ctx.arc(100, 100, 90, startAngle, (hours / 6 + minutes / 360 + seconds / 21600 - 0.5) * Math.PI, false);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.strokeStyle = "rgb(0, 255, 0)";
-        ctx.shadowColor = "rgba(128, 255, 128, 0.5)";
-        ctx.arc(100, 100, 75,startAngle, (minutes / 30 + seconds / 1800 - 0.5) * Math.PI, false);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.strokeStyle = "rgb(0, 0, 255)";
-        ctx.shadowColor = "rgba(128, 128, 255, 0.5)";
-        ctx.arc(100, 100, 60,startAngle, (seconds / 30 - 0.5) * Math.PI, false);
-        ctx.stroke();
-
-        time = [];
-        if (hours < 10) {
-            time.push('0');
-        }
-        time.push(hours);
-        time.push(':');
-
-        if (minutes < 10) {
-            time.push('0');
-        }
-        time.push(minutes);
-        time.push(':');
-
-        if (seconds < 10) {
-            time.push('0');
-        }
-        time.push(seconds);
-
-        if (am) {
-            time.push('AM');
-        } else {
-            time.push('PM');
-        }
-
-        ctx.fillText(time.join(''), 50, 105);
-    }
-
-    drawClock();
-    setInterval(drawClock, 1000);
-}
-</script> -->
-
-<!-- </body> -->
+<body>
+  <div class="navbar navba-default navbar-fixed-top">
+    <div class="container-fill">{{template "navbar" .}}</div>
+  </div>
+<!-- <div class="col-lg-12"> -->
+	<div id='calendar'></div>
+<!-- </div> -->
+</body>
 </html>

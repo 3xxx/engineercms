@@ -14,8 +14,8 @@ type Article struct {
 	Subtext   string    `orm:"sie(20)"`
 	Content   string    `orm:"sie(5000)"`
 	ProductId int64     `orm:"null"`
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 func init() {

@@ -47,10 +47,10 @@
     <h4 >更多项目</h4>
     <div >
       <p>
-        <a href="https://github.com/3xxx/hydrows">供水管线设计工具</a>
+        <a href="https://github.com/3xxx/hydrows">HydroWS-供水管线设计工具</a>
       </p>
       <p>
-        <a href="https://github.com/3xxx/merit">价值成果管理系统</a>
+        <a href="https://github.com/3xxx/merit">MeritMS-价值成果管理系统</a>
       </p>
     </div>
   </div>

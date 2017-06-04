@@ -15,27 +15,27 @@ type AdminCategory struct {
 	Title    string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Code     string    `orm:"null"`
 	Grade    int       `orm:"null"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now;type(datetime)"`
 }
 
 type AdminIpsegment struct {
 	Id      int64     `form:"-"`
 	Title   string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	StartIp string    `orm:"not null"`
+	StartIp string    //`orm:"not null"`
 	EndIp   string    `orm:"null"`
 	Iprole  int       `orm:"null"`
-	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"index","auto_now;type(datetime)"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now;type(datetime)"`
 }
 
 type AdminCalendar struct {
 	Id        int64     `json:"id",form:"-"`
 	Title     string    `json:"title",form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
 	Content   string    `json:"content",orm:"sie(20)"`
-	Starttime time.Time `json:"start",orm:"not null;type(datetime)"`
+	Starttime time.Time `json:"start",orm:"type(datetime)"`
 	Endtime   time.Time `json:"end",orm:"null;type(datetime)"`
-	Allday    bool      `json:"allDay",orm:"not null;default(0)"`
+	Allday    bool      `json:"allDay",orm:"default(0)"`
 	Color     string    `json:"color",orm:"null"`
 	Public    bool      `default(true)`
 	// Color     string    `json:"backgroundColor",orm:"null"`
@@ -47,10 +47,10 @@ type AdminSynchIp struct {
 	Id       int64     `form:"-"`
 	ParentId int64     `orm:"null"`
 	UserName string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	SynchIp  string    `orm:"not null"`
+	SynchIp  string    //`orm:"not null"`
 	Port     string    `orm:"default(80)"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now;type(datetime)"`
 }
 
 //科室结构
@@ -59,8 +59,8 @@ type AdminDepartment struct {
 	ParentId int64     `orm:"null"`
 	Title    string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Code     string    `orm:"null"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 //首页轮播图片
@@ -68,8 +68,8 @@ type AdminCarousel struct {
 	Id      int64     `form:"-"`
 	Title   string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Url     string    `orm:"null"`
-	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 // `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -613,7 +613,7 @@ func GetAdminDepartbyidtitle(id int64, title string) (*AdminDepartment, error) {
 	return category, err
 }
 
-//添加
+//添加轮播动画
 func AddAdminCarousel(title, url string) (id int64, err error) {
 	o := orm.NewOrm()
 	carousel := &AdminCarousel{
@@ -641,3 +641,5 @@ func GetAdminCarousel() (carousels []*AdminCarousel, err error) {
 	}
 	return carousels, err
 }
+
+//添加提交给merit的ip地址和端口号，接口名称
