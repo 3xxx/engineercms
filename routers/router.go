@@ -8,6 +8,8 @@ import (
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
+	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
+
 	beego.Router("/", &controllers.ProjController{}, "*:Get")
 	//显示首页
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
@@ -118,6 +120,12 @@ func init() {
 	beego.Router("/admin/merit/meritlist/:id:int", &controllers.AdminController{}, "*:GetPostMerit")
 	//提交成果给merit
 	beego.Router("/admin/merit/sendmeritlist", &controllers.AdminController{}, "post:SendMeritlist")
+	//查看附件列表
+	beego.Router("/admin/merit/meritlist/attachment/:id:string", &controllers.AdminController{}, "get:CatalogAttachment")
+	//修改附件
+	beego.Router("/admin/merit/meritlist/modify", &controllers.AdminController{}, "post:ModifyCatalog")
+	//修改附件
+	beego.Router("/admin/merit/meritlist/modifylink", &controllers.AdminController{}, "post:ModifyLink")
 
 	//用户修改自己密码
 	beego.Router("/user", &controllers.UserController{}, "get:GetUserByUsername")

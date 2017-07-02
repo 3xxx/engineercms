@@ -748,6 +748,7 @@ func (c *ProjController) DeleteProject() {
 //*******项目日历*****
 //添加日历
 func (c *ProjController) AddCalendar() {
+	var starttime, endtime time.Time
 	projectid := c.Ctx.Input.Param(":id")
 	pid, err := strconv.ParseInt(projectid, 10, 64)
 	if err != nil {
@@ -782,16 +783,25 @@ func (c *ProjController) AddCalendar() {
 		memorabilia = false
 	}
 	const lll = "2006-01-02 15:04"
-	starttime, err := time.Parse(lll, start)
-	// beego.Info(start)
-	// beego.Info(starttime)
-	if err != nil {
-		beego.Error(err)
+	if start != "" {
+		starttime, err = time.Parse(lll, start)
+		// beego.Info(start)
+		// beego.Info(starttime)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		starttime = time.Now()
 	}
-	endtime, err := time.Parse(lll, end)
-	if err != nil {
-		beego.Error(err)
+	if end != "" {
+		endtime, err = time.Parse(lll, end)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		endtime = starttime
 	}
+
 	_, err = models.AddProjCalendar(pid, title, content, color, url, allday, public, memorabilia, starttime, endtime)
 	if err != nil {
 		beego.Error(err)
@@ -846,6 +856,7 @@ func (c *ProjController) Calendar() {
 
 //修改
 func (c *ProjController) UpdateCalendar() {
+	var starttime, endtime time.Time
 	cid := c.Input().Get("cid")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
@@ -880,15 +891,24 @@ func (c *ProjController) UpdateCalendar() {
 		public = false
 	}
 	const lll = "2006-01-02 15:04"
-	starttime, err := time.Parse(lll, start)
-	// beego.Info(start)
-	// beego.Info(starttime)
-	if err != nil {
-		beego.Error(err)
+
+	if start != "" {
+		starttime, err = time.Parse(lll, start)
+		// beego.Info(start)
+		// beego.Info(starttime)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		starttime = time.Now()
 	}
-	endtime, err := time.Parse(lll, end)
-	if err != nil {
-		beego.Error(err)
+	if end != "" {
+		endtime, err = time.Parse(lll, end)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		endtime = starttime
 	}
 	err = models.UpdateProjCalendar(cidNum, title, content, color, url, allday, public, memorabilia, starttime, endtime)
 	if err != nil {

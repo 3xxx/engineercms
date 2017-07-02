@@ -31,9 +31,15 @@
     <script src="/static/js/jquery.form.js"></script>
 
     <style>
+    div .col-lg-10{
+        z-index: 8888;
+      }
       /*.form-group .datepicker{
         z-index: 9999;
       }*/
+      div .popover{
+        z-index: 9999;
+      }
       i#delete
         {
           color:#C71585;
@@ -189,6 +195,7 @@
       data-filter-control="true"
       >
     </table>
+
     <!-- 添加成果 -->
     <div class="container">
       <div class="form-horizontal">
@@ -340,6 +347,7 @@
         autoclose: true,//选中之后自动隐藏日期选择框
         clearBtn: true,//清除按钮
         todayBtn: 'linked',//今日按钮
+        todayHighlight:true,
         format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
       });
     </script>
@@ -367,11 +375,68 @@
        >
     </table>
 
+  <!-- 附件列表 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalattach">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title" id="attachtitle"></h3>
+          </div>
+          <div class="modal-body">
+            <div id="attachbar" class="btn-group">
+              <button type="button" class="btn btn-default" id="attachbutton"> <i class="fa fa-plus"></i>
+              </button>
+            </div>
+            <div class="modal-body-content">
+              <table id="attachs"
+                    data-query-params="queryParams"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-toolbar="#attachbar"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-show-refresh="true"
+                    data-click-to-select="true">
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <br/>
     <br/>
   </div>
 
 <script type="text/javascript">
+  function setAttachment(value,row,index){
+    if (value){
+      // if (value.length==1){
+        // attachUrl= '<a href="'+value[0].Url+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        // return attachUrl;
+      // }else if(value.length==0){
+                    
+      // }else if(value.length>1){
+        attachUrl= "<a class='attachment' href='javascript:void(0)' title='查看附件列表'><i class='fa fa-list-ol'></i></a>";
+        return attachUrl;
+      // }
+    }
+  }
+    //最后面弹出附件列表中用的
+  function setAttachlink(value,row,index){
+    attachUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+      return attachUrl;
+  }
+
   function actionFormatter(value, row, index) {
     return [
         '<a class="send" href="javascript:void(0)" title="提交">',
@@ -385,18 +450,59 @@
         '</a>'
     ].join('');
   }
+    //弹出附件列表表格添加空行
+    $(function () {
+        $('#attachbutton').click(function () {
+            $('#attachs').bootstrapTable('insertRow', {
+                index: 3,
+                row: {
+                  Id:10,
+                  Url: '',
+                  Url: ''
+                }
+            });
+        });
+    });
 
   window.actionEvents = {
+    'click .attachment': function (e, value, row, index) {
+        rowcatalogid=row.id;
+        rowtitle=row.Name;
+        $("#attachtitle").html(rowtitle+'—附件列表');
+        // $("input#cid").remove();
+        // var th1="<input id='cid' type='hidden' name='cid' value='" +row.Id+"'/>"
+        // $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+
+        $('#attachs').bootstrapTable('refresh', {url:'/admin/merit/meritlist/attachment/'+row.id});
+        $('#modalattach').modal({
+          show:true,
+          backdrop:'static'
+        });
+    },
+
     'click .send': function (e, value, row, index) {
-        if(confirm("确定提交该行吗？")){
-          var removeline=$(this).parents("tr")
+      var selectRow3=$('#table').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定提交吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          // var removeline=$(this).parents("tr")
           //提交到后台进行修改数据库状态修改
             $.ajax({
             type:"post",//这里是否一定要用post？？？
             url:"/admin/merit/sendmeritlist",
-            data: {cid:row.id},
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
             success:function(data,status){//数据提交成功时返回数据
-              removeline.remove();
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              // removeline.remove();
               alert("提交“"+data+"”成功！(status:"+status+".)");
               $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
             }
@@ -498,7 +604,7 @@
   }
 
     //未提交
-    $(function (value, sourceData) {
+  $(function (value, sourceData) {
       $('#table').bootstrapTable({
         idField: 'id',
         uniqueId:'id',
@@ -536,7 +642,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter ProjectNumber',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -571,7 +677,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter ProjectName',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -606,7 +712,7 @@
                 type: 'select',
                 source: ["规划", "项目建议书", "可行性研究", "初步设计", "招标设计", "施工图"],
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter DesignStage',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -641,7 +747,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter number',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -675,7 +781,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Name',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -692,6 +798,7 @@
           },{
             field: 'Category',
             title: '成果类型',
+            visible: false,
             sortable:'true',
             editable: {
               params:function(params) {
@@ -711,7 +818,7 @@
                 type: 'select',
                 source: {{.Select2}},//["$1", "$2", "$3"],
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Category',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -745,7 +852,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Count',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -777,25 +884,17 @@
                   params.ids = ids;
                   return params;
                 },
-                type: 'select2', 
-                source:{{.Userselect}},//'/regist/getuname1',
-        // source: [
-        //       {id: 'gb', text: 'Great Britain'},
-        //       {id: 'us', text: 'United States'},
-        //       {id: 'ru', text: 'Russia'}
-        //    ],
-
-        //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
-
-                select2: {
-                  allowClear: true,
-                  width: '150px',
-                  placeholder: '请选择人名',
+                // type: 'select2', 
+                // source:{{.Userselect}},//'/regist/getuname1',
+                // select2: {
+                  // allowClear: true,
+                  // width: '150px',
+                  // placeholder: '请选择人名',
                   // multiple: true
-                },//'/regist/getuname1',//这里用get方法，所以要换一个
+                // },//'/regist/getuname1',//这里用get方法，所以要换一个
                 
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Drawn',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -827,15 +926,15 @@
                   params.ids = ids;
                   return params;
                 },
-                type: 'select2', 
-                source:{{.Userselect}},
-                select2: {
-                  allowClear: true,
-                  width: '150px',
-                  placeholder: '请选择人名',
-                },
+                // type: 'select2', 
+                // source:{{.Userselect}},
+                // select2: {
+                //   allowClear: true,
+                //   width: '150px',
+                //   placeholder: '请选择人名',
+                // },
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Designd',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -852,6 +951,7 @@
           },{
             field: 'Checked',
             title: '校核',
+            visible: false,
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -875,7 +975,7 @@
                   placeholder: '请选择人名',
                 },
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Checked',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -892,6 +992,7 @@
           },{
             field: 'Examined',
             title: '审查',
+            visible: false,
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -915,7 +1016,7 @@
                   placeholder: '请选择人名',
                 },
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Examined',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -949,7 +1050,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Drawnratio',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -983,7 +1084,7 @@
                 },
                 type: 'text',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 title: 'Enter Designdratio',
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
@@ -997,6 +1098,11 @@
                   }
                 }
             }
+          },{
+            field:'Link',
+            title: '附件',
+            formatter:'setAttachment',
+            events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版(日/月/年)',
@@ -1018,13 +1124,14 @@
                 },
                 type: 'date',
                 pk: 1,
-                url: '/achievement/modifycatalog',
+                url: '/admin/merit/meritlist/modify',
                 // title: 'Enter ProjectNumber' 
                 format: 'yyyy-mm-dd',    
                 viewformat: 'dd/mm/yyyy',    
                 datepicker: {
                     weekStart: 1,
-                    todayBtn: 'linked'
+                    todayBtn: 'linked',
+                    todayHighlight:true,
                    }
                 },
                 success: function(response, newValue) {
@@ -1046,7 +1153,7 @@
           }
         ],
       });
-    });
+  });
   //已提交
   $(function () {
     $('#table1').bootstrapTable({
@@ -1081,6 +1188,7 @@
             field: 'Category',
             title: '成果类型',
             sortable:'true',
+            visible: false,
           },{
             field: 'Count',
             title: '数量',
@@ -1093,190 +1201,75 @@
           },{
             field: 'Checked',
             title: '校核',
-            editable: {
-              params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'select2', 
-                source:{{.Userselect}},
-                select2: {
-                  allowClear: true,
-                  width: '150px',
-                  placeholder: '请选择人名',
-                },
-                pk: 1,
-                url: '/achievement/modifycatalog',
-                title: 'Enter Checked'  
-            }
+            visible: false,
           },{
             field: 'Examined',
             title: '审查',
-            editable: {
-              params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'select2', 
-                source:{{.Userselect}},
-                select2: {
-                  allowClear: true,
-                  width: '150px',
-                  placeholder: '请选择人名',
-                },
-                pk: 1,
-                url: '/achievement/modifycatalog',
-                title: 'Enter Examined'  
-            }
+            visible: false,
           },{
             field: 'Drawnratio',
             title: '制图比例',
-            editable: {
-              params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'text',
-                pk: 1,
-                url: '/achievement/modifycatalog',
-                title: 'Enter Drawnratio'  
-            }
           },{
             field: 'Designdratio',
             title: '设计比例',
-            editable: {
-              params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'text',
-                pk: 1,
-                url: '/achievement/modifycatalog',
-                title: 'Enter Designdratio'  
-            }
           },{
             field: 'Complex',
             title: '难度系数',
-            editable: {
-              params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'text',
-                pk: 1,
-                url: '/achievement/modifycatalog',
-                title: 'Enter Complex'  
-            }
+            visible: false,
           },{
             field: 'Datestring',
             title: '出版',
-            // formatter:localDateFormatter,
-            editable: {
-              params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'date',
-                pk: 1,
-                url: '/achievement/modifycatalog',
-                // title: 'Enter ProjectNumber' 
-                format: 'yyyy-mm-dd',    
-                viewformat: 'dd/mm/yyyy',    
-                datepicker: {
-                    weekStart: 1,
-                    todayBtn: 'linked'
-                   }
-                }
-        },{
+          },{
             field:'action',
             title: '操作',
             formatter:'actionFormatter1',
             events:'actionEvents1',
-        }
+          }
+        ]
+    });
+  });
+  //附件链接列表在线编辑
+  $(function () {
+    $('#attachs').bootstrapTable({
+        idField: 'Id',
+        columns: [
+          {
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            }
+          },{
+            field:'action',
+            title: '操作',
+            formatter:function(value,row,index){
+              return '<a class="deletelink" href="javascript:void(0)" title="删除"> <i id="delete" class="fa fa-trash"></i> </a>';
+            },
+            events:'actionEvents',
+          },{
+            field: 'Url',
+            title: '下载',
+            formatter:setAttachlink,
+          },{
+            field: 'Url',
+            title: '地址',
+            editable: {
+              params:function(params) {
+                  params.cid = rowcatalogid;
+                  return params;
+                },
+              placement:'left',
+              type: 'textarea',
+              pk: 1,
+              url: '/admin/merit/meritlist/modifylink',
+              title: 'Enter Link',
+              'noeditFormatter': function(value, row, index){
+                if (row.Editable != true) {
+                  return value;
+                }
+                  return false;        
+              } 
+            }
+          }
         ]
     });
   });
@@ -1294,6 +1287,7 @@
                autoclose: true,//选中之后自动隐藏日期选择框
                clearBtn: true,//清除按钮
                todayBtn: 'linked',//今日按钮
+               todayHighlight:true,
                format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
             });
   }

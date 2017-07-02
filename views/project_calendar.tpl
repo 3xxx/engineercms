@@ -284,9 +284,10 @@ $(document).ready(function() {
               }
               // $("#ispublic1").prop('checked',data.Public);
       				$("#start1").val(data.start.format('YYYY-MM-DD HH:mm'));
-              if (data.allDay){
+              // if (data.allDay){
 
-              }else{
+              if (data.end){
+              // }else{
                 $("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
               }
 					    $('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
@@ -407,14 +408,17 @@ $(document).ready(function() {
                 data: {projectid:projectid,title:title,content:content,allday:allday,public:public,memorabilia:memorabilia,start:start,end:end,color:rgbToHex(currColor),url:url},
                 success:function(data,status){
                   alert("添加“"+data+"”成功！(status:"+status+".)");
+                  // if (end==""){
+                  //   end=start
+                  // };
                   var eventData;
-					       if (title) {
-					       eventData = {
-					       	title: title,
-					       	content: content,
-					       	start: start,
-					       	end: end,
-                  color:rgbToHex(currColor),
+					        if (title) {
+					         eventData = {
+					       	 title: title,
+					       	 content: content,
+					       	 start: start,
+					       	 end: end,
+                    color:rgbToHex(currColor),
 					       	// textColor: getRandomColor(),
 					       	// backgroundColor: rgbToHex(currColor),
 					       	// borderColor: rgbToHex(currColor),

@@ -379,7 +379,11 @@ func (c *AttachController) AddAttachment() {
 	if err != nil {
 		beego.Error(err)
 	}
-
+	var news string
+	var cid int64
+	var attachment string
+	var path, DiskDirectory, Url string
+	var catalog models.PostMerit
 	if role == 1 {
 		//解析表单
 		pid := c.Input().Get("pid")
@@ -402,8 +406,6 @@ func (c *AttachController) AddAttachment() {
 			beego.Error(err)
 		}
 		//根据proj的parentIdpath——这个已经有了专门函数，下列可以简化！
-		var path, DiskDirectory, Url string
-		var catalog models.PostMerit
 
 		if proj.ParentIdPath != "" { //如果不是根目录
 			patharray := strings.Split(proj.ParentIdPath, "-")
@@ -480,7 +482,6 @@ func (c *AttachController) AddAttachment() {
 		if err != nil {
 			beego.Error(err)
 		}
-		var attachment string
 		// var filesize int64
 		if h != nil {
 			//保存附件
@@ -536,16 +537,22 @@ func (c *AttachController) AddAttachment() {
 
 			catalog.Created = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 			catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
-			var news string
+
 			catalog.Complex = 1
 			catalog.State = 0
-			_, err, news = models.AddPostMerit(catalog)
+			cid, err, news = models.AddPostMerit(catalog)
 			if err != nil {
 				beego.Error(err)
 			} else {
+				link1 := Url + "/" + attachment //附件链接地址
+				_, err = models.AddCatalogLink(cid, link1)
+				if err != nil {
+					beego.Error(err)
+				}
 				data := news
 				c.Ctx.WriteString(data)
 			}
+
 			//生成提交merit的清单结束*******************
 
 			//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库

@@ -138,11 +138,36 @@ $(document).ready(function() {
     // page is now ready, initialize the calendar...
     $('#calendar').fullCalendar({
         // put your options and callbacks here
+      // customButtons: {
+      //   myCustomButton: {
+      //       text: 'custom!',
+            // icon:{
+            //     prev: 'left-single-arrow',
+            //     next: 'right-single-arrow',
+            //     prevYear: 'left-double-arrow',
+            //     nextYear: 'right-double-arrow'
+            // },
+        //     themeIcon:{
+        //         prev: 'circle-triangle-w',
+        //         next: 'circle-triangle-e',
+        //         prevYear: 'seek-prev',
+        //         nextYear: 'seek-next'
+        //     },
+        //     click: function() {
+        //         alert('clicked the custom button!');
+        //     }
+        // }
+      // },
       header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay,listMonth'
-			},
+        left: 'prev,next today myCustomButton',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay,listMonth'
+      },
+   //    header: {
+			// 	left: 'prev,next today',
+			// 	center: 'title',
+			// 	right: 'month,agendaWeek,agendaDay,listMonth'
+			// },
 			// defaultDate: '2017-01-12',
 			navLinks: true, // can click day/week names to navigate views
 			editable: true,
@@ -179,7 +204,7 @@ $(document).ready(function() {
         				show:true,
         				backdrop:'static'
         			});
-            },
+      },
 			editable: true,
 			// events: '/admin/calendar',
 			// eventSources: [  
@@ -262,8 +287,7 @@ $(document).ready(function() {
         		// change the day's background color just for fun
         		// $(this).css('background-color', getRandomColor());
     	},
-    	eventClick: function(data, jsEvent, view){  
-                    //修改日程事件 
+    	eventClick: function(data, jsEvent, view){ //修改日程事件  
         $("input#cid").remove();
       	var th1="<input id='cid' type='hidden' name='cid' value='" +data.id+"'/>"
       				$(".modal-body").append(th1);
@@ -280,9 +304,9 @@ $(document).ready(function() {
               // $("#ispublic1").prop('checked',data.Public);
 
       				$("#start1").val(data.start.format('YYYY-MM-DD HH:mm'));
-              if (data.allDay){
-
-              }else{
+              // if (data.allDay){
+              if (data.end){
+              // }else{
                 $("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
               }
 					    $('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
@@ -290,7 +314,7 @@ $(document).ready(function() {
         				show:true,
         				backdrop:'static'
         			});  
-            },
+      },
         eventDrop: function(event,delta,revertFunc) {
           // alert(event.id+event.title+delta.days());
           // var url = "/admin/calendar/dropcalendar";
@@ -323,8 +347,11 @@ $(document).ready(function() {
                   revertFunc();
                 }
             });     
-          }
-});
+        }
+  });
+
+$('#calendar .fc-left').append('<div class="fc-button-group"><input type="text" class="fc-prev-button fc-button fc-state-default fc-corner-left" style="width:100px;height:29px;" placeholder="搜索事件"><button type="button" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fa fa-search"></span></button></div>' );
+
 });
 // RGB 转16进制
   var rgbToHex = function(rgb) {

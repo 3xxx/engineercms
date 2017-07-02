@@ -18,6 +18,48 @@ type AdminController struct {
 	beego.Controller
 }
 
+//Catalog添加附件链接和设计说明、校审意见
+type CatalogLinkCont struct {
+	Id            int64     `json:"id"`
+	ProjectNumber string    //项目编号
+	ProjectName   string    //项目名称
+	DesignStage   string    //阶段
+	Section       string    //专业
+	Tnumber       string    //成果编号
+	Name          string    //成果名称
+	Category      string    //成果类型
+	Page          string    //成果计量单位
+	Count         float64   //成果数量
+	Drawn         string    //编制、绘制
+	Designd       string    //设计
+	Checked       string    //校核
+	Examined      string    //审查
+	Verified      string    //核定
+	Approved      string    //批准
+	Complex       float64   //难度系数
+	Drawnratio    float64   //编制、绘制占比系数
+	Designdratio  float64   //设计系数
+	Checkedratio  float64   //校核系数
+	Examinedratio float64   //审查系数
+	Datestring    string    //保存字符型日期
+	Date          time.Time `orm:"null;auto_now_add;type(datetime)"`
+	Created       time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated       time.Time `orm:"auto_now_add;type(datetime)"`
+	Author        string    //上传者
+	State         int
+	Link          []models.CatalogLink
+}
+
+//附件链接表
+type CatalogLinkEditable struct {
+	Id        int64
+	CatalogId int64
+	Url       string `orm:"sie(500)"`
+	Editable  bool
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
+}
+
 func (c *AdminController) Get() {
 	iprole := Getiprole(c.Ctx.Input.IP())
 	if iprole != 1 {
@@ -550,15 +592,24 @@ func (c *AdminController) AddCalendar() {
 		public = false
 	}
 	const lll = "2006-01-02 15:04"
-	starttime, err := time.Parse(lll, start)
-	// beego.Info(start)
-	// beego.Info(starttime)
-	if err != nil {
-		beego.Error(err)
+	var starttime, endtime time.Time
+	if start != "" {
+		starttime, err = time.Parse(lll, start)
+		// beego.Info(start)
+		// beego.Info(starttime)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		starttime = time.Now()
 	}
-	endtime, err := time.Parse(lll, end)
-	if err != nil {
-		beego.Error(err)
+	if end != "" {
+		endtime, err = time.Parse(lll, end)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		endtime = starttime
 	}
 	_, err = models.AddAdminCalendar(title, content, color, allday, public, starttime, endtime)
 	if err != nil {
@@ -629,15 +680,24 @@ func (c *AdminController) UpdateCalendar() {
 		public = false
 	}
 	const lll = "2006-01-02 15:04"
-	starttime, err := time.Parse(lll, start)
-	// beego.Info(start)
-	// beego.Info(starttime)
-	if err != nil {
-		beego.Error(err)
+	var starttime, endtime time.Time
+	if start != "" {
+		starttime, err = time.Parse(lll, start)
+		// beego.Info(start)
+		// beego.Info(starttime)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		starttime = time.Now()
 	}
-	endtime, err := time.Parse(lll, end)
-	if err != nil {
-		beego.Error(err)
+	if end != "" {
+		endtime, err = time.Parse(lll, end)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		endtime = starttime
 	}
 	err = models.UpdateAdminCalendar(cidNum, title, content, color, allday, public, starttime, endtime)
 	if err != nil {
@@ -1027,6 +1087,7 @@ func (c *AdminController) MeritBasic() {
 		beego.Error(err)
 	}
 	//取到一个数据，不是数组，所以table无法显示
+	//如果数据为空，则构造一个空数据给table，方便修改
 	merits := make([]*models.MeritBasic, 1)
 	merits[0] = &meritbasic
 	c.Data["json"] = &merits
@@ -1079,47 +1140,246 @@ func (c *AdminController) GetPostMerit() {
 			beego.Error(err)
 		}
 	}
+	link := make([]CatalogLinkCont, 0)
+	Attachslice := make([]models.CatalogLink, 0)
+	linkarr := make([]CatalogLinkCont, 1)
+	attacharr := make([]models.CatalogLink, 1)
 
-	c.Data["json"] = postmerits //products
+	//这里循环，添加附件链接和设计说，校审意见
+	for _, w := range postmerits {
+		linkarr[0].Id = w.Id
+		linkarr[0].ProjectNumber = w.ProjectNumber
+		linkarr[0].ProjectName = w.ProjectName
+		linkarr[0].DesignStage = w.DesignStage
+		linkarr[0].Section = w.Section
+		linkarr[0].Tnumber = w.Tnumber
+		linkarr[0].Name = w.Name
+		linkarr[0].Category = w.Category
+		linkarr[0].Page = w.Page
+		linkarr[0].Count = w.Count
+		linkarr[0].Drawn = w.Drawn
+		linkarr[0].Designd = w.Designd
+		linkarr[0].Checked = w.Checked
+		linkarr[0].Examined = w.Examined
+		linkarr[0].Verified = w.Verified
+		linkarr[0].Approved = w.Approved
+		linkarr[0].Complex = w.Complex
+		linkarr[0].Drawnratio = w.Drawnratio
+		linkarr[0].Designdratio = w.Designdratio
+		linkarr[0].Checkedratio = w.Checkedratio
+		linkarr[0].Examinedratio = w.Examinedratio
+		linkarr[0].Datestring = w.Datestring
+		linkarr[0].Date = w.Date
+		linkarr[0].Created = w.Created
+		linkarr[0].Updated = w.Updated
+		linkarr[0].Author = w.Author
+		linkarr[0].State = w.State
+		links, err := models.GetCatalogLinks(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, v := range links {
+			attacharr[0].Url = v.Url
+			// beego.Info(v.Url)
+			Attachslice = append(Attachslice, attacharr...)
+		}
+		linkarr[0].Link = Attachslice
+		Attachslice = make([]models.CatalogLink, 0)
+		link = append(link, linkarr...)
+	}
+	c.Data["json"] = link //postmerits //products
 	c.ServeJSON()
+}
+
+//在线修改保存某个字段
+func (c *AdminController) ModifyCatalog() {
+	name := c.Input().Get("name")
+	value := c.Input().Get("value")
+	pk := c.Input().Get("pk")
+
+	ids := c.GetString("ids")
+	if ids != "" { //修改选中。问题，选中的是其他几个，修改当前这个没有选中，则不修改，会不会很奇怪？
+		array := strings.Split(ids, ",")
+		for _, v := range array {
+			// pid = strconv.FormatInt(v1, 10)
+			if v != pk { //避免与下面的id重复
+				//id转成64位
+				idNum, err := strconv.ParseInt(v, 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				err = models.ModifyCatalog(idNum, name, value)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					// data := value
+					// c.Ctx.WriteString(data)
+				}
+			}
+		}
+	}
+
+	id, err := strconv.ParseInt(pk, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//无论如何都修改当前，重复修改了
+	err = models.ModifyCatalog(id, name, value)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		data := value
+		c.Ctx.WriteString(data)
+	}
+
+	logs := logs.NewLogger(1000)
+	logs.SetLogger("file", `{"filename":"log/meritlog.log"}`)
+	logs.EnableFuncCallDepth(true)
+	logs.Info(c.Ctx.Input.IP() + " " + "修改保存设计记录" + pk)
+	logs.Close()
+}
+
+//列表显示成果附件
+func (c *AdminController) CatalogAttachment() {
+	id := c.Ctx.Input.Param(":id")
+	// beego.Info(id)
+	c.Data["Id"] = id
+	var idNum int64
+	var err error
+	// var Url string
+	if id != "" {
+		//id转成64为
+		idNum, err = strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	//由id取得成果状态
+	catalog, err := models.GetPostMerit(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据成果id取得所有附件
+	links, err := models.GetCatalogLinks(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	Attachslice := make([]CatalogLinkEditable, 0)
+	attacharr := make([]CatalogLinkEditable, 1)
+	if len(links) > 0 {
+		for _, v := range links {
+			attacharr[0].Id = v.Id
+			// linkarr[0].Title = v.FileName
+			attacharr[0].Url = v.Url
+			attacharr[0].CatalogId = idNum
+			if catalog.State == 0 {
+				attacharr[0].Editable = true
+			} else {
+				attacharr[0].Editable = false
+			}
+			// beego.Info(v.Url)
+			Attachslice = append(Attachslice, attacharr...)
+		}
+		if catalog.State == 0 {
+			attacharr[0].Url = "http://"
+			attacharr[0].Id = 0
+			attacharr[0].CatalogId = idNum
+			attacharr[0].Editable = true
+			Attachslice = append(Attachslice, attacharr...)
+		}
+	} else {
+		if catalog.State == 0 {
+			attacharr[0].Created = time.Now()
+			attacharr[0].Updated = time.Now()
+			attacharr[0].Editable = true
+			attacharr[0].Url = "http://"
+			attacharr[0].CatalogId = idNum
+			Attachslice = attacharr
+		}
+	}
+
+	c.Data["json"] = Attachslice
+	c.ServeJSON()
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+}
+
+//修改link
+func (c *AdminController) ModifyLink() {
+	name := c.Input().Get("name")
+	value := c.Input().Get("value")
+	pk := c.Input().Get("pk")
+
+	id, err := strconv.ParseInt(pk, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	cid := c.Input().Get("cid") //成果id
+	cidnum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//无论如何都修改当前，重复修改了
+	err = models.ModifyCatalogLink(id, cidnum, name, value)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		data := value
+		c.Ctx.WriteString(data)
+	}
+
+	logs := logs.NewLogger(1000)
+	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
+	logs.EnableFuncCallDepth(true)
+	logs.Info(c.Ctx.Input.IP() + " " + "修改保存设计记录" + pk)
+	logs.Close()
 }
 
 //提交meritlist给merit，这个是关键代码
 func (c *AdminController) SendMeritlist() {
 	//1——将state从0变为1
-	pk := c.Input().Get("cid")
-	beego.Info(pk)
-	id, err := strconv.ParseInt(pk, 10, 64)
-	if err != nil {
-		beego.Error(err)
-	}
-	err = models.UpdatePostMerit(id, "State", "1")
-	if err != nil {
-		beego.Error(err)
-	} else {
-		data := "ok!"
-		c.Ctx.WriteString(data)
+	// req.Response()
+	pk1 := c.Ctx.Input.RequestBody
+	// beego.Info(pk1)
+	var ob []models.PostMerit
+	// beego.Info(c.Ctx.Input.RequestBody)
+	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	// pk := c.Input().Get("id")
+	// beego.Info(ob.Id)
+	// cid, err := strconv.ParseInt(pk, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	for _, v := range ob {
+		err := models.UpdatePostMerit(v.Id, "State", "1")
+		if err != nil {
+			beego.Error(err)
+		} else {
+			data := "ok!"
+			c.Ctx.WriteString(data)
+		}
 	}
 	//2——将meritlist提交给merit服务器
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
 		beego.Error(err)
 	}
-	postmerit, err := models.GetPostMerit(id)
-	if err != nil {
-		beego.Error(err)
-	}
+	// postmerit, err := models.GetPostMerit(ob.Id)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 	// postmerit.Author = meritbasic.Username
 	//编码JSON
-	body, err := json.Marshal(postmerit)
-	if err != nil {
-		beego.Error(err)
-	}
+	// body, err := json.Marshal(postmerit)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 
 	req := httplib.Post("http://" + meritbasic.Ip + ":" + meritbasic.Port + "/getecmspost")
 	req.Param("username", meritbasic.Username)
 	req.Param("password", meritbasic.Password)
-	req.Body(body)
+	// req.Body(body)
+	req.Body(pk1)
 	str, err := req.String()
 	if err != nil {
 		beego.Error(err)

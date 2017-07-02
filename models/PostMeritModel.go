@@ -42,6 +42,15 @@ type PostMerit struct {
 	State         int       //1编写状态，未提交；2编写者提交，
 }
 
+//附件链接表
+type CatalogLink struct {
+	Id        int64
+	CatalogId int64
+	Url       string    `orm:"sie(500)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
+}
+
 //用户表
 type MeritBasic struct {
 	Id         int64  `PK`
@@ -56,7 +65,7 @@ type MeritBasic struct {
 }
 
 func init() {
-	orm.RegisterModel(new(PostMerit), new(MeritBasic)) //, new(Article)
+	orm.RegisterModel(new(PostMerit), new(CatalogLink), new(MeritBasic)) //, new(Article)
 }
 
 //修改成果信息
@@ -102,9 +111,9 @@ func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 	//Filter("Drawn", catalog.Drawn).Filter("Designd", catalog.Designd).Filter("Checked", catalog.Checked).
 	err = o.QueryTable("PostMerit").Filter("Tnumber", catalog.Tnumber).Filter("Name", catalog.Name).Filter("Category", catalog.Category).One(&catalog1)
 	if err == orm.ErrNoRows {
-		cid, err = o.Insert(&catalog) //_, err = o.Insert(reply)
-		if err != nil {
-			return 0, err, "insert err"
+		cid, err1 := o.Insert(&catalog) //_, err = o.Insert(reply)
+		if err1 != nil {
+			return 0, err1, "insert err"
 		} else {
 			return cid, nil, "insert ok"
 		}
@@ -115,6 +124,255 @@ func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 	} else {
 		return 0, nil, "数据已存在"
 	}
+}
+
+//用户修改一条成果的某个字段
+func ModifyCatalog(cid int64, fieldname, value string) error {
+	o := orm.NewOrm()
+	var catalog PostMerit
+	// catalog := &Catalog{Id: cid}
+	err := o.QueryTable("PostMerit").Filter("Id", cid).One(&catalog)
+	// err:=o.Read(catalog).One()
+	if err == nil {
+		// type Duration int64
+		// const (
+		// 	Nanosecond  Duration = 1
+		// 	Microsecond          = 1000 * Nanosecond
+		// 	Millisecond          = 1000 * Microsecond
+		// 	Second               = 1000 * Millisecond
+		// 	Minute               = 60 * Second
+		// 	Hour                 = 60 * Minute
+		// )
+		// const lll = "2006-01-02"
+		catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+		switch fieldname {
+		case "ProjectNumber":
+			catalog.ProjectNumber = value
+			_, err := o.Update(&catalog, "ProjectNumber", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "ProjectName":
+			catalog.ProjectName = value
+			_, err := o.Update(&catalog, "ProjectName", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "DesignStage":
+			catalog.DesignStage = value
+			_, err := o.Update(&catalog, "DesignStage", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Section":
+			catalog.Section = value
+			_, err := o.Update(&catalog, "Section", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Tnumber":
+			catalog.Tnumber = value
+			_, err := o.Update(&catalog, "Tnumber", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Name":
+			catalog.Name = value
+			_, err := o.Update(&catalog, "Name", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Category":
+			catalog.Category = value
+			_, err := o.Update(&catalog, "Category", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Count":
+			//转成float64
+			catalog.Count, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				return err
+			}
+			_, err := o.Update(&catalog, "Count", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Drawn":
+			catalog.Drawn = value
+			_, err := o.Update(&catalog, "Drawn", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Designd":
+			catalog.Designd = value
+			_, err := o.Update(&catalog, "Designd", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Checked":
+			catalog.Checked = value
+			_, err := o.Update(&catalog, "Checked", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Examined":
+			catalog.Examined = value
+			_, err := o.Update(&catalog, "Examined", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Drawnratio":
+			catalog.Drawnratio, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				return err
+			}
+			_, err := o.Update(&catalog, "Drawnratio", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Designdratio":
+			catalog.Designdratio, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				return err
+			}
+			_, err := o.Update(&catalog, "Designdratio", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Checkedratio":
+			catalog.Checkedratio, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				return err
+			}
+			_, err := o.Update(&catalog, "Checkedratio", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Examinedratio":
+			catalog.Examinedratio, err = strconv.ParseFloat(value, 64)
+			_, err := o.Update(&catalog, "Examinedratio", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Complex":
+			catalog.Complex, err = strconv.ParseFloat(value, 64)
+			_, err := o.Update(&catalog, "Complex", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Datestring":
+			const lll = "2006-01-02" //"2006-01-02 15:04:05" //12-19-2015 22:40:24
+			catalog.Date, err = time.Parse(lll, value)
+			if err != nil {
+				return err
+			}
+			catalog.Datestring = value
+			_, err := o.Update(&catalog, "Datestring", "Date", "Updated") //这里不能用&catalog
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		}
+		// 指定多个字段
+		// o.Update(&user, "Field1", "Field2", ...)这个试验没成功
+	} else {
+		return o.Read(&catalog)
+	}
+	return nil
+}
+
+//添加附件链接表
+func AddCatalogLink(cid int64, link string) (id int64, err error) {
+	o := orm.NewOrm()
+	cataloglink := &CatalogLink{
+		CatalogId: cid,
+		Url:       link,
+		Created:   time.Now(),
+		Updated:   time.Now(),
+	}
+	id, err = o.Insert(cataloglink)
+	if err != nil {
+		return id, err //如果文章编号相同，则唯一性检查错误，返回id吗？
+	}
+	return id, err
+}
+
+//根据成果id查出附件链接表
+func GetCatalogLinks(cid int64) (links []*CatalogLink, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("CatalogLink")
+	_, err = qs.Filter("CatalogId", cid).All(&links)
+	if err != nil {
+		return nil, err
+	}
+	return links, err
+}
+
+//修改links
+func ModifyCatalogLink(id, cid int64, fieldname, value string) error {
+	o := orm.NewOrm()
+	var cataloglink CatalogLink
+	// catalog := &Catalog{Id: cid}
+	err := o.QueryTable("CatalogLink").Filter("Id", id).One(&cataloglink)
+	// err:=o.Read(catalog).One()
+	if err == nil {
+		cataloglink.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+		cataloglink.Url = value
+		_, err := o.Update(&cataloglink, "Url", "Updated")
+		if err != nil {
+			return err
+		} else {
+			return nil
+		}
+	} else {
+		cataloglink := &CatalogLink{
+			CatalogId: cid,
+			Url:       value,
+			Created:   time.Now(),
+			Updated:   time.Now(),
+		}
+		_, err = o.Insert(cataloglink)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 //用户修改一个用户的某个字段
@@ -233,19 +491,20 @@ func UpdateMeritBasic(cid int64, fieldname, value string) error {
 	// user := &User{Id: cid}
 	err := o.QueryTable("MeritBasic").Filter("Id", cid).One(&merit)
 	// err:=o.Read(user).One()
+	type Duration int64
+	const (
+		Nanosecond  Duration = 1
+		Microsecond          = 1000 * Nanosecond
+		Millisecond          = 1000 * Microsecond
+		Second               = 1000 * Millisecond
+		Minute               = 60 * Second
+		Hour                 = 60 * Minute
+	)
+	// hours := 8
+	const lll = "2006-01-02"
+	merit.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+
 	if err == nil {
-		type Duration int64
-		const (
-			Nanosecond  Duration = 1
-			Microsecond          = 1000 * Nanosecond
-			Millisecond          = 1000 * Microsecond
-			Second               = 1000 * Millisecond
-			Minute               = 60 * Second
-			Hour                 = 60 * Minute
-		)
-		// hours := 8
-		const lll = "2006-01-02"
-		merit.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 		switch fieldname {
 		case "Username":
 			merit.Username = value
@@ -295,7 +554,27 @@ func UpdateMeritBasic(cid int64, fieldname, value string) error {
 		// 指定多个字段
 		// o.Update(&user, "Field1", "Field2", ...)这个试验没成功
 	} else {
-		return o.Read(&merit)
+		switch fieldname {
+		case "Username":
+			merit.Username = value
+		case "Nickname":
+			merit.Nickname = value
+		case "Password":
+			//这里要加密
+			md5Ctx := md5.New()
+			md5Ctx.Write([]byte(value))
+			cipherStr := md5Ctx.Sum(nil)
+			merit.Password = hex.EncodeToString(cipherStr)
+		case "Ip":
+			merit.Ip = value
+		case "Port":
+			merit.Port = value
+		}
+		_, err := o.Insert(&merit)
+		if err != nil {
+			return err
+		}
+		// return o.Read(&merit)
 	}
 	return nil
 }
