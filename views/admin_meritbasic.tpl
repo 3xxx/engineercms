@@ -305,6 +305,24 @@
                 url: '/admin/merit/updatemeritbasic',
                 title: 'Enter Port'  
             }
+          },{
+            field: 'EcmsIp',
+            title: 'Ecms的IP',
+            editable: {
+                type: 'text',
+                pk: 1,
+                url: '/admin/merit/updatemeritbasic',
+                title: 'Enter Port'  
+            }
+          },{
+            field: 'EcmsPort',
+            title: 'Ecms的端口',
+            editable: {
+                type: 'text',
+                pk: 1,
+                url: '/admin/merit/updatemeritbasic',
+                title: 'Enter Port'  
+            }
           }
         ]
     });

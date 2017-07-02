@@ -1,3 +1,7 @@
+// @APIVersion 1.0.0
+// @Title mobile API
+// @Description mobile has every tool to get any job done, so codename for the new mobile APIs.
+// @Contact astaxie@gmail.com
 package routers
 
 import (
@@ -116,10 +120,15 @@ func init() {
 	beego.Router("/admin/merit/meritbasic", &controllers.AdminController{}, "*:MeritBasic")
 	//修改meritbasic表格数据
 	beego.Router("/admin/merit/updatemeritbasic", &controllers.AdminController{}, "*:UpdateMeritBasic")
-	//未提交merit的成果列表
+	//未提交和已提交的merit的成果列表
 	beego.Router("/admin/merit/meritlist/:id:int", &controllers.AdminController{}, "*:GetPostMerit")
 	//提交成果给merit
 	beego.Router("/admin/merit/sendmeritlist", &controllers.AdminController{}, "post:SendMeritlist")
+	//删除成果merit
+	beego.Router("/admin/merit/deletemeritlist", &controllers.AdminController{}, "post:DeleteMeritlist")
+	//回退merit已提交成果给未提交
+	beego.Router("/admin/merit/downmeritlist", &controllers.AdminController{}, "post:DownMeritlist")
+
 	//查看附件列表
 	beego.Router("/admin/merit/meritlist/attachment/:id:string", &controllers.AdminController{}, "get:CatalogAttachment")
 	//修改附件

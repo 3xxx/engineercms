@@ -13,8 +13,9 @@
 6. 深度检索到成果、附件和文章全文；全局检索到局域网内其他cms上的成果、附件和文章；
 7. 根据资料编号的规则，批量上传附件时，自动截取编号和名称，并归入对应的目录中；
 8. 3种权限方式：IP地址段权限，适用于局域网内相互之间的无障碍访问；注册用户的权限适用于远程VPN访问；用户组权限适用于项目团队协作；
-9. 公开和私有的个人日历日程。每个项目提供一个项目日程；
-10. 退休后可将自己个人的cms系统导入cms服务器版，实现知识继承。
+9. 公开和私有的个人日历日程。每个项目提供一个项目日程和大事记时间轴；
+10. 上传成果后，自动生成提供给MeritMS的成果清单，可提交给MeritMS系统进行成果统计；
+11. 目的是标准化管理自己的知识体系，可以把数据库挂到到服务器上，供其他人查阅；退休后可将自己个人的cms系统导入cms服务器版，实现知识继承。
 
 二 todo:
 
@@ -38,7 +39,3 @@
 
 EngineerCMS source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
-
-![cms](https://cloud.githubusercontent.com/assets/10678867/25748719/a340448e-31de-11e7-8341-6502881fa19c.png)
-
-![snap2timeline](https://cloud.githubusercontent.com/assets/10678867/25749044/bc658aae-31df-11e7-8c81-680682dd77ef.png)

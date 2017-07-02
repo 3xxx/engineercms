@@ -458,7 +458,8 @@
                 row: {
                   Id:10,
                   Url: '',
-                  Url: ''
+                  Url: 'http://',
+                  Editable:true
                 }
             });
         });
@@ -472,7 +473,6 @@
         // $("input#cid").remove();
         // var th1="<input id='cid' type='hidden' name='cid' value='" +row.Id+"'/>"
         // $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-
         $('#attachs').bootstrapTable('refresh', {url:'/admin/merit/meritlist/attachment/'+row.id});
         $('#modalattach').modal({
           show:true,
@@ -491,9 +491,17 @@
           var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
                 return row.id;
             });
+          if (ids.length==0){
+            ids = $.map(mycars, function(row){
+                return row.id;
+            });
+            // alert(ids);
+            // alert(row.id);
+          }
+          
           // var removeline=$(this).parents("tr")
           //提交到后台进行修改数据库状态修改
-            $.ajax({
+          $.ajax({
             type:"post",//这里是否一定要用post？？？
             url:"/admin/merit/sendmeritlist",
             data: JSON.stringify(selectRow3),//JSON.stringify(row),
@@ -506,86 +514,182 @@
               alert("提交“"+data+"”成功！(status:"+status+".)");
               $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
             }
-            });  
+          });  
         }
     },
-    'click .downsend': function (e, value, row, index) {
-        if(confirm("确定退回该行吗？")){
-        var removeline=$(this).parents("tr")
-          //提交到后台进行修改数据库状态修改
-            $.ajax({
-            type:"post",//这里是否一定要用post？？？
-            url:"/achievement/downsendcatalog",
-            data: {CatalogId:row.Id},
-                success:function(data,status){//数据提交成功时返回数据
-                removeline.remove();
-                alert("退回“"+data+"”成功！(status:"+status+".)");
-                }
-            });  
-        }
-    },
+    // 'click .downsend': function (e, value, row, index) {
+    //     if(confirm("确定退回该行吗？")){
+    //     var removeline=$(this).parents("tr")
+    //       //提交到后台进行修改数据库状态修改
+    //         $.ajax({
+    //         type:"post",//这里是否一定要用post？？？
+    //         url:"/achievement/downsendcatalog",
+    //         data: {CatalogId:row.Id},
+    //             success:function(data,status){//数据提交成功时返回数据
+    //             removeline.remove();
+    //             alert("退回“"+data+"”成功！(status:"+status+".)");
+    //             }
+    //         });  
+    //     }
+    // },
 
     'click .remove': function (e, value, row, index) {
-        if(confirm("确定删除该行吗？")){  
-        var removeline=$(this).parents("tr")
-        //提交到后台进行删除数据库
-         // alert("欢迎您：" + name) 
-            $.ajax({
+      var selectRow3=$('#table').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定删除吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          if (ids.length==0){
+            ids = $.map(mycars, function(row){
+                return row.id;
+            });
+          }
+          // var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+          $.ajax({
             type:"post",//这里是否一定要用post？？？
             url:"/admin/merit/deletemeritlist",
-            data: {CatalogId:row.Id},
-                success:function(data,status){//数据提交成功时返回数据
-                removeline.remove();
-                alert("删除“"+data+"”成功！(status:"+status+".)");
-                }
-            });  
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              // removeline.remove();
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
+          });  
         }
-    }
+      }
+        // if(confirm("确定删除吗？")){  
+        // var removeline=$(this).parents("tr")
+        //     $.ajax({
+        //     type:"post",//这里是否一定要用post？？？
+        //     url:"/admin/merit/deletemeritlist",
+        //     data: {CatalogId:row.Id},
+        //         success:function(data,status){//数据提交成功时返回数据
+        //         removeline.remove();
+        //         alert("删除“"+data+"”成功！(status:"+status+".)");
+        //         }
+        //     });  
+        // }
+    
   };
 
   //不提供删除功能的操作
   function actionFormatter1(value, row, index) {
     return [
-        '<a class="send" href="javascript:void(0)" title="提交">',
-        '<i class="glyphicon glyphicon-step-forward"></i>',
-        '</a>',
         '<a class="downsend" href="javascript:void(0)" title="退回">',
         '<i class="glyphicon glyphicon-step-backward"></i>',
-        '</a>',
+        '</a>&nbsp;',
+        '<a class="remove" href="javascript:void(0)" title="删除">',
+        '<i id="delete" class="glyphicon glyphicon-remove"></i>',
+        '</a>'
     ].join('');
   }
 //不提供删除功能的操作
   window.actionEvents1 = {
-    'click .send': function (e, value, row, index) {
-        if(confirm("确定提交该行吗？")){
-          var removeline=$(this).parents("tr")
-          //提交到后台进行修改数据库状态修改
-            $.ajax({
-            type:"post",//这里是否一定要用post？？？
-            url:"/achievement/sendcatalog",
-            data: {CatalogId:row.Id},
-                success:function(data,status){//数据提交成功时返回数据
-                removeline.remove();
-                alert("提交“"+data+"”成功！(status:"+status+".)");
-                }
-            });  
-        }
-    },
+    // 'click .send': function (e, value, row, index) {
+    //     if(confirm("确定提交该行吗？")){
+    //       var removeline=$(this).parents("tr")
+    //       //提交到后台进行修改数据库状态修改
+    //         $.ajax({
+    //         type:"post",//这里是否一定要用post？？？
+    //         url:"/achievement/sendcatalog",
+    //         data: {CatalogId:row.Id},
+    //             success:function(data,status){//数据提交成功时返回数据
+    //             removeline.remove();
+    //             alert("提交“"+data+"”成功！(status:"+status+".)");
+    //             }
+    //         });  
+    //     }
+    // },
     'click .downsend': function (e, value, row, index) {
-        if(confirm("确定退回该行吗？")){
-        var removeline=$(this).parents("tr")
-          //提交到后台进行修改数据库状态修改
-            $.ajax({
-            type:"post",//这里是否一定要用post？？？
-            url:"/achievement/downsendcatalog",
-            data: {CatalogId:row.Id},
-                success:function(data,status){//数据提交成功时返回数据
-                removeline.remove();
-                alert("退回“"+data+"”成功！(status:"+status+".)");
-                }
-            });  
+      var selectRow3=$('#table1').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
         }
-    }
+        if(confirm("确定退回吗？")){
+          var ids = $.map($('#table1').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          if (ids.length==0){
+            ids = $.map(mycars, function(row){
+                return row.id;
+            });
+          }
+          $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/admin/merit/downmeritlist",
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table1').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              alert("退回“"+data+"”成功！(status:"+status+".)");
+              $('#table').bootstrapTable('refresh', {url:'/admin/merit/meritlist/0'});
+            }
+          });  
+        }
+      },
+
+      'click .remove': function (e, value, row, index) {
+      var selectRow3=$('#table1').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定删除吗？")){
+          var ids = $.map($('#table1').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          if (ids.length==0){
+            ids = $.map(mycars, function(row){
+                return row.id;
+            });
+          }
+          // var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+          $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/admin/merit/deletemeritlist",
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table1').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              // removeline.remove();
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
+          });  
+        }
+      }
+        // if(confirm("确定退回吗？")){
+        // var removeline=$(this).parents("tr")
+        //   //提交到后台进行修改数据库状态修改
+        //     $.ajax({
+        //     type:"post",//这里是否一定要用post？？？
+        //     url:"/achievement/downsendcatalog",
+        //     data: {CatalogId:row.Id},
+        //         success:function(data,status){//数据提交成功时返回数据
+        //         removeline.remove();
+        //         alert("退回“"+data+"”成功！(status:"+status+".)");
+        //         }
+        //     });  
+        // }
+    
   };
   //这个是指定哪几个不能选的
   function stateFormatter(value, row, index) {
@@ -1122,6 +1226,7 @@
                   params.ids = ids;
                   return params;
                 },
+
                 type: 'date',
                 pk: 1,
                 url: '/admin/merit/meritlist/modify',
@@ -1130,10 +1235,8 @@
                 viewformat: 'dd/mm/yyyy',    
                 datepicker: {
                     weekStart: 1,
-                    todayBtn: 'linked',
-                    todayHighlight:true,
-                   }
-                },
+                    todayBtn: 'linked'
+                   },
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
                   for(var i=0;i<selectRow3.length;i++){
@@ -1145,6 +1248,7 @@
                     });
                   }
                 }
+            }
           },{
               field:'action',
               title: '操作',

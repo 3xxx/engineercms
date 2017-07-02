@@ -60,6 +60,8 @@ type MeritBasic struct {
 	Repassword string `orm:"-" form:"Repassword" valid:"Required" form:"-"`
 	Ip         string //ip地址
 	Port       string
+	EcmsIp     string    //用户engineercms的ip地址
+	EcmsPort   string    //用户engineercms的端口
 	Createtime time.Time `orm:"type(datetime);auto_now_add" `
 	Updated    time.Time `orm:"type(datetime);auto_now_add" `
 }
@@ -86,10 +88,10 @@ func init() {
 // 	return nil
 // }
 
-//删除_把附件也一并删除（在controllers中实现吧）
+//删除成果列表
 func DeletePostMerit(cid int64) error {
 	o := orm.NewOrm()
-	product := &Product{Id: cid}
+	product := &PostMerit{Id: cid}
 	if o.Read(product) == nil {
 		_, err := o.Delete(product)
 		if err != nil {
@@ -99,7 +101,7 @@ func DeletePostMerit(cid int64) error {
 	return nil
 }
 
-//
+//添加成果列表
 func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 	// orm := orm.NewOrm()
 	// fmt.Println(user)
@@ -109,7 +111,7 @@ func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 	//保证成果的唯一性
 	//出差必须在成果名称中写入自己的名字以示区别
 	//Filter("Drawn", catalog.Drawn).Filter("Designd", catalog.Designd).Filter("Checked", catalog.Checked).
-	err = o.QueryTable("PostMerit").Filter("Tnumber", catalog.Tnumber).Filter("Name", catalog.Name).Filter("Category", catalog.Category).One(&catalog1)
+	err = o.QueryTable("PostMerit").Filter("ProjectNumber", catalog.ProjectNumber).Filter("ProjectName", catalog.ProjectName).Filter("Tnumber", catalog.Tnumber).Filter("Name", catalog.Name).One(&catalog1)
 	if err == orm.ErrNoRows {
 		cid, err1 := o.Insert(&catalog) //_, err = o.Insert(reply)
 		if err1 != nil {
@@ -536,7 +538,7 @@ func UpdateMeritBasic(cid int64, fieldname, value string) error {
 			}
 		case "Ip":
 			merit.Ip = value
-			_, err := o.Update(&merit, "Ip", "Updated") //这里不能用&user
+			_, err := o.Update(&merit, "Ip", "Updated")
 			if err != nil {
 				return err
 			} else {
@@ -544,7 +546,23 @@ func UpdateMeritBasic(cid int64, fieldname, value string) error {
 			}
 		case "Port":
 			merit.Port = value
-			_, err := o.Update(&merit, "Port", "Updated") //这里不能用&user
+			_, err := o.Update(&merit, "Port", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "EcmsIp":
+			merit.EcmsIp = value
+			_, err := o.Update(&merit, "EcmsIp", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "EcmsPort":
+			merit.EcmsPort = value
+			_, err := o.Update(&merit, "EcmsPort", "Updated")
 			if err != nil {
 				return err
 			} else {
@@ -569,6 +587,10 @@ func UpdateMeritBasic(cid int64, fieldname, value string) error {
 			merit.Ip = value
 		case "Port":
 			merit.Port = value
+		case "EcmsIp":
+			merit.EcmsIp = value
+		case "EcmsPort":
+			merit.EcmsPort = value
 		}
 		_, err := o.Insert(&merit)
 		if err != nil {

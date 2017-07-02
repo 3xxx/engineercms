@@ -593,6 +593,7 @@ func (c *AdminController) AddCalendar() {
 	}
 	const lll = "2006-01-02 15:04"
 	var starttime, endtime time.Time
+	var err error
 	if start != "" {
 		starttime, err = time.Parse(lll, start)
 		// beego.Info(start)
@@ -1337,13 +1338,16 @@ func (c *AdminController) ModifyLink() {
 
 //提交meritlist给merit，这个是关键代码
 func (c *AdminController) SendMeritlist() {
+	// req1 := httplib.Post("http://beego.me/")
+	// req1.Param("username","astaxie")
+	// req1.Param("password","123456")
 	//1——将state从0变为1
-	// req.Response()
+	// req.Response())
 	pk1 := c.Ctx.Input.RequestBody
 	// beego.Info(pk1)
 	var ob []models.PostMerit
-	// beego.Info(c.Ctx.Input.RequestBody)
 	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	// beego.Info(c.Ctx.Input.RequestBody	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
 	// pk := c.Input().Get("id")
 	// beego.Info(ob.Id)
 	// cid, err := strconv.ParseInt(pk, 10, 64)
@@ -1374,17 +1378,51 @@ func (c *AdminController) SendMeritlist() {
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
-
-	req := httplib.Post("http://" + meritbasic.Ip + ":" + meritbasic.Port + "/getecmspost")
-	req.Param("username", meritbasic.Username)
-	req.Param("password", meritbasic.Password)
+	req := httplib.Post("http://" + meritbasic.Ip + ":" + meritbasic.Port + "/getecmspost?ecmsip=" + meritbasic.EcmsIp + "&ecmsport=" + meritbasic.EcmsPort)
+	// req.Param("username", meritbasic.Username)
+	// req.Param("password", meritbasic.Password)
+	// req.Param("ecmsip", meritbasic.EcmsIp)
+	// beego.Info(meritbasic.EcmsIp)
+	// req.Param("ecmsport", meritbasic.EcmsPort)
 	// req.Body(body)
-	req.Body(pk1)
-	str, err := req.String()
+	req.Body(pk1) //传body不能带param，太奇怪了。
+	_, err = req.String()
 	if err != nil {
 		beego.Error(err)
 	}
-	beego.Info(str)
+	// beego.Info(str)
+}
+
+//删除meritlist
+func (c *AdminController) DeleteMeritlist() {
+	// pk1 := c.Ctx.Input.RequestBody
+	var ob []models.PostMerit
+	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	for _, v := range ob {
+		err := models.DeletePostMerit(v.Id)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			data := "ok!"
+			c.Ctx.WriteString(data)
+		}
+	}
+}
+
+//回退meritlist已提交给未提交
+func (c *AdminController) DownMeritlist() {
+	// pk1 := c.Ctx.Input.RequestBody
+	var ob []models.PostMerit
+	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	for _, v := range ob {
+		err := models.UpdatePostMerit(v.Id, "State", "0")
+		if err != nil {
+			beego.Error(err)
+		} else {
+			data := "ok!"
+			c.Ctx.WriteString(data)
+		}
+	}
 }
 
 // include_once('connect.php');//连接数据库

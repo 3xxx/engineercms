@@ -406,6 +406,11 @@ func (c *AttachController) AddAttachment() {
 			beego.Error(err)
 		}
 		//根据proj的parentIdpath——这个已经有了专门函数，下列可以简化！
+		//由proj id取得url
+		// Url, DiskDirectory, err = GetUrlPath(proj.Id)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
 
 		if proj.ParentIdPath != "" { //如果不是根目录
 			patharray := strings.Split(proj.ParentIdPath, "-")
@@ -422,7 +427,7 @@ func (c *AttachController) AddAttachment() {
 			catalog.ProjectNumber = meritproj.Code
 			catalog.ProjectName = meritproj.Title
 
-			if len(proj.ParentIdPath) > 1 {
+			if len(patharray) > 1 {
 				//pid转成64位
 				meritNum1, err := strconv.ParseInt(patharray[1], 10, 64)
 				if err != nil {
@@ -435,7 +440,7 @@ func (c *AttachController) AddAttachment() {
 				catalog.DesignStage = meritproj1.Title
 			}
 
-			if len(proj.ParentIdPath) > 2 {
+			if len(patharray) > 2 {
 				//pid转成64位
 				meritNum2, err := strconv.ParseInt(patharray[2], 10, 64)
 				if err != nil {
@@ -463,9 +468,11 @@ func (c *AttachController) AddAttachment() {
 					Url = "/attachment/" + proj1.Code + proj1.Title
 				} else {
 					path = proj1.Title
+					DiskDirectory = DiskDirectory + "\\" + path
+					Url = Url + "/" + path
 				}
-				DiskDirectory = DiskDirectory + "\\" + path
-				Url = Url + "/" + path
+				// DiskDirectory = DiskDirectory + "\\" + path
+				// Url = Url + "/" + path
 			}
 			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
 			Url = Url + "/" + proj.Title
@@ -507,7 +514,7 @@ func (c *AttachController) AddAttachment() {
 			code := filename1
 			title := filename2
 			//存入成果数据库
-			//如果编号重复，则不写入，值返回Id值。
+			//如果编号重复，则不写入，只返回Id值。
 			//根据id添加成果code, title, label, principal, content string, projectid int64
 			prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", pidNum)
 			if err != nil {
