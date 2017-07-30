@@ -4,23 +4,198 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
-  <title>Vertical Responsive Timeline UI - Template Monster Demo</title>
+  <title>EngineerCMS</title>
   <meta name="author" content="Jake Rocheleau">
   <link rel="stylesheet" type="text/css" media="all" href="/static/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" media="all" href="/static/css/timeline.css">
 	<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
+  <script type="text/javascript" src="/static/js/html2canvas.js"></script> 
+  <!--需要注意的是,这里一定要等待js库和网页加载完毕后再执行函数-->  
+  <!-- html2canvas()中,第一个参数是要截图的Dom对象，第二个参数时渲染完成后回调的canvas对象。-->  
+  <script type="text/javascript">  
+
+  function takeScreenshot() {
+  var getPixelRatio = function(context) {
+    var backingStore = context.backingStorePixelRatio ||
+          context.webkitBackingStorePixelRatio ||
+          context.mozBackingStorePixelRatio ||
+          context.msBackingStorePixelRatio ||
+          context.oBackingStorePixelRatio ||
+          context.backingStorePixelRatio || 1;
+    return (window.devicePixelRatio || 1) / backingStore;
+  };
+  var canvas = document.createElement("canvas");
+  var context = canvas.getContext("2d");
+  var ratio=getPixelRatio(context);
+  var w = $("#canv").width();
+  var h = $("#canv").height();
+  canvas.width =document.body.clientWidth * 1;// w*1;ratio;
+  canvas.height = document.body.clientHeight * 1;//h*1;ratio;//h * 2;
+  //然后将画布缩放，将图像放大两倍画到画布上
+  context.scale(1,1);
+  html2canvas(document.getElementById("canv"), {
+    // "logging": true, //Enable log (use Web Console for get Errors and Warnings)
+    // "proxy": basePath + "canvas/proxy.do",
+    // allowTaint: false,
+    // taintTest: true,
+    canvas: canvas,
+    "onrendered": function(canvas) {
+      canvas.style.width=document.body.clientWidth+ "px";
+      canvas.style.height=document.body.clientHeight+ "px";
+      var img = new Image();
+      img.crossOrigin = "*";
+      img.onload = function() {
+        img.onload = null;
+        //document.body.appendChild(img);
+        // $("#canv").append(img);
+      };
+      img.onerror = function() {
+        img.onerror = null;
+        if(window.console.log) {
+          window.console.log("Not loaded image from canvas.toDataURL");
+        } else {
+        alert("Not loaded image from canvas.toDataURL");
+        }
+      };
+      img.src = canvas.toDataURL("image/png");
+      var triggerDownload = $("<a>").attr("href", img.src).attr("download", "img.png").appendTo("body"); 
+      triggerDownload[0].click(); 
+      triggerDownload.remove();
+    }
+  });
+  }
+
+      // $(function(){     
+      //     print();  
+      // });  
+      // function print(){//不完整   
+      //     html2canvas(document.body, {            
+      //         onrendered: function(canvas){  
+      //             $('#down_button').attr('href',canvas.toDataURL("image/png")) ;  
+      //             $('#down_button').attr('download','myjobdeer.png') ;  
+      //         }  
+      //     });  
+      // }
+      // html2canvas(document.body, {
+      //   onrendered: function(canvas) {
+      //     document.body.appendChild(canvas);
+      //   }
+      // });
+    //   function print(){  
+    //     html2canvas(document.body, {            
+    //         onrendered: function(canvas){  
+    //             var canvas = document.getElementById("<span style="font-family: Arial, Helvetica, sans-serif;">canvas"</span><span style="font-family: Arial, Helvetica, sans-serif;">),</span> 
+    //               url = canvas.toDataURL(); 
+    //               //以下代码为下载此图片功能 
+    //               var triggerDownload = $("<a>").attr("href", url).attr("download", "img.png").appendTo("body"); 
+    //               triggerDownload[0].click(); 
+    //               triggerDownload.remove();
+    //         },  
+    //     // height:9000  
+    //     });  
+    // }
+
+
+    // .on('click','.download',function(){
+    //             $('#mycanvas').remove();
+    //             var _height=$('.skinReport').height();
+    //             //滚到顶部
+    //             $('html, body').animate({scrollTop:0});
+    //             if(confirm('是否下载肌肤检测报告？'))
+    //             {
+    //                 setTimeout(function(){
+    //                     var canvas = document.createElement("canvas"),
+    //                         w=$('#skinReport').width(),
+    //                         h=$('#skinReport').height();
+    //                     canvas.width = w * 2;
+    //                     canvas.height = h * 2;
+    //                     canvas.style.width = w + "px";
+    //                     canvas.style.height = h + "px";
+    //                     var context = canvas.getContext("2d");
+    //                     //然后将画布缩放，将图像放大两倍画到画布上
+    //                     context.scale(2,2);
+    //                     html2canvas(document.getElementById('skinReport'), {
+    //                         allowTaint: false,
+    //                         taintTest: true,
+    //                         canvas: canvas,
+    //                         onrendered: function(canvas) {
+    //                             canvas.id = "mycanvas";
+    //                             canvas.style.display = 'none';
+    //                             document.body.appendChild(canvas);
+    //                             //生成base64图片数据
+    //                             imgData = canvas.toDataURL(type);
+    //                             //var newImg = document.createElement("img");
+    //                             //newImg.src =  dataUrl;
+    //                             //document.body.appendChild(newImg);
+    //                             //console.log(imgData);
+    //                             var _fixType = function(type) {
+    //                                 type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+    //                                 var r = type.match(/png|jpeg|bmp|gif/)[0];
+    //                                 return 'image/' + r;
+    //                             };
+    //                             // 加工image data，替换mime type
+    //                             imgData = imgData.replace(_fixType(type),'image/octet-stream');
+    //                             /**
+    //                              * 在本地进行文件保存
+    //                              * @param  {String} data     要保存到本地的图片数据
+    //                              * @param  {String} filename 文件名
+    //                              */
+    //                             var saveFile = function(data, filename){
+    //                                 var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    //                                 save_link.href = data;
+    //                                 save_link.download = filename;
+
+    //                                 var event = document.createEvent('MouseEvents');
+    //                                 event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    //                                 save_link.dispatchEvent(event);
+    //                             };
+
+    //                             // 下载后的问题名
+    //                             var filename = aname+'肌肤检测报告' + (new Date()).getTime() + '.' + type;
+    //                             // download
+    //                             saveFile(imgData,filename);
+    //                         },
+    //                         width:1512,
+    //                         height:15000
+    //                     })
+    //                 },2500)
+    //             }
+    //             else
+    //             {
+    //                 return;
+    //             }
+
+    //         })
+  </script>
+  <style>
+    .right-top 
+    {
+        /*width: 40px;*/
+        /*height:40px;*/
+        position: fixed;/*这是必须的*/
+        z-index: 999;
+        left:95%;/*这是必须的*/
+        top: 40px;/*这是必须的*/
+        /*background:red;*/
+    }
+  </style>
+  </head>
  	<!-- Dark Responsive Timeline with Bootstrap黑色Bootstrap响应式时间轴 -->
 <body>
-	<div class="container">
+<input type="button" class='btn btn-warning right-top' value="截图" onclick="takeScreenshot()" id="down">
+	<div class="container" id="canv">
 	  <header class="page-header">
 	    <h1>{{.ProjectTile}}</h1>
 	    <h1><small>——大事记</small></h1>
+      <!-- <a type="button" id="down_button">download</a> -->
+      
 	  </header>
 	  
 	  <ul class="timeline">
   	</ul>
+
 	</div>
 
 <script type="text/javascript">

@@ -387,7 +387,6 @@ func (c *AttachController) AddAttachment() {
 	if role == 1 {
 		//解析表单
 		pid := c.Input().Get("pid")
-		// beego.Info(pid)
 		//pid转成64为
 		pidNum, err := strconv.ParseInt(pid, 10, 64)
 		if err != nil {
@@ -411,10 +410,8 @@ func (c *AttachController) AddAttachment() {
 		// if err != nil {
 		// 	beego.Error(err)
 		// }
-
 		if proj.ParentIdPath != "" { //如果不是根目录
 			patharray := strings.Split(proj.ParentIdPath, "-")
-
 			//pid转成64位
 			meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
 			if err != nil {
@@ -471,13 +468,9 @@ func (c *AttachController) AddAttachment() {
 					DiskDirectory = DiskDirectory + "\\" + path
 					Url = Url + "/" + path
 				}
-				// DiskDirectory = DiskDirectory + "\\" + path
-				// Url = Url + "/" + path
 			}
 			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
 			Url = Url + "/" + proj.Title
-			// beego.Info(DiskDirectory)
-			// beego.Info(Url)
 		} else { //如果是根目录
 			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
 			Url = "/attachment/" + proj.Title
@@ -489,25 +482,15 @@ func (c *AttachController) AddAttachment() {
 		if err != nil {
 			beego.Error(err)
 		}
-		// var filesize int64
 		if h != nil {
 			//保存附件
 			attachment = h.Filename
-			// beego.Info(attachment)
-			// path = ".\\attachment\\" + categoryproj.Number + categoryproj.Title + "\\" + categoryphase.Title + "\\" + categoryspec.Title + "\\" + category + "\\" + h.Filename
 			path = DiskDirectory + "\\" + h.Filename
-			// path := c.Input().Get("url")  //存文件的路径
-			// path = path[3:]
-			// path = "./attachment" + "/" + h.Filename
 			// f.Close() // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
-			// filesize, _ = FileSize(path)
-			// filesize = filesize / 1000.0
 			//将附件的编号和名称写入数据库
 			_, filename1, filename2, _, _, _, _ := Record(attachment)
 			// filename1, filename2 := SubStrings(attachment)
 			//当2个文件都取不到filename1的时候，数据库里的tnumber的唯一性检查出错。
-			// beego.Info(filename1)
-			// beego.Info(filename2)
 			if filename1 == "" {
 				filename1 = filename2 //如果编号为空，则用文件名代替，否则多个编号为空导致存入数据库唯一性检查错误
 			}
@@ -524,8 +507,6 @@ func (c *AttachController) AddAttachment() {
 			//成果写入postmerit表，准备提交merit*********
 			catalog.Tnumber = code
 			catalog.Name = title
-			// catalog.Category = c.Input().Get("Category")
-			// catalog.Page = c.Input().Get("Page")
 			catalog.Count = 1
 			catalog.Drawn = meritbasic.Nickname
 			catalog.Designd = meritbasic.Nickname
@@ -559,7 +540,6 @@ func (c *AttachController) AddAttachment() {
 				data := news
 				c.Ctx.WriteString(data)
 			}
-
 			//生成提交merit的清单结束*******************
 
 			//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
@@ -593,6 +573,14 @@ func (c *AttachController) AddAttachment() {
 
 //向某个侧栏id下添加成果——用于第二种添加，多附件模式
 func (c *AttachController) AddAttachment2() {
+	meritbasic, err := models.GetMeritBasic()
+	if err != nil {
+		beego.Error(err)
+	}
+	var catalog models.PostMerit
+	var news string
+	var cid int64
+
 	_, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		//解析表单
@@ -603,7 +591,7 @@ func (c *AttachController) AddAttachment2() {
 		if err != nil {
 			beego.Error(err)
 		}
-		prodcode := c.Input().Get("prodcode")
+		prodcode := c.Input().Get("prodcode") //和上面那个区别仅仅在此处而已
 		prodname := c.Input().Get("prodname")
 		prodlabel := c.Input().Get("prodlabel")
 		prodprincipal := c.Input().Get("prodprincipal")
@@ -622,6 +610,15 @@ func (c *AttachController) AddAttachment2() {
 		if err != nil {
 			beego.Error(err)
 		}
+		Number, Name, DesignStage, Section, err := GetProjTitleNumber(pidNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		catalog.ProjectNumber = Number
+		catalog.ProjectName = Name
+		catalog.DesignStage = DesignStage
+		catalog.Section = Section
+
 		//获取上传的文件
 		_, h, err := c.GetFile("file")
 		if err != nil {
@@ -632,15 +629,8 @@ func (c *AttachController) AddAttachment2() {
 		if h != nil {
 			//保存附件
 			attachment = h.Filename
-			// beego.Info(attachment)
-			// path = ".\\attachment\\" + categoryproj.Number + categoryproj.Title + "\\" + categoryphase.Title + "\\" + categoryspec.Title + "\\" + category + "\\" + h.Filename
 			path = DiskDirectory + "\\" + h.Filename
-			// path := c.Input().Get("url")  //存文件的路径
-			// path = path[3:]
-			// path = "./attachment" + "/" + h.Filename
 			// f.Close()// 关闭上传的文件，不然的话会出现临时文件不能清除的情况
-			// filesize, _ = FileSize(path)
-			// filesize = filesize / 1000.0
 			//存入成果数据库
 			//如果编号重复，则不写入，值返回Id值。
 			//根据id添加成果code, title, label, principal, content string, projectid int64
@@ -648,6 +638,45 @@ func (c *AttachController) AddAttachment2() {
 			if err != nil {
 				beego.Error(err)
 			}
+
+			//成果写入postmerit表，准备提交merit*********
+			catalog.Tnumber = prodcode
+			catalog.Name = prodname
+			catalog.Count = 1
+			catalog.Drawn = meritbasic.Nickname
+			catalog.Designd = meritbasic.Nickname
+			catalog.Author = meritbasic.Username
+			catalog.Drawnratio = 0.4
+			catalog.Designdratio = 0.4
+
+			const lll = "2006-01-02"
+			convdate := time.Now().Format(lll)
+			t1, err := time.Parse(lll, convdate) //这里t1要是用t1:=就不是前面那个t1了
+			if err != nil {
+				beego.Error(err)
+			}
+			catalog.Datestring = convdate
+			catalog.Date = t1
+
+			catalog.Created = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+			catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+
+			catalog.Complex = 1
+			catalog.State = 0
+			cid, err, news = models.AddPostMerit(catalog)
+			if err != nil {
+				beego.Error(err)
+			} else {
+				link1 := Url + "/" + attachment //附件链接地址
+				_, err = models.AddCatalogLink(cid, link1)
+				if err != nil {
+					beego.Error(err)
+				}
+				data := news
+				c.Ctx.WriteString(data)
+			}
+			//生成提交merit的清单结束*******************
+
 			//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
 			//如果附件名称相同，则覆盖上传，但数据库不追加
 			_, err = models.AddAttachment(attachment, filesize, 0, prodId)
@@ -785,7 +814,7 @@ func (c *AttachController) DeleteAttachment() {
 	}
 }
 
-// 下载附件
+// 下载附件——这个仅是测试
 // func (c *AttachController) ImageFilter() {
 func ImageFilter(ctx *context.Context) {
 	// token := path.Base(ctx.Request.RequestURI)
@@ -870,8 +899,8 @@ func (c *AttachController) DownloadAttachment() {
 	}
 	fileext := path.Ext(filePath)
 	switch fileext {
-	case ".pdf", ".PDF":
-		if role <= 3 {
+	case ".pdf", ".PDF", ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
+		if role <= 5 {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
 		} else {
 			route := c.Ctx.Request.URL.String()
@@ -949,13 +978,65 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 			}
 			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
 			Url = Url + "/" + proj.Title
-			// beego.Info(DiskDirectory)
-			// beego.Info(Url)
 		} else { //如果是根目录
 			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
 			Url = "/attachment/" + proj.Code + proj.Title
 		}
 		return Url, DiskDirectory, err
 	}
+}
 
+//根据id返回项目编号，项目名称，项目阶段，项目专业
+func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Section string, err error) {
+	proj, err := models.GetProj(id)
+	if err != nil {
+		beego.Error(err)
+		return "", "", "", "", err
+	} else {
+		//根据proj的parentIdpath
+		if proj.ParentIdPath != "" { //如果不是根目录
+			patharray := strings.Split(proj.ParentIdPath, "-")
+			//pid转成64位
+			meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			meritproj, err := models.GetProj(meritNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			ProjectNumber = meritproj.Code
+			ProjectName = meritproj.Title
+			if len(patharray) > 1 {
+				//pid转成64位
+				meritNum1, err := strconv.ParseInt(patharray[1], 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				meritproj1, err := models.GetProj(meritNum1)
+				if err != nil {
+					beego.Error(err)
+				}
+				DesignStage = meritproj1.Title
+			}
+
+			if len(patharray) > 2 {
+				//pid转成64位
+				meritNum2, err := strconv.ParseInt(patharray[2], 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				meritproj2, err := models.GetProj(meritNum2)
+				if err != nil {
+					beego.Error(err)
+				}
+				Section = meritproj2.Title
+			}
+
+		} else { //如果是根目录
+			ProjectNumber = proj.Code
+			ProjectName = proj.Title
+		}
+		return ProjectNumber, ProjectName, DesignStage, Section, err
+	}
 }

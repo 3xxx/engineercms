@@ -226,8 +226,21 @@ func (c *ProjController) GetProjectCate() {
 
 //后台添加项目id的子节点
 func (c *ProjController) AddProjectCate() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -288,8 +301,20 @@ func (c *ProjController) AddProjectCate() {
 
 //后台修改项目目录节点名称
 func (c *ProjController) UpdateProjectCate() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -332,8 +357,20 @@ func (c *ProjController) UpdateProjectCate() {
 //删除多节点
 //删除多节点的子节点
 func (c *ProjController) DeleteProjectCate() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -525,8 +562,20 @@ func (c *ProjController) GetProjNav() {
 
 //添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -603,8 +652,20 @@ func (c *ProjController) AddProject() {
 
 //修改项目名称、负责人等，
 func (c *ProjController) UpdateProject() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -640,8 +701,20 @@ func (c *ProjController) UpdateProject() {
 //根据id删除proj
 //后台删除目录，
 func (c *ProjController) DeleteProject() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)

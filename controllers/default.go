@@ -12,14 +12,103 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "projects.tpl"
+	username, role := checkprodRole(c.Ctx)
+	// beego.Info(username)
+	// beego.Info(role)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.TplName = "engineercms.tpl"
+}
+
+//文档
+func (c *MainController) Getecmsdoc() {
+	username, role := checkprodRole(c.Ctx)
+	// beego.Info(username)
+	// beego.Info(role)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.TplName = "ecmsdoc.tpl"
+}
+
+func (c *MainController) Getmeritmsdoc() {
+	username, role := checkprodRole(c.Ctx)
+	// beego.Info(username)
+	// beego.Info(role)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.TplName = "meritmsdoc.tpl"
+}
+
+//api
+func (c *MainController) Getecmsapi() {
+	username, role := checkprodRole(c.Ctx)
+	// beego.Info(username)
+	// beego.Info(role)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.TplName = "ecmsapi.tpl"
+}
+
+func (c *MainController) Getmeritmsapi() {
+	username, role := checkprodRole(c.Ctx)
+	// beego.Info(username)
+	// beego.Info(role)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.TplName = "meritmsapi.tpl"
 }
 
 func (c *MainController) Test() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
 	c.TplName = "test.tpl"
 }
 

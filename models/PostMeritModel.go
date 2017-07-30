@@ -124,7 +124,7 @@ func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 		return 0, err, "找不到主键"
 		//     fmt.Println("找不到主键")
 	} else {
-		return 0, nil, "数据已存在"
+		return catalog1.Id, nil, "数据已存在"
 	}
 }
 

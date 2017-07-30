@@ -7,19 +7,19 @@
  */
 
 (function(){
-
+ 
     var video = {},
         uploadVideoList = [],
         isModifyUploadVideo = false,
         uploadFile;
-
+ 
     window.onload = function(){
         $focus($G("videoUrl"));
         initTabs();
         initVideo();
         initUpload();
     };
-
+ 
     /* 初始化tab标签 */
     function initTabs(){
         var tabs = $G('tabHeads').children;
@@ -39,12 +39,12 @@
             });
         }
     }
-
+ 
     function initVideo(){
         createAlignButton( ["videoFloat", "upload_alignment"] );
         addUrlChangeListener($G("videoUrl"));
         addOkListener();
-
+ 
         //编辑视频时初始化相关信息
         (function(){
             var img = editor.selection.getRange().getClosedNode(),url;
@@ -66,7 +66,7 @@
             createPreviewVideo(url);
         })();
     }
-
+ 
     /**
      * 监听确认和取消两个按钮事件，用户执行插入或者清空正在播放的视频实例操作
      */
@@ -90,7 +90,7 @@
             $G("preview").innerHTML = "";
         };
     }
-
+ 
     /**
      * 依据传入的align值更新按钮信息
      * @param align
@@ -109,9 +109,10 @@
             }
         }
     }
-
+ 
     /**
      * 将单个视频信息插入编辑器中
+     * 修改：处理通用视频代码iframe   BY oceanking 20150309
      */
     function insertSingle(){
         var width = $G("videoWidth"),
@@ -120,14 +121,37 @@
             align = findFocus("videoFloat","name");
         if(!url) return false;
         if ( !checkNum( [width, height] ) ) return false;
-        editor.execCommand('insertvideo', {
-            url: convert_url(url),
-            width: width.value,
-            height: height.value,
-            align: align
-        }, isModifyUploadVideo ? 'upload':null);
+         
+        url = utils.trim(url);
+        if(/^<iframe/.test(url)){
+            var conUrl = '';
+            if(/src=\"[^\s"]+/i.test(url)){
+                conUrl = url.match(/src=\"[^\s"]+/i)[0].substr(5);
+            }
+            var newIframe = editor.document.createElement("iframe");
+            var div;
+            newIframe.setAttribute("src",/http:\/\/|https:\/\//ig.test(conUrl) ? conUrl : "http://"+conUrl);
+            /^[1-9]+[.]?\d*$/g.test( width.value ) ? newIframe.setAttribute("width",width.value) : "";
+            /^[1-9]+[.]?\d*$/g.test( height.value ) ? newIframe.setAttribute("height",height.value) : "";
+            //newIframe.setAttribute("scrolling","no");
+            newIframe.setAttribute("frameborder","0",0);
+            newIframe.setAttribute("allowfullscreen","allowfullscreen");
+            newIframe.setAttribute("align",align);
+            div = editor.document.createElement("div");
+            div.appendChild(newIframe);
+            //alert(div.innerHTML);
+            console.log(div.innerHTML);
+            editor.execCommand("inserthtml",div.innerHTML,true);
+        } else {
+            editor.execCommand('insertvideo', {
+                url: convert_url(url),
+                width: width.value,
+                height: height.value,
+                align: align
+            }, isModifyUploadVideo ? 'upload':null);
+        }
     }
-
+ 
     /**
      * 将元素id下的所有代表视频的图片插入编辑器中
      * @param id
@@ -147,7 +171,7 @@
         }
         editor.execCommand('insertvideo',videoObjs);
     }
-
+ 
     /**
      * 找到id下具有focus类的节点并返回该节点下的某个属性
      * @param id
@@ -179,10 +203,10 @@
             .replace(/v\.qq\.com\/cover\/[\w]+\/[\w]+\/([\w]+)\.html/i, "static.video.qq.com/TPout.swf?vid=$1")
             .replace(/v\.qq\.com\/.+[\?\&]vid=([^&]+).*$/i, "static.video.qq.com/TPout.swf?vid=$1")
             .replace(/my\.tv\.sohu\.com\/[\w]+\/[\d]+\/([\d]+)\.shtml.*$/i, "share.vrs.sohu.com/my/v.swf&id=$1");
-
+ 
         return url;
     }
-
+ 
     /**
       * 检测传入的所有input框中输入的长宽是否是正数
       * @param nodes input框集合，
@@ -199,7 +223,7 @@
          }
          return true;
      }
-
+ 
     /**
      * 数字判断
      * @param value
@@ -207,7 +231,7 @@
     function isNumber( value ) {
         return /(0|^[1-9]\d*$)/.test( value );
     }
-
+ 
     /**
       * 创建图片浮动选择按钮
       * @param ids
@@ -227,7 +251,7 @@
              switchSelect( ci );
          }
      }
-
+ 
     /**
      * 选择切换
      * @param selectParentId
@@ -244,7 +268,7 @@
             } )
         }
     }
-
+ 
     /**
      * 监听url改变事件
      * @param url
@@ -260,26 +284,41 @@
             }, false );
         }
     }
-
+ 
     /**
      * 根据url生成视频预览
+     * 修改：处理通用视频代码iframe   BY oceanking 20150309
      * @param url
      */
     function createPreviewVideo(url){
         if ( !url )return;
-
-        var conUrl = convert_url(url);
-
-        $G("preview").innerHTML = '<div class="previewMsg"><span>'+lang.urlError+'</span></div>'+
-        '<embed class="previewVideo" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
-            ' src="' + conUrl + '"' +
-            ' width="' + 420  + '"' +
-            ' height="' + 280  + '"' +
-            ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >' +
-        '</embed>';
+        url = utils.trim(url);
+        if(/^<iframe/.test(url)){
+            var conUrl = '';
+            if(/src=\"[^\s"]+/i.test(url)){
+                conUrl = url.match(/src=\"[^\s"]+/i)[0].substr(5);
+            }
+            $G("preview").innerHTML = '<div class="previewMsg"><span>'+lang.urlError+'</span></div>'+
+            '<iframe class="previewVideo"' +
+                ' src="' + conUrl + '"' +
+                ' width="' + 420  + '"' +
+                ' height="' + 280  + '"' +
+                ' frameborder=0 allowfullscreen>' +
+            '</iframe>';
+        } else {
+            var conUrl = convert_url(url);
+ 
+            $G("preview").innerHTML = '<div class="previewMsg"><span>'+lang.urlError+'</span></div>'+
+            '<embed class="previewVideo" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
+                ' src="' + conUrl + '"' +
+                ' width="' + 420  + '"' +
+                ' height="' + 280  + '"' +
+                ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >' +
+            '</embed>';
+        }
     }
-
-
+ 
+ 
     /* 插入上传视频 */
     function insertUpload(){
         var videoObjs=[],
@@ -296,7 +335,7 @@
                 align:align
             });
         }
-
+ 
         var count = uploadFile.getQueueCount();
         if (count) {
             $('.info', '#queueList').html('<span style="color:red;">' + '还有2个未上传文件'.replace(/[\d]/, count) + '</span>');
@@ -305,13 +344,13 @@
             editor.execCommand('insertvideo', videoObjs, 'upload');
         }
     }
-
+ 
     /*初始化上传标签*/
     function initUpload(){
         uploadFile = new UploadFile('queueList');
     }
-
-
+ 
+ 
     /* 上传附件 */
     function UploadFile(target) {
         this.$wrap = target.constructor == String ? $('#' + target) : $(target);
@@ -375,7 +414,7 @@
                 actionUrl = editor.getActionUrl(editor.getOpt('videoActionName')),
                 fileMaxSize = editor.getOpt('videoMaxSize'),
                 acceptExtensions = (editor.getOpt('videoAllowFiles') || []).join('').replace(/\./g, ',').replace(/^[,]/, '');;
-
+ 
             if (!WebUploader.Uploader.support()) {
                 $('#filePickerReady').after($('<div>').html(lang.errorNotSupport)).hide();
                 return;
@@ -383,7 +422,7 @@
                 $('#filePickerReady').after($('<div>').html(lang.errorLoadConfig)).hide();
                 return;
             }
-
+ 
             uploader = _this.uploader = WebUploader.create({
                 pick: {
                     id: '#filePickerReady',
@@ -403,9 +442,9 @@
                 id: '#filePickerBtn',
                 label: lang.uploadAddFile
             });
-
+ 
             setState('pedding');
-
+ 
             // 当有文件添加进来时执行，负责view的创建
             function addFile(file) {
                 var $li = $('<li id="' + file.id + '">' +
@@ -413,7 +452,7 @@
                         '<p class="imgWrap"></p>' +
                         '<p class="progress"><span></span></p>' +
                         '</li>'),
-
+ 
                     $btns = $('<div class="file-panel">' +
                         '<span class="cancel">' + lang.uploadDelete + '</span>' +
                         '<span class="rotateRight">' + lang.uploadTurnRight + '</span>' +
@@ -421,7 +460,7 @@
                     $prgress = $li.find('p.progress span'),
                     $wrap = $li.find('p.imgWrap'),
                     $info = $('<p class="error"></p>').hide().appendTo($li),
-
+ 
                     showError = function (code) {
                         switch (code) {
                             case 'exceed_size':
@@ -442,7 +481,7 @@
                         }
                         $info.text(text).show();
                     };
-
+ 
                 if (file.getStatus() === 'invalid') {
                     showError(file.statusText);
                 } else {
@@ -469,14 +508,14 @@
                     }
                     percentages[ file.id ] = [ file.size, 0 ];
                     file.rotation = 0;
-
+ 
                     /* 检查文件格式 */
                     if (!file.ext || acceptExtensions.indexOf(file.ext.toLowerCase()) == -1) {
                         showError('not_allow_type');
                         uploader.removeFile(file);
                     }
                 }
-
+ 
                 file.on('statuschange', function (cur, prev) {
                     if (prev === 'progress') {
                         $prgress.hide().width(0);
@@ -497,21 +536,21 @@
                         $prgress.css('display', 'block');
                     } else if (cur === 'complete') {
                     }
-
+ 
                     $li.removeClass('state-' + prev).addClass('state-' + cur);
                 });
-
+ 
                 $li.on('mouseenter', function () {
                     $btns.stop().animate({height: 30});
                 });
                 $li.on('mouseleave', function () {
                     $btns.stop().animate({height: 0});
                 });
-
+ 
                 $btns.on('click', 'span', function () {
                     var index = $(this).index(),
                         deg;
-
+ 
                     switch (index) {
                         case 0:
                             uploader.removeFile(file);
@@ -523,7 +562,7 @@
                             file.rotation -= 90;
                             break;
                     }
-
+ 
                     if (supportTransition) {
                         deg = 'rotate(' + file.rotation + 'deg)';
                         $wrap.css({
@@ -535,12 +574,12 @@
                     } else {
                         $wrap.css('filter', 'progid:DXImageTransform.Microsoft.BasicImage(rotation=' + (~~((file.rotation / 90) % 4 + 4) % 4) + ')');
                     }
-
+ 
                 });
-
+ 
                 $li.insertBefore($filePickerBlock);
             }
-
+ 
             // 负责view的销毁
             function removeFile(file) {
                 var $li = $('#' + file.id);
@@ -548,36 +587,36 @@
                 updateTotalProgress();
                 $li.off().find('.file-panel').off().end().remove();
             }
-
+ 
             function updateTotalProgress() {
                 var loaded = 0,
                     total = 0,
                     spans = $progress.children(),
                     percent;
-
+ 
                 $.each(percentages, function (k, v) {
                     total += v[ 0 ];
                     loaded += v[ 0 ] * v[ 1 ];
                 });
-
+ 
                 percent = total ? loaded / total : 0;
-
+ 
                 spans.eq(0).text(Math.round(percent * 100) + '%');
                 spans.eq(1).css('width', Math.round(percent * 100) + '%');
                 updateStatus();
             }
-
+ 
             function setState(val, files) {
-
+ 
                 if (val != state) {
-
+ 
                     var stats = uploader.getStats();
-
+ 
                     $upload.removeClass('state-' + state);
                     $upload.addClass('state-' + val);
-
+ 
                     switch (val) {
-
+ 
                         /* 未选择文件 */
                         case 'pedding':
                             $queue.addClass('element-invisible');
@@ -586,7 +625,7 @@
                             $progress.hide(); $info.hide();
                             uploader.refresh();
                             break;
-
+ 
                         /* 可以开始上传 */
                         case 'ready':
                             $placeHolder.addClass('element-invisible');
@@ -596,30 +635,30 @@
                             $upload.text(lang.uploadStart);
                             uploader.refresh();
                             break;
-
+ 
                         /* 上传中 */
                         case 'uploading':
                             $progress.show(); $info.hide();
                             $upload.text(lang.uploadPause);
                             break;
-
+ 
                         /* 暂停上传 */
                         case 'paused':
                             $progress.show(); $info.hide();
                             $upload.text(lang.uploadContinue);
                             break;
-
+ 
                         case 'confirm':
                             $progress.show(); $info.hide();
                             $upload.text(lang.uploadStart);
-
+ 
                             stats = uploader.getStats();
                             if (stats.successNum && !stats.uploadFailNum) {
                                 setState('finish');
                                 return;
                             }
                             break;
-
+ 
                         case 'finish':
                             $progress.hide(); $info.show();
                             if (stats.uploadFailNum) {
@@ -629,23 +668,23 @@
                             }
                             break;
                     }
-
+ 
                     state = val;
                     updateStatus();
-
+ 
                 }
-
+ 
                 if (!_this.getQueueCount()) {
                     $upload.addClass('disabled')
                 } else {
                     $upload.removeClass('disabled')
                 }
-
+ 
             }
-
+ 
             function updateStatus() {
                 var text = '', stats;
-
+ 
                 if (state === 'ready') {
                     text = lang.updateStatusReady.replace('_', fileCount).replace('_KB', WebUploader.formatSize(fileSize));
                 } else if (state === 'confirm') {
@@ -658,42 +697,42 @@
                     text = lang.updateStatusFinish.replace('_', fileCount).
                         replace('_KB', WebUploader.formatSize(fileSize)).
                         replace('_', stats.successNum);
-
+ 
                     if (stats.uploadFailNum) {
                         text += lang.updateStatusError.replace('_', stats.uploadFailNum);
                     }
                 }
-
+ 
                 $info.html(text);
             }
-
+ 
             uploader.on('fileQueued', function (file) {
                 fileCount++;
                 fileSize += file.size;
-
+ 
                 if (fileCount === 1) {
                     $placeHolder.addClass('element-invisible');
                     $statusBar.show();
                 }
-
+ 
                 addFile(file);
             });
-
+ 
             uploader.on('fileDequeued', function (file) {
                 fileCount--;
                 fileSize -= file.size;
-
+ 
                 removeFile(file);
                 updateTotalProgress();
             });
-
+ 
             uploader.on('filesQueued', function (file) {
                 if (!uploader.isInProgress() && (state == 'pedding' || state == 'finish' || state == 'confirm' || state == 'ready')) {
                     setState('ready');
                 }
                 updateTotalProgress();
             });
-
+ 
             uploader.on('all', function (type, files) {
                 switch (type) {
                     case 'uploadFinished':
@@ -711,21 +750,21 @@
                         break;
                 }
             });
-
+ 
             uploader.on('uploadBeforeSend', function (file, data, header) {
                 //这里可以通过data对象添加POST参数
                 header['X_Requested_With'] = 'XMLHttpRequest';
             });
-
+ 
             uploader.on('uploadProgress', function (file, percentage) {
                 var $li = $('#' + file.id),
                     $percent = $li.find('.progress span');
-
+ 
                 $percent.css('width', percentage * 100 + '%');
                 percentages[ file.id ][ 1 ] = percentage;
                 updateTotalProgress();
             });
-
+ 
             uploader.on('uploadSuccess', function (file, ret) {
                 var $file = $('#' + file.id);
                 try {
@@ -745,7 +784,7 @@
                     $file.find('.error').text(lang.errorServerUpload).show();
                 }
             });
-
+ 
             uploader.on('uploadError', function (file, code) {
             });
             uploader.on('error', function (code, file) {
@@ -755,12 +794,12 @@
             });
             uploader.on('uploadComplete', function (file, ret) {
             });
-
+ 
             $upload.on('click', function () {
                 if ($(this).hasClass('disabled')) {
                     return false;
                 }
-
+ 
                 if (state === 'ready') {
                     uploader.upload();
                 } else if (state === 'paused') {
@@ -769,7 +808,7 @@
                     uploader.stop();
                 }
             });
-
+ 
             $upload.addClass('state-' + state);
             updateTotalProgress();
         },
@@ -785,5 +824,5 @@
             this.uploader.refresh();
         }
     };
-
+ 
 })();

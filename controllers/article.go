@@ -178,6 +178,14 @@ func (c *ArticleController) GetArticle() {
 
 //向某个侧栏id下添加文章
 func (c *ArticleController) AddArticle() {
+	meritbasic, err := models.GetMeritBasic()
+	if err != nil {
+		beego.Error(err)
+	}
+	var catalog models.PostMerit
+	var news string
+	var cid int64
+
 	_, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		// id := c.Ctx.Input.Param(":id")
@@ -200,11 +208,61 @@ func (c *ArticleController) AddArticle() {
 		if err != nil {
 			beego.Error(err)
 		}
+
+		//成果写入postmerit表，准备提交merit*********
+		Number, Name, DesignStage, Section, err := GetProjTitleNumber(pidNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		catalog.ProjectNumber = Number
+		catalog.ProjectName = Name
+		catalog.DesignStage = DesignStage
+		catalog.Section = Section
+
+		catalog.Tnumber = code
+		catalog.Name = title
+		catalog.Count = 1
+		catalog.Drawn = meritbasic.Nickname
+		catalog.Designd = meritbasic.Nickname
+		catalog.Author = meritbasic.Username
+		catalog.Drawnratio = 0.4
+		catalog.Designdratio = 0.4
+
+		const lll = "2006-01-02"
+		convdate := time.Now().Format(lll)
+		t1, err := time.Parse(lll, convdate) //这里t1要是用t1:=就不是前面那个t1了
+		if err != nil {
+			beego.Error(err)
+		}
+		catalog.Datestring = convdate
+		catalog.Date = t1
+
+		catalog.Created = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+		catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+
+		catalog.Complex = 1
+		catalog.State = 0
+		//生成提交merit的清单结束*******************
+
 		//将文章添加到成果id下
-		_, err = models.AddArticle(subtext, content, Id)
+		aid, err := models.AddArticle(subtext, content, Id)
 		if err != nil {
 			beego.Error(err)
 		} else {
+			//生成提交merit的清单*******************
+			cid, err, news = models.AddPostMerit(catalog)
+			if err != nil {
+				beego.Error(err)
+			} else {
+				link1 := "/project/product/article/" + strconv.FormatInt(aid, 10) //附件链接地址
+				_, err = models.AddCatalogLink(cid, link1)
+				if err != nil {
+					beego.Error(err)
+				}
+				data := news
+				c.Ctx.WriteString(data)
+			}
+			//生成提交merit的清单结束*******************
 			c.Data["json"] = "ok"
 			c.ServeJSON()
 		}
@@ -217,7 +275,7 @@ func (c *ArticleController) AddArticle() {
 	}
 }
 
-//向成果id下添加文章
+//向成果id下添加文章——这个没用，上面那个已经包含了
 func (c *ArticleController) AddProdArticle() {
 	_, role := checkprodRole(c.Ctx)
 	if role == 1 {

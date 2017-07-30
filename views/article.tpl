@@ -24,8 +24,8 @@
   <label>作者：{{.product.Principal}}</label>
   <small id="publish">发表于：{{dateformat .product.Created "2006-01-02"}}</small>
   <!-- <a href='/project/search/'><span class="label label-info">标签</span></a>  -->
-  <button type="button" class="btn-group btn-group-sm" id="updatearticle">编辑</button>
-  <button type="button" class="btn-group btn-group-sm" id="deletearticle">删除</button>
+  <button type="button" class="btn btn-warning btn-group btn-group-sm" id="updatearticle">编辑</button>
+  <button type="button" class="btn btn-danger btn-group btn-group-sm" id="deletearticle">删除</button>
 </div>
 
   <div class="content">

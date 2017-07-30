@@ -986,6 +986,16 @@
 
 		// Trigger nodeRendered event
 		this._triggerEvent('nodeRendered', node, _default.options);
+
+		//添加增删改按钮
+		// node.$el.append(this._template.button.add.clone());
+		// node.$el.append(this._template.button.edit.clone());
+		// node.$el.append(this._template.button.remove.clone());
+		// node.$el.mouseenter(function(){
+		// node.$el.children('button.btn').removeClass('node-hidden');
+		// }).mouseleave(function(){
+		// node.$el.children('button.btn').addClass('node-hidden');
+		// });
 	};
 
 	// Add checkable icon
@@ -1155,7 +1165,13 @@
 		},
 		image: $('<span class="image"></span>'),
 		badge: $('<span class="badge"></span>'),
-		text: $('<span class="text"></span>')
+		text: $('<span class="text"></span>'),
+		//添加增删改图标
+		// button: {
+		// add: $('<button class="btn icon-plus node-hidden"></button>'),
+		// edit: $('<button class="btn icon-edit node-hidden"></button>'),
+		// remove: $('<button class="btn icon-remove node-hidden"></button>')
+		// }
 	};
 
 	Tree.prototype._css = '.treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}'

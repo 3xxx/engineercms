@@ -8,11 +8,8 @@
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script src="/static/js/tableExport.js"></script>
@@ -20,141 +17,15 @@
 </head>
 
 <body>
-  <div class="bs-example">
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-      <!-- <ol class="carousel-indicators">
-        {{range $index, $elem :=.Photo}}
-          <li data-target="#carousel-example-generic" data-slide-to="{{$index}}" class=""></li>
-        {{end}} 
-      </ol> -->
-      <div class="carousel-inner">
-        <!-- <div class="item active" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/1.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/2.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/3.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/4.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/5.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/6.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/7.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/8.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/9.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/10.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/11.jpg" alt="Second slide" style="height:300px;">
-        </div> -->
-        {{range $index, $elem :=.Carousel}}
-          <div {{if eq 0 $index}} class="item active" {{else}}class="item"{{end}}  align=center>
-            <img src="{{.Url}}/{{.Title}}" alt="First slide" style="height:300px;">
-              <div class="carousel-caption">
-                <h3>{{.Title}}</h3>
-              </div>
-          </div>
-        {{end}} 
-      </div>
-      <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-      </a>
-      <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-      </a>
-    </div>
-  </div> 
+<div class="bs-example">
 
+<div id="details">
+<h3 id="rowtitle">搜索结果</h3>
 
-<div class="text-center">
-  <h1><i class="fa fa-terminal" style="font-size:80px"></i>
-  </h1>
-  <!-- <i class="glyphicon glyphicon-chevron-right"></i> <i class="glyphicon glyphicon-minus"></i> -->
-  
-  <h1 >搜索{{.Length}}个 文件</h1>
-  <p class="large">
-    EngineerCMS-工程师知识管理系统 是运行于个人电脑的微服务系统，标准化管理个人资料，轻松发布，方便知识的继承。
-  </p>
-  <p class="large">
-    系统结合了档案管理系统形式、SharePoint‘点-平台’理念、ProjectWise协同设计需求。
-  </p>
-<!--   <p class="large">
-    如果说基于服务器的系统体现了产品特性。
-  </p>
-  <p class="large">
-    那么基于个人的CMS我说体现了文艺:)
-  </p> -->
-<div class="col-lg-4">
-  <!-- <p class="large">
-  </p> -->
-</div>
-  
-  <div class="col-lg-4"><!-- col-md-6 col-sm-4 -->
-  <!-- <form >   form支持回车，但是不支持json，如何做到支持json？用jsonform-->
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="请输入关键字进行搜索" autocomplete="off" size="30" id="keyword" onkeypress="getKey();">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" id="search"><!-- type="submit" -->
-          <i class="glyphicon glyphicon-search"></i>
-          Search!
-        </button>
-      </span>
-
-    </div>
-         <span>选择搜索范围：</span>
-        <input  type="radio" name="range" checked="true" value="local"/>
-        <label >本机</label>
-        <input type="radio" name="range" value="global"/>
-        <label >全局</label> 
-  </div>
-<div class="col-lg-4">
-  <!-- <p class="large">
-    系统
-  </p> -->
-</div>
-<div id="details" style="display:none">
-<h3 id="rowtitle"></h3>
-<!-- data-url="/admin/category/2" 没有了这个，当然table1表格无法支持刷新了！！！data-show-refresh="true"-->
-<!-- <table id="table1"
-        data-toggle="table"
-        data-search="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-toolbar="#btn_toolbar1"
-        data-sort-name="Grade"
-        data-page-size="5"
-        data-page-list="[5, 25, 50, All]"
-        data-unique-id="id"
-        data-pagination="true"
-        data-side-pagination="client"
-        data-click-to-select="true">
-    <thead>        
-      <tr>
-        <th data-width="10" data-checkbox="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Code">代码</th>
-        <th data-field="Grade" data-sortable="true">级别</th>
-      </tr>
-    </thead>
-</table> -->
 <table id="table1" 
         data-toggle="table" 
         data-search="true"
+        data-url="/project/product/search?keyword={{.Key}}&productid={{.Pid}}"
         data-show-refresh="true"
         data-show-toggle="true"
         data-show-columns="true"
@@ -190,29 +61,7 @@
     </thead>
 </table>
 </div>
-  <!-- <div class="col-lg-12">
-        <h1 class="ui icon header">
-          <i class="browser icon"></i>
-          查询结果
-        </h1>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>编号</th>
-              <th>名称</th>
-              <th>链接</th>
-              <th>分类/Ip</th>
-              <th>上传者/主机</th>
-            </tr>
-          </thead>
-          <tbody id="results">
-          </tbody>
-        </table>
-  </div> -->
-<!-- <div class="col-lg-12"> 
-<br>
-<hr/>
-</div>  -->
+
 </div>  
 
 <script type="text/javascript">
@@ -222,10 +71,6 @@
          $(".info").removeClass("info");
          $(ele).addClass("info");
          rowid=row.Id;//全局变量
-         // rowtitle=row.Title
-         // $("#rowtitle").html("工程目录分级-"+rowtitle);
-         // $("#details").show();
-         // $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+row.Id});
      });
   });
 
@@ -237,13 +82,6 @@
         url:"/index/searchproduct",
         data: {keyword: $("#keyword").val(),radiostring:radio},
         success:function(data,status){//数据提交成功时返回数据
-          // $.each(data,function(i,d){
-          //   if (radio=="local"){
-               
-          //   }else{
-              
-          //   }
-          // });
           //显示结果表
           $("#rowtitle").html("搜寻结果");
           $("#details").show();
@@ -262,13 +100,7 @@
         url:"/index/searchproduct",
         data: {keyword: $("#keyword").val(),radiostring:radio},
         success:function(data,status){//数据提交成功时返回数据
-          // $.each(data,function(i,d){
-          //   if (radio=="local"){
-               
-          //   }else{
-              
-          //   }
-          // });
+
           //显示结果表
           $("#rowtitle").html("搜寻结果");
           $("#details").show();

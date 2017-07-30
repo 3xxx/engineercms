@@ -2,24 +2,8 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目详细-EngiCMS</title>
-<!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/> -->
-<!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
-  <!-- <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script> -->
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
-  
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script> -->
-  
-  <!-- <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/> -->
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
-  <!-- <script src="/static/js/tableExport.js"></script> -->
 </head>
 
 <body>
@@ -30,7 +14,6 @@
 <div class="col-lg-3">
   <div id="tree"></div>
 </div>
-
 
 <script type="text/javascript">
     $(function () {
@@ -174,8 +157,8 @@
 
     function index1(value,row,index){
     // alert( "Data Loaded: " + index );
-            return index+1
-          }
+      return index+1
+    }
 </script>
 
 <div class="col-lg-9">
@@ -217,7 +200,33 @@
     } 
     } 
     window.setInterval("reinitIframe()", 200);
- </script>
 
+
+    // $(function () {
+    //     $('#search').click(function () {
+    //       var productid=$("#productid").val();
+    //       var keyword=$("#keyword").val();
+    //       if (productid){
+    //         var url="/projects/search"
+    //       }else{
+    //         var url="/project/product/search"
+    //       }
+    //       $.ajax({
+    //         type:"post",//这里是否一定要用post？？？
+    //         url:url,
+    //         data: {productid:productid,keyword:keyword},
+    //         success:function(data,status){//数据提交成功时返回数据
+    //           $("#attachtitle").html(rowtitle+'—附件列表');
+    //           $('#attachs').bootstrapTable('refresh', {url:'/achievement/catalog/attachment/'+row.id});
+    //           $('#modalattach').modal({
+    //             show:true,
+    //             backdrop:'static'
+    //           });
+    //         }
+    //       });
+
+    //     });
+    // });
+ </script>
 </body>
 </html>

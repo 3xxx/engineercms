@@ -61,72 +61,87 @@ type CatalogLinkEditable struct {
 }
 
 func (c *AdminController) Get() {
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole != 1 {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
+	if role != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	// role := Getiprole(c.Ctx.Input.IP())
-	// if role == 1 {
 	c.TplName = "admin.tpl"
-	// } else {
-	c.Data["role"] = iprole
-	// 	c.ServeJSON()
-	// }
-	c.Data["Ip"] = c.Ctx.Input.IP()
 }
 
 func (c *AdminController) Admin() {
-	role := Getiprole(c.Ctx.Input.IP())
-	// if role == 1 {
-	id := c.Ctx.Input.Param(":id")
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["Id"] = id
-	switch id {
-	case "010": //日历实物
-		c.TplName = "admin_calendar.tpl"
-	case "011": //基本设置
-		c.TplName = "admin_base.tpl"
-	case "012": //分级目录
-		c.TplName = "admin_category.tpl"
-	case "013": //搜索引擎
-		c.TplName = "admin_spiderip.tpl"
-	case "021": //系统权限
-		c.TplName = "admin_systemrole.tpl"
-	case "022": //项目权限
-		c.TplName = "admin_projectrole.tpl"
-	case "030": //组织结构
-		c.TplName = "admin_department.tpl"
-	case "031": //用户
-		c.TplName = "admin_users.tpl"
-	case "032": //IP地址段
-		c.TplName = "admin_ipsegment.tpl"
-	case "033": //用户组
-		c.TplName = "admin_usergroup.tpl"
-	case "041": //项目编辑
-		c.TplName = "admin_projectstree.tpl"
-	case "042": //同步IP async
-		c.TplName = "admin_projectsynch.tpl"
-	case "043": //项目权限
-		c.TplName = "admin_projectsrole.tpl"
-	case "044": //项目目录快捷编辑
-		c.TplName = "admin_projectseditor.tpl"
-	case "051": //merit基本信息
-		c.TplName = "admin_meritbasic.tpl"
-	case "052": //未提交成果清单
-		c.TplName = "admin_meritlist.tpl"
-	case "053": //预留
-		c.TplName = "admin_merit.tpl"
-	default:
-		c.TplName = "admin_calendar.tpl"
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
 	}
-	// } else {
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	// 	c.ServeJSON()
-	// }
+	if role == 1 {
+		id := c.Ctx.Input.Param(":id")
+		c.Data["Id"] = id
+		switch id {
+		case "010": //日历实物
+			c.TplName = "admin_calendar.tpl"
+		case "011": //基本设置
+			c.TplName = "admin_base.tpl"
+		case "012": //分级目录
+			c.TplName = "admin_category.tpl"
+		case "013": //搜索引擎
+			c.TplName = "admin_spiderip.tpl"
+		case "021": //系统权限
+			c.TplName = "admin_systemrole.tpl"
+		case "022": //项目权限
+			c.TplName = "admin_projectrole.tpl"
+		case "030": //组织结构
+			c.TplName = "admin_department.tpl"
+		case "031": //用户
+			c.TplName = "admin_users.tpl"
+		case "032": //IP地址段
+			c.TplName = "admin_ipsegment.tpl"
+		case "033": //用户组
+			c.TplName = "admin_usergroup.tpl"
+		case "041": //项目编辑
+			c.TplName = "admin_projectstree.tpl"
+		case "042": //同步IP async
+			c.TplName = "admin_projectsynch.tpl"
+		case "043": //项目权限
+			c.TplName = "admin_projectsrole.tpl"
+		case "044": //项目目录快捷编辑
+			c.TplName = "admin_projectseditor.tpl"
+		case "051": //merit基本信息
+			c.TplName = "admin_meritbasic.tpl"
+		case "052": //未提交成果清单
+			c.TplName = "admin_meritlist.tpl"
+		case "053": //预留
+			c.TplName = "admin_merit.tpl"
+		default:
+			c.TplName = "admin_calendar.tpl"
+		}
+	}
+
 }
 
 //根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
@@ -570,6 +585,7 @@ func processFlag(arg []string) (maps map[string]int) {
 	//	close(ipAddrs)
 }
 
+//********************日历开始**************
 //添加日历
 func (c *AdminController) AddCalendar() {
 	title := c.Input().Get("title")
@@ -804,6 +820,28 @@ func (c *AdminController) DeleteCalendar() {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
 	}
+}
+
+func (c *AdminController) SearchCalendar() {
+	title := c.Input().Get("title")
+	const lll = "2006-01-02"
+
+	var calendars []*models.AdminCalendar
+	var err error
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		calendars, err = models.SearchAdminCalendar(title, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.SearchAdminCalendar(title, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
 }
 
 //******编辑项目同步ip**********

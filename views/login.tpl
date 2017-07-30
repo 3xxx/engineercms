@@ -21,14 +21,14 @@
         <span style="color: #ff0000;"><input type="hidden" name="url" value="{{.Url}}"/></span>
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-        <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account" list="cars"></div>
+        <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
         <div id='datalistDiv'>
           <datalist id="cars" name="cars">
           </datalist>
         </div>
       <div class="form-group">
         <label class="control-label" for="LoginForm-Password">密码</label>
-        <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password"></div>
+        <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
 
       <div class="checkbox">
         <label>

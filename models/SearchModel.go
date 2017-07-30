@@ -41,6 +41,40 @@ func SearchProduct(key string) (prod []*Product, err error) {
 	return prod, err
 }
 
+//搜索某个项目里的成果：article的全文，待完善
+func SearchProjProduct(pid int64, key string) (prod []*Product, err error) {
+	cond := orm.NewCondition()
+	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	// cond2 := cond.Or("Content__contains", key)
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("Product")
+	qs1 := qs.SetCond(cond1)
+	_, err = qs1.Filter("ProjectId", pid).Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
+	if err != nil {
+		return prod, err
+	}
+	//取出所有成果
+	articls := make([]*Article, 0)
+	products, err := GetProjProducts(pid)
+
+	qs2 := o.QueryTable("Article")
+	// qs3 := qs2.SetCond(cond2)
+
+	for _, v := range products {
+		_, err = qs2.Filter("ProductId", v.Id).Filter("Content__contains", key).OrderBy("-created").All(&articls)
+		if err != nil {
+			return nil, err
+		}
+		if len(articls) > 0 {
+			prod = append(prod, v)
+		}
+		articls = make([]*Article, 0)
+	}
+
+	return prod, err
+}
+
 //设计院首页全局搜索——未修改
 // func Searchspidertopics(title string, isDesc bool) ([]*Spidertopic, []*Spidercategory, error) {
 // 	o := orm.NewOrm()

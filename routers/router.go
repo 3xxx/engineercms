@@ -13,8 +13,15 @@ func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
 	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
+	//文档
+	beego.Router("/doc/ecms", &controllers.MainController{}, "get:Getecmsdoc")
+	beego.Router("/doc/meritms", &controllers.MainController{}, "get:Getmeritmsdoc")
 
-	beego.Router("/", &controllers.ProjController{}, "*:Get")
+	//api接口
+	beego.Router("/api/ecms", &controllers.MainController{}, "get:Getecmsapi")
+	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
+
+	beego.Router("/", &controllers.MainController{}, "get:Get")
 	//显示首页
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
 	//显示右侧页面框架
@@ -73,6 +80,9 @@ func init() {
 	beego.Router("/admin/calendar/dropcalendar", &controllers.AdminController{}, "*:DropCalendar")
 	//resize事件
 	beego.Router("/admin/calendar/resizecalendar", &controllers.AdminController{}, "*:ResizeCalendar")
+	//搜索事件
+	beego.Router("/admin/calendar/searchcalendar", &controllers.AdminController{}, "*:SearchCalendar")
+
 	//显示项目目录:注意这个方法放在projcontroller中
 	beego.Router("/admin/project/getprojectcate/:id:string", &controllers.ProjController{}, "*:GetProjectCate")
 	//添加子节点
@@ -207,9 +217,9 @@ func init() {
 	//取得成果中所有附件中的非pdf附件列表
 	beego.Router("/project/product/attachment/:id:string", &controllers.AttachController{}, "*:GetAttachments")
 	//取得同步成果中所有附件中的非pdf附件列表
-	beego.Router("project/product/synchattachment", &controllers.AttachController{}, "*:GetsynchAttachments")
+	beego.Router("/project/product/synchattachment", &controllers.AttachController{}, "*:GetsynchAttachments")
 	//提供接口：同步成果中所有附件中的非pdf附件列表
-	beego.Router("project/product/providesynchattachment", &controllers.AttachController{}, "*:ProvideAttachments")
+	beego.Router("/project/product/providesynchattachment", &controllers.AttachController{}, "*:ProvideAttachments")
 
 	//取得成果中所有附件中——包含pdf，非pdf，文章
 	beego.Router("/project/product/allattachments/:id:string", &controllers.AttachController{}, "*:GetAllAttachments")
@@ -247,7 +257,13 @@ func init() {
 	beego.Router("/project/product/deleteattachment", &controllers.AttachController{}, "post:DeleteAttachment")
 
 	//向成果里添加文章
+	//向侧栏下添加文章
 	beego.Router("/project/product/addarticle", &controllers.ArticleController{}, "post:AddArticle")
+	//在某个项目里搜索成果
+	beego.Router("/search", &controllers.SearchController{}, "get:Get")
+	beego.Router("/project/product/search", &controllers.SearchController{}, "get:SearchProjProducts")
+	//搜索某个项目——没意义
+	beego.Router("/projects/search", &controllers.SearchController{}, "get:SearchProjects")
 
 	//附件下载"/attachment/*", &controllers.AttachController{}
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)

@@ -461,8 +461,8 @@
         var pid = $('#pid').val();
         var prodcode = $('#prodcode').val();
         var prodname = $('#prodname').val();
-        var prodlabel = $('#prodlabel').val();
-        var prodprincipal = $('#prodprincipal').val();
+        var prodlabel = $('#prodlabel1').val();
+        var prodprincipal = $('#prodprincipal1').val();
         // var html = ue.getContent();
         // alert(html);
         uploader.option('formData', {

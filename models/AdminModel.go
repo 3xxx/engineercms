@@ -352,6 +352,31 @@ func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCale
 	return calendars, err
 }
 
+//取所有——要修改为支持时间段的，比如某个月份
+func SearchAdminCalendar(title string, public bool) (calendars []*AdminCalendar, err error) {
+	cond := orm.NewCondition()
+	cond1 := cond.Or("title__contains", title).Or("content__contains", title)
+
+	o := orm.NewOrm()
+	qs := o.QueryTable("AdminCalendar")
+	qs = qs.SetCond(cond1)
+
+	calendars = make([]*AdminCalendar, 0)
+	// qs := o.QueryTable("AdminCalendar")
+	if public { //只取公开的
+		_, err = qs.Filter("title", title).Filter("public", true).OrderBy("-Starttime").Distinct().All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	} else { //取全部
+		_, err = qs.OrderBy("-Starttime").Distinct().All(&calendars)
+		if err != nil {
+			return calendars, err
+		}
+	}
+	return calendars, err
+}
+
 //修改
 func UpdateAdminCalendar(cid int64, title, content, color string, allday, public bool, start, end time.Time) error {
 	o := orm.NewOrm()

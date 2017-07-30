@@ -22,27 +22,54 @@
       {{end}}
 
       {{if .IsProjects}}
-        <form class="navbar-form navbar-left" role="search" method="get" action="/projects/search">
+        <form class="navbar-form navbar-left" role="search" method="get" action="/search">
           <div class="form-group">
-          <input type="text" class="form-control"  class="search-query span2" placeholder="Search Projects" name="keyword"></div>
-          <button type="submit" class="btn btn-default">Submit</button>
+          <input type="text" class="form-control"  class="search-query span2" placeholder="Search Projects" name="keyword" id="keyword"></div>
+          <button type="submit" class="btn btn-default" id="search">Submit</button>
         </form>
       {{else}}
-        <form class="navbar-form navbar-left" role="search" method="get" action="/project/product/search">
+        <form class="navbar-form navbar-left" role="search" method="get" action="/search">
           <div class="form-group">
-          <input type="text" class="form-control"  class="search-query span2" placeholder="Search Products" name="keyword"></div>
-          <button type="submit" class="btn btn-default">Submit</button>
+          <input type="text" class="form-control"  class="search-query span2" placeholder="Search Products" name="keyword" id="keyword"></div>
+          <input type="hidden" name="productid" id="productid" value="{{.Category.Id}}">
+          <button type="submit" class="btn btn-default" id="search">Submit</button>
         </form>
       {{end}}
-      <!-- <li class="divider">水平分割线</li> -->
-      <li>
-        <a href="http://192.168.9.13:8081/standard" target="_blank">规范</a>
+
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          文档 <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="/doc/ecms" title="工程师知识管理系统">EngineerCMS</a>
+          </li>
+          <li>
+            <a href="/doc/meritms" title="价值和成果管理系统">MeritMS</a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          API <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="https://gowalker.org/github.com/3xxx/EngineerCMS/controllers" title="工程师知识管理系统">EngineerCMS</a>
+          </li>
+          <li>
+            <a href="https://gowalker.org/github.com/3xxx/MeritMS/controllers" title="价值和成果管理系统">MeritMS</a>
+          </li>
+        </ul>
       </li>
       <li>
-        <a href="http://192.168.9.13:8081/legislation" target="_blank">对标</a>
+        <a href="http://112.74.42.44:8081/standard" target="_blank">规范</a>
       </li>
       <li>
-        <a href="http://192.168.9.13:8080" target="_blank">MeritMS</a>
+        <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
+      </li>
+      <li>
+        <a href="http://112.74.42.44:8080" target="_blank">MeritMS</a>
       </li>
       <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
         <a href="/meetingroom">会议室</a>

@@ -85,7 +85,7 @@ func init() {
 func AddProject(code, title, label, principal string, parentid int64, parentidpath, parenttitlepath string, grade int) (id int64, err error) {
 	o := orm.NewOrm()
 	//关闭写同步
-	// o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
+	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 	// var project Project
 	// if pid == "" {
 	project := &Project{
@@ -131,6 +131,8 @@ func UpdateProject(cid int64, code, title, label, principal string) error {
 //删除
 func DeleteProject(id int64) error {
 	o := orm.NewOrm()
+	//关闭写同步
+	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 	project := &Project{Id: id}
 	if o.Read(project) == nil {
 		_, err := o.Delete(project)
@@ -174,6 +176,7 @@ func GetProj(id int64) (proj Project, err error) {
 // 	return proj, err
 // }
 //根据id查出所有子孙，用ParentIdPath
+//逻辑错误：110-210-310包含了10？？？？
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")

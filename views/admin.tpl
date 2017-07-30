@@ -56,7 +56,7 @@
                   </ul>
               </li>
               <li>
-                  <a href="/admin/login/out">Log out</a>
+                  <a href="/login?exit=true">Log out</a>
               </li>
           </ul>
       </div>
