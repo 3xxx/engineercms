@@ -25,7 +25,7 @@
 
 </head>
 <body>
-<div class="col-lg-2">
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
   <div id="tree"></div>
 </div>
 <!-- 菜单顶部 -->
@@ -34,7 +34,7 @@
 <!-- <div class="navbar navba-default navbar-fixed-top"> -->
   <!-- <div class="container-fill"> -->
   <!-- <div class="main-panel"> -->
-  <div class="col-lg-10">
+  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
       
       <div class="navbar navbar-top">
           <ul class="nav navbar-nav navbar-right">
@@ -405,7 +405,7 @@
     }
 </script>
 
-<div class="col-lg-10">
+<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
     <!-- <div class="form-group"> -->
         <!-- <label class="control-label" id="regis" for="LoginForm-UserName"></label> 显示部门名称  -->
     <!-- </div> -->

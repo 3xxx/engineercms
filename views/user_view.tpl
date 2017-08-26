@@ -23,11 +23,11 @@
   <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
   <script type="text/javascript" src="/static/js/select2.js"></script>
 </head>
-<body>
-  <div class="navbar navba-default navbar-fixed-top">
-    <div class="container-fill">{{template "navbar" .}}</div>
-  </div>
 
+  <!-- <div class="navbar navba-default navbar-fixed-top"> -->
+    <div class="container-fill">{{template "navbar" .}}</div>
+  <!-- </div> -->
+<body>
   <div class="col-lg-12">
   <h3>用户表-{{.User}}</h3>
     <div id="toolbar1" class="btn-group">

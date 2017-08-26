@@ -36,11 +36,11 @@
   <!-- <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script> -->
 </head>
 
-<body>
-<div class="navbar navba-default navbar-fixed-top">
-  <div class="container-fill">{{template "navbar" .}}</div>
-</div>
 
+<!-- <div class="navbar navba-default navbar-fixed-top"> -->
+  <div class="container-fill">{{template "navbar" .}}</div>
+<!-- </div> -->
+<body>
 <div class="col-lg-12">
   <!-- 面包屑导航 -->
   <div class="breadcrumbs">

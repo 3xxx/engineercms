@@ -6,12 +6,13 @@
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
 </head>
 
-<body>
-<div class="navbar navba-default navbar-fixed-top">
-  <div class="container-fill">{{template "navbar" .}}</div>
-</div>
 
-<div class="col-lg-3">
+<!-- <div class="navbar navbar-default navbar-static-top"> -->
+  <div class="container-fill">{{template "navbar" .}}</div>
+<!-- </div> -->
+
+<body>
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
   <div id="tree"></div>
 </div>
 
@@ -161,7 +162,7 @@
     }
 </script>
 
-<div class="col-lg-9">
+<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
 <!-- 面包屑导航 -->
   <div class="breadcrumbs">
     <ol class="breadcrumb" split="&gt;">

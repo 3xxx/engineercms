@@ -69,6 +69,25 @@ func (c *MainController) Getmeritmsdoc() {
 	c.TplName = "meritmsdoc.tpl"
 }
 
+func (c *MainController) Gethydrowsdoc() {
+	username, role := checkprodRole(c.Ctx)
+	// beego.Info(username)
+	// beego.Info(role)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.TplName = "hydrowsdoc.tpl"
+}
+
 //api
 func (c *MainController) Getecmsapi() {
 	username, role := checkprodRole(c.Ctx)

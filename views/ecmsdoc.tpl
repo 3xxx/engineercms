@@ -12,13 +12,15 @@
 <script type="text/javascript" src="/static/js/docs.min.js"></script>
 
 </head>
-<body>
 
-<div class="navbar-wrapper">
+
+<!-- <div class="navbar-wrapper"> -->
   <div class="container-fill">
         {{template "navbar" .}}
   </div>
-</div>
+<!-- </div> -->
+
+<body>
 <div class="container">
 
   <div class="col-md-3" role="complementary">
@@ -66,9 +68,11 @@
         <li>
           <a href="#addproj">添加项目</a>
         </li>
+
         <li>
           <a href="#addprojcallendar">项目日历事件</a>
         </li>
+
         <li>
           <a href="#addprod">向项目中添加成果</a>
           <ul class="nav">
@@ -83,11 +87,17 @@
             </li>
           </ul>
         </li>
+
         <li>
           <a href="#synch">同步资料</a>
         </li>
+
         <li>
           <a href="#checkexamin">校审流程</a>
+        </li>
+
+        <li>
+          <a href="#standard">规范管理</a>
         </li>
 
       </ul>
@@ -245,7 +255,7 @@
       向项目中添加成果
     </h1>
     <p class="lead">
-      有多种添加模式，并且使用3中模式展示，分别是pdf，图文和其他附件。
+      有多种添加模式，并且使用3种模式展示，分别是pdf，图文和其他附件。
     </p>
     <h2 id="addprod-multi">
       <a class="anchorjs-link " href="#addprod-multi" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
@@ -256,14 +266,14 @@
     </ol>
     <h2 id="addprod-multiattachment">
       <a class="anchorjs-link " href="#addprod-multiattachment" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
-      批量模式
+      多附件模式
     </h2>
     <ol>
       <p>项目——具体一个项目——成果列表——添加：多附件模式指一个成果中包含多个附件，比如一张图有参照图，一份报告有多个章节等；</p>
     </ol>
     <h2 id="addprod-img">
       <a class="anchorjs-link " href="#addprod-img" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
-      批量模式
+      图文模式
     </h2>
     <ol>
       <p>文章模式可以将图文word直接粘贴进来，然后按提示导入word中的图片，非常快捷了。也可以批量上传设代现场照片……</p>
@@ -286,6 +296,16 @@
       当我们向EngineerCMS中上传成果的时候，在后台自动生成了成果清单，只要提交给MeritMS即可。前提是要设置MeritMS的ip地址可接受的端口。
     </p>
     <img src="/static/img/MeritMS校审流程.png" style="width: 100%">
+
+    <h1 id="standard" class="page-header">
+      <a class="anchorjs-link " href="#standard" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
+      规范管理
+    </h1>
+    <p class="lead">
+      规范管理功能为查阅、上传和有效版本库管理；系统设计上不用删除旧规范，旧规范仍然可以查阅，只是系统利用有效版本库进行标识它是否是最新版本的有效规范；系统设计上将规范和有效版本库分开，好处是显而易见的，降低维护繁琐工作。使用中，我们任意上传我们收集到的规范即可，不用管这个规范是否是有效，另一方面，我们导入有效规范版本库数据即可，比如每次发布新的规范版本时，导入这些数据即可。
+    </p>
+    <img src="/static/img/规范查阅.png" style="width: 100%">
+    <img src="/static/img/规范有效库管理.png" style="width: 100%">
   </div>
 </div>
 </div>

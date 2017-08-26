@@ -6,14 +6,15 @@
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
 </head>
 
-<body>
-  <div class="navbar navba-default navbar-fixed-top">
+
+  <!-- <div class="navbar navba-default navbar-fixed-top"> -->
     <div class="container-fill">{{template "navbar" .}}</div>
-  </div>
+  <!-- </div> -->
+<body>  
   <!-- 侧栏 -->
-  <div id="treeview" class="col-xs-2"></div>
+  <div id="treeview" class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
   <!-- 右侧frame -->
-  <div class="col-lg-10">
+  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
     <iframe src="/index/user" name='main' frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=100"></iframe> 
   </div>  
 
@@ -22,7 +23,7 @@
     <br>
     <hr/>
   </div>
-  <div class="col-lg-6">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
     <h4>Copyright © 2016-2017 EngineerCMS</h4>
     <p>
       网站由 <i class="user icon"></i>
@@ -43,7 +44,7 @@
       。
     </p>
   </div>
-  <div class="col-lg-6">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
     <h4 >更多项目</h4>
     <div >
       <p>

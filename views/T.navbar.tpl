@@ -1,8 +1,8 @@
 {{define "navbar"}}
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-static-top">
     <ul class="nav navbar-nav">
       <li {{if .IsIndex}}class="active"{{end}}>
-        <a href="/index">水利设计院</a>
+        <a href="/index">设计院</a>
       </li>
       <!-- <li {{if .IsProjects}}class="active"{{end}}>
         <a href="/project">项目</a>
@@ -47,6 +47,9 @@
           <li>
             <a href="/doc/meritms" title="价值和成果管理系统">MeritMS</a>
           </li>
+          <li>
+            <a href="/doc/hydrows" title="水利供水管线设计工具">HydroWS</a>
+          </li>
         </ul>
       </li>
       <li class="dropdown">
@@ -62,21 +65,28 @@
           </li>
         </ul>
       </li>
-      <li>
-        <a href="http://112.74.42.44:8081/standard" target="_blank">规范</a>
-      </li>
-      <li>
-        <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          规范 <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="http://112.74.42.44:8081/standard" target="_blank">查询</a>
+          </li>
+          <li>
+            <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
+          </li>
+        </ul>
       </li>
       <li>
         <a href="http://112.74.42.44:8080" target="_blank">MeritMS</a>
       </li>
-      <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
+      <!-- <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
         <a href="/meetingroom">会议室</a>
-      </li>
-      <li {{if .IsCarCalendar}}class="active"{{end}}>
+      </li> -->
+      <!-- <li {{if .IsCarCalendar}}class="active"{{end}}>
         <a href="/car">车辆</a>
-      </li>
+      </li> -->
     </ul>
 
     <div class="pull-right">

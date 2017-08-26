@@ -12,13 +12,14 @@
 <script type="text/javascript" src="/static/js/docs.min.js"></script>
 
 </head>
-<body>
 
-<div class="navbar-wrapper">
+
+<!-- <div class="navbar-wrapper"> -->
   <div class="container-fill">
         {{template "navbar" .}}
   </div>
-</div>
+<!-- </div> -->
+<body>
 <div class="container">
 
   <div class="col-md-3" role="complementary">

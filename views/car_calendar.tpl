@@ -738,10 +738,11 @@ $(document).ready(function() {
   });
 
 </script>
-<body>
-  <div class="navbar navba-default navbar-fixed-top">
+
+  <!-- <div class="navbar navba-default navbar-fixed-top"> -->
     <div class="container-fill">{{template "navbar" .}}</div>
-  </div>
+  <!-- </div> -->
+<body>  
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>
 <!-- </div> -->

@@ -16,6 +16,7 @@ func init() {
 	//文档
 	beego.Router("/doc/ecms", &controllers.MainController{}, "get:Getecmsdoc")
 	beego.Router("/doc/meritms", &controllers.MainController{}, "get:Getmeritmsdoc")
+	beego.Router("/doc/hydrows", &controllers.MainController{}, "get:Gethydrowsdoc")
 
 	//api接口
 	beego.Router("/api/ecms", &controllers.MainController{}, "get:Getecmsapi")

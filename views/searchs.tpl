@@ -16,6 +16,7 @@
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
 </head>
 
+<div class="container-fill">{{template "navbar" .}}</div>
 <body>
 <div class="bs-example">
 

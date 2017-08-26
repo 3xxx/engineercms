@@ -22,11 +22,18 @@
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
 </head>
 
-<body>
-<div class="navbar navba-default navbar-fixed-top">
-  <div class="container-fill">{{template "navbar" .}}</div>
-</div>
 
+<!-- <div class="navbar navbar-default navbar-static-top"> -->
+  <div class="container-fill">{{template "navbar" .}}</div>
+<!-- </div> -->
+<!-- <nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    ...
+  </div>
+</nav> -->
+
+
+<body>
 <div class="col-lg-12">
   <h3>项目列表</h3>
 <div id="toolbar1" class="btn-group">
