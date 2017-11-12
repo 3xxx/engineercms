@@ -80,11 +80,11 @@ func DeleteArticle(id int64) error {
 // 	}
 // 	return Artic, err
 // }
-//根据成果id取得所有文章
+//根据成果id取得所有文章——只返回id和prodid，因为返回content太慢了，没必要吧20171007
 func GetArticles(pid int64) (Articles []*Article, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Article")
-	_, err = qs.Filter("Productid", pid).All(&Articles)
+	_, err = qs.Filter("Productid", pid).All(&Articles, "Id", "ProductId")
 	if err != nil {
 		return nil, err
 	}

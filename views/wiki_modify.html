@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{{template "header"}}
+<title>修改wiki</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
+  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+  <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
+  <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.js"></script>
+  <script src="/static/ueditor/ueditor.parse.js"></script>
+  <style type="text/css">
+  h3 {line-height: 150%;
+  /*color: #DC143C;#000000*/
+  color:#FFFFFF;
+  background: #4682B4;/*#fff*/
+  margin: 10;
+  padding: 10;
+  font-family: Georgia, Palatino, serif;
+  }
+    
+  .uploader-list {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  #uploader-demo .thumbnail {
+    width: 110px;
+    height: 110px;
+  }
+  .file-item {
+    float: left;
+    position: relative;
+    margin: 0 20px 20px 0;
+    padding: 4px;
+  }
+  .webuploader-container {
+    position: relative;
+  }
+  </style>
+</head>
+
+<!-- <div class="navbar navbar-default navbar-static-top"> -->
+  <div class="container-fill">{{template "navbar" .}}</div>
+
+<body>
+<div class="col-lg-12">
+  <!-- 这里添加项目目录树显示 -->
+  <h2>修改wiki</h2>
+  <!-- 下面的action="/topic/post"与script中的/topic/topic_many_addbaidu 如何统一
+  其实也正好，当仅上传附件的时候也触发了form中的post方法进行了跳转；当不传附件，仅修改内容的时候，就必须要点“提交修改”按钮了-->
+  <form method="post" action="/wiki/post" enctype="multipart/form-data">
+    <input type="hidden" id="tid" name="tid" value="{{.Wiki.Id}}">
+<!--     <div class="form-group">
+      <label>wiki编号:</label>
+      <input id="tnumber" type="text" class="form-control"  placeholder="Enter account" name="tnumber" value="{{.Topic.Tnumber}}"></div> -->
+
+    <div class="form-group">
+      <label>标题名称:</label>
+      <input id="title" type="text" class="form-control"  placeholder="Enter account" name="title" value="{{.Wiki.Title}}"></div>
+
+      <label>wiki内容:</label>
+<div id="content">
+    <script id="editor" type="text/plain" style="height:500px;"></script>
+</div>
+
+  <button type="submit" class="btn btn-default">提交修改</button>    
+ </form>
+</div>
+
+
+<script type="text/javascript">
+    //实例化编辑器
+    //议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue = UE.getEditor('editor');
+    ue.addListener("ready", function () {
+    uParse('.content', {
+        rootPath: '/static/ueditor/'
+    });
+    });
+
+    $(function(){
+        var content =$('#content').val();
+        //判断ueditor 编辑器是否创建成功
+        ue.addListener("ready", function () {
+        // editor准备好之后才可以使用
+        ue.setContent({{str2html .Wiki.Content}});
+        });
+    });
+/* 2.传入参数表,添加到已有参数表里 通过携带参数，实现不同的页面使用不同controllers*/
+    ue.ready(function () {
+    ue.addListener('focus', function () {//startUpload start-upload startUpload beforeExecCommand是在插入图片之前触发
+    var tid = $('#tid').val();    
+    var title = $('#title').val();
+    var html = ue.getContent();
+    ue.execCommand('serverparam', {
+        "key":"wiki",
+        "tid":tid,
+        "title":title,
+        'content':html, 
+        });
+    });
+    });
+
+</script>
+</body>
+</html>

@@ -255,3 +255,25 @@ func (c *SearchController) SearchProjects() {
 		}
 	}
 }
+
+//搜索wiki
+func (c *SearchController) SearchWiki() { //search用的是get方法
+	tid := c.Input().Get("wikiname")
+	if tid != "" {
+		c.Data["IsWiki"] = true
+		// c.Data["IsSearch"] = true
+		c.Data["IsLogin"] = checkAccount(c.Ctx)
+		c.TplName = "searchwiki.tpl"
+		Searchs, err := models.SearchWikis(tid, false)
+		if err != nil {
+			beego.Error(err.Error)
+		} else {
+			c.Data["Searchs"] = Searchs
+		}
+	} else {
+		c.Data["IsWiki"] = true
+		// c.Data["IsSearch"] = true
+		c.Data["IsLogin"] = checkAccount(c.Ctx)
+		c.TplName = "searchwiki.tpl"
+	}
+}

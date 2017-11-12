@@ -382,7 +382,7 @@ func (c *AttachController) AddAttachment() {
 	var news string
 	var cid int64
 	var attachment string
-	var path, DiskDirectory, Url string
+	var filepath, DiskDirectory, Url string
 	var catalog models.PostMerit
 	if role == 1 {
 		//解析表单
@@ -464,9 +464,9 @@ func (c *AttachController) AddAttachment() {
 					DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
 					Url = "/attachment/" + proj1.Code + proj1.Title
 				} else {
-					path = proj1.Title
-					DiskDirectory = DiskDirectory + "\\" + path
-					Url = Url + "/" + path
+					filepath = proj1.Title
+					DiskDirectory = DiskDirectory + "\\" + filepath
+					Url = Url + "/" + filepath
 				}
 			}
 			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
@@ -485,7 +485,8 @@ func (c *AttachController) AddAttachment() {
 		if h != nil {
 			//保存附件
 			attachment = h.Filename
-			path = DiskDirectory + "\\" + h.Filename
+
+			// filepath = DiskDirectory + "\\" + h.Filename
 			// f.Close() // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 			//将附件的编号和名称写入数据库
 			_, filename1, filename2, _, _, _, _ := Record(attachment)
@@ -503,6 +504,10 @@ func (c *AttachController) AddAttachment() {
 			if err != nil {
 				beego.Error(err)
 			}
+			//改名，替换文件名中的#和斜杠
+			filename2 = strings.Replace(filename2, "#", "号", -1)
+			filename2 = strings.Replace(filename2, "/", "-", -1)
+			FileSuffix := path.Ext(h.Filename)
 
 			//成果写入postmerit表，准备提交merit*********
 			catalog.Tnumber = code
@@ -532,7 +537,8 @@ func (c *AttachController) AddAttachment() {
 			if err != nil {
 				beego.Error(err)
 			} else {
-				link1 := Url + "/" + attachment //附件链接地址
+				link1 := Url + "/" + filename1 + filename2 + FileSuffix //附件链接地址
+				filepath = DiskDirectory + "\\" + filename1 + filename2 + FileSuffix
 				_, err = models.AddCatalogLink(cid, link1)
 				if err != nil {
 					beego.Error(err)
@@ -544,12 +550,13 @@ func (c *AttachController) AddAttachment() {
 
 			//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
 			//如果附件名称相同，则覆盖上传，但数据库不追加
-			_, err = models.AddAttachment(attachment, filesize, 0, prodId)
+			attachmentname := filename1 + filename2 + FileSuffix
+			_, err = models.AddAttachment(attachmentname, filesize, 0, prodId)
 			if err != nil {
 				beego.Error(err)
 			} else {
 				//存入文件夹
-				err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+				err = c.SaveToFile("file", filepath) //.Join("attachment", attachment)) //存文件    WaterMark(filepath)    //给文件加水印
 				if err != nil {
 					beego.Error(err)
 				}
@@ -857,6 +864,78 @@ func ImageFilter(ctx *context.Context) {
 	// }
 }
 
+//根据权限查看附件
+func (c *AttachController) Attachment() {
+	c.Data["IsLogin"] = checkAccount(c.Ctx)
+	//4.取得客户端用户名
+	var uname, useridstring, projurl string
+	v := c.GetSession("uname")
+	// var userrole int
+	if v != nil {
+		uname = v.(string)
+		c.Data["Uname"] = v.(string)
+		user, err := models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+		useridstring = strconv.FormatInt(user.Id, 10)
+		// userrole = user.Role
+	}
+	// iprole := Getiprole(c.Ctx.Input.IP())
+	// if iprole <= userrole {
+	// 	role = iprole
+	// } else {
+	// 	role = userrole
+	// }
+
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(id)
+	//根据附件id取得附件的prodid，路径
+	attachment, err := models.GetAttachbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(attachment.ProductId)
+	product, err := models.GetProd(attachment.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(product.ProjectId) //25001
+	//根据projid取出路径
+	proj, err := models.GetProj(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+	if proj.ParentIdPath == "" {
+		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
+	} else {
+		projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+	}
+
+	//由proj id取得url
+	url, _, err := GetUrlPath(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+	fileext := path.Ext(attachment.FileName)
+
+	if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) {
+		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
+		c.Redirect(url+"/"+attachment.FileName, 302)
+	} else {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+}
+
 func (c *AttachController) DownloadAttachment() {
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
@@ -897,7 +976,9 @@ func (c *AttachController) DownloadAttachment() {
 	if err != nil {
 		beego.Error(err)
 	}
+
 	fileext := path.Ext(filePath)
+
 	switch fileext {
 	case ".pdf", ".PDF", ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		if role <= 5 {
@@ -946,7 +1027,7 @@ func FileSize(file string) (int64, error) {
 	return f.Size(), nil
 }
 
-//根据id返回附件url和文件夹路径
+//根据侧栏id返回附件url和文件夹路径
 func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 	proj, err := models.GetProj(id)
 	if err != nil {

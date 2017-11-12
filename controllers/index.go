@@ -230,22 +230,8 @@ func (c *IndexController) Calendar() {
 	c.TplName = "index_calendar.tpl"
 }
 
-func (c *IndexController) MeetingroomCalendar() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
-	c.Data["IsMeetingroomCalendar"] = true
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.TplName = "meetingroom_calendar.tpl"
-}
-
+//*******汽车
+//显示页面
 func (c *IndexController) GetCarCalendar() {
 	username, role := checkprodRole(c.Ctx)
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -263,7 +249,6 @@ func (c *IndexController) GetCarCalendar() {
 	c.TplName = "car_calendar.tpl"
 }
 
-//*******汽车
 //添加日历
 func (c *IndexController) AddCarCalendar() {
 	// username, _ := checkprodRole(c.Ctx)
@@ -484,6 +469,23 @@ func (c *IndexController) DeleteCarCalendar() {
 }
 
 //*****会议室
+//显示页面
+func (c *IndexController) MeetingroomCalendar() {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsMeetingroomCalendar"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.TplName = "meetingroom_calendar.tpl"
+}
+
 //添加日历
 func (c *IndexController) AddMeetCalendar() {
 	ip := c.Ctx.Input.IP()
@@ -700,4 +702,40 @@ func (c *IndexController) DeleteMeetCalendar() {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
 	}
+}
+
+//*****订餐
+//显示页面
+func (c *IndexController) GetOrderCalendar() {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsOrderCalendar"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.TplName = "order_calendar.tpl"
+}
+
+//*****考勤
+//显示页面
+func (c *IndexController) GetAttendanceCalendar() {
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsAttendanceCalendar"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.TplName = "attendance_calendar.tpl"
 }

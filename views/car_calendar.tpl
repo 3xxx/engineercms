@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 {{template "header"}}
-<title>车辆预定</title>
+<title>车辆预约</title>
 <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
 <script src='/static/js/moment.min.js'></script>
 <script src='/static/js/fullcalendar.min.js'></script>
@@ -129,6 +129,7 @@
 		  }
 </style>
 </head>
+<div class="container-fill">{{template "navbar" .}}</div>
 <!-- <body> -->
 <script type="text/javascript">
 $(document).ready(function() {
@@ -714,8 +715,7 @@ $(document).ready(function() {
 		maxView: 1,
 		forceParse: 0
     });
-</script>
-<script>
+
   var currColor = "#3c8dbc"; //Red by default
   $(function () {
     /* ADDING EVENTS */
@@ -739,9 +739,6 @@ $(document).ready(function() {
 
 </script>
 
-  <!-- <div class="navbar navba-default navbar-fixed-top"> -->
-    <div class="container-fill">{{template "navbar" .}}</div>
-  <!-- </div> -->
 <body>  
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>

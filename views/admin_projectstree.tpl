@@ -72,7 +72,7 @@
   function localDateFormatter(value) {
      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }
-  // 改变点击行颜色
+  // 点击行出来项目目录
   $(function(){
      $("#table0").on("click-row.bs.table",function(e,row,ele){
         $(".info").removeClass("info");

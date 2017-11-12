@@ -86,12 +86,7 @@
   <!-- <i class="glyphicon glyphicon-chevron-right"></i> <i class="glyphicon glyphicon-minus"></i> -->
   
   <h1 >搜索{{.Length}}个 文件</h1>
-  <p class="large">
-    EngineerCMS-工程师知识管理系统 是运行于个人电脑的微服务系统，标准化管理个人资料，轻松发布，方便知识的继承。
-  </p>
-  <p class="large">
-    系统结合了档案管理系统形式、SharePoint‘点-平台’理念、ProjectWise协同设计需求。
-  </p>
+
 <!--   <p class="large">
     如果说基于服务器的系统体现了产品特性。
   </p>
@@ -234,7 +229,7 @@
       var radio =$("input[type='radio']:checked").val();
       $.ajax({
         type:"post",//这里是否一定要用post，是的，因为get会缓存？？
-        url:"/index/searchproduct",
+        url:"/index/searchproduct",// /project/product/search?keyword={{.Key}}&productid={{.Pid}}
         data: {keyword: $("#keyword").val(),radiostring:radio},
         success:function(data,status){//数据提交成功时返回数据
           // $.each(data,function(i,d){

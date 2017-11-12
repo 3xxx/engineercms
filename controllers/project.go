@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -114,11 +115,23 @@ func (c *ProjController) GetProject() {
 		c.Data["IsLogin"] = false
 	}
 	c.Data["Username"] = username
-	c.Data["IsProject"] = true
+	// c.Data["IsProject"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
 
 	id := c.Ctx.Input.Param(":id")
+	switch id {
+	case "25001":
+		c.Data["IsProject"] = true
+	case "25002":
+		c.Data["IsDesign"] = true
+	case "25003":
+		c.Data["IsConstruct"] = true
+	case "25004":
+		c.Data["IsSupervision"] = true
+	case "25005":
+		c.Data["IsBuild"] = true
+	}
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
 	var err error
@@ -154,7 +167,20 @@ func (c *ProjController) GetProject() {
 	c.Data["json"] = root //data
 	// c.ServeJSON()
 	c.Data["Category"] = category
-	c.TplName = "project.tpl"
+
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		beego.Error(err)
+	}
+	if matched == true {
+		// beego.Info("移动端~")
+		c.TplName = "mproject.tpl"
+	} else {
+		// beego.Info("电脑端！")
+		c.TplName = "project.tpl"
+	}
+
 }
 
 //点击项目名称，根据id查看项目下所有成果

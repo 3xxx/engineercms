@@ -95,6 +95,21 @@ func GetAttachments(id int64) (attachments []*Attachment, err error) {
 	return attachments, err
 }
 
+//根据成果id取得所有附件数量
+func GetAttachmentsCount(id int64) (cnt int64, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Attachment")
+	cnt, err = qs.Filter("Productid", id).Count()
+	// cnt, err := o.QueryTable("user").Count()
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	if err != nil {
+		return 0, err
+	}
+	return cnt, err
+}
+
 //根据名字title查询到附件
 func GetAttachmentTitle(title string) (cate Attachment, err error) {
 	o := orm.NewOrm()

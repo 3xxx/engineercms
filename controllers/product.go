@@ -10,6 +10,7 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"os"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -102,7 +103,16 @@ func (c *ProdController) GetProjProd() {
 
 	// c.Data["json"] = root
 	// c.ServeJSON()
-	c.TplName = "project_products.tpl"
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		beego.Error(err)
+	}
+	if matched == true {
+		c.TplName = "mproject_products.tpl"
+	} else {
+		c.TplName = "project_products.tpl"
+	}
 }
 
 //取得某个侧栏id下的成果给table
@@ -140,10 +150,10 @@ func (c *ProdController) GetProducts() {
 		beego.Error(err)
 	}
 	//由proj id取得url
-	Url, _, err := GetUrlPath(idNum)
-	if err != nil {
-		beego.Error(err)
-	}
+	// Url, _, err := GetUrlPath(idNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 	// beego.Info(Url)
 	link := make([]ProductLink, 0)
 	Attachslice := make([]AttachmentLink, 0)
@@ -180,13 +190,13 @@ func (c *ProdController) GetProducts() {
 				attacharr := make([]AttachmentLink, 1)
 				attacharr[0].Id = v.Id
 				attacharr[0].Title = v.FileName
-				attacharr[0].Link = Url
+				// attacharr[0].Link = Url
 				Attachslice = append(Attachslice, attacharr...)
 			} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
 				pdfarr := make([]PdfLink, 1)
 				pdfarr[0].Id = v.Id
 				pdfarr[0].Title = v.FileName
-				pdfarr[0].Link = Url
+				// pdfarr[0].Link = Url
 				Pdfslice = append(Pdfslice, pdfarr...)
 			}
 		}
@@ -203,7 +213,7 @@ func (c *ProdController) GetProducts() {
 		for _, x := range Articles {
 			articlearr := make([]ArticleContent, 1)
 			articlearr[0].Id = x.Id
-			articlearr[0].Content = x.Content
+			articlearr[0].Content = x.Content //返回的content是空，因为真要返回内容，会很影响速度，也没必要
 			articlearr[0].Link = "/project/product/article"
 			Articleslice = append(Articleslice, articlearr...)
 		}

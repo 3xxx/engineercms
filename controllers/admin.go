@@ -119,10 +119,14 @@ func (c *AdminController) Admin() {
 			c.TplName = "admin_department.tpl"
 		case "031": //用户
 			c.TplName = "admin_users.tpl"
-		case "032": //IP地址段
+		case "032": //角色
+			c.TplName = "admin_role.tpl"
+		case "033": //权限
+			c.TplName = "admin_permission.tpl"
+		case "034": //IP地址段
 			c.TplName = "admin_ipsegment.tpl"
-		case "033": //用户组
-			c.TplName = "admin_usergroup.tpl"
+		// case "033": //用户组
+		// 	c.TplName = "admin_usergroup.tpl"
 		case "041": //项目编辑
 			c.TplName = "admin_projectstree.tpl"
 		case "042": //同步IP async
@@ -454,7 +458,6 @@ func Getiprole(ip string) (role int) {
 	//     fmt.Println(" 没有找到信息")
 	//     return
 	// }
-
 }
 
 //获取下一个IP

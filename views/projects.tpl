@@ -20,6 +20,29 @@
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
+
+<style type="text/css"> 
+/*ul,li{line-height: 24px; list-style:none; font-size: 14px;}*/
+/*a{width:20px; height:10px; line-height: 4px; vertical-align: top; margin: 0px 0px 0 0; overflow: hidden; background:#f00; display:inline-block;}*/
+  /*body{ 
+    font-size:12px; 
+    font-family:"Courier New", Courier, monospace; 
+    letter-spacing:5px; 
+  } 
+  ul{ 
+    list-style:none; 
+  }*/ 
+  /*li{ */
+    /*width:130px; */
+    /*height:130px; */
+    /*line-height:130px; */
+    /*vertical-align:middle; */
+    /*text-align:center; */
+    /*float:left; */
+    /*margin-left:20px; */
+  /*}*/
+</style> 
+
 </head>
 
 
@@ -67,15 +90,19 @@
     <thead>        
       <tr>
         <!-- radiobox data-checkbox="true"-->
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Code" data-formatter="setCode">编号</th>
-        <th data-field="Title" data-formatter="setTitle">名称</th>
-        <th data-field="Label" data-formatter="setLable">标签</th>
-        <th data-field="Principal">负责人</th>
-        <th data-field="Number">成果数量</th>
-        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents">时间轴</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
+        <th data-width="10" data-radio="true" data-align="center" data-valign="middle"></th>
+        <th data-formatter="index1" data-align="center" data-valign="middle">#</th>
+        <th data-field="Code" data-formatter="setCode" data-align="center" data-valign="middle">编号</th>
+        <th data-field="Title" data-formatter="setTitle" data-align="center" data-valign="middle">名称</th>
+        <th data-field="Label" data-formatter="setLable" data-align="center" data-valign="middle">标签</th>
+        <th data-field="Principal" data-align="center" data-valign="middle">负责人</th>
+        <th data-field="Number" data-title-tooltip="A=B=C=D=E=F=G=" data-align="center" data-valign="middle">成果数量</th>
+        <th data-field="Number" data-formatter="actionFormatter0" data-title-tooltip="A=B=C=D=E=F=G=" data-align="center" data-valign="middle">阶段</th>
+        <th data-field="Number" data-formatter="actionFormatter1" data-title-tooltip="A=B=C=D=E=F=G=" data-align="center" data-valign="middle">文件</th>
+        <th data-field="Number" data-formatter="actionFormatter2" data-title-tooltip="A=B=C=D=E=F=G=" data-align="center" data-valign="middle">团队</th>
+        <th data-field="Number" data-formatter="actionFormatter3" data-title-tooltip="本项目合同" data-align="center" data-valign="middle">合同</th>
+        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-align="center" data-valign="middle">时间轴</th>
+        <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
       </tr>
     </thead>
 </table>
@@ -107,6 +134,97 @@
     return index+1
   }
 
+  //专业快捷进入
+
+  //阶段快捷进入{font-weight:bold
+  function actionFormatter0(value, row, index) {
+    return [
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="规划">',
+        'A</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="项建">',        
+        'B</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="可研">',
+        'C</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="初设">',
+        'D</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="招标">',
+        'E</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="施工图">',
+        'F</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="竣工图">',
+        'J</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="其他：文章、图纸……">',
+        '<i class="fa fa-ellipsis-h"></i></a>'
+    ].join('');
+  }
+  //文件快捷进入
+  function actionFormatter1(value, row, index) {
+    return [
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="批文">',
+        'A</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="日志">',        
+        'B</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="强条">',
+        'C</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="大纲">',
+        'D</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="报告">',
+        'E</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="综合说明">',
+        'F</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="总布置图">',
+        'G</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="项目简介">',
+        'H</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="宣传动画">',
+        'I</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';" title="其他：文章、图纸、PPT……">',
+        '<i class="fa fa-ellipsis-h"></i></a>'
+    ].join('');
+  }
+  //成员
+  function actionFormatter2(value, row, index) {
+    return [
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="设总">',
+        '1</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="规划">',        
+        '2</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="地质">',
+        '3</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="">',
+        '4</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="水工">',
+        '5</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="机电">',
+        '6</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="施工">',
+        '7</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="征地">',
+        '8</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Georgia',', serif;color:',getRandomColor(),';" title="水保">',
+        '9</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-family:','Georgia',', serif;color:',getRandomColor(),';" title="其他：预算、环保……">',
+        '<i class="fa fa-ellipsis-h"></i></a>'
+    ].join('');
+  }
+
+//合同
+  function actionFormatter3(value, row, index) {
+    return [
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';"title="收款合同">',
+        'C</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';"title="付款合同">',        
+        'P</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';"title="合同进度">',
+        'P</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';"title="收款进度">',
+        'GP</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-weight:bold;font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';"title="付款进度">',
+        'PP</a>&nbsp;&nbsp;',
+        '<a href="javascript:void(0)" style="font-family:','Comic Sans MS',',cursive;color:',getRandomColor(),';"title="其他：……">',
+        '<i class="fa fa-ellipsis-h"></i></a>'
+    ].join('');
+  }
   //详细，提交，删除
   function actionFormatter(value, row, index) {
     return [
@@ -355,12 +473,15 @@ $(document).ready(function(){
 // $.each(array,function(index){
 //     alert(this);
 // });
+if ({{.Select2}}){//20171021从meirit修改而来
   $.each({{.Select2}},function(i,d){
   // alert(this);
   // alert(i);
   // alert(d);
-   $("#admincategory").append('<option value="' + i + '">'+d+'</option>');
-   });
+    $("#admincategory").append('<option value="' + i + '">'+d+'</option>');
+  });
+}
+
 });
 
 //根据选择，刷新表格
@@ -614,5 +735,35 @@ function refreshtable(){
   </div>
 
 </div>
+
+<script type="text/javascript"> 
+  // $(function(){ 
+  //   $("ul li").each(function(){ 
+  //     $(this).css("background-color",getRandomColor()); 
+  //   }); 
+  // }) 
+
+  function getRandomColor(){ 
+    var c = '#'; 
+    var cArray = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']; 
+    for(var i = 0; i < 6;i++){ 
+      var cIndex = Math.round(Math.random()*15); 
+      c += cArray[cIndex]; 
+    } 
+    return c; 
+  } 
+
+</script>
+
+<!-- <div>
+  <ul>
+    <li>第一个色块</li>
+    <li>第二个色块</li>
+    <li>第三个色块</li>
+    <li>第四个色块</li>
+  </ul>
+</div> -->
+
+
 </body>
 </html>

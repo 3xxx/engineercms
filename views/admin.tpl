@@ -40,12 +40,12 @@
           <ul class="nav navbar-nav navbar-right">
           <!-- <ul class="nav navbar-nav"> -->
               <li>
-                  <a href="/project">项目</a>
+                  <a href="/project">返回</a>
               </li>
               <li>
                   <a href="/admin/user/detail">{{.Ip}}</a>
               </li>
-              <li class="dropdown">
+              <!-- <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<b class="caret"></b></a>
                   <ul class="dropdown-menu">
                       <li><a href="https://github.com/3xxx" target="_blank">3xxx github</a></li>
@@ -54,9 +54,9 @@
                       <li class="divider"></li>
                       <li><a href="http://blog.csdn.net/hotqin888" target="_blank">Blog</a></li>
                   </ul>
-              </li>
+              </li> -->
               <li>
-                  <a href="/login?exit=true">Log out</a>
+                  <a href="/login?exit=true">退出</a>
               </li>
           </ul>
       </div>
@@ -169,45 +169,6 @@
                 ] 
               },
               {
-                text: "权限管理",
-                icon: "fa fa-balance-scale",
-                // selectedIcon: "glyphicon glyphicon-stop",
-                href: "#node-1",
-                // selectable: true,
-                id: '02',
-                selectable: false,
-                // state: {
-                  // checked: true,
-                  // disabled: true,
-                  // expanded: true,
-                  // selected: true
-                // },
-                tags: ['available'],
-                nodes: 
-                [
-                  { icon: "fa fa-safari",
-                    text: '系统权限',
-                    id: '021',
-                    state: {
-                      // checked: true,
-                      disabled: true,
-                      // expanded: true,
-                      // selected: true
-                    }
-                  },
-                  { icon: "fa fa-navicon",
-                    text: '项目权限',
-                    id: '022',
-                    state: {
-                      // checked: true,
-                      disabled: true,
-                      // expanded: true,
-                      // selected: true
-                    }
-                  }
-                ]
-              },
-              {
                 text: "账号管理",
                 icon: "fa fa-users icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
@@ -230,19 +191,66 @@
                     id: '030'
                   },
                   { icon: "fa fa-users",
-                    text: '用户',
+                    text: '用户-角色分配',
                     id: '031'
+                  },
+                  { icon: "fa fa-users",
+                    text: '角色-权限分配',
+                    id: '032'
+                  },
+                  { icon: "fa fa-users",
+                    text: '权限',
+                    id: '033'
                   },
                   { icon: "fa fa-th",
                     text: 'IP地址段',
-                    id: '032'
-                  },
-                  { icon: "fa fa-group",
-                    text: '用户组',
-                    id: '033'
-                  },
+                    id: '034'
+                  }
+                  // { icon: "fa fa-group",
+                  //   text: '用户组',
+                  //   id: '033'
+                  // },
                 ]
-              }, 
+              },
+              // {
+              //   text: "权限管理",
+              //   icon: "fa fa-balance-scale",
+              //   // selectedIcon: "glyphicon glyphicon-stop",
+              //   href: "#node-1",
+              //   // selectable: true,
+              //   id: '02',
+              //   selectable: false,
+              //   // state: {
+              //     // checked: true,
+              //     // disabled: true,
+              //     // expanded: true,
+              //     // selected: true
+              //   // },
+              //   tags: ['available'],
+              //   nodes: 
+              //   [
+              //     { icon: "fa fa-safari",
+              //       text: '系统权限',
+              //       id: '021',
+              //       state: {
+              //         // checked: true,
+              //         // disabled: true,
+              //         // expanded: true,
+              //         // selected: true
+              //       }
+              //     },
+              //     { icon: "fa fa-navicon",
+              //       text: '项目权限',
+              //       id: '022',
+              //       state: {
+              //         // checked: true,
+              //         // disabled: true,
+              //         // expanded: true,
+              //         // selected: true
+              //       }
+              //     }
+              //   ]
+              // },
               {
                 text: "项目设置",
                 icon: "fa fa-list-alt icon",
@@ -371,6 +379,8 @@
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
           }else if(data.id=="033"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
+          }else if(data.id=="034"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)  
           }else if(data.id=="041"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
           }else if(data.id=="042"){

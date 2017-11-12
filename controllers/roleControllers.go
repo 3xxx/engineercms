@@ -1,0 +1,605 @@
+package controllers
+
+import (
+	// "encoding/json"
+	m "engineercms/models"
+	"github.com/astaxie/beego"
+	"github.com/casbin/beego-orm-adapter"
+	"github.com/casbin/casbin"
+	_ "github.com/mattn/go-sqlite3"
+	"regexp"
+	"strconv"
+	"strings"
+	// "engineercms/controllers/validator"
+	// "github.com/astaxie/beego/context"
+	// "github.com/asofdate/hauth/core/groupcache"
+	// "github.com/asofdate/hauth/core/hrpc"
+	// "github.com/asofdate/hauth/core/models"
+	// "github.com/asofdate/hauth/utils"
+	// "github.com/asofdate/hauth/utils/hret"
+	// "github.com/asofdate/hauth/utils/i18n"
+	// "github.com/asofdate/hauth/utils/jwt"
+	// "github.com/asofdate/hauth/utils/logs"
+	// "github.com/asofdate/hauth/utils/validator"
+)
+
+type RoleController struct {
+	beego.Controller
+}
+
+type Userrole struct {
+	Id         int64
+	Rolename   string
+	Rolenumber string
+	Status     int
+	Level      string
+}
+
+type Tree struct {
+	Id    int64  `json:"id"`
+	Nodes []Tree `json:"nodes"`
+}
+
+// type RoleController struct {
+// 	models models.RoleModel
+// }
+
+// var RoleCtl = &RoleController{
+// 	models.RoleModel{},
+// }
+var e *casbin.Enforcer
+var a *beegoormadapter.Adapter
+
+func init() {
+	// Initialize a Beego ORM adapter and use it in a Casbin enforcer:
+	// The adapter will use the MySQL database named "casbin".
+	// If it doesn't exist, the adapter will create it automatically.
+	// a := beegoormadapter.NewAdapter("mysql", "mysql_username:mysql_password@tcp(127.0.0.1:3306)/") // Your driver and data source.
+	a = beegoormadapter.NewAdapter("sqlite3", "database/engineer.db", true) // Your driver and data source.
+	// Or you can use an existing DB "abc" like this:
+	// The adapter will use the table named "casbin_rule".
+	// If it doesn't exist, the adapter will create it automatically.
+	// a := beegoormadapter.NewAdapter("mysql", "mysql_username:mysql_password@tcp(127.0.0.1:3306)/abc", true)
+	// e := casbin.NewEnforcer("examples/rbac_model.conf", a)
+	e = casbin.NewEnforcer("conf/rbac_model.conf", a)
+	// Load the policy from DB.
+	e.LoadPolicy()
+}
+
+func (c *RoleController) Test() {
+	// Check the permission.
+	//请求的资源v1/v2/aaa.jpg
+	//得到资源的扩展名Suffix-jpg，输入enforce中间那个(?i:pdf)不分大小写
+	beego.Info(e.Enforce("alice", "/v1/v2/aaa.jpg", "write", "jpg"))
+	beego.Info(e.Enforce("bob", "/v1/v2/aaa.PDF", "delete", "PDF"))
+	beego.Info(e.Enforce("bob", "/v1/v2/aaa.jpg", "write", "jpg"))
+	// beego.Info(e.Enforce("bob", "/v1/aaa.pdf", "read", "pdf"))
+	// beego.Info(e.Enforce("bob", "/v1/v2/aaa.dwg", "read", "dwg"))
+	// beego.Info(e.Enforce("bob", "/v1/v2/aaa.pdf", "write", "pdf"))
+	beego.Info(e.Enforce("bob", "/v1/v2/aaa.ttt", "read", "ttt")) //任意扩展名
+	// Modify the policy.
+	// e.AddPolicy(...)
+	// e.RemovePolicy(...)
+	// Save the policy back to DB.
+	// e.SavePolicy()
+}
+
+// swagger:operation GET /v1/auth/role/page StaticFiles RoleController
+//
+// 角色管理页面
+//
+// 如果用户被授权访问角色管理页面,则系统返回角色管理页面内容,否则返回404错误
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: domain_id
+//   in: query
+//   description: domain code number
+//   required: true
+//   type: string
+//   format:
+// responses:
+//   '200':
+//     description: success
+// func (RoleController) Page(ctx *context.Context) {
+// 	ctx.Request.ParseForm()
+// 	if !hrpc.BasicAuth(ctx.Request) {
+// 		hret.Error(ctx.ResponseWriter, 403, i18n.NoAuth(ctx.Request))
+// 		return
+// 	}
+
+// 	rst, err := groupcache.GetStaticFile("AsofdateRolePage")
+// 	if err != nil {
+// 		hret.Error(ctx.ResponseWriter, 404, i18n.PageNotFound(ctx.Request))
+// 		return
+// 	}
+// 	ctx.ResponseWriter.Write(rst)
+// }
+
+// swagger:operation GET /v1/auth/role/get RoleController RoleController
+//
+// 查询角色信息
+//
+// 查询指定域中的角色信息
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: domain_id
+//   in: query
+//   description: domain code number
+//   required: true
+//   type: string
+//   format:
+// responses:
+//   '200':
+//     description: success
+//这个作废，用下面的从casbin中获取用户角色
+// func (c *RoleController) Get() {
+// 	id := c.Ctx.Input.Param(":id")
+// 	c.Data["Id"] = id
+// 	c.Data["Ip"] = c.Ctx.Input.IP()
+// 	// if id == "" { //如果id为空，则查询
+// 	roles, err := m.GetRoles()
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+
+// 	if id != "" {
+// 		//pid转成64为
+// 		idNum, err := strconv.ParseInt(id, 10, 64)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
+// 		//查出用户的角色，处于勾选状态
+// 		userroles, err := m.GetRoleByUserId(idNum)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
+// 		userrole := make([]Userrole, 0)
+// 		var level string
+// 		level = "2"
+// 		for _, v1 := range roles {
+// 			for _, v2 := range userroles {
+// 				if v2.RoleId == v1.Id {
+// 					level = "1"
+// 				}
+// 			}
+// 			aa := make([]Userrole, 1)
+// 			aa[0].Id = v1.Id
+// 			aa[0].Rolename = v1.Rolename
+// 			aa[0].Rolenumber = v1.Rolenumber
+// 			aa[0].Level = level
+// 			userrole = append(userrole, aa...)
+// 			aa = make([]Userrole, 0)
+// 			level = "2"
+// 		}
+// 		c.Data["json"] = userrole
+// 		c.ServeJSON()
+// 	}
+// 	c.Data["json"] = roles
+// 	c.ServeJSON()
+// }
+
+func (c *RoleController) Get() {
+	id := c.Ctx.Input.Param(":id")
+	c.Data["Id"] = id
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	// if id == "" { //如果id为空，则查询
+	roles, err := m.GetRoles()
+	if err != nil {
+		beego.Error(err)
+	}
+
+	if id != "" {
+		//pid转成64为
+		// idNum, err := strconv.ParseInt(id, 10, 64)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		//查出用户的角色，处于勾选状态
+		userroles := e.GetRolesForUser(id)
+		userrole := make([]Userrole, 0)
+		var level string
+		level = "2"
+		for _, v1 := range roles {
+			for _, v2 := range userroles {
+				ridNum, err := strconv.ParseInt(v2, 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				if ridNum == v1.Id {
+					level = "1"
+				}
+			}
+			aa := make([]Userrole, 1)
+			aa[0].Id = v1.Id
+			aa[0].Rolename = v1.Rolename
+			aa[0].Rolenumber = v1.Rolenumber
+			aa[0].Level = level
+			userrole = append(userrole, aa...)
+			aa = make([]Userrole, 0)
+			level = "2"
+		}
+		c.Data["json"] = userrole
+		c.ServeJSON()
+	}
+	c.Data["json"] = roles
+	c.ServeJSON()
+}
+
+// swagger:operation POST /v1/auth/role/post RoleController RoleController
+//
+// 新增角色信息
+//
+// 在某个指定的域中,新增角色信息
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: domain_id
+//   in: query
+//   description: domain code number
+//   required: true
+//   type: string
+//   format:
+// responses:
+//   '200':
+//     description: success
+
+func (c *RoleController) Post() {
+	// u := m.Role{}
+	// if err := c.ParseForm(&u); err != nil {
+	// 	beego.Error(err.Error)
+	// 	return
+	// }
+	var role m.Role
+	role.Rolename = c.Input().Get("rolename")
+	role.Rolenumber = c.Input().Get("rolenumber")
+
+	statusint, err := strconv.Atoi(c.Input().Get("status"))
+	if err != nil {
+		beego.Error(err)
+	}
+	role.Status = statusint
+
+	id, err := m.SaveRole(role)
+	if err == nil && id > 0 {
+		// c.Rsp(true, "Success")
+		// return
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	} else {
+		// c.Rsp(false, err.Error())
+		beego.Error(err)
+		// return
+	}
+}
+
+//向userid里添加权限——这个作废，用casbin的
+// func (c *RoleController) UserRole() {
+// 	uid := c.GetString("uid") //secofficeid
+// 	//id转成64位
+// 	uidNum, err := strconv.ParseInt(uid, 10, 64)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	//取出所有uidnum的role
+// 	userroles, err := m.GetRoleByUserId(uidNum)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+
+// 	ids := c.GetString("ids") //roleid
+// 	// beego.Info(ids)
+// 	array := strings.Split(ids, ",")
+// 	// beego.Info(array)
+// 	bool := false
+// 	for _, v1 := range array {
+// 		// pid = strconv.FormatInt(v1, 10)
+// 		//id转成64位
+// 		idNum, err := strconv.ParseInt(v1, 10, 64)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
+// 		for _, v2 := range userroles {
+// 			//没有找到则插入
+// 			if v2.RoleId == idNum {
+// 				bool = true
+// 			}
+// 		}
+// 		if bool == false {
+// 			//存入数据库
+// 			err = m.AddUserRole(uidNum, idNum)
+// 			if err != nil {
+// 				beego.Error(err)
+// 			}
+// 			// beego.Info(uidNum)
+// 			// beego.Info(idNum)
+// 		}
+// 		bool = false
+// 	}
+
+// 	for _, v3 := range userroles {
+// 		for _, v4 := range array {
+// 			//id转成64位
+// 			idNum, err := strconv.ParseInt(v4, 10, 64)
+// 			if err != nil {
+// 				beego.Error(err)
+// 			}
+// 			//没有找到则删除
+// 			if v3.RoleId == idNum {
+// 				bool = true
+// 			}
+// 		}
+
+// 		if bool == false {
+// 			//删除数据库
+// 			err = m.DeleteUserRole(uidNum, v3.RoleId)
+// 			if err != nil {
+// 				beego.Error(err)
+// 			}
+// 		}
+// 		bool = false
+// 	}
+// 	if err != nil {
+// 		beego.Error(err)
+// 	} else {
+// 		c.Data["json"] = "ok"
+// 		c.ServeJSON()
+// 	}
+// }
+
+//AddPolicy(sec string, ptype string, rule []string)
+func (c *RoleController) UserRole() {
+	//要支持批量分配角色，循环用户id
+	uid := c.GetString("uid") //secofficeid
+	//id转成64位
+	// uidNum, err := strconv.ParseInt(uid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	ids := c.GetString("ids") //roleid
+	array := strings.Split(ids, ",")
+
+	// var rule []string
+	for _, v1 := range array {
+		// rule = append(rule, uid, v1)
+		// beego.Info(rule)
+		// e.AddPolicy(uid, v1)
+		e.AddGroupingPolicy(uid, v1)
+		// rule = make([]string, 0)
+	}
+	// a.SavePolicy(e.GetModel())//autosave默认是true
+	// 	[{0 p 12 1    } {0 g 8 1    } {0 g 7 1
+	//    } {0 g 7 2    } {0 g 5 1    } {0 g 5 2    }]
+	// lines := [7][4]string{{"0", "p", "100", "1"}, {"0", "p", "101", "1"}}
+	// _, err := a.o.InsertMulti(len(lines), lines)
+	// return err
+
+	c.Data["json"] = "ok"
+	c.ServeJSON()
+}
+
+//给角色赋项目目录的权限
+func (c *RoleController) RolePermission() {
+	roleids := c.GetString("roleids")
+	rolearray := strings.Split(roleids, ",")
+	// beego.Info(rolearray)
+	permissionids := c.GetString("permissionids")
+	permissionarray := strings.Split(permissionids, ",")
+	// beego.Info(permissionarray)
+	sufids := c.GetString("sufids")
+	sufarray := strings.Split(sufids, ",")
+
+	treeids := c.GetString("treeids") //项目目录id
+	treearray := strings.Split(treeids, ",")
+	// beego.Info(treearray)
+	treenodeids := c.GetString("treenodeids") //项目目录的nodeid 0.0.0-0.0.1-0.1.0-0.1.0
+	treenodearray := strings.Split(treenodeids, ",")
+	// beego.Info(treenodearray)
+	// treeids := c.GetString("tree")
+	//json字符串解析到结构体，以便进行追加
+	// var tree []Tree
+	// err := json.Unmarshal([]byte(treeids), &tree)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	var success bool
+	var nodeidint int
+	var projurl, action, suf string
+	var err error
+	//取出项目目录的顶级
+	var nodesid, nodesids []string
+	if len(treenodearray) > 1 {
+		nodesids, err = highest(treenodearray, nodesid, 0)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	// beego.Info(nodesids)
+	for _, v1 := range rolearray {
+		for _, v2 := range permissionarray {
+			//定义读取、添加、修改、删除
+			switch v2 {
+			case "添加成果":
+				action = "add"
+				suf = ".*"
+			case "编辑成果":
+				action = "update"
+				suf = ".*"
+			case "删除成果":
+				action = "delete"
+				suf = ".*"
+			case "读取成果":
+				action = "get"
+				for _, v4 := range sufarray {
+					if v4 == "任意" {
+						suf = ".*"
+						break
+					} else if v4 == "" { //用户没展开则读取不到table4的select
+						suf = "(?i:pdf)"
+					} else {
+						suf = "(?i:" + v4 + ")"
+					}
+				}
+			}
+
+			for _, v3 := range nodesids {
+				nodeidint, err = strconv.Atoi(v3)
+				if err != nil {
+					beego.Error(err)
+				}
+				//id转成64位
+				pidNum, err := strconv.ParseInt(treearray[nodeidint], 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+
+				//根据projid取出路径
+				proj, err := m.GetProj(pidNum)
+				if err != nil {
+					beego.Error(err)
+				}
+				if proj.ParentIdPath == "" {
+					projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
+				} else {
+					projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
+				}
+				success = e.AddPolicy(v1, projurl, action, suf)
+			}
+		}
+	}
+	if success == true {
+		c.Data["json"] = "ok"
+	} else {
+		c.Data["json"] = "wrong"
+	}
+	c.ServeJSON()
+}
+
+//迭代查出最高级的树状目录
+func highest(nodeid []string, nodesid []string, i int) (nodesid1 []string, err error) {
+	if i == 0 {
+		nodesid = append(nodesid, "0")
+	}
+	var i1 int
+	for i1 = i; i1 < len(nodeid)-1; i1++ {
+		matched, err := regexp.MatchString("(?i:"+nodeid[i]+")", nodeid[i1+1])
+		// fmt.Println(matched)
+		if err != nil {
+			beego.Error(err)
+		}
+		if !matched {
+			i = i1 + 1
+			nodesid = append(nodesid, strconv.Itoa(i1+1))
+			break
+		} else {
+			if i == len(nodeid)-2 {
+				return nodesid, err
+			}
+		}
+	}
+	if i1 < len(nodeid)-1 {
+		nodesid, err = highest(nodeid, nodesid, i)
+	}
+	return nodesid, err
+}
+
+// swagger:operation POST /v1/auth/role/delete RoleController RoleController
+//
+// 删除角色信息
+//
+// 删除某个指定域中的角色信息
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: domain_id
+//   in: query
+//   description: domain code number
+//   required: true
+//   type: string
+//   format:
+// responses:
+//   '200':
+//     description: success
+func (c *RoleController) Delete() {
+	rid, _ := c.GetInt64("roleid")
+	_, err := m.DeleteRole(rid)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+// swagger:operation PUT /v1/auth/role/put RoleController RoleController
+//
+// 更新角色信息
+//
+// 更新某个域中的角色信息,角色编码不能更新
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: domain_id
+//   in: query
+//   description: domain code number
+//   required: true
+//   type: string
+//   format:
+// responses:
+//   '200':
+//     description: success
+func (c *RoleController) Update() {
+	var role m.Role
+	roleid := c.Input().Get("roleid")
+	idNum, err := strconv.ParseInt(roleid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	role.Id = idNum
+	role.Rolename = c.Input().Get("rolename")
+	role.Rolenumber = c.Input().Get("rolenumber")
+
+	statusint, err := strconv.Atoi(c.Input().Get("status"))
+	if err != nil {
+		beego.Error(err)
+	}
+	role.Status = statusint
+
+	err = m.UpdateRole(role)
+	if err == nil {
+		// c.Rsp(true, "Success")
+		// return
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	} else {
+		// c.Rsp(false, err.Error())
+		beego.Error(err)
+		// return
+	}
+}

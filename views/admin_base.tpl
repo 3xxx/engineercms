@@ -69,7 +69,6 @@
 </div>
 <!--         data-url="/admin/base" -->
 <table id="table0"
-
         data-search="true"
         data-show-refresh="true"
         data-show-toggle="true"

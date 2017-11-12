@@ -11,6 +11,7 @@ import (
 
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	beego.Router("/role/test", &controllers.RoleController{}, "*:Test")
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
 	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
 	//文档
@@ -23,6 +24,8 @@ func init() {
 	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
 
 	beego.Router("/", &controllers.MainController{}, "get:Get")
+
+	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
 	//显示首页
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
 	//显示右侧页面框架
@@ -33,6 +36,11 @@ func init() {
 	beego.Router("/meetingroom", &controllers.IndexController{}, "*:MeetingroomCalendar")
 	//车辆预定日程
 	beego.Router("/car", &controllers.IndexController{}, "*:GetCarCalendar")
+	//订餐
+	beego.Router("/order", &controllers.IndexController{}, "*:GetOrderCalendar")
+	//考勤
+	beego.Router("/attendance", &controllers.IndexController{}, "*:GetAttendanceCalendar")
+
 	//首页搜索项目或成果
 	beego.Router("/index/searchproject", &controllers.SearchController{}, "*:SearchProject")
 	beego.Router("/index/searchproduct", &controllers.SearchController{}, "*:SearchProduct")
@@ -127,6 +135,17 @@ func init() {
 	beego.Router("/admin/user/updateuser", &controllers.UserController{}, "*:UpdateUser")
 	//删除用户
 	beego.Router("/admin/user/deleteuser", &controllers.UserController{}, "*:DeleteUser")
+
+	//新建角色
+	beego.Router("/admin/role/post", &controllers.RoleController{}, "post:Post")
+	beego.Router("/admin/role/update", &controllers.RoleController{}, "put:Update")
+	beego.Router("/admin/role/delete", &controllers.RoleController{}, "post:Delete")
+	beego.Router("/admin/role/get/?:id:string", &controllers.RoleController{}, "get:Get")
+	//添加用户角色
+	beego.Router("/admin/role/userrole", &controllers.RoleController{}, "post:UserRole")
+	//添加角色权限
+	beego.Router("/admin/role/permission", &controllers.RoleController{}, "post:RolePermission")
+
 	//meritbasic表格数据填充
 	beego.Router("/admin/merit/meritbasic", &controllers.AdminController{}, "*:MeritBasic")
 	//修改meritbasic表格数据
@@ -194,7 +213,7 @@ func init() {
 	//点击侧栏，根据id返回json数据给导航条
 	beego.Router("/project/navbar/:id:string", &controllers.ProjController{}, "*:GetProjNav")
 
-	//根据项目侧栏id显示这个id下的成果界面——作废，用上面GetProject界面
+	//根据项目侧栏id显示这个id下的成果界面—
 	beego.Router("/project/:id:string/:id:string", &controllers.ProdController{}, "*:GetProjProd")
 
 	//给上面那个页面提供table所用的json数据
@@ -268,7 +287,11 @@ func init() {
 
 	//附件下载"/attachment/*", &controllers.AttachController{}
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
+
 	beego.Router("/attachment/*", &controllers.AttachController{}, "get:DownloadAttachment")
+	//根据权限下载附件
+	beego.Router("/attachment", &controllers.AttachController{}, "get:Attachment")
+
 	//上面用attachment.ImageFilter是不行的，必须是package.func
 	//首页轮播图片的权限
 	beego.Router("/attachment/carousel/*.*", &controllers.AttachController{}, "get:GetCarousel")
@@ -301,5 +324,25 @@ func init() {
 	beego.Router("/index/meetingroomcalendar/dropcalendar", &controllers.IndexController{}, "*:DropMeetCalendar")
 	//resize事件
 	beego.Router("/index/meetingroomcalendar/resizecalendar", &controllers.IndexController{}, "*:ResizeMeetCalendar")
+
+	//wiki页面
+	beego.Router("/wiki", &controllers.WikiController{}) //get
+	//发表文章界面
+	beego.Router("/wiki/add", &controllers.WikiController{}, "get:Add")
+	//发表文章提交
+	beego.Router("/wiki/addwiki", &controllers.WikiController{}, "post:AddWiki")
+	//查看一个文章
+	beego.Router("/wiki/view/", &controllers.WikiController{}, "get:View")
+	//删除wiki
+	beego.Router("/wiki/delete", &controllers.WikiController{}, "post:Delete")
+	//修改一个文章
+	// beego.Router("/wiki/modify", &controllers.WikiController{}, "get:Modify")
+	beego.AutoRouter(&controllers.WikiController{})
+	//添加删除wiki的评论
+	beego.Router("/reply/addwiki", &controllers.ReplyController{}, "post:AddWiki")
+	beego.Router("/reply/deletewiki", &controllers.ReplyController{}, "get:DeleteWiki")
+	beego.SetStaticPath("/attachment/wiki", "attachment/wiki")
+	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
+	beego.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
 
 }

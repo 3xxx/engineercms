@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 {{template "header"}}
-<title>会议室预定</title>
+<title>会议室预约</title>
 <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
 <script src='/static/js/moment.min.js'></script>
 <script src='/static/js/fullcalendar.min.js'></script>
@@ -129,6 +129,8 @@
 		  }
 </style>
 </head>
+
+<div class="container-fill">{{template "navbar" .}}</div>
 <!-- <body> -->
 <script type="text/javascript">
 $(document).ready(function() {
@@ -336,7 +338,7 @@ $(document).ready(function() {
                 }
             });     
           }
-});
+  });
 });
 // RGB 转16进制
   var rgbToHex = function(rgb) {
@@ -571,7 +573,7 @@ $(document).ready(function() {
       </div>
     </div>
   </div>
-</form>
+  </form>
 </div>
 
 <!-- 编辑日程窗口 -->
@@ -682,7 +684,7 @@ $(document).ready(function() {
       </div>
     </div>
   </div>
-</div>
+  </div>
 </div> 
 
 <script type="text/javascript">
@@ -717,8 +719,7 @@ $(document).ready(function() {
 		maxView: 1,
 		forceParse: 0
     });
-</script>
-<script>
+
   var currColor = "#3c8dbc"; //Red by default
   $(function () {
     /* ADDING EVENTS */
@@ -742,12 +743,9 @@ $(document).ready(function() {
 
 </script>
 
-  <!-- <div class="navbar navba-default navbar-fixed-top"> -->
-    <div class="container-fill">{{template "navbar" .}}</div>
-  <!-- </div> -->
  <body> 
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>
 <!-- </div> -->
-</body>
+  </body>
 </html>

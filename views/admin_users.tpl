@@ -27,7 +27,7 @@
 
 <div class="col-lg-12">
 <h3>用户表</h3>
-  <div id="toolbar1" class="btn-group">
+  <div id="toolbar" class="btn-group">
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
         <button type="button" data-name="importButton" id="importButton" class="btn btn-default"> <i class="fa fa-plus">导入</i>
@@ -38,15 +38,13 @@
         <i class="fa fa-trash">删除</i>
         </button>
   </div>
-  <!-- data-url="/admin/user"
-   -->
   <table id="table0"
         data-search="true"
         data-show-refresh="true"
         data-show-toggle="true"
         data-show-columns="true"
         data-striped="true"
-        data-toolbar="#toolbar1"
+        data-toolbar="#toolbar"
         data-query-params="queryParams"
         data-sort-name="Username"
         data-sort-order="desc"
@@ -59,24 +57,6 @@
         data-click-to-select="true"
         data-show-export="true"
         >
-    <!-- <thead>        
-      <tr>       
-        radiobox data-checkbox="true"
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Username">用户名</th>
-        <th data-field="Nickname">昵称</th>
-        <th data-field="Password">密码</th>
-        <th data-field="Email">邮箱</th>
-        <th data-field="Department">部门</th>
-        <th data-field="Secoffice">科室</th>
-        <th data-field="Ip">IP</th>
-        <th data-field="Status">状态</th>
-        <th data-field="Lastlogintime" data-formatter="localDateFormatter">最后登陆</th>
-        <th data-field="Createtime" data-formatter="localDateFormatter">建立</th>
-        <th data-field="Role">权限</th>
-      </tr>
-    </thead> -->
   </table>
 
 <script type="text/javascript">
@@ -109,73 +89,11 @@
         backdrop:'static'
         });
     })
-    //用表格在线编辑比较好
-    // $("#editorButton").click(function() {
-    //   var selectRow=$('#table0').bootstrapTable('getSelections');
-    //   if (selectRow.length<1){
-    //     alert("请先勾选类别！");
-    //     return;
-    //   }
-    //   if (selectRow.length>1){
-    //   alert("请不要勾选一个以上类别！");
-    //   return;
-    //   }
-    //   $("input#cid").remove();
-    //   var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-    //   $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-    //   $("#Username1").val(selectRow[0].Username);
-    //   $("#Nickname1").val(selectRow[0].Nickname);
-    //   $("#Password1").val(selectRow[0].Password);
-    //   $("#Repassword1").val(selectRow[0].Repassword);
-    //   $("#Email1").val(selectRow[0].Email);
-    //   $("#Department1").val(selectRow[0].Department);
-    //   $("#Secoffice1").val(selectRow[0].Secoffice);
-    //   $("#Ip1").val(selectRow[0].Ip);
-    //   $("#Status1").val(selectRow[0].Status);
-    //   $("#Role1").val(selectRow[0].Role);
-    //     $('#modalTable1').modal({
-    //     show:true,
-    //     backdrop:'static'
-    //     });
-    // })
-
-    // $("#deleteButton").click(function() {
-    //   var selectRow=$('#table0').bootstrapTable('getSelections');
-    //   if (selectRow.length<=0) {
-    //     alert("请先勾选类别！");
-    //     return false;
-    //   }
-    //   var title=$.map(selectRow,function(row){
-    //     return row.Title;
-    //   })
-    //   var ids="";
-    //   for(var i=0;i<selectRow.length;i++){
-    //     if(i==0){
-    //       ids=selectRow[i].Id;
-    //     }else{
-    //       ids=ids+","+selectRow[i].Id;
-    //     }  
-    //   }
-    //   $.ajax({
-    //     type:"post",
-    //     url:"/admin/category/deletecategory",
-    //     data: {ids:ids},
-    //     success:function(data,status){
-    //       alert("删除“"+data+"”成功！(status:"+status+".)");
-    //       //删除已选数据
-    //       $('#table0').bootstrapTable('remove',{
-    //         field:'Title',
-    //         values:title
-    //       });
-    //     }
-    //   });  
-    // })
   })
-
 </script>
 
-<!-- 添加用户 -->
-<div class="container">
+  <!-- 添加用户 -->
+  <div class="container">
   <form class="form-horizontal">
     <div class="modal fade" id="modalTable">
       <div class="modal-dialog">
@@ -257,10 +175,10 @@
       </div>
     </div>
   </div>
-</form>
-</div>
-<!-- 导入用户数据 -->
-<div class="container form-horizontal">
+  </form>
+  </div>
+  <!-- 导入用户数据 -->
+  <div class="container form-horizontal">
     <div class="modal fade" id="importusers">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -283,17 +201,19 @@
                 </form>
               </div>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="submit" class="btn btn-primary" onclick="return importusers();">导入</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" onclick="return importusers();">导入</button>
           <!-- <button type="submit" class="btn btn-primary" onclick="return import_xls_catalog();">提交</button> -->
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<script type="text/javascript">
+
+  <!-- 用户表 -->
+  <script type="text/javascript">
     function save(){
       // var radio =$("input[type='radio']:checked").val();        
       var Username   = $('#Username').val();
@@ -348,8 +268,8 @@
         }
     }
 
-  $(function () {
-    $('#table0').bootstrapTable({
+    $(function () {
+      $('#table0').bootstrapTable({
         idField: 'Id',
         url: '/admin/user',
         // striped: "true",
@@ -385,6 +305,7 @@
             }
           },{
             field: 'Password',
+            visible: false,
             title: '密码',
             editable: {
               type: 'text',
@@ -396,6 +317,7 @@
             }
           },{
             field: 'Email',
+            visible: false,
             title: '邮箱',
             // sortable:'true',
             editable: {
@@ -466,14 +388,17 @@
             }
           },{
             field: 'Lastlogintime',
+            visible: false,
             title: '最后登录',
             formatter:localDateFormatter,
           },{
             field: 'Createtime',
+            visible: false,
             title: '建立',
             formatter:localDateFormatter,
           },{
             field: 'Role',
+            visible: false,
             title: '权限',
             editable: {
                 type: 'select2', 
@@ -495,20 +420,25 @@
                 url: '/admin/user/updateuser',
                 title: 'Enter Status'  
             }
+          },{
+            field:'action',
+            title: '操作',
+            formatter:'actionFormatter',
+            events:'actionEvents',
           }
         ]
+      });
     });
-  });
 
-  function index1(value,row,index){
-    return index+1
-  }
+    function index1(value,row,index){
+      return index+1
+    }
 
-  function localDateFormatter(value) {
-    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
-  }
-  // 改变点击行颜色
-  $(function(){
+    function localDateFormatter(value) {
+      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    }
+    // 点击行显示角色
+    $(function(){
      // $("#table").bootstrapTable('destroy').bootstrapTable({
      //     columns:columns,
      //     data:json
@@ -516,60 +446,31 @@
      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
          $(ele).addClass("info");
-         rowid=row.Id;//全局变量
+         userid=row.Id;//全局变量
          rowtitle=row.Nickname
-         $("#rowtitle").html("用户详情-"+rowtitle);
+         $("#rowtitle").html("用户角色-"+rowtitle);
          $("#details").show();
-         $('#table1').bootstrapTable('refresh', {url:'/admin/user/'+row.Id});
+         $('#table1').bootstrapTable('refresh', {url:'/admin/role/get/'+row.Id});
      });
-  });
-    //下面这个用在线表格编辑代替
-    // function update(){
-    // var radio =$("input[type='radio']:checked").val();
-      // var Username   = $('#Username1').val();
-      // var Nickname   = $('#Nickname1').val();
-      // var Password   = $('#Password1').val();
-      // var Repassword = $('#Repassword1').val();
-      // var Email      = $('#Email1').val();
-      // var Department = $('#Department1').val();
-      // var Secoffice  = $('#Secoffice1').val();
-      // var Ip         = $('#Ip').val();
-      // var Status     = $('#Status1 option:selected').text();
-      // var Role       = $('#Role1').val();
-      // var cid = $('#cid').val();
-    // $('#myModal').on('hide.bs.modal', function () {  
-    //   if (projcatename1)
-    //     {  
-    //       $.ajax({
-    //           type:"post",
-    //           url:"/admin/user/updateuser",
-    //           data: {cid:cid,username:Username,nickname:Nickname,password:Password,repassword:Repassword,email:Email,department:Department,secoffice:Secoffice,ip:Ip,statusStatus,role:Role},
-    //           success:function(data,status){
-    //             alert("添加“"+data+"”成功！(status:"+status+".)");
-    //            }
-    //       });  
-    //     } 
-    //     $('#modalTable1').modal('hide');
-    //     $('#table0').bootstrapTable('refresh', {url:'/admin/user'});
-    // }
+    });
 </script>
 
 <!-- onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
 row：点击行的数据，
 $element：tr 元素，
 field：点击列的 field 名称 -->
-<script type="text/javascript">
-function format_status(status,row,index) {
-  if(status == 1){
-    return '显示'
-  }else if(status == 2){
-    return  '隐藏'
-  }else if(status == 0){
-    return  '禁止'
+<!-- <script type="text/javascript">
+  function format_status(status,row,index) {
+    if(status == 1){
+      return '显示'
+    }else if(status == 2){
+      return  '隐藏'
+    }else if(status == 0){
+      return  '禁止'
+    }
   }
-}
 
-$(document).ready(function() {
+  $(document).ready(function() {
   //添加分级
   $("#addButton1").click(function() {
         $("input#pid").remove();
@@ -677,24 +578,23 @@ $(document).ready(function() {
       }
     });  
   })
-})
-
-</script>
+  })
+</script> -->
 
 <!-- 用户详情表 -->
-<toolbar id="btn_toolbar1" class="toolbar">
+<!-- <toolbar id="btn_toolbar1" class="toolbar">
 <div class="btn-group">
         <button type="button" data-name="addButton1" id="addButton1" class="btn btn-default" data-target="modal"><i class="fa fa-plus" aria-hidden="true"> </i>添加</button>
         <button type="button" data-name="editorButton1" id="editorButton1" class="btn btn-default" data-target="modal"><i class="fa fa-edit" aria-hidden="true"> </i>编辑</button>
         <button type="button" data-name="deleteButton1" id="deleteButton1" class="btn btn-default" data-target="default"><i class="fa fa-trash" aria-hidden="true"> </i>删除</button>
         <button type="button" data-name="submitButton1" id="submitButton1" class="btn btn-default" data-target="default"><i class="fa fa-cog" aria-hidden="true"> </i>提交</button>
     </div>
-</toolbar>
+</toolbar> -->
 <!-- data-query-params="queryParams" data-content-type="application/json"-->
-<div id="details" style="display:none">
-<h3 id="rowtitle"></h3>
+<!-- <div id="details" style="display:none"> -->
+<!-- <h3 id="rowtitle"></h3> -->
 <!-- data-url="/admin/category/2" 没有了这个，当然table1表格无法支持刷新了！！！data-show-refresh="true"-->
-<table id="table1"
+<!-- <table id="table1"
         data-toggle="table"
         data-search="true"
         data-show-toggle="true"
@@ -725,141 +625,156 @@ $(document).ready(function() {
       </tr>
     </thead>
 </table>
+</div> -->
+<!-- 显示用户角色表 -->
+<div id="details" style="display:none">
+  <div class="row">
+    <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
+      <h3 id="rowtitle">角色表</h3>
+      <div id="toolbar1" class="btn-group">
+        <button type="button" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">保存修改</i>
+        </button>
+        <!-- <button type="button" data-name="editorButton" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
+        </button>
+        <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn btn-danger btn-sm">
+        <i class="fa fa-trash">删除</i>
+        </button> -->
+      </div>
+        <table id="table1"
+               data-toggle="table"
+               data-striped="true"
+               data-toolbar="#toolbar1"
+               data-show-refresh="true"
+               data-show-toggle="true"
+               data-show-columns="true"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-click-to-select="true"
+               data-page-list="[5, 25, 50, All]"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-width="10" data-checkbox="true" data-formatter="stateFormatter"></th>
+                <th data-formatter="index1">#</th>
+                <th data-field="Rolenumber">角色编码</th>
+                <th data-field="Rolename">角色名称</th>
+                <th data-align="center" data-formatter="StatusFormatter">状态</th>
+                <!-- <th data-field="domain_desc">所属域</th> -->
+                <!-- <th data-align="center"
+                    data-field="create_user">创建人</th> -->
+                <!-- <th data-align="center"
+                    data-field="Createtime" data-formatter="localDateFormatter">创建时间</th> -->
+                <!-- <th data-align="center"
+                    data-field="modify_user">修改人</th> -->
+                <!-- <th data-align="center"
+                    data-field="Updated" data-formatter="localDateFormatter">修改时间</th> -->
+                <!-- <th data-field="state-handle"
+                    data-align="center"
+                    data-formatter="RoleObj.formatter">资源操作</th> -->
+            </tr>
+            </thead>
+        </table>
+    </div>
+  </div>
 </div>
 
-<!-- 添加用户详细 -->
-<div class="container">
-  <form class="form-horizontal">
-    <div class="modal fade" id="modalTable2">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h3 class="modal-title">添加详细</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">名称</label>
-                <div class="col-sm-7">
-                  <input type="text" class="form-control" id="projcatename2"></div>
-                </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">代码</label>
-                <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="projcatecode2"></div>
-              </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">级别</label>
-                <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="projcategrade2"></div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <!-- <button type="submit" class="btn btn-primary">保存</button> -->
-            <button type="button" class="btn btn-primary" onclick="save2()">保存</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
+<br/>
+<br/>
 <script type="text/javascript">
-  function save2(){
-      // var radio =$("input[type='radio']:checked").val();
-      var projcatename2 = $('#projcatename2').val();
-      var projcatecode2 = $('#projcatecode2').val();
-      var parentid = $('#pid').val();
-      var projcategrade2 = $('#projcategrade2').val();
-      // $('#myModal').on('hide.bs.modal', function () {  
-      if (projcatename2)
-        {  
-            $.ajax({
-                type:"post",
-                url:"/admin/category/addcategory",
-                data: {pid:parentid,title:projcatename2,code:projcatecode2,grade:projcategrade2},//父级id
-                success:function(data,status){
-                  alert("添加“"+data+"”成功！(status:"+status+".)");
-                 }
-            });  
-        } 
-        // $(function(){$('#myModal').modal('hide')}); 
-          $('#modalTable2').modal('hide');
-          $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+parentid});
-          // "/category/modifyfrm?cid="+cid
-          // window.location.reload();//刷新页面
-  }
-  function update2(){
-      // var radio =$("input[type='radio']:checked").val();
-      var projcatename3 = $('#projcatename3').val();
-      var projcatecode3 = $('#projcatecode3').val();
-      var projcategrade3 = $('#projcategrade3').val();
-      var cid = $('#cid').val();
-      // $('#myModal').on('hide.bs.modal', function () {  
-      if (projcatename3)
-        {  
-            $.ajax({
-                type:"post",
-                url:"/admin/category/updatecategory",
-                data: {cid:cid,title:projcatename3,code:projcatecode3,grade:projcategrade3},
-                success:function(data,status){
-                  alert("添加“"+data+"”成功！(status:"+status+".)");
-                 }
-            });  
-        } 
-        // $(function(){$('#myModal').modal('hide')});
-          $('#modalTable3').modal('hide');
-          // alert("添加“"+rowid);
-          $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+rowid});
-  } 
+      function stateFormatter(value, row, index) {
+        if (row.Level === "1") {
+            return {
+                // disabled: true,
+                checked: true
+            }
+        }
+        return value;
+      }
 
+      function StatusFormatter(value, row, index) {
+        // alert(row.Status);
+        if (row.Status == "0") {
+            return '正常';
+        }else{
+          return '失效';
+        }
+      }
+
+    // 保存修改
+    $("#editorButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      var selectRow=$('#table1').bootstrapTable('getSelections');
+      if (selectRow.length<=0) {
+        alert("请先勾选！");
+        return false;
+      }
+      // if(confirm("确定删除吗？一旦删除将无法恢复！")){
+        var title=$.map(selectRow,function(row){
+          return row.Title;
+        })
+        var ids="";
+        for(var i=0;i<selectRow.length;i++){
+          if(i==0){
+            ids=selectRow[i].Id;
+          }else{
+            ids=ids+","+selectRow[i].Id;
+          }  
+        }
+        $.ajax({
+          type:"post",
+          url:"/admin/role/userrole",
+          data: {uid:userid,ids:ids},
+          success:function(data,status){
+            alert("添加“"+data+"”成功！(status:"+status+".)");
+            $('#table1').bootstrapTable('refresh', {url:'/admin/role/get/'+userid});
+          }
+        });  
+    })
+
+  function actionFormatter(value, row, index) {
+    return '<button type="button" data-name="addButton" id="addButton" class="btn btn-info btn-xs"> <i class="fa fa-user">角色</i></button>';
+  }
+  window.actionEvents = {
+      //弹出角色选择模态框，选择后保存——未修改
+    'click .send': function (e, value, row, index) {
+      var selectRow3=$('#table').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定提交吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          if (ids.length==0){
+            ids = $.map(mycars, function(row){
+                return row.id;
+            });
+          }
+          // var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+            $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/sendcatalog",
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',//table填充的数据结构中必须提供这个id，否则不能删除某行
+                  values: ids
+              });
+              // removeline.remove();
+              alert("提交“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
+            });  
+        }
+    },
+  };
 </script>
-<!-- 修改工程目录分级 -->
-<div class="form-horizontal" class="container">
-  <!-- <form class="form-horizontal"> -->
-    <div class="modal fade" id="modalTable3">
-      <div class="modal-dialog">
-        <div  class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h3 class="modal-title">修改目录分级</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">目录名称</label>
-                <div class="col-sm-7">
-                  <input type="text" class="form-control" id="projcatename3"></div>
-              </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">代码</label>
-                <div class="col-sm-7">
-                  <input type="text" class="form-control" id="projcatecode3"></div>
-              </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">级别</label>
-                <div class="col-sm-7">
-                  <input type="text" class="form-control" id="projcategrade3"></div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="submit" class="btn btn-primary" onclick="update2()">修改</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  <!-- </form> -->
-</div>
-<br/>
-<br/>
 </div>
 
 </body>
