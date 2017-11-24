@@ -19,10 +19,37 @@ Demo(http://112.74.42.44/)
 10. 上传成果后，自动生成提供给MeritMS的成果清单，可提交给MeritMS系统进行成果统计；
 11. 目的是标准化管理自己的知识体系，可以把数据库挂到到服务器上，供其他人查阅；退休后可将自己个人的cms系统导入cms服务器版，实现知识继承。
 
+我们做工程设计的，经常要做设代，现场服务，而且人员会更换比较频繁。拥有这样一个资料管理平台，是很多人的远望，那么有没有简单免费开源的web应用呢？基于engineercms核心的系统，具有：
+
+√参建单位各自自由建立自己的目录，共享资料，避免大家重复存储资料。
+
+√关键字检索和全文检索。
+
+√图纸易得，能更好地控制工程质量——pdf文件参建单位都可以阅读，提高效率，减少障碍。 
+
+√基于“用户——角色——权限”的权限设置。独创的根据文件扩展名来进行权限管理。
+
+√会议室和车辆的预定，用餐人数计划统计等常用功能。
+
+√wiki技术讨论。
+
+√工程大事记，工程进展时间轴等潮玩意儿。
+
+√独创的pdf连续查阅；
+
+√IPAD移动端无障碍；
+
+√设代日记图文并茂记录现场进度；
+
+√项目甘特图进度；
+
 二 todo:
 
-1. 任意级别目录进行权限设置；
-2. 权限分3类，IP地址段权限等级设置、注册用户权限等级设置和用户组权限等级设置；每类权限等级分为写、读、删、下载附件；仅能删除自己的成果等多种权限；
+×手机端添加图片发布文档；
+
+×平台推送。
+
+×考勤登记，值班安排；
 
 ## Quick Start
 
@@ -42,8 +69,11 @@ Demo(http://112.74.42.44/)
 EngineerCMS source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
 ![](https://cloud.githubusercontent.com/assets/10678867/25748719/a340448e-31de-11e7-8341-6502881fa19c.png)
+IPAD移动端效果
 ![snap6](https://user-images.githubusercontent.com/10678867/33214084-644adf38-d165-11e7-8d70-c25f9e7ffbbc.png)
+项目进度展示
 ![snap8](https://user-images.githubusercontent.com/10678867/33214091-6b737446-d165-11e7-834e-b728ea4f590e.png)
+用户——角色——权限设置，树状目录权限，区分附件扩展名
 ![snap7](https://user-images.githubusercontent.com/10678867/33214095-7133dc2c-d165-11e7-8d23-aa172042f9e5.png)
 ![snap3](https://user-images.githubusercontent.com/10678867/33214099-74ec231a-d165-11e7-8430-ef68c1d8610d.png)
 ![snap5](https://user-images.githubusercontent.com/10678867/33214106-7853fd70-d165-11e7-88c3-a0db71a1dbab.png)
