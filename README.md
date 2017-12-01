@@ -76,7 +76,7 @@ IPAD移动端效果
 ![snap6](https://user-images.githubusercontent.com/10678867/33214084-644adf38-d165-11e7-8d70-c25f9e7ffbbc.png)
 项目进度展示
 ![snap8](https://user-images.githubusercontent.com/10678867/33214091-6b737446-d165-11e7-834e-b728ea4f590e.png)
-用户——角色——权限设置，树状目录权限，区分附件扩展名
+用户——角色——权限设置，树状目录权限，区分附件扩展名，基于casbin
 ![snap7](https://user-images.githubusercontent.com/10678867/33214095-7133dc2c-d165-11e7-8d23-aa172042f9e5.png)
 ![snap3](https://user-images.githubusercontent.com/10678867/33214099-74ec231a-d165-11e7-8430-ef68c1d8610d.png)
 ![snap5](https://user-images.githubusercontent.com/10678867/33214106-7853fd70-d165-11e7-88c3-a0db71a1dbab.png)
