@@ -74,7 +74,7 @@ EngineerCMS source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
 ![](https://cloud.githubusercontent.com/assets/10678867/25748719/a340448e-31de-11e7-8341-6502881fa19c.png)
 IPAD移动端效果
-![snap6](https://user-images.githubusercontent.com/10678867/33214084-644adf38-d165-11e7-8d70-c25f9e7ffbbc.png)
+![](https://user-images.githubusercontent.com/10678867/33826847-3b8ea162-dea1-11e7-9deb-a8b757da50ab.jpg)
 项目进度展示
 ![snap8](https://user-images.githubusercontent.com/10678867/33214091-6b737446-d165-11e7-834e-b728ea4f590e.png)
 用户——角色——权限设置，树状目录权限，区分附件扩展名，基于casbin
