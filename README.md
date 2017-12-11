@@ -80,4 +80,5 @@ IPAD移动端效果
 用户——角色——权限设置，树状目录权限，区分附件扩展名，基于casbin
 ![snap7](https://user-images.githubusercontent.com/10678867/33214095-7133dc2c-d165-11e7-8d23-aa172042f9e5.png)
 ![snap3](https://user-images.githubusercontent.com/10678867/33214099-74ec231a-d165-11e7-8430-ef68c1d8610d.png)
+![2](https://user-images.githubusercontent.com/10678867/33826926-7ef24c42-dea1-11e7-87a7-0b40c0906578.jpg)
 ![snap5](https://user-images.githubusercontent.com/10678867/33214106-7853fd70-d165-11e7-88c3-a0db71a1dbab.png)
