@@ -20,6 +20,19 @@
       <li {{if .IsConstruct}}class="active"{{end}}>
         <a href="/project/25003">施工</a>
       </li>
+      <li {{if or .IsDesignGant .IsConstructGant}}class="dropdown active"{{end}}>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          进度 <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li {{if .IsDesignGant}}class="active"{{end}}>
+            <a href="/projectgant">设计进度</a>
+          </li>
+          <li {{if .IsConstructGant}}class="active"{{end}}>
+            <a href="/projectgant">施工进度</a>
+          </li>
+        </ul>
+      </li>
         <form class="navbar-form navbar-left" role="search" method="get" action="/search">
           <div class="form-group">
           <input type="text" class="form-control"  class="search-query span2" placeholder="Search Products" name="keyword" id="keyword"></div>
@@ -39,18 +52,26 @@
           </li>
         </ul>
       </li>
-      <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
-        <a href="/meetingroom">会议室</a>
+      <li {{if or .IsMeetingroomCalendar .IsCarCalendar .IsOrderCalendar .IsAttendanceCalendar}}class="dropdown active"{{end}} >
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          预订 <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
+            <a href="/meetingroom">会议室&值班安排</a>
+          </li>
+          <li {{if .IsCarCalendar}}class="active"{{end}}>
+            <a href="/car">车辆</a>
+          </li>
+          <li {{if .IsOrderCalendar}}class="active"{{end}}>
+            <a href="/order">订餐</a>
+          </li>
+          <li {{if .IsAttendanceCalendar}}class="active"{{end}}>
+            <a href="/attendance">考勤</a>
+          </li>
+        </ul>
       </li>
-      <li {{if .IsCarCalendar}}class="active"{{end}}>
-        <a href="/car">车辆</a>
-      </li>
-      <li {{if .IsOrderCalendar}}class="active"{{end}}>
-        <a href="/order">订餐</a>
-      </li>
-      <li {{if .IsAttendanceCalendar}}class="active"{{end}}>
-        <a href="/attendance">考勤</a>
-      </li>
+
     </ul>
 
     <div class="pull-right">
@@ -63,7 +84,7 @@
                 <li><a href="/admin" title="管理">进入后台</a></li>
                 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
-                <li><a href="/calendar" title="日程安排">日程安排</a></li>
+                <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
                 <li><a href="/login?exit=true">退出</a></li>
               </ul>
             </li>
@@ -75,7 +96,7 @@
                 <!-- <li><a href="/admin" title="管理">进入后台</a></li> -->
                 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
-                <li><a href="/calendar" title="日程安排">日程安排</a></li>
+                <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
                 <li><a href="/login?exit=true">退出</a></li>
               </ul>
             </li>
@@ -88,8 +109,8 @@
                 <li><a href="/admin" title="管理">进入后台</a></li>
                 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
-                <li><a href="/calendar" title="日程安排">日程安排</a></li>
-                <li><a href="/login">登录</a></li>
+                <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
+                <li><a href="/login?exit=true">退出</a></li>
               </ul>
             </li>
           {{else}}
@@ -99,8 +120,8 @@
                 <!-- <li><a href="/admin" title="管理">进入后台</a></li> -->
                 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
-                <li><a href="/calendar" title="日程安排">日程安排</a></li>
-                <li><a href="/login">登录</a></li>
+                <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
+                <li><a href="/login">登陆</a></li>
               </ul>
             </li>
           {{end}}

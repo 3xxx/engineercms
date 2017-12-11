@@ -257,8 +257,8 @@
 </div> 
 
 <script type="text/javascript">
-  $(document).ready(function() {
-  $("table").tablesorter();
+  // $(document).ready(function() {
+  // $("table").tablesorter();
   // $("#ajax-append").click(function() {
   //    $.get("assets/ajax-content.html", function(html) {
   //     // append the "ajax'd" data to the table body
@@ -272,7 +272,7 @@
   //   });
   //   return false;
   // });
-});
+// });
 </script>
 
 </body>

@@ -443,7 +443,8 @@ $(document).ready(function() {
       var allday=document.getElementById("isallday1").checked;
       var public=document.getElementById("ispublic1").checked;
       var memorabilia=document.getElementById("ismemorabilia1").checked;
-      var url=$('img').attr('src');
+      // var url=$('img').attr('src');保留，供参考
+      var url=$('#imgurl').val();
       var currColor=$('#add-new-event1').css("background-color");
       if (title){  
             $.ajax({
@@ -459,7 +460,7 @@ $(document).ready(function() {
       }
   }
   //删除事件
-    function delete_event(){
+  function delete_event(){
         if(confirm("您确定要删除吗？")){
             var cid = $("#cid").val();  
               $.ajax({
@@ -474,7 +475,7 @@ $(document).ready(function() {
                 }
               });  
         }
-    } 
+  } 
 </script>
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>

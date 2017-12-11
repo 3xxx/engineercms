@@ -73,10 +73,70 @@ type ArticleContent struct {
 func (c *ProdController) GetProjProd() {
 	c.Data["IsProject"] = true
 	id := c.Ctx.Input.Param(":id")
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(id)
 	c.Data["Id"] = id
 	_, role := checkprodRole(c.Ctx)
 	c.Data["role"] = role
+
+	//这里取到用户的权限
+	//添加权限POST
+	//修改权限PUT——页面上，任何人可以修改自己的product
+	//删除权限DELETE——页面上，任何人可以删除自己的product
+	//1.取得客户端用户名
+	var uname, useridstring string
+	v := c.GetSession("uname")
+	// var role, userrole int
+	if v != nil {
+		uname = v.(string)
+		c.Data["Uname"] = v.(string)
+
+		user, err := models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+		c.Data["Uid"] = user.Id
+		// userrole = user.Role
+		useridstring = strconv.FormatInt(user.Id, 10)
+	} else {
+		// userrole = 5
+		// route := c.Ctx.Request.URL.String()
+		// c.Data["Url"] = route
+		// c.Redirect("/roleerr?url="+route, 302)
+		// return
+	}
+	//2.取得侧栏目录路径——路由id
+	//2.1 根据id取得路由
+	var projurls string
+	proj, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	if proj.ParentId == 0 { //如果是项目根目录
+		projurls = "/" + strconv.FormatInt(proj.Id, 10)
+	} else {
+		projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+	}
+
+	if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
+		c.Data["RoleAdd"] = "true"
+	} else {
+		c.Data["RoleAdd"] = "false"
+	}
+	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+		c.Data["RoleUpdate"] = "true"
+	} else {
+		c.Data["RoleUpdate"] = "false"
+	}
+	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+		c.Data["RoleDelete"] = "true"
+	} else {
+		c.Data["RoleDelete"] = "false"
+	}
 	// var categories []*models.ProjCategory
 	// var err error
 	//id转成64为
@@ -666,7 +726,7 @@ func checkprodRole(ctx *context.Context) (uname string, role int) {
 		uname = ctx.Input.IP()
 	}
 	iprole := Getiprole(ctx.Input.IP())
-	beego.Info(iprole)
+	// beego.Info(iprole)
 	if iprole <= userrole {
 		role = iprole
 	} else {

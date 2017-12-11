@@ -364,6 +364,7 @@ func (c *RoleController) Post() {
 // }
 
 //AddPolicy(sec string, ptype string, rule []string)
+//添加用户角色
 func (c *RoleController) UserRole() {
 	//要支持批量分配角色，循环用户id
 	uid := c.GetString("uid") //secofficeid
@@ -436,16 +437,16 @@ func (c *RoleController) RolePermission() {
 			//定义读取、添加、修改、删除
 			switch v2 {
 			case "添加成果":
-				action = "add"
+				action = "POST"
 				suf = ".*"
 			case "编辑成果":
-				action = "update"
+				action = "PUT"
 				suf = ".*"
 			case "删除成果":
-				action = "delete"
+				action = "DELETE"
 				suf = ".*"
 			case "读取成果":
-				action = "get"
+				action = "GET"
 				for _, v4 := range sufarray {
 					if v4 == "任意" {
 						suf = ".*"

@@ -1,78 +1,133 @@
 {{define "mnavbar"}}
-<nav class="navbar navbar-default navbar-static-top">
-    <ul class="nav navbar-nav">
-      <!-- <li {{if .IsIndex}}class="active"{{end}}>
-        <a href="/index">首页</a>
-      </li>
-      <li {{if .IsProject}}class="active"{{end}}>
-        <a href="/project/25001">项目</a>
-      </li> -->
 
-      <li {{if .IsBuild}}class="active"{{end}}>
-        <a href="/project/25005">建设</a>
-      </li>
-      <li {{if .IsDesign}}class="active"{{end}}>
-        <a href="/project/25002">设计</a>
-      </li>
-      <li {{if .IsSupervision}}class="active"{{end}}>
-        <a href="/project/25004">监理</a>
-      </li>
-      <li {{if .IsConstruct}}class="active"{{end}}>
-        <a href="/project/25003">施工</a>
-      </li>
-        <form class="navbar-form navbar-left" role="search" method="get" action="/search">
-          <div class="form-group">
-          <input type="text" class="form-control"  class="search-query span2" placeholder="Search Products" name="keyword" id="keyword"></div>
-          <input type="hidden" name="productid" id="productid" value="{{.Category.Id}}">
-          <button type="submit" class="btn btn-default" id="search">Submit</button>
-        </form>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          规范 <b class="caret"></b>
+<div class="blog_main">
+
+    <div class="main_list">
+
+      <div class="blog_article">
+
+        <div class="blog_article_c clearfix">
+          <p class="date">
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+              <div id="tree"></div>
+            </div>
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+              <!-- 面包屑导航 -->
+              <div class="breadcrumbs">
+    <ol class="breadcrumb" split="&gt;">
+      <li>
+        <a href="javascript:void(0)"> <i class="fa fa-home" aria-hidden="true"></i>
+          项目编号：{{.Category.Code}}
         </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a href="http://112.74.42.44:8081" target="_blank">查询</a>
-          </li>
-          <li>
-            <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
-          </li>
-        </ul>
       </li>
-      <!-- <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>
-        <a href="/meetingroom">会议室</a>
-      </li>
-      <li {{if .IsCarCalendar}}class="active"{{end}}>
-        <a href="/car">车辆</a>
-      </li>
-      <li {{if .IsOrderCalendar}}class="active"{{end}}>
-        <a href="/order">订餐</a>
-      </li>
-      <li {{if .IsAttendanceCalendar}}class="active"{{end}}>
-        <a href="/attendance">考勤</a>
-      </li> -->
-    </ul>
 
-    <div class="pull-right">
-      <ul class="nav navbar-nav">
-        {{if or .IsLogin .IsAdmin}}
-        <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <!-- <li><a href="/admin" title="管理">进入后台</a></li> -->
-                <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
-                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
-                <li><a href="/calendar" title="日程安排">日程安排</a></li>
-                <li><a href="/login?exit=true">退出</a></li>
-              </ul>
-            </li>
-        {{else}}
+    </ol>
+              </div>
+
+              <iframe src="/project/{{.Id}}/{{.Id}}" name='iframepage' id="iframepage" frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0"  onload="this.height=800"></iframe> 
+            </div> 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog_top_wrap">
+      <div class="blog_top"> <i id="menu_J" class="iconfont icon_l">导航</i>
+        <form method="get" action="http://m.blog.csdn.net/search/index" id="searchform"> <i id="search_J" class="iconfont icon_r">搜索</i>
+          <div id="search_c_J" class="search">
+            <input type="text" placeholder="请输入" id="search" name="keyword" page="1" value="">
+            <i class="iconfont icon_search"></i>
+            <i class="iconfont icon_close">关闭</i>
+          </div>
+        </form>
+
+        <h2 class="blog_top_t">EngineerCMS</h2>
+      </div>
+    </div>
+
+
+    <div class="leftNav" style="left: -40rem;">
+
+      <div class="left_top">
+        <a href="http://m.blog.csdn.net/Blog?username=hotqin888">
+          <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/1_hotqin888.jpg" alt="hotqin888"></a>
+        <a href="http://m.blog.csdn.net/Blog?username=hotqin888" class="sign">hotqin888</a>
+      </div>
+
+      <ul class="nav_list">
         <li>
-          <a href="/login">登录</a>
+          <a href="http://m.blog.csdn.net/home/index">
+            <i>•</i>
+            <span>首页</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
         </li>
-        {{end}}
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=mobile&amp;Type=">
+            <i>•</i>
+            <span>移动开发</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=enterprise&amp;Type=">
+            <i>•</i>
+            <span>架构</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=cloud&amp;Type=">
+            <i>•</i>
+            <span>云计算/大数据</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=www&amp;Type=">
+            <i>•</i>
+            <span>互联网</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=system&amp;Type=">
+            <i>•</i>
+            <span>运维</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=database&amp;Type=">
+            <i>•</i>
+            <span>数据库</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=web&amp;Type=">
+            <i>•</i>
+            <span>前端</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=code&amp;Type=">
+            <i>•</i>
+            <span>编程语言</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=software&amp;Type=">
+            <i>•</i>
+            <span>研发管理</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
+        <li>
+          <a href="http://m.blog.csdn.net/Column/Column?Channel=other&amp;Type=">
+            <i>•</i>
+            <span>综合</span>
+            <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-youjiantou.png" alt="img" class="arrow_r"></a>
+        </li>
       </ul>
     </div>
-</nav>
-{{end}}
+    <!-- 这个重要，msk点一下可以缩回侧栏 -->
+    <div id="mask" style="display: none;"></div>
+  </div>
 
+  <div class="backToTop" style="z-index: 9999999; display: block;">
+    <img src="./beego利用casbin进行权限管理——第一节 起步、测试 - hotqin888的专栏 - CSDN博客_files/iconfont-fudongxiangshang.png" alt="img"></div>
+
+{{end}}

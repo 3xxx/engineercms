@@ -377,6 +377,15 @@ func (c *MainController) IsSubmitAgain(token string) bool {
 }
 
 func (c *MainController) Pdf() {
+	// var uname, useridstring string
+	v := c.GetSession("uname")
+	// var role, userrole int
+	if v == nil {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		return
+	}
 	// c.TplName = "web/viewer.html"
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	// uname, _, _ := checkRoleread(c.Ctx) //login里的
@@ -419,7 +428,7 @@ func (c *MainController) Pdf() {
 		if err != nil {
 			beego.Error(err)
 		}
-		//由成果id（后台传过来的行id）取得成果
+		//由成果id（后台传过来的行id）取得成果——进行排序
 		prod, err := models.GetProd(attach.ProductId)
 		if err != nil {
 			beego.Error(err)
@@ -438,7 +447,7 @@ func (c *MainController) Pdf() {
 		// beego.Info(Url)
 		projid = prod.ProjectId
 	} else { //id是侧栏目录id
-		//由侧栏id取得所有成果和所有成果的附件pdf
+		//由侧栏id取得所有成果和所有成果的附件pdf——进行排序
 		prods, err = models.GetProducts(idNum)
 		if err != nil {
 			beego.Error(err)

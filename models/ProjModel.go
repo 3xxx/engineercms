@@ -250,6 +250,17 @@ func GetProjbyParenttitlepath(parenttitlepath, title string) (proj Project, err 
 	return proj, err
 }
 
+//根据parentid和title取得proj目录
+func GetProjbyParentidTitle(parentid int64, title string) (proj Project, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
+	err = qs.Filter("ParentId", parentid).Filter("title", title).One(&proj)
+	if err != nil {
+		return proj, err
+	}
+	return proj, err
+}
+
 //递归将目录写入数据库
 func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (cid []Pidstruct) {
 	o := orm.NewOrm() //实例化数据库操作对象

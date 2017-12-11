@@ -870,7 +870,6 @@ func (c *AttachController) Attachment() {
 	//4.取得客户端用户名
 	var uname, useridstring, projurl string
 	v := c.GetSession("uname")
-	// var userrole int
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -879,14 +878,7 @@ func (c *AttachController) Attachment() {
 			beego.Error(err)
 		}
 		useridstring = strconv.FormatInt(user.Id, 10)
-		// userrole = user.Role
 	}
-	// iprole := Getiprole(c.Ctx.Input.IP())
-	// if iprole <= userrole {
-	// 	role = iprole
-	// } else {
-	// 	role = userrole
-	// }
 
 	id := c.Input().Get("id")
 	//pid转成64为
@@ -894,18 +886,18 @@ func (c *AttachController) Attachment() {
 	if err != nil {
 		beego.Error(err)
 	}
-	// beego.Info(id)
+
 	//根据附件id取得附件的prodid，路径
 	attachment, err := models.GetAttachbyId(idNum)
 	if err != nil {
 		beego.Error(err)
 	}
-	// beego.Info(attachment.ProductId)
+
 	product, err := models.GetProd(attachment.ProductId)
 	if err != nil {
 		beego.Error(err)
 	}
-	// beego.Info(product.ProjectId) //25001
+
 	//根据projid取出路径
 	proj, err := models.GetProj(product.ProjectId)
 	if err != nil {
@@ -918,15 +910,18 @@ func (c *AttachController) Attachment() {
 	}
 
 	//由proj id取得url
-	url, _, err := GetUrlPath(product.ProjectId)
+	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
 	}
+
 	fileext := path.Ext(attachment.FileName)
 
 	if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) {
 		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
-		c.Redirect(url+"/"+attachment.FileName, 302)
+		// c.Redirect(url+"/"+attachment.FileName, 302)
+		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+
 	} else {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -939,9 +934,9 @@ func (c *AttachController) Attachment() {
 func (c *AttachController) DownloadAttachment() {
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
-	var uname string
+	var uname, useridstring string
 	v := c.GetSession("uname")
-	var role, userrole int
+	// var role, userrole int
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -949,27 +944,23 @@ func (c *AttachController) DownloadAttachment() {
 		if err != nil {
 			beego.Error(err)
 		}
-		userrole = user.Role
+		// userrole = user.Role
+		useridstring = strconv.FormatInt(user.Id, 10)
 	} else {
-		userrole = 5
+		// userrole = 5
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		return
 	}
-	// uname := v.(string) //ck.Value
-	// 4.取出用户的权限等级
-	// role, _ := checkRole(c.Ctx) //login里的
-	// 5.进行逻辑分析：
-	// rolename, err := strconv.ParseInt(role, 10, 64)
-	// if err != nil {
-	// 	beego.Error(err)
+
+	// iprole := Getiprole(c.Ctx.Input.IP())
+	// if iprole <= userrole {
+	// 	role = iprole
+	// } else {
+	// 	role = userrole
 	// }
-	// username := c.Input().Get("username")
-	iprole := Getiprole(c.Ctx.Input.IP())
-	if iprole <= userrole {
-		role = iprole
-	} else {
-		role = userrole
-	}
-	// beego.Info(c.Ctx.Input.IP())
-	// beego.Info(role)
+
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(ctx.Request.RequestURI)
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
@@ -979,32 +970,79 @@ func (c *AttachController) DownloadAttachment() {
 
 	fileext := path.Ext(filePath)
 
-	switch fileext {
-	case ".pdf", ".PDF", ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
-		if role <= 5 {
-			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-		} else {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
-			return
-			// c.Data["json"] = "权限不够！"
-			// c.ServeJSON()
-		}
-	default:
-		if role <= 2 {
-			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-		} else {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
-			return
-			// c.Data["json"] = "权限不够！"
-			// c.ServeJSON()
+	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
+	// beego.Info(path.Dir(filePath))
+	filepath1 := path.Dir(filePath)
+	array := strings.Split(filepath1, "/")
+	// beego.Info(strings.Split(filepath1, "/"))
+
+	//查出所有项目
+	var pid int64
+	proj, err := models.GetProjects()
+	//循环，项目编号+名称=array[1]则其id
+	for _, v := range proj {
+		if v.Code+v.Title == array[1] {
+			pid = v.Id
+			break
 		}
 	}
+
+	var projurl models.Project
+	projurls := "/" + strconv.FormatInt(pid, 10)
+	//id作为parentid+array[2]
+	if len(array) > 1 {
+		for i := 2; i < len(array); i++ {
+			// beego.Info(i)
+			// beego.Info(array[i])
+			// beego.Info(projurl.Id)
+			if i == 2 {
+				// beego.Info(pid)
+				projurl, err = models.GetProjbyParentidTitle(pid, array[i])
+				if err != nil {
+					beego.Error(err)
+				}
+			} else {
+				projurl, err = models.GetProjbyParentidTitle(projurl.Id, array[i])
+				if err != nil {
+					beego.Error(err)
+				}
+			}
+			projurls = projurls + "/" + strconv.FormatInt(projurl.Id, 10)
+		}
+	}
+
+	if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) {
+		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
+		// c.Redirect(url+"/"+attachment.FileName, 302)
+		// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	} else {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+
+	// switch fileext {
+	// case ".pdf", ".PDF", ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
+	// 	if role < 5 {
+	// 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// 	} else {
+	// 		route := c.Ctx.Request.URL.String()
+	// 		c.Data["Url"] = route
+	// 		c.Redirect("/roleerr?url="+route, 302)
+	// 		return
+	// 	}
+	// default:
+	// 	if role <= 2 {
+	// 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// 	} else {
+	// 		route := c.Ctx.Request.URL.String()
+	// 		c.Data["Url"] = route
+	// 		c.Redirect("/roleerr?url="+route, 302)
+	// 		return
+	// 	}
+	// }
 }
 
 //首页轮播图片给予任何权限
@@ -1050,7 +1088,7 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 				}
 				if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
 					DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
-					Url = "/attachment/" + proj1.Code + proj1.Title
+					Url = "attachment/" + proj1.Code + proj1.Title
 				} else {
 					path = proj1.Title
 					DiskDirectory = DiskDirectory + "\\" + path
@@ -1061,7 +1099,7 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 			Url = Url + "/" + proj.Title
 		} else { //如果是根目录
 			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
-			Url = "/attachment/" + proj.Code + proj.Title
+			Url = "attachment/" + proj.Code + proj.Title
 		}
 		return Url, DiskDirectory, err
 	}

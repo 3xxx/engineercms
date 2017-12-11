@@ -300,10 +300,14 @@
       return pdfUrl;
   }
 
-    // 批量上传
-    $("#addButton").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！"+{{.role}});
+  // 批量上传
+  $("#addButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！"+{{.role}});
+      //   return;
+      // }
+      if ({{.RoleAdd}}!="true"){
+        alert("权限不够！");
         return;
       }
       $("input#pid").remove();
@@ -314,7 +318,7 @@
         show:true,
         backdrop:'static'
         });
-    })
+  })
 
   $(document).ready(function() {
     $list1 = $('#thelist');
@@ -416,9 +420,13 @@
     // });
   })      
 
-    // 多附件模式
-    $("#addButton1").click(function() {
-      if ({{.role}}!=1){
+  // 多附件模式
+  $("#addButton1").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      if ({{.RoleAdd}}!="true"){
         alert("权限不够！");
         return;
       }
@@ -429,7 +437,7 @@
           show:true,
           backdrop:'static'
         });
-    })
+  })
 
   $(document).ready(function() {
       $list = $('#thelist1');
@@ -540,9 +548,13 @@
     });
   }) 
 
-    //****添加文章
-    $("#addButton2").click(function() {
-      if ({{.role}}!=1){
+  //****添加文章
+  $("#addButton2").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      if ({{.RoleAdd}}!="true"){
         alert("权限不够！");
         return;
       }
@@ -554,15 +566,15 @@
         show:true,
         backdrop:'static'
         });
-    })
+  })
 
 
-    // 编辑成果信息
-    $("#editorProdButton").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+  // 编辑成果信息
+  $("#editorProdButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选成果！");
@@ -572,6 +584,13 @@
         alert("请不要勾选一个以上成果！");
         return;
       }
+      // alert(selectRow[0].Uid);
+      // alert({{.Uid}});
+      if (selectRow[0].Uid!={{.Uid}}&&{{.RoleUpdate}}!="true"){
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
       }
@@ -585,7 +604,10 @@
         alert("同步成果不允许！");
         return;
       }
-        
+      
+
+
+
       $("input#cid").remove();
       var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
       $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
@@ -598,15 +620,15 @@
       show:true,
       backdrop:'static'
       });
-    })
+  })
 
-    // 编辑成果附件——删除附件、文章或追加附件
-    var selectrowid;
-    $("#editorAttachButton").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+  // 编辑成果附件——删除附件、文章或追加附件
+  var selectrowid;
+  $("#editorAttachButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选成果！");
@@ -616,6 +638,12 @@
       alert("请不要勾选一个以上成果！");
       return;
       }
+
+      if (selectRow[0].Uid!={{.Uid}}&&{{.RoleDelete}}!="true"){
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
       }
@@ -638,7 +666,7 @@
       show:true,
       backdrop:'static'
       });
-    })
+  })
 
   $(document).ready(function() {
     var uploader;
@@ -734,17 +762,23 @@
     })
   })
     
-    // 删除成果
-    $("#deleteButton").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+  // 删除成果
+  $("#deleteButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<=0) {
         alert("请先勾选成果！");
         return false;
       }
+     //问题：如果多选，而其中有自己的，也有自己不具备权限的********
+      if (selectRow[0].Uid!={{.Uid}}&&{{.RoleDelete}}!="true"){
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
       }
@@ -784,7 +818,7 @@
           }
         });
       }  
-    })
+  })
 
 
   //模态框可拖曳—要引入ui-jquery.js
@@ -1296,8 +1330,12 @@
     }
   }
   // 删除附件
-    $("#deleteAttachButton").click(function() {
-      if ({{.role}}!=1){
+  $("#deleteAttachButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      if ({{.RoleDelete}}!="true"){
         alert("权限不够！");
         return;
       }
@@ -1306,6 +1344,12 @@
         alert("请先勾选！");
         return false;
       }
+
+      if ({{.RoleDelete}}!="true"){
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+
       if(confirm("确定删除吗？一旦删除将无法恢复！")){
         var title=$.map(selectRow,function(row){
           return row.Title;
@@ -1332,7 +1376,7 @@
           }
         });
       }  
-    })
+  })
 
     //******表格追加项目同步ip中的数据*******
     $(function () {

@@ -109,11 +109,11 @@ func AddProduct(code, title, label, principal, content string, Projectid int64) 
 	return id, err
 }
 
-//根据侧栏id查出所有成果
+//根据侧栏id查出所有成果——按编号排序
 func GetProducts(id int64) (products []*Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	_, err = qs.Filter("ProjectId", id).OrderBy("-created").All(&products)
+	_, err = qs.Filter("ProjectId", id).OrderBy("-code").All(&products)
 	if err != nil {
 		return nil, err
 	}

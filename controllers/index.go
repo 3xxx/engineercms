@@ -704,6 +704,28 @@ func (c *IndexController) DeleteMeetCalendar() {
 	}
 }
 
+func (c *IndexController) SearchCalendar() {
+	title := c.Input().Get("title")
+	const lll = "2006-01-02"
+
+	var calendars []*models.MeetCalendar
+	var err error
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		calendars, err = models.SearchMeetCalendar(title, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.SearchMeetCalendar(title, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+}
+
 //*****订餐
 //显示页面
 func (c *IndexController) GetOrderCalendar() {

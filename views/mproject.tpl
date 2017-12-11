@@ -1,29 +1,10 @@
 <!-- 具体一个项目的侧栏，右侧为project_products.tpl,显示任意侧栏下的成果 -->
 <!DOCTYPE html>
-{{template "header"}}
+{{template "mheader"}}
 <title>项目详细-EngiCMS</title>
   <script src="/static/js/bootstrap-treeview.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
-  <style type="text/css"> 
-/*ul,li{line-height: 24px; list-style:none; font-size: 14px;}*/
-/*a{width:20px; height:10px; line-height: 4px; vertical-align: top; margin: 0px 0px 0 0; overflow: hidden; background:#f00; display:inline-block;}*/
-  /*body{ 
-    font-size:12px; 
-    font-family:"Courier New", Courier, monospace; 
-    letter-spacing:5px; 
-  } 
-  ul{ 
-    list-style:none; 
-  }*/ 
-  /*li{ */
-    /*width:130px; */
-    /*height:130px; */
-    /*line-height:130px; */
-    /*vertical-align:middle; */
-    /*text-align:center; */
-    /*float:left; */
-    /*margin-left:20px; */
-  /*}*/
+<style type="text/css">
   .navbar-default {
   background-color: #e74c3c;
   border-color: #c0392b;
@@ -96,17 +77,27 @@
 </style> 
 </head>
 
+<body style="height: auto; overflow-y: auto;">
 
 <!-- <div class="navbar navbar-default navbar-static-top"> -->
   <div class="container-fill">{{template "mnavbar" .}}</div>
 <!-- </div> -->
 
-<body>
-<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-  <div id="tree"></div>
-</div>
+<!-- <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div id="tree"></div>
+        </div> -->
 
-<script type="text/javascript">
+
+
+
+
+
+<!-- <body> -->
+<!-- <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+  <div id="tree"></div>
+</div> -->
+
+  <script type="text/javascript">
     $(function () {
         // function getTree() {
           // text: "Node 1",
@@ -250,39 +241,11 @@
     // alert( "Data Loaded: " + index );
       return index+1
     }
-</script>
+  </script>
 
-<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-<!-- 面包屑导航 -->
-  <div class="breadcrumbs">
-    <ol class="breadcrumb" split="&gt;">
-      <li>
-        <a href="javascript:void(0)"> <i class="fa fa-home" aria-hidden="true"></i>
-          项目编号：{{.Category.Code}}
-        </a>
-      </li>
-      <!-- {{range $index, $elem :=.jishu}}
-      <li>
-        <a href="javascript:void(0)">
-          jibie.title
-        </a>
-      </li>
-      {{end}} -->
-    </ol>
-  </div>
-    <!-- <div class="form-group"> -->
-        <!-- <label class="control-label" id="regis" for="LoginForm-UserName"></label> 显示部门名称  -->
-    <!-- </div> -->
-        <!-- <iframe src="/secofficeshow" name='main' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onLoad="iFrameHeight()"></iframe> -->
-        <!-- <iframe src="/secofficeshow" name='main' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onload="changeFrameHeight()"></iframe> -->
-        <!-- 默认显示所有成果？还是项目简介？当为项目id时，判断是一级，显示里面的成果 -->
-       <iframe src="/project/{{.Id}}/{{.Id}}" name='iframepage' id="iframepage" frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0"  onload="this.height=800"></iframe> 
-</div>  
-
-
-<script type="text/javascript">
- function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
-  var iframe = document.getElementById("iframepage");
+  <script type="text/javascript">
+    function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
+    var iframe = document.getElementById("iframepage");
     try{
     var bHeight = iframe.contentWindow.document.body.scrollHeight;
     var dHeight = iframe.contentWindow.document.documentElement.scrollHeight; var height = Math.max(bHeight, dHeight,800); iframe.height = height;
@@ -318,6 +281,6 @@
 
     //     });
     // });
- </script>
+  </script>
 </body>
 </html>

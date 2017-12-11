@@ -34,6 +34,8 @@ func init() {
 	beego.Router("/calendar", &controllers.IndexController{}, "*:Calendar")
 	//会议室预定日程
 	beego.Router("/meetingroom", &controllers.IndexController{}, "*:MeetingroomCalendar")
+	beego.Router("/meetingroom/searchcalendar", &controllers.IndexController{}, "*:SearchCalendar")
+
 	//车辆预定日程
 	beego.Router("/car", &controllers.IndexController{}, "*:GetCarCalendar")
 	//订餐
@@ -284,6 +286,23 @@ func init() {
 	beego.Router("/project/product/search", &controllers.SearchController{}, "get:SearchProjProducts")
 	//搜索某个项目——没意义
 	beego.Router("/projects/search", &controllers.SearchController{}, "get:SearchProjects")
+
+	//********gante
+	//项目进度甘特图
+	beego.Router("/projectgant", &controllers.ProjGantController{}, "get:Get")
+	//数据填充
+	// beego.Router("/projectgant/getprojgants", &controllers.ProjGantController{}, "get:GetProjGants")
+	//添加项目进度
+	beego.Router("/projectgant/addprojgant", &controllers.ProjGantController{}, "post:AddProjGant")
+	//导入项目进度数据
+	beego.Router("/projectgant/importprojgant", &controllers.ProjGantController{}, "post:ImportProjGant")
+
+	//修改项目进度
+	beego.Router("/projectgant/updateprojgant", &controllers.ProjGantController{}, "post:UpdateProjGant")
+	//删除项目进度
+	beego.Router("/projectgant/deleteprojgant", &controllers.ProjGantController{}, "post:DeleteProjGant")
+	//关闭项目进度
+	beego.Router("/projectgant/closeprojgant", &controllers.ProjGantController{}, "post:CloseProjGant")
 
 	//附件下载"/attachment/*", &controllers.AttachController{}
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
