@@ -71,10 +71,10 @@ func (c *SearchController) SearchProduct() { //search用的是get方法
 		Pdfslice := make([]PdfLink, 0)
 		Articleslice := make([]ArticleContent, 0)
 		for _, w := range products {
-			Url, _, err := GetUrlPath(w.ProjectId)
-			if err != nil {
-				beego.Error(err)
-			}
+			// Url, _, err := GetUrlPath(w.ProjectId)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
 			//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
 			//循环成果
 			//每个成果取到所有附件
@@ -105,13 +105,13 @@ func (c *SearchController) SearchProduct() { //search用的是get方法
 					attacharr := make([]AttachmentLink, 1)
 					attacharr[0].Id = v.Id
 					attacharr[0].Title = v.FileName
-					attacharr[0].Link = Url
+					// attacharr[0].Link = Url
 					Attachslice = append(Attachslice, attacharr...)
 				} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
 					pdfarr := make([]PdfLink, 1)
 					pdfarr[0].Id = v.Id
 					pdfarr[0].Title = v.FileName
-					pdfarr[0].Link = Url
+					// pdfarr[0].Link = Url
 					Pdfslice = append(Pdfslice, pdfarr...)
 				}
 			}

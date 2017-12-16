@@ -8,7 +8,7 @@ import (
 	"time"
 	// "os"
 	"strconv"
-	// "strings"
+	"strings"
 	// "path"
 )
 
@@ -152,8 +152,24 @@ func (c *ArticleController) ProvideArticles() {
 //根据id查看，查出文章
 func (c *ArticleController) GetArticle() {
 	id := c.Ctx.Input.Param(":id")
-	_, role := checkprodRole(c.Ctx)
-	c.Data["role"] = role
+	// _, role := checkprodRole(c.Ctx)
+	// c.Data["role"] = role
+	//1.取得客户端用户名
+	var uname, useridstring string
+	v := c.GetSession("uname")
+	// var role, userrole int
+	if v != nil {
+		uname = v.(string)
+		c.Data["Uname"] = v.(string)
+
+		user, err := models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+		c.Data["Uid"] = user.Id
+		// userrole = user.Role
+		useridstring = strconv.FormatInt(user.Id, 10)
+	}
 	// var categories []*models.ProjCategory
 	var err error
 	//id转成64为
@@ -171,6 +187,36 @@ func (c *ArticleController) GetArticle() {
 	if err != nil {
 		beego.Error(err)
 	}
+
+	//2.取得侧栏目录路径——路由id
+	//2.1 根据id取得路由
+	var projurls string
+	proj, err := models.GetProj(prod.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+	if proj.ParentId == 0 { //如果是项目根目录
+		projurls = "/" + strconv.FormatInt(proj.Id, 10)
+	} else {
+		projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+	}
+
+	// if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
+	// 	c.Data["RoleAdd"] = "true"
+	// } else {
+	// 	c.Data["RoleAdd"] = "false"
+	// }
+	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+		c.Data["RoleUpdate"] = "true"
+	} else {
+		c.Data["RoleUpdate"] = "false"
+	}
+	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+		c.Data["RoleDelete"] = "true"
+	} else {
+		c.Data["RoleDelete"] = "false"
+	}
+	// c.Data["productid"] = prod.Uid//文章作者id
 	c.Data["article"] = Article
 	c.Data["product"] = prod
 	c.TplName = "article.tpl"
@@ -178,6 +224,18 @@ func (c *ArticleController) GetArticle() {
 
 //向某个侧栏id下添加文章
 func (c *ArticleController) AddArticle() {
+	//取得客户端用户名
+	v := c.GetSession("uname")
+	var user models.User
+	var err error
+	if v != nil {
+		uname := v.(string)
+		user, err = models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
 		beego.Error(err)
@@ -204,7 +262,7 @@ func (c *ArticleController) AddArticle() {
 			beego.Error(err)
 		}
 		//根据项目id添加成果code, title, label, principal, content string, projectid int64
-		Id, err := models.AddProduct(code, title, label, principal, "", pidNum)
+		Id, err := models.AddProduct(code, title, label, principal, "", user.Id, pidNum)
 		if err != nil {
 			beego.Error(err)
 		}

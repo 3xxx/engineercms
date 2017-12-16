@@ -40,7 +40,7 @@
           <ul class="nav navbar-nav navbar-right">
           <!-- <ul class="nav navbar-nav"> -->
               <li>
-                  <a href="/project">返回</a>
+                  <a href="/">返回</a>
               </li>
               <li>
                   <a href="/admin/user/detail">{{.Ip}}</a>

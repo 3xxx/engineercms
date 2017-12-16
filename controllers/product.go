@@ -80,8 +80,8 @@ func (c *ProdController) GetProjProd() {
 	}
 	// beego.Info(id)
 	c.Data["Id"] = id
-	_, role := checkprodRole(c.Ctx)
-	c.Data["role"] = role
+	// _, role := checkprodRole(c.Ctx)
+	// c.Data["role"] = role
 
 	//这里取到用户的权限
 	//添加权限POST
@@ -201,9 +201,8 @@ func (c *ProdController) GetProducts() {
 		// 	beego.Error(err)
 		// }
 		// beego.Info(Url)
-	} else {
-
-	}
+	} //else {
+	//}
 	//根据项目id取得所有成果
 	products, err := models.GetProducts(idNum)
 	if err != nil {
@@ -574,6 +573,18 @@ func (c *ProdController) ProvidesynchProducts() {
 
 //向某个侧栏id下添加成果——这个没用，用attachment里的addattachment
 func (c *ProdController) AddProduct() {
+	//取得客户端用户名
+	v := c.GetSession("uname")
+	var user models.User
+	var err error
+	if v != nil {
+		uname := v.(string)
+		user, err = models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
 	id := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
 	code := c.Input().Get("code")
@@ -589,7 +600,7 @@ func (c *ProdController) AddProduct() {
 		beego.Error(err)
 	}
 	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, pidNum)
+	_, err = models.AddProduct(code, title, label, principal, content, user.Id, pidNum)
 	if err != nil {
 		beego.Error(err)
 	}

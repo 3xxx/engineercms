@@ -425,11 +425,14 @@ func (c *RoleController) RolePermission() {
 	var err error
 	//取出项目目录的顶级
 	var nodesid, nodesids []string
+	// beego.Info(len(treenodearray))
 	if len(treenodearray) > 1 {
 		nodesids, err = highest(treenodearray, nodesid, 0)
 		if err != nil {
 			beego.Error(err)
 		}
+	} else {
+		nodesids = []string{"0"} //append(nodesids, "0")
 	}
 	// beego.Info(nodesids)
 	for _, v1 := range rolearray {
@@ -480,6 +483,10 @@ func (c *RoleController) RolePermission() {
 				} else {
 					projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
 				}
+				// beego.Info(v1)
+				// beego.Info(projurl)
+				// beego.Info(action)
+				// beego.Info(suf)
 				success = e.AddPolicy(v1, projurl, action, suf)
 			}
 		}
@@ -493,7 +500,9 @@ func (c *RoleController) RolePermission() {
 }
 
 //迭代查出最高级的树状目录
-func highest(nodeid []string, nodesid []string, i int) (nodesid1 []string, err error) {
+//nodesid是数组的序号
+//nodeid是节点号：0.0.1   0.0.1.0
+func highest(nodeid, nodesid []string, i int) (nodesid1 []string, err error) {
 	if i == 0 {
 		nodesid = append(nodesid, "0")
 	}

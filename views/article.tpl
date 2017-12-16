@@ -114,10 +114,11 @@
 
     //****编辑文章
     $("#updatearticle").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      if ({{.product.Uid}}==={{.Uid}}||{{.RoleUpdate}}=="true"){
       $("input#cid").remove();//文章id
       $("input#pid").remove();//项目目录id
       var th1="<input id='cid' type='hidden' name='cid' value='" +{{.article.Id}}+"'/>"
@@ -146,7 +147,11 @@
       $('#modalArticle').modal({
         show:true,
         backdrop:'static'
-        }); 
+      });
+    }else{
+        alert("权限不够！"+{{.Uid}});
+        return;
+      }
     })
 
     $(function(){
@@ -188,10 +193,8 @@
 
     // 删除文章
     $("#deletearticle").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+      if ({{.product.Uid}}==={{.Uid}}||{{.RoleUpdate}}=="true"){
+
       if(confirm("确定删除吗？一旦删除将无法恢复！")){
         $.ajax({
           type:"post",
@@ -203,6 +206,10 @@
             window.close();
           }
         });
+      }
+      }else{
+        alert("权限不够！"+{{.Uid}});
+        return;
       }  
     })
 </script>

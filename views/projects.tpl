@@ -21,28 +21,6 @@
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
 
-<style type="text/css"> 
-/*ul,li{line-height: 24px; list-style:none; font-size: 14px;}*/
-/*a{width:20px; height:10px; line-height: 4px; vertical-align: top; margin: 0px 0px 0 0; overflow: hidden; background:#f00; display:inline-block;}*/
-  /*body{ 
-    font-size:12px; 
-    font-family:"Courier New", Courier, monospace; 
-    letter-spacing:5px; 
-  } 
-  ul{ 
-    list-style:none; 
-  }*/ 
-  /*li{ */
-    /*width:130px; */
-    /*height:130px; */
-    /*line-height:130px; */
-    /*vertical-align:middle; */
-    /*text-align:center; */
-    /*float:left; */
-    /*margin-left:20px; */
-  /*}*/
-</style> 
-
 </head>
 
 

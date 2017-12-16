@@ -314,11 +314,11 @@
       }
     }
   }
-// var bb;
+
   function setAttachment(value,row,index){
     if (value){
       if (value.length==1){
-        attachUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
         return attachUrl;
       }else if(value.length==0){
                     
@@ -328,10 +328,11 @@
       }
     }
   }
+
   function setPdf(value,row,index){
     if (value){
       if (value.length==1){
-        pdfUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+        pdfUrl= '<a href="/pdf?id='+value[0].Id+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
         return pdfUrl;
       }else if(value.length==0){
                     
@@ -396,14 +397,14 @@
     articleUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-text-o"></i></a>';
       return articleUrl;
   }
-  //最后面弹出附件列表中用的
+  //最后面弹出附件列表中用的<a href="'+value+
   function setAttachlink(value,row,index){
-    attachUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+    attachUrl= '<a href="/attachment?id='+row.Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
       return attachUrl;
   }
-  //最后面弹出pdf列表中用的
+  //最后面弹出pdf列表中用的'&file='+value+
   function setPdflink(value,row,index){
-    pdfUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+    pdfUrl= '<a href="/pdf?id='+row.Id+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
       return pdfUrl;
   }  
 </script>

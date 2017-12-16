@@ -584,42 +584,41 @@
         alert("请不要勾选一个以上成果！");
         return;
       }
-      // alert(selectRow[0].Uid);
+      // alert(selectRow[0].Uid=={{.Uid}});
       // alert({{.Uid}});
-      if (selectRow[0].Uid!={{.Uid}}&&{{.RoleUpdate}}!="true"){
+      if (selectRow[0].Uid==={{.Uid}}||{{.RoleUpdate}}=="true"){
+      
+        if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+        var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Articlecontent[0]){
+        var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Pdflink[0]){
+        var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+        }
+        if (site){
+          alert("同步成果不允许！");
+          return;
+        }
+
+        $("input#cid").remove();
+        var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $("#prodcode3").val(selectRow[0].Code);
+        $("#prodname3").val(selectRow[0].Title);
+        $("#prodlabel3").val(selectRow[0].Label);
+        $("#prodprincipal3").val(selectRow[0].Principal);
+
+        $('#modalProdEditor').modal({
+        show:true,
+        backdrop:'static'
+        });
+
+      }else{
         alert("权限不够！"+selectRow[0].Uid);
         return;
       }
-
-      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Articlecontent[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Pdflink[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
-      }
-      if (site){
-        alert("同步成果不允许！");
-        return;
-      }
-      
-
-
-
-      $("input#cid").remove();
-      var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $("#prodcode3").val(selectRow[0].Code);
-      $("#prodname3").val(selectRow[0].Title);
-      $("#prodlabel3").val(selectRow[0].Label);
-      $("#prodprincipal3").val(selectRow[0].Principal);
-
-      $('#modalProdEditor').modal({
-      show:true,
-      backdrop:'static'
-      });
   })
 
   // 编辑成果附件——删除附件、文章或追加附件
@@ -639,10 +638,7 @@
       return;
       }
 
-      if (selectRow[0].Uid!={{.Uid}}&&{{.RoleDelete}}!="true"){
-        alert("权限不够！"+selectRow[0].Uid);
-        return;
-      }
+      if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
 
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
@@ -666,6 +662,12 @@
       show:true,
       backdrop:'static'
       });
+
+      }else{
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+
   })
 
   $(document).ready(function() {
@@ -774,10 +776,8 @@
         return false;
       }
      //问题：如果多选，而其中有自己的，也有自己不具备权限的********
-      if (selectRow[0].Uid!={{.Uid}}&&{{.RoleDelete}}!="true"){
-        alert("权限不够！"+selectRow[0].Uid);
-        return;
-      }
+      if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
+        
 
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
@@ -817,6 +817,11 @@
             });
           }
         });
+      }
+
+      }else{
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
       }  
   })
 

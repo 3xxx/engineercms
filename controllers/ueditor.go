@@ -145,7 +145,7 @@ func (c *UeditorController) ControllerUE() {
 		if h != nil {
 			//保存附件
 			path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
-			Url = Url + "/" + strconv.Itoa(year) + month.String() + "/"
+			Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 			err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 			if err != nil {
 				beego.Error(err)

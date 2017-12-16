@@ -158,14 +158,26 @@ func (c *UserController) User() {
 func (c *UserController) View() {
 	// c.Data["IsCategory"] = true
 	// c.TplName = "category.tpl"
-	c.Data["IsLogin"] = checkAccount(c.Ctx)
+	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//2.取得客户端用户名
 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	v := c.GetSession("uname")
 	if v != nil {
-		c.Data["Uname"] = v.(string)
+		c.Data["Username"] = v.(string)
 	}
+
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	// c.Data["Username"] = username
+
 	// ck, err := c.Ctx.Request.Cookie("uname")
 	// if err != nil {
 	// 	beego.Error(err)
@@ -312,11 +324,13 @@ func (c *UserController) GetUserByUsername() {
 	_, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		c.Data["IsAdmin"] = true
-	} else if role <= 1 && role > 5 {
+	} else if role > 1 && role < 5 {
+		// beego.Info(role)
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
 		c.Data["IsLogin"] = false
+		// beego.Info(role)
 	}
 
 	// c.Data["IsProject"] = true
@@ -332,7 +346,7 @@ func (c *UserController) GetUserByUsername() {
 	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
-		c.Data["Uname"] = v.(string)
+		c.Data["Username"] = v.(string)
 	}
 	if uname == "" {
 		route := c.Ctx.Request.URL.String()
@@ -341,6 +355,16 @@ func (c *UserController) GetUserByUsername() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
+	// 	username, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// 	c.Data["IsAdmin"] = true
+	// } else if role > 1 && role < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	// uname := v.(string) //ck.Value
 	// 4.取出用户的权限等级
 	// role, _ := checkRole(c.Ctx) //login里的
@@ -363,6 +387,20 @@ func (c *UserController) GetUserByUsername() {
 
 //用户个人数据，填充table，以便编辑
 func (c *UserController) Usermyself() {
+	_, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	// c.Data["Username"] = username
+	// c.Data["IsIndex"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
 	//4.取得客户端用户名
 	var uname string
 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)

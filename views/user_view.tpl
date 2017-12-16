@@ -103,7 +103,7 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">昵称</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Nickname"></div>
+                  <input type="text" class="form-control" id="Nickname"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">密码</label>
@@ -118,22 +118,22 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">邮箱</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Email"></div>
+                  <input type="text" class="form-control" id="Email"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">部门</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Department"></div>
+                  <input type="text" class="form-control" id="Department"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">科室</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Secoffice"></div>
+                  <input type="text" class="form-control" id="Secoffice"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">IP</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="Ip"></div>
+                  <input type="text" class="form-control" id="Ip"></div>
               </div>
               
               <div class="form-group must">
@@ -311,11 +311,11 @@
     return index+1
   }
 
-  function localDateFormatter(value) {
-    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
-  }
-  // 改变点击行颜色
-  $(function(){
+    function localDateFormatter(value) {
+      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    }
+    // 点击行显示角色
+    $(function(){
      // $("#table").bootstrapTable('destroy').bootstrapTable({
      //     columns:columns,
      //     data:json
@@ -323,9 +323,82 @@
      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
          $(ele).addClass("info");
+         userid=row.Id;//全局变量
+         rowtitle=row.Nickname
+         $("#rowtitle").html("用户角色-"+rowtitle);
+         $("#details").show();
+         $('#table1').bootstrapTable('refresh', {url:'/admin/role/get/'+row.Id});
      });
-  });
+    });
+</script>
 
+<!-- 显示用户角色表 -->
+<div id="details" style="display:none">
+  <div class="row">
+    <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
+      <h3 id="rowtitle">角色表</h3>
+      <div id="toolbar1" class="btn-group">
+        <!-- <button type="button" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">保存修改</i>
+        </button> -->
+        <!-- <button type="button" data-name="editorButton" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
+        </button>
+        <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn btn-danger btn-sm">
+        <i class="fa fa-trash">删除</i>
+        </button> -->
+      </div>
+        <table id="table1"
+               data-toggle="table"
+               data-striped="true"
+               data-click-to-select="false"
+               data-page-list="[5, 25, 50, All]"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-width="10" data-checkbox="true" data-formatter="stateFormatter"></th>
+                <th data-formatter="index1">#</th>
+                <th data-field="Rolenumber">角色编码</th>
+                <th data-field="Rolename">角色名称</th>
+                <th data-align="center" data-formatter="StatusFormatter">状态</th>
+                <!-- <th data-field="domain_desc">所属域</th> -->
+                <!-- <th data-align="center"
+                    data-field="create_user">创建人</th> -->
+                <!-- <th data-align="center"
+                    data-field="Createtime" data-formatter="localDateFormatter">创建时间</th> -->
+                <!-- <th data-align="center"
+                    data-field="modify_user">修改人</th> -->
+                <!-- <th data-align="center"
+                    data-field="Updated" data-formatter="localDateFormatter">修改时间</th> -->
+                <!-- <th data-field="state-handle"
+                    data-align="center"
+                    data-formatter="RoleObj.formatter">资源操作</th> -->
+            </tr>
+            </thead>
+        </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+      function stateFormatter(value, row, index) {
+        if (row.Level === "1") {
+            return {
+                disabled: true,
+                checked: true
+            }
+        }else{
+          return {
+            disabled: true
+          }
+        }
+        return value;
+      }
+      function StatusFormatter(value, row, index) {
+        // alert(row.Status);
+        if (row.Status == "0") {
+            return '正常';
+        }else{
+          return '失效';
+        }
+      }
 </script>
 
 </div>
