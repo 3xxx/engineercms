@@ -175,15 +175,37 @@ func GetProj(id int64) (proj Project, err error) {
 // 	}
 // 	return proj, err
 // }
+
 //根据id查出所有子孙，用ParentIdPath
 //逻辑错误：110-210-310包含了10？？？？
+//20180107完美解决这个问题。同ProdModel.go中GetProjProducts一致
+//通过Id为projid，查出本级
+//parentid是projid，查出二级
+//parentidpath包含projid-，查出三级，以及往下
+//差点按照无闻的视频，将parentidpath存成$id1#$id2#$id3#
+//存：parentidpath="$"+id1+"#"
+//查：__contains,"$"+id1+"#"
+//取：stings.replace(stings.replace(parentidpath,"#",","-1),"$",""-1)
+//输出：strings.split(上面的，",")
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
+	idstring := strconv.FormatInt(id, 10)
+	cond := orm.NewCondition()
+	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring+"-").Or("ParentId", id)
 	o := orm.NewOrm()
+	//先查出所有项目parent id path中包含id的数据
 	qs := o.QueryTable("Project")
-	_, err = qs.Filter("ParentIdPath__contains", id).All(&projects)
+	qs = qs.SetCond(cond1)
+
+	_, err = qs.All(&projects)
 	if err != nil {
 		return nil, err
 	}
+
+	// qs := o.QueryTable("Project")
+	// _, err = qs.Filter("ParentIdPath__contains", id).All(&projects)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	return projects, err
 }
 

@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"time"
 	// "os"
+	"regexp"
 	"strconv"
 	"strings"
 	// "path"
@@ -201,6 +202,72 @@ func (c *ArticleController) GetArticle() {
 		projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
 	}
 
+	//上一篇和下一篇
+	//根据项目id取得所有成果
+	products, err := models.GetProducts(proj.Id)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	// Attachslice := make([]AttachmentLink, 0)
+	Articles := make([]*models.Article, 0)
+	for _, w := range products {
+		//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
+		//循环成果
+		//每个成果取到所有附件
+		//一个附件则直接打开/下载；2个以上则打开模态框
+		//取得文章
+		Articles1, err := models.GetArticles(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		Articles = append(Articles, Articles1...)
+	}
+
+	// count := len(Articles)
+	// count1 := strconv.Itoa(count)
+	// count2, err := strconv.ParseInt(count1, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
+	// if p == "" {//这里是用于在页面打开pdf附件的时候，显示地址是/pdf?id=628，id是附件id
+	// var p1 string
+	for i, v := range Articles {
+		if v.Id == idNum { //idnumb是附件的id
+			// p1 = strconv.Itoa(i + 1)
+			// PdfLink = Url + "/" + v.FileName
+			//上一篇
+			if i > 0 {
+				c.Data["NextArticleId"] = strconv.FormatInt(Articles[i-1].Id, 10)
+				//由文章id取得prodtitle
+				//查出成果编号，名称和作者
+				articleprod, err := models.GetProd(Articles[i-1].ProductId)
+				if err != nil {
+					beego.Error(err)
+				}
+				c.Data["NextArticleTitle"] = articleprod.Title
+				c.Data["Next"] = true
+			} else {
+				c.Data["Next"] = false
+			}
+			if i < len(Articles)-1 {
+				c.Data["PreArticleId"] = strconv.FormatInt(Articles[i+1].Id, 10)
+				//由文章id取得prodtitle
+				//查出成果编号，名称和作者
+				articleprod, err := models.GetProd(Articles[i+1].ProductId)
+				if err != nil {
+					beego.Error(err)
+				}
+				c.Data["PreArticleTitle"] = articleprod.Title
+				c.Data["Pre"] = true
+			} else {
+				c.Data["Pre"] = false
+			}
+			break
+		}
+	}
+
 	// if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
 	// 	c.Data["RoleAdd"] = "true"
 	// } else {
@@ -217,9 +284,21 @@ func (c *ArticleController) GetArticle() {
 		c.Data["RoleDelete"] = "false"
 	}
 	// c.Data["productid"] = prod.Uid//文章作者id
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		beego.Error(err)
+	}
+	if matched == true {
+		// beego.Info("移动端~")
+		c.TplName = "marticle.tpl"
+	} else {
+		// beego.Info("电脑端！")
+		c.TplName = "article.tpl"
+	}
 	c.Data["article"] = Article
 	c.Data["product"] = prod
-	c.TplName = "article.tpl"
+
 }
 
 //向某个侧栏id下添加文章
@@ -244,153 +323,163 @@ func (c *ArticleController) AddArticle() {
 	var news string
 	var cid int64
 
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		// id := c.Ctx.Input.Param(":id")
-		pid := c.Input().Get("pid")
-		code := c.Input().Get("code")
-		title := c.Input().Get("title")
-		subtext := c.Input().Get("subtext")
-		label := c.Input().Get("label")
-		principal := c.Input().Get("principal")
-		content := c.Input().Get("content")
-		// c.Data["Id"] = id
-		// beego.Info(subtext)
-		//id转成64为
-		pidNum, err := strconv.ParseInt(pid, 10, 64)
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// id := c.Ctx.Input.Param(":id")
+	pid := c.Input().Get("pid")
+	code := c.Input().Get("code")
+	title := c.Input().Get("title")
+	subtext := c.Input().Get("subtext")
+	label := c.Input().Get("label")
+	principal := c.Input().Get("principal")
+	relevancy := c.Input().Get("relevancy")
+	content := c.Input().Get("content")
+	// c.Data["Id"] = id
+	// beego.Info(subtext)
+	//id转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据项目id添加成果code, title, label, principal, content string, projectid int64
+	Id, err := models.AddProduct(code, title, label, principal, "", user.Id, pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//*****添加成果关联信息
+	if relevancy != "" {
+		_, err = models.AddRelevancy(Id, relevancy)
 		if err != nil {
 			beego.Error(err)
 		}
-		//根据项目id添加成果code, title, label, principal, content string, projectid int64
-		Id, err := models.AddProduct(code, title, label, principal, "", user.Id, pidNum)
-		if err != nil {
-			beego.Error(err)
-		}
+	}
+	//*****添加成果关联信息结束
 
-		//成果写入postmerit表，准备提交merit*********
-		Number, Name, DesignStage, Section, err := GetProjTitleNumber(pidNum)
-		if err != nil {
-			beego.Error(err)
-		}
-		catalog.ProjectNumber = Number
-		catalog.ProjectName = Name
-		catalog.DesignStage = DesignStage
-		catalog.Section = Section
+	//成果写入postmerit表，准备提交merit*********
+	Number, Name, DesignStage, Section, err := GetProjTitleNumber(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	catalog.ProjectNumber = Number
+	catalog.ProjectName = Name
+	catalog.DesignStage = DesignStage
+	catalog.Section = Section
 
-		catalog.Tnumber = code
-		catalog.Name = title
-		catalog.Count = 1
-		catalog.Drawn = meritbasic.Nickname
-		catalog.Designd = meritbasic.Nickname
-		catalog.Author = meritbasic.Username
-		catalog.Drawnratio = 0.4
-		catalog.Designdratio = 0.4
+	catalog.Tnumber = code
+	catalog.Name = title
+	catalog.Count = 1
+	catalog.Drawn = meritbasic.Nickname
+	catalog.Designd = meritbasic.Nickname
+	catalog.Author = meritbasic.Username
+	catalog.Drawnratio = 0.4
+	catalog.Designdratio = 0.4
 
-		const lll = "2006-01-02"
-		convdate := time.Now().Format(lll)
-		t1, err := time.Parse(lll, convdate) //这里t1要是用t1:=就不是前面那个t1了
-		if err != nil {
-			beego.Error(err)
-		}
-		catalog.Datestring = convdate
-		catalog.Date = t1
+	const lll = "2006-01-02"
+	convdate := time.Now().Format(lll)
+	t1, err := time.Parse(lll, convdate) //这里t1要是用t1:=就不是前面那个t1了
+	if err != nil {
+		beego.Error(err)
+	}
+	catalog.Datestring = convdate
+	catalog.Date = t1
 
-		catalog.Created = time.Now() //.Add(+time.Duration(hours) * time.Hour)
-		catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+	catalog.Created = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+	catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 
-		catalog.Complex = 1
-		catalog.State = 0
-		//生成提交merit的清单结束*******************
+	catalog.Complex = 1
+	catalog.State = 0
+	//生成提交merit的清单结束*******************
 
-		//将文章添加到成果id下
-		aid, err := models.AddArticle(subtext, content, Id)
+	//将文章添加到成果id下
+	aid, err := models.AddArticle(subtext, content, Id)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		//生成提交merit的清单*******************
+		cid, err, news = models.AddPostMerit(catalog)
 		if err != nil {
 			beego.Error(err)
 		} else {
-			//生成提交merit的清单*******************
-			cid, err, news = models.AddPostMerit(catalog)
+			link1 := "/project/product/article/" + strconv.FormatInt(aid, 10) //附件链接地址
+			_, err = models.AddCatalogLink(cid, link1)
 			if err != nil {
 				beego.Error(err)
-			} else {
-				link1 := "/project/product/article/" + strconv.FormatInt(aid, 10) //附件链接地址
-				_, err = models.AddCatalogLink(cid, link1)
-				if err != nil {
-					beego.Error(err)
-				}
-				data := news
-				c.Ctx.WriteString(data)
 			}
-			//生成提交merit的清单结束*******************
-			c.Data["json"] = "ok"
-			c.ServeJSON()
+			data := news
+			c.Ctx.WriteString(data)
 		}
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+		//生成提交merit的清单结束*******************
+		c.Data["json"] = "ok"
+		c.ServeJSON()
 	}
+	// } else {
+	// route := c.Ctx.Request.URL.String()
+	// c.Data["Url"] = route
+	// c.Redirect("/roleerr?url="+route, 302)
+	// c.Redirect("/roleerr", 302)
+	// return
+	// }
 }
 
 //向成果id下添加文章——这个没用，上面那个已经包含了
 func (c *ArticleController) AddProdArticle() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		// id := c.Ctx.Input.Param(":id")
-		pid := c.Input().Get("pid")
-		subtext := c.Input().Get("subtext")
-		content := c.Input().Get("content")
-		//id转成64为
-		pidNum, err := strconv.ParseInt(pid, 10, 64)
-		if err != nil {
-			beego.Error(err)
-		}
-		//将文章添加到成果id下
-		_, err = models.AddArticle(subtext, content, pidNum)
-		if err != nil {
-			beego.Error(err)
-		} else {
-			c.Data["json"] = "ok"
-			c.ServeJSON()
-		}
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// id := c.Ctx.Input.Param(":id")
+	pid := c.Input().Get("pid")
+	subtext := c.Input().Get("subtext")
+	content := c.Input().Get("content")
+	//id转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
 	}
+	//将文章添加到成果id下
+	_, err = models.AddArticle(subtext, content, pidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+	// } else {
+	// route := c.Ctx.Request.URL.String()
+	// c.Data["Url"] = route
+	// c.Redirect("/roleerr?url="+route, 302)
+	// // c.Redirect("/roleerr", 302)
+	// return
+	// }
 }
 
 //编辑 成果id
 func (c *ArticleController) UpdateArticle() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		// id := c.Ctx.Input.Param(":id")
-		pid := c.Input().Get("pid")
-		subtext := c.Input().Get("subtext")
-		content := c.Input().Get("content")
-		//id转成64为
-		pidNum, err := strconv.ParseInt(pid, 10, 64)
-		if err != nil {
-			beego.Error(err)
-		}
-		//将文章添加到成果id下
-		err = models.UpdateArticle(pidNum, subtext, content)
-		if err != nil {
-			beego.Error(err)
-		} else {
-			c.Data["json"] = "ok"
-			c.ServeJSON()
-		}
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// id := c.Ctx.Input.Param(":id")
+	pid := c.Input().Get("pid")
+	subtext := c.Input().Get("subtext")
+	content := c.Input().Get("content")
+	//id转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
 	}
+	//将文章添加到成果id下
+	err = models.UpdateArticle(pidNum, subtext, content)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+	// } else {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
 }
 
 //根据文章id删除文章_没删除文章中的图片

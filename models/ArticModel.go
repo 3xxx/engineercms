@@ -14,6 +14,7 @@ type Article struct {
 	Subtext   string    `orm:"sie(20)"`
 	Content   string    `orm:"sie(5000)"`
 	ProductId int64     `orm:"null"`
+	Views     int64     `orm:"default(0)"`
 	Created   time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
@@ -92,12 +93,20 @@ func GetArticles(pid int64) (Articles []*Article, err error) {
 }
 
 //根据文章id取得文章
-func GetArticle(id int64) (Artic Article, err error) {
+func GetArticle(id int64) (Artic *Article, err error) {
 	o := orm.NewOrm()
+	article := new(Article)
 	qs := o.QueryTable("Article") //这个表名AchievementTopic需要用驼峰式，
-	err = qs.Filter("id", id).One(&Artic)
+	err = qs.Filter("id", id).One(article)
 	if err != nil {
 		return Artic, err
 	}
-	return Artic, err
+
+	article.Views++
+	_, err = o.Update(article)
+	if err != nil {
+		return article, err
+	}
+
+	return article, err
 }

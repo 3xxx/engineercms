@@ -127,7 +127,7 @@ func GetProjProducts(id int64) (products []*Product, err error) {
 	projects := make([]*Project, 0)
 
 	cond := orm.NewCondition()
-	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring)
+	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring+"-").Or("ParentId", id)
 	o := orm.NewOrm()
 	//先查出所有项目parent id path中包含id的数据
 	qs := o.QueryTable("Project")

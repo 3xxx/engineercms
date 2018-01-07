@@ -1752,7 +1752,7 @@
             accept: null/*{
                 title: 'Images',
                 extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
+                mimeTypes: 'image/gif,image/jpeg,image/png,image/jpg,image/bmp'
             }*/
         });
     

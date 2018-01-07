@@ -32,6 +32,22 @@
   <!-- <script type="text/javascript" src="/static/js/webuploader.js"></script> -->
   <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
   <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+  
+  <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+  <style type="text/css">
+  /*模态框效果*/
+    /*.modal-header {*/
+      /*background: #00FF00;*/
+      /*min-height: 16.42857143px;
+      padding: 15px;
+      border-bottom: 1px solid #e5e5e5;*/
+    /*}*/
+    /*.col-sm-1 input[type=checkbox]{
+　　display: inline-block;
+　　vertical-align: middle;
+　　margin-bottom: 2px; 
+    }*/
+  </style>
 </head>
 
 <body>
@@ -55,9 +71,9 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
-        <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
+        <!-- <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
         <i class="fa fa-refresh">同步</i>
-        </button>
+        </button> -->
 </div>
 <!--data-click-to-select="true" -->
 <table id="table0" 
@@ -85,16 +101,17 @@
         <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
         <th data-width="10" data-radio="true"></th>
         <th data-formatter="index1">#</th>
-        <!-- <th data-field="Id">编号</th> -->
-        <th data-field="Code">编号</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Label" data-formatter="setLable">关键字</th>
-        <th data-field="Principal">设计</th>
-        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents">文章</th>
-        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents">附件</th>
-        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-        <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
+        <!-- <th data-field="Id">编号</th> data-visible="false" -->
+        <th data-field="Code" data-halign="center">编号</th>
+        <th data-field="Title" data-halign="center">名称</th>
+        <th data-field="Label" data-formatter="setLable" data-halign="center">关键字</th>
+        <th data-field="Principal" data-halign="center">设计</th>
+        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents" data-halign="center">文章</th>
+        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-halign="center">附件</th>
+        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-halign="center">PDF</th>
+        <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false">建立时间</th>
+        <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center">更新时间</th>
+        <th data-field="Relevancy" data-formatter="RelevFormatter" events="actionRelevancy" data-halign="center">关联</th>
       </tr>
     </thead>
 </table>
@@ -123,6 +140,34 @@
   function localDateFormatter(value) {
     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }
+
+  function RelevFormatter(value) {
+    if (value){
+      if (value.length==1){//'<a href="/project/product/article/'
+        var array=value[0].Relevancy.split(",")
+        var relevarray = new Array() 
+        for (i=0;i<array.length;i++)
+        {
+          relevarray[i]=array[i];
+        }
+        return relevarray.join(",");
+        // articleUrl= '<a href="'+value[0].Link+'/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
+        // return articleUrl;
+      }else if(value.length==0){
+                    
+      }else if(value.length>1){
+        var relevarray = new Array()
+        for (i=0;i<value.length;i++)
+          {
+            relevarray[i]=value[i].Relevancy;
+          }
+        return relevarray.join(",");
+        // articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
+        // return articleUrl;
+      }
+    }
+  }
+
   function setCode(value,row,index){
     return "<a href='/project/product/attachment/"+row.Id+"'>" + value + "</a>";
   }
@@ -325,16 +370,39 @@
     $btn = $('#ctlBtn');
     state = 'pending';
     // $('#modalTable').on('shown.bs.modal',function(e){
+      var allMaxSize = 100;
       var uploader=WebUploader.create({
         // 不压缩image
         resize: false,
+        fileSingleSizeLimit: 10*1024*1024,//限制大小10M，单文件
+        fileSizeLimit: allMaxSize*1024*1024,//限制大小10M，所有被选文件，超出选择不上
         // swf文件路径
         swf: '/static/fex-team-webuploader/dist/Uploader.swf',
         // 文件接收服务端。
         server: '/project/product/addattachment',
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#picker'
+        pick: '#picker',
+        // 只允许选择规定文件类型。
+        accept: {
+            title: 'Images',
+            extensions: 'png,jpg,jpeg,gif,bmp,flv,swf,mkv,avi,rm,rmvb,mpeg,mpg,ogg,ogv,mov,wmv,mp4,webm,mp3,wav,mid,rar,zip,tar,gz,7z,bz2,cab,iso,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,md,xml,dwg,dgn',
+            mimeTypes: '*/*'
+        }
+      });
+      /**
+     * 验证文件格式以及文件大小
+     */
+      uploader.on("error",function (type){
+        if (type == "F_DUPLICATE") {
+              alert("请不要重复选择文件！");
+         } else if (type == "Q_EXCEED_SIZE_LIMIT"){
+              alert("所选附件总大小不可超过" + allMaxSize + "M！多分几次传吧！");
+         }else if (type=="Q_TYPE_DENIED"){
+          alert("请上传图片、视频、文档、图纸、压缩等格式文件");
+        }else if(type=="F_EXCEED_SIZE"){
+          alert("单个文件大小不能超过10M");
+        }
       });
 
       // 当有文件添加进来的时候
@@ -856,7 +924,7 @@
   <!-- 批量上传 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -870,7 +938,7 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel" name="prodlabel"></div>
+                  <input type="tel" class="form-control" id="prodlabel" name="prodlabel" placeholder="以英文,号分割"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
@@ -919,7 +987,7 @@
 <!-- 多附件 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable1">
-      <div class="modal-dialog">
+      <div class="modal-dialog"  id="modalDialog1">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -942,7 +1010,7 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel1" name="prodlabel1"></div>
+                  <input type="tel" class="form-control" id="prodlabel1" name="prodlabel1" placeholder="以英文,号分割"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
@@ -976,7 +1044,7 @@
   <!-- 添加文章 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable2">
-      <div class="modal-dialog" style="width: 100%">
+      <div class="modal-dialog" style="width: 100%" id="modalDialog2">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1004,12 +1072,23 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel2" name="prodlabel2"></div>
+                  <input type="tel" class="form-control" id="prodlabel2" name="prodlabel2" placeholder="以英文,号分割"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="prodprincipal2" name="prodprincipal2"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">关联文件</label>
+                <div class="col-sm-1">
+                <!-- <form name="myform">  -->
+                  <input type="checkbox" name="box" id="box" value="1" onclick="station_select()">
+                </div>
+                <div class="col-sm-6">
+                  <input type="tel" class="form-control" id="relevancy" name="relevancy" disabled="true" placeholder="输入文件编号，以英文,号分割">
+                  <!-- <input type="text" name="aa" id="text">  -->
+                <!-- </form> --></div>
               </div>
             </div>
             <label>文章正文:</label>
@@ -1028,7 +1107,7 @@
   <!-- 文章列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalarticle">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog3">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1073,7 +1152,7 @@
   <!-- 除了**pdf**之外的附件列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalattach">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog4">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1118,7 +1197,7 @@
   <!-- pdf附件列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalpdf">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog5">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1163,7 +1242,7 @@
   <!-- 编辑成果名称等信息 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalProdEditor">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog6">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1186,7 +1265,7 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel3" name="prodlabel3"></div>
+                  <input type="tel" class="form-control" id="prodlabel3" name="prodlabel3" placeholder="以英文,号分割"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
@@ -1206,7 +1285,7 @@
   <!-- 编辑成果附件 删除附件或追加附件-->
   <div class="form-horizontal">
     <div class="modal fade" id="modalAttachEditor">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog7">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1267,7 +1346,9 @@
 //实例化编辑器
     var ue = UE.getEditor('container', {
       autoHeightEnabled: true,
-      autoFloatEnabled: true
+      autoFloatEnabled: false,
+      // topOffset:100,
+      initialFrameWidth:'100%'
     });
   /* 2.传入参数表,添加到已有参数表里 通过携带参数，实现不同的页面使用不同controllers*/
     ue.ready(function () {
@@ -1289,13 +1370,14 @@
     var subtext = $('#subtext1').val();
     var prodprincipal = $('#prodprincipal2').val();
     var prodlabel = $('#prodlabel2').val();
+    var relevancy = $('#relevancy').val();
     var html = ue.getContent();
     // $('#myModal').on('hide.bs.modal', function () {  
     if (prodname&&prodcode){  
       $.ajax({
         type:"post",
         url:"/project/product/addarticle",
-        data: {pid:projectid,code:prodcode,title:prodname,subtext:subtext,label:prodlabel,content:html,principal:prodprincipal},//父级id
+        data: {pid:projectid,code:prodcode,title:prodname,subtext:subtext,label:prodlabel,content:html,principal:prodprincipal,relevancy:relevancy},//父级id
         success:function(data,status){
           alert("添加“"+data+"”成功！(status:"+status+".)");
           $('#modalTable2').modal('hide');
@@ -1426,6 +1508,28 @@
         }
         return rows;
     }
+
+    //勾选后输入框可用
+
+    function station_select(){ 
+      if(box.checked){ 
+        document.getElementById("relevancy").disabled=false; 
+      } else{ 
+        document.getElementById("relevancy").disabled=true; 
+      } 
+    }
+
+    $(document).ready(function(){
+        $("#modalDialog").draggable();//为模态对话框添加拖拽
+        $("#modalDialog1").draggable();
+        $("#modalDialog2").draggable();
+        $("#modalDialog3").draggable();
+        $("#modalDialog4").draggable();
+        $("#modalDialog5").draggable();
+        $("#modalDialog6").draggable();
+        $("#modalDialog7").draggable();
+        $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
+    })
 </script>
 
 </body>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
-  <title>EngineerCMS</title>
+  <title>{{.ProjectTile}}——大事记</title>
   <meta name="author" content="Jake Rocheleau">
   <link rel="stylesheet" type="text/css" media="all" href="/static/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" media="all" href="/static/css/timeline.css">
@@ -253,7 +253,7 @@ var month;//=d.getMonth() + 1;
 					var _timeline_body_p1_ = $("<p></p>").text(tl["content"]);
 					_timeline_body_.append(_timeline_body_p1_);
 					var _timeline_body_p2_ = $("<p></p>");
-					_timeline_body_p2_.append($("<img/>").attr("src",tl["image"]));
+					_timeline_body_p2_.append($("<img/>").attr("src","/"+tl["image"]));
 					_timeline_body_.append(_timeline_body_p1_);
 					_timeline_body_.append(_timeline_body_p2_);
 
@@ -281,7 +281,12 @@ var month;//=d.getMonth() + 1;
       	  	loadData(i);
       	  	i=i+1;
       		}
-				}
+				}else if({{.Count}}==i*2-1){//当count是单数的时候
+          loadData(i);
+          i=i+1;
+        }
+
+        // alert("第一个"+{{.Count}}+i)
     	});
   	}
 
@@ -300,10 +305,12 @@ var month;//=d.getMonth() + 1;
         		loadData(i);
         		i=i+1;
       		}
-      	}
+      	}else if({{.Count}}==i*2-1){
+          loadData(i);
+          i=i+1;
+        }
     	})
   	}
-
   	loadData(i);
   	tcScroll();
   	i=i+1;

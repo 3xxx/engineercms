@@ -24,7 +24,7 @@
     <hr/>
   </div>
   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-    <h4>Copyright © 2016-2017 EngineerCMS</h4>
+    <h4>Copyright © 2016-2018 EngineerCMS</h4>
     <p>
       网站由 <i class="user icon"></i>
       <a target="_blank" href="https://github.com/3xxx">@3xxx</a>

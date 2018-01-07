@@ -195,6 +195,7 @@ func (c *UserController) View() {
 	c.TplName = "admin_user_view.tpl"
 }
 
+//添加用户
 func (c *UserController) AddUser() {
 	// u := m.User{}
 	// if err := c.ParseForm(&u); err != nil {
@@ -205,11 +206,18 @@ func (c *UserController) AddUser() {
 	user.Username = c.Input().Get("username")
 	user.Nickname = c.Input().Get("nickname")
 
+	Pwd1 := c.Input().Get("password")
 	md5Ctx := md5.New()
-	md5Ctx.Write([]byte(c.Input().Get("password")))
+	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
-	user.Repassword = c.Input().Get("repassword")
+	// user.Repassword = c.Input().Get("repassword")
+	// Pwd1=c.Input().Get("password")
+	// 				md5Ctx := md5.New()
+	// 				md5Ctx.Write([]byte(Pwd1))
+	// 				cipherStr := md5Ctx.Sum(nil)
+	// 				user.Password = hex.EncodeToString(cipherStr)
+
 	user.Email = c.Input().Get("email")
 	user.Department = c.Input().Get("department")
 	user.Secoffice = c.Input().Get("secoffice")

@@ -88,7 +88,8 @@
         <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents">文章</th>
         <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents">附件</th>
         <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
+        <!-- <th data-field="Created" data-formatter="localDateFormatter">建立时间</th> -->
+        <th data-field="Updated" data-visible="false" data-formatter="localDateFormatter">更新时间</th>
         <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
       </tr>
     </thead>

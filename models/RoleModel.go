@@ -12,6 +12,8 @@ import (
 	"github.com/astaxie/beego/orm"
 	// "github.com/astaxie/beego/validation"
 	// . "github.com/beego/admin/src/lib"
+	// "github.com/casbin/beego-orm-adapter"
+	// "github.com/casbin/casbin"
 )
 
 //用户表
@@ -162,3 +164,14 @@ func DeleteUserRole(uid, rid int64) error {
 	// }
 	return err
 }
+
+//由角色id、action和项目id，取得所有的路径
+// func GetPermissions(roleid, projectid, action) (paths []*CasbinRule, err error) {
+// 	o := orm.NewOrm()
+// 	qs := o.QueryTable("casbin_rule")
+// 	_, err = qs.Filter("PType", "p").Filter("v0", roleid).Filter("v1__contains", projectid).Filter("v2", action).All(&paths)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return roles, err
+// }

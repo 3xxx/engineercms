@@ -859,7 +859,7 @@ func (c *ProjController) AddCalendar() {
 	start := c.Input().Get("start")
 	end := c.Input().Get("end")
 	color := c.Input().Get("color")
-	url := "/" + c.Input().Get("url")
+	url := c.Input().Get("url") //"/" +
 	allday1 := c.Input().Get("allday")
 	var allday bool
 	if allday1 == "true" {
@@ -967,7 +967,7 @@ func (c *ProjController) UpdateCalendar() {
 	start := c.Input().Get("start")
 	end := c.Input().Get("end")
 	color := c.Input().Get("color")
-	url := "/" + c.Input().Get("url")
+	url := c.Input().Get("url") //"/" +
 	memorabilia1 := c.Input().Get("memorabilia")
 	var memorabilia bool
 	if memorabilia1 == "true" {

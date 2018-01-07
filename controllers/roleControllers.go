@@ -4,9 +4,11 @@ import (
 	// "encoding/json"
 	m "engineercms/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	"github.com/casbin/beego-orm-adapter"
 	"github.com/casbin/casbin"
 	_ "github.com/mattn/go-sqlite3"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -39,6 +41,17 @@ type Tree struct {
 	Id    int64  `json:"id"`
 	Nodes []Tree `json:"nodes"`
 }
+
+// type CasbinRule struct {
+// 	Id    int
+// 	PType string
+// 	V0    string
+// 	V1    string
+// 	V2    string
+// 	V3    string
+// 	V4    string
+// 	V5    string
+// }
 
 // type RoleController struct {
 // 	models models.RoleModel
@@ -206,7 +219,7 @@ func (c *RoleController) Get() {
 		// if err != nil {
 		// 	beego.Error(err)
 		// }
-		//查出用户的角色，处于勾选状态
+		//查出用户的角色，处于勾选状态，来自casbin\rbac_api.go
 		userroles := e.GetRolesForUser(id)
 		userrole := make([]Userrole, 0)
 		var level string
@@ -382,6 +395,7 @@ func (c *RoleController) UserRole() {
 		// beego.Info(rule)
 		// e.AddPolicy(uid, v1)
 		e.AddGroupingPolicy(uid, v1)
+		//应该用AddRoleForUser()
 		// rule = make([]string, 0)
 	}
 	// a.SavePolicy(e.GetModel())//autosave默认是true
@@ -488,6 +502,7 @@ func (c *RoleController) RolePermission() {
 				// beego.Info(action)
 				// beego.Info(suf)
 				success = e.AddPolicy(v1, projurl, action, suf)
+				//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
 			}
 		}
 	}
@@ -527,6 +542,43 @@ func highest(nodeid, nodesid []string, i int) (nodesid1 []string, err error) {
 		nodesid, err = highest(nodeid, nodesid, i)
 	}
 	return nodesid, err
+}
+
+//查询角色所具有的权限对应的项目目录
+func (c *RoleController) GetRolePermission() {
+	roleid := c.GetString("roleid") //角色id
+	action := c.GetString("action")
+	projectid := c.GetString("projectid")
+	beego.Info(roleid)
+	beego.Info(action)
+	beego.Info(projectid)
+	myRes := e.GetPermissionsForUser(roleid)
+	beego.Info(myRes)
+	// 	2018/01/03 21:42:15 [I] [roleControllers.go:543] [[1 /25001/* POST .*] [1 /25001
+	// /* PUT .*] [1 /25001/* DELETE .*] [1 /25001/* GET .*] [1 /25001/25003/* GET (?i:
+	// PDF)] [1 /25001/25002/25013/* GET (?i:PDF)] [1 /25001/25002/25012/* GET (?i:PDF)
+	// ] [1 /25001/25002/25011/* GET (?i:PDF)] [1 /25001/* GET (?i:PDF)] [1 /25001/2500
+	// 4/* POST .*]]
+	// Permissions, err := models.GetPermissions(roleid,projectid,action)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	var paths []beegoormadapter.CasbinRule
+	o := orm.NewOrm()
+	qs := o.QueryTable("casbin_rule")
+	_, err := qs.Filter("PType", "p").Filter("v0", roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).All(&paths)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(paths)
+	var projids []string
+	for _, v1 := range paths {
+		projid := strings.Replace(v1.V1, "/*", "", -1)
+		projids = append(projids, path.Base(projid))
+	}
+	beego.Info(projids)
+	c.Data["json"] = projids
+	c.ServeJSON()
 }
 
 // swagger:operation POST /v1/auth/role/delete RoleController RoleController

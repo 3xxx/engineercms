@@ -188,6 +188,14 @@ func (c *WikiController) AddWiki() {
 	// uname, _ := checkprodRole(c.Ctx) //login里的
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
+	if role > 4 { //&& uname != category.Author
+		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	_, err := models.AddWikiOne(title, content, username)
 	if err != nil {
 		beego.Error(err)

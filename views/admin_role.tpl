@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <title>角色——权限分配</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Material Design Lite">
     
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -42,23 +42,24 @@
         <i class="fa fa-trash">删除</i>
         </button>
       </div>
-        <table id="table"
-               data-url="/admin/role/get/"
-               data-toggle="table"
-               data-striped="true"
-               data-toolbar="#toolbar1"
-               data-show-refresh="true"
-               data-show-toggle="true"
-               data-show-columns="true"
-               data-side-pagination="client"
-               data-pagination="true"
-               data-click-to-select="true"
-               data-page-size="5"
-               data-page-list="[5, 25, 50, All]"
-               data-search="false">
-            <thead>
-            <tr>
-                <th data-field="state" data-checkbox="true"></th>
+      <table id="table"
+        data-url="/admin/role/get/"
+        data-toggle="table"
+        data-striped="true"
+        data-toolbar="#toolbar1"
+        data-show-refresh="true"
+        data-show-toggle="true"
+        data-show-columns="true"
+        data-side-pagination="client"
+        data-pagination="true"
+        data-click-to-select="true"
+        data-page-size="5"
+        data-page-list="[5, 25, 50, All]"
+        data-search="false"
+        >
+        <thead>
+          <tr><!-- data-radio -->
+                <th data-field="state" data-checkbox="true" data-select-item-name="role"></th>
                 <th data-formatter="index1">#</th>
                 <th data-field="Rolenumber">角色编码</th>
                 <th data-field="Rolename">角色名称</th>
@@ -73,9 +74,9 @@
                 <!-- <th data-field="state-handle"
                     data-align="center"
                     data-formatter="RoleObj.formatter">资源操作</th> -->
-            </tr>
-            </thead>
-        </table>
+          </tr>
+        </thead>
+      </table>
     </div>
     <!-- 项目表 -->
     <div class="col-sm-6 col-md-6 col-lg-6">
@@ -83,21 +84,20 @@
       <table id="table2"  
         data-url="/project/getprojects"
         data-toggle="table"
-       data-search="true"
-       data-show-refresh="true"
-       data-show-toggle="true"
-       data-show-columns="true"
-       data-click-to-select="true"
-       data-side-pagination="client"
-       data-pagination="true"
-       data-page-size="5"
+        data-search="true"
+        data-show-refresh="true"
+        data-show-toggle="true"
+        data-show-columns="true"
+        data-click-to-select="true"
+        data-side-pagination="client"
+        data-pagination="true"
+        data-page-size="5"
         data-page-list="[5, 10, All]"
-       data-query-params="queryParams"
+        data-query-params="queryParams"
         >
         <thead>        
           <tr>
-          <!-- radiobox data-checkbox="true"-->
-          <th data-width="10" data-checkbox="true"></th>
+          <th data-width="10" data-radio="true" data-select-item-name="proj"></th>
           <th data-formatter="index1">#</th>
           <th data-field="Code">编号</th>
           <th data-field="Title">名称</th>
@@ -122,7 +122,8 @@
       <table id="table3"  
         data-toolbar="#toolbar3"
         data-detail-view="true"
-       data-query-params="queryParams"
+        data-click-to-select="true"
+        data-query-params="queryParams"
         >
         <thead>        
           <tr>
@@ -144,28 +145,28 @@
       <div id="details" style="display:none">
         <h3 id="rowtitle"></h3>
           <div class="modal-body">
-              <div id="tree"></div>
+            <div id="tree"></div>
           </div>
       </div>
     </div>
   </div> 
 
   <script>
-  /*数据json,"PDF":"","DWG":"","DOC":"","XLS":""*/
-  // 权限表
-  var json =  [{"Id":"1","Title":"添加成果"},
-                {"Id":"2","Title":"编辑成果"},
-                {"Id":"3","Title":"删除成果"},
-                {"Id":"4","Title":"读取成果"}];
-  var json1 =  [{"Id":"5","Title":"任意"},
+    /*数据json,"PDF":"","DWG":"","DOC":"","XLS":""*/
+    // 权限表
+    var json =  [{"Id":"1","Title":"添加成果","Action":"POST"},
+                {"Id":"2","Title":"编辑成果","Action":"PUT"},
+                {"Id":"3","Title":"删除成果","Action":"DELETE"},
+                {"Id":"4","Title":"读取成果","Action":"GET"}];
+    var json1 = [{"Id":"5","Title":"任意"},
                 {"Id":"6","Title":"PDF","checked":true},
                 {"Id":"7","Title":"DWG"},
                 {"Id":"8","Title":"DOC"},
                 {"Id":"8","Title":"XLS"},
                 {"Id":"8","Title":"DGN"}];              
-        /*初始化table数据*/
-        $(function(){
-            $("#table3").bootstrapTable({
+    /*初始化table数据*/
+    $(function(){
+      $("#table3").bootstrapTable({
               data:json,
               // onClickRow: function (row, $element) {
                 // alert( "选择了行Id为: " + row.Id );
@@ -178,9 +179,9 @@
               onExpandRow: function (index, row, $detail) {
                 expandTable(index, row,$detail);
               }
-            });
-        });
-      function expandTable(index, row,$detail) {
+      });
+    });
+    function expandTable(index, row,$detail) {
         var cur_table = $detail.html('<table id="table4"></table>').find('table');
         if (index==3){
           $(cur_table).bootstrapTable({
@@ -194,8 +195,8 @@
             data:json1,
           })
         }
-      }
-  //初始化子表格(无线循环)
+    }
+    //初始化子表格(无限循环)
     // oInit.InitSubTable = function (index, row, $detail) {
     //     var parentid = row.MENU_ID;
     //     var cur_table = $detail.html('<table></table>').find('table');
@@ -231,66 +232,66 @@
     //     });
     // };
 
-  function index1(value,row,index){
-    return index+1
-  }
-
-  function stateFormatter(value, row, index) {
-    if (row.checked === true) {
-        return {
-            // disabled: true,
-            checked: true
-        }
+    function index1(value,row,index){
+      return index+1
     }
-    return value;
-  }
 
-  function StatusFormatter(value, row, index) {
-    // alert(row.Status);
-    if (row.Status == "0") {
-        return '正常';
-    }else{
-      return '失效';
+    function stateFormatter(value, row, index) {
+      if (row.checked === true) {
+          return {
+              // disabled: true,
+              checked: true
+          }
+      }
+      return value;
     }
-  }
 
-  function localDateFormatter(value) {
-    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
-  }
-  function checkDateFormatter(value) {
-    return '<input type="checkbox" name="bike"/>';
-  }
+    function StatusFormatter(value, row, index) {
+      // alert(row.Status);
+      if (row.Status == "0") {
+          return '正常';
+      }else{
+        return '失效';
+      }
+    }
 
-  $(document).ready(function() {
-    //添加角色
-    $("#addButton").click(function() {
+    function localDateFormatter(value) {
+      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    }
+    function checkDateFormatter(value) {
+      return '<input type="checkbox" name="bike"/>';
+    }
+
+    $(document).ready(function() {
+      //添加角色
+      $("#addButton").click(function() {
         $('#modalTable').modal({
         show:true,
         backdrop:'static'
         });
-    })
-    //删除角色
-    $("#deleteButton").click(function() {
-     var selectRow=$('#table').bootstrapTable('getSelections');
-     if (selectRow.length<=0) {
-       alert("请先勾选！");
-       return false;
-     }
-     var titles=$.map(selectRow,function(row){
-       // alert(row.Id);
-       // return row.Id;
-       // alert(row.Title);
-       return row.Title;
-     })
-     var ids="";
-     for(var i=0;i<selectRow.length;i++){
-       if(i==0){
-         ids=selectRow[i].Id;
-       }else{
-         ids=ids+","+selectRow[i].Id;
-       }  
-     }
-     $.ajax({
+      })
+      //删除角色
+      $("#deleteButton").click(function() {
+        var selectRow=$('#table').bootstrapTable('getSelections');
+        if (selectRow.length<=0) {
+          alert("请先勾选！");
+          return false;
+        }
+        var titles=$.map(selectRow,function(row){
+          // alert(row.Id);
+          // return row.Id;
+          // alert(row.Title);
+          return row.Title;
+        })
+        var ids="";
+        for(var i=0;i<selectRow.length;i++){
+          if(i==0){
+            ids=selectRow[i].Id;
+          }else{
+            ids=ids+","+selectRow[i].Id;
+          }  
+        }
+        $.ajax({
        type:"post",
        url:"/admin/role/delete",
        data: {ids:ids},
@@ -302,36 +303,36 @@
            values:titles
          });
        }
-     }); 
-    })
-    //编辑角色模态框
-    $("#editorButton").click(function() {
-      var selectRow=$('#table').bootstrapTable('getSelections');
-      if (selectRow.length<1){
-        alert("请先勾选角色！");
-        return;
-      }
-      if (selectRow.length>1){
-        alert("请不要勾选一个以上角色！");
-        return;
-      }
-      $("input#cid").remove();
-      var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $("#Rolename1").val(selectRow[0].Rolename);
-      $("#Rolenumber1").val(selectRow[0].Rolenumber);
-      $("#Status1").val(selectRow[0].Status);
-      // alert(JSON.stringify(selectRow));
-      // alert(selectRow[0].Id);
-      // var title = $('#'+id).attr("value");
-      // var title = $('#'+id).attr("href");
-      // var categoryid = $('#categoryid').val();
+        }); 
+      })
+      //编辑角色模态框
+      $("#editorButton").click(function() {
+        var selectRow=$('#table').bootstrapTable('getSelections');
+        if (selectRow.length<1){
+          alert("请先勾选角色！");
+          return;
+        }
+        if (selectRow.length>1){
+          alert("请不要勾选一个以上角色！");
+          return;
+        }
+        $("input#cid").remove();
+        var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $("#Rolename1").val(selectRow[0].Rolename);
+        $("#Rolenumber1").val(selectRow[0].Rolenumber);
+        $("#Status1").val(selectRow[0].Status);
+        // alert(JSON.stringify(selectRow));
+        // alert(selectRow[0].Id);
+        // var title = $('#'+id).attr("value");
+        // var title = $('#'+id).attr("href");
+        // var categoryid = $('#categoryid').val();
         $('#modalTable1').modal({
         show:true,
         backdrop:'static'
         });
-    })
-  }) 
+      })
+    }) 
     //新建角色
     function save(){
       // var radio =$("input[type='radio']:checked").val();        
@@ -340,36 +341,34 @@
       // var Status     = $('#Status option:selected').text();
       var Status = $('#Status option:selected').val();
 
-      if (Rolename)
-        {  
-            $.ajax({
+      if (Rolename){  
+        $.ajax({
                 type:"post",
                 url:"/admin/role/post",
                 data: {rolename:Rolename,rolenumber:Rolenumber,status:Status},
                 success:function(data,status){
                   alert("添加“"+data+"”成功！(status:"+status+".)");
                  }
-            });  
-        } else{
-          alert("角色名等不能为空！");
-        }
-        // $(function(){$('#myModal').modal('hide')}); 
-          $('#modalTable').modal('hide');
-          $('#table').bootstrapTable('refresh', {url:'/admin/role/get'});
-          // "/category/modifyfrm?cid="+cid
-          // window.location.reload();//刷新页面
+        });  
+      } else{
+        alert("角色名等不能为空！");
+      }
+      // $(function(){$('#myModal').modal('hide')}); 
+      $('#modalTable').modal('hide');
+      $('#table').bootstrapTable('refresh', {url:'/admin/role/get'});
+      // "/category/modifyfrm?cid="+cid
+      // window.location.reload();//刷新页面
     }
 
     //更新角色
     function update(){
-     // var radio =$("input[type='radio']:checked").val();
-     var roleid1 = $('#cid').val();
-     var rolename1 = $('#Rolename1').val();
-     var rolenumber1 = $('#Rolenumber1').val();
-     var status1 = $('#Status1').val();
-     // $('#myModal').on('hide.bs.modal', function () {  
-     if (rolename1)
-      {  
+      // var radio =$("input[type='radio']:checked").val();
+      var roleid1 = $('#cid').val();
+      var rolename1 = $('#Rolename1').val();
+      var rolenumber1 = $('#Rolenumber1').val();
+      var status1 = $('#Status1').val();
+      // $('#myModal').on('hide.bs.modal', function () {  
+      if (rolename1){  
           $.ajax({
               type:"put",
               url:"/admin/role/update",
@@ -380,15 +379,15 @@
           });  
       } 
       // $(function(){$('#myModal').modal('hide')});
-        $('#modalTable1').modal('hide');
-        $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
-        // "/category/modifyfrm?cid="+cid
-        // window.location.reload();//刷新页面
+      $('#modalTable1').modal('hide');
+      $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
+      // "/category/modifyfrm?cid="+cid
+      // window.location.reload();//刷新页面
     }
 
     //点击项目显示目录
     $(function(){
-     $("#table2").on("click-row.bs.table",function(e,row,ele){
+      $("#table2").on("check.bs.table",function(e,row,ele){
         $(".info").removeClass("info");
         $(ele).addClass("info");
         rowid=row.Id;//全局变量
@@ -399,7 +398,7 @@
         $("input#cid").remove();
           var th1="<input id='cid' type='hidden' name='cid' value='" +rowid+"'/>"
         $(".modal-body").append(th1);
-         //初始化树   
+        //初始化树   
         $.ajax({  //JQuery的Ajax  
             type: 'POST',    
             dataType : "json",//返回数据类型  
@@ -418,18 +417,28 @@
                 enableLinks: true,
                 hierarchicalCheck:true,//有效！！
                 // propagateCheckEvent:true,
+                highlightSearchResults:false,//搜索结果不高亮
                 state: {
                   checked: true,
-                  disabled: true,
+                  // disabled: true,
                   expanded: true,
-                  selected: true
+                  // selected: true
                 }
               });
-              $('#tree').treeview('expandAll');//这句为何无效？
+              // $('#tree').treeview('expandAll');//这句为何无效？
+              // var singleNode = {
+                // text: '设计单位',
+                // id:'0.0.0'
+                // code:projcatecode3
+              // };
+              // $('#tree').treeview('checkNode', [ singleNode, { silent: true } ]);
+              // $('#tree').treeview('collapseNode', [ singleNode, { silent: true, ignoreChildren: false } ]);
+              // $('#tree').treeview('checkAll', { silent: true });
+              // $('#tree').treeview('disableNode', [ singleNode, { silent: true, keepState: true } ]);
               $("#details").show();  
             }
         });
-     });
+      });
     });
 
     // 保存权限和修改权限
@@ -520,6 +529,89 @@
       });  
     })
   </script>
+
+  <!-- 显示角色的权限 -->
+  <script type="text/javascript">
+    // 每次点击角色表table、权限表table2、项目表table3，3个表任何一个点击，都检查是否具备查询条件
+    $(function(){
+      $("#table").on("check.bs.table",function(e,row,ele){
+        //检查table2项目表和table3权限表是否有选择，并且只能单选
+        var selectRow2=$('#table2').bootstrapTable('getSelections');
+        var selectRow3=$('#table3').bootstrapTable('getSelections');
+        if (selectRow2.length>1) {
+          // alert("请不要勾选一个以上权限！");
+          return false;
+        }else if(selectRow2.length==1 && selectRow2.length==1){
+          var projectid="";
+          for(var i=0;i<selectRow2.length;i++){
+            if(i==0){
+              projectid=selectRow2[i].Id;
+            }else{
+              projectid=projectid+","+selectRow2[i].Id;
+            }  
+          }
+          var action="";
+          for(var i=0;i<selectRow3.length;i++){
+            if(i==0){
+              action=selectRow3[i].Action;
+            }else{
+              action=action+","+selectRow3[i].Action;
+            }  
+          }
+          // alert(JSON.stringify(checkableNodes));
+          // $('#btn-check-node.check-node').on('click', function (e) {
+          //   $checkableTree.treeview('checkNode', [ checkableNodes, { silent: $('#chk-check-silent').is(':checked') }]);
+          // });
+          // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
+          //刷新树   
+          $.ajax({  //JQuery的Ajax  
+            type: 'GET',    
+            dataType : "json",//返回数据类型  
+            // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
+            url: "/admin/role/getpermission",//请求的action路径  
+            data: {roleid:row.Id,action:action,projectid:projectid}, 
+             //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
+            error: function () {//请求失败处理函数    
+                alert('请求失败');    
+            },  
+            success:function(data){ //请求成功后处理函数。取到Json对象data
+              // var findCheckableNodess = function() {
+              //   return $('#tree').treeview('search', [ data, { ignoreCase: false, exactMatch: true } ]);//忽略大小写——这个只支持名称
+              // };
+              $('#tree').treeview('uncheckAll', { silent: true });
+              for(var i=0;i<data.length;i++){
+                // alert(data[i]);
+                var findCheckableNodess = function() {
+                  return $('#tree').treeview('findNodes', [data[i], 'id']);
+                }; 
+                var checkableNodes = findCheckableNodess();
+                // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
+                $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+              }
+            }
+          });
+        }
+        // if (selectRow.length>1) {
+        //   alert("请不要勾选一个以上项目！");
+        //   return false;
+        // }
+      });
+
+      $("#table2").on("click-row.bs.table",function(e,row,ele){
+
+      });
+
+      $("#table3").on("click-row.bs.table",function(e,row,ele){
+
+      });
+    });
+    // onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
+    // row：点击行的数据，
+    // $element：tr 元素，
+    // field：点击列的 field 名称
+  </script>
+
+
 
   <!-- 添加角色 -->
   <div class="container">

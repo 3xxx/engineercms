@@ -54,7 +54,7 @@ type UploadimageUE struct {
 
 func (c *UeditorController) ControllerUE() {
 	op := c.Input().Get("action")
-	// key := c.Input().Get("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
+	key := c.Input().Get("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
 	switch op {
 	case "config": //这里还是要优化成conf/config.json
 		// $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
@@ -109,54 +109,81 @@ func (c *UeditorController) ControllerUE() {
 		// c.Data["json"] = r
 		// c.ServeJSON()
 	case "uploadimage", "uploadfile", "uploadvideo":
-		//解析表单
-		pid := c.Input().Get("pid")
-		beego.Info(pid)
-		//pid转成64为
-		pidNum, err := strconv.ParseInt(pid, 10, 64)
-		if err != nil {
-			beego.Error(err)
-		}
-		//根据proj的parentIdpath
-		Url, DiskDirectory, err := GetUrlPath(pidNum)
-		if err != nil {
-			beego.Error(err)
-		}
-		beego.Info(DiskDirectory)
-		//获取上传的文件
-		_, h, err := c.GetFile("upfile")
-		if err != nil {
-			beego.Error(err)
-		}
-		fileSuffix := path.Ext(h.Filename)
-		// random_name
-		newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
-		// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
-		// if err != nil {
-		// 	beego.Error(err)
-		// }
-		year, month, _ := time.Now().Date()
-		err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
-		if err != nil {
-			beego.Error(err)
-		}
-		var path string
-		var filesize int64
-		if h != nil {
-			//保存附件
-			path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
-			Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
-			err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		switch key {
+		case "wiki": //添加wiki
+			//保存上传的图片
+			_, h, err := c.GetFile("upfile")
 			if err != nil {
 				beego.Error(err)
 			}
-			filesize, _ = FileSize(path)
+			var filesize int64
+			fileSuffix := path.Ext(h.Filename)
+			newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
+			year, month, _ := time.Now().Date()
+			err = os.MkdirAll(".\\attachment\\wiki\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+			if err != nil {
+				beego.Error(err)
+			}
+			path1 := ".\\attachment\\wiki\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
+			Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
+			err = c.SaveToFile("upfile", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+			if err != nil {
+				beego.Error(err)
+			}
+			filesize, _ = FileSize(path1)
 			filesize = filesize / 1000.0
 			c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": Url + newname, "title": h.Filename, "original": h.Filename}
 			c.ServeJSON()
-		} else {
-			c.Data["json"] = map[string]interface{}{"state": "ERROR", "url": "", "title": "", "original": ""}
-			c.ServeJSON()
+		default:
+			//解析表单
+			pid := c.Input().Get("pid")
+			beego.Info(pid)
+			//pid转成64为
+			pidNum, err := strconv.ParseInt(pid, 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			//根据proj的parentIdpath
+			Url, DiskDirectory, err := GetUrlPath(pidNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			beego.Info(DiskDirectory)
+			//获取上传的文件
+			_, h, err := c.GetFile("upfile")
+			if err != nil {
+				beego.Error(err)
+			}
+			fileSuffix := path.Ext(h.Filename)
+			// random_name
+			newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
+			// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			year, month, _ := time.Now().Date()
+			err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+			if err != nil {
+				beego.Error(err)
+			}
+			var path string
+			var filesize int64
+			if h != nil {
+				//保存附件
+				path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
+				Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
+				err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+				if err != nil {
+					beego.Error(err)
+				}
+				filesize, _ = FileSize(path)
+				filesize = filesize / 1000.0
+				c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": Url + newname, "title": h.Filename, "original": h.Filename}
+				c.ServeJSON()
+			} else {
+				c.Data["json"] = map[string]interface{}{"state": "ERROR", "url": "", "title": "", "original": ""}
+				c.ServeJSON()
+			}
 		}
 	case "uploadscrawl":
 		number := c.Input().Get("number")

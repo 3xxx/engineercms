@@ -26,8 +26,8 @@
 <body>
 
 <div class="col-lg-12">
-<h3>用户表</h3>
-  <div id="toolbar" class="btn-group">
+  <h3>用户表</h3>
+    <div id="toolbar" class="btn-group">
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
         <button type="button" data-name="importButton" id="importButton" class="btn btn-default"> <i class="fa fa-plus">导入</i>
@@ -37,7 +37,7 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
-  </div>
+    </div>
   <table id="table0"
         data-search="true"
         data-show-refresh="true"
@@ -59,7 +59,7 @@
         >
   </table>
 
-<script type="text/javascript">
+  <script type="text/javascript">
         /*数据json*/
         var json =  [{"Id":"1","UserName":"水利","UserNickname":"SL","Lastlogintime":"2016-01-05"},
                      {"Id":"2","UserName":"电力","UserNickname":"DL"},
@@ -74,7 +74,7 @@
         //         data:json,
         //     });
         // });
-  $(document).ready(function() {
+    $(document).ready(function() {
     $("#addButton").click(function() {
         $('#modalTable').modal({
         show:true,
@@ -89,69 +89,69 @@
         backdrop:'static'
         });
     })
-  })
-</script>
+    })
+  </script>
 
   <!-- 添加用户 -->
   <div class="container">
-  <form class="form-horizontal">
-    <div class="modal fade" id="modalTable">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
+    <form class="form-horizontal">
+      <div class="modal fade" id="modalTable">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
             <h3 class="modal-title">添加用户</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">        
-              <div class="form-group must">
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">        
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">用户名</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Username"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">昵称</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Nickname"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">密码</label>
                 <div class="col-sm-7">
-                  <input type="password" class="form-control" id="password" maxlength="32" placeholder="至多32个字符"></div>
-              </div>
-              <div class="form-group must">
+                  <input type="password" class="form-control" id="Password" maxlength="32" placeholder="至多32个字符"></div>
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">确认密码</label>
                 <div class="col-sm-7">
                   <input type="password" class="form-control equalto" name="password2" maxlength="32" placeholder="至多32个字符" data-rule-equalto="#password" data-msg-equalto="密码不一致"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">邮箱</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Email"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">部门</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Department"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">科室</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Secoffice"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">IP</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Ip"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">CMS端口Port</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Port"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-7">
                   <select id="Status" class="form-control">
@@ -160,22 +160,22 @@
                     <option value="0" >禁用</option>
                   </select>
                 </div>
-              </div>
-              <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label class="col-sm-3 control-label">权限</label>
                 <div class="col-sm-7">
                 <input type="number" class="form-control digits" id="Role" maxlength="20" placeholder="至多20个字符"></div>
+                </div>
               </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" onclick="save()">保存</button>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="save()">保存</button>
-        </div>
       </div>
-    </div>
-  </div>
-  </form>
+    </form>
   </div>
   <!-- 导入用户数据 -->
   <div class="container form-horizontal">
@@ -247,7 +247,7 @@
           // "/category/modifyfrm?cid="+cid
           // window.location.reload();//刷新页面
     }
-      //导入用户数据表
+    //导入用户数据表
     function importusers(){
         var file=$("#usersexcel").val();
         if(file!=""){  
@@ -443,7 +443,7 @@
      //     columns:columns,
      //     data:json
      // });
-     $("#table0").on("click-row.bs.table",function(e,row,ele){
+      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
          $(ele).addClass("info");
          userid=row.Id;//全局变量
@@ -451,9 +451,9 @@
          $("#rowtitle").html("用户角色-"+rowtitle);
          $("#details").show();
          $('#table1').bootstrapTable('refresh', {url:'/admin/role/get/'+row.Id});
-     });
+      });
     });
-</script>
+  </script>
 
 <!-- onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
 row：点击行的数据，
@@ -626,8 +626,8 @@ field：点击列的 field 名称 -->
     </thead>
 </table>
 </div> -->
-<!-- 显示用户角色表 -->
-<div id="details" style="display:none">
+  <!-- 显示用户角色表 -->
+  <div id="details" style="display:none">
   <div class="row">
     <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
       <h3 id="rowtitle">角色表</h3>
@@ -676,11 +676,11 @@ field：点击列的 field 名称 -->
         </table>
     </div>
   </div>
-</div>
+  </div>
 
-<br/>
-<br/>
-<script type="text/javascript">
+  <br/>
+  <br/>
+  <script type="text/javascript">
       function stateFormatter(value, row, index) {
         if (row.Level === "1") {
             return {
@@ -734,12 +734,13 @@ field：点击列的 field 名称 -->
         });  
     })
 
-  function actionFormatter(value, row, index) {
-    return '<button type="button" data-name="addButton" id="addButton" class="btn btn-info btn-xs"> <i class="fa fa-user">角色</i></button>';
-  }
-  window.actionEvents = {
-      //弹出角色选择模态框，选择后保存——未修改
-    'click .send': function (e, value, row, index) {
+    function actionFormatter(value, row, index) {
+      return '<button type="button" data-name="addButton" id="addButton" class="btn btn-info btn-xs"> <i class="fa fa-user">角色</i></button>';
+    }
+
+    window.actionEvents = {
+        //弹出角色选择模态框，选择后保存——未修改
+      'click .send': function (e, value, row, index) {
       var selectRow3=$('#table').bootstrapTable('getSelections');
         if (selectRow3.length==0){
           var mycars = new Array()
@@ -772,9 +773,9 @@ field：点击列的 field 名称 -->
             }
             });  
         }
-    },
-  };
-</script>
+      },
+    };
+  </script>
 </div>
 
 </body>

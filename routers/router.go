@@ -147,6 +147,8 @@ func init() {
 	beego.Router("/admin/role/userrole", &controllers.RoleController{}, "post:UserRole")
 	//添加角色权限
 	beego.Router("/admin/role/permission", &controllers.RoleController{}, "post:RolePermission")
+	//查询角色权限
+	beego.Router("/admin/role/getpermission", &controllers.RoleController{}, "get:GetRolePermission")
 
 	//meritbasic表格数据填充
 	beego.Router("/admin/merit/meritbasic", &controllers.AdminController{}, "*:MeritBasic")

@@ -74,7 +74,7 @@
     //         'print', 'preview', 'searchreplace', 'help', 'drafts'
     //     ]],
     autoHeightEnabled: true,
-    autoFloatEnabled: true
+    // autoFloatEnabled: true
 });
 /* 2.传入参数表,添加到已有参数表里 通过携带参数，实现不同的页面使用不同controllers*/
     ue.ready(function () {

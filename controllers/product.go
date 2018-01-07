@@ -25,6 +25,7 @@ type ProductLink struct {
 	Code           string
 	Title          string
 	Label          string
+	Relevancy      []models.Relevancy
 	Uid            int64
 	Principal      string
 	ProjectId      int64
@@ -102,13 +103,13 @@ func (c *ProdController) GetProjProd() {
 		c.Data["Uid"] = user.Id
 		// userrole = user.Role
 		useridstring = strconv.FormatInt(user.Id, 10)
-	} else {
-		// userrole = 5
-		// route := c.Ctx.Request.URL.String()
-		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
-		// return
-	}
+	} //else {
+	// userrole = 5
+	// route := c.Ctx.Request.URL.String()
+	// c.Data["Url"] = route
+	// c.Redirect("/roleerr?url="+route, 302)
+	// return
+	//}
 	//2.取得侧栏目录路径——路由id
 	//2.1 根据id取得路由
 	var projurls string
@@ -278,6 +279,51 @@ func (c *ProdController) GetProducts() {
 		}
 		linkarr[0].Articlecontent = Articleslice
 		Articleslice = make([]ArticleContent, 0)
+
+		//取得关联
+		relevancies, err := models.GetRelevancy(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		relevancies1 := make([]models.Relevancy, 0)
+		if len(relevancies) > 0 {
+			for _, tt := range relevancies {
+				relevancies2 := make([]models.Relevancy, 1)
+				relevancies2[0].Relevancy = tt.Relevancy
+				relevancies1 = append(relevancies1, relevancies2...)
+			}
+			linkarr[0].Relevancy = relevancies1
+			relevancies1 = make([]models.Relevancy, 0)
+		} else if len(relevancies) == 0 {
+			//循环所有relevancies,以,号分割，如果相等prodcode,则返回
+			relevancies3, err := models.GetAllRelevancies()
+			if err != nil {
+				beego.Error(err)
+			}
+			// if len(relevancies)>0{}
+			for _, vv := range relevancies3 {
+				array := strings.Split(vv.Relevancy, ",")
+				// beego.Info(array)
+				for _, ww := range array {
+					if ww == w.Code {
+						relevancies2 := make([]models.Relevancy, 1)
+						// v.ProductId查出prodcode
+						prod, err := models.GetProd(vv.ProductId)
+						if err != nil {
+							beego.Error(err)
+						} else {
+							// beego.Info(ww)        //20171228
+							// beego.Info(prod.Code) //20171231
+							relevancies2[0].Relevancy = prod.Code
+							relevancies1 = append(relevancies1, relevancies2...)
+						}
+						break
+					}
+				}
+			}
+			linkarr[0].Relevancy = relevancies1
+			// relevancies1 = make([]models.Relevancy, 0)
+		}
 		link = append(link, linkarr...)
 	}
 
@@ -612,111 +658,111 @@ func (c *ProdController) AddProduct() {
 
 //编辑成果信息
 func (c *ProdController) UpdateProduct() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		id := c.Input().Get("pid")
-		code := c.Input().Get("code")
-		title := c.Input().Get("title")
-		label := c.Input().Get("label")
-		principal := c.Input().Get("principal")
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	id := c.Input().Get("pid")
+	code := c.Input().Get("code")
+	title := c.Input().Get("title")
+	label := c.Input().Get("label")
+	principal := c.Input().Get("principal")
 
-		//id转成64为
-		idNum, err := strconv.ParseInt(id, 10, 64)
-		if err != nil {
-			beego.Error(err)
-		}
-		//根据id添加成果code, title, label, principal, content string, projectid int64
-		err = models.UpdateProduct(idNum, code, title, label, principal)
-		if err != nil {
-			beego.Error(err)
-		}
-		c.Data["json"] = "ok"
-		c.ServeJSON()
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
 	}
+	//根据id添加成果code, title, label, principal, content string, projectid int64
+	err = models.UpdateProduct(idNum, code, title, label, principal)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = "ok"
+	c.ServeJSON()
+	// } else {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
 }
 
 //删除成果，包含成果里的附件。删除附件用attachment中的
 func (c *ProdController) DeleteProduct() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		ids := c.GetString("ids")
-		array := strings.Split(ids, ",")
-		for _, v := range array {
-			// pid = strconv.FormatInt(v1, 10)
-			//id转成64位
-			idNum, err := strconv.ParseInt(v, 10, 64)
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//循环删除成果
+		//根据成果id取得所有附件
+		attachments, err := models.GetAttachments(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, w := range attachments {
+			//取得附件的成果id——再取得成果的项目目录id——再取得路径
+			attach, err := models.GetAttachbyId(w.Id)
 			if err != nil {
 				beego.Error(err)
 			}
-			//循环删除成果
-			//根据成果id取得所有附件
-			attachments, err := models.GetAttachments(idNum)
+			prod, err := models.GetProd(attach.ProductId)
 			if err != nil {
 				beego.Error(err)
 			}
-			for _, w := range attachments {
-				//取得附件的成果id——再取得成果的项目目录id——再取得路径
-				attach, err := models.GetAttachbyId(w.Id)
-				if err != nil {
-					beego.Error(err)
-				}
-				prod, err := models.GetProd(attach.ProductId)
-				if err != nil {
-					beego.Error(err)
-				}
-				//根据proj的id
-				_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
-				if err != nil {
-					beego.Error(err)
-				} else {
-					path := DiskDirectory + "\\" + attach.FileName
-					//删除附件
-					err = os.Remove(path)
-					if err != nil {
-						beego.Error(err)
-					}
-					//删除附件数据表
-					err = models.DeleteAttachment(w.Id)
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-			}
-			//删除文章，文章中的图片无法删除
-			//取得成果id下所有文章
-			articles, err := models.GetArticles(idNum)
-			if err != nil {
-				beego.Error(err)
-			}
-			//删除文章表
-			for _, z := range articles {
-				//删除文章数据表
-				err = models.DeleteArticle(z.Id)
-				if err != nil {
-					beego.Error(err)
-				}
-			}
-			err = models.DeleteProduct(idNum) //删除成果数据表
+			//根据proj的id
+			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 			if err != nil {
 				beego.Error(err)
 			} else {
-				c.Data["json"] = "ok"
-				c.ServeJSON()
+				path := DiskDirectory + "\\" + attach.FileName
+				//删除附件
+				err = os.Remove(path)
+				if err != nil {
+					beego.Error(err)
+				}
+				//删除附件数据表
+				err = models.DeleteAttachment(w.Id)
+				if err != nil {
+					beego.Error(err)
+				}
 			}
 		}
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+		//删除文章，文章中的图片无法删除
+		//取得成果id下所有文章
+		articles, err := models.GetArticles(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		//删除文章表
+		for _, z := range articles {
+			//删除文章数据表
+			err = models.DeleteArticle(z.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		err = models.DeleteProduct(idNum) //删除成果数据表
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
 	}
+	// } else {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
 }
 
 func checkprodRole(ctx *context.Context) (uname string, role int) {
@@ -731,7 +777,11 @@ func checkprodRole(ctx *context.Context) (uname string, role int) {
 		if err != nil {
 			beego.Error(err)
 		}
-		userrole = user.Role
+		if user.Role == 0 {
+			userrole = 4
+		} else {
+			userrole = user.Role
+		}
 	} else {
 		userrole = 5
 		uname = ctx.Input.IP()
