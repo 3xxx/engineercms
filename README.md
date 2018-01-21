@@ -64,6 +64,12 @@ Demo2(http://112.74.42.44:8086/)
 
 ×考勤登记，值班安排；
 
+## 下载和安装
+
+在release标签中下载二进制文件和源码压缩包。[https://github.com/3xxx/EngineerCMS/releases](https://github.com/3xxx/EngineerCMS/releases)
+
+将二进制文件放到源码文件夹下直接运行即可。
+
 ## Quick Start
 
 * 参加quickstart快速开始。
