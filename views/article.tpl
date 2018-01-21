@@ -6,9 +6,9 @@
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
-    <script src="/static/ueditor/ueditor.parse.js"></script>
+    <script src="/static/ueditor/ueditor.parse.min.js"></script>
 
     <!-- <link href="/static/css/csdnarticlestyle.css" rel="stylesheet">
     <script src="/static/js/html5shiv.min.js"></script>
@@ -76,10 +76,10 @@
               <span class="ico ico_type_Original"></span>
               <h1>
                 <span class="link_title">
-                  <a href="http://blog.csdn.net/hotqin888/article/details/78822774">
+                  <!-- <a href="http://blog.csdn.net/hotqin888/article/details/78822774"> -->
                     {{.product.Code}}-{{.product.Title}}
                     <small>{{.article.Subtext}}</small>
-                  </a>
+                  <!-- </a> -->
                 </span>
               </h1>
             </div>
@@ -87,7 +87,8 @@
               <label>&nbsp;作者：{{.product.Principal}}</label>
               <small>发表于：{{dateformat .product.Created "2006-01-02 15:04:05"}}</small>
               <small id="publish">阅读{{.article.Views}}次</small>
-              <button type="button" class="btn btn-warning btn-xs"  id="updatearticle">编辑</button>
+              <!-- <button type="button" class="btn btn-warning btn-xs"  id="updatearticle">编辑</button> -->
+              <a href="/project/product/modifyarticle/{{.article.Id}}" class="btn btn-warning btn-xs">修改</a>
               <button type="button" class="btn btn-danger btn-xs" id="deletearticle">删除</button>
             </div>  
             <div class="article_manage clearfix">

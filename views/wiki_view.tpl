@@ -3,11 +3,11 @@
 <title>Wiki详细</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
     <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
-    <script src="/static/ueditor/ueditor.parse.js"></script>
+    <script src="/static/ueditor/ueditor.parse.min.js"></script>
     <!-- <link href="/static/ueditor/third-party/video-js/video1-js.min.css" rel="stylesheet"> -->
     <!-- <script src="/static/ueditor/third-party/video-js/video.min.js"></script> -->
   <style type="text/css">
@@ -22,8 +22,8 @@
 <div class="col-md-8 col-md-offset-2">
   <h2>
     {{.Wiki.Title}}
-    <!--下面这个.Tid是Wiki.go的view里直接传过来的-->
-    <a href="/wiki/modify?tid={{.Tid}}" class="btn btn-default" target="_blank">修改wiki</a>
+    <!--下面这个.Tid是Wiki.go的view里直接传过来的 target="_blank"-->
+    <a href="/wiki/modify?tid={{.Tid}}" class="btn btn-default">修改wiki</a>
   </h2>
     <div class="content">
   {{str2html .Wiki.Content}}
@@ -63,14 +63,17 @@
     <div class="form-group">
       <label>内容：</label>
       <div>
-        <script id="container" type="text/plain" style="height:300px;"></script><!-- width:1024px; -->
+        <script id="container" type="text/plain" style="height:300px;width: 100%"></script><!-- width:1024px; -->
       </div>
       <!-- <textarea name="content" id="" cols="30" rows="10" class="form-control"></textarea> -->
     </div>
-    <button class="btn btn-default" onclick="return checkInput();">提交回复</button>
+    <button class="btn btn-primary" onclick="return checkInput();" style="float:right">提交回复</button>
+    <br>
   </form>
+  <br>
+  <br>
  <div>
- <br>
+ 
 </div> 
 </div>
 

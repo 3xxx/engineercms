@@ -511,7 +511,7 @@ body > a > img {
   line-height: 35px;
 }
 #main .article_content p > img {
-  max-width: 602px;
+  max-width: 800px;/*602px;*/
   height: auto;
 }
 #main .article_content a {

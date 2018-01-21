@@ -452,14 +452,45 @@ func (c *ArticleController) AddProdArticle() {
 	// }
 }
 
+//修改文章页面
+func (c *ArticleController) ModifyArticle() {
+	//这里再添加一次验证才行！！！
+	id := c.Ctx.Input.Param(":id")
+
+	var err error
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	Article, err := models.GetArticle(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//查出成果编号，名称和作者
+	prod, err := models.GetProd(Article.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["product"] = prod
+	c.Data["article"] = Article
+	c.Data["IsLogin"] = checkAccount(c.Ctx)
+	c.TplName = "article_modify.tpl"
+}
+
 //编辑 成果id
 func (c *ArticleController) UpdateArticle() {
 	// _, role := checkprodRole(c.Ctx)
 	// if role == 1 {
 	// id := c.Ctx.Input.Param(":id")
-	pid := c.Input().Get("pid")
+	pid := c.Input().Get("aid")
+	// beego.Info(aid)
 	subtext := c.Input().Get("subtext")
-	content := c.Input().Get("content")
+	// beego.Info(subtext)
+	// content := c.Input().Get("content")
+	content := c.Input().Get("editorValue")
+	// beego.Info(content)
 	//id转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
@@ -470,8 +501,9 @@ func (c *ArticleController) UpdateArticle() {
 	if err != nil {
 		beego.Error(err)
 	} else {
-		c.Data["json"] = "ok"
-		c.ServeJSON()
+		// c.Data["json"] = "ok"
+		// c.ServeJSON()
+		c.Redirect("/project/product/article/"+pid, 302) //回到修改后的文章
 	}
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()

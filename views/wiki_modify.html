@@ -3,11 +3,11 @@
 <title>修改wiki</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
   <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.js"></script>
-  <script src="/static/ueditor/ueditor.parse.js"></script>
+  <script src="/static/ueditor/ueditor.parse.min.js"></script>
   <style type="text/css">
   h3 {line-height: 150%;
   /*color: #DC143C;#000000*/
@@ -43,7 +43,7 @@
   <div class="container-fill">{{template "navbar" .}}</div>
 
 <body>
-<div class="col-lg-12">
+  <div class="col-md-8 col-md-offset-2">
   <!-- 这里添加项目目录树显示 -->
   <h2>修改wiki</h2>
   <!-- 下面的action="/topic/post"与script中的/topic/topic_many_addbaidu 如何统一
@@ -60,13 +60,14 @@
 
       <label>wiki内容:</label>
 <div id="content">
-    <script id="editor" type="text/plain" style="height:500px;"></script>
+    <script id="editor" type="text/plain" style="height:500px;width: 100%"></script>
 </div>
-
-  <button type="submit" class="btn btn-default">提交修改</button>    
+  <br />
+  <button type="submit" class="btn btn-primary" style="float:right">提交修改</button>
+  <br />  
  </form>
+ <br />
 </div>
-
 
 <script type="text/javascript">
     //实例化编辑器

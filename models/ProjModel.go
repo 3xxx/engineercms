@@ -182,6 +182,7 @@ func GetProj(id int64) (proj Project, err error) {
 //通过Id为projid，查出本级
 //parentid是projid，查出二级
 //parentidpath包含projid-，查出三级，以及往下
+//还是不严谨，projid-前面还有数据呢？必须前后都有限定符号才行
 //差点按照无闻的视频，将parentidpath存成$id1#$id2#$id3#
 //存：parentidpath="$"+id1+"#"
 //查：__contains,"$"+id1+"#"

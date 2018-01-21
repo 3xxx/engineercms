@@ -263,6 +263,8 @@ func init() {
 	beego.Router("/project/product/syncharticles", &controllers.ArticleController{}, "*:GetsynchArticles")
 	//根据成果id取得成果的所有文章列表_注意articles是复数
 	beego.Router("/project/product/providesyncharticles", &controllers.ArticleController{}, "*:ProvideArticles")
+	//文章进行编辑页面
+	beego.Router("/project/product/modifyarticle/:id:string", &controllers.ArticleController{}, "*:ModifyArticle")
 	//文章进行编辑
 	beego.Router("/project/product/updatearticle", &controllers.ArticleController{}, "*:UpdateArticle")
 	//删除文章

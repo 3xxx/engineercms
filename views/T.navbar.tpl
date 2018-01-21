@@ -118,7 +118,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <!-- <li><a href="/admin" title="管理">进入后台</a></li> -->
-                <li><a href="/project/25001/gettimeline" title="大事记">大事记1</a></li>
+                <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
                 <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
                 <li><a href="/login">登陆</a></li>

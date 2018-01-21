@@ -11,9 +11,9 @@
       <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
       <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
       <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-      <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+      <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
       <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
-      <script src="/static/ueditor/ueditor.parse.js"></script>
+      <script src="/static/ueditor/ueditor.parse.min.js"></script>
   <script type="text/javascript" src="/static/js/details_mobile.js"></script>
       <!--link( rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css" )-->
 

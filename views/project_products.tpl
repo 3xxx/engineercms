@@ -21,7 +21,7 @@
   <script src="/static/js/tableExport.js"></script>
 
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
     <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
@@ -100,17 +100,17 @@
       <tr>
         <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
         <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
+        <th data-formatter="index1" data-align="center">#</th>
         <!-- <th data-field="Id">编号</th> data-visible="false" -->
         <th data-field="Code" data-halign="center">编号</th>
         <th data-field="Title" data-halign="center">名称</th>
-        <th data-field="Label" data-formatter="setLable" data-halign="center">关键字</th>
-        <th data-field="Principal" data-halign="center">设计</th>
-        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents" data-halign="center">文章</th>
-        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-halign="center">附件</th>
-        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-halign="center">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false">建立时间</th>
-        <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center">更新时间</th>
+        <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
+        <th data-field="Principal" data-halign="center" data-align="center">设计</th>
+        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents" data-halign="center" data-align="center">文章</th>
+        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-halign="center" data-align="center">附件</th>
+        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-halign="center" data-align="center">PDF</th>
+        <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th>
+        <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
         <th data-field="Relevancy" data-formatter="RelevFormatter" events="actionRelevancy" data-halign="center">关联</th>
       </tr>
     </thead>
