@@ -60,6 +60,8 @@ Demo2(http://112.74.42.44:8086/)
 
 √分享文章到微信。
 
+√√√ONLYOFFICE实时文档协作支持。
+
 二 todo:
 
 ×手机端添加图片发布文档；
@@ -89,6 +91,11 @@ Demo2(http://112.74.42.44:8086/)
 
 EngineerCMS source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
+
+ONLYOFFICE实时文档协作效果
+
+![](https://user-images.githubusercontent.com/10678867/36202300-34f28b98-11be-11e8-8933-721c120346c2.jpg)
+
 ![](https://cloud.githubusercontent.com/assets/10678867/25748719/a340448e-31de-11e7-8341-6502881fa19c.png)
 手机端访问文章效果
 
