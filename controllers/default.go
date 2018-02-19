@@ -1,15 +1,22 @@
 package controllers
 
 import (
+	// "encoding/json"
 	"engineercms/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
+	// "io"
+	// "net/http"
+	// "github.com/astaxie/beego/httplib"
+	// "bytes"
+	// "io/ioutil"
+	// "mime/multipart"
+	// "os"
 	"path"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
-	// "github.com/astaxie/beego/httplib"
 )
 
 type MainController struct {
@@ -54,7 +61,7 @@ func (c *MainController) Get() {
 	if matched == true {
 		// beego.Info("移动端~")
 		// c.TplName = "mproject.tpl"
-		c.Redirect("/project/25002", 301)
+		c.Redirect("/project/", 301)
 	} else {
 		// beego.Info("电脑端！")
 		achemployee := make([]AchEmployee, 0)
@@ -258,7 +265,6 @@ func (c *MainController) Getmeritmsapi() {
 }
 
 func (c *MainController) Test() {
-
 	// beego.Info(c.Ctx.Input.UserAgent())
 	u := c.Ctx.Input.UserAgent()
 	// re := regexp.MustCompile("Trident")

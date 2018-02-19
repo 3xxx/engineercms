@@ -48,7 +48,7 @@ func (c *ProjController) Get() {
 		c.Data["IsLogin"] = false
 	}
 	c.Data["Username"] = username
-	c.Data["IsProjects"] = true
+	c.Data["IsProject"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
 	c.TplName = "projects.tpl"
@@ -120,18 +120,18 @@ func (c *ProjController) GetProject() {
 	c.Data["role"] = role
 
 	id := c.Ctx.Input.Param(":id")
-	switch id {
-	case "25001":
-		c.Data["IsProject"] = true
-	case "25002":
-		c.Data["IsDesign"] = true
-	case "25003":
-		c.Data["IsConstruct"] = true
-	case "25004":
-		c.Data["IsSupervision"] = true
-	case "25005":
-		c.Data["IsBuild"] = true
-	}
+	// switch id {
+	// case "25001":
+	c.Data["IsProject"] = true
+	// case "25002":
+	// 	c.Data["IsDesign"] = true
+	// case "25003":
+	// 	c.Data["IsConstruct"] = true
+	// case "25004":
+	// 	c.Data["IsSupervision"] = true
+	// case "25005":
+	// 	c.Data["IsBuild"] = true
+	// }
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
 	var err error

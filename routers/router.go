@@ -11,6 +11,23 @@ import (
 
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	beego.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
+	// beego.Router("/onlyoffice/post", &controllers.OnlyController{}, "post:PostOnlyoffice")
+	beego.Router("/onlyoffice", &controllers.OnlyController{}, "get:Get")
+	//table获取所有数据给上面界面使用
+	beego.Router("/onlyoffice/data", &controllers.OnlyController{}, "*:GetData")
+	//添加一个文档
+	beego.Router("/onlyoffice/addattachment", &controllers.OnlyController{}, "post:AddOnlyAttachment")
+	//在onlyoffice中打开文档协作
+	beego.Router("/onlyoffice/:id:string", &controllers.OnlyController{}, "*:OnlyOffice")
+	//删除
+	beego.Router("/onlyoffice/deletedoc", &controllers.OnlyController{}, "*:DeleteDoc")
+	//修改
+	beego.Router("/onlyoffice/updatedoc", &controllers.OnlyController{}, "*:UpdateDoc")
+
+	//下载doc
+	beego.Router("/attachment/onlyoffice/*", &controllers.OnlyController{}, "get:DownloadDoc")
+
 	beego.Router("/role/test", &controllers.RoleController{}, "*:Test")
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
 	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
