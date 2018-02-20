@@ -96,7 +96,9 @@ ONLYOFFICE实时文档协作效果
 
 ![](https://user-images.githubusercontent.com/10678867/36202300-34f28b98-11be-11e8-8933-721c120346c2.jpg)
 
-![](https://cloud.githubusercontent.com/assets/10678867/25748719/a340448e-31de-11e7-8341-6502881fa19c.png)
+![onlyoffice word](https://user-images.githubusercontent.com/10678867/36413270-9fc09c00-1658-11e8-817e-3e58021a8253.jpg)
+![onlyoffice powerpoint](https://user-images.githubusercontent.com/10678867/36413278-a61110ee-1658-11e8-9955-14241b8b8bd7.jpg)
+![onlyoffice excel](https://user-images.githubusercontent.com/10678867/36413285-ab0dcd8a-1658-11e8-9a11-4c94709efea8.jpg)
 手机端访问文章效果
 
 ![](https://user-images.githubusercontent.com/10678867/34637355-7391a26e-f2ef-11e7-8c9d-9f3edcce9004.png)
