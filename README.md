@@ -94,7 +94,7 @@ EngineerCMS source code is licensed under the Apache Licence, Version 2.0
 
 ONLYOFFICE实时文档协作效果
 
-![engineercms onlyoffice](https://user-images.githubusercontent.com/10678867/36413347-e5d75f26-1658-11e8-8818-daaeec4746e5.jpg)
+![engineercms onlyoffice1](https://user-images.githubusercontent.com/10678867/37555500-f7148af6-2a22-11e8-860f-df0ef044d781.png)
 
 ![onlyoffice word](https://user-images.githubusercontent.com/10678867/36413270-9fc09c00-1658-11e8-817e-3e58021a8253.jpg)
 
