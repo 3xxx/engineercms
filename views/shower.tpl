@@ -19,8 +19,8 @@
   <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
-  <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
+  <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
@@ -428,7 +428,7 @@ $(document).ready(function() {
         // 不压缩image
         resize: false,
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/admin/base/addcarousel',
         // 选择文件的按钮。可选。

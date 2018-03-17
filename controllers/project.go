@@ -120,18 +120,20 @@ func (c *ProjController) GetProject() {
 	c.Data["role"] = role
 
 	id := c.Ctx.Input.Param(":id")
-	// switch id {
-	// case "25001":
-	c.Data["IsProject"] = true
-	// case "25002":
-	// 	c.Data["IsDesign"] = true
-	// case "25003":
-	// 	c.Data["IsConstruct"] = true
-	// case "25004":
-	// 	c.Data["IsSupervision"] = true
-	// case "25005":
-	// 	c.Data["IsBuild"] = true
-	// }
+	switch id {
+	case "25001":
+		c.Data["IsProject"] = true
+	case "25002":
+		c.Data["IsDesign"] = true
+	case "25003":
+		c.Data["IsConstruct"] = true
+	case "25004":
+		c.Data["IsSupervision"] = true
+	case "25005":
+		c.Data["IsBuild"] = true
+	default:
+		c.Data["IsProject"] = true
+	}
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
 	var err error

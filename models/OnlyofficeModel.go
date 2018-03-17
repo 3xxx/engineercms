@@ -158,6 +158,20 @@ func UpdateDoc(cid int64, code, title, label, principal string, end time.Time) e
 	return nil
 }
 
+//修改成果时间信息
+func UpdateDocTime(cid int64) error {
+	o := orm.NewOrm()
+	product := &OnlyOffice{Id: cid}
+	if o.Read(product) == nil {
+		product.Updated = time.Now()
+		_, err := o.Update(product, "Updated")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 //删除_把附件也一并删除（在controllers中实现吧）
 func DeleteDoc(cid int64) error {
 	o := orm.NewOrm()

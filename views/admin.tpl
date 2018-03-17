@@ -190,67 +190,57 @@
                     text: "组织结构",
                     id: '030'
                   },
-                  { icon: "fa fa-users",
-                    text: '用户-角色分配',
+                  { 
+                    icon: "fa fa-align-right",
+                    text: "用户-组织结构",
                     id: '031'
                   },
                   { icon: "fa fa-users",
-                    text: '角色-权限分配',
+                    text: '用户-角色',
                     id: '032'
-                  },
-                  { icon: "fa fa-users",
-                    text: '权限',
-                    id: '033'
-                  },
-                  { icon: "fa fa-th",
-                    text: 'IP地址段',
-                    id: '034'
                   }
+                  
                   // { icon: "fa fa-group",
                   //   text: '用户组',
                   //   id: '033'
                   // },
                 ]
               },
-              // {
-              //   text: "权限管理",
-              //   icon: "fa fa-balance-scale",
-              //   // selectedIcon: "glyphicon glyphicon-stop",
-              //   href: "#node-1",
-              //   // selectable: true,
-              //   id: '02',
-              //   selectable: false,
-              //   // state: {
-              //     // checked: true,
-              //     // disabled: true,
-              //     // expanded: true,
-              //     // selected: true
-              //   // },
-              //   tags: ['available'],
-              //   nodes: 
-              //   [
-              //     { icon: "fa fa-safari",
-              //       text: '系统权限',
-              //       id: '021',
-              //       state: {
-              //         // checked: true,
-              //         // disabled: true,
-              //         // expanded: true,
-              //         // selected: true
-              //       }
-              //     },
-              //     { icon: "fa fa-navicon",
-              //       text: '项目权限',
-              //       id: '022',
-              //       state: {
-              //         // checked: true,
-              //         // disabled: true,
-              //         // expanded: true,
-              //         // selected: true
-              //       }
-              //     }
-              //   ]
-              // },
+              {
+                text: "权限管理",
+                icon: "fa fa-balance-scale",
+                // selectedIcon: "glyphicon glyphicon-stop",
+                href: "#node-1",
+                // selectable: true,
+                id: '02',
+                selectable: false,
+                // state: {
+                  // checked: true,
+                  // disabled: true,
+                  // expanded: true,
+                  // selected: true
+                // },
+                tags: ['available'],
+                nodes: 
+                [
+                  { icon: "fa fa-users",
+                    text: '角色-权限分配',
+                    id: '021'
+                  },
+                  { icon: "fa fa-users",
+                    text: '用户-OO权限',
+                    id: '022'
+                  },
+                  { icon: "fa fa-users",
+                    text: '角色-OO权限',
+                    id: '023'
+                  },
+                  { icon: "fa fa-th",
+                    text: 'IP地址段',
+                    id: '024'
+                  }
+                ]
+              },
               {
                 text: "项目设置",
                 icon: "fa fa-list-alt icon",
@@ -371,6 +361,10 @@
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
           }else if(data.id=="022"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
+          }else if(data.id=="023"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
+          }else if(data.id=="024"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)
           }else if(data.id=="030"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
           }else if(data.id=="031"){
@@ -380,7 +374,9 @@
           }else if(data.id=="033"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
           }else if(data.id=="034"){
-            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)  
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)
+          }else if(data.id=="035"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;账号管理&gt;"+data.text)   
           }else if(data.id=="041"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;项目设置&gt;"+data.text)
           }else if(data.id=="042"){

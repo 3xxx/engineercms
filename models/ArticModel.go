@@ -85,7 +85,7 @@ func DeleteArticle(id int64) error {
 func GetArticles(pid int64) (Articles []*Article, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Article")
-	_, err = qs.Filter("Productid", pid).All(&Articles, "Id", "ProductId")
+	_, err = qs.Filter("Productid", pid).All(&Articles, "Id", "ProductId", "Created", "Updated")
 	if err != nil {
 		return nil, err
 	}

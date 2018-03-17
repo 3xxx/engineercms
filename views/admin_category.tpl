@@ -25,7 +25,7 @@
   <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/> -->
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/> -->
   <!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
   
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>

@@ -19,14 +19,17 @@
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
-  <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
+  <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
   
   <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
   <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.js"></script>
   <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/bootstrap-datepicker/bootstrap-datepicker3.css"/>
   <style type="text/css">
+      /*.form-group .datepicker{
+        z-index: 9999;
+      }*/
   /*模态框效果*/
     /*.modal-header {*/
       /*background: #00FF00;*/
@@ -99,9 +102,9 @@
         <th data-field="Title" data-halign="center">名称</th>
         <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
         <th data-field="Principal" data-halign="center" data-align="center">负责人</th>
-        <th data-field="Docxlink" data-formatter="setDocx" data-events="actionEvents" data-halign="center" data-align="center">DOCX</th>
-        <th data-field="Xlsxlink" data-formatter="setXlsx" data-events="actionEvents" data-halign="center" data-align="center">XLSX</th>
-        <th data-field="Pptxlink" data-formatter="setPptx" data-events="actionEvents" data-halign="center" data-align="center">PPTX</th>
+        <th data-field="Docxlink" data-formatter="setDocx" data-events="actionEvents" data-halign="center" data-align="center">协作</th>
+        <!-- <th data-field="Xlsxlink" data-formatter="setXlsx" data-events="actionEvents" data-halign="center" data-align="center">XLSX</th> -->
+        <!-- <th data-field="Pptxlink" data-formatter="setPptx" data-events="actionEvents" data-halign="center" data-align="center">PPTX</th> -->
         <th data-field="End" data-formatter="localDateFormatter" data-halign="center" data-align="center">结束时间</th>
         <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th>
         <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
@@ -161,45 +164,54 @@
 
   function setDocx(value,row,index){
     if (value){
-      if (value.length==1){//'<a href="/project/product/article/'
-        articleUrl= '<a href=/onlyoffice/'+value[0].Id+' title="查看" target="_blank"><i class="fa fa-file-word-o"></i></a>';
-        return articleUrl;
+      if (value.length==1){
+        if (value[0].Suffix=="docx"){
+          docUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+          return docUrl;
+        }else if(value[0].Suffix=="xlsx"){
+          xlsUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+          return xlsUrl;
+        }else if(value[0].Suffix=="pptx"){
+          pptUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+          return pptUrl;
+        }
+        
       }else if(value.length==0){
                     
       }else if(value.length>1){
-        articleUrl= "<a class='Docx' href='javascript:void(0)' title='查看Docx列表'><i class='fa fa-list-ol'></i></a>";
-        return articleUrl;
+        fileUrl= "<a class='Docx' href='javascript:void(0)' title='查看文档列表'><i class='fa fa-list-ol'></i></a>";
+        return fileUrl;
       }
     }
   }
 
-  function setXlsx(value,row,index){
-    if (value){
-      if (value.length==1){
-        attachUrl= '<a href=/onlyoffice/'+value[0].Id+' title="下载" target="_blank"><i class="fa fa-file-excel-o"></i></a>';
-        return attachUrl;
-      }else if(value.length==0){
+  // function setXlsx(value,row,index){
+  //   if (value){
+  //     if (value.length==1){
+  //       attachUrl= '<a href=/onlyoffice/'+value[0].Id+' title="下载" target="_blank"><i class="fa fa-file-excel-o"></i></a>';
+  //       return attachUrl;
+  //     }else if(value.length==0){
                     
-      }else if(value.length>1){
-        attachUrl= "<a class='Xlsx' href='javascript:void(0)' title='查看Xlsx列表'><i class='fa fa-list-ol'></i></a>";
-        return attachUrl;
-      }
-    }
-  }
+  //     }else if(value.length>1){
+  //       attachUrl= "<a class='Xlsx' href='javascript:void(0)' title='查看Xlsx列表'><i class='fa fa-list-ol'></i></a>";
+  //       return attachUrl;
+  //     }
+  //   }
+  // }
 
-  function setPptx(value,row,index){
-    if (value){
-      if (value.length==1){
-        pdfUrl= '<a href=/onlyoffice/'+value[0].Id+' title="打开pdf" target="_blank"><i class="fa fa-file-powerpoint-o"></i></a>';
-        return pdfUrl;
-      }else if(value.length==0){
+  // function setPptx(value,row,index){
+  //   if (value){
+  //     if (value.length==1){
+  //       pdfUrl= '<a href=/onlyoffice/'+value[0].Id+' title="打开pdf" target="_blank"><i class="fa fa-file-powerpoint-o"></i></a>';
+  //       return pdfUrl;
+  //     }else if(value.length==0){
                     
-      }else if(value.length>1){
-        pdfUrl= "<a class='Pptx' href='javascript:void(0)' title='查看Pptx列表'><i class='fa fa-list-ol'></i></a>";
-        return pdfUrl;
-      }
-    }
-  }
+  //     }else if(value.length>1){
+  //       pdfUrl= "<a class='Pptx' href='javascript:void(0)' title='查看Pptx列表'><i class='fa fa-list-ol'></i></a>";
+  //       return pdfUrl;
+  //     }
+  //   }
+  // }
 
   window.actionEvents = {
     'click .Docx': function (e, value, row, index) {
@@ -270,7 +282,7 @@
         fileSingleSizeLimit: 10*1024*1024,//限制大小10M，单文件
         fileSizeLimit: allMaxSize*1024*1024,//限制大小10M，所有被选文件，超出选择不上
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/onlyoffice/addattachment',
         // 选择文件的按钮。可选。
@@ -401,8 +413,8 @@
       $("#prodname3").val(selectRow[0].Title);
       $("#prodlabel3").val(selectRow[0].Label);
       $("#prodprincipal3").val(selectRow[0].Principal);
-
-      $("#proddate3").val(selectRow[0].End);
+      //selectRow[0].End
+      $("#proddate3").val(moment(selectRow[0].End, 'YYYY-MM-DD').format('YYYY-MM-DD'));
 
       $('#modalProdEditor').modal({
       show:true,
@@ -450,7 +462,7 @@
         // 不压缩image
         resize: false,
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/onlyoffice/updateattachment',
         // 选择文件的按钮。可选。
@@ -775,7 +787,7 @@
     var prodlabel = $('#prodlabel3').val();
     var prodprincipal = $('#prodprincipal3').val();
     var proddate = $('#proddate3').val();
- 
+ 	  //alert(proddate);
     if (prodname&&prodcode){  
       $.ajax({
         type:"post",

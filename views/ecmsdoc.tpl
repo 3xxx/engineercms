@@ -100,6 +100,10 @@
           <a href="#standard">规范管理</a>
         </li>
 
+        <li>
+          <a href="#onlyoffice">文档协作</a>
+        </li>
+
       </ul>
       <a class="back-to-top" href="#top">返回顶部</a>
 
@@ -115,8 +119,12 @@
     </h1>
 
     <p class="lead">
-      EngineerCMS 具有功能：文档管理，图文发布，团队协同，结合MeritMS进行校审流程，成果统计等。</p>
-      <p class="lead">创新：集档案系统，ProjectWise协同设计，Redmine项目管理，SharePoint发布等特色；是基于个人电脑的知识管理与共享的微服务。
+      EngineerCMS 具有功能：文档管理，文档协作，图文发布，团队协同，结合MeritMS进行校审流程，成果统计等。</p>
+    <p class="lead">
+      创新：集ONLYOFFICE文档协作，档案系统，ProjectWise协同设计，Redmine项目管理，SharePoint发布，网络云盘等特色；是基于个人电脑的知识管理与共享的微服务。
+    </p>
+    <p class="lead">
+      特色：采用golang语音编写，天生部署简单，无需服务环境，无需数据库服务，省心。
     </p>
 
     <div class="bs-callout bs-callout-warning" id="jquery-required">
@@ -147,33 +155,44 @@
       功能
     </h2>
 
-<ol>
+  <ol>
+    <li>文档、资源管理；文档协作（基于ONLYOFFICE document server）；项目资源同步；</li>
     <li>后台预定义工程目录类型和分层级别，支持无限级；</li>
-<li>建立项目时选择后台预定义的项目类型和目录层级，自动建立树形目录，支持无限级目录；项目支持公开和私有；</li>
-<li>任意层级目录下可以添加任意成果；可对任意目录进行权限设置；</li>
-<li>成果包含文章、pdf附件和非pdf附件，并将它们分别列出；一个成果如果包含一个pdf文件则直接打开，如果多于一个则打开列表，非pdf附件也是一样；文章采用富文本编辑器，支持图文word直接黏贴；</li>
-<li>多人建立相同项目和目录，可以实现目录中的成果同步显示；</li>
-<li>深度检索到成果、附件和文章全文；全局检索到局域网内其他cms上的成果、附件和文章；</li>
-<li>根据资料编号的规则，批量上传附件时，自动截取编号和名称，并归入对应的目录中；</li>
-<li> 3种权限方式：IP地址段权限，适用于局域网内相互之间的无障碍访问；注册用户的权限适用于远程VPN访问；用户组权限适用于项目团队协作；</li>
-<li>公开和私有的个人日历日程。每个项目提供一个项目日程和大事记时间轴；</li>
-<li> 上传成果后，自动生成提供给MeritMS的成果清单，可提交给MeritMS系统进行成果统计；</li>
-<li>目的是标准化管理自己的知识体系，可以把数据库挂到到服务器上，供其他人查阅；退休后可将自己个人的cms系统导入cms服务器版，实现知识继承。</li>  
-  </ol>
+    <li>建立项目时选择后台预定义的项目类型和目录层级，自动建立树形目录，支持无限级目录；项目支持公开和私有；</li>
+    <li>任意层级目录下可以添加任意成果；可对任意目录进行权限设置；</li>
+    <li>成果包含文章、pdf附件和非pdf附件，并将它们分别列出；一个成果如果包含一个pdf文件则直接打开，如果多于一个则打开列表，非pdf附件也是一样；文章采用富文本编辑器，支持图文word直接黏贴；</li>
+    <li>多人建立相同项目和目录，可以实现目录中的成果同步显示；</li>
+    <li>定义组织结构；</li>
+    <li> 2种权限方式：IP地址段权限，适用于局域网内相互之间的无障碍访问；基于用户——角色——权限的方式适用于项目团队协作；独创的根据文件扩展名来进行权限管理。</li>
+    <li>深度检索到成果、附件和文章全文；全局检索到局域网内其他cms上的成果、附件和文章；</li>
+    <li>根据资料编号的规则，批量上传附件时，自动截取编号和名称，并归入对应的目录中；</li>
+    <li>公开和私有的个人日历日程。每个项目提供一个项目日程和大事记时间轴；</li>
+    <li>上传成果后，自动生成提供给MeritMS的成果清单，可提交给MeritMS系统进行设计成果校审流程和工作量统计；</li>
+    <li>目的是标准化管理自己的知识体系，可以把数据库挂到到服务器上，供其他人查阅；退休后可将自己个人的cms系统导入cms服务器版，实现知识继承。</li>
+    <li>√硬盘中存储文件的目录与页面目录一致。</li>
+    <li>√会议室和车辆的预定，用餐人数计划统计等常用功能。</li>
+    <li>√wiki技术讨论。</li>
+    <li>√工程大事记，工程进展时间轴等潮玩意儿。</li>
+    <li>√独创的pdf连续查阅；</li>
+    <li>√IPAD、手机移动端无障碍；</li>
+    <li>√设代日记图文并茂记录现场进度；连续查看文章。</li>
+    <li>√设计、施工进度甘特图展示；</li>
+    <li>√分享到微信；</li>
+    <li>√√√支持ONLYOFFICE多人在线编辑文档（实时文档协作）。</li>
 
+  </ol>
     <h2 id="about-use">
       <a class="anchorjs-link " href="#about-use" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
       使用方式
     </h2>
-<ol>
+  <ol>
     <li>如果是首次使用，请：</li>
-  <li> 解压到d:\EngineerCMS\；（其他盘根目录下也行，因为上传附件会使得这个文件夹越来越大，所以，要考虑空间大一些的盘。）</li>
-  <li> 修改配置文件conf\app.conf.sample为app.conf,打开app.conf,看到里面的httpport = 80，如果要修改成8080，请修改后保存。runmode = prod表示生产模式运行系统。</li>
-  <li> 修改数据库文件database\engineercms.db.sample为engineercms.db。</li>
-  <li> 运行engineercms-win64/win32.exe即可在chrome浏览器中输入本地ip（127.0.0.1）和前面设置的端口号（假设是80或8080）进行访问。如果是80端口，则端口号可省略，如http://127.0.0.1。如果运行后闪退，则可能是端口号被占用了，请修改端口号再运行。运行后不要关闭窗口，它是服务。IE浏览器支持不好，推荐使用chrome，可以使用firefox、opra。加入开机启动请自行设置。</li>
+    <li> 解压到d:\EngineerCMS\；（其他盘根目录下也行，因为上传附件会使得这个文件夹越来越大，所以，要考虑空间大一些的盘。）</li>
+    <li> 修改配置文件conf\app.conf.sample为app.conf,打开app.conf,看到里面的httpport = 80，如果要修改成8080，请修改后保存。runmode = prod表示生产模式运行系统。</li>
+    <li> 修改数据库文件database\engineercms.db.sample为engineercms.db。</li>
+    <li> 运行engineercms-win64/win32.exe即可在chrome浏览器中输入本地ip（127.0.0.1）和前面设置的端口号（假设是80或8080）进行访问。如果是80端口，则端口号可省略，如http://127.0.0.1。如果运行后闪退，则可能是端口号被占用了，请修改端口号再运行。运行后不要关闭窗口，它是服务。IE浏览器支持不好，推荐使用chrome，可以使用firefox、opra。加入开机启动请自行设置。</li>
   </ol>
   <img src="/static/img/局域网meritecms.png" style="width: 100%">
-
     <h1 id="backroud" class="page-header">
       <a class="anchorjs-link " href="#backroud" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
       后台设置
@@ -306,6 +325,23 @@
     </p>
     <img src="/static/img/规范查阅.png" style="width: 100%">
     <img src="/static/img/规范有效库管理.png" style="width: 100%">
+
+    <h1 id="onlyoffice" class="page-header">
+      <a class="anchorjs-link " href="#onlyoffice" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
+      文档协作
+    </h1>
+    <p class="lead">
+      文档协作功能即团队成员可以同时编辑一个文档，支持word,excel,powerpoint，解决多人文档协作需要汇总的问题，比如月报，任务进度控制表，会议纪要等需要多人审阅的文件，发个链接给大家，大家有意见直接在上面修改，简单高效快捷，体验良好。EngineerCMS基于ONLYOFFICE document server进行的二次开发，提供文档管理和更新后的文档存储即提供回调参数给onlyoffice。
+    </p>
+    <p class="lead">文档管理界面</p>
+    <img src="/static/img/EngineerCMS onlyoffice.jpg" style="width: 100%">
+    <p class="lead">word协作效果</p>
+    <img src="/static/img/onlyoffice word.jpg" style="width: 100%">
+    <p class="lead">powerpoint协作效果</p>
+    <img src="/static/img/onlyoffice powerpoint.jpg" style="width: 100%">
+    <p class="lead">excel协作效果</p>
+    <img src="/static/img/onlyoffice excel.jpg" style="width: 100%">
+
   </div>
 </div>
 </div>

@@ -10,8 +10,8 @@
 <script src='/static/js/bootstrap-datetimepicker.zh-CN.js'></script>
 <link rel='stylesheet' href='/static/css/bootstrap-datetimepicker.min.css'/>
 <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-<link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
-<script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css"> -->
+<!-- <script type="text/javascript" src="/static/js/webuploader.min.js"></script> -->
 <style>
 	/*body {
 		margin: 0;

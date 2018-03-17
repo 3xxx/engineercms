@@ -25,8 +25,8 @@
 
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
-  <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
+  <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
 </head>
 
 <body>
@@ -321,7 +321,7 @@
         // 不压缩image
         resize: false,
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/project/product/addattachment',
         // 选择文件的按钮。可选。
@@ -436,7 +436,7 @@
         // 不压缩image
         resize: false,
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/project/product/addattachment2',
         // 选择文件的按钮。可选。
@@ -648,7 +648,7 @@
         // 不压缩image
         resize: false,
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/project/product/updateattachment',
         // 选择文件的按钮。可选。

@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>EngineerCMS</title>
+  <title>用户-角色</title>
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
@@ -20,7 +20,7 @@
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <script src="/static/js/jquery.form.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/>
   <script type="text/javascript" src="/static/js/select2.js"></script>
 </head>
 <body>
@@ -628,10 +628,17 @@ field：点击列的 field 名称 -->
 </div> -->
   <!-- 显示用户角色表 -->
   <div id="details" style="display:none">
-  <div class="row">
-    <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
+    <div class="row">
+      <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
       <h3 id="rowtitle">角色表</h3>
       <div id="toolbar1" class="btn-group">
+        <button type="button" data-name="addButton" id="addButtonrole" class="btn btn btn-info btn-sm"> <i class="fa fa-plus">添加</i>
+        </button>
+        <button type="button" data-name="editorButton" id="editorButtonrole" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
+        </button>
+        <button type="button" data-name="deleteButton" id="deleteButtonrole" class="btn btn btn-danger btn-sm">
+        <i class="fa fa-trash">删除</i>
+        </button>
         <button type="button" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">保存修改</i>
         </button>
         <!-- <button type="button" data-name="editorButton" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
@@ -674,8 +681,98 @@ field：点击列的 field 名称 -->
             </tr>
             </thead>
         </table>
+      </div>
     </div>
   </div>
+  <!-- 添加角色 -->
+  <div class="container">
+    <form class="form-horizontal">
+    <div class="modal fade" id="modalTable1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">添加角色</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">        
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">角色名</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="Rolename"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">角色编号</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="Rolenumber"></div>
+              </div>
+
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-7">
+                  <select id="Status" class="form-control">
+                    <option value="0">正常</option>
+                    <option value="1">失效</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" onclick="save()">保存</button>
+        </div>
+      </div>
+    </div>
+      </div>
+    </form>
+  </div>
+  <!-- 修改角色 -->
+  <div class="container">
+    <form class="form-horizontal">
+      <div class="modal fade" id="modalTable2">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">修改角色</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">角色名</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" id="Rolename1"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">角色编号</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" id="Rolenumber1"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">状态</label>
+                  <div class="col-sm-7">
+                    <select id="Status1" class="form-control">
+                      <option value="0">正常</option>
+                      <option value="1">失效</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" onclick="update()">修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 
   <br/>
@@ -700,7 +797,135 @@ field：点击列的 field 名称 -->
         }
       }
 
-    // 保存修改
+    $(document).ready(function() {
+      //添加角色
+      $("#addButtonrole").click(function() {
+        $('#modalTable1').modal({
+        show:true,
+        backdrop:'static'
+        });
+      })
+
+      //删除角色
+      $("#deleteButtonrole").click(function() {
+        var selectRow=$('#table1').bootstrapTable('getSelections');
+        if (selectRow.length<=0) {
+          alert("请先勾选！");
+          return false;
+        }
+        if(confirm("确定删除吗？一旦删除将无法恢复！")){
+          var titles=$.map(selectRow,function(row){
+            // alert(row.Id);
+            // return row.Id;
+            // alert(row.Title);
+            return row.Title;
+          })
+          var ids="";
+          for(var i=0;i<selectRow.length;i++){
+            if(i==0){
+              ids=selectRow[i].Id;
+            }else{
+              ids=ids+","+selectRow[i].Id;
+            }  
+          }
+          $.ajax({
+            type:"post",
+            url:"/admin/role/delete",
+            data: {ids:ids},
+            success:function(data,status){
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              //删除已选数据
+              $('#table1').bootstrapTable('remove',{
+                field:'Title',
+                values:titles
+              });
+            }
+          });
+        } 
+      })
+
+      //编辑角色模态框
+      $("#editorButtonrole").click(function() {
+        var selectRow=$('#table1').bootstrapTable('getSelections');
+        if (selectRow.length<1){
+          alert("请先勾选角色！");
+          return;
+        }
+        if (selectRow.length>1){
+          alert("请不要勾选一个以上角色！");
+          return;
+        }
+        $("input#cid").remove();
+        var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $("#Rolename1").val(selectRow[0].Rolename);
+        $("#Rolenumber1").val(selectRow[0].Rolenumber);
+        $("#Status1").val(selectRow[0].Status);
+        // alert(JSON.stringify(selectRow));
+        // alert(selectRow[0].Id);
+        // var title = $('#'+id).attr("value");
+        // var title = $('#'+id).attr("href");
+        // var categoryid = $('#categoryid').val();
+        $('#modalTable2').modal({
+        show:true,
+        backdrop:'static'
+        });
+      })
+    })
+
+    //新建角色
+    function save(){
+      // var radio =$("input[type='radio']:checked").val();        
+      var Rolename = $('#Rolename').val();
+      var Rolenumber = $('#Rolenumber').val();
+      // var Status     = $('#Status option:selected').text();
+      var Status = $('#Status option:selected').val();
+
+      if (Rolename){  
+        $.ajax({
+                type:"post",
+                url:"/admin/role/post",
+                data: {rolename:Rolename,rolenumber:Rolenumber,status:Status},
+                success:function(data,status){
+                  alert("添加“"+data+"”成功！(status:"+status+".)");
+                 }
+        });  
+      } else{
+        alert("角色名等不能为空！");
+      }
+      // $(function(){$('#myModal').modal('hide')}); 
+      $('#modalTable1').modal('hide');
+      $('#table1').bootstrapTable('refresh', {url:'/admin/role/get'});
+      // "/category/modifyfrm?cid="+cid
+      // window.location.reload();//刷新页面
+    }
+
+    //更新角色
+    function update(){
+      // var radio =$("input[type='radio']:checked").val();
+      var roleid1 = $('#cid').val();
+      var rolename1 = $('#Rolename1').val();
+      var rolenumber1 = $('#Rolenumber1').val();
+      var status1 = $('#Status1').val();
+      // $('#myModal').on('hide.bs.modal', function () {  
+      if (rolename1){  
+          $.ajax({
+              type:"put",
+              url:"/admin/role/update",
+              data: {roleid:roleid1,rolename:rolename1,rolenumber:rolenumber1,status:status1},
+              success:function(data,status){
+                alert("修改“"+data+"”成功！(status:"+status+".)");
+               }
+          });  
+      } 
+      // $(function(){$('#myModal').modal('hide')});
+      $('#modalTable1').modal('hide');
+      $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
+      // "/category/modifyfrm?cid="+cid
+      // window.location.reload();//刷新页面
+    }
+
+    // 保存用户-角色的修改
     $("#editorButton").click(function() {
       // if ({{.role}}!=1){
       //   alert("权限不够！");
@@ -733,6 +958,7 @@ field：点击列的 field 名称 -->
           }
         });  
     })
+
 
     function actionFormatter(value, row, index) {
       return '<button type="button" data-name="addButton" id="addButton" class="btn btn-info btn-xs"> <i class="fa fa-user">角色</i></button>';

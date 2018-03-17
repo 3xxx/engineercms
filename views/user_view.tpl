@@ -20,7 +20,7 @@
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <!-- <script src="/static/js/jquery.form.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/>
   <script type="text/javascript" src="/static/js/select2.js"></script>
 </head>
 

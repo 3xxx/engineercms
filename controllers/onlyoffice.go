@@ -29,7 +29,7 @@ type Callback struct {
 	Status      int      `json:"status"`
 	Url         string   `json:"url"`
 	Changesurl  string   `json:"changesurl"`
-	History     history  `json:"history"`
+	History     history1 `json:"history"`
 	Users       []string `json:"users"`
 	Actions     []action `json:"actions"`
 	Lastsave    string   `json:"lastsave"`
@@ -37,24 +37,35 @@ type Callback struct {
 }
 
 type action struct {
-	Type   int
-	userid string
+	Type   int    `json:"type"`
+	Userid string `json:"userid"`
 }
 
-type history struct {
-	changes       []change
-	serverVersion string
+type history1 struct {
+	ServerVersion string   `json:"serverVersion"`
+	Changes       []change `json:"changes"`
+	// created       time.Time
+	// key           string
+	// user          User1
+	// version       int
 }
 
 type change struct {
-	created string
-	User    User1
+	Created string `json:"created"` //time.Time
+	User    User1  `json:"user"`
 }
 
 type User1 struct {
-	id   string
-	name string
+	Id   string `json:"id"` //必须大写才能在tpl中显示{{.json}}
+	Name string `json:"name"`
 }
+
+// type FileNode struct {
+// 	Id        int64       `json:"id"`
+// 	Title     string      `json:"text"`
+// 	Code      string      `json:"code"` //分级目录代码
+// 	FileNodes []*FileNode `json:"nodes"`
+// }
 
 type Onlyoffice1 struct {
 	Id      int64
@@ -76,33 +87,32 @@ type OnlyLink struct {
 	Created   time.Time
 	Updated   time.Time
 	Docxlink  []DocxLink
-	Xlsxlink  []XlsxLink
-	Pptxlink  []PptxLink
+	// Xlsxlink  []XlsxLink
+	// Pptxlink  []PptxLink
 }
 
 type DocxLink struct {
-	Id    int64
-	Title string
+	Id     int64
+	Title  string
+	Suffix string
 	// Link    string
 	Created time.Time
 	Updated time.Time
 }
 
-type XlsxLink struct {
-	Id    int64
-	Title string
-	// Link    string
-	Created time.Time
-	Updated time.Time
-}
+// type XlsxLink struct {
+// 	Id    int64
+// 	Title string
+// 	Created time.Time
+// 	Updated time.Time
+// }
 
-type PptxLink struct {
-	Id    int64
-	Title string
-	// Link    string
-	Created time.Time
-	Updated time.Time
-}
+// type PptxLink struct {
+// 	Id    int64
+// 	Title string
+// 	Created time.Time
+// 	Updated time.Time
+// }
 
 func (c *OnlyController) Get() {
 	username, role := checkprodRole(c.Ctx)
@@ -202,8 +212,8 @@ func (c *OnlyController) GetData() {
 
 	link := make([]OnlyLink, 0)
 	Docxslice := make([]DocxLink, 0)
-	Xlsxslice := make([]XlsxLink, 0)
-	Pptxslice := make([]PptxLink, 0)
+	// Xlsxslice := make([]XlsxLink, 0)
+	// Pptxslice := make([]PptxLink, 0)
 	for _, w := range docs {
 		Attachments, err := models.GetOnlyAttachments(w.Id)
 		if err != nil {
@@ -222,31 +232,33 @@ func (c *OnlyController) GetData() {
 		for _, v := range Attachments {
 			// beego.Info(v.FileName)
 			// fileext := path.Ext(v.FileName)
+			docxarr := make([]DocxLink, 1)
+			docxarr[0].Id = v.Id
+			docxarr[0].Title = v.FileName
 			if path.Ext(v.FileName) == ".docx" || path.Ext(v.FileName) == ".DOCX" || path.Ext(v.FileName) == ".doc" || path.Ext(v.FileName) == ".DOC" {
-				docxarr := make([]DocxLink, 1)
-				docxarr[0].Id = v.Id
-				docxarr[0].Title = v.FileName
-				Docxslice = append(Docxslice, docxarr...)
+				docxarr[0].Suffix = "docx"
+
 			} else if path.Ext(v.FileName) == ".XLSX" || path.Ext(v.FileName) == ".xlsx" || path.Ext(v.FileName) == ".XLS" || path.Ext(v.FileName) == ".xls" {
-				xlsxarr := make([]XlsxLink, 1)
-				xlsxarr[0].Id = v.Id
-				xlsxarr[0].Title = v.FileName
-				// pdfarr[0].Link = Url
-				Xlsxslice = append(Xlsxslice, xlsxarr...)
+				docxarr[0].Suffix = "xlsx"
+				// xlsxarr := make([]XlsxLink, 1)
+				// xlsxarr[0].Id = v.Id
+				// xlsxarr[0].Title = v.FileName
+				// Xlsxslice = append(Xlsxslice, xlsxarr...)
 			} else if path.Ext(v.FileName) == ".pptx" || path.Ext(v.FileName) == ".PPTX" || path.Ext(v.FileName) == ".ppt" || path.Ext(v.FileName) == ".PPT" {
-				pptxarr := make([]PptxLink, 1)
-				pptxarr[0].Id = v.Id
-				pptxarr[0].Title = v.FileName
-				// pdfarr[0].Link = Url
-				Pptxslice = append(Pptxslice, pptxarr...)
+				docxarr[0].Suffix = "pptx"
+				// pptxarr := make([]PptxLink, 1)
+				// pptxarr[0].Id = v.Id
+				// pptxarr[0].Title = v.FileName
+				// Pptxslice = append(Pptxslice, pptxarr...)
 			}
+			Docxslice = append(Docxslice, docxarr...)
 		}
 		linkarr[0].Docxlink = Docxslice
-		linkarr[0].Xlsxlink = Xlsxslice
-		linkarr[0].Pptxlink = Pptxslice
+		// linkarr[0].Xlsxlink = Xlsxslice
+		// linkarr[0].Pptxlink = Pptxslice
 		Docxslice = make([]DocxLink, 0) //再把slice置0
-		Xlsxslice = make([]XlsxLink, 0) //再把slice置0
-		Pptxslice = make([]PptxLink, 0)
+		// Xlsxslice = make([]XlsxLink, 0) //再把slice置0
+		// Pptxslice = make([]PptxLink, 0)
 
 		link = append(link, linkarr...)
 	}
@@ -287,6 +299,12 @@ func (c *OnlyController) OnlyOffice() {
 		c.Data["Uname"] = c.Ctx.Input.IP()
 		c.Data["Uid"] = c.Ctx.Input.IP()
 	}
+
+	users2 := User1{"9", "qin.xc"}
+	c.Data["changes1"] = change{"2018-03-10 15:34:57", users2}
+	var users3 = User1{"8", "qin8.xc"}
+	c.Data["changes2"] = change{"2018-03-10 15:35:29", users3}
+	c.Data["serverVersion1"] = "5.0.7"
 
 	if path.Ext(onlyattachment.FileName) == ".docx" || path.Ext(onlyattachment.FileName) == ".DOCX" {
 		c.Data["fileType"] = "docx"
@@ -347,6 +365,12 @@ func (c *OnlyController) UrltoCallback() {
 	var callback Callback
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
 
+	//beego.Info(callback.History)
+	// beego.Info(callback.History)
+	//beego.Info(callback.Actions) //[{0 }]
+	//beego.Info(callback.Lastsave)
+	//beego.Info(string(c.Ctx.Input.RequestBody))
+
 	if callback.Status == 1 || callback.Status == 4 {
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
@@ -376,6 +400,10 @@ func (c *OnlyController) UrltoCallback() {
 			beego.Error(err)
 		} else {
 			err = models.UpdateOnlyAttachment(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			err = models.UpdateDocTime(onlyattachment.DocId)
 			if err != nil {
 				beego.Error(err)
 			}
@@ -484,7 +512,9 @@ func (c *OnlyController) AddOnlyAttachment() {
 			//存入文件夹
 			//判断文件是否存在，如果不存在就写入
 			if _, err := os.Stat(filepath); err != nil {
+				// beego.Info(err)
 				if os.IsNotExist(err) {
+					// beego.Info(err)
 					//return false
 					err = c.SaveToFile("file", filepath) //存文件
 					if err != nil {
@@ -493,6 +523,10 @@ func (c *OnlyController) AddOnlyAttachment() {
 					c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": h.Filename, "original": h.Filename, "url": Url + "/" + h.Filename}
 					c.ServeJSON()
 				}
+			} else {
+				// beego.Info(err)
+				c.Data["json"] = map[string]interface{}{"state": "error"}
+				c.ServeJSON()
 			}
 
 		}

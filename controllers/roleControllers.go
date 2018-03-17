@@ -298,6 +298,8 @@ func (c *RoleController) Post() {
 	} else {
 		// c.Rsp(false, err.Error())
 		beego.Error(err)
+		c.Data["json"] = "wrong"
+		c.ServeJSON()
 		// return
 	}
 }
@@ -604,13 +606,22 @@ func (c *RoleController) GetRolePermission() {
 //   '200':
 //     description: success
 func (c *RoleController) Delete() {
-	rid, _ := c.GetInt64("roleid")
-	_, err := m.DeleteRole(rid)
-	if err != nil {
-		beego.Error(err)
-	} else {
-		c.Data["json"] = "ok"
-		c.ServeJSON()
+	roleids := c.GetString("ids")
+	rolearray := strings.Split(roleids, ",")
+	for _, v1 := range rolearray {
+		// rid, _ := c.GetInt64("roleid")
+		//id转成64位
+		idNum, err := strconv.ParseInt(v1, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		_, err = m.DeleteRole(idNum)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
 	}
 }
 

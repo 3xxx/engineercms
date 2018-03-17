@@ -111,20 +111,23 @@ func (c *AdminController) Admin() {
 			c.TplName = "admin_category.tpl"
 		case "013": //搜索引擎
 			c.TplName = "admin_spiderip.tpl"
-		case "021": //系统权限
-			c.TplName = "admin_systemrole.tpl"
-		case "022": //项目权限
-			c.TplName = "admin_projectrole.tpl"
+		case "021": //角色权限分配
+			c.TplName = "admin_role.tpl"
+			// c.TplName = "admin_systemrole.tpl"
+		case "022": //用户-oo权限
+			c.TplName = "admin_roleoo.tpl"
+			// c.TplName = "admin_projectrole.tpl"
+		case "023": //角色-oo权限
+			c.TplName = "admin_useroo.tpl"
+		case "024": //IP地址段
+			c.TplName = "admin_ipsegment.tpl"
 		case "030": //组织结构
 			c.TplName = "admin_department.tpl"
-		case "031": //用户
+		case "031": //用户-组织结构
 			c.TplName = "admin_users.tpl"
-		case "032": //角色
-			c.TplName = "admin_role.tpl"
-		case "033": //权限
-			c.TplName = "admin_permission.tpl"
-		case "034": //IP地址段
-			c.TplName = "admin_ipsegment.tpl"
+		case "032": //角色-用户
+			c.TplName = "admin_users.tpl"
+
 		// case "033": //用户组
 		// 	c.TplName = "admin_usergroup.tpl"
 		case "041": //项目编辑

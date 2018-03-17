@@ -8,10 +8,10 @@
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
 <!--引入CSS-->
-<link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
+<!-- <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css"> -->
 <!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
 <!--引入JS-->
-<script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.js"></script>
+<!-- <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
   <style>
