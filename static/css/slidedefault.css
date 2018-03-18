@@ -95,35 +95,35 @@ body {
 }
 
 .offline-storage .counter:after {
-  background-image: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_Offline_Storage_32.png);
+  background-image: url(/static/img/HTML5_Offline_Storage_32.png);
 }
 
 .device-access .counter:after{
-  background-image: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_Device_Access_32.png);
+  background-image: url(/static/img/HTML5_Device_Access_32.png);
 }
 
 .realtime-communication .counter:after {
-  background-image: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_Connectivity_32.png);
+  background-image: url(/static/img/HTML5_Connectivity_32.png);
 }
 
 .performance .counter:after {
-  background-image: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_Performance_32.png);
+  background-image: url(/static/img/HTML5_Performance_32.png);
 }
 
 .semantics .counter:after {
-  background-image: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_Semantics_32.png);
+  background-image: url(/static/img/HTML5_Semantics_32.png);
 }
 
 .multimedia .counter:after {
-  background: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_MultiMedia_32.png);
+  background: url(/static/img/HTML5_MultiMedia_32.png);
 }
 
 .effects .counter:after {
-  background: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_3D_Effects_32.png);
+  background: url(/static/img/HTML5_3D_Effects_32.png);
 }
 
 .styling .counter:after {
-  background: url(http://www.html5rocks.com/static/images/identity/classes_32/HTML5_Styling_32.png);
+  background: url(/static/img/HTML5_Styling_32.png);
 }
 
 .slide.title > .counter,

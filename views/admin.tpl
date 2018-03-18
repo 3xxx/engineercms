@@ -2,128 +2,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>EngineerCMS</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EngineerCMS后台</title>
 
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
-  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
-<script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
-<script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-<script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
-<script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
-<script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+  <link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.min.css">
+  <link rel="stylesheet" href="/static/css/custom.css">
 
-<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-<script src="/static/js/tableExport.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
 
+  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
 </head>
 <body>
-<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-  <div id="tree"></div>
-</div>
-<!-- 菜单顶部 -->
-<!-- <nav class="navbar navbar-default"> -->
-    <!-- <ul class="nav navbar-nav"> -->
-<!-- <div class="navbar navba-default navbar-fixed-top"> -->
-  <!-- <div class="container-fill"> -->
-  <!-- <div class="main-panel"> -->
-  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-      
-      <div class="navbar navbar-top">
-          <ul class="nav navbar-nav navbar-right">
-          <!-- <ul class="nav navbar-nav"> -->
-              <li>
-                  <a href="/">返回</a>
-              </li>
-              <li>
-                  <a href="/admin/user/detail">{{.Ip}}</a>
-              </li>
-              <!-- <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                      <li><a href="https://github.com/3xxx" target="_blank">3xxx github</a></li>
-                      <li><a href="http://www.sina.com/xc-qin" target="_blank">Weibo</a></li>
-                      <li><a href="#">Something</a></li>
-                      <li class="divider"></li>
-                      <li><a href="http://blog.csdn.net/hotqin888" target="_blank">Blog</a></li>
-                  </ul>
-              </li> -->
-              <li>
-                  <a href="/login?exit=true">退出</a>
-              </li>
-          </ul>
+
+  <div class="page-wrapper toggled">
+    <nav id="sidebar" class="sidebar-wrapper">
+      <div class="sidebar-content mCustomScrollbar _mCS_1 mCS-autoHide desktop">
+        <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
+          <div id="mCSB_1_container" class="mCSB_container" style="position: relative; left: 0px; top: 0px;" dir="ltr">
+            <a href="#" id="toggle-sidebar"> <i class="fa fa-bars"></i>
+            </a>
+            <div class="sidebar-brand">
+              <a href="#">pro sidebar</a>
+            </div>
+            <div class="sidebar-header">
+              <div class="user-pic">
+                <img class="img-responsive img-rounded mCS_img_loaded" src="/static/img/user.jpg" alt=""></div>
+              <div class="user-info">
+                <span class="user-name">
+                  Engineer <strong>CMS</strong>
+                </span>
+                <span class="user-role">Administrator</span>
+                <div class="user-status">
+                  <a href="#">
+                    <span class="label label-success">Online</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- sidebar-header  -->  
+            <div class="sidebar-search">
+              <div>
+                <div class="input-group">
+                  <input type="text" class="form-control search-menu" placeholder="Search for...">  
+                  <span class="input-group-addon"> <i class="fa fa-search"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- sidebar-search  -->  
+            <div class="sidebar-menu">
+              <ul id="tree"></ul>
+            </div>
+            <!-- sidebar-menu  --> </div>
+          <!--<div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: block;">  
+          <div class="mCSB_draggerContainer">
+            <div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; top: 0px; display: block; height: 66px; max-height: 194px;">
+              <div class="mCSB_dragger_bar" style="line-height: 30px;"></div>
+            </div>
+            <div class="mCSB_draggerRail"></div>
+          </div>
+        </div>
+        -->
       </div>
-    <!-- </nav> -->
+    </div>
+    <!-- sidebar-content  -->  
 
-    <!-- </div> -->
-    <!-- 面包屑导航 -->
-    <!-- <div class="main-panel-breadcrumb"> -->
-      <!-- {include file="./_layout/breadcrumb" /} -->
-    <!-- </div> -->
-  <!-- </div> -->
-<!-- </div>     -->
-<!-- if (!empty($parents)) { -->
-<!-- $html  = ""; -->
-<!-- <div class="main-panel-breadcrumb"> -->
-  <div class="breadcrumbs">
-    <ol class="breadcrumb" split="&gt;">
-      <li>
-        <a href="javascript:void(0)"> <i class="fa fa-home" aria-hidden="true"></i>
-          后台
-        </a>
-      </li>
-      <li>
-        <a href="javascript:void(0)"> <i class="fa '. $parents['picon'] .' " aria-hidden="true"></i>
-          日历
-        </a>
-      </li>
-<!--       <li>
-        <a href="javascript:void(0)">
-          <i class="fa '. $parents['icon'] .' " aria-hidden="true"></i>
-          分级目录
-        </a>
-      </li> -->
-      <!-- <li>
-        <a href="javascript:void(0)">
-          <i class="fa '. $parents['act_icon'] .' " aria-hidden="true"></i>
-          parents
-        </a>
-      </li> -->
-    </ol>
-  </div>
-<!-- </div> -->
-</div>
-
-
-
-<script type="text/javascript">
+    <div class="sidebar-footer">
+      <a href="#">
+        <i class="fa fa-bell"></i>
+        <span class="label label-warning notification">3</span>
+      </a>
+      <a href="#">
+        <i class="fa fa-envelope"></i>
+        <span class="label label-success notification">7</span>
+      </a>
+      <a href="#">
+        <i class="fa fa-gear"></i>
+      </a>
+      <a href="#">
+        <i class="fa fa-power-off"></i>
+      </a>
+    </div>
+  </nav>
+  <!-- sidebar-wrapper  -->  
+  <main class="page-content">
+    <div class="breadcrumbs">
+      <ol class="breadcrumb" split="&gt;">
+        <li>
+          <a href="javascript:void(0)">
+            <i class="fa fa-home" aria-hidden="true"></i>
+            后台
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">
+            <i class="fa '. $parents['picon'] .' " aria-hidden="true"></i>
+            日历
+          </a>
+        </li>
+      </ol>
+    </div>
+    <div class="container-fluid">
+      <iframe src="/admin/01" name='main' frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=100"></iframe>
+    </div>
+  </main>
+  <!-- page-content" --> </div>
+  <script type="text/javascript">
     $(function () {
-        // function getTree() {
-          // text: "Node 1",
-          // icon: "glyphicon glyphicon-stop",
-          // selectedIcon: "glyphicon glyphicon-stop",
-          // color: "#000000",
-          // backColor: "#FFFFFF",
-          // href: "#node-1",
-          // selectable: true,
-          // state: {
-          //   checked: true,
-          //   disabled: true,
-          //   expanded: true,
-          //   selected: true
-          // },
-          // tags: ['available'],
-          // Some logic to retrieve, or generate tree structure
-            // <div class="hello-user">欢迎您~'. $_authUser['username'] .'  </div>
-            var data = 
-            [
+      //function getTree() {
+      // text: "Node 1",
+      // icon: "glyphicon glyphicon-stop",
+      // selectedIcon: "glyphicon glyphicon-stop",
+      // color: "#000000",
+      // backColor: "#FFFFFF",
+      // href: "#node-1",
+      // selectable: true,
+      // state: {
+      //   checked: true,
+      //   disabled: true,
+      //   expanded: true,
+      //   selected: true
+      // },
+      // tags: ['available'],
+      // Some logic to retrieve, or generate tree structure
+      // <div class="hello-user">欢迎您~'. $_authUser['username'] .'  </div>
+      var data = 
+      [
               {
                 text: "欢迎您~{{.Ip}}", 
                 text1: "欢迎您~{{.Ip}}",
@@ -311,35 +322,24 @@
                   }
                 ]
               } 
-            ]
-            // return data;
+      ]
+      // return data;
 
-        $('#tree').treeview({
-            data: data,         // data is not optional
-            levels: 2,
-            enableLinks: true,
-            showTags:false,
-            // showCheckbox: true,
-            state: {
-              checked: true,
-              disabled: true,
-              expanded: true,
-              selected: true
-            }
-            // multiSelect: true
-          });  
-        // }
-          // alert(JSON.stringify({{.json}}));
-         // $('#treeview').treeview('collapseAll', { silent: true });
-          // $('#tree').treeview({
-          // data: [{{.json}}],//defaultData,
-          // data:alternateData,
-          // levels: 3,// expanded to 5 levels
-          // enableLinks:true,
-          // showTags:true,
-          // collapseIcon:"glyphicon glyphicon-chevron-up",
-          // expandIcon:"glyphicon glyphicon-chevron-down",
-        // });
+      $('#tree').treeview({
+          data: data,         // data is not optional
+          levels: 1,
+          enableLinks: true,
+          showTags:false,
+          // showCheckbox: true,
+          state: {
+            checked: true,
+            disabled: true,
+            expanded: true,
+            selected: true
+          }
+          // multiSelect: true
+      });  
+
 
         $('#tree').on('nodeSelected', function(event, data) {
             // alert("名称："+data.text);
@@ -409,32 +409,35 @@
     // alert( "Data Loaded: " + index );
       return index+1
     }
-</script>
+  </script>
 
-<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+  <!-- <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10"> -->
     <!-- <div class="form-group"> -->
         <!-- <label class="control-label" id="regis" for="LoginForm-UserName"></label> 显示部门名称  -->
     <!-- </div> -->
         <!-- <iframe src="/secofficeshow" name='main' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onLoad="iFrameHeight()"></iframe> -->
         <!-- <iframe src="/secofficeshow" name='main' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onload="changeFrameHeight()"></iframe> -->
-       <iframe src="/admin/01" name='main' frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=100"></iframe> 
-</div>  
+
+    <!-- <iframe src="/admin/01" name='main' frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=100"></iframe>  -->
+  <!-- </div>   -->
 
 
-<script type="text/javascript">
-  function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
-    var iframe = document.getElementById("iframepage");
-    try{
-      var bHeight = iframe.contentWindow.document.body.scrollHeight;
-      var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-      var height = Math.max(bHeight, dHeight,800);
-      iframe.height = height;
+  <script type="text/javascript">
+    function reinitIframe(){//http://caibaojian.com/frame-adjust-content-height.html
+      var iframe = document.getElementById("iframepage");
+      try{
+        var bHeight = iframe.contentWindow.document.body.scrollHeight;
+        var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+        var height = Math.max(bHeight, dHeight,800);
+        iframe.height = height;
        // console.log(height);//这个显示老是在变化
-     }catch (ex){
-     } 
-  } 
-  window.setInterval("reinitIframe()", 200);
- </script>
+      }catch (ex){
+      } 
+    } 
+    window.setInterval("reinitIframe()", 200);
+  </script>
+  <script src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="/static/js/custom.js"></script>
 
 </body>
 </html>
