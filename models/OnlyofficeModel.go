@@ -28,13 +28,35 @@ type OnlyAttachment struct {
 	FileName  string
 	FileSize  int64
 	Downloads int64
-	DocId     int64     //*Topic    `orm:"rel(fk)"`
-	Created   time.Time `orm:"auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"auto_now;type(datetime)"`
+	DocId     int64 //*Topic `orm:"rel(fk)"`
+	// Changesurl string    `orm:"null"` //文件修改记录
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now;type(datetime)"`
+}
+
+//历史版本
+type OnlyHistory struct {
+	Id         int64
+	AttachId   int64
+	UserId     int64
+	Version    int
+	ChangesUrl string    //`orm:"null"`
+	HistoryKey string    `orm:"sie(19)"`
+	Expires    time.Time `orm:"type(datetime)"`
+	Created    time.Time `orm:"type(datetime)"`
+}
+
+//修改情况
+type OnlyChanges struct {
+	Id         int64
+	HistoryKey string `orm:"sie(19)"`
+	UserId     string `orm:"sie(10)"`
+	UserName   string `orm:"sie(20)"`
+	Created    string `orm:"sie(19)"`
 }
 
 func init() {
-	orm.RegisterModel(new(OnlyOffice), new(OnlyAttachment))
+	orm.RegisterModel(new(OnlyOffice), new(OnlyAttachment), new(OnlyHistory), new(OnlyChanges))
 }
 
 //取得所有项目
@@ -125,13 +147,18 @@ func GetOnlyAttachbyId(Id int64) (attach OnlyAttachment, err error) {
 	return attach, err
 }
 
-//修改附件的日期
+//修改附件的日期和changesurl修改记录地址
 func UpdateOnlyAttachment(cid int64) (err error) {
 	o := orm.NewOrm()
 	attachment := &OnlyAttachment{Id: cid}
 	if o.Read(attachment) == nil {
 		attachment.Updated = time.Now()
-		_, err := o.Update(attachment, "Updated")
+		// if changesurl != "" {
+		// 	attachment.Changesurl = changesurl
+		// 	_, err = o.Update(attachment, "Updated", "Changesurl")
+		// } else {
+		_, err = o.Update(attachment, "Updated")
+		// }
 		if err != nil {
 			return err
 		}
@@ -196,4 +223,113 @@ func DeleteOnlyAttachment(cid int64) error {
 		}
 	}
 	return nil
+}
+
+//添加历史版本
+func AddOnlyHistory(onlyattachmentid, uid int64, version int, key, changesurl string, expires, created time.Time) (id int64, err1, err2 error) {
+	o := orm.NewOrm()
+	var history OnlyHistory
+	err1 = o.QueryTable("OnlyHistory").Filter("HistoryKey", key).One(&history)
+	if err1 == orm.ErrNoRows { // 没有找到记录
+		onlyhistory := &OnlyHistory{
+			AttachId:   onlyattachmentid,
+			UserId:     uid,
+			Version:    version,
+			HistoryKey: key,
+			ChangesUrl: changesurl,
+			Expires:    expires,
+			Created:    created,
+		}
+		id, err2 = o.Insert(onlyhistory)
+		if err2 != nil {
+			return 0, err1, err2
+		}
+	} else if err1 == orm.ErrMultiRows {
+		return 0, err1, err2
+	} else if err1 == nil {
+		return history.Id, err1, err2
+	}
+	return id, err1, err2
+}
+
+//写入附件文档的修改记录地址
+// func UpdateChangesUrl(onlyattachmentid int64, changesurl string) error {
+// 	o := orm.NewOrm()
+// 	onlyattachment := &OnlyAttachment{Id: onlyattachmentid}
+// 	if o.Read(onlyattachment) == nil {
+// 		onlyattachment.Changesurl = changesurl
+// 		_, err := o.Update(onlyattachment, "Changesurl")
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+// 	return nil
+// }
+
+//根据附件id获取历史版本信息
+func GetOnlyHistory(onlyattachmentid int64) (onlyhistories []*OnlyHistory, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("OnlyHistory")
+	_, err = qs.Filter("AttachId", onlyattachmentid).All(&onlyhistories)
+	if err != nil {
+		return nil, err
+	}
+	return onlyhistories, err
+}
+
+//根据附件id和version获取历史changeurl
+// func GetOnlyChangesUrl(onlyattachmentid int64, version int) (onlyhistory *OnlyHistory, err error) {
+// 	o := orm.NewOrm()
+// 	qs := o.QueryTable("OnlyHistory")
+// 	err = qs.Filter("AttachId", onlyattachmentid).Filter("Version", version).One(&onlyhistory)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return onlyhistory, err
+// }
+
+//获取附件id历史版本号
+func GetOnlyHistoryVersion(onlyattachmentid int64) (onlyhistories []OnlyHistory, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("OnlyHistory")
+	_, err = qs.Filter("AttachId", onlyattachmentid).All(&onlyhistories, "Version")
+	if err != nil {
+		return nil, err
+	}
+	return onlyhistories, err
+}
+
+//添加历史版本
+func AddOnlyChanges(key, uid, uname, created string) (id int64, err1, err2 error) {
+	o := orm.NewOrm()
+	var changes OnlyChanges
+	err1 = o.QueryTable("OnlyChanges").Filter("HistoryKey", key).One(&changes)
+	if err1 == orm.ErrNoRows { // 没有找到记录
+		onlychanges := &OnlyChanges{
+			UserId:     uid,
+			UserName:   uname,
+			HistoryKey: key,
+			Created:    created,
+		}
+		id, err2 = o.Insert(onlychanges)
+		if err2 != nil {
+			return 0, err1, err2
+		}
+	} else if err1 == orm.ErrMultiRows {
+		return 0, err1, err2
+	} else if err1 == nil {
+		return changes.Id, err1, err2
+	}
+	return id, err1, err2
+}
+
+//根据附件历史版本key获取历史版本修改信息
+func GetOnlyChanges(key string) (onlychanges []*OnlyChanges, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("OnlyChanges")
+	_, err = qs.Filter("HistoryKey", key).All(&onlychanges)
+	if err != nil {
+		return nil, err
+	}
+	return onlychanges, err
 }

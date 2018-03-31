@@ -2,82 +2,110 @@
 <html style="height: 100%;">
 	<head>
 	  <title>fei-OnlyOffice</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
 	</head>
+
 	<body style="height: 100%; margin: 0;">
 		<div id="placeholder" style="height: 100%"></div>
     <script type="text/javascript" src="http://192.168.99.100:9000/web-apps/apps/api/documents/api.js"></script>
+
+
     <script type="text/javascript">
+    	//历史版本保留1个月。比如Unix时间戳（Unix timestamp）expires=1524547423
       var onRequestHistory = function() {
-        // var changes=[{
-        //     "created":"2018-03-10 14:22:15",
-        //     "user":{"id":"8","name":"qin8.xc"}
-        // }];
-        // alert(changes[0].created);
+
       	docEditor.refreshHistory({
-        "currentVersion": 2,
-        "history": [
-          {
-          "changes": [{{.changes1}}], //the changes from the history object returned after saving the document
-            "created": "2018-03-9 10:15:55",
-            "key": "1520696086733383100",
-            "serverVersion": "{{.serverVersion1}}", //the serverVersion from the history object returned after saving the document
-        		  "user": {
-        		    "id": "9",
-        		    "name": "qin.xc"
-        		  },
-        		  "version": 1
-        		},
-      			{
-      			  "changes": [{{.changes2}}],//"[{{.changes2}}]",
-      			  "created": "2018-03-10 14:11:35",
-      			  "key": "1520696086733383100",
-      			  "user": {
-      			      "id": "8",
-      			      "name": "qin8.xc"
-      			  },
-      			  "version": 2
-      			},
-    		]
+        "currentVersion": {{.currentversion}},
+        "history":{{.onlyhistory}},
+      //   "history": [
+      //     {
+      //     	"changes": changes,//[{{.changes1}}], //the changes from the history object returned after saving the document
+      //       "created": "2018-03-9 10:15:55",
+      //       "key": "1522427166608304100",//1521951775531484800这里影响历史版本切换
+      //       "serverVersion": "5.07", //the serverVersion from the history object returned after saving the document
+      //   	  "user": {
+      //   	    "id": "9",
+      //   	    "name": "qin.xc"
+      //   	  },
+      //   	  "version": 1
+      //   	},
+      //   	{
+      // 		  "changes": changes,
+      // 		  "created": "2018-03-10 14:11:35",
+      // 		  "key": "1522465759378671300",//
+      // 		  "user": {
+      // 		      "id": "9",
+      // 		      "name": "qin.xc"
+      // 		  },
+      // 		  "version": 2
+      // 		},
+      //   	{
+      // 		  "changes": changes,
+      // 		  "created": "2018-03-11 14:11:35",
+      // 		  "key": "1522470906000209200",//当前版本
+      // 		  "user": {
+      // 		      "id": "9",
+      // 		      "name": "qin.xc"
+      // 		  },
+      // 		  "version": 3
+      // 		},
+      		
+      // 		{
+      // 		  "changes": changes,
+      // 		  "created": "2018-03-11 14:11:35",
+      // 		  "key": "1522475922103673500",//当前版本
+      // 		  "user": {
+      // 		      "id": "9",
+      // 		      "name": "qin.xc"
+      // 		  },
+      // 		  "version": 4
+      // 		},
+    		// ]
   			});
 			};
 
 			var onRequestHistoryClose = function() {
   		  document.location.reload();
 			};
+
 			var onRequestHistoryData = function(event) {
-    // 指定允许其他域名访问    
-    // header('Access-Control-Allow-Origin:*');    
-    // 响应类型    
-    // header('Access-Control-Allow-Methods:POST');    
-    // 响应头设置    
-    // header('Access-Control-Allow-Headers:x-requested-with,content-type');
-    // response.addHeader("Access-Control-Allow-Origin", "*");
-    // HttpServletResponse response = ServletActionContext.getResponse();
-    var version = event.data;
-    docEditor.setHistoryData({
-
-      "changesUrl": "http://192.168.99.1/attachment/onlyoffice/changes.zip", //the changesUrl from the JSON object returned after saving the document
-      "key": "1520696086733383100",//只有这个id起作用
-      "previous": {
-        "key": "1520696086733383100",
-        "url": "http://192.168.99.1/attachment/onlyoffice/to-the-previous-version-of-the-document.docx"
-      },
-      "url": "http://192.168.99.1/attachment/onlyoffice/url-to-example-document.docx",
-      "version":2 //version
-    })
+    		var version = event.data;
+    		var string={{.changesurl}};
+    		for(var i=0;i<string.length;i++){
+    			if (version==string[i].version){
+						var string1=string[i].changesurl
+					}
+    		}
+				var string2=string1.replace(/\u0026/,"&");
+				// alert(string2);
+    		docEditor.setHistoryData({
+    			//下面这里存变化的位置
+      		// "changesUrl":"http://192.168.99.100:9000/cache/files/1522475922103673500_7157/changes.zip/changes.zip?md5=syFUueSXdnCWe60Iym001g==&expires=1525068326&disposition=attachment&ooname=output.zip",//string1, //the changesUrl from the JSON object returned after saving the document
+      		
+      		"changesUrl":string2,
+      		"key": "",
+      		"previous": {
+      		  "key": "",//这里不影响版本切换
+      		  "url": ""//http://192.168.99.100:9000/cache/files/1521953170330601700_4540/output.docx/output.docx?md5=eSwnrSSumTeMuh59IoXhCQ==&expires=1524547423&disposition=attachment&ooname=output.docx这里影响版本
+      		},
+      		"url": "",
+      		"version": version
+    		})
 			};
-
-
 
     	// alert({{.Doc.FileName}});
     	window.docEditor = new DocsAPI.DocEditor("placeholder",
-      {
+      	{
         "events": {
-            "onRequestHistory": onRequestHistory,
-            "onRequestHistoryClose": onRequestHistoryClose,
-            "onRequestHistoryData": onRequestHistoryData,
+          "onRequestHistory": onRequestHistory,
+          "onRequestHistoryClose": onRequestHistoryClose,
+          "onRequestHistoryData": onRequestHistoryData,
         },
-
 
       	"document": {
           "fileType": "{{.fileType}}",
@@ -111,8 +139,6 @@
           	"print": true,
           	"review": true
         	},
-        	"title": "{{.Doc.FileName}}",
-        	"url": "https://example.com/url-to-example-document.docx"
         },
         "documentType": "{{.documentType}}",
         "editorConfig": {
@@ -120,22 +146,21 @@
           
         	"createUrl": "https://example.com/url-to-create-document/",
           "user": {
-            "id": "{{.Uid}}",
+            "id": {{.Uid}},
             "name": "{{.Uname}}"
           },
-
 
 					"customization": {
             "chat": true,
             "commentAuthorOnly": false,
             "compactToolbar": false,
             "customer": {
-              "address": "My City, 123a-45",
-              "info": "Some additional information",
+              "address": "116# Tianshou Road,Guangzhou China",
+              "info": "QQ504284",
               "logo": "http://192.168.99.1/static/test/user.jpg",//logo-big.png
-              "mail": "john@example.com",
-              "name": "John Smith and Co.",
-              "www": "example.com"
+              "mail": "xc-qin@163.com",
+              "name": "Qin Xiao Chuan",
+              "www": "github.com/3xxx"
             },
             "feedback": {
               "url": "http://192.168.99.1/onlyoffice",
@@ -152,7 +177,7 @@
               "url": "http://192.168.99.1/onlyoffice"
             },
             "showReviewChanges": false,
-            "zoom": 100
+            "zoom": 100,
         	},
         	"embedded": {
             "embedUrl": "https://example.com/embedded?doc=exampledocument1.docx",
@@ -179,13 +204,39 @@
             }
         	]
         },
+
         "height": "100%",
         // "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
-    		"type": "desktop",//desktop//embedded//mobile访问文档的平台类型 网页嵌入
+    		"type": {{.Type}},//"desktop",//desktop//embedded//mobile访问文档的平台类型 网页嵌入
         "width": "100%"
       });
-
 
    	</script>
 	</body>
 </html>
+
+<!-- {
+"key":"1521953170330601700",
+"status":2,
+
+"url":"http://192.168.99.100:9000/cache/files/1521953170330601700_4540/outpu
+t.docx/output.docx?md5=eSwnrSSumTeMuh59IoXhCQ==&expires=1524547423&disposition=a
+ttachment&ooname=output.docx",
+
+"changesurl":"http://192.168.99.100:9000/cache/fil
+es/1521953170330601700_4540/changes.zip/changes.zip?md5=w6DItkSwyBJkuHDl_CiZZQ==
+&expires=1524547423&disposition=attachment&ooname=output.zip",
+
+"history":{
+	"serverVersion":"5.0.7",
+	"changes":[{
+		"created":"2018-03-25 05:23:25",
+		"user":{"id":"127.0	.0.1","name":"127.0.0.1"}
+		}]
+},
+
+"users":["127.0.0.1"],
+"actions":[{"type":0,"userid":"127.0.0.1"}],
+"lastsave":"2018-03-25T05:23:30.342Z",
+"notmodified":false
+} -->

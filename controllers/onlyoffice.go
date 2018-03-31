@@ -25,29 +25,30 @@ type OnlyController struct {
 }
 
 type Callback struct {
-	Key         string   `json:"key"`
-	Status      int      `json:"status"`
-	Url         string   `json:"url"`
-	Changesurl  string   `json:"changesurl"`
-	History     history1 `json:"history"`
-	Users       []string `json:"users"`
-	Actions     []action `json:"actions"`
-	Lastsave    string   `json:"lastsave"`
-	Notmodified bool     `json:"notmodified"`
+	Key         string    `json:"key"`
+	Status      int       `json:"status"`
+	Url         string    `json:"url"`
+	Changesurl  string    `json:"changesurl"`
+	History     history1  `json:"history"`
+	Users       []string  `json:"users"`
+	Actions     []action  `json:"actions"`
+	Lastsave    time.Time `json:"lastsave"`
+	Notmodified bool      `json:"notmodified"`
 }
 
 type action struct {
-	Type   int    `json:"type"`
-	Userid string `json:"userid"`
+	Type   int   `json:"type"`
+	Userid int64 `json:"userid"`
 }
 
 type history1 struct {
-	ServerVersion string   `json:"serverVersion"`
-	Changes       []change `json:"changes"`
-	// created       time.Time
-	// key           string
-	// user          User1
-	// version       int
+	ServerVersion string    `json:"serverVersion"`
+	Changes       []change  `json:"changes"`
+	Created       time.Time `json:"created"`
+	Key           string    `json:"key"`
+	// ChangesUrl    string    `json:"changesurl"`
+	User    User1 `json:"user"`
+	Version int   `json:"version"`
 }
 
 type change struct {
@@ -59,6 +60,43 @@ type User1 struct {
 	Id   string `json:"id"` //必须大写才能在tpl中显示{{.json}}
 	Name string `json:"name"`
 }
+
+//构造changesurl结构
+type changesurl struct {
+	Version    int    `json:"version"`
+	ChangesUrl string `json:"changesurl"`
+}
+
+// type Callback2 struct {
+// 	Key         string    `json:"key"`
+// 	Status      int       `json:"status"`
+// 	Url         string    `json:"url"`
+// 	Changesurl  string    `json:"changesurl"`
+// 	History     history2  `json:"history"`
+// 	Users       []string  `json:"users"`
+// 	Actions     []action  `json:"actions"`
+// 	Lastsave    time.Time `json:"lastsave"`
+// 	Notmodified bool      `json:"notmodified"`
+// }
+
+// type history2 struct {
+// 	ServerVersion string    `json:"serverVersion"`
+// 	Changes       []change2 `json:"changes"`
+// 	Created       time.Time `json:"created"`
+// 	Key           string    `json:"key"`
+// 	User          User1     `json:"user"`
+// 	Version       int       `json:"version"`
+// }
+
+// type change2 struct {
+// 	Created string `json:"created"` //time.Time
+// 	User    User2  `json:"user"`
+// }
+
+// type User2 struct {
+// 	Id   string `json:"id"` //必须大写才能在tpl中显示{{.json}}
+// 	Name string `json:"name"`
+// }
 
 // type FileNode struct {
 // 	Id        int64       `json:"id"`
@@ -250,6 +288,10 @@ func (c *OnlyController) GetData() {
 				// pptxarr[0].Id = v.Id
 				// pptxarr[0].Title = v.FileName
 				// Pptxslice = append(Pptxslice, pptxarr...)
+			} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
+				docxarr[0].Suffix = "pdf"
+			} else if path.Ext(v.FileName) == ".txt" || path.Ext(v.FileName) == ".TXT" {
+				docxarr[0].Suffix = "txt"
 			}
 			Docxslice = append(Docxslice, docxarr...)
 		}
@@ -266,6 +308,28 @@ func (c *OnlyController) GetData() {
 	c.ServeJSON()
 }
 
+//取得changesurl
+// func (c *OnlyController) ChangesUrl() {
+// 	version := c.Input().Get("version")
+
+// 	versionint, err := strconv.Atoi(version)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	attachmentid := c.Input().Get("attachmentid")
+// 	idNum, err := strconv.ParseInt(attachmentid, 10, 64)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	changesurl, err := models.GetOnlyChangesUrl(idNum, versionint)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	beego.Info(changesurl.ChangesUrl)
+// 	c.Data["json"] = changesurl.ChangesUrl
+// 	c.ServeJSON()
+// }
+
 //协作页面的显示
 func (c *OnlyController) OnlyOffice() {
 	id := c.Ctx.Input.Param(":id")
@@ -280,7 +344,7 @@ func (c *OnlyController) OnlyOffice() {
 		beego.Error(err)
 	}
 	c.Data["Doc"] = onlyattachment
-
+	c.Data["attachid"] = idNum
 	c.Data["Key"] = strconv.FormatInt(onlyattachment.Updated.UnixNano(), 10)
 
 	var uname string
@@ -288,7 +352,6 @@ func (c *OnlyController) OnlyOffice() {
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
-
 		user, err := models.GetUserByUsername(uname)
 		if err != nil {
 			beego.Error(err)
@@ -297,14 +360,69 @@ func (c *OnlyController) OnlyOffice() {
 		// useridstring = strconv.FormatInt(user.Id, 10)
 	} else {
 		c.Data["Uname"] = c.Ctx.Input.IP()
-		c.Data["Uid"] = c.Ctx.Input.IP()
+		c.Data["Uid"] = 0
 	}
 
-	users2 := User1{"9", "qin.xc"}
-	c.Data["changes1"] = change{"2018-03-10 15:34:57", users2}
-	var users3 = User1{"8", "qin8.xc"}
-	c.Data["changes2"] = change{"2018-03-10 15:35:29", users3}
-	c.Data["serverVersion1"] = "5.0.7"
+	//构造[]history
+	history, err := models.GetOnlyHistory(onlyattachment.Id)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	onlyhistory := make([]history1, 0)
+	onlychanges := make([]change, 0)
+	onlychangesurl := make([]changesurl, 0)
+	for _, v := range history {
+		aa := make([]history1, 1)
+		cc := make([]changesurl, 1)
+		// aa[0].Created = v.Created
+		aa[0].Key = v.HistoryKey
+		aa[0].User.Id = strconv.FormatInt(v.UserId, 10) //
+
+		if v.UserId != 0 {
+			user := models.GetUserByUserId(v.UserId)
+			aa[0].User.Name = user.Nickname
+		}
+		aa[0].Version = v.Version
+
+		//取得changes
+		changes, err := models.GetOnlyChanges(v.HistoryKey)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, v1 := range changes {
+			bb := make([]change, 1)
+			bb[0].Created = v1.Created
+			bb[0].User.Id = v1.UserId
+			bb[0].User.Name = v1.UserName
+			onlychanges = append(onlychanges, bb...)
+		}
+		aa[0].Changes = onlychanges
+		// aa[0].ChangesUrl = v.ChangesUrl
+		aa[0].Created = v.Created
+
+		cc[0].Version = v.Version
+		cc[0].ChangesUrl = v.ChangesUrl
+		onlychanges = make([]change, 0)
+		onlyhistory = append(onlyhistory, aa...)
+		onlychangesurl = append(onlychangesurl, cc...)
+	}
+
+	c.Data["onlyhistory"] = onlyhistory
+	c.Data["changesurl"] = onlychangesurl
+
+	historyversion, err := models.GetOnlyHistoryVersion(onlyattachment.Id)
+	if err != nil {
+		beego.Error(err)
+	}
+	var first int
+	for _, v := range historyversion {
+		if first < v.Version {
+			first = v.Version
+		}
+	}
+	c.Data["currentversion"] = first
+	beego.Info(first)
 
 	if path.Ext(onlyattachment.FileName) == ".docx" || path.Ext(onlyattachment.FileName) == ".DOCX" {
 		c.Data["fileType"] = "docx"
@@ -330,6 +448,10 @@ func (c *OnlyController) OnlyOffice() {
 	} else if path.Ext(onlyattachment.FileName) == ".ppt" || path.Ext(onlyattachment.FileName) == ".PPT" {
 		c.Data["fileType"] = "ppt"
 		c.Data["documentType"] = "presentation"
+	} else if path.Ext(onlyattachment.FileName) == ".pdf" || path.Ext(onlyattachment.FileName) == ".PDF" {
+		c.Data["fileType"] = "pdf"
+		c.Data["documentType"] = "text"
+		c.Data["Mode"] = "view"
 	}
 
 	u := c.Ctx.Input.UserAgent()
@@ -338,12 +460,15 @@ func (c *OnlyController) OnlyOffice() {
 		beego.Error(err)
 	}
 	if matched == true {
-		// beego.Info("移动端~")
-		c.TplName = "onlyoffice/onlyoffice.tpl"
+		beego.Info("移动端~")
+		// c.TplName = "onlyoffice/onlyoffice.tpl"
+		c.Data["Type"] = "mobile"
 	} else {
-		// beego.Info("电脑端！")
-		c.TplName = "onlyoffice/onlyoffice.tpl"
+		beego.Info("电脑端！")
+		// c.TplName = "onlyoffice/onlyoffice.tpl"
+		c.Data["Type"] = "desktop"
 	}
+	c.TplName = "onlyoffice/onlyoffice.tpl"
 }
 
 //协作页面的保存和回调
@@ -364,12 +489,7 @@ func (c *OnlyController) UrltoCallback() {
 
 	var callback Callback
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
-
-	//beego.Info(callback.History)
-	// beego.Info(callback.History)
-	//beego.Info(callback.Actions) //[{0 }]
-	//beego.Info(callback.Lastsave)
-	//beego.Info(string(c.Ctx.Input.RequestBody))
+	// beego.Info(string(c.Ctx.Input.RequestBody))
 
 	if callback.Status == 1 || callback.Status == 4 {
 		c.Data["json"] = map[string]interface{}{"error": 0}
@@ -399,15 +519,78 @@ func (c *OnlyController) UrltoCallback() {
 		if err != nil {
 			beego.Error(err)
 		} else {
+			//更新附件的时间和changesurl
 			err = models.UpdateOnlyAttachment(idNum)
 			if err != nil {
 				beego.Error(err)
 			}
+
+			//写入历史版本数据
+			array := strings.Split(callback.Changesurl, "&")
+			Expires1 := strings.Split(array[1], "=")
+			Expires := Expires1[1]
+			Expirestime, err := strconv.ParseInt(Expires, 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			//获取本地location
+			// toBeCharge := "2015-01-01 00:00:00"                             //待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
+			// timeLayout := "2006-01-02T15:04:05.999Z" //转化所需模板
+
+			// loc, _ := time.LoadLocation("Local") //重要：获取时区
+			// theTime, _ := time.ParseInLocation(timeLayout, toBeCharge, loc) //使用模板在对应时区转化为time.time类型
+			// sr := theTime.Unix()                                            //转化为时间戳 类型是int64                                               //打印输出时间戳 1420041600
+
+			//时间戳转日期
+			dataTimeStr := time.Unix(Expirestime, 0) //.Format(timeLayout) //设置时间戳 使用模板格式化为日期字符串
+			// t, _ := time.Parse(timeLayout, callback.Lastsave)
+			// beego.Info(callback.Lastsave)
+			//写入历史版本
+			historyversion, err := models.GetOnlyHistoryVersion(onlyattachment.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			var first int
+			for _, v := range historyversion {
+				if first < v.Version {
+					first = v.Version
+				}
+			}
+			// beego.Info(callback.Users[0])
+			_, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, callback.Actions[0].Userid, first+1, callback.Key, callback.Changesurl, dataTimeStr, callback.Lastsave)
+			if err1 != nil {
+				beego.Error(err1)
+			}
+			if err2 != nil {
+				beego.Error(err2)
+			}
+			//写入changes
+			for _, v := range callback.History.Changes {
+				_, err1, err2 = models.AddOnlyChanges(callback.Key, v.User.Id, v.User.Name, v.Created)
+				if err1 != nil {
+					beego.Error(err1)
+				}
+				if err2 != nil {
+					beego.Error(err2)
+				}
+			}
+			//更新文档更新时间
 			err = models.UpdateDocTime(onlyattachment.DocId)
 			if err != nil {
 				beego.Error(err)
 			}
 		}
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
+	} else if callback.Status == 3 {
+		//更新附件的时间和changesurl
+		err = models.UpdateOnlyAttachment(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
+	} else {
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
 	}
@@ -580,30 +763,25 @@ func (c *OnlyController) UpdateDoc() {
 	}
 
 	inputdate := c.Input().Get("proddate")
-	// beego.Info(inputdate)
 	var t1, end time.Time
-	// var convdate1, convdate2 string
 	const lll = "2006-01-02"
 	if len(inputdate) > 9 { //如果是datepick获取的时间，则不用加8小时
 		t1, err = time.Parse(lll, inputdate) //这里t1要是用t1:=就不是前面那个t1了
 		if err != nil {
 			beego.Error(err)
 		}
-		// convdate := t1.Format(lll)
-		// catalog.Datestring = convdate
 		end = t1
 		// t1 = printtime.Add(+time.Duration(hours) * time.Hour)
 	} else { //如果取系统时间，则需要加8小时
 		date := time.Now()
 		convdate := date.Format(lll)
-		// catalog.Datestring = convdate
 		date, err = time.Parse(lll, convdate)
 		if err != nil {
 			beego.Error(err)
 		}
 		end = date
 	}
-	//根据id添加成果code, title, label, principal, content string, projectid int64
+	//根据id添加成果
 	err = models.UpdateDoc(idNum, code, title, label, principal, end)
 	if err != nil {
 		beego.Error(err)
@@ -617,7 +795,6 @@ func (c *OnlyController) DeleteDoc() {
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
 	for _, v := range array {
-		// pid = strconv.FormatInt(v1, 10)
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {

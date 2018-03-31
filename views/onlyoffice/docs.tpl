@@ -51,7 +51,7 @@
 
 <div class="col-lg-12">
   <h3>文档列表</h3>
-<div id="toolbar1" class="btn-group">
+  <div id="toolbar1" class="btn-group">
         <!-- 多文件批量上传 -->
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
         </button>
@@ -71,9 +71,9 @@
         <!-- <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
         <i class="fa fa-refresh">同步</i>
         </button> -->
-</div>
+  </div>
 <!--data-click-to-select="true" -->
-<table id="table0" 
+  <table id="table0" 
         data-toggle="table" 
         data-url="/onlyoffice/data"
         data-search="true"
@@ -110,7 +110,7 @@
         <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
       </tr>
     </thead>
-</table>
+  </table>
 
 <script type="text/javascript">
   function index1(value,row,index){
@@ -174,6 +174,12 @@
         }else if(value[0].Suffix=="pptx"){
           pptUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
           return pptUrl;
+        }else if(value[0].Suffix=="pdf"){
+          pdfUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';
+          return pdfUrl;
+        }else if(value[0].Suffix=="txt"){
+          txtUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-text-o fa-lg" style="color:black;"></i></a>';
+          return txtUrl;
         }
         
       }else if(value.length==0){
@@ -291,7 +297,7 @@
         // 只允许选择规定文件类型。
         accept: {
             title: 'Images',
-            extensions: 'doc,docx,xls,xlsx,ppt,pptx,txt',
+            extensions: 'doc,docx,xls,xlsx,ppt,pptx,txt,pdf',
             mimeTypes: '*/*'
         }
       });
