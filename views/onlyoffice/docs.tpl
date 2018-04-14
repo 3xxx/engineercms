@@ -1,8 +1,12 @@
 <!-- 文档列表 -->
 <!DOCTYPE html>
 <head>
-
   <title>fei-ONLYOFFICE</title>
+
+  <!-- <link type='text/css' href='/static/oo/files-3TmaoIbj3PAed78NYLoa7w2.css' rel='stylesheet' />
+    <link type='text/css' href='/static/oo/common-HLDWebQ4QDcrVRYNq4-rWA2.css' rel='stylesheet' />
+    <link type='text/css' href='/static/oo/files-CUBYqoHsKUGuN7k-PidXtQ2.css' rel='stylesheet' /> -->
+
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -10,6 +14,8 @@
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script src="/static/js/tableExport.js"></script>
@@ -26,11 +32,29 @@
   <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.js"></script>
   <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/bootstrap-datepicker/bootstrap-datepicker3.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
+  <script type="text/javascript" src="/static/js/select2.js"></script>
+
+
+<!-- <script language="javascript" src="/static/oo/ga-teamlab.js" type="text/javascript"></script> -->
+
+
   <style type="text/css">
+    #modalDialog .modal-header {cursor: move;}
+    #modalDialog1 .modal-header {cursor: move;}
+    #modalDialog2 .modal-header {cursor: move;}
+    #modalDialog3 .modal-header {cursor: move;}
+    #modalDialog4 .modal-header {cursor: move;}
+    #modalDialog5 .modal-header {cursor: move;}
+    #modalDialog6 .modal-header {cursor: move;}
+    #modalDialog7 .modal-header {cursor: move;}
+    #modalDialog8 .modal-header {cursor: move;}
+    #modalDialog9 .modal-header {cursor: move;}
+    #modalDialog10 .modal-header {cursor: move;}
       /*.form-group .datepicker{
         z-index: 9999;
       }*/
-  /*模态框效果*/
+    /*模态框效果*/
     /*.modal-header {*/
       /*background: #00FF00;*/
       /*min-height: 16.42857143px;
@@ -51,16 +75,12 @@
 
 <div class="col-lg-12">
   <h3>文档列表</h3>
+
   <div id="toolbar1" class="btn-group">
         <!-- 多文件批量上传 -->
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
         </button>
-        <!-- 多附件上传 -->
-        <!-- <button type="button" data-name="addButton1" id="addButton1" class="btn btn-default"> <i class="fa fa-plus-square-o" title="多附件模式">添加</i>
-        </button> -->
-        <!-- 添加文章 -->
-        <!-- <button type="button" data-name="addButton2" id="addButton2" class="btn btn-default"> <i class="fa fa-plus-square" title="文章模式">添加</i>
-        </button> -->
+
         <button type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
         </button>
         <button type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
@@ -68,9 +88,15 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
-        <!-- <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
-        <i class="fa fa-refresh">同步</i>
-        </button> -->
+        <button type="button" data-name="sharesetting" id="sharesetting" class="btn btn-default">
+        <i class="fa fa-share-alt">权限</i>
+        </button>
+        <button type="button" data-name="download" id="download" class="btn btn-default">
+        <i class="fa fa-download">下载</i>
+        </button>
+        <button type="button" data-name="downloadas" id="downloadas" class="btn btn-default">
+        <i class="fa fa-download">下载为</i>
+        </button>
   </div>
 <!--data-click-to-select="true" -->
   <table id="table0" 
@@ -103,6 +129,7 @@
         <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
         <th data-field="Principal" data-halign="center" data-align="center">负责人</th>
         <th data-field="Docxlink" data-formatter="setDocx" data-events="actionEvents" data-halign="center" data-align="center">协作</th>
+        <th data-field="Docxlink" data-formatter="setPermission" data-events="actionEvents" data-halign="center" data-align="center">权限</th>
         <!-- <th data-field="Xlsxlink" data-formatter="setXlsx" data-events="actionEvents" data-halign="center" data-align="center">XLSX</th> -->
         <!-- <th data-field="Pptxlink" data-formatter="setPptx" data-events="actionEvents" data-halign="center" data-align="center">PPTX</th> -->
         <th data-field="End" data-formatter="localDateFormatter" data-halign="center" data-align="center">结束时间</th>
@@ -162,23 +189,44 @@
     return "<a href='/attachment/onlyoffice/"+value+"'>" + value + "</a>";
   }
 
+  //协作图标
   function setDocx(value,row,index){
     if (value){
       if (value.length==1){
         if (value[0].Suffix=="docx"){
-          docUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+          if (value[0].Permission=="4"){
+            docUrl= '<a href=# title="拒绝访问"><i class="fa fa-file-word-o fa-lg"></i></a>';
+          }else{
+            docUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+          }
           return docUrl;
         }else if(value[0].Suffix=="xlsx"){
-          xlsUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+          if (value[0].Permission=="4"){
+            xlsUrl= '<a href=# title="拒绝访问"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+          }else{
+            xlsUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+          }
           return xlsUrl;
         }else if(value[0].Suffix=="pptx"){
-          pptUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+          if (value[0].Permission=="4"){
+            pptUrl= '<a href=# title="拒绝访问"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+          }else{
+            pptUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+          }
           return pptUrl;
         }else if(value[0].Suffix=="pdf"){
-          pdfUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';
+          if (value[0].Permission=="4"){
+            pdfUrl= '<a href=# title="拒绝访问"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';
+          }else{
+            pdfUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';
+          }
           return pdfUrl;
         }else if(value[0].Suffix=="txt"){
-          txtUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-text-o fa-lg" style="color:black;"></i></a>';
+          if (value[0].Permission=="4"){
+            txtUrl= '<a href=# title="拒绝访问"><i class="fa fa-file-word-o fa-lg"></i></a>';
+          }else{
+            txtUrl= '<a href=/onlyoffice/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-text-o fa-lg" style="color:black;"></i></a>';
+          }
           return txtUrl;
         }
         
@@ -190,6 +238,37 @@
       }
     }
   }
+
+  //设置permission显示
+  function setPermission(value,row,index){
+        if (value[0].Permission=="1"){
+          permission= '<i class="fa fa-pencil fa-lg" title="可查看、修改" style="color:#9e9e9e;"></i>';
+          return permission;
+        }else if (value[0].Permission=="2"){
+          permission= '<i class="fa fa-commenting-o fa-lg" title="审阅" style="color:#9e9e9e;"></i>';
+          return permission;
+        }else if (value[0].Permission=="3"){
+          permission= '<i class="fa fa-eye fa-lg" title="只读" style="color:#9e9e9e;"></i>';
+          return permission;
+        }else if (value[0].Permission=="4"){
+          permission= '<i class="fa fa-eye-slash fa-lg" title="拒绝访问" style="color:#9e9e9e;"></i>';
+          return permission;
+        }
+      }
+
+  //设置permission选择
+  // function setPermission(value,row,index){
+  //   return "<select id='Status1' class='form-control'><option value='0'>正常</option><option value='1'>失效</option></select>";
+  // }
+  // function StatusFormatter(value, row, index) {
+      //   // alert(row.Status);
+      //   if (row.Status == "0") {
+      //       return '正常';
+      //   }else{
+      //     return '失效';
+      //   }
+      // }
+  //设置删除
 
   // function setXlsx(value,row,index){
   //   if (value){
@@ -423,8 +502,8 @@
       $("#proddate3").val(moment(selectRow[0].End, 'YYYY-MM-DD').format('YYYY-MM-DD'));
 
       $('#modalProdEditor').modal({
-      show:true,
-      backdrop:'static'
+        show:true,
+        backdrop:'static'
       });
   })
 
@@ -447,14 +526,105 @@
       $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
       $('#attachments').bootstrapTable('refresh', {url:'/onlyoffice/'+selectRow[0].Id});//取得所有附件列表和文章列表
       $('#modalAttachEditor').modal({
-      show:true,
-      backdrop:'static'
+        show:true,
+        backdrop:'static'
       });
       // }else{
       //   alert("权限不够！"+selectRow[0].Uid);
       //   return;
       // }
   })
+
+    // 分享设置
+  $("#sharesetting").click(function() {
+      var selectRow=$('#table0').bootstrapTable('getSelections');
+      if (selectRow.length<1){
+        alert("请先勾选成果！");
+        return;
+      }
+      if (selectRow.length>1){
+        alert("请不要勾选一个以上成果！");
+        return;
+      }
+
+      $("input#pid").remove();
+      var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
+      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+      $('#tableusers1').bootstrapTable('refresh', {url:'/onlyoffice/getpermission?docid='+selectRow[0].Id});//取得这个文档的用户和角色列表
+      $('#modalsharesetting').modal({
+        show:true,
+        backdrop:'static'
+      });
+      // }else{
+      //   alert("权限不够！"+selectRow[0].Uid);
+      //   return;
+      // }
+  })
+
+  //下载
+  $("#download").click(function() {
+      var selectRow=$('#table0').bootstrapTable('getSelections');
+      if (selectRow.length<1){
+        alert("请先勾选成果！");
+        return;
+      }
+      if (selectRow.length>1){
+        alert("请不要勾选一个以上成果！");
+        return;
+      }
+      // window.location.href="/attachment/onlyoffice/"+selectRow[0].Id;
+      // window.open("https://codeload.github.com/douban/douban-client/legacy.zip/master");
+      var $eleForm = $("<form method='get'></form>");
+      $eleForm.attr("action","/onlyoffice/download/"+selectRow[0].Id);
+      $(document.body).append($eleForm);
+      //提交表单，实现下载
+      $eleForm.submit();
+      
+      // }else{
+      //   alert("权限不够！"+selectRow[0].Uid);
+      //   return;
+      // }
+  })
+
+  // 构造表单下载
+    // $('.download').click(function () {
+    //   var tt = new Date().getTime();
+    //   var url = 'http://192.168.1.231:8080/91survey/ws/excel/download';
+      /**
+       * 使用form表单来发送请求
+      * 1.method属性用来设置请求的类型——post还是get
+      * 2.action属性用来设置请求路径。
+      * */
+      // var form=$("<form>");//定义一个form表单
+      // form.attr("style","display:none");
+      // form.attr("target","");
+      // form.attr("method","get");  //请求类型
+      // form.attr("action",url);   //请求地址
+      // $("body").append(form);//将表单放置在web中
+    　　/**
+         * input标签主要用来传递请求所需的参数：
+         *
+         * 1.name属性是传递请求所需的参数名.
+         * 2.value属性是传递请求所需的参数值.
+         *
+         * 3.当为get类型时，请求所需的参数用input标签来传递，直接写在URL后面是无效的。
+         * 4.当为post类型时，queryString参数直接写在URL后面，formData参数则用input标签传递
+         *       有多少数据则使用多少input标签
+         **/
+    //   var input1=$("<input>");
+    //   input1.attr("type","hidden");
+    //   input1.attr("name","tt");
+    //   input1.attr("value",tt);
+    //   form.append(input1);
+  
+    //   var input2=$("<input>");
+    //   input2.attr("type","hidden");
+    //   input2.attr("name","companyId");
+    //   input2.attr("value",companyId);
+    //   form.append(input2);
+
+    //   form.submit();//表单提交
+    // })
 
   $(document).ready(function() {
     var uploader;
@@ -754,9 +924,215 @@
     </div>
   </div>
 
+  <!-- 分享设置 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalsharesetting">
+      <div class="modal-dialog" id="modalDialog8">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">分享设置Sharing Settings</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <div id="" class="btn-group">
+                <!-- <a data-toggle="modal" href="#users" class="btn btn-default"> -->
+                <button type="button" id="addusers" class="btn btn-default"><i class="fa fa-plus">&nbsp;&nbsp;Add Users</i>
+                </button>
+                <!-- </a> -->
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i id="dropdownMenu1" class="fa fa-eye">&nbsp;&nbsp;</i>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="">
+                    <li>
+                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full AccessRead</i></a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="" class="btn-group">
+                <button type="button" data-name="" id="addroles" class="btn btn-default">
+                <i class="fa fa-plus">&nbsp;&nbsp;Add Groups</i>
+                </button>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="addgroups">
+                    <span class="buttonText"><i id="dropdownMenu2" class="fa fa-eye">&nbsp;&nbsp;</i></span>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a href="#" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full AccessRead</i></a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="shows1($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="shows1($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="shows1($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <table id="tableusers1"
+                    data-search="true"
+                    data-toolbar=""
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="name"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-click-to-select="false">
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="saveusers" data-method="" onclick="return saveusers()">保存</button>
+            <button type="button" href="#" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+          <!-- <div class="modal-footer">
+            <a data-toggle="modal"  class="btn btn-primary btn-large">弹出第二个模态框</a>
+            <a  class="btn" data-dismiss="modal">关闭</a>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户列表模态框 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="users">
+      <div class="modal-dialog" id="modalDialog9">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #8bc34a">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>用户列表</h3>
+          </div>
+          <div class="modal-body">
+            <table id="tableusers20"
+              data-search="true"
+              data-show-refresh="true"
+              data-show-toggle="true"
+              data-show-columns="true"
+              data-striped="true"
+              data-toolbar="#toolbar"
+              data-query-params="queryParams"
+              data-sort-name="Username"
+              data-sort-order="desc"
+              data-page-size="5"
+              data-page-list="[5, 25, 50, All]"
+              data-unique-id="id"
+              data-pagination="true"
+              data-side-pagination="client"
+              data-click-to-select="true"
+              data-show-export="true"
+              >
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn2Right" data-method="append">保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- 角色列表模态框 -->
+<div class="form-horizontal">
+  <div class="modal fade" id="roles">
+    <div class="modal-dialog" id="modalDialog10">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #FF5722;">
+          <a class="close" data-dismiss="modal">×</a>
+          <h3>角色列表</h3>
+        </div>
+        <div class="modal-body">
+          <table id="tableusers21"
+            data-search="true"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-show-columns="true"
+            data-striped="true"
+            data-toolbar="#toolbar"
+            data-query-params="queryParams"
+            data-sort-name="Rolename"
+            data-sort-order="desc"
+            data-page-size="5"
+            data-page-list="[5, 25, 50, All]"
+            data-unique-id="id"
+            data-pagination="true"
+            data-side-pagination="client"
+            data-click-to-select="true"
+            data-show-export="true"
+            >
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btn2Right1" data-method="append">保存</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <script type="text/javascript">
+    //选择用户的角色
+    function shows(a) {
+      // alert(a);
+      if (a=="  Full AccessRead"){
+        $("#dropdownMenu1").removeClass();
+        $("#dropdownMenu1").addClass("fa fa-pencil");
+      }else if(a=="  Review"){
+        $("#dropdownMenu1").removeClass();
+        $("#dropdownMenu1").addClass("fa fa-commenting-o");
+      }else if(a=="  Read Only"){
+        $("#dropdownMenu1").removeClass();
+        $("#dropdownMenu1").addClass("fa fa-eye");
+      }else if(a=="  Deny Access"){
+        $("#dropdownMenu1").removeClass();
+        $("#dropdownMenu1").addClass("fa fa-eye-slash");
+      }
+      // $('.buttonText').text(a)
+    }
+
+    //选择角色的权限
+    function shows1(a) {
+      if (a=="  Full AccessRead"){
+        $("#dropdownMenu2").removeClass();
+        $("#dropdownMenu2").addClass("fa fa-pencil");
+      }else if(a=="  Review"){
+        $("#dropdownMenu2").removeClass();
+        $("#dropdownMenu2").addClass("fa fa-commenting-o");
+      }else if(a=="  Read Only"){
+        $("#dropdownMenu2").removeClass();
+        $("#dropdownMenu2").addClass("fa fa-eye");
+      }else if(a=="  Deny Access"){
+        $("#dropdownMenu2").removeClass();
+        $("#dropdownMenu2").addClass("fa fa-eye-slash");
+      }
+      // $('.buttonText').text(a)
+    }
+
     $("#Date").datepicker({
         weekStart: 1,
         language: "zh-CN",
@@ -784,6 +1160,7 @@
         todayHighlight:true,
         format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
     });
+
   // 编辑成果信息
   function updateprod(){
     // var radio =$("input[type='radio']:checked").val();
@@ -904,18 +1281,471 @@
       } 
     }
 
+    //模态框可移动
     $(document).ready(function(){
-        $("#modalDialog").draggable();//为模态对话框添加拖拽
-        $("#modalDialog1").draggable();
-        $("#modalDialog2").draggable();
-        $("#modalDialog3").draggable();
-        $("#modalDialog4").draggable();
-        $("#modalDialog5").draggable();
-        $("#modalDialog6").draggable();
-        $("#modalDialog7").draggable();
+        $("#modalDialog").draggable({ handle: ".modal-header" });//为模态对话框添加拖拽,仅头部能拖动
+        $("#modalDialog1").draggable({ handle: ".modal-header" });
+        $("#modalDialog2").draggable({ handle: ".modal-header" });
+        $("#modalDialog3").draggable({ handle: ".modal-header" });
+        $("#modalDialog4").draggable({ handle: ".modal-header" });
+        $("#modalDialog5").draggable({ handle: ".modal-header" });
+        $("#modalDialog6").draggable({ handle: ".modal-header" });
+        $("#modalDialog7").draggable({ handle: ".modal-header" });
+        $("#modalDialog8").draggable({ handle: ".modal-header" });
+        $("#modalDialog9").draggable({ handle: ".modal-header" });
+        $("#modalDialog10").draggable({ handle: ".modal-header" });
         $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
     })
-</script>
+
+    //选择用户表
+    $(function () {
+      $tableLeft = $('#tableusers20').bootstrapTable({
+        idField: 'Id',
+        // url: '/admin/user',
+        // striped: "true",
+        columns: [
+          {
+            checkbox: 'true',
+            width: '10'
+          },
+          {
+            // field: 'Number',
+            title: '序号',
+            halign: 'center',
+            align: 'center',
+            formatter:function(value,row,index){
+            return index+1
+            }
+          },{
+            field: 'name',
+            title: '用户名',
+            halign: 'center',
+            align: 'center',
+            // sortable:'true',
+            // editable: {
+                // type: 'text',
+                // pk: 1,
+                // url: '/admin/user/updateuser',
+                // title: 'Enter ProjectNumber' 
+            // }
+          },{
+            field: 'Nickname',
+            title: '昵称',
+            halign: 'center',
+            align: 'center',
+            // editable: {
+                // type: 'text',
+                // pk: 1,
+                // url: '/admin/user/updateuser',
+                // title: 'Enter ProjectName'  
+            // }
+          },{
+            field: 'Department',
+            title: '部门',
+            halign: 'center',
+            align: 'center',
+            // editable: {
+                // type: 'text',
+                // pk: 1,
+                // url: '/admin/user/updateuser',
+                // title: 'Enter Department'  
+            // }
+          },{
+            field: 'Secoffice',
+            title: '科室',
+            sortable:'true',
+            halign: 'center',
+            align: 'center',
+            // editable: {
+                // type: 'text',
+                // source: {{.Select2}},//["$1", "$2", "$3"],
+                // pk: 1,
+                // url: '/admin/user/updateuser',
+                // title: 'Enter Category' 
+            // }
+          },{
+            field: 'role',
+            // visible: false,
+            title: '权限',
+            halign: 'center',
+            align: 'center',
+            editable: {
+                type: 'select2', 
+                source: [
+                      {id: '1', text: '  Full AccessRead',value:1},
+                      {id: '2', text: '  Review',value:2},
+                      {id: '3', text: '  Read Only',value:3},
+                      {id: '4', text: '  Deny Access',value:4}
+                   ],
+              //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
+              //Because the value attribute on a <select> tag must be a string, and Select2 generates the value attribute from the id property of the data objects, the id property on each data object must also be a string.
+
+              // Select2 will attempt to convert anything that is not a string to a string, which will work for most situations, but it is recommended to explicitly convert your ids to strings ahead of time.
+
+              // Blank ids or an id with a value of 0 are not permitted.
+                select2: {
+                  allowClear: true,
+                  width: '150px',
+                  placeholder: '请选择权限',
+                  // multiple: true
+                },
+                pk: 1,
+                // url: '/admin/user/updateuser',
+                title: 'Enter Status'  
+            }
+          // },{
+          //   field:'action',
+          //   title: '操作',
+          //   formatter:'actionFormatter',
+          //   events:'actionEvents',
+          }
+        ]
+      });
+    });
+
+    //选择角色表
+    $(function () {
+      $tableLeft1 = $('#tableusers21').bootstrapTable({
+        idField: 'Id',
+        columns: [
+          {
+            checkbox: 'true',
+            width: '10'
+          },
+          {
+            title: '序号',
+            halign: 'center',
+            align: 'center',
+            formatter:function(value,row,index){
+            return index+1
+            }
+          },{
+            field: 'Rolenumber',
+            title: '角色编码',
+            halign: 'center',
+            align: 'center',
+          },{
+            field: 'name',
+            title: '角色名称',
+            halign: 'center',
+            align: 'center',
+          },{
+            field: 'role',
+            title: '权限',
+            halign: 'center',
+            align: 'center',
+            editable: {
+                type: 'select2', 
+                source: [
+                      {id: '1', text: '  Full AccessRead',value:1},
+                      {id: '2', text: '  Review',value:2},
+                      {id: '3', text: '  Read Only',value:3},
+                      {id: '4', text: '  Deny Access',value:4}
+                   ],
+                select2: {
+                  allowClear: true,
+                  width: '150px',
+                  placeholder: '请选择权限',
+                },
+                pk: 1,
+                title: 'Enter Status'  
+            }
+          }
+        ]
+      });
+    });
+
+    //设置用户权限表
+    $(function () {
+      $tableRight = $('#tableusers1').bootstrapTable({
+        idField: 'Id',
+        url: '',
+        // striped: "true",
+        columns: [
+          // {
+          //   checkbox: 'true',
+          //   width: '10'
+          // },
+          {
+            // field: 'Number',
+            title: '序号',
+            halign: 'center',
+            align: 'center',
+            formatter:function(value,row,index){
+            return index+1
+            }
+          },{
+            field: 'name',
+            title: '用户名/角色名',
+            halign: 'center',
+            align: 'center',
+            sortable:'true',
+            // editable: {
+                // type: 'text',
+                // pk: 1,
+                // url: '/admin/user/updateuser',
+                // title: 'Enter ProjectNumber' 
+            // }
+          },{
+            field: 'role',
+            // visible: false,
+            title: '权限',
+            halign: 'center',
+            align: 'center',
+            editable: {
+                type: 'select2', 
+                source: [
+                      {id: '1', text: '  Full AccessRead',value:1},
+                      {id: '2', text: '  Review',value:2},
+                      {id: '3', text: '  Read Only',value:3},
+                      {id: '4', text: '  Deny Access',value:4}
+                   ],
+        //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
+                select2: {
+                  allowClear: true,
+                  width: '150px',
+                  placeholder: '请选择权限',
+                  // multiple: true
+                },
+                pk: 1,
+                // url: '/admin/user/updateuser',
+                title: 'Enter Status'  
+            }
+          },{
+            field:'action',
+            title: '操作',
+            halign: 'center',
+            align: 'center',
+            formatter:'actionFormatter',
+            events:'actionEvents',
+          }
+        ]
+      });
+    });
+  </script>
+
+  <!-- 解决多弹出模态框问题 -->
+  <script type="text/javascript">
+    jQuery(function($){
+            //解决模态框背景色越来越深的问题
+            $(document).on('show.bs.modal', '.modal', function(event) {
+                // $(this).appendTo($('body'));
+            }).on('shown.bs.modal', '.modal.in', function(event) {
+                setModalsAndBackdropsOrder();
+            }).on('hidden.bs.modal', '.modal', function(event) {
+                setModalsAndBackdropsOrder();
+            });
+
+            function setModalsAndBackdropsOrder() {
+                var modalZIndex = 1040;
+                $('.modal.in').each(function(index) {
+                    var $modal = $(this);
+                    modalZIndex++;
+                    $modal.css('zIndex', modalZIndex);
+                    $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
+                });
+                $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
+            }
+
+            //覆盖Modal.prototype的hideModal方法
+            $.fn.modal.Constructor.prototype.hideModal = function () {
+                var that = this
+                this.$element.hide()
+                this.backdrop(function () {
+                    //判断当前页面所有的模态框都已经隐藏了之后body移除.modal-open，即body出现滚动条。
+                    $('.modal.fade.in').length === 0 && that.$body.removeClass('modal-open')
+                    that.resetAdjustments()
+                    that.resetScrollbar()
+                    that.$element.trigger('hidden.bs.modal')
+                })
+            }
+    });
+  </script>
+
+  <!-- table中数据传递 -->
+  <script type="text/javascript">
+    //取得权限表中所有数据——判断是否有重复的
+    // var selectRow=$tableRight.bootstrapTable('getData');
+    //用户选择到权限表中
+    $('#btn2Right').click(function () {  
+      var selectContent = $tableLeft.bootstrapTable('getSelections');
+      // for(var i=0;i<selectContent.length;i++){
+      //   for(var j=0;j<selectRow.length;j++){
+      //     if (selectContent[i].name==selectRow[j].name){
+      //       删除
+      //     }
+      //   }
+      // }
+      $tableRight.bootstrapTable("append", selectContent);   
+      username = $.map(selectContent, function (row) {  
+        return row.name;
+      });  
+      $tableLeft.bootstrapTable('remove', {  
+        field: 'name',  
+        values: username  
+      });  
+    }); 
+
+    //角色选择到权限表中
+    $('#btn2Right1').click(function () {  
+      var selectContent = $tableLeft1.bootstrapTable('getSelections');  
+      $tableRight.bootstrapTable("append", selectContent);  
+      rolename = $.map(selectContent, function (row) {  
+        return row.name;  
+      });  
+      $tableLeft1.bootstrapTable('remove', {  
+        field: 'name',  
+        values: rolename  
+      });  
+    });  
+    // $('#btn2Left').click(function () {  
+    //     var selectContent = $tableRight.bootstrapTable('getSelections'); 
+    //     $tableLeft.bootstrapTable("append", selectContent);  
+    //     var selects = $tableRight.bootstrapTable('getSelections');  
+    //     SKUNo = $.map(selects, function (row) {  
+    //         return row.SKUNo;  
+    //     });  
+    //     $tableRight.bootstrapTable('remove', {  
+    //         field: 'SKUNo',  
+    //         values: SKUNo  
+    //     });  
+    // });  
+    // }
+
+    $(document).ready(function() {
+      var now = new Date(); 
+      myDate=new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(); 
+      $("#Date").val(myDate);
+
+      //弹出添加用户模态框
+      $("#addusers").click(function() {
+        if ($("#dropdownMenu1").hasClass("fa fa-pencil")){
+          $tableLeft.bootstrapTable('refresh', {url:'/admin/user?role=1'});
+        }else if($("#dropdownMenu1").hasClass("fa fa-commenting-o")){
+          $tableLeft.bootstrapTable('refresh', {url:'/admin/user?role=2'});
+        }else if($("#dropdownMenu1").hasClass("fa fa-eye")){
+          $tableLeft.bootstrapTable('refresh', {url:'/admin/user?role=3'});
+        }else if($("#dropdownMenu1").hasClass("fa fa-eye-slash")){
+          $tableLeft.bootstrapTable('refresh', {url:'/admin/user?role=4'});
+        }
+
+        $('#users').modal({
+          show:true,
+          backdrop:'static'
+        });
+      })
+
+      //弹出添加角色模态框
+      $("#addroles").click(function() {
+        if ($("#dropdownMenu2").hasClass("fa fa-pencil")){
+          $tableLeft1.bootstrapTable('refresh', {url:'/admin/role/get?role=1'});
+        }else if($("#dropdownMenu2").hasClass("fa fa-commenting-o")){
+          $tableLeft1.bootstrapTable('refresh', {url:'/admin/role/get?role=2'});
+        }else if($("#dropdownMenu2").hasClass("fa fa-eye")){
+          $tableLeft1.bootstrapTable('refresh', {url:'/admin/role/get?role=3'});
+        }else if($("#dropdownMenu2").hasClass("fa fa-eye-slash")){
+          $tableLeft1.bootstrapTable('refresh', {url:'/admin/role/get?role=4'});
+        }
+
+        $('#roles').modal({
+          show:true,
+          backdrop:'static'
+        });
+      })
+
+    })
+
+
+    function actionFormatter(value, row, index) {
+      return '<a class="remove" href="javascript:void(0)" title="删除"><i class="glyphicon glyphicon-remove"></i></a>';
+    }
+
+    window.actionEvents = {
+      'click .remove': function (e, value, row, index) {
+        var username=[]
+        username[0]=row.name
+        $tableRight.bootstrapTable('remove', {field: 'name', values: username});
+      }        
+      // 'click .remove': function (e, value, row, index) {
+      //   var map = {};
+      // map['username'] = row.Username;
+      // alert(map.username);
+
+      // var selects = $tableRight.bootstrapTable('getSelections');  
+      // username = $.map(selects, function (row) {  
+      //   return row.Username;  
+      // });
+      // alert(username);
+
+      // alert(row.Username);
+      // $tableRight.bootstrapTable('remove', {  
+      //   field: 'Username',  
+      //   values: username//username
+      // }); 
+      // }
+    };
+
+    //添加用户/角色权限
+    function saveusers(){
+      // if ({{.RoleDelete}}!="true"){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      // var selectRow=$('#tableusers1').bootstrapTable('getSelections');
+      var selectRow=$('#tableusers1').bootstrapTable('getData');
+      if (selectRow.length<=0) {
+        alert("没有数据！");
+        return false;
+      }//else{
+        // alert(JSON.stringify(selectRow));
+      //}
+      var docid = $('#pid').val();
+      // if ({{.RoleDelete}}!="true"){
+      //   alert("权限不够！"+selectRow[0].Uid);
+      //   return;
+      // }
+
+      //if(confirm("确定删除吗？一旦删除将无法恢复！")){
+        // var title=$.map(selectRow,function(row){
+        //   return row.Title;
+        // })
+
+        // var userids="";
+        // var roleids="";
+        // for(var i=0;i<selectRow.length;i++){
+        //   if (selectRow[i].Rolenumber){
+        //     if(roleids==""){
+        //       roleids=selectRow[i].Id;
+        //     }else{
+        //       roleids=roleids+","+selectRow[i].Id;
+        //     }
+        //   }else{
+        //     if(userids==""){
+        //       userids=selectRow[i].Id;
+        //     }else{
+        //       userids=userids+","+selectRow[i].Id;
+        //     }
+        //   }
+        // }
+        // alert(idsrole);
+        // alert(idsuser);
+        $.ajax({
+          type:"post",
+          url:"/onlyoffice/addpermission",
+          data: {ids:JSON.stringify(selectRow),docid:docid},
+          // data: {userids:userids,roleids:roleids,docid:docid},
+          success:function(data,status){
+            alert("保存“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            // $('#attachments').bootstrapTable('remove',{
+            //   field:'Title',
+            //   values:title
+            // });
+          }
+        });
+      // }
+    }
+  </script>
 
 </body>
 </html>

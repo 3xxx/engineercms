@@ -79,7 +79,7 @@ func (c *UserController) Index() {
 	//6.进行逻辑分析：
 	// rolename, _ := strconv.ParseInt(role, 10, 64)
 	// if filetype != "pdf" && filetype != "jpg" && filetype != "diary" {
-	if role > 1 { //&& uname != category.Author
+	if role > "1" { //&& uname != category.Author
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -127,6 +127,13 @@ func (c *UserController) User() {
 		if err != nil {
 			beego.Error(err)
 		}
+		//如果设置了role,用于onlyoffice的权限设置
+		role := c.Input().Get("role")
+		if role != "" {
+			for _, v := range users {
+				v.Role = role
+			}
+		}
 		c.Data["json"] = &users
 		c.ServeJSON()
 	} else {
@@ -139,6 +146,7 @@ func (c *UserController) User() {
 		if err != nil {
 			beego.Error(err)
 		}
+
 		// var users1 []*m.User
 		users := make([]*m.User, 1)
 		users[0] = &user
@@ -168,9 +176,13 @@ func (c *UserController) View() {
 	}
 
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -228,11 +240,7 @@ func (c *UserController) AddUser() {
 		beego.Error(err)
 	}
 	user.Status = statusint
-	roleint, err := strconv.Atoi(c.Input().Get("role"))
-	if err != nil {
-		beego.Error(err)
-	}
-	user.Role = roleint
+	user.Role = c.Input().Get("role")
 	id, err := m.SaveUser(user)
 	if err == nil && id > 0 {
 		// c.Rsp(true, "Success")
@@ -330,9 +338,13 @@ func (c *UserController) DeleteUser() {
 //用户查看自己，修改密码等
 func (c *UserController) GetUserByUsername() {
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		// beego.Info(role)
 		c.Data["IsLogin"] = true
 	} else {
@@ -396,9 +408,13 @@ func (c *UserController) GetUserByUsername() {
 //用户个人数据，填充table，以便编辑
 func (c *UserController) Usermyself() {
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -536,11 +552,8 @@ func (c *UserController) ImportUsers() {
 					if err != nil {
 						beego.Error(err)
 					}
-					role1, err := strconv.Atoi(role)
-					if err != nil {
-						beego.Error(err)
-					}
-					user.Role = role1
+
+					user.Role = role
 					user.Lastlogintime = time.Now()
 					_, err = m.SaveUser(user) //如果姓名重复，也要返回uid
 					if err != nil {

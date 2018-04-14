@@ -232,7 +232,7 @@ func checkAccount(ctx *context.Context) bool {
 	// 	beego.AppConfig.String("pwd") == pwd
 }
 
-func checkRole(ctx *context.Context) (role int, err error) { //这里返回用户的role
+func checkRole(ctx *context.Context) (role string, err error) { //这里返回用户的role
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
 	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
 	// defer sess.SessionRelease(ctx.ResponseWriter)

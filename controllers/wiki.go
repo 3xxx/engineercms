@@ -21,9 +21,13 @@ type WikiController struct {
 
 func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate，用后面的listall()
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -89,9 +93,13 @@ func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate�
 //根据用户名查看wiki
 func (c *WikiController) Viewbyuname() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -113,9 +121,13 @@ func (c *WikiController) Viewbyuname() {
 
 func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -133,7 +145,7 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
 
-	if role > 4 { //&& uname != category.Author
+	if roleint > 4 { //&& uname != category.Author
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -149,9 +161,13 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 //这个提交添加wiki的方法
 func (c *WikiController) AddWiki() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -188,7 +204,7 @@ func (c *WikiController) AddWiki() {
 	// uname, _ := checkprodRole(c.Ctx) //login里的
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
-	if role > 4 { //&& uname != category.Author
+	if roleint > 4 { //&& uname != category.Author
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -196,7 +212,7 @@ func (c *WikiController) AddWiki() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	_, err := models.AddWikiOne(title, content, username)
+	_, err = models.AddWikiOne(title, content, username)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -281,9 +297,13 @@ func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 
 func (c *WikiController) View() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -331,9 +351,13 @@ func (c *WikiController) View() {
 //修改wiki页面
 func (c *WikiController) Modify() { //这个也要登陆验证
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -360,7 +384,7 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
 
-	if role > 2 && username != wiki.Author { //
+	if roleint > 2 && username != wiki.Author { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -404,11 +428,15 @@ func (c *WikiController) Delete() { //应该显示警告
 	// var uname string
 	//2.如果登录或ip在允许范围内，进行访问权限检查
 	uname, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// rolename, _ = strconv.Atoi(role)
 	// beego.Info(rolename)=5
 	// beego.Info(wiki.Author)=127.0.0.1
 	c.Data["Uname"] = uname
-	if role > 2 && uname != wiki.Author { //
+	if roleint > 2 && uname != wiki.Author { //
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -439,9 +467,13 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 	var uname string
 	//2.如果登录或ip在允许范围内，进行访问权限检查
 	uname, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// rolename, _ = strconv.Atoi(role)
 	c.Data["Uname"] = uname
-	if role > 2 && uname != wiki.Author { //
+	if roleint > 2 && uname != wiki.Author { //
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route

@@ -20,7 +20,7 @@
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <script src="/static/js/jquery.form.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
   <script type="text/javascript" src="/static/js/select2.js"></script>
 </head>
 <body>
@@ -38,7 +38,7 @@
         <i class="fa fa-trash">删除</i>
         </button>
     </div>
-  <table id="table0"
+    <table id="table0"
         data-search="true"
         data-show-refresh="true"
         data-show-toggle="true"
@@ -57,7 +57,7 @@
         data-click-to-select="true"
         data-show-export="true"
         >
-  </table>
+    </table>
 
   <script type="text/javascript">
         /*数据json*/
@@ -154,7 +154,7 @@
                 <div class="form-group must">
                 <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-7">
-                  <select id="Status" class="form-control">
+                  <select id="Statusadd" class="form-control">
                     <option value="1" >显示</option>
                     <option value="2" >隐藏</option>
                     <option value="0" >禁用</option>
@@ -226,7 +226,7 @@
       var Ip         = $('#Ip').val();
       var Port         = $('#Port').val();
       // var Status     = $('#Status option:selected').text();
-      var Status     = $('#Status option:selected').val();
+      var Status     = $('#Statusadd option:selected').val();
       var Role       = $('#Role').val();
       if (Username)
         {  
@@ -285,7 +285,7 @@
             return index+1
             }
           },{
-            field: 'Username',
+            field: 'name',//Username
             title: '用户名',
             sortable:'true',
             editable: {
@@ -397,7 +397,7 @@
             title: '建立',
             formatter:localDateFormatter,
           },{
-            field: 'Role',
+            field: 'role',//'Role'
             visible: false,
             title: '权限',
             editable: {
@@ -723,7 +723,7 @@ field：点击列的 field 名称 -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="save()">保存</button>
+          <button type="button" class="btn btn-primary" onclick="saverole()">保存</button>
         </div>
       </div>
     </div>
@@ -767,7 +767,7 @@ field：点击列的 field 名称 -->
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-primary" onclick="update()">修改</button>
+              <button type="button" class="btn btn-primary" onclick="updaterole()">修改</button>
             </div>
           </div>
         </div>
@@ -874,7 +874,7 @@ field：点击列的 field 名称 -->
     })
 
     //新建角色
-    function save(){
+    function saverole(){
       // var radio =$("input[type='radio']:checked").val();        
       var Rolename = $('#Rolename').val();
       var Rolenumber = $('#Rolenumber').val();
@@ -901,7 +901,7 @@ field：点击列的 field 名称 -->
     }
 
     //更新角色
-    function update(){
+    function updaterole(){
       // var radio =$("input[type='radio']:checked").val();
       var roleid1 = $('#cid').val();
       var rolename1 = $('#Rolename1').val();

@@ -94,9 +94,13 @@ type Rolesvalue struct {
 //项目列表页面
 func (c *ProjGantController) Get() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false

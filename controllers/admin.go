@@ -62,9 +62,13 @@ type CatalogLinkEditable struct {
 
 func (c *AdminController) Get() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -75,7 +79,7 @@ func (c *AdminController) Get() {
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
 
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -87,9 +91,13 @@ func (c *AdminController) Get() {
 
 func (c *AdminController) Admin() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -99,7 +107,7 @@ func (c *AdminController) Admin() {
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role == 1 {
+	if role == "1" {
 		id := c.Ctx.Input.Param(":id")
 		c.Data["Id"] = id
 		switch id {
@@ -659,7 +667,7 @@ func (c *AdminController) Calendar() {
 	}
 	var calendars []*models.AdminCalendar
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		calendars, err = models.GetAdminCalendar(startdate, enddate, false)
 		if err != nil {
 			beego.Error(err)
@@ -835,7 +843,7 @@ func (c *AdminController) SearchCalendar() {
 	var calendars []*models.AdminCalendar
 	var err error
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		calendars, err = models.SearchAdminCalendar(title, false)
 		if err != nil {
 			beego.Error(err)
@@ -1075,7 +1083,7 @@ func (c *AdminController) DeleteDepartment() {
 //批量上传首页轮播图片
 func (c *AdminController) AddCarousel() {
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		//获取上传的文件
 		_, h, err := c.GetFile("file")
 		if err != nil {

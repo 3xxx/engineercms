@@ -517,7 +517,7 @@ func (c *ArticleController) UpdateArticle() {
 //根据文章id删除文章_没删除文章中的图片
 func (c *ArticleController) DeleteArticle() {
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.Input().Get("pid")
 		//id转成64为

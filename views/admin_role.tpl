@@ -62,7 +62,7 @@
                 <th data-field="state" data-checkbox="true" data-select-item-name="role"></th>
                 <th data-formatter="index1">#</th>
                 <th data-field="Rolenumber">角色编码</th>
-                <th data-field="Rolename">角色名称</th>
+                <th data-field="name">角色名称</th>
                 <th data-align="center" data-formatter="StatusFormatter">状态</th>
                 <!-- <th data-field="domain_desc">所属域</th> -->
                 <!-- <th data-align="center"
@@ -248,7 +248,7 @@
 
     function StatusFormatter(value, row, index) {
       // alert(row.Status);
-      if (row.Status == "0") {
+      if (row.role == "0") {//Status
           return '正常';
       }else{
         return '失效';

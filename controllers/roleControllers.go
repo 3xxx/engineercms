@@ -212,6 +212,17 @@ func (c *RoleController) Get() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//如果设置了role,用于onlyoffice的权限设置
+	role := c.Input().Get("role")
+	if role != "" {
+		roleint, err := strconv.Atoi(role)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, v := range roles {
+			v.Status = roleint
+		}
+	}
 
 	if id != "" {
 		//pid转成64为
@@ -396,8 +407,8 @@ func (c *RoleController) UserRole() {
 		// rule = append(rule, uid, v1)
 		// beego.Info(rule)
 		// e.AddPolicy(uid, v1)
-		e.AddGroupingPolicy(uid, v1)
-		//应该用AddRoleForUser()
+		e.AddGroupingPolicy(uid, v1) //management_api.go
+		//应该用AddRoleForUser()//rbac_api.go
 		// rule = make([]string, 0)
 	}
 	// a.SavePolicy(e.GetModel())//autosave默认是true
@@ -503,7 +514,7 @@ func (c *RoleController) RolePermission() {
 				// beego.Info(projurl)
 				// beego.Info(action)
 				// beego.Info(suf)
-				success = e.AddPolicy(v1, projurl, action, suf)
+				success = e.AddPolicy(v1, projurl, action, suf) //来自casbin\management_api.go
 				//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
 			}
 		}
@@ -551,11 +562,13 @@ func (c *RoleController) GetRolePermission() {
 	roleid := c.GetString("roleid") //角色id
 	action := c.GetString("action")
 	projectid := c.GetString("projectid")
-	beego.Info(roleid)
-	beego.Info(action)
-	beego.Info(projectid)
-	myRes := e.GetPermissionsForUser(roleid)
-	beego.Info(myRes)
+	// beego.Info(roleid)
+	// beego.Info(action)
+	// beego.Info(projectid)
+
+	// myRes := e.GetPermissionsForUser(roleid)
+	// beego.Info(myRes)
+
 	// 	2018/01/03 21:42:15 [I] [roleControllers.go:543] [[1 /25001/* POST .*] [1 /25001
 	// /* PUT .*] [1 /25001/* DELETE .*] [1 /25001/* GET .*] [1 /25001/25003/* GET (?i:
 	// PDF)] [1 /25001/25002/25013/* GET (?i:PDF)] [1 /25001/25002/25012/* GET (?i:PDF)
@@ -578,7 +591,7 @@ func (c *RoleController) GetRolePermission() {
 		projid := strings.Replace(v1.V1, "/*", "", -1)
 		projids = append(projids, path.Base(projid))
 	}
-	beego.Info(projids)
+	// beego.Info(projids)
 	c.Data["json"] = projids
 	c.ServeJSON()
 }

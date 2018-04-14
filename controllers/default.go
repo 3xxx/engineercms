@@ -25,9 +25,13 @@ type MainController struct {
 
 func (c *MainController) Get() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -40,9 +44,9 @@ func (c *MainController) Get() {
 
 	// beego.Info(username)
 	// beego.Info(role)
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -170,11 +174,15 @@ func (c *MainController) Get() {
 //文档
 func (c *MainController) Getecmsdoc() {
 	username, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(username)
 	// beego.Info(role)
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -189,11 +197,15 @@ func (c *MainController) Getecmsdoc() {
 
 func (c *MainController) Getmeritmsdoc() {
 	username, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(username)
 	// beego.Info(role)
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -208,11 +220,15 @@ func (c *MainController) Getmeritmsdoc() {
 
 func (c *MainController) Gethydrowsdoc() {
 	username, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(username)
 	// beego.Info(role)
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -228,11 +244,15 @@ func (c *MainController) Gethydrowsdoc() {
 //api
 func (c *MainController) Getecmsapi() {
 	username, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(username)
 	// beego.Info(role)
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -247,11 +267,15 @@ func (c *MainController) Getecmsapi() {
 
 func (c *MainController) Getmeritmsapi() {
 	username, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(username)
 	// beego.Info(role)
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false

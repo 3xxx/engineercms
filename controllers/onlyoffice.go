@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"engineercms/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	"github.com/casbin/beego-orm-adapter"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -130,12 +132,21 @@ type OnlyLink struct {
 }
 
 type DocxLink struct {
-	Id     int64
-	Title  string
-	Suffix string
+	Id         int64
+	Title      string
+	Suffix     string
+	Permission string
 	// Link    string
 	Created time.Time
 	Updated time.Time
+}
+
+//权限表提交的table中json数据解析成struct
+type Rolepermission struct {
+	Id         int64
+	Name       string `json:"name"`
+	Rolenumber string
+	Permission string `json:"role"`
 }
 
 // type XlsxLink struct {
@@ -152,11 +163,16 @@ type DocxLink struct {
 // 	Updated time.Time
 // }
 
+//文档管理页面
 func (c *OnlyController) Get() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -240,9 +256,31 @@ func (c *OnlyController) Get() {
 }
 
 //提供给列表页的table中json数据
-//取得某个侧栏id下的成果给table
 func (c *OnlyController) GetData() {
+	//1.取得客户端用户名
+	var uname, useridstring string
+	var user models.User
 	var err error
+	v := c.GetSession("uname")
+	// var role, userrole int
+	if v != nil {
+		uname = v.(string)
+		// c.Data["Uname"] = v.(string)
+		user, err = models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+		c.Data["Uid"] = user.Id
+		// userrole = user.Role
+		useridstring = strconv.FormatInt(user.Id, 10)
+	}
+	var myRes [][]string
+	if useridstring != "" {
+		myRes = e.GetPermissionsForUser(useridstring)
+		// beego.Info(myRes)
+	}
+	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+
 	docs, err := models.GetDocs()
 	if err != nil {
 		beego.Error(err)
@@ -250,9 +288,8 @@ func (c *OnlyController) GetData() {
 
 	link := make([]OnlyLink, 0)
 	Docxslice := make([]DocxLink, 0)
-	// Xlsxslice := make([]XlsxLink, 0)
-	// Pptxslice := make([]PptxLink, 0)
 	for _, w := range docs {
+
 		Attachments, err := models.GetOnlyAttachments(w.Id)
 		if err != nil {
 			beego.Error(err)
@@ -267,10 +304,46 @@ func (c *OnlyController) GetData() {
 		linkarr[0].Uid = w.Uid
 		linkarr[0].Created = w.Created
 		linkarr[0].Updated = w.Updated
+		//docid——me——1
 		for _, v := range Attachments {
 			// beego.Info(v.FileName)
 			// fileext := path.Ext(v.FileName)
 			docxarr := make([]DocxLink, 1)
+			docxarr[0].Permission = "1"
+			//查询v.Id是否和myres的V1路径后面的id一致，如果一致，则取得V2（权限）
+			//查询用户具有的权限
+			// beego.Info(useridstring)
+			if useridstring != "" { //如果是登录用户，则设置了权限的文档不能看
+				// beego.Info(myRes)
+				// myRes1 := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+				if w.Uid != user.Id {
+					for _, k := range myResall {
+						// beego.Info(k)
+						if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+							docxarr[0].Permission = "4"
+						}
+					}
+					for _, k := range myRes {
+						// beego.Info(k)
+						if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+							docxarr[0].Permission = k[2]
+						}
+					}
+				}
+			} else { //如果用户没登录，则设置了权限的文档不能看
+				for _, k := range myResall { //所有设置了权限的不能看
+					// beego.Info(k)
+					if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+						// beego.Info(i)
+						// beego.Info(strconv.FormatInt(v.Id, 10))
+						// beego.Info(path.Base(k[1]))
+						docxarr[0].Permission = "4"
+						// beego.Info(strconv.FormatInt(v.Id, 10))
+						// beego.Info(path.Base(k[1]))
+					}
+				}
+			}
+
 			docxarr[0].Id = v.Id
 			docxarr[0].Title = v.FileName
 			if path.Ext(v.FileName) == ".docx" || path.Ext(v.FileName) == ".DOCX" || path.Ext(v.FileName) == ".doc" || path.Ext(v.FileName) == ".DOC" {
@@ -343,12 +416,18 @@ func (c *OnlyController) OnlyOffice() {
 	if err != nil {
 		beego.Error(err)
 	}
-	c.Data["Doc"] = onlyattachment
-	c.Data["attachid"] = idNum
-	c.Data["Key"] = strconv.FormatInt(onlyattachment.Updated.UnixNano(), 10)
 
-	var uname string
+	//docid——uid——me
+	doc, err := models.Getdocbyid(onlyattachment.DocId)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	var uname, useridstring, Permission string
+	var myRes [][]string
 	v := c.GetSession("uname")
+	// var role, userrole int
+	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -356,12 +435,82 @@ func (c *OnlyController) OnlyOffice() {
 		if err != nil {
 			beego.Error(err)
 		}
+		useridstring = strconv.FormatInt(user.Id, 10)
+		myRes = e.GetPermissionsForUser(useridstring)
+		if doc.Uid == user.Id {
+			Permission = "1"
+		} else { //如果是登录用户，则设置了权限的文档不能看
+			Permission = "1"
+			for _, k := range myResall {
+				if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+					Permission = "4"
+				}
+			}
+			for _, k := range myRes {
+				if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+					Permission = k[2]
+				}
+			}
+		}
 		c.Data["Uid"] = user.Id
-		// useridstring = strconv.FormatInt(user.Id, 10)
-	} else {
+		// userrole = user.Role
+	} else { //如果用户没登录，则设置了权限的文档不能看
+		Permission = "1"
+		for _, k := range myResall { //所有设置了权限的不能看
+			if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+				Permission = "4"
+			}
+		}
 		c.Data["Uname"] = c.Ctx.Input.IP()
 		c.Data["Uid"] = 0
 	}
+
+	// var myRes [][]string
+	// if useridstring != "" {
+	// 	myRes = e.GetPermissionsForUser(useridstring)
+	// }
+	// myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+	// Permission = "1"
+	// if useridstring != "" {
+	// 	for _, k := range myResall {
+	// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+	// 			Permission = "4"
+	// 		}
+	// 	}
+	// 	for _, k := range myRes {
+	// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+	// 			Permission = k[2]
+	// 		}
+	// 	}
+	// } else { //如果用户没登录，则设置了权限的文档不能看
+	// 	for _, k := range myResall { //所有设置了权限的不能看
+	// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+	// 			Permission = "4"
+	// 		}
+	// 	}
+	// }
+
+	// In case edit is set to "false" and review is set to "true",
+	// the document will be available in review mode only.
+	if Permission == "1" {
+		c.Data["Mode"] = "edit"
+		c.Data["Edit"] = true
+		c.Data["Review"] = true
+	} else if Permission == "2" {
+		c.Data["Mode"] = "edit"
+		c.Data["Edit"] = false
+		c.Data["Review"] = true
+	} else if Permission == "3" {
+		c.Data["Mode"] = "view"
+		c.Data["Edit"] = false
+		c.Data["Review"] = false
+	} else if Permission == "4" {
+		return
+	}
+
+	c.Data["Doc"] = onlyattachment
+	c.Data["attachid"] = idNum
+	c.Data["Key"] = strconv.FormatInt(onlyattachment.Updated.UnixNano(), 10)
 
 	//构造[]history
 	history, err := models.GetOnlyHistory(onlyattachment.Id)
@@ -422,7 +571,7 @@ func (c *OnlyController) OnlyOffice() {
 		}
 	}
 	c.Data["currentversion"] = first
-	beego.Info(first)
+	// beego.Info(first)
 
 	if path.Ext(onlyattachment.FileName) == ".docx" || path.Ext(onlyattachment.FileName) == ".DOCX" {
 		c.Data["fileType"] = "docx"
@@ -460,11 +609,11 @@ func (c *OnlyController) OnlyOffice() {
 		beego.Error(err)
 	}
 	if matched == true {
-		beego.Info("移动端~")
+		// beego.Info("移动端~")
 		// c.TplName = "onlyoffice/onlyoffice.tpl"
 		c.Data["Type"] = "mobile"
 	} else {
-		beego.Info("电脑端！")
+		// beego.Info("电脑端！")
 		// c.TplName = "onlyoffice/onlyoffice.tpl"
 		c.Data["Type"] = "desktop"
 	}
@@ -508,7 +657,8 @@ func (c *OnlyController) UrltoCallback() {
 			beego.Error(err)
 		}
 
-		f, err := os.OpenFile(".\\attachment\\onlyoffice\\"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+		// f, err := os.OpenFile(".\\attachment\\onlyoffice\\"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+		f, err := os.Create(".\\attachment\\onlyoffice\\" + onlyattachment.FileName)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -748,6 +898,50 @@ func (c *OnlyController) DownloadDoc() {
 	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
 }
 
+//文档管理页面下载文档
+func (c *OnlyController) Download() {
+	// c.Data["IsLogin"] = checkAccount(c.Ctx)
+	//4.取得客户端用户名
+	// var uname, useridstring string
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+	docid := c.Ctx.Input.Param(":id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(docid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据成果id取得所有附件
+	attachments, err := models.GetOnlyAttachments(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	filePath := "attachment/onlyoffice/" + attachments[0].FileName
+	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
+	// filePath := path.Base(ctx.Request.RequestURI)
+	// filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
+	// fileext := path.Ext(filePath)
+	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
+	// beego.Info(path.Dir(filePath))
+	// filepath1 := path.Dir(filePath)
+	// array := strings.Split(filepath1, "/")
+	// beego.Info(strings.Split(filepath1, "/"))
+	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+}
+
 //编辑成果信息
 func (c *OnlyController) UpdateDoc() {
 	id := c.Input().Get("pid")
@@ -834,6 +1028,115 @@ func (c *OnlyController) DeleteDoc() {
 			c.ServeJSON()
 		}
 	}
+}
+
+//onlyoffice权限管理
+//添加用户和角色的权限
+func (c *OnlyController) Addpermission() {
+	// roleids := c.GetString("roleids")
+	// rolearray := strings.Split(roleids, ",")
+	// userids := c.GetString("userids")
+	// userarray := strings.Split(userids, ",")
+	ids := c.GetString("ids")
+	// beego.Info(ids)
+	tt := []byte(ids)
+	var rolepermission []Rolepermission
+	json.Unmarshal(tt, &rolepermission)
+	// beego.Info(rolepermission)
+	docid := c.GetString("docid")
+	//id转成64位
+	idNum, err := strconv.ParseInt(docid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//循环删除成果
+	//根据成果id取得所有附件
+	attachments, err := models.GetOnlyAttachments(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(docid)
+	// action := "get"
+	// var suf string
+	suf := ".*"
+	var success bool
+	for _, v1 := range rolepermission {
+		// beego.Info(v1.Id)
+		if v1.Rolenumber != "" { //存储角色id
+			success = e.AddPolicy("role_"+strconv.FormatInt(v1.Id, 10), "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10), v1.Permission, suf)
+		} else { //存储用户id
+			success = e.AddPolicy(strconv.FormatInt(v1.Id, 10), "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10), v1.Permission, suf)
+		}
+		//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+	}
+	if success == true {
+		c.Data["json"] = "ok"
+	} else {
+		c.Data["json"] = "wrong"
+	}
+	c.ServeJSON()
+}
+
+//查询一个文档，哪些用户和角色拥有什么样的权限
+func (c *OnlyController) Getpermission() {
+	docid := c.GetString("docid")
+	//id转成64位
+	idNum, err := strconv.ParseInt(docid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据成果id取得所有附件
+	attachments, err := models.GetOnlyAttachments(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	var users []beegoormadapter.CasbinRule
+	rolepermission := make([]Rolepermission, 0)
+	for _, w := range attachments {
+		o := orm.NewOrm()
+		qs := o.QueryTable("casbin_rule")
+		_, err = qs.Filter("PType", "p").Filter("v1", "/onlyoffice/"+strconv.FormatInt(w.Id, 10)).All(&users)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(users)
+		for _, v := range users {
+			rolepermission1 := make([]Rolepermission, 1)
+			if strings.Contains(v.V0, "role_") { //是角色
+				// beego.Info(v.V0)
+				roleid := strings.Replace(v.V0, "role_", "", -1)
+				//id转成64位
+				roleidNum, err := strconv.ParseInt(roleid, 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				// beego.Info(roleidNum)
+				role := models.GetRoleByRoleId(roleidNum)
+				// beego.Info(role)
+				rolepermission1[0].Id = roleidNum
+				rolepermission1[0].Name = role.Rolename
+				rolepermission1[0].Rolenumber = role.Rolenumber
+				rolepermission1[0].Permission = v.V2
+				// rolepermission = append(rolepermission, rolepermission1...)
+			} else { //是用户
+				// rolepermission1 := make([]Rolepermission, 1)
+				//id转成64位
+				uidNum, err := strconv.ParseInt(v.V0, 10, 64)
+				if err != nil {
+					beego.Error(err)
+				}
+				user := models.GetUserByUserId(uidNum)
+				rolepermission1[0].Id = uidNum
+				rolepermission1[0].Name = user.Nickname
+				rolepermission1[0].Permission = v.V2
+			}
+			rolepermission = append(rolepermission, rolepermission1...)
+			// rolepermission1 = make([]Rolepermission, 0)
+		}
+		// myRes := e.GetPermissionsForUser(roleid)
+	}
+	c.Data["json"] = rolepermission
+	c.ServeJSON()
 }
 
 // 原来golang下载文件这么简单

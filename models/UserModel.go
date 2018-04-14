@@ -17,7 +17,7 @@ import (
 //用户表
 type User struct {
 	Id            int64  `PK`
-	Username      string `orm:"unique"` //这个拼音的简写
+	Username      string `json:"name",orm:"unique"` //这个拼音的简写
 	Nickname      string //中文名，注意这里，很多都要查询中文名才行`orm:"unique;size(32)" form:"Nickname" valid:"Required;MaxSize(20);MinSize(2)"`
 	Password      string
 	Repassword    string `orm:"-" form:"Repassword" valid:"Required" form:"-"`
@@ -31,7 +31,7 @@ type User struct {
 	Lastlogintime time.Time `orm:"type(datetime);auto_now_add" form:"-"`
 	Createtime    time.Time `orm:"type(datetime);auto_now_add" `
 	Updated       time.Time `orm:"type(datetime);auto_now_add" `
-	Role          int
+	Role          string    `json:"role"`
 	// Roles         []*Role   `orm:"rel(m2m)"`
 }
 
@@ -436,10 +436,7 @@ func UpdateUser(cid int64, fieldname, value string) error {
 				return nil
 			}
 		case "Role":
-			user.Role, err = strconv.Atoi(value)
-			if err != nil {
-				return err
-			}
+			user.Role = value
 			_, err := o.Update(&user, "Role", "Updated") //这里不能用&user
 			if err != nil {
 				return err

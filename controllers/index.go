@@ -72,9 +72,13 @@ type Employee struct { //职员的分院和科室属性
 //显示侧栏结构，科室里员工
 func (c *IndexController) GetIndex() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -216,9 +220,13 @@ func (c *IndexController) Product() {
 
 func (c *IndexController) Calendar() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -234,10 +242,14 @@ func (c *IndexController) Calendar() {
 //显示页面
 func (c *IndexController) GetCarCalendar() {
 	username, role := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	c.Data["Ip"] = c.Ctx.Input.IP()
-	if role == 1 {
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -308,7 +320,7 @@ func (c *IndexController) CarCalendar() {
 	}
 	var calendars []*models.CarCalendar
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		calendars, err = models.GetCarCalendar(startdate, enddate, false)
 		if err != nil {
 			beego.Error(err)
@@ -472,9 +484,13 @@ func (c *IndexController) DeleteCarCalendar() {
 //显示页面
 func (c *IndexController) MeetingroomCalendar() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -544,7 +560,7 @@ func (c *IndexController) MeetCalendar() {
 	}
 	var calendars []*models.MeetCalendar
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		calendars, err = models.GetMeetCalendar(startdate, enddate, false)
 		if err != nil {
 			beego.Error(err)
@@ -711,7 +727,7 @@ func (c *IndexController) SearchCalendar() {
 	var calendars []*models.MeetCalendar
 	var err error
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		calendars, err = models.SearchMeetCalendar(title, false)
 		if err != nil {
 			beego.Error(err)
@@ -730,9 +746,13 @@ func (c *IndexController) SearchCalendar() {
 //显示页面
 func (c *IndexController) GetOrderCalendar() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -748,9 +768,13 @@ func (c *IndexController) GetOrderCalendar() {
 //显示页面
 func (c *IndexController) GetAttendanceCalendar() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false

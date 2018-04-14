@@ -765,31 +765,35 @@ func (c *ProdController) DeleteProduct() {
 	// }
 }
 
-func checkprodRole(ctx *context.Context) (uname string, role int) {
+func checkprodRole(ctx *context.Context) (uname, role string) {
 	// var uname string
 	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
 	// defer sess.SessionRelease(ctx.ResponseWriter)
 	v := ctx.Input.CruSession.Get("uname")
-	var userrole int
+	var userrole string
 	if v != nil {
 		uname = v.(string)
 		user, err := models.GetUserByUsername(uname)
 		if err != nil {
 			beego.Error(err)
 		}
-		if user.Role == 0 {
-			userrole = 4
+		if user.Role == "0" {
+			userrole = "4"
 		} else {
 			userrole = user.Role
 		}
 	} else {
-		userrole = 5
+		userrole = "5"
 		uname = ctx.Input.IP()
 	}
 	iprole := Getiprole(ctx.Input.IP())
 	// beego.Info(iprole)
-	if iprole <= userrole {
-		role = iprole
+	roleint, err := strconv.Atoi(userrole)
+	if err != nil {
+		beego.Error(err)
+	}
+	if iprole <= roleint {
+		role = strconv.Itoa(iprole)
 	} else {
 		role = userrole
 	}

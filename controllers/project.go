@@ -39,9 +39,13 @@ type Project1 struct {
 //项目列表页面
 func (c *ProjController) Get() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -105,10 +109,14 @@ func (c *ProjController) GetProjects() {
 
 //根据id查看项目，查出项目目录
 func (c *ProjController) GetProject() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	username, userrole := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(userrole)
+	if err != nil {
+		beego.Error(err)
+	}
+	if userrole == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -117,7 +125,7 @@ func (c *ProjController) GetProject() {
 	c.Data["Username"] = username
 	// c.Data["IsProject"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
+	c.Data["role"] = userrole
 
 	id := c.Ctx.Input.Param(":id")
 	switch id {
@@ -136,7 +144,7 @@ func (c *ProjController) GetProject() {
 	}
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
-	var err error
+	// var err error
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
@@ -188,10 +196,14 @@ func (c *ProjController) GetProject() {
 //点击项目名称，根据id查看项目下所有成果
 //这个只是页面。表格内的数据填充用product controllers里的getprojproducts方法
 func (c *ProjController) GetProjProducts() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	username, userrole := checkprodRole(c.Ctx)
+	roleint, err := strconv.Atoi(userrole)
+	if err != nil {
+		beego.Error(err)
+	}
+	if userrole == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -200,12 +212,11 @@ func (c *ProjController) GetProjProducts() {
 	c.Data["Username"] = username
 	c.Data["IsProject"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
+	c.Data["role"] = userrole
 
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
 	// var categories []*models.ProjCategory
-	var err error
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
@@ -255,9 +266,13 @@ func (c *ProjController) GetProjectCate() {
 //后台添加项目id的子节点
 func (c *ProjController) AddProjectCate() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -268,7 +283,7 @@ func (c *ProjController) AddProjectCate() {
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
 
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -279,7 +294,6 @@ func (c *ProjController) AddProjectCate() {
 	// pid := c.Input().Get("pid")//项目id
 	nodeid := c.Input().Get("id") //节点nodeid
 	// beego.Info(nodeid)
-	var err error
 	//id转成64为
 	idNum, err := strconv.ParseInt(nodeid, 10, 64)
 	if err != nil {
@@ -330,9 +344,13 @@ func (c *ProjController) AddProjectCate() {
 //后台修改项目目录节点名称
 func (c *ProjController) UpdateProjectCate() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -342,7 +360,7 @@ func (c *ProjController) UpdateProjectCate() {
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -386,9 +404,13 @@ func (c *ProjController) UpdateProjectCate() {
 //删除多节点的子节点
 func (c *ProjController) DeleteProjectCate() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -398,7 +420,7 @@ func (c *ProjController) DeleteProjectCate() {
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -591,9 +613,13 @@ func (c *ProjController) GetProjNav() {
 //添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -603,7 +629,7 @@ func (c *ProjController) AddProject() {
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -681,9 +707,13 @@ func (c *ProjController) AddProject() {
 //修改项目名称、负责人等，
 func (c *ProjController) UpdateProject() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -693,13 +723,13 @@ func (c *ProjController) UpdateProject() {
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
-	var err error
+
 	projcode := c.Input().Get("code")
 	projname := c.Input().Get("name")
 	projlabe := c.Input().Get("label")
@@ -730,9 +760,13 @@ func (c *ProjController) UpdateProject() {
 //后台删除目录，
 func (c *ProjController) DeleteProject() {
 	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if role == "1" {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if roleint > 1 && roleint < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false
@@ -742,7 +776,7 @@ func (c *ProjController) DeleteProject() {
 	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role != 1 {
+	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -939,7 +973,7 @@ func (c *ProjController) Calendar() {
 	}
 	var calendars []*models.ProjCalendar
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	if role == "1" {
 		calendars, err = models.GetProjCalendar(pid, startdate, enddate, false)
 		if err != nil {
 			beego.Error(err)
@@ -1146,7 +1180,7 @@ func (c *ProjController) ProjectTimeline() {
 	var calendars []*models.ProjCalendar
 	// var err error
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 { //显示公开和私有的大事记
+	if role == "1" { //显示公开和私有的大事记
 		calendars, err = models.GetAllProjCalendar(pid, false)
 		if err != nil {
 			beego.Error(err)
@@ -1192,7 +1226,7 @@ func (c *ProjController) Timeline() {
 	var calendars []*models.ProjCalendar
 	// var err error
 	_, role := checkprodRole(c.Ctx)
-	if role == 1 { //显示公开和私有的大事记
+	if role == "1" { //显示公开和私有的大事记
 		calendars, err = models.GetAllProjCalendar(pid, false)
 		if err != nil {
 			beego.Error(err)
@@ -1219,8 +1253,7 @@ func (c *ProjController) Timeline() {
 	// p := pagination.NewPaginator(c.Ctx.Request, 10, 9)
 	// beego.Info(p.Offset())   0
 	// fetch the next 5 posts
-
-	if role == 1 { //显示公开和私有的大事记
+	if role == "1" { //显示公开和私有的大事记
 		calendars, err = models.ListPostsByOffsetAndLimit(pid, paginator.Offset(), postsPerPage, true)
 		if err != nil {
 			beego.Error(err)

@@ -16,12 +16,12 @@ import (
 	// "github.com/casbin/casbin"
 )
 
-//用户表
+//角色表
 type Role struct {
 	Id         int64  `PK`
-	Rolename   string `orm:"unique"` //这个拼音的简写
+	Rolename   string `json:"name",orm:"unique"` //这个拼音的简写
 	Rolenumber string
-	Status     int       `orm:"default(0)" form:"Status" valid:"Range(1,2)"`
+	Status     int       `json:"role",orm:"default(0)",form:"Status",valid:"Range(1,2,3,4)"`
 	Createtime time.Time `orm:"type(datetime);auto_now_add" `
 	Updated    time.Time `orm:"type(datetime);auto_now_add" `
 }
@@ -91,7 +91,7 @@ func GetRoles() (roles []*Role, err error) {
 	return roles, err
 }
 
-//取到一个用户数据，不是数组，所以table无法显示
+//取到一个角色数据，不是数组，所以table无法显示
 func GetRoleByRoleId(roleid int64) (role Role) {
 	role = Role{Id: roleid}
 	o := orm.NewOrm()

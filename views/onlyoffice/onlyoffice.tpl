@@ -135,9 +135,9 @@
           "permissions": {
           	"comment": true,
           	"download": true,
-          	"edit": true,
+          	"edit": {{.Edit}},
           	"print": true,
-          	"review": true
+          	"review": {{.Review}}//true
         	},
         },
         "documentType": "{{.documentType}}",
@@ -189,7 +189,7 @@
 
           "lang": "zh-CN",//"en-US",
 
-					// "mode": "view",//edit
+					"mode": {{.Mode}},//"view",//edit
 
 					"recent": [
             {

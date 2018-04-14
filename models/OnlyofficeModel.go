@@ -100,6 +100,14 @@ func AddDoc(code, title, label, principal string, end time.Time, uid int64) (id 
 	return id, err
 }
 
+//根据docid获得docuid
+func Getdocbyid(id int64) (doc OnlyOffice, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("OnlyOffice")
+	err = qs.Filter("id", id).One(&doc)
+	return doc, err
+}
+
 //添加附件到成果id下
 //如果附件名称已经存在，则不再追加写入数据库
 //应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
