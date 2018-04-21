@@ -545,7 +545,7 @@ func (c *ProjGantController) ImportProjGant() {
 				j := 1
 				//读取编号
 				if len(row.Cells) >= 2 { //总列数，从1开始
-					code, err = row.Cells[j].String()
+					code = row.Cells[j].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -586,14 +586,14 @@ func (c *ProjGantController) ImportProjGant() {
 				}
 				//读取描述
 				if len(row.Cells) >= 10 {
-					description, err = row.Cells[j+8].String()
+					description = row.Cells[j+8].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				//读取项目名称
 				if len(row.Cells) >= 3 {
-					name, err = row.Cells[j+1].String()
+					name = row.Cells[j+1].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -611,7 +611,7 @@ func (c *ProjGantController) ImportProjGant() {
 				}
 				//读取阶段
 				if len(row.Cells) >= 4 {
-					designstage, err := row.Cells[j+2].String()
+					designstage := row.Cells[j+2].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -630,7 +630,7 @@ func (c *ProjGantController) ImportProjGant() {
 
 				//读取专业
 				if len(row.Cells) >= 5 {
-					section, err := row.Cells[j+3].String()
+					section := row.Cells[j+3].String()
 					if err != nil {
 						beego.Error(err)
 					}

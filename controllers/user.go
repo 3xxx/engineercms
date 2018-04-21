@@ -484,19 +484,19 @@ func (c *UserController) ImportUsers() {
 				// 这里要判断单元格列数，如果超过单元格使用范围的列数，则出错for j := 2; j < 7; j += 5 {
 				j := 1
 				if len(row.Cells) >= 2 { //总列数，从1开始
-					user.Username, err = row.Cells[j].String()
+					user.Username = row.Cells[j].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 3 {
-					user.Nickname, err = row.Cells[j+1].String()
+					user.Nickname = row.Cells[j+1].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 4 {
-					Pwd1, err := row.Cells[j+2].String()
+					Pwd1 := row.Cells[j+2].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -507,37 +507,37 @@ func (c *UserController) ImportUsers() {
 					user.Password = hex.EncodeToString(cipherStr)
 				}
 				if len(row.Cells) >= 5 {
-					user.Email, err = row.Cells[j+3].String()
+					user.Email = row.Cells[j+3].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 6 {
-					user.Department, err = row.Cells[j+4].String()
+					user.Department = row.Cells[j+4].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 7 {
-					user.Secoffice, err = row.Cells[j+5].String()
+					user.Secoffice = row.Cells[j+5].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 8 {
-					user.Ip, err = row.Cells[j+6].String()
+					user.Ip = row.Cells[j+6].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 9 {
-					user.Port, err = row.Cells[j+7].String()
+					user.Port = row.Cells[j+7].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				if len(row.Cells) >= 10 {
-					status, err := row.Cells[j+8].String()
+					status := row.Cells[j+8].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -548,7 +548,7 @@ func (c *UserController) ImportUsers() {
 					user.Status = status1
 				}
 				if len(row.Cells) >= 11 {
-					role, err := row.Cells[j+9].String()
+					role := row.Cells[j+9].String()
 					if err != nil {
 						beego.Error(err)
 					}
