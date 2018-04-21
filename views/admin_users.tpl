@@ -932,10 +932,10 @@ field：点击列的 field 名称 -->
       //   return;
       // }
       var selectRow=$('#table1').bootstrapTable('getSelections');
-      if (selectRow.length<=0) {
-        alert("请先勾选！");
-        return false;
-      }
+      // if (selectRow.length<=0) {
+      //   alert("请先勾选！");
+      //   return false;
+      // }
       // if(confirm("确定删除吗？一旦删除将无法恢复！")){
         var title=$.map(selectRow,function(row){
           return row.Title;

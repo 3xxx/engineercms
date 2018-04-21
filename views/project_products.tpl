@@ -48,6 +48,14 @@
 　　vertical-align: middle;
 　　margin-bottom: 2px; 
     }*/
+    #modalDialog .modal-header {cursor: move;}
+    #modalDialog1 .modal-header {cursor: move;}
+    #modalDialog2 .modal-header {cursor: move;}
+    #modalDialog3 .modal-header {cursor: move;}
+    #modalDialog4 .modal-header {cursor: move;}
+    #modalDialog5 .modal-header {cursor: move;}
+    #modalDialog6 .modal-header {cursor: move;}
+    #modalDialog7 .modal-header {cursor: move;}
   </style>
 </head>
 
@@ -927,7 +935,7 @@
     <div class="modal fade" id="modalTable">
       <div class="modal-dialog" id="modalDialog">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -988,7 +996,7 @@
 <!-- 多附件 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable1">
-      <div class="modal-dialog"  id="modalDialog1">
+      <div class="modal-dialog"  id="modalDialog1" style="background-color: #8bc34a">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
@@ -1047,7 +1055,7 @@
     <div class="modal fade" id="modalTable2">
       <div class="modal-dialog" style="width: 100%" id="modalDialog2">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #FF5722;">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1110,7 +1118,7 @@
     <div class="modal fade" id="modalarticle">
       <div class="modal-dialog" id="modalDialog3">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1155,7 +1163,7 @@
     <div class="modal fade" id="modalattach">
       <div class="modal-dialog" id="modalDialog4">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1200,7 +1208,7 @@
     <div class="modal fade" id="modalpdf">
       <div class="modal-dialog" id="modalDialog5">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1245,7 +1253,7 @@
     <div class="modal fade" id="modalProdEditor">
       <div class="modal-dialog" id="modalDialog6">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1288,7 +1296,7 @@
     <div class="modal fade" id="modalAttachEditor">
       <div class="modal-dialog" id="modalDialog7">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1521,14 +1529,14 @@
     }
 
     $(document).ready(function(){
-        $("#modalDialog").draggable();//为模态对话框添加拖拽
-        $("#modalDialog1").draggable();
-        $("#modalDialog2").draggable();
-        $("#modalDialog3").draggable();
-        $("#modalDialog4").draggable();
-        $("#modalDialog5").draggable();
-        $("#modalDialog6").draggable();
-        $("#modalDialog7").draggable();
+        $("#modalDialog").draggable({ handle: ".modal-header" });//为模态对话框添加拖拽
+        $("#modalDialog1").draggable({ handle: ".modal-header" });
+        $("#modalDialog2").draggable({ handle: ".modal-header" });
+        $("#modalDialog3").draggable({ handle: ".modal-header" });
+        $("#modalDialog4").draggable({ handle: ".modal-header" });
+        $("#modalDialog5").draggable({ handle: ".modal-header" });
+        $("#modalDialog6").draggable({ handle: ".modal-header" });
+        $("#modalDialog7").draggable({ handle: ".modal-header" });
         $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
     })
 </script>

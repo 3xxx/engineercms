@@ -175,6 +175,12 @@
                   { 
                     icon: "fa fa-bug",
                     text: "搜索IP",
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '013'
                   }
                 ] 
@@ -204,6 +210,12 @@
                   { 
                     icon: "fa fa-align-right",
                     text: "用户-组织结构",
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '031'
                   },
                   { icon: "fa fa-users",
@@ -240,10 +252,22 @@
                   },
                   { icon: "fa fa-users",
                     text: '用户-OO权限',
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '022'
                   },
                   { icon: "fa fa-users",
                     text: '角色-OO权限',
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '023'
                   },
                   { icon: "fa fa-th",
@@ -278,11 +302,23 @@
                   { 
                     icon: "fa fa-lock",
                     text: "项目权限",
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '043'
                   },
                   { 
                     icon: "fa fa-copy",
                     text: "快捷编辑",
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '044',
                   }
                 ]
@@ -313,11 +349,23 @@
                   { 
                     icon: "fa fa-lock",
                     text: "已提交清单",
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '053'
                   },
                   { 
                     icon: "fa fa-copy",
                     text: "预留",
+                    state: {
+                      // checked: true,
+                      disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
                     id: '054',
                   }
                 ]

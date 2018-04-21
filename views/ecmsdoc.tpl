@@ -331,10 +331,14 @@
       文档协作
     </h1>
     <p class="lead">
-      文档协作功能即团队成员可以同时编辑一个文档，支持word,excel,powerpoint，解决多人文档协作需要汇总的问题，比如月报，任务进度控制表，会议纪要等需要多人审阅的文件，发个链接给大家，大家有意见直接在上面修改，简单高效快捷，体验良好。EngineerCMS基于ONLYOFFICE document server进行的二次开发，提供文档管理和更新后的文档存储即提供回调参数给onlyoffice。
+      文档协作功能即团队成员可以同时编辑一个文档，支持word,excel,powerpoint，解决多人文档协作需要汇总的问题，比如月报，任务进度控制表，会务安排进度控制，excel计算书，会议纪要等需要多人审阅的文件，发个链接给大家，大家有意见直接在上面修改，简单高效快捷，体验良好。EngineerCMS基于ONLYOFFICE document server进行的二次开发，提供文档管理和更新后的文档存储即提供回调参数给onlyoffice。
     </p>
     <p class="lead">文档管理界面</p>
-    <img src="/static/img/EngineerCMS onlyoffice.jpg" style="width: 100%">
+    <img src="/static/img/EngineerCMS onlyoffice.png" style="width: 100%">
+    <p class="lead">文档用户权限设置</p>
+    <img src="/static/img/oo doc user permission.png" style="width: 100%">
+    <p class="lead">文档用户组（角色）权限设置</p>
+    <img src="/static/img/oo doc role permission.png" style="width: 100%">
     <p class="lead">word协作效果</p>
     <img src="/static/img/onlyoffice word.jpg" style="width: 100%">
     <p class="lead">powerpoint协作效果</p>

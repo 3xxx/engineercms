@@ -215,16 +215,16 @@ func (c *RoleController) Get() {
 	//如果设置了role,用于onlyoffice的权限设置
 	role := c.Input().Get("role")
 	if role != "" {
-		roleint, err := strconv.Atoi(role)
-		if err != nil {
-			beego.Error(err)
-		}
+		// roleint, err := strconv.Atoi(role)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
 		for _, v := range roles {
-			v.Status = roleint
+			v.Status = role
 		}
 	}
 
-	if id != "" {
+	if id != "" { //如果选中了用户，则显示用户所具有的角色
 		//pid转成64为
 		// idNum, err := strconv.ParseInt(id, 10, 64)
 		// if err != nil {
@@ -237,12 +237,12 @@ func (c *RoleController) Get() {
 		level = "2"
 		for _, v1 := range roles {
 			for _, v2 := range userroles {
-				ridNum, err := strconv.ParseInt(v2, 10, 64)
+				ridNum, err := strconv.ParseInt(strings.Replace(v2, "role_", "", -1), 10, 64)
 				if err != nil {
 					beego.Error(err)
 				}
 				if ridNum == v1.Id {
-					level = "1"
+					level = "1" //if (row.Level === "1") checked: true
 				}
 			}
 			aa := make([]Userrole, 1)
@@ -254,10 +254,10 @@ func (c *RoleController) Get() {
 			aa = make([]Userrole, 0)
 			level = "2"
 		}
-		c.Data["json"] = userrole
+		c.Data["json"] = userrole //用户所具有的角色，勾选
 		c.ServeJSON()
 	}
-	c.Data["json"] = roles
+	c.Data["json"] = roles //角色列表
 	c.ServeJSON()
 }
 
@@ -294,11 +294,11 @@ func (c *RoleController) Post() {
 	role.Rolename = c.Input().Get("rolename")
 	role.Rolenumber = c.Input().Get("rolenumber")
 
-	statusint, err := strconv.Atoi(c.Input().Get("status"))
-	if err != nil {
-		beego.Error(err)
-	}
-	role.Status = statusint
+	// statusint, err := strconv.Atoi(c.Input().Get("status"))
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	role.Status = c.Input().Get("status")
 
 	id, err := m.SaveRole(role)
 	if err == nil && id > 0 {
@@ -391,33 +391,38 @@ func (c *RoleController) Post() {
 
 //AddPolicy(sec string, ptype string, rule []string)
 //添加用户角色
+//先删除用户所有角色
 func (c *RoleController) UserRole() {
 	//要支持批量分配角色，循环用户id
 	uid := c.GetString("uid") //secofficeid
-	//id转成64位
-	// uidNum, err := strconv.ParseInt(uid, 10, 64)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	ids := c.GetString("ids") //roleid
-	array := strings.Split(ids, ",")
-
-	// var rule []string
-	for _, v1 := range array {
-		// rule = append(rule, uid, v1)
-		// beego.Info(rule)
-		// e.AddPolicy(uid, v1)
-		e.AddGroupingPolicy(uid, v1) //management_api.go
-		//应该用AddRoleForUser()//rbac_api.go
-		// rule = make([]string, 0)
+	//先删除用户的权限
+	e.DeleteRolesForUser(uid) //数据库没有删掉！
+	//删除数据库中角色中的用户
+	o := orm.NewOrm()
+	qs := o.QueryTable("casbin_rule")
+	_, err := qs.Filter("PType", "g").Filter("v0", uid).Delete()
+	if err != nil {
+		beego.Error(err)
 	}
-	// a.SavePolicy(e.GetModel())//autosave默认是true
-	// 	[{0 p 12 1    } {0 g 8 1    } {0 g 7 1
-	//    } {0 g 7 2    } {0 g 5 1    } {0 g 5 2    }]
-	// lines := [7][4]string{{"0", "p", "100", "1"}, {"0", "p", "101", "1"}}
-	// _, err := a.o.InsertMulti(len(lines), lines)
-	// return err
-
+	//再添加，如果没有选择，相当于删除了全部角色
+	ids := c.GetString("ids") //roleid
+	if ids != "" {
+		array := strings.Split(ids, ",")
+		// var rule []string
+		for _, v1 := range array {
+			// rule = append(rule, uid, v1)
+			// e.AddPolicy(uid, v1)
+			e.AddGroupingPolicy(uid, "role_"+v1) //management_api.go
+			//应该用AddRoleForUser()//rbac_api.go
+			// rule = make([]string, 0)
+		}
+		// a.SavePolicy(e.GetModel())//autosave默认是true
+		// 	[{0 p 12 1    } {0 g 8 1    } {0 g 7 1
+		//    } {0 g 7 2    } {0 g 5 1    } {0 g 5 2    }]
+		// lines := [7][4]string{{"0", "p", "100", "1"}, {"0", "p", "101", "1"}}
+		// _, err := a.o.InsertMulti(len(lines), lines)
+		// return err
+	}
 	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
@@ -671,11 +676,11 @@ func (c *RoleController) Update() {
 	role.Rolename = c.Input().Get("rolename")
 	role.Rolenumber = c.Input().Get("rolenumber")
 
-	statusint, err := strconv.Atoi(c.Input().Get("status"))
-	if err != nil {
-		beego.Error(err)
-	}
-	role.Status = statusint
+	// statusint, err := strconv.Atoi(c.Input().Get("status"))
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	role.Status = c.Input().Get("status")
 
 	err = m.UpdateRole(role)
 	if err == nil {

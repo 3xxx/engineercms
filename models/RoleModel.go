@@ -21,7 +21,7 @@ type Role struct {
 	Id         int64  `PK`
 	Rolename   string `json:"name",orm:"unique"` //这个拼音的简写
 	Rolenumber string
-	Status     int       `json:"role",orm:"default(0)",form:"Status",valid:"Range(1,2,3,4)"`
+	Status     string    `json:"role",orm:"default('0');size(2)"` //,form:"Status",valid:"Range('0','1','2','3','4')"`
 	Createtime time.Time `orm:"type(datetime);auto_now_add" `
 	Updated    time.Time `orm:"type(datetime);auto_now_add" `
 }

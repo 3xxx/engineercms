@@ -85,13 +85,13 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/admin" title="管理">进入后台</a></li>
+                <li><a href="/login" title="重新登录">重新登录</a></li>
                 <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
                 <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
                 <li><a href="/login?exit=true">退出</a></li>
               </ul>
             </li>
-            
           {{else}}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
@@ -100,6 +100,7 @@
                 <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
                 <li><a href="/user" title="用户资料">用户资料</a></li>
+                <li><a href="/login" title="重新登录">重新登录</a></li>
                 <li><a href="/login?exit=true">退出</a></li>
               </ul>
             </li>
@@ -110,6 +111,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/admin" title="管理">进入后台</a></li>
+                <li><a href="/login" title="重新登录">重新登录</a></li>
                 <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
                 <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
                 <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->

@@ -254,7 +254,7 @@
           permission= '<i class="fa fa-eye-slash fa-lg" title="拒绝访问" style="color:#9e9e9e;"></i>';
           return permission;
         }
-      }
+  }
 
   //设置permission选择
   // function setPermission(value,row,index){
@@ -537,7 +537,7 @@
 
     // 分享设置
   $("#sharesetting").click(function() {
-      var selectRow=$('#table0').bootstrapTable('getSelections');
+    var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选成果！");
         return;
@@ -546,7 +546,12 @@
         alert("请不要勾选一个以上成果！");
         return;
       }
-
+    // alert(selectRow[0].Uid);
+    //必须登录用户上传的文档，具有uid，才能设置权限。
+    if ({{.Uid}}===0){
+        alert("请登录！");
+        return;
+    }else if (selectRow[0].Uid==={{.Uid}}||{{.IsAdmin}}){
       $("input#pid").remove();
       var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
       $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
@@ -555,10 +560,10 @@
         show:true,
         backdrop:'static'
       });
-      // }else{
-      //   alert("权限不够！"+selectRow[0].Uid);
-      //   return;
-      // }
+    }else{
+      alert("权限不够！因为上传文档用户id为："+selectRow[0].Uid+"，你的id为："+{{.Uid}}+"!");
+      return;
+    }
   })
 
   //下载
@@ -1693,10 +1698,10 @@
       // }
       // var selectRow=$('#tableusers1').bootstrapTable('getSelections');
       var selectRow=$('#tableusers1').bootstrapTable('getData');
-      if (selectRow.length<=0) {
-        alert("没有数据！");
-        return false;
-      }//else{
+      // if (selectRow.length<=0) {
+      //   alert("没有数据！");
+      //   return false;
+      // }//else{
         // alert(JSON.stringify(selectRow));
       //}
       var docid = $('#pid').val();
