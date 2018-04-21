@@ -5,7 +5,7 @@
 package routers
 
 import (
-	"engineercms/controllers"
+	"github.com/3xxx/engineercms/controllers"
 	"github.com/astaxie/beego"
 )
 

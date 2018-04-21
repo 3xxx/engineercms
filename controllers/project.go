@@ -3,7 +3,7 @@ package controllers
 
 import (
 	// "encoding/json"
-	"engineercms/models"
+	"github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
 	"os"

@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "engineercms/routers"
+	_ "github.com/3xxx/engineercms/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/mattn/go-sqlite3"
