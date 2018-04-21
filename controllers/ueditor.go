@@ -2,10 +2,10 @@ package controllers
 
 import (
 	// "bytes"
-	"code.google.com/p/go-uuid/uuid"
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/pborman/uuid"
 	// "image/png"
 	"io"
 	"log"
