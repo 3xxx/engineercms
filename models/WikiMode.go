@@ -16,7 +16,7 @@ import (
 	// "errors"
 	"github.com/astaxie/beego/orm"
 	// "github.com/astaxie/beego/validation"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 //const (

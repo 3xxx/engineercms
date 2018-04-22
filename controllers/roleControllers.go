@@ -398,12 +398,12 @@ func (c *RoleController) UserRole() {
 	//先删除用户的权限
 	e.DeleteRolesForUser(uid) //数据库没有删掉！
 	//删除数据库中角色中的用户
-	o := orm.NewOrm()
-	qs := o.QueryTable("casbin_rule")
-	_, err := qs.Filter("PType", "g").Filter("v0", uid).Delete()
-	if err != nil {
-		beego.Error(err)
-	}
+	// o := orm.NewOrm()
+	// qs := o.QueryTable("casbin_rule")
+	// _, err := qs.Filter("PType", "g").Filter("v0", uid).Delete()
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 	//再添加，如果没有选择，相当于删除了全部角色
 	ids := c.GetString("ids") //roleid
 	if ids != "" {
