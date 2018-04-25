@@ -355,7 +355,7 @@ func UpdateUser(cid int64, fieldname, value string) error {
 		const lll = "2006-01-02"
 		user.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 		switch fieldname {
-		case "Username":
+		case "name":
 			user.Username = value
 			_, err := o.Update(&user, "Username", "Updated")
 			if err != nil {
@@ -435,7 +435,7 @@ func UpdateUser(cid int64, fieldname, value string) error {
 			} else {
 				return nil
 			}
-		case "Role":
+		case "role":
 			user.Role = value
 			_, err := o.Update(&user, "Role", "Updated") //这里不能用&user
 			if err != nil {

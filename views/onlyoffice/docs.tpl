@@ -954,7 +954,7 @@
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="">
                     <li>
-                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full AccessRead</i></a>
+                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
                     </li>
                     <li>
                       <a href="#" onclick="shows($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
@@ -980,7 +980,7 @@
                   </button>
                   <ul class="dropdown-menu" role="menu">
                     <li>
-                      <a href="#" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full AccessRead</i></a>
+                      <a href="#" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
                     </li>
                     <li>
                       <a href="#" onclick="shows1($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
@@ -1104,7 +1104,7 @@
     //选择用户的角色
     function shows(a) {
       // alert(a);
-      if (a=="  Full AccessRead"){
+      if (a=="  Full Access"){
         $("#dropdownMenu1").removeClass();
         $("#dropdownMenu1").addClass("fa fa-pencil");
       }else if(a=="  Review"){
@@ -1122,7 +1122,7 @@
 
     //选择角色的权限
     function shows1(a) {
-      if (a=="  Full AccessRead"){
+      if (a=="  Full Access"){
         $("#dropdownMenu2").removeClass();
         $("#dropdownMenu2").addClass("fa fa-pencil");
       }else if(a=="  Review"){
@@ -1377,7 +1377,7 @@
             editable: {
                 type: 'select2', 
                 source: [
-                      {id: '1', text: '  Full AccessRead',value:1},
+                      {id: '1', text: '  Full Access',value:1},
                       {id: '2', text: '  Review',value:2},
                       {id: '3', text: '  Read Only',value:3},
                       {id: '4', text: '  Deny Access',value:4}
@@ -1442,7 +1442,7 @@
             editable: {
                 type: 'select2', 
                 source: [
-                      {id: '1', text: '  Full AccessRead',value:1},
+                      {id: '1', text: '  Full Access',value:1},
                       {id: '2', text: '  Review',value:2},
                       {id: '3', text: '  Read Only',value:3},
                       {id: '4', text: '  Deny Access',value:4}
@@ -1500,7 +1500,7 @@
             editable: {
                 type: 'select2', 
                 source: [
-                      {id: '1', text: '  Full AccessRead',value:1},
+                      {id: '1', text: '  Full Access',value:1},
                       {id: '2', text: '  Review',value:2},
                       {id: '3', text: '  Read Only',value:3},
                       {id: '4', text: '  Deny Access',value:4}

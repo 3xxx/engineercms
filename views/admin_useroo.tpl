@@ -2,7 +2,7 @@
 <html>
   <head>
   <meta charset="UTF-8">
-  <title>用户——oo权限</title>
+  <title>用户—oo权限</title>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">

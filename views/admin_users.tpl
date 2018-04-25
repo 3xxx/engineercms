@@ -1,4 +1,4 @@
-<!-- iframe里用户列表-->
+<!-- iframe里用户-角色列表-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -247,6 +247,45 @@
           // "/category/modifyfrm?cid="+cid
           // window.location.reload();//刷新页面
     }
+
+    //删除用户
+    $("#deleteButton").click(function() {
+        var selectRow=$('#table0').bootstrapTable('getSelections');
+        if (selectRow.length<=0) {
+          alert("请先勾选！");
+          return false;
+        }
+        if(confirm("确定删除吗？一旦删除将无法恢复！")){
+          var names=$.map(selectRow,function(row){
+            // alert(row.Id);
+            // return row.Id;
+            // alert(row.Title);
+            return row.name;
+          })
+          var ids="";
+          for(var i=0;i<selectRow.length;i++){
+            if(i==0){
+              ids=selectRow[i].Id;
+            }else{
+              ids=ids+","+selectRow[i].Id;
+            }  
+          }
+          $.ajax({
+            type:"post",
+            url:"/admin/user/deleteuser",
+            data: {ids:ids},
+            success:function(data,status){
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              //删除已选数据
+              $('#table0').bootstrapTable('remove',{
+                field:'name',
+                values:names
+              });
+            }
+          });
+        } 
+    })
+
     //导入用户数据表
     function importusers(){
         var file=$("#usersexcel").val();

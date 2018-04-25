@@ -1,4 +1,6 @@
                        EngineerCMS revision history
+6, EngineerCMS 1.01 (Apr 25, 2018)
+	+) Add project permission query&update		       
 5, EngineerCMS 1.01 (Feb 20, 2018)
 	+) Add ONLYOFFICE Document Server
 4, EngineerCMS 0.92 (Feb 10, 2017)

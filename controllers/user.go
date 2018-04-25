@@ -11,6 +11,7 @@ import (
 	"github.com/tealeg/xlsx"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -321,17 +322,37 @@ func (c *UserController) UpdateUser() {
 // 	c.TplName = "user_view.tpl"
 // }
 
+// func (c *UserController) DeleteUser() {
+// 	Id, _ := c.GetInt64("userid")
+// 	status, err := m.DelUserById(Id)
+// 	if err == nil && status > 0 {
+// 		// c.Rsp(true, "Success")
+// 		c.Redirect("/user/index", 302)
+// 		return
+// 	} else {
+// 		// c.Rsp(false, err.Error())
+// 		beego.Error(err.Error)
+// 		return
+// 	}
+// }
+
+//删除用户
 func (c *UserController) DeleteUser() {
-	Id, _ := c.GetInt64("userid")
-	status, err := m.DelUserById(Id)
-	if err == nil && status > 0 {
-		// c.Rsp(true, "Success")
-		c.Redirect("/user/index", 302)
-		return
-	} else {
-		// c.Rsp(false, err.Error())
-		beego.Error(err.Error)
-		return
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		status, err := m.DelUserById(idNum)
+		if err == nil && status > 0 {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		} else if err != nil {
+			beego.Error(err)
+		}
 	}
 }
 

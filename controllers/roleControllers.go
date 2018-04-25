@@ -33,7 +33,7 @@ type Userrole struct {
 	Id         int64
 	Rolename   string
 	Rolenumber string
-	Status     int
+	Status     string
 	Level      string
 }
 
@@ -250,6 +250,7 @@ func (c *RoleController) Get() {
 			aa[0].Rolename = v1.Rolename
 			aa[0].Rolenumber = v1.Rolenumber
 			aa[0].Level = level
+			aa[0].Status = v1.Status
 			userrole = append(userrole, aa...)
 			aa = make([]Userrole, 0)
 			level = "2"
@@ -428,6 +429,7 @@ func (c *RoleController) UserRole() {
 }
 
 //给角色赋项目目录的权限
+//先删除角色对于这个项目的所有权限
 func (c *RoleController) RolePermission() {
 	roleids := c.GetString("roleids")
 	rolearray := strings.Split(roleids, ",")
@@ -438,11 +440,12 @@ func (c *RoleController) RolePermission() {
 	sufids := c.GetString("sufids")
 	sufarray := strings.Split(sufids, ",")
 
-	treeids := c.GetString("treeids") //项目目录id
+	treeids := c.GetString("treeids") //项目目录id，25001,25002
 	treearray := strings.Split(treeids, ",")
 	// beego.Info(treearray)
 	treenodeids := c.GetString("treenodeids") //项目目录的nodeid 0.0.0-0.0.1-0.1.0-0.1.0
 	treenodearray := strings.Split(treenodeids, ",")
+	projectid := c.GetString("projid")
 	// beego.Info(treenodearray)
 	// treeids := c.GetString("tree")
 	//json字符串解析到结构体，以便进行追加
@@ -451,9 +454,10 @@ func (c *RoleController) RolePermission() {
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
+
 	var success bool
 	var nodeidint int
-	var projurl, action, suf string
+	var projurl, action, suf1, suf string
 	var err error
 	//取出项目目录的顶级
 	var nodesid, nodesids []string
@@ -467,6 +471,19 @@ func (c *RoleController) RolePermission() {
 		nodesids = []string{"0"} //append(nodesids, "0")
 	}
 	// beego.Info(nodesids)
+
+	//删除这些角色、项目id的全部权限
+	for _, v1 := range rolearray {
+		// var paths []beegoormadapter.CasbinRule
+		o := orm.NewOrm()
+		qs := o.QueryTable("casbin_rule")
+		_, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "/"+projectid+"/").Delete()
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	// e.RemoveFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10))
+
 	for _, v1 := range rolearray {
 		for _, v2 := range permissionarray {
 			//定义读取、添加、修改、删除
@@ -482,14 +499,20 @@ func (c *RoleController) RolePermission() {
 				suf = ".*"
 			case "读取成果":
 				action = "GET"
-				for _, v4 := range sufarray {
+				for i, v4 := range sufarray {
 					if v4 == "任意" {
 						suf = ".*"
 						break
 					} else if v4 == "" { //用户没展开则读取不到table4的select
 						suf = "(?i:pdf)"
+						break
 					} else {
-						suf = "(?i:" + v4 + ")"
+						suf1 = "(?i:" + v4 + ")"
+						if i == 0 {
+							suf = suf1
+						} else {
+							suf = suf + "," + suf1
+						}
 					}
 				}
 			}
@@ -515,15 +538,21 @@ func (c *RoleController) RolePermission() {
 				} else {
 					projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
 				}
-				// beego.Info(v1)
+				beego.Info(v1)
 				// beego.Info(projurl)
 				// beego.Info(action)
 				// beego.Info(suf)
-				success = e.AddPolicy(v1, projurl, action, suf) //来自casbin\management_api.go
-				//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+				sufarray := strings.Split(suf, ",")
+				for _, v5 := range sufarray {
+					success = e.AddPolicy("role_"+v1, projurl, action, v5) //来自casbin\management_api.go
+					//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+				}
 			}
 		}
 	}
+
+	e.LoadPolicy() //重载权限
+
 	if success == true {
 		c.Data["json"] = "ok"
 	} else {
@@ -586,7 +615,7 @@ func (c *RoleController) GetRolePermission() {
 	var paths []beegoormadapter.CasbinRule
 	o := orm.NewOrm()
 	qs := o.QueryTable("casbin_rule")
-	_, err := qs.Filter("PType", "p").Filter("v0", roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).All(&paths)
+	_, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).All(&paths)
 	if err != nil {
 		beego.Error(err)
 	}
