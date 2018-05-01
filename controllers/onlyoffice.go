@@ -210,6 +210,7 @@ func (c *OnlyController) Get() {
 		beego.Info("电脑端！")
 		c.TplName = "onlyoffice/docs.tpl"
 	}
+	// c.Data["Url"] = c.Ctx.Request.URL.String()
 	// var u = navigator.userAgent, app = navigator.appVersion;
 	//       return {
 	//           trident: u.indexOf('Trident') > -1, //IE内核
@@ -328,7 +329,7 @@ func (c *OnlyController) GetData() {
 			if useridstring != "" { //如果是登录用户，则设置了权限的文档不能看
 				// beego.Info(myRes)
 				// myRes1 := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-				if w.Uid != user.Id {
+				if w.Uid != user.Id { //如果不是作者本人
 					for _, k := range myResall { //所有设置了权限的都不能看
 						// beego.Info(k)
 						if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
@@ -343,8 +344,8 @@ func (c *OnlyController) GetData() {
 						}
 					}
 					roles := e.GetRolesForUser(useridstring) //取出用户的所有角色
-					for _, w := range roles {
-						roleRes = e.GetPermissionsForUser(w) //取出角色的所有权限
+					for _, w1 := range roles {               //2018.4.30修改这个bug，这里原先w改为w1
+						roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
 						for _, k := range roleRes {
 							// beego.Info(k)
 							if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
@@ -439,6 +440,8 @@ func (c *OnlyController) GetData() {
 // }
 
 //协作页面的显示
+//补充权限判断
+//补充token
 func (c *OnlyController) OnlyOffice() {
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
@@ -459,7 +462,7 @@ func (c *OnlyController) OnlyOffice() {
 	}
 
 	var uname, useridstring, Permission string
-	var myRes [][]string
+	var myRes, roleRes [][]string
 	v := c.GetSession("uname")
 	// var role, userrole int
 	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
@@ -484,6 +487,28 @@ func (c *OnlyController) OnlyOffice() {
 			for _, k := range myRes {
 				if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
 					Permission = k[2]
+				}
+			}
+
+			roles := e.GetRolesForUser(useridstring) //取出用户的所有角色
+			for _, w1 := range roles {               //2018.4.30修改这个bug，这里原先w改为w1
+				roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+				for _, k := range roleRes {
+					// beego.Info(k)
+					if id == path.Base(k[1]) {
+						// docxarr[0].Permission = k[2]
+						int1, err := strconv.Atoi(k[2])
+						if err != nil {
+							beego.Error(err)
+						}
+						int2, err := strconv.Atoi(Permission)
+						if err != nil {
+							beego.Error(err)
+						}
+						if int1 < int2 {
+							Permission = k[2] //按最小值权限
+						}
+					}
 				}
 			}
 		}
@@ -524,7 +549,7 @@ func (c *OnlyController) OnlyOffice() {
 	// 		}
 	// 	}
 	// }
-
+	// beego.Info(Permission)
 	// In case edit is set to "false" and review is set to "true",
 	// the document will be available in review mode only.
 	if Permission == "1" {
@@ -540,6 +565,8 @@ func (c *OnlyController) OnlyOffice() {
 		c.Data["Edit"] = false
 		c.Data["Review"] = false
 	} else if Permission == "4" {
+		route := c.Ctx.Request.URL.String()
+		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
 
