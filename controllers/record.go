@@ -476,7 +476,7 @@ func SubStrings(filenameWithSuffix string) (substr1, substr2 string) {
 		re, _ := regexp.Compile("[^a-zA-Z0-9-~]") //2016-1-11日拟修改DZ122D.5-10-15~15.dwg
 		loc := re.FindStringIndex(filenameOnly)
 		// fmt.Println(str[loc[0]:loc[1]])
-		beego.Info(loc[0])
+		// beego.Info(loc[0])
 		if loc != nil {
 			end = loc[0]
 			fulleFilename1 = SubString(filenameOnly, 0, end)

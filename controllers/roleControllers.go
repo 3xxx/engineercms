@@ -431,15 +431,36 @@ func (c *RoleController) UserRole() {
 //给角色赋项目目录的权限
 //先删除角色对于这个项目的所有权限
 func (c *RoleController) RolePermission() {
+	var success bool
+	var nodeidint int
+	var projurl, action, suf1, suf string
+	var err error
 	roleids := c.GetString("roleids")
 	rolearray := strings.Split(roleids, ",")
 	// beego.Info(rolearray)
 	permissionids := c.GetString("permissionids")
 	permissionarray := strings.Split(permissionids, ",")
+	switch permissionarray[0] {
+	case "添加成果":
+		action = "POST"
+	case "编辑成果":
+		action = "PUT"
+	case "删除成果":
+		action = "DELETE"
+	case "读取成果":
+		action = "GET"
+	}
 	// beego.Info(permissionarray)
 	sufids := c.GetString("sufids")
 	sufarray := strings.Split(sufids, ",")
-
+	switch sufids {
+	case "任意":
+		suf = ".*"
+	case "":
+		suf = "(?i:PDF)"
+	case "PDF":
+		suf = "(?i:PDF)"
+	}
 	treeids := c.GetString("treeids") //项目目录id，25001,25002
 	treearray := strings.Split(treeids, ",")
 	// beego.Info(treearray)
@@ -455,10 +476,6 @@ func (c *RoleController) RolePermission() {
 	// 	beego.Error(err)
 	// }
 
-	var success bool
-	var nodeidint int
-	var projurl, action, suf1, suf string
-	var err error
 	//取出项目目录的顶级
 	var nodesid, nodesids []string
 	// beego.Info(len(treenodearray))
@@ -472,16 +489,25 @@ func (c *RoleController) RolePermission() {
 	}
 	// beego.Info(nodesids)
 
-	//删除这些角色、项目id的全部权限
+	//删除这些角色、项目id、权限的全部权限
 	for _, v1 := range rolearray {
 		// var paths []beegoormadapter.CasbinRule
 		o := orm.NewOrm()
 		qs := o.QueryTable("casbin_rule")
-		_, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "/"+projectid+"/").Delete()
-		if err != nil {
-			beego.Error(err)
+		if action == "GET" {
+			_, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).Filter("v3", suf).Delete()
+			if err != nil {
+				beego.Error(err)
+			}
+		} else {
+			_, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).Delete()
+			if err != nil {
+				beego.Error(err)
+			}
 		}
 	}
+
+	e.LoadPolicy() //重载权限
 	// e.RemoveFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10))
 
 	for _, v1 := range rolearray {
@@ -504,7 +530,7 @@ func (c *RoleController) RolePermission() {
 						suf = ".*"
 						break
 					} else if v4 == "" { //用户没展开则读取不到table4的select
-						suf = "(?i:pdf)"
+						suf = "(?i:PDF)"
 						break
 					} else {
 						suf1 = "(?i:" + v4 + ")"
@@ -538,7 +564,7 @@ func (c *RoleController) RolePermission() {
 				} else {
 					projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
 				}
-				beego.Info(v1)
+				// beego.Info(v1)
 				// beego.Info(projurl)
 				// beego.Info(action)
 				// beego.Info(suf)
@@ -551,7 +577,7 @@ func (c *RoleController) RolePermission() {
 		}
 	}
 
-	e.LoadPolicy() //重载权限
+	// e.LoadPolicy() //重载权限
 
 	if success == true {
 		c.Data["json"] = "ok"
@@ -596,6 +622,18 @@ func (c *RoleController) GetRolePermission() {
 	roleid := c.GetString("roleid") //角色id
 	action := c.GetString("action")
 	projectid := c.GetString("projectid")
+	sufids := c.GetString("sufids") //扩展名
+	// beego.Info(sufids)
+	var suf string
+	switch sufids {
+	case "任意":
+		suf = ".*"
+	case "":
+		suf = "(?i:PDF)"
+	case "PDF":
+		suf = "(?i:PDF)"
+	}
+	// beego.Info(suf)
 	// beego.Info(roleid)
 	// beego.Info(action)
 	// beego.Info(projectid)
@@ -615,9 +653,17 @@ func (c *RoleController) GetRolePermission() {
 	var paths []beegoormadapter.CasbinRule
 	o := orm.NewOrm()
 	qs := o.QueryTable("casbin_rule")
-	_, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).All(&paths)
-	if err != nil {
-		beego.Error(err)
+	if action == "GET" || action == "" {
+		_, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", "GET").Filter("v3", suf).All(&paths)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(paths)
+	} else {
+		_, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).All(&paths)
+		if err != nil {
+			beego.Error(err)
+		}
 	}
 	// beego.Info(paths)
 	var projids []string

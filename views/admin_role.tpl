@@ -163,11 +163,12 @@
                 {"Id":"3","Title":"删除成果","Action":"DELETE"},
                 {"Id":"4","Title":"读取成果","Action":"GET"}];
     var json1 = [{"Id":"5","Title":"任意","checked":true},
-                {"Id":"6","Title":"PDF"},
-                {"Id":"7","Title":"DWG"},
-                {"Id":"8","Title":"DOC"},
-                {"Id":"9","Title":"XLS"},
-                {"Id":"10","Title":"DGN"}];              
+                {"Id":"6","Title":"PDF"}
+                ];  
+                // {"Id":"7","Title":"DWG"},
+                // {"Id":"8","Title":"DOC"},
+                // {"Id":"9","Title":"XLS"},
+                // {"Id":"10","Title":"DGN"}            
     /*初始化table数据*/
     $(function(){
       $("#table3").bootstrapTable({
@@ -190,13 +191,14 @@
         if (index==3){
           $(cur_table).bootstrapTable({
             columns: [{
-                  checkbox: true,
+                  radio: true,//checkbox
                   formatter: "stateFormatter"
               }, {
                   field: 'Title',
                   title: '文件扩展名'
               }],
             data:json1,
+            clickToSelect:true
           })
         }
     }
@@ -236,50 +238,51 @@
     //     });
     // };
     //文件扩展名选择
-    $(function(){
-      $("#table3").on("uncheck.bs.table",function(e,row,ele){
-            if (row.Id=="5"){
-              // for (var i=6;i<=10;i++){
-                  // $('#table4').bootstrapTable('check',"1");
-                  $('#table4 input').removeAttr("disabled"); 
-              // }
-            }
-        })
-      $("#table3").on("check.bs.table",function(e,row,ele){
-            if (row.Id=="5"){
-              // for (var i=6;i<=10;i++){
-                  // $('#table4').bootstrapTable('uncheckAll');
-                  $('#table4 input').attr("disabled", true);
-                  $('[data-index="0"]').removeAttr("disabled");
-                  $('#table4').bootstrapTable('check',"0");
-
-              // }
-            }
-        })
-    })
+    // $(function(){
+    //   $("#table3").on("uncheck.bs.table",function(e,row,ele){
+    //         if (row.Id=="5"){
+    //           // for (var i=6;i<=10;i++){
+    //               // $('#table4').bootstrapTable('check',"1");
+    //               $('#table4 input').removeAttr("disabled"); 
+    //           // }
+    //         }
+    //     })
+    //   $("#table3").on("check.bs.table",function(e,row,ele){
+    //         if (row.Id=="5"){
+    //           // for (var i=6;i<=10;i++){
+    //               // $('#table4').bootstrapTable('uncheckAll');
+    //               $('#table4 input').attr("disabled", true);
+    //               $('[data-index="0"]').removeAttr("disabled");
+    //               $('#table4').bootstrapTable('check',"0");
+    //           // }
+    //         }
+    //     })
+    // })
 
     function index1(value,row,index){
       return index+1
     }
 
     function stateFormatter(value, row, index) {
-      if (row.Id =="5") {
+      if (row.Id =="6") {
           return {
               // disabled: true,
               checked: true
           }
-      }else{
-        return {
-              disabled: true
-              // checked: true
-          }
       }
-      if (row.checked === true) {
-          return {
-              checked: true
-          }
-      }
-      return value;
+      // else{
+      //   return {
+      //         disabled: true
+      //         // checked: true
+      //     }
+      // }
+      
+      // if (row.checked === true) {
+      //     return {
+      //         checked: true
+      //     }
+      // }
+      // return value;
     }
 
     function StatusFormatter(value, row, index) {
@@ -509,10 +512,11 @@
       // var title=$.map(selectRow,function(row){
       //   return row.Title;
       // })
+
       var permissionids="";
       for(var i=0;i<selectRow.length;i++){
         if(i==0){
-          permissionids=selectRow[i].Title;
+          permissionids=selectRow[i].Title;//这里直接用Action啊
         }else{
           permissionids=permissionids+","+selectRow[i].Title;
         }  
@@ -575,6 +579,7 @@
         //检查table2项目表和table3权限表是否有选择，并且只能单选
         var selectRow2=$('#table2').bootstrapTable('getSelections');
         var selectRow3=$('#table3').bootstrapTable('getSelections');
+        var selectRow4=$('#table4').bootstrapTable('getSelections');
         if (selectRow2.length>1) {
           // alert("请不要勾选一个以上权限！");
           return false;
@@ -595,6 +600,18 @@
               action=action+","+selectRow3[i].Action;
             }  
           }
+          // if (selectRow.length<=0) {
+          //   alert("请先勾选权限！");
+          //   return false;
+          // }
+          var sufids="";
+          for(var i=0;i<selectRow4.length;i++){
+            if(i==0){
+              sufids=selectRow4[i].Title;
+            }else{
+              sufids=sufids+","+selectRow4[i].Title;
+            }  
+          }
           // alert(JSON.stringify(checkableNodes));
           // $('#btn-check-node.check-node').on('click', function (e) {
           //   $checkableTree.treeview('checkNode', [ checkableNodes, { silent: $('#chk-check-silent').is(':checked') }]);
@@ -606,7 +623,7 @@
             dataType : "json",//返回数据类型  
             // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
             url: "/admin/role/getpermission",//请求的action路径  
-            data: {roleid:row.Id,action:action,projectid:projectid}, 
+            data: {roleid:row.Id,action:action,projectid:projectid,sufids:sufids}, 
              //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
             error: function () {//请求失败处理函数    
                 alert('请求失败');    
@@ -686,10 +703,15 @@
       });
 
       //点击权限表触发查询
+      //点击table4其实也是触发这个table3,并且row.action为空
       $("#table3").on("check.bs.table",function(e,row,ele){
+        // alert(row.Action);
         //检查table2项目表和table3权限表是否有选择，并且只能单选
         var selectRow=$('#table').bootstrapTable('getSelections');
         var selectRow2=$('#table2').bootstrapTable('getSelections');
+        var selectRow3=$('#table3').bootstrapTable('getSelections');
+        var selectRow4=$('#table4').bootstrapTable('getSelections');
+        // alert(selectRow4[0].Title);
         if (selectRow.length>1) {
           // alert("请不要勾选一个以上权限！");
           return false;
@@ -702,12 +724,25 @@
           //     projectid=projectid+","+selectRow[i].Id;
           //   }  
           // }
-          var action="";
-          for(var i=0;i<selectRow2.length;i++){
+          // var action="";
+          // for(var i=0;i<selectRow2.length;i++){
+          //   if(i==0){
+          //     action=selectRow2[i].Action;
+          //   }else{
+          //     action=action+","+selectRow2[i].Action;
+          //   }  
+          // }
+          
+          // if (selectRow.length<=0) {
+          //   alert("请先勾选权限！");
+          //   return false;
+          // }
+          var sufids="";
+          for(var i=0;i<selectRow4.length;i++){
             if(i==0){
-              action=selectRow2[i].Action;
+              sufids=selectRow4[i].Title;
             }else{
-              action=action+","+selectRow2[i].Action;
+              sufids=sufids+","+selectRow4[i].Title;
             }  
           }
           //刷新树   
@@ -716,7 +751,7 @@
             dataType : "json",//返回数据类型  
             // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
             url: "/admin/role/getpermission",//请求的action路径  
-            data: {roleid:selectRow[0].Id,action:row.Action,projectid:selectRow2[0].Id}, 
+            data: {roleid:selectRow[0].Id,action:selectRow3[0].Action,projectid:selectRow2[0].Id,sufids:sufids}, 
              //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
             error: function () {//请求失败处理函数    
                 alert('请求失败');    
@@ -735,14 +770,13 @@
           });
         }
       });
+
     });
     // onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
     // row：点击行的数据，
     // $element：tr 元素，
     // field：点击列的 field 名称
   </script>
-
-
 
   <!-- 添加角色 -->
   <div class="container">

@@ -86,11 +86,10 @@
     		docEditor.setHistoryData({
     			//下面这里存变化的位置
       		// "changesUrl":"http://192.168.99.100:9000/cache/files/1522475922103673500_7157/changes.zip/changes.zip?md5=syFUueSXdnCWe60Iym001g==&expires=1525068326&disposition=attachment&ooname=output.zip",//string1, //the changesUrl from the JSON object returned after saving the document
-      		
       		"changesUrl":string2,
       		"key": "",
       		"previous": {
-      		  "key": "",//这里不影响版本切换
+      		  "key": "",//这里不影响版本切换。与上个版本对比
       		  "url": ""//http://192.168.99.100:9000/cache/files/1521953170330601700_4540/output.docx/output.docx?md5=eSwnrSSumTeMuh59IoXhCQ==&expires=1524547423&disposition=attachment&ooname=output.docx这里影响版本
       		},
       		"url": "",

@@ -51,7 +51,18 @@ func (c *LoginController) Get() {
 		// c.Ctx.Input.CruSession.Delete("gosessionid")这句与上面一句重复
 		// c.Ctx.Input.CruSession.Flush()
 		// beego.GlobalSessions.SessionDestroy(c.Ctx.ResponseWriter, c.Ctx.Request)
-		c.DelSession("uname")
+		v := c.GetSession("uname")
+		// islogin := false
+		if v != nil {
+			//删除指定的session
+			c.DelSession("uname")
+			//销毁全部的session
+			c.DestroySession()
+			// islogin = true
+
+			//beego.Info("当前的session:")
+			//beego.Info(c.CruSession)
+		}
 		// sess.Flush()//这个不灵
 		c.Redirect("/", 301)
 		return

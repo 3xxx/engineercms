@@ -299,10 +299,10 @@ func (c *MainController) Test() {
 		beego.Error(err)
 	}
 	if matched == true {
-		beego.Info("移动端~")
+		// beego.Info("移动端~")
 		c.TplName = "test1.tpl"
 	} else {
-		beego.Info("电脑端！")
+		// beego.Info("电脑端！")
 		c.TplName = "test.tpl"
 	}
 	// var u = navigator.userAgent, app = navigator.appVersion;

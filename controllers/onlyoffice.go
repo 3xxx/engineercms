@@ -204,10 +204,10 @@ func (c *OnlyController) Get() {
 		beego.Error(err)
 	}
 	if matched == true {
-		beego.Info("移动端~")
+		// beego.Info("移动端~")
 		c.TplName = "onlyoffice/docs.tpl"
 	} else {
-		beego.Info("电脑端！")
+		// beego.Info("电脑端！")
 		c.TplName = "onlyoffice/docs.tpl"
 	}
 	// c.Data["Url"] = c.Ctx.Request.URL.String()
@@ -1112,7 +1112,7 @@ func (c *OnlyController) Addpermission() {
 	if err != nil {
 		beego.Error(err)
 	}
-	//循环删除成果
+
 	//根据成果id取得所有附件——这里只取第一个
 	attachments, err := models.GetOnlyAttachments(idNum)
 	if err != nil {

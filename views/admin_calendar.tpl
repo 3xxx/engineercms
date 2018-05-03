@@ -11,7 +11,7 @@
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-
+  <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
   <link rel='stylesheet' href='/static/css/fullcalendar.min.css'/>
   <script src='/static/js/fullcalendar.min.js'></script>
   <script src='/static/js/fullcalendar.zh-cn.js'></script>
@@ -22,6 +22,7 @@
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
 
   <style>
+  #modalDialog .modal-header {cursor: move;}
 	/*body {
 		margin: 0;
 		padding: 0;
@@ -545,9 +546,9 @@
   <div class="container">
     <form class="form-horizontal">
       <div class="modal fade" id="modalTable">
-        <div class="modal-dialog">
+        <div class="modal-dialog" id="modalDialog">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background-color: #FF5722;">
               <button type="button" class="close" data-dismiss="modal">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -861,6 +862,11 @@
       $('#add-new-event1').css({"background-color": currColor, "border-color": currColor});
     });
 
+    //模态框可移动
+    $(document).ready(function(){
+        $("#modalDialog").draggable({ handle: ".modal-header" });//为模态对话框添加拖拽,仅头部能拖动
+        $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
+    })
   //   $("#isallday").click(function(){//是否是全天事件
   //     if($("#sel_start").css("display")=="none"){
   //       $("#sel_start,#sel_end").show();
