@@ -59,7 +59,7 @@
     <input type="hidden" name="tid" value="{{.Wiki.Id}}">
     <div class="form-group">
       <label>显示昵称：</label>
-      <input type="text" class="form-control" id="nickname" name="nickname" value="{{.Uname}}"></div>
+      <input type="text" class="form-control" id="nickname" name="nickname" value="{{.Username}}"></div>
     <div class="form-group">
       <label>内容：</label>
       <div>

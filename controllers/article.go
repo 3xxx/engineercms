@@ -156,21 +156,30 @@ func (c *ArticleController) GetArticle() {
 	// _, role := checkprodRole(c.Ctx)
 	// c.Data["role"] = role
 	//1.取得客户端用户名
-	var uname, useridstring string
-	v := c.GetSession("uname")
-	// var role, userrole int
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
+	// var uname, useridstring string
+	// v := c.GetSession("uname")
+	// // var role, userrole int
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
 
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		c.Data["Uid"] = user.Id
-		// userrole = user.Role
-		useridstring = strconv.FormatInt(user.Id, 10)
-	}
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	c.Data["Uid"] = user.Id
+	// 	// userrole = user.Role
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	useridstring := strconv.FormatInt(uid, 10)
 	// var categories []*models.ProjCategory
 	var err error
 	//id转成64为
@@ -298,22 +307,22 @@ func (c *ArticleController) GetArticle() {
 	}
 	c.Data["article"] = Article
 	c.Data["product"] = prod
-
 }
 
 //向某个侧栏id下添加文章
 func (c *ArticleController) AddArticle() {
 	//取得客户端用户名
-	v := c.GetSession("uname")
-	var user models.User
-	var err error
-	if v != nil {
-		uname := v.(string)
-		user, err = models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-	}
+	// v := c.GetSession("uname")
+	// var user models.User
+	// var err error
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
@@ -342,7 +351,7 @@ func (c *ArticleController) AddArticle() {
 		beego.Error(err)
 	}
 	//根据项目id添加成果code, title, label, principal, content string, projectid int64
-	Id, err := models.AddProduct(code, title, label, principal, "", user.Id, pidNum)
+	Id, err := models.AddProduct(code, title, label, principal, "", uid, pidNum)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -516,7 +525,8 @@ func (c *ArticleController) UpdateArticle() {
 
 //根据文章id删除文章_没删除文章中的图片
 func (c *ArticleController) DeleteArticle() {
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role == "1" {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.Input().Get("pid")

@@ -509,74 +509,76 @@ func (c *RoleController) RolePermission() {
 
 	e.LoadPolicy() //重载权限
 	// e.RemoveFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10))
-
-	for _, v1 := range rolearray {
-		for _, v2 := range permissionarray {
-			//定义读取、添加、修改、删除
-			switch v2 {
-			case "添加成果":
-				action = "POST"
-				suf = ".*"
-			case "编辑成果":
-				action = "PUT"
-				suf = ".*"
-			case "删除成果":
-				action = "DELETE"
-				suf = ".*"
-			case "读取成果":
-				action = "GET"
-				for i, v4 := range sufarray {
-					if v4 == "任意" {
-						suf = ".*"
-						break
-					} else if v4 == "" { //用户没展开则读取不到table4的select
-						suf = "(?i:PDF)"
-						break
-					} else {
-						suf1 = "(?i:" + v4 + ")"
-						if i == 0 {
-							suf = suf1
+	if treeids != "" {
+		for _, v1 := range rolearray {
+			for _, v2 := range permissionarray {
+				//定义读取、添加、修改、删除
+				switch v2 {
+				case "添加成果":
+					action = "POST"
+					suf = ".*"
+				case "编辑成果":
+					action = "PUT"
+					suf = ".*"
+				case "删除成果":
+					action = "DELETE"
+					suf = ".*"
+				case "读取成果":
+					action = "GET"
+					for i, v4 := range sufarray {
+						if v4 == "任意" {
+							suf = ".*"
+							break
+						} else if v4 == "" { //用户没展开则读取不到table4的select
+							suf = "(?i:PDF)"
+							break
 						} else {
-							suf = suf + "," + suf1
+							suf1 = "(?i:" + v4 + ")"
+							if i == 0 {
+								suf = suf1
+							} else {
+								suf = suf + "," + suf1
+							}
 						}
 					}
 				}
-			}
 
-			for _, v3 := range nodesids {
-				nodeidint, err = strconv.Atoi(v3)
-				if err != nil {
-					beego.Error(err)
-				}
-				//id转成64位
-				pidNum, err := strconv.ParseInt(treearray[nodeidint], 10, 64)
-				if err != nil {
-					beego.Error(err)
-				}
+				for _, v3 := range nodesids {
+					nodeidint, err = strconv.Atoi(v3)
+					if err != nil {
+						beego.Error(err)
+					}
+					//id转成64位
+					pidNum, err := strconv.ParseInt(treearray[nodeidint], 10, 64)
+					if err != nil {
+						beego.Error(err)
+					}
 
-				//根据projid取出路径
-				proj, err := m.GetProj(pidNum)
-				if err != nil {
-					beego.Error(err)
-				}
-				if proj.ParentIdPath == "" {
-					projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
-				} else {
-					projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
-				}
-				// beego.Info(v1)
-				// beego.Info(projurl)
-				// beego.Info(action)
-				// beego.Info(suf)
-				sufarray := strings.Split(suf, ",")
-				for _, v5 := range sufarray {
-					success = e.AddPolicy("role_"+v1, projurl, action, v5) //来自casbin\management_api.go
-					//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+					//根据projid取出路径
+					proj, err := m.GetProj(pidNum)
+					if err != nil {
+						beego.Error(err)
+					}
+					if proj.ParentIdPath == "" {
+						projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
+					} else {
+						projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
+					}
+					// beego.Info(v1)
+					// beego.Info(projurl)
+					// beego.Info(action)
+					// beego.Info(suf)
+					sufarray := strings.Split(suf, ",")
+					for _, v5 := range sufarray {
+						success = e.AddPolicy("role_"+v1, projurl, action, v5) //来自casbin\management_api.go
+						//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+					}
 				}
 			}
 		}
+	} else {
+		success = true
 	}
-
 	// e.LoadPolicy() //重载权限
 
 	if success == true {

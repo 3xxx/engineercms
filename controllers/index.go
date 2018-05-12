@@ -71,23 +71,30 @@ type Employee struct { //职员的分院和科室属性
 
 //显示侧栏结构，科室里员工
 func (c *IndexController) GetIndex() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsIndex"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 
 	achemployee := make([]AchEmployee, 0)
 	achsecoffice := make([]AchSecoffice, 0)
@@ -219,45 +226,59 @@ func (c *IndexController) Product() {
 }
 
 func (c *IndexController) Calendar() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsCalendar"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "index_calendar.tpl"
 }
 
 //*******汽车
 //显示页面
 func (c *IndexController) GetCarCalendar() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsCarCalendar"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "car_calendar.tpl"
 }
 
@@ -319,7 +340,8 @@ func (c *IndexController) CarCalendar() {
 		beego.Error(err)
 	}
 	var calendars []*models.CarCalendar
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role == "1" {
 		calendars, err = models.GetCarCalendar(startdate, enddate, false)
 		if err != nil {
@@ -483,22 +505,29 @@ func (c *IndexController) DeleteCarCalendar() {
 //*****会议室
 //显示页面
 func (c *IndexController) MeetingroomCalendar() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsMeetingroomCalendar"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "meetingroom_calendar.tpl"
 }
 
@@ -559,7 +588,8 @@ func (c *IndexController) MeetCalendar() {
 		beego.Error(err)
 	}
 	var calendars []*models.MeetCalendar
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role == "1" {
 		calendars, err = models.GetMeetCalendar(startdate, enddate, false)
 		if err != nil {
@@ -726,7 +756,8 @@ func (c *IndexController) SearchCalendar() {
 
 	var calendars []*models.MeetCalendar
 	var err error
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role == "1" {
 		calendars, err = models.SearchMeetCalendar(title, false)
 		if err != nil {
@@ -745,43 +776,57 @@ func (c *IndexController) SearchCalendar() {
 //*****订餐
 //显示页面
 func (c *IndexController) GetOrderCalendar() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsOrderCalendar"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "order_calendar.tpl"
 }
 
 //*****考勤
 //显示页面
 func (c *IndexController) GetAttendanceCalendar() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsAttendanceCalendar"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "attendance_calendar.tpl"
 }

@@ -24,39 +24,42 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsIndex"] = true
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-
-	// beego.Info(username)
-	// beego.Info(role)
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// // c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
@@ -173,118 +176,153 @@ func (c *MainController) Get() {
 
 //文档
 func (c *MainController) Getecmsdoc() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	// beego.Info(username)
-	// beego.Info(role)
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// // beego.Info(username)
+	// // beego.Info(role)
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// // c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "ecmsdoc.tpl"
 }
 
 func (c *MainController) Getmeritmsdoc() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	// beego.Info(username)
-	// beego.Info(role)
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// // beego.Info(username)
+	// // beego.Info(role)
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// // c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "meritmsdoc.tpl"
 }
 
 func (c *MainController) Gethydrowsdoc() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	// beego.Info(username)
-	// beego.Info(role)
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// // beego.Info(username)
+	// // beego.Info(role)
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// // c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "hydrowsdoc.tpl"
 }
 
 //api
 func (c *MainController) Getecmsapi() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	// beego.Info(username)
-	// beego.Info(role)
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// // beego.Info(username)
+	// // beego.Info(role)
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// // c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "ecmsapi.tpl"
 }
 
 func (c *MainController) Getmeritmsapi() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	// beego.Info(username)
-	// beego.Info(role)
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// // beego.Info(username)
+	// // beego.Info(role)
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// // c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "meritmsapi.tpl"
 }
 
@@ -408,9 +446,16 @@ func (c *MainController) IsSubmitAgain(token string) bool {
 
 func (c *MainController) Pdf() {
 	// var uname, useridstring string
-	v := c.GetSession("uname")
+	// v := c.GetSession("uname")
 	// var role, userrole int
-	if v == nil {
+	// if v == nil {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	return
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
+	if uid == 0 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)

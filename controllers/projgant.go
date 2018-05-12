@@ -93,23 +93,30 @@ type Rolesvalue struct {
 
 //项目列表页面
 func (c *ProjGantController) Get() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsProjectgant"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "projects_gant.tpl"
 
 	projgants, err := models.GetProjGants()

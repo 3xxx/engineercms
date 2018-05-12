@@ -47,8 +47,10 @@ type history1 struct {
 	ServerVersion string    `json:"serverVersion"`
 	Changes       []change  `json:"changes"`
 	Created       time.Time `json:"created"`
+	ChangesUrl    string    `json:"changesurl"`
+	FileUrl       string    `json:"fileurl"`
 	Key           string    `json:"key"`
-	// ChangesUrl    string    `json:"changesurl"`
+	// ChangesUrl    string
 	User    User1 `json:"user"`
 	Version int   `json:"version"`
 }
@@ -166,34 +168,42 @@ type Rolepermission struct {
 //文档管理页面
 func (c *OnlyController) Get() {
 	//取得客户端用户名
-	v := c.GetSession("uname")
-	if v != nil {
-		uname := v.(string)
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		c.Data["Uid"] = user.Id
-	} else {
-		c.Data["Uid"] = 0
-	}
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	c.Data["Uid"] = user.Id
+	// } else {
+	// 	c.Data["Uid"] = 0
+	// }
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	// beego.Info(c.Ctx.Input.UserAgent())
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+
 	u := c.Ctx.Input.UserAgent()
 	// re := regexp.MustCompile("Trident")
 	// loc := re.FindStringIndex(u)
@@ -271,24 +281,34 @@ func (c *OnlyController) Get() {
 //提供给列表页的table中json数据
 func (c *OnlyController) GetData() {
 	//1.取得客户端用户名
-	var uname, useridstring string
-	var user models.User
+	// var uname, useridstring string
+	// var user models.User
 	var err error
-	v := c.GetSession("uname")
+	// v := c.GetSession("uname")
 	// var role, userrole int
-	if v != nil {
-		uname = v.(string)
-		// c.Data["Uname"] = v.(string)
-		user, err = models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		c.Data["Uid"] = user.Id
-		// userrole = user.Role
-		useridstring = strconv.FormatInt(user.Id, 10)
-	}
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	// c.Data["Uname"] = v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	c.Data["Uid"] = user.Id
+	// 	// userrole = user.Role
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	useridstring := strconv.FormatInt(uid, 10)
+
 	var myRes, roleRes [][]string
-	if useridstring != "" {
+	if useridstring != "0" {
 		myRes = e.GetPermissionsForUser(useridstring)
 		// beego.Info(myRes)
 	}
@@ -326,10 +346,10 @@ func (c *OnlyController) GetData() {
 			//查询v.Id是否和myres的V1路径后面的id一致，如果一致，则取得V2（权限）
 			//查询用户具有的权限
 			// beego.Info(useridstring)
-			if useridstring != "" { //如果是登录用户，则设置了权限的文档不能看
+			if useridstring != "0" { //如果是登录用户，则设置了权限的文档不能看
 				// beego.Info(myRes)
 				// myRes1 := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-				if w.Uid != user.Id { //如果不是作者本人
+				if w.Uid != uid { //如果不是作者本人
 					for _, k := range myResall { //所有设置了权限的都不能看
 						// beego.Info(k)
 						if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
@@ -364,7 +384,6 @@ func (c *OnlyController) GetData() {
 							}
 						}
 					}
-
 				} //如果是用户自己的文档，则permission为1，默认
 			} else { //如果用户没登录，则设置了权限的文档不能看
 				for _, k := range myResall { //所有设置了权限的不能看
@@ -384,7 +403,6 @@ func (c *OnlyController) GetData() {
 			docxarr[0].Title = v.FileName
 			if path.Ext(v.FileName) == ".docx" || path.Ext(v.FileName) == ".DOCX" || path.Ext(v.FileName) == ".doc" || path.Ext(v.FileName) == ".DOC" {
 				docxarr[0].Suffix = "docx"
-
 			} else if path.Ext(v.FileName) == ".XLSX" || path.Ext(v.FileName) == ".xlsx" || path.Ext(v.FileName) == ".XLS" || path.Ext(v.FileName) == ".xls" {
 				docxarr[0].Suffix = "xlsx"
 				// xlsxarr := make([]XlsxLink, 1)
@@ -410,7 +428,6 @@ func (c *OnlyController) GetData() {
 		Docxslice = make([]DocxLink, 0) //再把slice置0
 		// Xlsxslice = make([]XlsxLink, 0) //再把slice置0
 		// Pptxslice = make([]PptxLink, 0)
-
 		link = append(link, linkarr...)
 	}
 	c.Data["json"] = link //products
@@ -461,21 +478,31 @@ func (c *OnlyController) OnlyOffice() {
 		beego.Error(err)
 	}
 
-	var uname, useridstring, Permission string
+	var useridstring, Permission string
 	var myRes, roleRes [][]string
-	v := c.GetSession("uname")
+
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	useridstring = strconv.FormatInt(uid, 10)
+
+	// v := c.GetSession("uname")
 	// var role, userrole int
 	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		useridstring = strconv.FormatInt(user.Id, 10)
+	if uid != 0 {                           //无论是登录还是ip查出了用户id
+		// uname = v.(string)
+		// c.Data["Uname"] = v.(string)
+		// user, err := models.GetUserByUsername(uname)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		// useridstring = strconv.FormatInt(user.Id, 10)
 		myRes = e.GetPermissionsForUser(useridstring)
-		if doc.Uid == user.Id {
+		if doc.Uid == uid {
 			Permission = "1"
 		} else { //如果是登录用户，则设置了权限的文档不能看
 			Permission = "1"
@@ -512,7 +539,7 @@ func (c *OnlyController) OnlyOffice() {
 				}
 			}
 		}
-		c.Data["Uid"] = user.Id
+		// c.Data["Uid"] = user.Id
 		// userrole = user.Role
 	} else { //如果用户没登录，则设置了权限的文档不能看
 		Permission = "1"
@@ -521,8 +548,8 @@ func (c *OnlyController) OnlyOffice() {
 				Permission = "4"
 			}
 		}
-		c.Data["Uname"] = c.Ctx.Input.IP()
-		c.Data["Uid"] = 0
+		// c.Data["Uname"] = c.Ctx.Input.IP()
+		// c.Data["Uid"] = 0
 	}
 
 	// var myRes [][]string
@@ -594,8 +621,10 @@ func (c *OnlyController) OnlyOffice() {
 			user := models.GetUserByUserId(v.UserId)
 			aa[0].User.Name = user.Nickname
 		}
+		aa[0].ServerVersion = v.ServerVersion
 		aa[0].Version = v.Version
-
+		aa[0].FileUrl = v.FileUrl
+		aa[0].ChangesUrl = v.ChangesUrl
 		//取得changes
 		changes, err := models.GetOnlyChanges(v.HistoryKey)
 		if err != nil {
@@ -769,7 +798,7 @@ func (c *OnlyController) UrltoCallback() {
 				}
 			}
 			// beego.Info(callback.Users[0])
-			_, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, callback.Actions[0].Userid, first+1, callback.Key, callback.Changesurl, dataTimeStr, callback.Lastsave)
+			_, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, callback.Actions[0].Userid, callback.History.ServerVersion, first+1, callback.Key, callback.Url, callback.Changesurl, dataTimeStr, callback.Lastsave)
 			if err1 != nil {
 				beego.Error(err1)
 			}
@@ -812,20 +841,21 @@ func (c *OnlyController) UrltoCallback() {
 //要避免同名覆盖的严重bug！！！！
 func (c *OnlyController) AddOnlyAttachment() {
 	//取得客户端用户名
-	v := c.GetSession("uname")
-	var user models.User
-	var err error
-	if v != nil {
-		uname := v.(string)
-		user, err = models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-	}
+	// v := c.GetSession("uname")
+	// var user models.User
+	// var err error
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	var filepath, DiskDirectory, Url string
 
-	err = os.MkdirAll(".\\attachment\\onlyoffice\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	err := os.MkdirAll(".\\attachment\\onlyoffice\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
 	}
@@ -886,7 +916,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 			end = date
 		}
 		// beego.Info(end)
-		prodId, err := models.AddDoc(code, title, prodlabel, prodprincipal, end, user.Id)
+		prodId, err := models.AddDoc(code, title, prodlabel, prodprincipal, end, uid)
 		if err != nil {
 			beego.Error(err)
 		}

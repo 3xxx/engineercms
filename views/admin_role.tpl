@@ -537,25 +537,25 @@
       }
 
       arr=$('#tree').treeview('getChecked');
-        if (arr.length==0){
-          alert("请先勾选目录！");
-          return;
-        }
+      var treenodeids="";
+      if (arr.length!=0){
+        // alert("请先勾选目录！");
+        // return;
         // alert(JSON.stringify(arr));
         // if (arr.length>=2){
         //   alert("请不要勾选一个以上！");
         //   return;
         // }
-      var treeids="";
-      var treenodeids="";
-      for(var i=0;i<arr.length;i++){
-        if(i==0){
-          treeids=arr[i].id;
-          treenodeids=arr[i].nodeId;
-        }else{
-          treeids=treeids+","+arr[i].id;
-          treenodeids=treenodeids+","+arr[i].nodeId;
-        }  
+        var treeids="";
+        for(var i=0;i<arr.length;i++){
+          if(i==0){
+            treeids=arr[i].id;
+            treenodeids=arr[i].nodeId;
+          }else{
+            treeids=treeids+","+arr[i].id;
+            treenodeids=treenodeids+","+arr[i].nodeId;
+          }  
+        }
       }
 
       $.ajax({
@@ -633,14 +633,16 @@
               //   return $('#tree').treeview('search', [ data, { ignoreCase: false, exactMatch: true } ]);//忽略大小写——这个只支持名称
               // };
               $('#tree').treeview('uncheckAll', { silent: true });
-              for(var i=0;i<data.length;i++){
-                // alert(data[i]);
-                var findCheckableNodess = function() {
-                  return $('#tree').treeview('findNodes', [data[i], 'id']);
-                }; 
-                var checkableNodes = findCheckableNodess();
-                // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
-                $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+              if (data!=null){
+                for(var i=0;i<data.length;i++){
+                  // alert(data[i]);
+                  var findCheckableNodess = function() {
+                    return $('#tree').treeview('findNodes', [data[i], 'id']);
+                  }; 
+                  var checkableNodes = findCheckableNodess();
+                  // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
+                  $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+                }
               }
             }
           });
@@ -689,13 +691,15 @@
             },  
             success:function(data){ //请求成功后处理函数。取到Json对象data
               $('#tree').treeview('uncheckAll', { silent: true });
-              for(var i=0;i<data.length;i++){
-                // alert(data[i]);
-                var findCheckableNodess = function() {
-                  return $('#tree').treeview('findNodes', [data[i], 'id']);
-                }; 
-                var checkableNodes = findCheckableNodess();
-                $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+              if(data){
+                for(var i=0;i<data.length;i++){
+                  // alert(data[i]);
+                  var findCheckableNodess = function() {
+                    return $('#tree').treeview('findNodes', [data[i], 'id']);
+                  }; 
+                  var checkableNodes = findCheckableNodess();
+                  $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent:  true } ]);
+                }
               }
             }
           });
@@ -758,13 +762,15 @@
             },  
             success:function(data){ //请求成功后处理函数。取到Json对象data
               $('#tree').treeview('uncheckAll', { silent: true });
-              for(var i=0;i<data.length;i++){
-                // alert(data[i]);
-                var findCheckableNodess = function() {
-                  return $('#tree').treeview('findNodes', [data[i], 'id']);
-                }; 
-                var checkableNodes = findCheckableNodess();
-                $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+              if (data) {
+                for(var i=0;i<data.length;i++){
+                  // alert(data[i]);
+                  var findCheckableNodess = function() {
+                    return $('#tree').treeview('findNodes', [data[i], 'id']);
+                  }; 
+                  var checkableNodes = findCheckableNodess();
+                  $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+                }
               }
             }
           });

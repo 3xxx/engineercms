@@ -61,23 +61,30 @@ type CatalogLinkEditable struct {
 }
 
 func (c *AdminController) Get() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
@@ -90,23 +97,30 @@ func (c *AdminController) Get() {
 }
 
 func (c *AdminController) Admin() {
-	username, role := checkprodRole(c.Ctx)
-	roleint, err := strconv.Atoi(role)
-	if err != nil {
-		beego.Error(err)
-	}
-	if role == "1" {
-		c.Data["IsAdmin"] = true
-	} else if roleint > 1 && roleint < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	if role == "1" {
 		id := c.Ctx.Input.Param(":id")
 		c.Data["Id"] = id
@@ -666,7 +680,14 @@ func (c *AdminController) Calendar() {
 		beego.Error(err)
 	}
 	var calendars []*models.AdminCalendar
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
 	if role == "1" {
 		calendars, err = models.GetAdminCalendar(startdate, enddate, false)
 		if err != nil {
@@ -842,7 +863,14 @@ func (c *AdminController) SearchCalendar() {
 
 	var calendars []*models.AdminCalendar
 	var err error
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
 	if role == "1" {
 		calendars, err = models.SearchAdminCalendar(title, false)
 		if err != nil {
@@ -1082,7 +1110,8 @@ func (c *AdminController) DeleteDepartment() {
 
 //批量上传首页轮播图片
 func (c *AdminController) AddCarousel() {
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role == "1" {
 		//获取上传的文件
 		_, h, err := c.GetFile("file")

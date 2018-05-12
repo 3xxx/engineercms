@@ -8,7 +8,7 @@ import (
 	"github.com/astaxie/beego/context"
 	// "net/url"
 	"github.com/3xxx/engineercms/models"
-	// "strconv"
+	"strconv"
 	// "github.com/astaxie/beego/session"
 )
 
@@ -214,7 +214,6 @@ func checkAccount(ctx *context.Context) bool {
 	} else {
 		//     this.SetSession("asta", v.(int)+1)
 		//     this.Data["num"] = v.(int)
-
 		user.Username = v.(string)
 		v = ctx.Input.CruSession.Get("pwd")
 		user.Password = v.(string) //ck.Value
@@ -266,6 +265,69 @@ func checkRole(ctx *context.Context) (role string, err error) { //这里返回�
 	// } else {
 	// 	return "", err
 	// }
+}
+
+//用户登录，则role是1则是admin，其余没有意义
+//ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
+func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
+	// var uname string
+	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
+	// defer sess.SessionRelease(ctx.ResponseWriter)
+	v := ctx.Input.CruSession.Get("uname")
+	var userrole string
+	var user models.User
+	var err error
+	var iprole int
+	if v != nil { //如果登录了
+		islogin = true
+		uname = v.(string)
+		user, err = models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			uid = user.Id
+			if user.Role == "0" {
+				isadmin = false
+				userrole = "4"
+			} else if user.Role == "1" {
+				isadmin = true
+				userrole = user.Role
+			} else {
+				isadmin = false
+				userrole = user.Role
+			}
+		}
+	} else { //如果没登录,查询ip对应的用户
+		islogin = false
+		isadmin = false
+		uid = 0
+		uname = ctx.Input.IP()
+		user, err = models.GetUserByIp(uname)
+		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
+			beego.Error(err)
+			iprole = Getiprole(ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
+			userrole = strconv.Itoa(iprole)
+		} else { //如果查到，则role和用户名
+			if user.Role == "1" {
+				isadmin = true
+			}
+			uid = user.Id
+			userrole = user.Role
+			uname = user.Username
+		}
+	}
+	// beego.Info(iprole)
+	//如果用户登录，则以登录权限为优先，即使给这个用户设置的ip权限
+	// roleint, err := strconv.Atoi(userrole)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if iprole <= roleint {
+	// 	role = strconv.Itoa(iprole)
+	// } else {
+	// 	role = userrole
+	// }
+	return uname, userrole, uid, isadmin, islogin
 }
 
 // func checkRole(ctx *context.Context) (roles []*models.Role, err error) {

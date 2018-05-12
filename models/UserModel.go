@@ -508,6 +508,24 @@ func GetUserByUsername(username string) (user User, err error) {
 	return user, err
 }
 
+//根据ip查询用户
+func GetUserByIp(ip string) (user User, err error) {
+	o := orm.NewOrm()
+	// var user User
+	err = o.QueryTable("user").Filter("ip", ip).One(&user)
+	if err == orm.ErrMultiRows {
+		// 多条的时候报错
+		// fmt.Printf("Returned Multi Rows Not One")
+		return user, err
+	} else if err == orm.ErrNoRows {
+		// 没有找到记录
+		// fmt.Printf("Not row found")
+		return user, err
+	} else {
+		return user, err
+	}
+}
+
 //根据用户nickname取得用户
 func GetUserByNickname(nickname string) (user User) {
 	o := orm.NewOrm()

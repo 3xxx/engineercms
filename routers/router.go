@@ -334,9 +334,9 @@ func init() {
 
 	//附件下载"/attachment/*", &controllers.AttachController{}
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
-
+	//根据附件地址下载
 	beego.Router("/attachment/*", &controllers.AttachController{}, "get:DownloadAttachment")
-	//根据权限下载附件
+	//根据权限下载附件id号
 	beego.Router("/attachment", &controllers.AttachController{}, "get:Attachment")
 
 	//上面用attachment.ImageFilter是不行的，必须是package.func

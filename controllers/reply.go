@@ -25,23 +25,25 @@ func (c *ReplyController) Add() {
 	// content := c.Input().Get("editorValue")
 	//获取用户名，如果已经登录，则nickname用登录名
 	//4.取得客户端用户名
-	var uname string
-	v := c.GetSession("uname")
+	// var uname string
+	// v := c.GetSession("uname")
 	// var role, userrole int
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-		// user, err := models.GetUserByUsername(uname)
-		// if err != nil {
-		// 	beego.Error(err)
-		// }
-		// userrole = user.Role
-	} else {
-		uname = c.Input().Get("nickname")
-		// userrole = 5
-	}
+	username, _, _, _, _ := checkprodRole(c.Ctx)
 
-	err := models.AddTopicReply(tid, uname, c.Input().Get("editorValue"))
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// 	// user, err := models.GetUserByUsername(uname)
+	// 	// if err != nil {
+	// 	// 	beego.Error(err)
+	// 	// }
+	// 	// userrole = user.Role
+	// } else {
+	// 	uname = c.Input().Get("nickname")
+	// 	// userrole = 5
+	// }
+
+	err := models.AddTopicReply(tid, username, c.Input().Get("editorValue"))
 	if err != nil {
 		beego.Error(err)
 	}
@@ -90,23 +92,24 @@ func (c *ReplyController) AddWiki() {
 	// content := c.Input().Get("editorValue")
 	//获取用户名，如果已经登录，则nickname用登录名
 	//4.取得客户端用户名
-	var uname string
-	v := c.GetSession("uname")
+	// var uname string
+	// v := c.GetSession("uname")
 	// var role, userrole int
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-		// user, err := models.GetUserByUsername(uname)
-		// if err != nil {
-		// 	beego.Error(err)
-		// }
-		// userrole = user.Role
-	} else {
-		uname = c.Input().Get("nickname")
-		// userrole = 5
-	}
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// 	// user, err := models.GetUserByUsername(uname)
+	// 	// if err != nil {
+	// 	// 	beego.Error(err)
+	// 	// }
+	// 	// userrole = user.Role
+	// } else {
+	// 	uname = c.Input().Get("nickname")
+	// 	// userrole = 5
+	// }
+	username, _, _, _, _ := checkprodRole(c.Ctx)
 
-	err := models.AddWikiReply(tid, uname, c.Input().Get("editorValue"))
+	err := models.AddWikiReply(tid, username, c.Input().Get("editorValue"))
 	if err != nil {
 		beego.Error(err)
 	}

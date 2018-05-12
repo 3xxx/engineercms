@@ -36,14 +36,16 @@ type OnlyAttachment struct {
 
 //历史版本
 type OnlyHistory struct {
-	Id         int64
-	AttachId   int64
-	UserId     int64
-	Version    int
-	ChangesUrl string    //`orm:"null"`
-	HistoryKey string    `orm:"sie(19)"`
-	Expires    time.Time `orm:"type(datetime)"`
-	Created    time.Time `orm:"type(datetime)"`
+	Id            int64
+	AttachId      int64
+	UserId        int64
+	ServerVersion string
+	Version       int
+	FileUrl       string
+	ChangesUrl    string    //`orm:"null"`
+	HistoryKey    string    `orm:"sie(19)"`
+	Expires       time.Time `orm:"type(datetime)"`
+	Created       time.Time `orm:"type(datetime)"`
 }
 
 //修改情况
@@ -234,19 +236,21 @@ func DeleteOnlyAttachment(cid int64) error {
 }
 
 //添加历史版本
-func AddOnlyHistory(onlyattachmentid, uid int64, version int, key, changesurl string, expires, created time.Time) (id int64, err1, err2 error) {
+func AddOnlyHistory(onlyattachmentid, uid int64, serverversion string, version int, key, fileurl, changesurl string, expires, created time.Time) (id int64, err1, err2 error) {
 	o := orm.NewOrm()
 	var history OnlyHistory
 	err1 = o.QueryTable("OnlyHistory").Filter("HistoryKey", key).One(&history)
 	if err1 == orm.ErrNoRows { // 没有找到记录
 		onlyhistory := &OnlyHistory{
-			AttachId:   onlyattachmentid,
-			UserId:     uid,
-			Version:    version,
-			HistoryKey: key,
-			ChangesUrl: changesurl,
-			Expires:    expires,
-			Created:    created,
+			AttachId:      onlyattachmentid,
+			UserId:        uid,
+			ServerVersion: serverversion,
+			Version:       version,
+			HistoryKey:    key,
+			FileUrl:       fileurl,
+			ChangesUrl:    changesurl,
+			Expires:       expires,
+			Created:       created,
 		}
 		id, err2 = o.Insert(onlyhistory)
 		if err2 != nil {

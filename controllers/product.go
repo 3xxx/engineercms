@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
+	// "github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/httplib"
 	"os"
 	"path"
@@ -89,21 +89,30 @@ func (c *ProdController) GetProjProd() {
 	//修改权限PUT——页面上，任何人可以修改自己的product
 	//删除权限DELETE——页面上，任何人可以删除自己的product
 	//1.取得客户端用户名
-	var uname, useridstring string
-	v := c.GetSession("uname")
-	// var role, userrole int
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
+	// var uname, useridstring string
+	// v := c.GetSession("uname")
+	// // var role, userrole int
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
 
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		c.Data["Uid"] = user.Id
-		// userrole = user.Role
-		useridstring = strconv.FormatInt(user.Id, 10)
-	} //else {
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	c.Data["Uid"] = user.Id
+	// 	// userrole = user.Role
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	useridstring := strconv.FormatInt(uid, 10)
+	//else {
 	// userrole = 5
 	// route := c.Ctx.Request.URL.String()
 	// c.Data["Url"] = route
@@ -620,16 +629,17 @@ func (c *ProdController) ProvidesynchProducts() {
 //向某个侧栏id下添加成果——这个没用，用attachment里的addattachment
 func (c *ProdController) AddProduct() {
 	//取得客户端用户名
-	v := c.GetSession("uname")
-	var user models.User
-	var err error
-	if v != nil {
-		uname := v.(string)
-		user, err = models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-	}
+	// v := c.GetSession("uname")
+	// var user models.User
+	// var err error
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	id := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
@@ -646,7 +656,7 @@ func (c *ProdController) AddProduct() {
 		beego.Error(err)
 	}
 	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, user.Id, pidNum)
+	_, err = models.AddProduct(code, title, label, principal, content, uid, pidNum)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -763,41 +773,6 @@ func (c *ProdController) DeleteProduct() {
 	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
-}
-
-func checkprodRole(ctx *context.Context) (uname, role string) {
-	// var uname string
-	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	// defer sess.SessionRelease(ctx.ResponseWriter)
-	v := ctx.Input.CruSession.Get("uname")
-	var userrole string
-	if v != nil {
-		uname = v.(string)
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		if user.Role == "0" {
-			userrole = "4"
-		} else {
-			userrole = user.Role
-		}
-	} else {
-		userrole = "5"
-		uname = ctx.Input.IP()
-	}
-	iprole := Getiprole(ctx.Input.IP())
-	// beego.Info(iprole)
-	roleint, err := strconv.Atoi(userrole)
-	if err != nil {
-		beego.Error(err)
-	}
-	if iprole <= roleint {
-		role = strconv.Itoa(iprole)
-	} else {
-		role = userrole
-	}
-	return uname, role
 }
 
 // {

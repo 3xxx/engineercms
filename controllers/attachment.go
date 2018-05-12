@@ -376,16 +376,17 @@ func (c *AttachController) ProvidePdfs() {
 func (c *AttachController) AddAttachment() {
 	// _, role := checkprodRole(c.Ctx)
 	//取得客户端用户名
-	v := c.GetSession("uname")
-	var user models.User
-	var err error
-	if v != nil {
-		uname := v.(string)
-		user, err = models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-	}
+	// v := c.GetSession("uname")
+	// var user models.User
+	// var err error
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
@@ -512,7 +513,7 @@ func (c *AttachController) AddAttachment() {
 		//存入成果数据库
 		//如果编号重复，则不写入，只返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", user.Id, pidNum)
+		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", uid, pidNum)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -593,16 +594,17 @@ func (c *AttachController) AddAttachment() {
 //向某个侧栏id下添加成果——用于第二种添加，多附件模式
 func (c *AttachController) AddAttachment2() {
 	//取得客户端用户名
-	v := c.GetSession("uname")
-	var user models.User
-	var err error
-	if v != nil {
-		uname := v.(string)
-		user, err = models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-	}
+	// v := c.GetSession("uname")
+	// var user models.User
+	// var err error
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
@@ -665,7 +667,7 @@ func (c *AttachController) AddAttachment2() {
 		//存入成果数据库
 		//如果编号重复，则不写入，值返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", user.Id, pidNum)
+		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", uid, pidNum)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -892,17 +894,25 @@ func ImageFilter(ctx *context.Context) {
 func (c *AttachController) Attachment() {
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
-	var uname, useridstring, projurl string
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		useridstring = strconv.FormatInt(user.Id, 10)
-	}
+	var projurl string
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	useridstring := strconv.FormatInt(uid, 10)
 
 	id := c.Input().Get("id")
 	//pid转成64为
@@ -944,11 +954,10 @@ func (c *AttachController) Attachment() {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 	default:
-		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) {
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
@@ -960,29 +969,39 @@ func (c *AttachController) Attachment() {
 }
 
 //目前只有文章中的图片采用绝对路径型式，其他都是用上面的/id型式
+//文章中的附件呢？
+//default中的pdf页面中的{{.pdflink}}，绝对路径
 func (c *AttachController) DownloadAttachment() {
-	c.Data["IsLogin"] = checkAccount(c.Ctx)
-	//4.取得客户端用户名
-	var uname, useridstring string
-	v := c.GetSession("uname")
-	// var role, userrole int
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-		user, err := models.GetUserByUsername(uname)
-		if err != nil {
-			beego.Error(err)
-		}
-		// userrole = user.Role
-		useridstring = strconv.FormatInt(user.Id, 10)
-	} //else {
+	// c.Data["IsLogin"] = checkAccount(c.Ctx)
+	// //4.取得客户端用户名
+	// var uname, useridstring string
+	// v := c.GetSession("uname")
+	// // var role, userrole int
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	// userrole = user.Role
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+	//else {
 	// userrole = 5
 	// route := c.Ctx.Request.URL.String()
 	// c.Data["Url"] = route
 	// c.Redirect("/roleerr?url="+route, 302)
 	// return
 	// }
-
+	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	useridstring := strconv.FormatInt(uid, 10)
 	// iprole := Getiprole(c.Ctx.Input.IP())
 	// if iprole <= userrole {
 	// 	role = iprole
@@ -1044,7 +1063,7 @@ func (c *AttachController) DownloadAttachment() {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
 	default:
-		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) {
+		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
