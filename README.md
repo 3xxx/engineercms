@@ -74,7 +74,7 @@ Demo2(http://112.74.42.44:8086/)
 
 ## Quick Start
 
-* 参加quickstart快速开始。
+* 参见quickstart快速开始。
 
 ## Documentation
 
