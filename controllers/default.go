@@ -169,7 +169,6 @@ func (c *MainController) Get() {
 		c.Data["json"] = achdepart
 		c.TplName = "index.tpl"
 		// c.TplName = "engineercms.tpl"
-
 		// c.Redirect("/project/25002", 301)
 	}
 }
@@ -567,7 +566,6 @@ func (c *MainController) Pdf() {
 			}
 		}
 	}
-
 	//对成果进行循环
 	//赋予url
 	//如果是一个成果，直接给url;如果大于1个，则是数组:这个在前端实现
@@ -587,7 +585,6 @@ func (c *MainController) Pdf() {
 	// 	}
 	// }
 	// c.Data["json"] = link
-
 	// pdfs, err := models.GetAllPdfs(idNum, false)
 	// if err != nil {
 	// 	beego.Error(err)
@@ -598,12 +595,10 @@ func (c *MainController) Pdf() {
 	if err != nil {
 		beego.Error(err)
 	}
-
 	// cnt, err := o.QueryTable("user").Count()
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
-
 	// sets this.Data["paginator"] with the current offset (from the url query param)
 	postsPerPage := 1
 	paginator := pagination.SetPaginator(c.Ctx, postsPerPage, count2)
@@ -623,7 +618,6 @@ func (c *MainController) Pdf() {
 	// 	}
 	// 	Attachments = append(Attachments, Attachments1...)
 	// }
-
 	//查询当前附件id所在位置
 	// var p1, PdfLink string
 	// for i, v := range Attachments {
@@ -633,7 +627,6 @@ func (c *MainController) Pdf() {
 	// 		break
 	// 	}
 	// }
-
 	// pdfs, err = models.ListPostsByOffsetAndLimit(paginator.Offset(), postsPerPage)
 	// if err != nil {
 	// 	beego.Error(err)
@@ -652,9 +645,7 @@ func (c *MainController) Pdf() {
 	// 	slice1 = append(slice1, aa...)
 	// }
 	// c.Data["Categories"] = slice1
-
 	c.Data["paginator"] = paginator
-
 	if p == "" {
 		var p1 string
 		for i, v := range Attachments {

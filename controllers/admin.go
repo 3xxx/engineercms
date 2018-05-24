@@ -170,7 +170,6 @@ func (c *AdminController) Admin() {
 			c.TplName = "admin_calendar.tpl"
 		}
 	}
-
 }
 
 //根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别

@@ -156,9 +156,22 @@ func (c *LoginController) Post() {
 		c.SetSession("pwd", user.Password)
 		// beego.Info(sess.Get("uname"))
 		// c.Ctx.SetCookie("pwd", user.Password, maxAge, "/")
-
-		//更新user表的lastlogintime
-		models.UpdateUserlastlogintime(user.Username)
+		User, err := models.GetUserByUsername(user.Username)
+		if err != nil {
+			beego.Error(err)
+		}
+		if User.Ip == "" {
+			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
+			if err != nil {
+				beego.Error(err)
+			}
+		} else {
+			//更新user表的lastlogintime
+			err = models.UpdateUserlastlogintime(user.Username)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
 		if url != "" {
 			c.Redirect(url, 301)
 			// beego.Info(url)
@@ -173,7 +186,6 @@ func (c *LoginController) Post() {
 		c.Redirect("/loginerr?url="+url, 302)
 	}
 	return
-
 	// sess := index.StartSession()
 	// var user models.User
 	// inputs := index.Input()

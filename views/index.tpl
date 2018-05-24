@@ -99,5 +99,4 @@
 </body>
 </html>
 <!-- <button id="directNextpage" onclick="window.location.reload('/topic/add?id={{.Category.Id}}&mid=1')">Direct Next Page</button> 这个方法跳不出去iframe
-  onclick="window.open('/topic/add?id={{.Category.Id}}&mid=1')"新标签页中打开
-  onclick="parent.location.href='/topic/add?id={{.Category.Id}}&mid=2'跳出iframe重新打开-->
+  onclick="window.open('/topic/add?id={{.Category.Id}}&mid=1')"新标签页中打开  onclick="parent.location.href='/topic/add?id={{.Category.Id}}&mid=2'跳出iframe重新打开-->

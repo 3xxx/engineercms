@@ -92,7 +92,6 @@
                 <li><a href="/login?exit=true">退出</a></li>
               </ul>
             </li>
-            
           {{else}}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>

@@ -1,6 +1,10 @@
                        EngineerCMS revision history
+9, EngineerCMS 1.05 (May 24, 2018)
+	+) Add Download permission
+	*) Fixed bug of attachmentname	       
 9, EngineerCMS 1.04 (May 12, 2018)
-	+) Add IP permission	       
+	+) Add IP permission
+	*) Fixed bug of delete role permission	       
 8, EngineerCMS 1.03 (May 3, 2018)
 	*) Fixed bug of role permission
 7, EngineerCMS 1.02 (Apr 30, 2018)

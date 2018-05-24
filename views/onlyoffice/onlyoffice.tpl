@@ -16,9 +16,40 @@
 
 
     <script type="text/javascript">
+      var onAppReady = function() {
+          console.log("ONLYOFFICE Document Editor is ready");
+      };
+      var onCollaborativeChanges = function () {
+          console.log("The document changed by collaborative user");
+      };
+      var onDocumentReady = function() {
+          console.log("Document is loaded");
+      };
+      var onDocumentStateChange = function (event) {
+          if (event.data) {
+              console.log("The document changed");
+          } else {
+              console.log("Changes are collected on document editing service");
+          }
+      };
+      var onDownloadAs = function (event) {
+          console.log("ONLYOFFICE Document Editor create file: " + event.data);
+      };
+      var onError = function (event) {
+          console.log("ONLYOFFICE Document Editor reports an error: code " + event.data.errorCode + ", description " + event.data.errorDescription);
+      };
+      var onOutdatedVersion = function () {
+          location.reload(true);
+      };
+      var onRequestEditRights = function () {
+          // console.log("ONLYOFFICE Document Editor requests editing rights");
+          // document.location.reload();
+          var he=location.href.replace("view","edit");
+          location.href=he;
+      };
+
     	//历史版本保留1个月。比如Unix时间戳（Unix timestamp）expires=1524547423
       var onRequestHistory = function() {
-
       	docEditor.refreshHistory({
         "currentVersion": {{.currentversion}},
         "history":{{.onlyhistory}},
@@ -116,9 +147,16 @@
     	window.docEditor = new DocsAPI.DocEditor("placeholder",
       	{
         "events": {
+          "onAppReady": onAppReady,
+          "onCollaborativeChanges": onCollaborativeChanges,
+          "onDocumentReady": onDocumentReady,
+          "onDocumentStateChange": onDocumentStateChange,
+          "onDownloadAs": onDownloadAs,
+          "onError": onError,
+          "onRequestEditRights": onRequestEditRights,
           "onRequestHistory": onRequestHistory,
           "onRequestHistoryClose": onRequestHistoryClose,
-          "onRequestHistoryData": onRequestHistoryData,
+          "onRequestHistoryData": onRequestHistoryData
         },
 
       	"document": {
@@ -147,10 +185,10 @@
             ]
           },
           "permissions": {
-          	"comment": true,
-          	"download": true,
+          	"comment": {{.Comment}},//true,
+          	"download": {{.Download}},//true,
           	"edit": {{.Edit}},
-          	"print": true,
+          	"print": {{.Print}},//true,
           	"review": {{.Review}}//true
         	},
         },

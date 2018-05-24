@@ -57,6 +57,8 @@ func (c *ProjController) Get() {
 	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	// beego.Info(c.Ctx.Input.IP())
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
 	c.Data["IsAdmin"] = isadmin

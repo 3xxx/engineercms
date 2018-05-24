@@ -19,6 +19,8 @@ import (
 	// "github.com/astaxie/beego/httplib"
 	// "bytes"
 	// "github.com/astaxie/beego/utils/pagination"
+	// "crypto/aes"
+	// "crypto/cipher"
 	// "io"
 )
 
@@ -126,6 +128,7 @@ type OnlyLink struct {
 	End       time.Time
 	Principal string
 	Uid       int64
+	Uname     string
 	Created   time.Time
 	Updated   time.Time
 	Docxlink  []DocxLink
@@ -335,6 +338,8 @@ func (c *OnlyController) GetData() {
 		linkarr[0].End = w.End
 		linkarr[0].Principal = w.Principal
 		linkarr[0].Uid = w.Uid
+		user := models.GetUserByUserId(w.Uid)
+		linkarr[0].Uname = user.Nickname
 		linkarr[0].Created = w.Created
 		linkarr[0].Updated = w.Updated
 		//docid——me——1
@@ -403,18 +408,24 @@ func (c *OnlyController) GetData() {
 			docxarr[0].Title = v.FileName
 			if path.Ext(v.FileName) == ".docx" || path.Ext(v.FileName) == ".DOCX" || path.Ext(v.FileName) == ".doc" || path.Ext(v.FileName) == ".DOC" {
 				docxarr[0].Suffix = "docx"
+			} else if path.Ext(v.FileName) == ".wps" || path.Ext(v.FileName) == ".WPS" {
+				docxarr[0].Suffix = "docx"
 			} else if path.Ext(v.FileName) == ".XLSX" || path.Ext(v.FileName) == ".xlsx" || path.Ext(v.FileName) == ".XLS" || path.Ext(v.FileName) == ".xls" {
 				docxarr[0].Suffix = "xlsx"
 				// xlsxarr := make([]XlsxLink, 1)
 				// xlsxarr[0].Id = v.Id
 				// xlsxarr[0].Title = v.FileName
 				// Xlsxslice = append(Xlsxslice, xlsxarr...)
+			} else if path.Ext(v.FileName) == ".ET" || path.Ext(v.FileName) == ".et" {
+				docxarr[0].Suffix = "xlsx"
 			} else if path.Ext(v.FileName) == ".pptx" || path.Ext(v.FileName) == ".PPTX" || path.Ext(v.FileName) == ".ppt" || path.Ext(v.FileName) == ".PPT" {
 				docxarr[0].Suffix = "pptx"
 				// pptxarr := make([]PptxLink, 1)
 				// pptxarr[0].Id = v.Id
 				// pptxarr[0].Title = v.FileName
 				// Pptxslice = append(Pptxslice, pptxarr...)
+			} else if path.Ext(v.FileName) == ".DPS" || path.Ext(v.FileName) == ".dps" {
+				docxarr[0].Suffix = "pptx"
 			} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
 				docxarr[0].Suffix = "pdf"
 			} else if path.Ext(v.FileName) == ".txt" || path.Ext(v.FileName) == ".TXT" {
@@ -434,6 +445,9 @@ func (c *OnlyController) GetData() {
 	c.ServeJSON()
 }
 
+// WPS文字：wps,wpt,doc,dot,rtf
+// WPS演示：dps,dpt,ppt,pot,pps
+// WPS表格：et,ett,xls,xlt
 //取得changesurl
 // func (c *OnlyController) ChangesUrl() {
 // 	version := c.Input().Get("version")
@@ -583,14 +597,23 @@ func (c *OnlyController) OnlyOffice() {
 		c.Data["Mode"] = "edit"
 		c.Data["Edit"] = true
 		c.Data["Review"] = true
+		c.Data["Comment"] = true
+		c.Data["Download"] = true
+		c.Data["Print"] = true
 	} else if Permission == "2" {
 		c.Data["Mode"] = "edit"
 		c.Data["Edit"] = false
 		c.Data["Review"] = true
+		c.Data["Comment"] = true
+		c.Data["Download"] = false
+		c.Data["Print"] = false
 	} else if Permission == "3" {
 		c.Data["Mode"] = "view"
 		c.Data["Edit"] = false
 		c.Data["Review"] = false
+		c.Data["Comment"] = false
+		c.Data["Download"] = false
+		c.Data["Print"] = false
 	} else if Permission == "4" {
 		route := c.Ctx.Request.URL.String()
 		c.Redirect("/roleerr?url="+route, 302)
@@ -667,10 +690,19 @@ func (c *OnlyController) OnlyOffice() {
 	if path.Ext(onlyattachment.FileName) == ".docx" || path.Ext(onlyattachment.FileName) == ".DOCX" {
 		c.Data["fileType"] = "docx"
 		c.Data["documentType"] = "text"
+	} else if path.Ext(onlyattachment.FileName) == ".wps" || path.Ext(onlyattachment.FileName) == ".WPS" {
+		c.Data["fileType"] = "docx"
+		c.Data["documentType"] = "text"
 	} else if path.Ext(onlyattachment.FileName) == ".XLSX" || path.Ext(onlyattachment.FileName) == ".xlsx" {
 		c.Data["fileType"] = "xlsx"
 		c.Data["documentType"] = "spreadsheet"
+	} else if path.Ext(onlyattachment.FileName) == ".ET" || path.Ext(onlyattachment.FileName) == ".et" {
+		c.Data["fileType"] = "xlsx"
+		c.Data["documentType"] = "spreadsheet"
 	} else if path.Ext(onlyattachment.FileName) == ".pptx" || path.Ext(onlyattachment.FileName) == ".PPTX" {
+		c.Data["fileType"] = "pptx"
+		c.Data["documentType"] = "presentation"
+	} else if path.Ext(onlyattachment.FileName) == ".dps" || path.Ext(onlyattachment.FileName) == ".DPS" {
 		c.Data["fileType"] = "pptx"
 		c.Data["documentType"] = "presentation"
 	} else if path.Ext(onlyattachment.FileName) == ".doc" || path.Ext(onlyattachment.FileName) == ".DOC" {
@@ -754,7 +786,7 @@ func (c *OnlyController) UrltoCallback() {
 			beego.Error(err)
 		}
 		defer f.Close()
-		_, err = f.Write(body)
+		_, err = f.Write(body) //这里直接用resp.Body如何？
 		// _, err = f.WriteString(str)
 		// _, err = io.Copy(body, f)
 		if err != nil {
@@ -852,9 +884,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 	// 	}
 	// }
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
-
 	var filepath, DiskDirectory, Url string
-
 	err := os.MkdirAll(".\\attachment\\onlyoffice\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
@@ -923,12 +953,14 @@ func (c *OnlyController) AddOnlyAttachment() {
 		//改名，替换文件名中的#和斜杠
 		title = strings.Replace(title, "#", "号", -1)
 		title = strings.Replace(title, "/", "-", -1)
-		FileSuffix := path.Ext(h.Filename)
 
-		filepath = DiskDirectory + "\\" + code + title + FileSuffix
+		// FileSuffix := path.Ext(h.Filename)
+		// filepath = DiskDirectory + "\\" + code + title + FileSuffix
+		// attachmentname := code + title + FileSuffix
+		filepath = DiskDirectory + "\\" + h.Filename
 		//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
 		//如果附件名称相同，则不能上传，数据库添加
-		attachmentname := code + title + FileSuffix
+		attachmentname := h.Filename
 
 		_, _, err2 := models.AddOnlyAttachment(attachmentname, 0, 0, prodId)
 		if err2 != nil {
@@ -973,14 +1005,12 @@ func (c *OnlyController) DownloadDoc() {
 	// 	}
 	// 	useridstring = strconv.FormatInt(user.Id, 10)
 	// }
-
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(ctx.Request.RequestURI)
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
 		beego.Error(err)
 	}
-
 	// fileext := path.Ext(filePath)
 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
 	// beego.Info(path.Dir(filePath))
@@ -1016,22 +1046,66 @@ func (c *OnlyController) Download() {
 	if err != nil {
 		beego.Error(err)
 	}
-
 	filePath := "attachment/onlyoffice/" + attachments[0].FileName
+	// beego.Info(filePath)
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(ctx.Request.RequestURI)
 	// filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
-
 	// fileext := path.Ext(filePath)
 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
 	// beego.Info(path.Dir(filePath))
 	// filepath1 := path.Dir(filePath)
 	// array := strings.Split(filepath1, "/")
 	// beego.Info(strings.Split(filepath1, "/"))
-	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这个下载文件名不对
+	c.Ctx.Output.Download(filePath) //这个能保证下载文件名称正确
+
+	// *******解密****************
+	// aesKey := "0123456789123456"
+	// ciphertext, err := ioutil.ReadFile("attachment/onlyoffice/MyXLSXFile1.xlsx")
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+
+	// // Key
+	// key := []byte(aesKey)
+
+	// // Create the AES cipher
+	// block, err := aes.NewCipher(key)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// // Before even testing the decryption,
+	// // if the text is too small, then it is incorrect
+	// if len(ciphertext) < aes.BlockSize {
+	// 	panic("Text is too short")
+	// }
+
+	// // Get the 16 byte IV
+	// iv := ciphertext[:aes.BlockSize]
+
+	// // Remove the IV from the ciphertext
+	// ciphertext = ciphertext[aes.BlockSize:]
+
+	// // Return a decrypted stream
+	// stream := cipher.NewCFBDecrypter(block, iv)
+	// // Decrypt bytes from ciphertext
+	// stream.XORKeyStream(ciphertext, ciphertext)
+	// // create a new file for saving the encrypted data.
+	// // f, err := os.Create("11.ts") //生成一个新的文件
+	// // if err != nil {
+	// // 	panic(err.Error())
+	// // }
+	// // defer f.Close()
+	// // _, err = io.Copy(f, bytes.NewReader(ciphertext))
+	// // if err != nil {
+	// // 	beego.Error(err)
+	// // }
+	// io.Copy(c.Ctx.ResponseWriter, bytes.NewReader(ciphertext))
 }
 
 //编辑成果信息
@@ -1041,13 +1115,11 @@ func (c *OnlyController) UpdateDoc() {
 	title := c.Input().Get("title")
 	label := c.Input().Get("label")
 	principal := c.Input().Get("principal")
-
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		beego.Error(err)
 	}
-
 	inputdate := c.Input().Get("proddate")
 	var t1, end time.Time
 	const lll = "2006-01-02"
@@ -1098,7 +1170,6 @@ func (c *OnlyController) DeleteDoc() {
 			if err != nil {
 				beego.Error(err)
 			}
-
 			path := ".\\attachment\\onlyoffice\\" + attach.FileName
 			//删除附件
 			err = os.Remove(path)
@@ -1111,7 +1182,6 @@ func (c *OnlyController) DeleteDoc() {
 				beego.Error(err)
 			}
 		}
-
 		err = models.DeleteDoc(idNum) //删除成果数据表
 		if err != nil {
 			beego.Error(err)
@@ -1142,7 +1212,6 @@ func (c *OnlyController) Addpermission() {
 	if err != nil {
 		beego.Error(err)
 	}
-
 	//根据成果id取得所有附件——这里只取第一个
 	attachments, err := models.GetOnlyAttachments(idNum)
 	if err != nil {
@@ -1153,7 +1222,6 @@ func (c *OnlyController) Addpermission() {
 	// var suf string
 	suf := ".*"
 	var success bool
-
 	//先删除这个文档所有的permission
 	// var paths []beegoormadapter.CasbinRule
 	// o := orm.NewOrm()
@@ -1307,7 +1375,6 @@ func (c *OnlyController) Getpermission() {
 // }
 
 //判断某个文件是否存在 package main
-
 // import (
 //     "fmt"
 //     "os"

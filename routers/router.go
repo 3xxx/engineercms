@@ -36,7 +36,7 @@ func init() {
 	beego.Router("/onlyoffice/getpermission", &controllers.OnlyController{}, "get:Getpermission")
 
 	beego.Router("/role/test", &controllers.RoleController{}, "*:Test")
-	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
+	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")	
 	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
 	//文档
 	beego.Router("/doc/ecms", &controllers.MainController{}, "get:Getecmsdoc")
@@ -241,7 +241,7 @@ func init() {
 	//点击侧栏，根据id返回json数据给导航条
 	beego.Router("/project/navbar/:id:string", &controllers.ProjController{}, "*:GetProjNav")
 
-	//根据项目侧栏id显示这个id下的成果界面—
+	//根据项目侧栏id显示这个id下的成果界面——作废，用上面GetProject界面
 	beego.Router("/project/:id:string/:id:string", &controllers.ProdController{}, "*:GetProjProd")
 
 	//给上面那个页面提供table所用的json数据
