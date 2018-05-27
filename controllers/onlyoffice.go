@@ -746,6 +746,7 @@ func (c *OnlyController) OnlyOffice() {
 //协作页面的保存和回调
 //关闭浏览器标签后获取最新文档保存到文件夹
 func (c *OnlyController) UrltoCallback() {
+	var actionuserid int64
 	// pk1 := c.Ctx.Input.RequestBody
 	id := c.Input().Get("id")
 	//pid转成64为
@@ -762,11 +763,15 @@ func (c *OnlyController) UrltoCallback() {
 	var callback Callback
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
 	// beego.Info(string(c.Ctx.Input.RequestBody))
-
+	// beego.Info(callback)
+	//•	1 - document is being edited,
+	//•	4 - document is closed with no changes,
 	if callback.Status == 1 || callback.Status == 4 {
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
-	} else if callback.Status == 2 {
+		//•	2 - document is ready for saving
+		//•	6 - document is being edited, but the current document state is saved,
+	} else if callback.Status == 2 || callback.Status == 6 {
 		resp, err := http.Get(callback.Url)
 		if err != nil {
 			beego.Error(err)
@@ -807,13 +812,16 @@ func (c *OnlyController) UrltoCallback() {
 				beego.Error(err)
 			}
 			//获取本地location
-			// toBeCharge := "2015-01-01 00:00:00"                             //待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
-			// timeLayout := "2006-01-02T15:04:05.999Z" //转化所需模板
+			// toBeCharge := "2015-01-01 00:00:00"
+			//待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
+			// timeLayout := "2006-01-02T15:04:05.999Z"
+			//转化所需模板
 
 			// loc, _ := time.LoadLocation("Local") //重要：获取时区
 			// theTime, _ := time.ParseInLocation(timeLayout, toBeCharge, loc) //使用模板在对应时区转化为time.time类型
-			// sr := theTime.Unix()                                            //转化为时间戳 类型是int64                                               //打印输出时间戳 1420041600
-
+			// sr := theTime.Unix()
+			//转化为时间戳 类型是int64
+			//打印输出时间戳 1420041600
 			//时间戳转日期
 			dataTimeStr := time.Unix(Expirestime, 0) //.Format(timeLayout) //设置时间戳 使用模板格式化为日期字符串
 			// t, _ := time.Parse(timeLayout, callback.Lastsave)
@@ -830,7 +838,12 @@ func (c *OnlyController) UrltoCallback() {
 				}
 			}
 			// beego.Info(callback.Users[0])
-			_, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, callback.Actions[0].Userid, callback.History.ServerVersion, first+1, callback.Key, callback.Url, callback.Changesurl, dataTimeStr, callback.Lastsave)
+			if len(callback.Actions) == 0 {
+				actionuserid = 0
+			} else {
+				actionuserid = callback.Actions[0].Userid
+			}
+			_, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, actionuserid, callback.History.ServerVersion, first+1, callback.Key, callback.Url, callback.Changesurl, dataTimeStr, callback.Lastsave)
 			if err1 != nil {
 				beego.Error(err1)
 			}
@@ -855,7 +868,9 @@ func (c *OnlyController) UrltoCallback() {
 		}
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
-	} else if callback.Status == 3 {
+		//3-document saving error has occurred
+		//•	7 - error has occurred while force saving the document.
+	} else if callback.Status == 3 || callback.Status == 7 {
 		//更新附件的时间和changesurl
 		err = models.UpdateOnlyAttachment(idNum)
 		if err != nil {

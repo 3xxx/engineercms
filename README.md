@@ -11,7 +11,7 @@ Demo2(http://112.74.42.44:8086/)
 
 3. 开箱即用，无需网络开发知识。
 
-4. 新增加对onlyoffice document server的二次开发，实现企业的实时文档协作，非常方便，避免了文档的汇总等繁琐事物，效率大大提高，协作更加优雅有趣。
+4. 新增加对onlyoffice document server的二次开发，实现企业的实时文档协作，非常方便，避免了文档的汇总等繁琐事物，效率大大提高，协作更加优雅有趣。除了支持office的docx，xlsx及pptx格式外，还支持wps，et和dps格式。
 
 一 特性：
 
@@ -58,7 +58,7 @@ Demo2(http://112.74.42.44:8086/)
 
 √分享文章到微信。
 
-√√√ONLYOFFICE实时文档协作支持。
+√√√ONLYOFFICE实时文档协作支持。除了支持office的docx，xlsx及pptx格式外，还支持wps，et和dps格式。
 
 二 todo:
 
@@ -90,7 +90,7 @@ Demo2(http://112.74.42.44:8086/)
 EngineerCMS source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
 
-ONLYOFFICE实时文档协作效果
+ONLYOFFICE实时文档协作效果——除了支持office的docx，xlsx及pptx格式外，还支持wps，et和dps格式。
 
 ![engineercms onlyoffice1](https://user-images.githubusercontent.com/10678867/38768484-0a55e06e-4027-11e8-9871-fc65e1686408.png)
 

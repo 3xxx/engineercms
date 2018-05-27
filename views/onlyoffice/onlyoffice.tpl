@@ -218,7 +218,7 @@
               "url": "http://192.168.99.1/onlyoffice",
               "visible": true
             },
-            "forcesave": false,
+            "forcesave": true,
             "goback": {
               "text": "Go to Documents",
               "url": "http://192.168.99.1/onlyoffice"

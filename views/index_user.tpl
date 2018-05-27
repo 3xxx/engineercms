@@ -1,4 +1,6 @@
-<html>  
+<!-- 首页右侧的frame -->
+<!-- <!DOCTYPE html> -->
+<html>
 <head>  
     <meta charset="utf-8"> 
 <script src="/static/js/echarts.min.js"></script>
