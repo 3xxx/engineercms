@@ -159,8 +159,8 @@
         </div>
       </div>
     </div>
-  </div>
-</form>
+    </div>
+  </form>
 </div>
 
 <script type="text/javascript">
@@ -182,7 +182,7 @@
             return index+1
             }
           },{
-            field: 'Username',
+            field: 'name',//这里用user数据库json字段，不能是username
             title: '用户名',
             sortable:'true',
             editable: {

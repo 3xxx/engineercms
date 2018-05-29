@@ -141,7 +141,7 @@ func GetProjProducts(id int64) (products []*Product, err error) {
 	qs1 := o.QueryTable("Product")
 	products1 := make([]*Product, 0)
 	for _, v := range projects {
-		_, err = qs1.Filter("ProjectId", v.Id).OrderBy("-created").All(&products1)
+		_, err = qs1.Filter("ProjectId", v.Id).OrderBy("-created").All(&products1) //, "ProjectId"
 		if err != nil {
 			return nil, err
 		}

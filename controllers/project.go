@@ -99,12 +99,44 @@ func (c *ProjController) GetProjects() {
 			aa[0].Title = v.Title
 			aa[0].Label = v.Label
 			aa[0].Principal = v.Principal
+
 			//取得项目所有成果——速度太慢
+			//修改为一次性取到所有成过，然后循环赋值给aa
+			// products, err := models.GetProjProducts(v.Id)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+
+			//取项目本身
+			// category, err := models.GetProj(v.Id)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			//取项目所有子孙
+			categories, err := models.GetProjectsbyPid(v.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			//根据项目id取得项目下所有成果
 			products, err := models.GetProjProducts(v.Id)
 			if err != nil {
 				beego.Error(err)
 			}
-			aa[0].Number = len(products)
+
+			var count int
+			for _, m := range products {
+				if v.Id == m.ProjectId {
+					count = count + 1
+				}
+			}
+			// beego.Info(count)
+			slice := getsons(v.Id, categories)
+			// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+			if len(slice) > 0 {
+				getprodcount(slice, categories, products, &count)
+			}
+
+			aa[0].Number = count //len(products)
 			aa[0].Created = v.Created
 			aa[0].Updated = v.Updated
 			projects1 = append(projects1, aa...)
@@ -176,6 +208,11 @@ func (c *ProjController) GetProject() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//根据项目id取得项目下所有成果
+	products, err := models.GetProjProducts(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
 	//根据id取出下级
 	cates := getsons(idNum, categories)
 	//算出最大级数
@@ -184,10 +221,11 @@ func (c *ProjController) GetProject() {
 	// 	grade = append(grade, v.Grade)
 	// }
 	// height := intmax(grade[0], grade[1:]...)
+	var count [1]string
 	//递归生成目录json
-	root := FileNode{category.Id, category.Title, "", []*FileNode{}}
+	root := FileNode1{category.Id, category.Title, "", count, []*FileNode1{}}
 	// walk(category.Id, &root)
-	maketreejson(cates, categories, &root)
+	maketreejson1(cates, categories, products, &root)
 	// beego.Info(root)
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
@@ -1544,6 +1582,16 @@ func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height
 	return
 }
 
+//树状目录数据——带成果数量
+type FileNode1 struct {
+	Id        int64        `json:"id"`
+	Title     string       `json:"text"`
+	Code      string       `json:"code"` //分级目录代码
+	Tags      [1]string    `json:"tags"` //显示员工数量，如果定义为数值[1]int，则无论如何都显示0，所以要做成字符
+	FileNodes []*FileNode1 `json:"nodes"`
+}
+
+//树状目录数据
 type FileNode struct {
 	Id        int64       `json:"id"`
 	Title     string      `json:"text"`
@@ -1551,24 +1599,58 @@ type FileNode struct {
 	FileNodes []*FileNode `json:"nodes"`
 }
 
-//递归构造项目树状目录
-func walk(id int64, node *FileNode) {
-	//列出当前id下子节点，不要列出孙节点……
-	files, err := models.GetProjSonbyId(id)
-	if err != nil {
-		beego.Error(err)
-	}
+//递归构造项目树状目录——反复查询数据库，速度太慢，淘汰
+// func walk(id int64, node *FileNode) {
+// 	//列出当前id下子节点，不要列出孙节点……
+// 	files, err := models.GetProjSonbyId(id)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	// 遍历目录
+// 	for _, proj := range files {
+// 		id := proj.Id
+// 		title := proj.Title
+// 		code := proj.Code
+// 		// 将当前名和id作为子节点添加到目录下
+// 		child := FileNode{id, title, code, []*FileNode{}}
+// 		node.FileNodes = append(node.FileNodes, &child)
+// 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+// 		if models.Projhasson(proj.Id) {
+// 			walk(proj.Id, &child)
+// 		}
+// 	}
+// 	return
+// }
+
+//递归构造项目树状目录_带成果数量
+func maketreejson1(cates, categories []*models.Project, products []*models.Product, node *FileNode1) {
 	// 遍历目录
-	for _, proj := range files {
+	for _, proj := range cates {
 		id := proj.Id
 		title := proj.Title
 		code := proj.Code
-		// 将当前名和id作为子节点添加到目录下
-		child := FileNode{id, title, code, []*FileNode{}}
-		node.FileNodes = append(node.FileNodes, &child)
+		var count int
+		for _, m := range products {
+			if id == m.ProjectId {
+				count = count + 1
+			}
+		}
+		// beego.Info(count)
+		slice := getsons(id, categories)
 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
-		if models.Projhasson(proj.Id) {
-			walk(proj.Id, &child)
+		if len(slice) > 0 {
+			getprodcount(slice, categories, products, &count)
+		}
+		// beego.Info(&count)
+		var tags [1]string
+		tags[0] = strconv.Itoa(count)
+		// 将当前名和id作为子节点添加到目录下
+		child := FileNode1{id, title, code, tags, []*FileNode1{}}
+		node.FileNodes = append(node.FileNodes, &child)
+
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			maketreejson1(slice, categories, products, &child)
 		}
 	}
 	return
@@ -1588,6 +1670,24 @@ func maketreejson(cates, categories []*models.Project, node *FileNode) {
 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
 		if len(slice) > 0 {
 			maketreejson(slice, categories, &child)
+		}
+	}
+	return
+}
+
+//取得树状目录下的成果数量
+func getprodcount(cates, categories []*models.Project, products []*models.Product, count *int) {
+	for _, k := range cates {
+		for _, m := range products {
+			if k.Id == m.ProjectId {
+				*count = *count + 1
+				// beego.Info(count)
+			}
+		}
+		slice := getsons(k.Id, categories)
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			getprodcount(slice, categories, products, count)
 		}
 	}
 	return

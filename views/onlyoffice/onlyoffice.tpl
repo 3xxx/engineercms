@@ -209,7 +209,7 @@
             "customer": {
               "address": "116# Tianshou Road,Guangzhou China",
               "info": "QQ504284",
-              "logo": "http://192.168.99.1/static/test/user.jpg",//logo-big.png
+              "logo": "http://192.168.99.1/static/img/user.jpg",//logo-big.png
               "mail": "xc-qin@163.com",
               "name": "Qin Xiao Chuan",
               "www": "github.com/3xxx"
@@ -224,8 +224,8 @@
               "url": "http://192.168.99.1/onlyoffice"
             },
             "logo": {
-              "image": "http://192.168.99.1/static/test/user.jpg",//logo.png
-              "imageEmbedded": "http://192.168.99.1/static/test/user.jpg",//logo_em.png
+              "image": "http://192.168.99.1/static/img/oo.png",//logo.png
+              "imageEmbedded": "http://192.168.99.1/static/img/oo.png",//logo_em.png
               "url": "http://192.168.99.1/onlyoffice"
             },
             "showReviewChanges": false,

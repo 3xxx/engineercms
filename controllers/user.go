@@ -403,15 +403,15 @@ func (c *UserController) GetUserByUsername() {
 	// c.TplName = "category.tpl"
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
-	var uname string
+	// var uname string
 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-		c.Data["Username"] = v.(string)
-	}
-	if uname == "" {
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Username"] = v.(string)
+	// }
+	if islogin != true {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -475,21 +475,21 @@ func (c *UserController) Usermyself() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	//4.取得客户端用户名
-	var uname string
+	// var uname string
 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-	}
-	if uname == "" {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
-	}
-	user, err := m.GetUserByUsername(uname)
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname = v.(string)
+	// }
+	// if uname == "" {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
+	user, err := m.GetUserByUsername(username)
 	if err != nil {
 		beego.Error(err)
 	}

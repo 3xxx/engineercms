@@ -1,5 +1,10 @@
                        EngineerCMS revision history
-9, EngineerCMS 1.05 (May 24, 2018)
+11, EngineerCMS 1.06 (May 29, 2018)
+	+) Add tree product count
+	+) Add nav link to tree
+	*) Fixed bug of allproduct tpl
+	$) optimised the projects product count		       
+10, EngineerCMS 1.05 (May 24, 2018)
 	+) Add Download permission
 	*) Fixed bug of attachmentname	       
 9, EngineerCMS 1.04 (May 12, 2018)

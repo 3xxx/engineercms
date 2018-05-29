@@ -444,6 +444,52 @@ func (c *ProdController) GetProjProducts() {
 		}
 		linkarr[0].Articlecontent = Articleslice
 		Articleslice = make([]ArticleContent, 0)
+
+		//取得关联
+		relevancies, err := models.GetRelevancy(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		relevancies1 := make([]models.Relevancy, 0)
+		if len(relevancies) > 0 {
+			for _, tt := range relevancies {
+				relevancies2 := make([]models.Relevancy, 1)
+				relevancies2[0].Relevancy = tt.Relevancy
+				relevancies1 = append(relevancies1, relevancies2...)
+			}
+			linkarr[0].Relevancy = relevancies1
+			relevancies1 = make([]models.Relevancy, 0)
+		} else if len(relevancies) == 0 {
+			//循环所有relevancies,以,号分割，如果相等prodcode,则返回
+			relevancies3, err := models.GetAllRelevancies()
+			if err != nil {
+				beego.Error(err)
+			}
+			// if len(relevancies)>0{}
+			for _, vv := range relevancies3 {
+				array := strings.Split(vv.Relevancy, ",")
+				// beego.Info(array)
+				for _, ww := range array {
+					if ww == w.Code {
+						relevancies2 := make([]models.Relevancy, 1)
+						// v.ProductId查出prodcode
+						prod, err := models.GetProd(vv.ProductId)
+						if err != nil {
+							beego.Error(err)
+						} else {
+							// beego.Info(ww)        //20171228
+							// beego.Info(prod.Code) //20171231
+							relevancies2[0].Relevancy = prod.Code
+							relevancies1 = append(relevancies1, relevancies2...)
+						}
+						break
+					}
+				}
+			}
+			linkarr[0].Relevancy = relevancies1
+			// relevancies1 = make([]models.Relevancy, 0)
+		}
+
 		link = append(link, linkarr...)
 	}
 

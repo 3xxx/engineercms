@@ -326,6 +326,7 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 			uid = user.Id
 			userrole = user.Role
 			uname = user.Username
+			islogin = true
 		}
 	}
 	// beego.Info(iprole)

@@ -2,65 +2,42 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目成果-EngiCMS</title>
-<head>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
-  
-  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
-  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
-  
-  <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-  
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
-
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
-    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
-
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
-
-  <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
-  <script type="text/javascript" src="/static/js/webuploader.js"></script>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css"> -->
-  <!-- <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script> -->
+  <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+  <style type="text/css">
+    /*模态框效果*/
+    #modalDialog .modal-header {cursor: move;}
+    #modalDialog1 .modal-header {cursor: move;}
+    #modalDialog2 .modal-header {cursor: move;}
+    #modalDialog3 .modal-header {cursor: move;}
+    #modalDialog4 .modal-header {cursor: move;}
+    #modalDialog5 .modal-header {cursor: move;}
+    #modalDialog6 .modal-header {cursor: move;}
+    #modalDialog7 .modal-header {cursor: move;}
+  </style>
 </head>
-
-
-<!-- <div class="navbar navba-default navbar-fixed-top"> -->
   <div class="container-fill">{{template "navbar" .}}</div>
-<!-- </div> -->
+
 <body>
 <div class="col-lg-12">
   <!-- 面包屑导航 -->
-  <div class="breadcrumbs">
+  <!-- <div class="breadcrumbs">
     <ol class="breadcrumb" split="&gt;">
       <li>
         <i class="fa fa-home" aria-hidden="true">项目编号-名称：</i><a href="javascript:void(0)"> 
           {{.Category.Code}}-{{.Category.Title}}
         </a>/<a href="javascript:void(0)">成果列表</a>
       </li>
-      <!--{{range $index, $elem :=.jishu}}
-      <li>
-        <a href="javascript:void(0)">
-          jibie.title
-        </a>
-      </li>
-      {{end}} -->
     </ol>
-  </div>
+  </div> -->
 
-<div id="toolbar1" class="btn-group">
+  <div id="toolbar1" class="btn-group">
         <button type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
         </button>
         <button type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
@@ -68,9 +45,9 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
-</div>
-<!--data-click-to-select="true" -->
-<table id="table0" 
+  </div>
+  <!--data-click-to-select="true" -->
+  <table id="table0" 
         data-toggle="table" 
         data-url="/project/products/all/{{.Id}}"
         data-search="true"
@@ -94,22 +71,23 @@
       <tr>
         <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
         <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <!-- <th data-field="Id">编号</th> -->
-        <th data-field="Code">编号</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Label" data-formatter="setLable">关键字</th>
-        <th data-field="Principal">设计</th>
-        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents">文章</th>
-        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents">附件</th>
-        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-        <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
+        <th data-formatter="index1" data-align="center">#</th>
+        <!-- <th data-field="Id">编号</th> data-visible="false" -->
+        <th data-field="Code" data-halign="center">编号</th>
+        <th data-field="Title" data-halign="center">名称</th>
+        <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
+        <th data-field="Principal" data-halign="center" data-align="center">设计</th>
+        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents" data-halign="center" data-align="center">文章</th>
+        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-halign="center" data-align="center">附件</th>
+        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-halign="center" data-align="center">PDF</th>
+        <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th>
+        <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
+        <th data-field="Relevancy" data-formatter="RelevFormatter" events="actionRelevancy" data-halign="center">关联</th>
       </tr>
     </thead>
-</table>
+  </table>
 
-<script type="text/javascript">
+  <script type="text/javascript">
   function index1(value,row,index){
     return index+1
   }
@@ -117,6 +95,34 @@
   function localDateFormatter(value) {
     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }
+
+  function RelevFormatter(value) {
+    if (value){
+      if (value.length==1){//'<a href="/project/product/article/'
+        var array=value[0].Relevancy.split(",")
+        var relevarray = new Array() 
+        for (i=0;i<array.length;i++)
+        {
+          relevarray[i]=array[i];
+        }
+        return relevarray.join(",");
+        // articleUrl= '<a href="'+value[0].Link+'/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
+        // return articleUrl;
+      }else if(value.length==0){
+                    
+      }else if(value.length>1){
+        var relevarray = new Array()
+        for (i=0;i<value.length;i++)
+          {
+            relevarray[i]=value[i].Relevancy;
+          }
+        return relevarray.join(",");
+        // articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
+        // return articleUrl;
+      }
+    }
+  }
+
   function setCode(value,row,index){
     return "<a href='/project/product/attachment/"+row.Id+"'>" + value + "</a>";
   }
@@ -171,7 +177,7 @@
   function setAttachment(value,row,index){
     if (value){
       if (value.length==1){
-        attachUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
         return attachUrl;
       }else if(value.length==0){
                     
@@ -185,7 +191,7 @@
   function setPdf(value,row,index){
     if (value){
       if (value.length==1){
-        pdfUrl= '<a href="'+value[0].Link+'/'+value[0].Title+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+        pdfUrl= '<a href="/pdf?id='+value[0].Id+'" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
         return pdfUrl;
       }else if(value.length==0){
                     
@@ -252,18 +258,22 @@
   }
   //最后面弹出附件列表中用的
   function setAttachlink(value,row,index){
-    attachUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+    attachUrl= '<a href="/attachment?id='+row.Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
       return attachUrl;
   }
   //最后面弹出pdf列表中用的
   function setPdflink(value,row,index){
-    pdfUrl= '<a href="'+value+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+    pdfUrl= '<a href="/pdf?id='+row.Id+'" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
       return pdfUrl;
   }
 
-    // 编辑成果信息
-    $("#editorProdButton").click(function() {
-      if ({{.role}}!=1){
+  // 编辑成果信息
+  $("#editorProdButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      if ({{.RoleAdd}}!="true"){
         alert("权限不够！");
         return;
       }
@@ -276,41 +286,50 @@
         alert("请不要勾选一个以上成果！");
         return;
       }
-      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Articlecontent[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Pdflink[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
-      }
-      if (site){
-        alert("同步成果不允许！");
+      // alert(selectRow[0].Uid=={{.Uid}});
+      // alert({{.Uid}});
+      if (selectRow[0].Uid==={{.Uid}}||{{.RoleUpdate}}=="true"){
+      
+        if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+        var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Articlecontent[0]){
+        var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Pdflink[0]){
+        var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+        }
+        if (site){
+          alert("同步成果不允许！");
+          return;
+        }
+
+        $("input#cid").remove();
+        var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $("#prodcode3").val(selectRow[0].Code);
+        $("#prodname3").val(selectRow[0].Title);
+        $("#prodlabel3").val(selectRow[0].Label);
+        $("#prodprincipal3").val(selectRow[0].Principal);
+
+        $('#modalProdEditor').modal({
+        show:true,
+        backdrop:'static'
+        });
+
+      }else{
+        alert("权限不够！"+selectRow[0].Uid);
         return;
       }
-        
-      $("input#cid").remove();
-      var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $("#prodcode3").val(selectRow[0].Code);
-      $("#prodname3").val(selectRow[0].Title);
-      $("#prodlabel3").val(selectRow[0].Label);
-      $("#prodprincipal3").val(selectRow[0].Principal);
+  })
 
-      $('#modalProdEditor').modal({
-      show:true,
-      backdrop:'static'
-      });
-    })
-
-    // 编辑成果附件——删除附件、文章或追加附件
-    var selectrowid;
-    $("#editorAttachButton").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+  // 编辑成果附件——删除附件、文章或追加附件
+  var selectrowid;
+  $("#editorAttachButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选成果！");
@@ -320,6 +339,9 @@
       alert("请不要勾选一个以上成果！");
       return;
       }
+
+      if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
+
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
       }
@@ -342,7 +364,12 @@
       show:true,
       backdrop:'static'
       });
-    })
+
+      }else{
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+  })
 
   $(document).ready(function() {
     var uploader;
@@ -438,17 +465,21 @@
     })
   })
     
-    // 删除成果
-    $("#deleteButton").click(function() {
-      if ({{.role}}!=1){
-        alert("权限不够！");
-        return;
-      }
+  // 删除成果
+  $("#deleteButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<=0) {
         alert("请先勾选成果！");
         return false;
       }
+     //问题：如果多选，而其中有自己的，也有自己不具备权限的********
+      if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
+        
+
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
       }
@@ -487,16 +518,21 @@
             });
           }
         });
-      }  
-    })
+      }
 
-</script>
+      }else{
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }  
+  })
+
+  </script>
   <!-- 文章列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalarticle">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog3">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -539,9 +575,9 @@
   <!-- 除了**pdf**之外的附件列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalattach">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog4">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -584,9 +620,9 @@
   <!-- pdf附件列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalpdf">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog5">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -610,7 +646,7 @@
                       <th data-formatter="index1">#</th>
                       <th data-field="Title">名称</th>
                       <th data-field="FileSize">大小</th>
-                      <th data-field="Link" data-formatter="setPdflink">下载</th>
+                      <th data-field="Link" data-formatter="setPdflink">查看</th>
                       <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
                       <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
                     </tr>
@@ -629,9 +665,9 @@
   <!-- 编辑成果名称等信息 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalProdEditor">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog6">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -652,7 +688,7 @@
               <div class="form-group must">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
-                  <input type="tel" class="form-control" id="prodlabel3" name="prodlabel3"></div>
+                  <input type="tel" class="form-control" id="prodlabel3" name="prodlabel3" placeholder="以英文,号分割"></div>
               </div>
               <div class="form-group must">
                 <label class="col-sm-3 control-label">设计</label>
@@ -672,9 +708,9 @@
   <!-- 编辑成果附件 删除附件或追加附件-->
   <div class="form-horizontal">
     <div class="modal fade" id="modalAttachEditor">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="modalDialog7">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -730,21 +766,23 @@
 </div>
 
 <script type="text/javascript">
-//实例化编辑器
-    var ue = UE.getEditor('container', {
-      autoHeightEnabled: true,
-      autoFloatEnabled: true
-    });
+  //实例化编辑器
+    // var ue = UE.getEditor('container', {
+    //   autoHeightEnabled: true,
+    //   autoFloatEnabled: false,
+    //   // topOffset:100,
+    //   initialFrameWidth:'100%'
+    // });
   /* 2.传入参数表,添加到已有参数表里 通过携带参数，实现不同的页面使用不同controllers*/
-    ue.ready(function () {
-        ue.addListener('focus', function () {//startUpload start-upload startUpload beforeExecCommand是在插入图片之前触发
-            var pid = $('#pid').val();
-            // var html = ue.getContent();
-            ue.execCommand('serverparam', {
-              "pid":pid 
-            });
-        });
-    });
+    // ue.ready(function () {
+    //     ue.addListener('focus', function () {//startUpload start-upload startUpload beforeExecCommand是在插入图片之前触发
+    //         var pid = $('#pid').val();
+    //         // var html = ue.getContent();
+    //         ue.execCommand('serverparam', {
+    //           "pid":pid 
+    //         });
+    //     });
+    // });
 
   //添加文章
   function save2(){
@@ -755,13 +793,14 @@
     var subtext = $('#subtext1').val();
     var prodprincipal = $('#prodprincipal2').val();
     var prodlabel = $('#prodlabel2').val();
+    var relevancy = $('#relevancy').val();
     var html = ue.getContent();
     // $('#myModal').on('hide.bs.modal', function () {  
     if (prodname&&prodcode){  
       $.ajax({
         type:"post",
         url:"/project/product/addarticle",
-        data: {pid:projectid,code:prodcode,title:prodname,subtext:subtext,label:prodlabel,content:html,principal:prodprincipal},//父级id
+        data: {pid:projectid,code:prodcode,title:prodname,subtext:subtext,label:prodlabel,content:html,principal:prodprincipal,relevancy:relevancy},//父级id
         success:function(data,status){
           alert("添加“"+data+"”成功！(status:"+status+".)");
           $('#modalTable2').modal('hide');
@@ -801,8 +840,12 @@
     }
   }
   // 删除附件
-    $("#deleteAttachButton").click(function() {
-      if ({{.role}}!=1){
+  $("#deleteAttachButton").click(function() {
+      // if ({{.role}}!=1){
+      //   alert("权限不够！");
+      //   return;
+      // }
+      if ({{.RoleDelete}}!="true"){
         alert("权限不够！");
         return;
       }
@@ -811,6 +854,12 @@
         alert("请先勾选！");
         return false;
       }
+
+      if ({{.RoleDelete}}!="true"){
+        alert("权限不够！"+selectRow[0].Uid);
+        return;
+      }
+
       if(confirm("确定删除吗？一旦删除将无法恢复！")){
         var title=$.map(selectRow,function(row){
           return row.Title;
@@ -837,7 +886,7 @@
           }
         });
       }  
-    })
+  })
 
     //******表格追加项目同步ip中的数据*******
     $(function () {
@@ -869,6 +918,28 @@
         }
         return rows;
     }
+
+    //勾选后输入框可用
+
+    function station_select(){ 
+      if(box.checked){ 
+        document.getElementById("relevancy").disabled=false; 
+      } else{ 
+        document.getElementById("relevancy").disabled=true; 
+      } 
+    }
+
+    $(document).ready(function(){
+        $("#modalDialog").draggable({ handle: ".modal-header" });//为模态对话框添加拖拽
+        $("#modalDialog1").draggable({ handle: ".modal-header" });
+        $("#modalDialog2").draggable({ handle: ".modal-header" });
+        $("#modalDialog3").draggable({ handle: ".modal-header" });
+        $("#modalDialog4").draggable({ handle: ".modal-header" });
+        $("#modalDialog5").draggable({ handle: ".modal-header" });
+        $("#modalDialog6").draggable({ handle: ".modal-header" });
+        $("#modalDialog7").draggable({ handle: ".modal-header" });
+        $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
+    })
 </script>
 
 </body>

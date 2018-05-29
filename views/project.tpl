@@ -5,12 +5,9 @@
   <script src="/static/js/bootstrap-treeview.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
 </head>
-
-
 <!-- <div class="navbar navbar-default navbar-static-top"> -->
   <div class="container-fill">{{template "navbar" .}}</div>
 <!-- </div> -->
-
 <body>
 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
   <div id="tree"></div>
@@ -90,11 +87,11 @@
               }
             ]
             // return data;
-
           $('#tree').treeview({
             // data: data,         // data is not optional
             data:[{{.json}}],
             levels: 2,
+            showTags:true,
             // enableLinks: true,
             // multiSelect: true
           });  
@@ -110,7 +107,6 @@
           // collapseIcon:"glyphicon glyphicon-chevron-up",
           // expandIcon:"glyphicon glyphicon-chevron-down",
         // });
-
         $('#tree').on('nodeSelected', function(event, data) {
             // alert("名称："+data.text);
             // alert("节点id："+data.nodeId);
@@ -120,7 +116,6 @@
             // $("#regis").css("color","black");
             //点击任何一级，都是显示这一级下的成果
           document.getElementById("iframepage").src="/project/{{.Id}}/"+data.id;
-          
           // $("#iframepage").contents().find("#table0").bootstrapTable('refresh', {url:'/project/products/'+data.id});
           // $('#table0').bootstrapTable('refresh', {url:'/project/products/'+data.id});
           //?secid="+data.Id+"&level="+data.Level;
@@ -135,27 +130,49 @@
                 $(".breadcrumb #nav").remove();
                 for (i=0;i<data.length;i++)
                   {
-                // $(".breadcrumb").append('<li><a href="javascript:void(0)"><i class="fa fa-home">项目编号：' + {{.Category.Code}}+ '</a></li>');
-                    $(".breadcrumb").append('<li id="nav"><a href="javascript:void(0)">' + data[i].Title + '</a></li>');
+                // $(".breadcrumb").append('<li><a href="javascript:void(0)"><i class="fa fa-home">项目编号：' + {{.Category.Code}}+ '</a></li>');onclick="SomeJavaScriptCode"
+                    $(".breadcrumb").append('<li id="nav"><a href="javascript:gototree('+data[i].Id+')">' + data[i].Title + '</a></li>');
                   }
               // });
             }
           });
         }); 
 
-
         var obj = {};
         obj.text = "123";
         
-
         $("#btn").click(function (e) {
             var arr = $('#tree').treeview('getSelected');
             for (var key in arr) {
                 c.innerHTML = c.innerHTML + "," + arr[key].id;
             }
         })
-    }) 
+    })
 
+    function gototree(e){
+      document.getElementById("iframepage").src="/project/{{.Id}}/"+e;
+      var findCheckableNodess = function() {
+        return $('#tree').treeview('findNodes', [e, 'id']);
+      }; 
+      var checkableNodes = findCheckableNodess();
+        $('#tree').treeview('toggleNodeSelected', [ checkableNodes, { silent: true } ]);
+        $('#tree').treeview('toggleNodeExpanded', [ checkableNodes, { silent: true } ]);
+        $('#tree').treeview('revealNode', [ checkableNodes, { silent: true } ]);
+    }
+        // Select/unselect/toggle nodes
+        // $('#input-select-node').on('keyup', function (e) {
+        //   selectableNodes = findSelectableNodes();
+        //   $('.select-node').prop('disabled', !(selectableNodes.length >= 1));
+        // });
+        // $('#btn-select-node.select-node').on('click', function (e) {
+        //   $selectableTree.treeview('selectNode', [ selectableNodes, { silent: $('#chk-select-silent').is(':checked') }]);
+        // });
+        // $('#btn-unselect-node.select-node').on('click', function (e) {
+        //   $selectableTree.treeview('unselectNode', [ selectableNodes, { silent: $('#chk-select-silent').is(':checked') }]);
+        // });
+        // $('#btn-toggle-selected.select-node').on('click', function (e) {
+        //   $selectableTree.treeview('toggleNodeSelected', [ selectableNodes, { silent: $('#chk-select-silent').is(':checked') }]);
+        // });
     function index1(value,row,index){
     // alert( "Data Loaded: " + index );
       return index+1
@@ -167,7 +184,7 @@
   <div class="breadcrumbs">
     <ol class="breadcrumb" split="&gt;">
       <li>
-        <a href="javascript:void(0)"> <i class="fa fa-home" aria-hidden="true"></i>
+        <a href="javascript:gototree({{.Category.Id}})"> <i class="fa fa-home" aria-hidden="true"></i>
           项目编号：{{.Category.Code}}
         </a>
       </li>
@@ -177,7 +194,7 @@
           jibie.title
         </a>
       </li>
-      {{end}} -->
+      {{end}}-->
     </ol>
   </div>
     <!-- <div class="form-group"> -->
