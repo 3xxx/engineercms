@@ -102,6 +102,8 @@ ONLYOFFICE实时文档协作效果——除了支持office的docx，xlsx及pptx�
 
 ![onlyoffice excel](https://user-images.githubusercontent.com/10678867/36413285-ab0dcd8a-1658-11e8-9a11-4c94709efea8.jpg)
 
+在线直接预览dwg图纸文件：
+
 ![default](https://user-images.githubusercontent.com/10678867/41599295-4fb72070-7405-11e8-82fb-e746950ffa0d.gif)
 
 手机端访问文章效果
