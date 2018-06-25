@@ -147,7 +147,18 @@ func DeleteProject(id int64) error {
 func GetProjects() (proj []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
-	_, err = qs.Filter("parentid", 0).All(&proj)
+	_, err = qs.Filter("parentid", 0).Limit(-1).All(&proj)
+	if err != nil {
+		return proj, err
+	}
+	return proj, err
+}
+
+//取得所有项目目录
+func GetAllProjects() (proj []*Project, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Project")                      //这个表名AchievementTopic需要用驼峰式，
+	_, err = qs.Limit(-1).All(&proj, "Id", "ParentId") //结果没数量限制，默认是1000
 	if err != nil {
 		return proj, err
 	}
@@ -190,18 +201,16 @@ func GetProj(id int64) (proj Project, err error) {
 //输出：strings.split(上面的，",")
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	idstring := strconv.FormatInt(id, 10)
-	cond := orm.NewCondition()
-	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring+"-").Or("ParentId", id)
+	// cond := orm.NewCondition()
+	// cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring+"-").Or("ParentId", id)
 	o := orm.NewOrm()
 	//先查出所有项目parent id path中包含id的数据
 	qs := o.QueryTable("Project")
-	qs = qs.SetCond(cond1)
-
-	_, err = qs.All(&projects)
+	// qs = qs.SetCond(cond1)
+	_, err = qs.Filter("ParentIdPath__contains", "$"+idstring+"#").Limit(-1).All(&projects, "Id", "ParentId", "Title", "Grade")
 	if err != nil {
 		return nil, err
 	}
-
 	// qs := o.QueryTable("Project")
 	// _, err = qs.Filter("ParentIdPath__contains", id).All(&projects)
 	// if err != nil {
@@ -214,7 +223,7 @@ func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 func GetProjSonbyId(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")
-	_, err = qs.Filter("parentid", id).All(&projects)
+	_, err = qs.Filter("parentid", id).Limit(-1).All(&projects)
 	if err != nil {
 		return nil, err
 	}
@@ -224,16 +233,18 @@ func GetProjSonbyId(id int64) (projects []*Project, err error) {
 //根据id查是否有下级
 func Projhasson(id int64) bool {
 	o := orm.NewOrm()
+	exist := o.QueryTable("Project").Filter("ParentId", id).Exist()
+	return exist
 	// qs := o.QueryTable("Project")
-	proj := Project{ParentId: id}
-	err := o.Read(&proj, "ParentId")
-	if err == orm.ErrNoRows {
-		return false
-	} else if err == orm.ErrMissPK {
-		return false
-	} else {
-		return true
-	}
+	// proj := Project{ParentId: id}
+	// err := o.Read(&proj, "ParentId")
+	// if err == orm.ErrNoRows {
+	// 	return false
+	// } else if err == orm.ErrMissPK {
+	// 	return false
+	// } else {
+	// 	return true
+	// }
 }
 
 //根据名字title查询到项目目录
@@ -301,11 +312,20 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 
 				var parentidpath string
 				var parenttitlepath string
+				// if v.ParentIdPath != "" {
+				// 	parentidpath = v.ParentIdPath + "-" + strconv.FormatInt(v.ParentId, 10)
+				// 	parenttitlepath = v.ParentTitlePath + "-" + v.ParentTitle
+				// } else {
+				// 	parentidpath = strconv.FormatInt(v.ParentId, 10)
+				// 	parenttitlepath = v.ParentTitle
+				// }
 				if v.ParentIdPath != "" {
-					parentidpath = v.ParentIdPath + "-" + strconv.FormatInt(v.ParentId, 10)
+					parentidpath = v.ParentIdPath + "$" + strconv.FormatInt(v.ParentId, 10) + "#"
+					// parenttitlepath = v.ParentTitlePath + "$" + v.ParentTitle + "#"
 					parenttitlepath = v.ParentTitlePath + "-" + v.ParentTitle
 				} else {
-					parentidpath = strconv.FormatInt(v.ParentId, 10)
+					parentidpath = "$" + strconv.FormatInt(v.ParentId, 10) + "#"
+					// parenttitlepath = "$" + v.ParentTitle + "#"
 					parenttitlepath = v.ParentTitle
 				}
 
@@ -384,12 +404,12 @@ func GetProjCalendar(pid int64, start, end time.Time, public bool) (calendars []
 	calendars = make([]*ProjCalendar, 0)
 	// qs := o.QueryTable("ProjCalendar")
 	if public { //只取公开的
-		_, err = qs.Filter("ProjectId", pid).Filter("public", true).OrderBy("-Starttime").All(&calendars)
+		_, err = qs.Filter("ProjectId", pid).Filter("public", true).OrderBy("-Starttime").Limit(-1).All(&calendars)
 		if err != nil {
 			return calendars, err
 		}
 	} else { //取全部
-		_, err = qs.Filter("ProjectId", pid).OrderBy("-Starttime").All(&calendars)
+		_, err = qs.Filter("ProjectId", pid).OrderBy("-Starttime").Limit(-1).All(&calendars)
 		if err != nil {
 			return calendars, err
 		}
@@ -409,12 +429,12 @@ func GetAllProjCalendar(pid int64, public bool) (calendars []*ProjCalendar, err 
 	calendars = make([]*ProjCalendar, 0)
 	// qs := o.QueryTable("ProjCalendar")
 	if public { //只取公开的
-		_, err = qs.Filter("ProjectId", pid).Filter("public", true).Filter("memorabilia", true).OrderBy("-Starttime").All(&calendars)
+		_, err = qs.Filter("ProjectId", pid).Filter("public", true).Filter("memorabilia", true).OrderBy("-Starttime").Limit(-1).All(&calendars)
 		if err != nil {
 			return calendars, err
 		}
 	} else { //取全部
-		_, err = qs.Filter("ProjectId", pid).Filter("memorabilia", true).OrderBy("-Starttime").All(&calendars)
+		_, err = qs.Filter("ProjectId", pid).Filter("memorabilia", true).OrderBy("-Starttime").Limit(-1).All(&calendars)
 		if err != nil {
 			return calendars, err
 		}
@@ -429,10 +449,10 @@ func ListPostsByOffsetAndLimit(pid int64, set, postsPerPage int, public bool) ([
 	qs := o.QueryTable("ProjCalendar")
 	var err error
 	if public { //只取公开的
-		_, err = qs.Filter("ProjectId", pid).Filter("public", true).Filter("memorabilia", true).Limit(postsPerPage, set).OrderBy("-Starttime").All(&calendars)
+		_, err = qs.Filter("ProjectId", pid).Filter("public", true).Filter("memorabilia", true).Limit(postsPerPage, set).OrderBy("-Starttime").Limit(-1).All(&calendars)
 		return calendars, err
 	} else { //取全部
-		_, err = qs.Filter("ProjectId", pid).Filter("memorabilia", true).Limit(postsPerPage, set).OrderBy("-Starttime").All(&calendars)
+		_, err = qs.Filter("ProjectId", pid).Filter("memorabilia", true).Limit(postsPerPage, set).OrderBy("-Starttime").Limit(-1).All(&calendars)
 		return calendars, err
 	}
 }

@@ -12,6 +12,9 @@ import (
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
 	beego.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
+	//cms中预览office回调
+	beego.Router("/officeviewcallback", &controllers.OnlyController{}, "*:OfficeViewCallback")
+
 	// beego.Router("/onlyoffice/post", &controllers.OnlyController{}, "post:PostOnlyoffice")
 	beego.Router("/onlyoffice", &controllers.OnlyController{}, "get:Get")
 	//table获取所有数据给上面界面使用
@@ -20,6 +23,9 @@ func init() {
 	beego.Router("/onlyoffice/addattachment", &controllers.OnlyController{}, "post:AddOnlyAttachment")
 	//在onlyoffice中打开文档协作
 	beego.Router("/onlyoffice/:id:string", &controllers.OnlyController{}, "*:OnlyOffice")
+	//cms中预览office
+	beego.Router("/officeview/:id:string", &controllers.OnlyController{}, "*:OfficeView")
+
 	//删除
 	beego.Router("/onlyoffice/deletedoc", &controllers.OnlyController{}, "*:DeleteDoc")
 	//修改
@@ -36,7 +42,7 @@ func init() {
 	beego.Router("/onlyoffice/getpermission", &controllers.OnlyController{}, "get:Getpermission")
 
 	beego.Router("/role/test", &controllers.RoleController{}, "*:Test")
-	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")	
+	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
 	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
 	//文档
 	beego.Router("/doc/ecms", &controllers.MainController{}, "get:Getecmsdoc")
@@ -209,6 +215,9 @@ func init() {
 	beego.Router("/project", &controllers.ProjController{}, "*:Get")
 	//table获取所有项目数据给上面界面使用_后续扩展按标签获取
 	beego.Router("/project/getprojects", &controllers.ProjController{}, "*:GetProjects")
+
+	//侧栏懒加载下级
+	beego.Router("/project/getprojcate", &controllers.ProjController{}, "*:GetProjCate")
 	//添加项目，应该是project/addproj,delproj,updateproj
 	beego.Router("/project/addproject", &controllers.ProjController{}, "*:AddProject")
 	//修改项目

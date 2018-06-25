@@ -42,6 +42,7 @@
 		checkedIcon: 'glyphicon glyphicon-check',
 		partiallyCheckedIcon: 'glyphicon glyphicon-expand',
 		uncheckedIcon: 'glyphicon glyphicon-unchecked',
+		tagsClass: 'badge',
 
 		color: undefined,
 		backColor: undefined,
@@ -82,6 +83,7 @@
 		onNodeDisabled: undefined,
 		onNodeEnabled: undefined,
 		onNodeExpanded: undefined,
+		onNodeChanged: undefined,
 		onNodeSelected: undefined,
 		onNodeUnchecked: undefined,
 		onNodeUnselected: undefined,
@@ -269,6 +271,7 @@
 		this.$element.off('nodeDisabled');
 		this.$element.off('nodeEnabled');
 		this.$element.off('nodeExpanded');
+		this.$element.off('nodeChanged');
 		this.$element.off('nodeSelected');
 		this.$element.off('nodeUnchecked');
 		this.$element.off('nodeUnselected');
@@ -323,6 +326,10 @@
 
 		if (typeof (this._options.onNodeExpanded) === 'function') {
 			this.$element.on('nodeExpanded', this._options.onNodeExpanded);
+		}
+
+		if (typeof (this._options.onNodeChanged) === 'function') {
+			this.$element.on('nodeChanged', this._options.onNodeChanged);
 		}
 
 		if (typeof (this._options.onNodeSelected) === 'function') {
@@ -523,7 +530,6 @@
 
 	Tree.prototype._toggleExpanded = function (node, options) {
 		if (!node) return;
-
 		// Lazy-load the child nodes if possible
 		if (typeof(this._options.lazyLoad) === 'function' && node.lazyLoad) {
 			this._lazyLoad(node);
@@ -633,7 +639,7 @@
 		return this;
 	};
 
-	Tree.prototype._setSelected = function (node, state, options) {
+	Tree.prototype._setSelected = function (node, state, options, fired = false) {
 
 		// We never pass options when rendering, so the only time
 		// we need to validate state is from user interaction
@@ -644,7 +650,7 @@
 			// If multiSelect false, unselect previously selected
 			if (!this._options.multiSelect) {
 				$.each(this._findNodes('true', 'state.selected'), $.proxy(function (index, node) {
-					this._setSelected(node, false, $.extend(options, {unselecting: true}));
+					this._setSelected(node, false, $.extend(options, {unselecting: true}), true);
 				}, this));
 			}
 
@@ -664,6 +670,7 @@
 
 			// Optionally trigger event
 			this._triggerEvent('nodeSelected', node, options);
+			this._triggerEvent('nodeChanged', node, options);
 		}
 		else {
 
@@ -674,6 +681,7 @@
 				// Fire the nodeSelected event if reselection is allowed
 				if (this._options.allowReselect) {
 					this._triggerEvent('nodeSelected', node, options);
+					this._triggerEvent('nodeChanged', node, options);
 				}
 				return this;
 			}
@@ -694,6 +702,9 @@
 
 			// Optionally trigger event
 			this._triggerEvent('nodeUnselected', node, options);
+			if (!fired) {
+				this._triggerEvent('nodeChanged', node, options);
+			}			
 		}
 
 		return this;
@@ -971,7 +982,15 @@
 			$.each(node.tags, $.proxy(function addTag(id, tag) {
 				node.$el
 					.append(this._template.badge.clone()
-						.append(tag)
+						.addClass(
+							(typeof tag === 'object' ? tag.class : undefined)
+							|| node.tagsClass
+							|| this._options.tagsClass
+						)
+						.append(
+							(typeof tag === 'object' ? tag.text : undefined)
+							|| tag
+						)
 					);
 			}, this));
 		}
@@ -986,16 +1005,6 @@
 
 		// Trigger nodeRendered event
 		this._triggerEvent('nodeRendered', node, _default.options);
-
-		//æ·»åŠ å¢žåˆ æ”¹æŒ‰é’®
-		// node.$el.append(this._template.button.add.clone());
-		// node.$el.append(this._template.button.edit.clone());
-		// node.$el.append(this._template.button.remove.clone());
-		// node.$el.mouseenter(function(){
-		// node.$el.children('button.btn').removeClass('node-hidden');
-		// }).mouseleave(function(){
-		// node.$el.children('button.btn').addClass('node-hidden');
-		// });
 	};
 
 	// Add checkable icon
@@ -1148,6 +1157,11 @@
 				}
 				style += '.node-' + this._elementId + '[data-nodeId="' + node.nodeId + '"]{' + innerStyle + '}';
 			}
+
+			if (node.iconColor) {
+				var innerStyle = 'color:' + node.iconColor + ';';
+				style += '.node-' + this._elementId + '[data-nodeId="' + node.nodeId + '"] .node-icon{' + innerStyle + '}';
+			}
 		}, this));
 
 		return this._css + style;
@@ -1166,7 +1180,7 @@
 		image: $('<span class="image"></span>'),
 		badge: $('<span class="badge"></span>'),
 		text: $('<span class="text"></span>'),
-		//æ·»åŠ å¢žåˆ æ”¹å›¾æ ‡
+		//Ìí¼ÓÔöÉ¾¸ÄÍ¼±ê
 		// button: {
 		// add: $('<button class="btn icon-plus node-hidden"></button>'),
 		// edit: $('<button class="btn icon-edit node-hidden"></button>'),
@@ -1182,8 +1196,8 @@
 		@param {String} pattern - A pattern to match against a given field
 		@return {String} field - Field to query pattern against
 	*/
-	Tree.prototype.findNodes = function (pattern, field) {
-		return this._findNodes(pattern, field);
+	Tree.prototype.findNodes = function (pattern, field, modifier) {
+		return this._findNodes(pattern, field, modifier);
 	};
 
 
@@ -1436,10 +1450,17 @@
 		options = $.extend({}, _default.options, options);
 
 		// insert new node
-		$.extend(node,newNode);
+		var targetNodes;
+		var parentNode = this._nodes[node.parentId];
+		if (parentNode) {
+			targetNodes = parentNode.nodes;
+		} else {
+			targetNodes = this._tree;
+		}
+		targetNodes.splice(node.index, 1, newNode);
 
 		// remove old node from DOM
-		//this._removeNodeEl(node);
+		this._removeNodeEl(node);
 
 		// initialize new state and render changes
 		this._setInitialStates({nodes: this._tree}, 0)
@@ -1900,8 +1921,8 @@
 	};
 	
     /** 
-     des:æ‰©å±•bootstrap-treeviewçš„ç¼–è¾‘èŠ‚ç‚¹æ–¹æ³•
-     ç¼–è¾‘èŠ‚ç‚¹ 
+     des:À©Õ¹bootstrap-treeviewµÄ±à¼­½Úµã·½·¨
+     ±à¼­½Úµã 
      author:qlx 2017-3-31
      */
 	Tree.prototype.editNode = function (identifiers, options) {
@@ -1913,7 +1934,7 @@
 	}
 
     /** 
-    * ç¼–è¾‘èŠ‚ç‚¹ 
+    * ±à¼­½Úµã 
     */
 	Tree.prototype.setEditNode = function (node, options) {
 	    if (options) {

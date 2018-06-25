@@ -120,7 +120,7 @@
         <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-halign="center" data-align="center">PDF</th>
         <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th>
         <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
-        <th data-field="Relevancy" data-formatter="RelevFormatter" events="actionRelevancy" data-halign="center">关联</th>
+        <th data-field="Relevancy" data-formatter="RelevFormatter" events="actionRelevancy" data-halign="center" data-align="center">关联</th>
       </tr>
     </thead>
 </table>
@@ -242,7 +242,21 @@
   function setAttachment(value,row,index){
     if (value){
       if (value.length==1){
-        attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        // alert(value[0].Title);
+        // var ext = value[0].Title.substring(0, value[0].Title.lastIndexOf("."));
+        var ext =/\.[^\.]+/.exec(value[0].Title);
+        // alert(ext);
+        if (ext==".dwg"){
+          attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="打开" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
+        }else if(ext==".doc"||ext==".docx"){
+          attachUrl= '<a href=/officeview/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+        }else if(ext==".xls"||ext==".xlsx"){
+          attachUrl= '<a href=/officeview/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+        }else if(ext==".ppt"||ext==".pptx"){
+          attachUrl= '<a href=/officeview/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+        }else{
+          attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        }
         return attachUrl;
       }else if(value.length==0){
                     
@@ -395,7 +409,7 @@
         // 只允许选择规定文件类型。
         accept: {
             title: 'Images',
-            extensions: 'png,jpg,jpeg,gif,bmp,flv,swf,mkv,avi,rm,rmvb,mpeg,mpg,ogg,ogv,mov,wmv,mp4,webm,mp3,wav,mid,rar,zip,tar,gz,7z,bz2,cab,iso,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,md,xml,dwg,dgn',
+            extensions: 'png,jpg,jpeg,gif,bmp,flv,swf,mkv,avi,rm,rmvb,mpeg,mpg,ogg,ogv,mov,wmv,mp4,webm,mp3,wav,mid,rar,zip,tar,gz,7z,bz2,cab,iso,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,md,xml,dwg,dgn,txt',
             mimeTypes: '*/*'
         }
       });
@@ -1180,13 +1194,15 @@
                       data-unique-id="id"
                       data-pagination="true"
                       data-side-pagination="client"
-                      data-click-to-select="true">
+                      data-click-to-select="true"
+                      data-search="true"
+                      >
                     <thead>     
                     <tr>
                       <th data-width="10" data-checkbox="true"></th>
                       <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="FileSize">大小</th>
+                      <th data-field="Title" data-sortable="true">名称</th>
+                      <th data-field="FileSize" data-sortable="true">大小</th>
                       <th data-field="Link" data-formatter="setAttachlink">下载</th>
                       <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
                       <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
@@ -1225,13 +1241,15 @@
                       data-unique-id="id"
                       data-pagination="true"
                       data-side-pagination="client"
-                      data-click-to-select="true">
+                      data-click-to-select="true"
+                      data-search="true"
+                      >
                     <thead>     
                     <tr>
                       <th data-width="10" data-checkbox="true"></th>
                       <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="FileSize">大小</th>
+                      <th data-field="Title" data-sortable="true">名称</th>
+                      <th data-field="FileSize" data-sortable="true">大小</th>
                       <th data-field="Link" data-formatter="setPdflink">查看</th>
                       <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
                       <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>

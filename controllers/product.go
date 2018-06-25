@@ -39,10 +39,11 @@ type ProductLink struct {
 }
 
 type AttachmentLink struct {
-	Id        int64
-	Title     string
-	Link      string
-	FileSize  int64
+	Id       int64
+	Title    string
+	Link     string
+	FileSize int64
+	// Suffix    string
 	Downloads int64
 	Created   time.Time
 	Updated   time.Time
@@ -83,6 +84,8 @@ func (c *ProdController) GetProjProd() {
 	c.Data["Id"] = id
 	// _, role := checkprodRole(c.Ctx)
 	// c.Data["role"] = role
+	//记录开始时间
+	start := time.Now()
 
 	//这里取到用户的权限
 	//添加权限POST
@@ -129,7 +132,8 @@ func (c *ProdController) GetProjProd() {
 	if proj.ParentId == 0 { //如果是项目根目录
 		projurls = "/" + strconv.FormatInt(proj.Id, 10)
 	} else {
-		projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+		// projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+		projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 	}
 
 	if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
@@ -178,6 +182,8 @@ func (c *ProdController) GetProjProd() {
 	if err != nil {
 		beego.Error(err)
 	}
+	elapsed := time.Since(start)
+	beego.Info(elapsed)
 	if matched == true {
 		c.TplName = "mproject_products.tpl"
 	} else {
@@ -259,6 +265,7 @@ func (c *ProdController) GetProducts() {
 				attacharr := make([]AttachmentLink, 1)
 				attacharr[0].Id = v.Id
 				attacharr[0].Title = v.FileName
+				// attacharr[0].Suffix = path.Ext(v.FileName)
 				// attacharr[0].Link = Url
 				Attachslice = append(Attachslice, attacharr...)
 			} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
@@ -359,7 +366,7 @@ func (c *ProdController) GetProjProducts() {
 
 	}
 	//根据项目id取得项目下所有成果
-	products, err := models.GetProjProducts(idNum)
+	_, products, err := models.GetProjProducts(idNum, 1)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -522,11 +529,15 @@ func (c *ProdController) GetsynchProducts() {
 	}
 	var projid int64
 	//根据目录id取出项目id，以便得到同步ip
+	var parentidpath, parentidpath1 string
 	// array := strings.Split(proj.ParentIdPath, "-")
 	if proj.ParentIdPath != "" { //如果不是根目录
-		array := strings.Split(proj.ParentIdPath, "-")
+		// array := strings.Split(proj.ParentIdPath, "-")
+		parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+		parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+		patharray := strings.Split(parentidpath1, "-")
 		//pid转成64位
-		projid, err = strconv.ParseInt(array[0], 10, 64)
+		projid, err = strconv.ParseInt(patharray[0], 10, 64)
 		beego.Info(projid)
 		if err != nil {
 			beego.Error(err)
@@ -701,8 +712,20 @@ func (c *ProdController) AddProduct() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//根据pid查出项目id
+	proj, err := models.GetProj(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	parentidpath := strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+	parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
+	patharray := strings.Split(parentidpath1, "-")
+	topprojectid, err := strconv.ParseInt(patharray[0], 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
 	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, uid, pidNum)
+	_, err = models.AddProduct(code, title, label, principal, content, uid, pidNum, topprojectid)
 	if err != nil {
 		beego.Error(err)
 	}

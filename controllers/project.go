@@ -31,7 +31,7 @@ type Project1 struct {
 	Title     string
 	Label     string
 	Principal string
-	Number    int
+	Number    int64
 	Created   time.Time
 	Updated   time.Time
 }
@@ -90,6 +90,16 @@ func (c *ProjController) GetProjects() {
 		if err != nil {
 			beego.Error(err)
 		}
+		//取出所有目录
+		// categories, err := models.GetAllProjects()
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		// beego.Info(categories)
+		// products, err := models.GetAllProducts()
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
 		//取得每个项目的成果数量
 		projects1 := make([]Project1, 0) //这里不能加*号
 		for _, v := range projects {
@@ -99,43 +109,33 @@ func (c *ProjController) GetProjects() {
 			aa[0].Title = v.Title
 			aa[0].Label = v.Label
 			aa[0].Principal = v.Principal
-
 			//取得项目所有成果——速度太慢
-			//修改为一次性取到所有成过，然后循环赋值给aa
-			// products, err := models.GetProjProducts(v.Id)
-			// if err != nil {
-			// 	beego.Error(err)
-			// }
-
-			//取项目本身
-			// category, err := models.GetProj(v.Id)
-			// if err != nil {
-			// 	beego.Error(err)
-			// }
+			//修改为一次性取到所有成果，然后循环赋值给aa
 			//取项目所有子孙
-			categories, err := models.GetProjectsbyPid(v.Id)
-			if err != nil {
-				beego.Error(err)
-			}
+			//效率太低
+			// categories, err := models.GetProjectsbyPid(v.Id)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
 			//根据项目id取得项目下所有成果
-			products, err := models.GetProjProducts(v.Id)
+			//效率太低
+			count, _, err := models.GetProjProducts(v.Id, 3)
 			if err != nil {
 				beego.Error(err)
 			}
-
-			var count int
-			for _, m := range products {
-				if v.Id == m.ProjectId {
-					count = count + 1
-				}
-			}
+			// var count int
+			// for _, m := range products {
+			// 	if v.Id == m.ProjectId {
+			// 		count = count + 1
+			// 	}
+			// }
 			// beego.Info(count)
-			slice := getsons(v.Id, categories)
-			// 如果遍历的当前节点下还有节点，则进入该节点进行递归
-			if len(slice) > 0 {
-				getprodcount(slice, categories, products, &count)
-			}
-
+			// slice := getsons(v.Id, categories)
+			// beego.Info(slice)
+			// 如果遍历的当前节点下还有子节点，则进入该子节点进行递归
+			// if len(slice) > 0 {
+			// 	getprodcount(slice, categories, products, &count)
+			// }
 			aa[0].Number = count //len(products)
 			aa[0].Created = v.Created
 			aa[0].Updated = v.Updated
@@ -203,16 +203,31 @@ func (c *ProjController) GetProject() {
 	if err != nil {
 		beego.Error(err)
 	}
+
+	//记录开始时间
+	start := time.Now()
 	//取项目所有子孙
 	categories, err := models.GetProjectsbyPid(idNum)
 	if err != nil {
 		beego.Error(err)
 	}
+	//记录结束时间差
+	elapsed := time.Since(start)
+	beego.Info(elapsed)
 	//根据项目id取得项目下所有成果
-	products, err := models.GetProjProducts(idNum)
+	_, products, err := models.GetProjProducts(idNum, 2)
 	if err != nil {
 		beego.Error(err)
 	}
+	//记录结束时间差
+	elapsed = time.Since(start)
+	beego.Info(elapsed)
+	//一次性查出所有成果
+	//或者存储成果数据的时候存上项目id，相当于加了个索引
+	// products, err := models.GetAllProducts()
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 	//根据id取出下级
 	cates := getsons(idNum, categories)
 	//算出最大级数
@@ -226,6 +241,9 @@ func (c *ProjController) GetProject() {
 	root := FileNode1{category.Id, category.Title, "", count, []*FileNode1{}}
 	// walk(category.Id, &root)
 	maketreejson1(cates, categories, products, &root)
+	//记录结束时间差
+	elapsed = time.Since(start)
+	beego.Info(elapsed)
 	// beego.Info(root)
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
@@ -244,7 +262,74 @@ func (c *ProjController) GetProject() {
 		// beego.Info("电脑端！")
 		c.TplName = "project.tpl"
 	}
+}
 
+//根据id懒加载项目目录
+func (c *ProjController) GetProjCate() {
+	// id := c.Ctx.Input.Param(":id")
+	id := c.Input().Get("id")
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//记录开始时间
+	start := time.Now()
+	//取所有儿子
+	cates, err := models.GetProjSonbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//取得项目类别，给添加项目模态框选项用
+	var slice []FileNode2
+	// var lazyload bool
+	// var tags [1]string
+	for _, v := range cates {
+		aa := make([]FileNode2, 1)
+		aa[0].Id = v.Id
+		aa[0].Title = v.Title //名称
+		//是否有儿子_太慢>1S
+		// if models.Projhasson(v.Id) {
+		// 	aa[0].LazyLoad = true
+		// } else {
+		// 	aa[0].LazyLoad = false
+		// }
+		aa[0].LazyLoad = true
+		// 	cc[0].Selectable = false
+		// 	// slice1 = append(slice1, aa...)当aa为slice的时候要...,
+		slice = append(slice, aa...) //当v.title为值的时候不用...
+	}
+
+	// for _, proj := range cates {
+	// 	id := proj.Id
+	// 	title := proj.Title
+	// 	// code := proj.Code
+	// 	//是否有儿子_太慢
+	// 	// if models.Projhasson(proj.Id) {
+	// 	// 	lazyload = true
+	// 	// } else {
+	// 	// 	lazyload = false
+	// 	// }
+	// 	lazyload = true
+	// 	// var count int
+	// 	// for _, m := range products {
+	// 	// 	if id == m.ProjectId {
+	// 	// 		count = count + 1
+	// 	// 	}
+	// 	// }
+	// 	// tags[0] = strconv.Itoa(count)
+	// 	// 将当前名和id作为子节点添加到目录下
+	// 	child := FileNode2{id, title, code, tags, lazyload}
+	// 	slice = append(slice, child)
+	// }
+	//记录结束时间差696ms__不查询儿子则110ms
+	elapsed := time.Since(start) //97MS
+	beego.Info(elapsed)
+
+	c.Data["json"] = slice //data
+	c.ServeJSON()
 }
 
 //点击项目名称，根据id查看项目下所有成果
@@ -377,12 +462,21 @@ func (c *ProjController) AddProjectCate() {
 	code := c.Input().Get("code")
 	parentid := category.Id
 	var parentidpath, parenttitlepath string
-	if category.ParentIdPath != "" {
-		parentidpath = category.ParentIdPath + "-" + strconv.FormatInt(category.Id, 10)
-		parenttitlepath = category.ParentTitlePath + "-" + category.Title
+	// if category.ParentIdPath != "" {
+	// 	parentidpath = category.ParentIdPath + "-" + strconv.FormatInt(category.Id, 10)
+	// 	parenttitlepath = category.ParentTitlePath + "-" + category.Title
 
+	// } else {
+	// 	parentidpath = strconv.FormatInt(category.Id, 10)
+	// 	parenttitlepath = category.Title
+	// }
+	if category.ParentIdPath != "" {
+		parentidpath = category.ParentIdPath + "$" + strconv.FormatInt(category.Id, 10) + "#"
+		// parenttitlepath = category.ParentTitlePath + "#$" + category.Title + "#"
+		parenttitlepath = category.ParentTitlePath + "-" + category.Title
 	} else {
-		parentidpath = strconv.FormatInt(category.Id, 10)
+		parentidpath = "$" + strconv.FormatInt(category.Id, 10) + "#"
+		// parenttitlepath = "$" + category.Title + "#"
 		parenttitlepath = category.Title
 	}
 	grade := category.Grade + 1
@@ -611,8 +705,12 @@ func (c *ProjController) GetProjNav() {
 	//根据proj的parentIdpath
 	navslice := make([]Navbartruct, 0)
 	nav := make([]Navbartruct, 1)
+	var parentidpath, parentidpath1 string
 	if proj.ParentIdPath != "" { //如果不是根目录
-		patharray := strings.Split(proj.ParentIdPath, "-")
+		// patharray := strings.Split(proj.ParentIdPath, "-")
+		parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+		parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+		patharray := strings.Split(parentidpath1, "-")
 		for _, v := range patharray {
 			//pid转成64为
 			idNum1, err := strconv.ParseInt(v, 10, 64)
@@ -1553,11 +1651,20 @@ func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height
 
 				var parentidpath string
 				var parenttitlepath string
+				// if v.ParentIdPath != "" {
+				// 	parentidpath = v.ParentIdPath + "-" + strconv.FormatInt(v.ParentId, 10)
+				// 	parenttitlepath = v.ParentTitlePath + "-" + v.ParentTitle
+				// } else {
+				// 	parentidpath = strconv.FormatInt(v.ParentId, 10)
+				// 	parenttitlepath = v.ParentTitle
+				// }
 				if v.ParentIdPath != "" {
-					parentidpath = v.ParentIdPath + "-" + strconv.FormatInt(v.ParentId, 10)
+					parentidpath = v.ParentIdPath + "$" + strconv.FormatInt(v.ParentId, 10) + "#"
+					// parenttitlepath = v.ParentTitlePath + "#$" + v.ParentTitle + "#"
 					parenttitlepath = v.ParentTitlePath + "-" + v.ParentTitle
 				} else {
-					parentidpath = strconv.FormatInt(v.ParentId, 10)
+					parentidpath = "$" + strconv.FormatInt(v.ParentId, 10) + "#"
+					// parenttitlepath = "$" + v.ParentTitle + "#"
 					parenttitlepath = v.ParentTitle
 				}
 
@@ -1580,6 +1687,15 @@ func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height
 		write(cid, nodes, igrade, height)
 	}
 	return
+}
+
+//树状目录数据——带成果数量和懒加载
+type FileNode2 struct {
+	Id    int64  `json:"id"`
+	Title string `json:"text"`
+	// Code     string    `json:"code"` //分级目录代码
+	Tags     [1]string `json:"tags"` //显示员工数量，如果定义为数值[1]int，则无论如何都显示0，所以要做成字符
+	LazyLoad bool      `json:"lazyLoad"`
 }
 
 //树状目录数据——带成果数量
@@ -1656,7 +1772,7 @@ func maketreejson1(cates, categories []*models.Project, products []*models.Produ
 	return
 }
 
-//递归构造项目树状目录
+//递归构造项目树状目录_不带标签，未使用
 func maketreejson(cates, categories []*models.Project, node *FileNode) {
 	// 遍历目录
 	for _, proj := range cates {

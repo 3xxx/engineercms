@@ -70,6 +70,7 @@ func (c *AttachController) GetAttachments() {
 			linkarr := make([]AttachmentLink, 1)
 			linkarr[0].Id = v.Id
 			linkarr[0].Title = v.FileName
+			// linkarr[0].Suffix=path.Ext(v.FileName)
 			linkarr[0].FileSize = v.FileSize
 			linkarr[0].Downloads = v.Downloads
 			linkarr[0].Created = v.Created
@@ -393,8 +394,8 @@ func (c *AttachController) AddAttachment() {
 		beego.Error(err)
 	}
 	var news string
-	var cid int64
-	var attachment string
+	var cid, topprojectid int64
+	var attachment, parentidpath, parentidpath1 string
 	var filepath, DiskDirectory, Url string
 	var catalog models.PostMerit
 	// if role == 1 {
@@ -413,10 +414,12 @@ func (c *AttachController) AddAttachment() {
 		beego.Error(err)
 	}
 	filesize = filesize / 1000.0
+	//根据pid查出项目id
 	proj, err := models.GetProj(pidNum)
 	if err != nil {
 		beego.Error(err)
 	}
+
 	//根据proj的parentIdpath——这个已经有了专门函数，下列可以简化！
 	//由proj id取得url
 	// Url, DiskDirectory, err = GetUrlPath(proj.Id)
@@ -424,7 +427,14 @@ func (c *AttachController) AddAttachment() {
 	// 	beego.Error(err)
 	// }
 	if proj.ParentIdPath != "" { //如果不是根目录
-		patharray := strings.Split(proj.ParentIdPath, "-")
+		parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+		parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+		patharray := strings.Split(parentidpath1, "-")
+		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		// patharray := strings.Split(proj.ParentIdPath1, "-")
 		//pid转成64位
 		meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
@@ -489,6 +499,7 @@ func (c *AttachController) AddAttachment() {
 		Url = "/attachment/" + proj.Title
 		catalog.ProjectNumber = proj.Code
 		catalog.ProjectName = proj.Title
+		topprojectid = proj.Id
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
@@ -513,7 +524,7 @@ func (c *AttachController) AddAttachment() {
 		//存入成果数据库
 		//如果编号重复，则不写入，只返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", uid, pidNum)
+		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", uid, pidNum, topprojectid)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -624,6 +635,18 @@ func (c *AttachController) AddAttachment2() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//根据pid查出项目id
+	proj, err := models.GetProj(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	parentidpath := strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+	parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
+	patharray := strings.Split(parentidpath1, "-")
+	topprojectid, err := strconv.ParseInt(patharray[0], 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
 	prodcode := c.Input().Get("prodcode") //和上面那个区别仅仅在此处而已
 	prodname := c.Input().Get("prodname")
 	prodlabel := c.Input().Get("prodlabel")
@@ -667,7 +690,7 @@ func (c *AttachController) AddAttachment2() {
 		//存入成果数据库
 		//如果编号重复，则不写入，值返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", uid, pidNum)
+		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", uid, pidNum, topprojectid)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -940,7 +963,8 @@ func (c *AttachController) Attachment() {
 	if proj.ParentIdPath == "" {
 		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
 	} else {
-		projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+		// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+		projurl = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
 	}
 
 	//由proj id取得url
@@ -953,6 +977,12 @@ func (c *AttachController) Attachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	case ".dwg", ".DWG":
+		c.Data["DwgLink"] = c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName
+		c.TplName = "dwg.tpl"
+	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+		//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
@@ -1062,6 +1092,9 @@ func (c *AttachController) DownloadAttachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+		//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
@@ -1119,6 +1152,7 @@ func FileSize(file string) (int64, error) {
 
 //根据侧栏id返回附件url和文件夹路径
 func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
+	var parentidpath, parentidpath1 string
 	proj, err := models.GetProj(id)
 	if err != nil {
 		beego.Error(err)
@@ -1127,7 +1161,10 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 		//根据proj的parentIdpath
 		var path string
 		if proj.ParentIdPath != "" { //如果不是根目录
-			patharray := strings.Split(proj.ParentIdPath, "-")
+			// patharray := strings.Split(proj.ParentIdPath, "-")
+			parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+			parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+			patharray := strings.Split(parentidpath1, "-")
 			for _, v := range patharray {
 				//pid转成64为
 				idNum, err := strconv.ParseInt(v, 10, 64)
@@ -1159,6 +1196,7 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 
 //根据id返回项目编号，项目名称，项目阶段，项目专业
 func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Section string, err error) {
+	var parentidpath, parentidpath1 string
 	proj, err := models.GetProj(id)
 	if err != nil {
 		beego.Error(err)
@@ -1166,7 +1204,10 @@ func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Sect
 	} else {
 		//根据proj的parentIdpath
 		if proj.ParentIdPath != "" { //如果不是根目录
-			patharray := strings.Split(proj.ParentIdPath, "-")
+			parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+			parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+			patharray := strings.Split(parentidpath1, "-")
+			// patharray := strings.Split(proj.ParentIdPath, "-")
 			//pid转成64位
 			meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
 			if err != nil {

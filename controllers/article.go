@@ -208,7 +208,8 @@ func (c *ArticleController) GetArticle() {
 	if proj.ParentId == 0 { //如果是项目根目录
 		projurls = "/" + strconv.FormatInt(proj.Id, 10)
 	} else {
-		projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+		// projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+		projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 	}
 
 	//上一篇和下一篇
@@ -350,8 +351,20 @@ func (c *ArticleController) AddArticle() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//根据pid查出项目id
+	proj, err := models.GetProj(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	parentidpath := strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+	parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
+	patharray := strings.Split(parentidpath1, "-")
+	topprojectid, err := strconv.ParseInt(patharray[0], 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
 	//根据项目id添加成果code, title, label, principal, content string, projectid int64
-	Id, err := models.AddProduct(code, title, label, principal, "", uid, pidNum)
+	Id, err := models.AddProduct(code, title, label, principal, "", uid, pidNum, topprojectid)
 	if err != nil {
 		beego.Error(err)
 	}

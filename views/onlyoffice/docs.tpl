@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <head>
   <title>fei-ONLYOFFICE</title>
-
+  <meta name="renderer" content="webkit">
+  <!-- 加上这句，360等浏览器就会默认使用google内核，而不是IE内核 。 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- 加上这一句，如果被用户强行使用IE浏览器，就会使用IE的最高版本渲染内核 -->
   <!-- <link type='text/css' href='/static/oo/files-3TmaoIbj3PAed78NYLoa7w2.css' rel='stylesheet' />
     <link type='text/css' href='/static/oo/common-HLDWebQ4QDcrVRYNq4-rWA2.css' rel='stylesheet' />
     <link type='text/css' href='/static/oo/files-CUBYqoHsKUGuN7k-PidXtQ2.css' rel='stylesheet' /> -->
@@ -78,10 +81,11 @@
   <h3>文档列表</h3>
 
   <div id="toolbar1" class="btn-group">
+        <button type="button" data-name="createButton" id="createButton" class="btn btn-default" title="新建"> <i class="fa fa-plus">新建</i>
+        </button>
         <!-- 多文件批量上传 -->
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
         </button>
-
         <button type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
         </button>
         <button type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>

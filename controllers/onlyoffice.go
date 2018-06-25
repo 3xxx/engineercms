@@ -743,6 +743,123 @@ func (c *OnlyController) OnlyOffice() {
 	c.TplName = "onlyoffice/onlyoffice.tpl"
 }
 
+//cms中查阅office
+func (c *OnlyController) OfficeView() {
+	id := c.Ctx.Input.Param(":id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据附件id取得附件的prodid，路径
+	attachment, err := models.GetAttachbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	product, err := models.GetProd(attachment.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//根据projid取出路径
+	// proj, err := models.GetProj(product.ProjectId)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
+	// if proj.ParentIdPath == "" {
+	// 	projurl := "/" + strconv.FormatInt(proj.Id, 10) + "/"
+	// } else {
+	// 	// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+	// 	projurl := "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
+	// }
+
+	//由proj id取得url
+	fileurl, _, err := GetUrlPath(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	c.Data["FilePath"] = fileurl + "/" + attachment.FileName
+	// beego.Info(fileurl + "/" + attachment.FileName)
+
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	// useridstring := strconv.FormatInt(uid, 10)
+
+	c.Data["Mode"] = "view"
+	c.Data["Edit"] = false
+	c.Data["Review"] = false
+	c.Data["Comment"] = false
+	c.Data["Download"] = true
+	c.Data["Print"] = true
+
+	c.Data["Doc"] = attachment
+	c.Data["attachid"] = idNum
+	c.Data["Key"] = strconv.FormatInt(attachment.Updated.UnixNano(), 10)
+
+	if path.Ext(attachment.FileName) == ".docx" || path.Ext(attachment.FileName) == ".DOCX" {
+		c.Data["fileType"] = "docx"
+		c.Data["documentType"] = "text"
+	} else if path.Ext(attachment.FileName) == ".wps" || path.Ext(attachment.FileName) == ".WPS" {
+		c.Data["fileType"] = "docx"
+		c.Data["documentType"] = "text"
+	} else if path.Ext(attachment.FileName) == ".XLSX" || path.Ext(attachment.FileName) == ".xlsx" {
+		c.Data["fileType"] = "xlsx"
+		c.Data["documentType"] = "spreadsheet"
+	} else if path.Ext(attachment.FileName) == ".ET" || path.Ext(attachment.FileName) == ".et" {
+		c.Data["fileType"] = "xlsx"
+		c.Data["documentType"] = "spreadsheet"
+	} else if path.Ext(attachment.FileName) == ".pptx" || path.Ext(attachment.FileName) == ".PPTX" {
+		c.Data["fileType"] = "pptx"
+		c.Data["documentType"] = "presentation"
+	} else if path.Ext(attachment.FileName) == ".dps" || path.Ext(attachment.FileName) == ".DPS" {
+		c.Data["fileType"] = "pptx"
+		c.Data["documentType"] = "presentation"
+	} else if path.Ext(attachment.FileName) == ".doc" || path.Ext(attachment.FileName) == ".DOC" {
+		c.Data["fileType"] = "doc"
+		c.Data["documentType"] = "text"
+	} else if path.Ext(attachment.FileName) == ".txt" || path.Ext(attachment.FileName) == ".TXT" {
+		c.Data["fileType"] = "txt"
+		c.Data["documentType"] = "text"
+	} else if path.Ext(attachment.FileName) == ".XLS" || path.Ext(attachment.FileName) == ".xls" {
+		c.Data["fileType"] = "xls"
+		c.Data["documentType"] = "spreadsheet"
+	} else if path.Ext(attachment.FileName) == ".csv" || path.Ext(attachment.FileName) == ".CSV" {
+		c.Data["fileType"] = "csv"
+		c.Data["documentType"] = "spreadsheet"
+	} else if path.Ext(attachment.FileName) == ".ppt" || path.Ext(attachment.FileName) == ".PPT" {
+		c.Data["fileType"] = "ppt"
+		c.Data["documentType"] = "presentation"
+	} else if path.Ext(attachment.FileName) == ".pdf" || path.Ext(attachment.FileName) == ".PDF" {
+		c.Data["fileType"] = "pdf"
+		c.Data["documentType"] = "text"
+		c.Data["Mode"] = "view"
+	}
+
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		beego.Error(err)
+	}
+	if matched == true {
+		// beego.Info("移动端~")
+		// c.TplName = "onlyoffice/onlyoffice.tpl"
+		c.Data["Type"] = "mobile"
+	} else {
+		// beego.Info("电脑端！")
+		// c.TplName = "onlyoffice/onlyoffice.tpl"
+		c.Data["Type"] = "desktop"
+	}
+	c.TplName = "onlyoffice/officeview.tpl"
+}
+
 //协作页面的保存和回调
 //关闭浏览器标签后获取最新文档保存到文件夹
 func (c *OnlyController) UrltoCallback() {
@@ -876,6 +993,33 @@ func (c *OnlyController) UrltoCallback() {
 		if err != nil {
 			beego.Error(err)
 		}
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
+	}
+}
+
+//cms中返回值
+func (c *OnlyController) OfficeViewCallback() {
+	var callback Callback
+	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
+	beego.Info(string(c.Ctx.Input.RequestBody))
+	// beego.Info(callback)
+	//•	1 - document is being edited,
+	//•	4 - document is closed with no changes,
+	if callback.Status == 1 || callback.Status == 4 {
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
+		//•	2 - document is ready for saving
+		//•	6 - document is being edited, but the current document state is saved,
+		// c.Data["json"] = map[string]interface{}{"error": 0}
+		// c.ServeJSON()
+		//3-document saving error has occurred
+		//•	7 - error has occurred while force saving the document.
+	} else if callback.Status == 3 || callback.Status == 7 {
+		//更新附件的时间和changesurl
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
 	} else {

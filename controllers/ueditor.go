@@ -154,6 +154,7 @@ func (c *UeditorController) ControllerUE() {
 			if err != nil {
 				beego.Error(err)
 			}
+			beego.Info(h.Filename)
 			fileSuffix := path.Ext(h.Filename)
 			// random_name
 			newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename

@@ -35,7 +35,8 @@
   <script src="/static/js/gantt/ganttTask.js"></script>
   <script src="/static/js/gantt/ganttDrawerSVG.js"></script>
   <script src="/static/js/gantt/ganttGridEditor.js"></script>
-  <script src="/static/js/gantt/ganttMaster.js"></script>  
+  <script src="/static/js/gantt/ganttMaster.js"></script> 
+  <!-- <script src="/static/js/gantt/ganttZoom.js"></script> -->
 </head>
 <body style="background-color: #fff;">
 
