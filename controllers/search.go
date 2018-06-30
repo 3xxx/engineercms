@@ -95,10 +95,10 @@ func (c *SearchController) SearchProduct() { //search用的是get方法
 			linkarr[0].Uid = w.Uid
 			linkarr[0].Principal = w.Principal
 			linkarr[0].ProjectId = w.ProjectId
-			linkarr[0].Content = w.Content
+			// linkarr[0].Content = w.Content
 			linkarr[0].Created = w.Created
 			linkarr[0].Updated = w.Updated
-			linkarr[0].Views = w.Views
+			// linkarr[0].Views = w.Views
 			for _, v := range Attachments {
 				// fileext := path.Ext(v.FileName)
 				if path.Ext(v.FileName) != ".pdf" && path.Ext(v.FileName) != ".PDF" {
@@ -190,10 +190,10 @@ func (c *SearchController) SearchProjProducts() {
 				linkarr[0].Uid = w.Uid
 				linkarr[0].Principal = w.Principal
 				linkarr[0].ProjectId = w.ProjectId
-				linkarr[0].Content = w.Content
+				// linkarr[0].Content = w.Content
 				linkarr[0].Created = w.Created
 				linkarr[0].Updated = w.Updated
-				linkarr[0].Views = w.Views
+				// linkarr[0].Views = w.Views
 				for _, v := range Attachments {
 					// fileext := path.Ext(v.FileName)
 					if path.Ext(v.FileName) != ".pdf" && path.Ext(v.FileName) != ".PDF" {

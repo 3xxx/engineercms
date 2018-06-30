@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EngineerCMS后台</title>
 
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 
@@ -182,6 +182,17 @@
                       // selected: true
                     },
                     id: '013'
+                  }, 
+                  { 
+                    icon: "fa fa-bug",
+                    text: "升级数据库",
+                    state: {
+                      // checked: true,
+                      // disabled: true,
+                      // expanded: true,
+                      // selected: true
+                    },
+                    id: '014'
                   }
                 ] 
               },
@@ -404,6 +415,8 @@
           }else if(data.id=="012"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统设置&gt;"+data.text)
           }else if(data.id=="013"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统设置&gt;"+data.text)
+          }else if(data.id=="014"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统设置&gt;"+data.text)
           }else if(data.id=="021"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;权限管理&gt;"+data.text)

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>EngineerCMS</title>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
@@ -100,13 +100,14 @@
 
 <script type="text/javascript">
         /*数据json*/
-        var json =  [{"Id":"1","Title":"首页轮播图片","Content":"添加宽幅图片","Tips":"最新的10张"},
-                      {"Id":"2","Title":"网站昵称","Content":"平行世界","Tips":"网站昵称"},
-                      {"Id":"3","Title":"管理员昵称","Content":"无影","Tips":"昵称"},
-                      {"Id":"4","Title":"管理员头像","Content":"怪物","Tips":"图像"},
-                      {"Id":"5","Title":"导航条定制","Content":"wiki","Tips":"选择导航条"},
-                      {"Id":"6","Title":"网站简介","Content":"来自虫洞","Tips":"介绍"},
-                      {"Id":"7","Title":"远程访问","Content":"允许","Tips":"vpn或nat123"}];
+        var json =  [{"Id":"1","Title":"首页轮播图片","Content":"添加宽幅图片","Tips":"最新的10张"}];
+        // ,
+        //               {"Id":"2","Title":"网站昵称","Content":"平行世界","Tips":"网站昵称"},
+        //               {"Id":"3","Title":"管理员昵称","Content":"无影","Tips":"昵称"},
+        //               {"Id":"4","Title":"管理员头像","Content":"怪物","Tips":"图像"},
+        //               {"Id":"5","Title":"导航条定制","Content":"wiki","Tips":"选择导航条"},
+        //               {"Id":"6","Title":"网站简介","Content":"来自虫洞","Tips":"介绍"},
+        //               {"Id":"7","Title":"远程访问","Content":"允许","Tips":"vpn或nat123"}
         /*初始化table数据*/
         $(function(){
             $("#table0").bootstrapTable({

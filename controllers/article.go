@@ -364,7 +364,7 @@ func (c *ArticleController) AddArticle() {
 		beego.Error(err)
 	}
 	//根据项目id添加成果code, title, label, principal, content string, projectid int64
-	Id, err := models.AddProduct(code, title, label, principal, "", uid, pidNum, topprojectid)
+	Id, err := models.AddProduct(code, title, label, principal, uid, pidNum, topprojectid)
 	if err != nil {
 		beego.Error(err)
 	}

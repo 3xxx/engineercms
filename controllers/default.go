@@ -676,3 +676,23 @@ func (c *MainController) Pdf() {
 	// 	this.Data["paginator"] = p
 	// }
 }
+
+//升级数据库
+func (c *MainController) UpdateDatabase() {
+	beego.Info("ok")
+	err1, err2, err3, err4 := models.UpdateDatabase()
+	if err1 != nil {
+		beego.Error(err1)
+	}
+	if err2 != nil {
+		beego.Error(err2)
+	}
+	if err3 != nil {
+		beego.Error(err3)
+	}
+	if err4 != nil {
+		beego.Error(err4)
+	}
+	c.Data["json"] = "ok"
+	c.ServeJSON()
+}

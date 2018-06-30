@@ -524,7 +524,7 @@ func (c *AttachController) AddAttachment() {
 		//存入成果数据库
 		//如果编号重复，则不写入，只返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", uid, pidNum, topprojectid)
+		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, uid, pidNum, topprojectid)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -690,7 +690,7 @@ func (c *AttachController) AddAttachment2() {
 		//存入成果数据库
 		//如果编号重复，则不写入，值返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", uid, pidNum, topprojectid)
+		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, uid, pidNum, topprojectid)
 		if err != nil {
 			beego.Error(err)
 		}

@@ -255,10 +255,10 @@ func (c *ProdController) GetProducts() {
 		linkarr[0].Uid = w.Uid
 		linkarr[0].Principal = w.Principal
 		linkarr[0].ProjectId = w.ProjectId
-		linkarr[0].Content = w.Content
+		// linkarr[0].Content = w.Content
 		linkarr[0].Created = w.Created
 		linkarr[0].Updated = w.Updated
-		linkarr[0].Views = w.Views
+		// linkarr[0].Views = w.Views
 		for _, v := range Attachments {
 			// fileext := path.Ext(v.FileName)
 			if path.Ext(v.FileName) != ".pdf" && path.Ext(v.FileName) != ".PDF" {
@@ -412,10 +412,10 @@ func (c *ProdController) GetProjProducts() {
 		linkarr[0].Uid = w.Uid
 		linkarr[0].Principal = w.Principal
 		linkarr[0].ProjectId = w.ProjectId
-		linkarr[0].Content = w.Content
+		// linkarr[0].Content = w.Content
 		linkarr[0].Created = w.Created
 		linkarr[0].Updated = w.Updated
-		linkarr[0].Views = w.Views
+		// linkarr[0].Views = w.Views
 		for _, v := range Attachments {
 			// fileext := path.Ext(v.FileName)
 			if path.Ext(v.FileName) != ".pdf" && path.Ext(v.FileName) != ".PDF" {
@@ -637,10 +637,10 @@ func (c *ProdController) ProvidesynchProducts() {
 		linkarr[0].Uid = w.Uid
 		linkarr[0].Principal = w.Principal
 		linkarr[0].ProjectId = w.ProjectId
-		linkarr[0].Content = w.Content
+		// linkarr[0].Content = w.Content
 		linkarr[0].Created = w.Created
 		linkarr[0].Updated = w.Updated
-		linkarr[0].Views = w.Views
+		// linkarr[0].Views = w.Views
 		for _, v := range Attachments {
 			// fileext := path.Ext(v.FileName)
 			if path.Ext(v.FileName) != ".pdf" && path.Ext(v.FileName) != ".PDF" {
@@ -704,7 +704,7 @@ func (c *ProdController) AddProduct() {
 	title := c.Input().Get("title")
 	label := c.Input().Get("label")
 	principal := c.Input().Get("principal")
-	content := c.Input().Get("content")
+	// content := c.Input().Get("content")
 	// beego.Info(id)
 	c.Data["Id"] = id
 	//id转成64为
@@ -725,7 +725,7 @@ func (c *ProdController) AddProduct() {
 		beego.Error(err)
 	}
 	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, uid, pidNum, topprojectid)
+	_, err = models.AddProduct(code, title, label, principal, uid, pidNum, topprojectid)
 	if err != nil {
 		beego.Error(err)
 	}

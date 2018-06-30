@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>用户-角色</title>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>

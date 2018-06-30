@@ -11,6 +11,9 @@ import (
 
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	//升级数据库
+	beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
+
 	beego.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
 	//cms中预览office回调
 	beego.Router("/officeviewcallback", &controllers.OnlyController{}, "*:OfficeViewCallback")

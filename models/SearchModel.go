@@ -56,7 +56,7 @@ func SearchProjProduct(pid int64, key string) (prod []*Product, err error) {
 	}
 	//取出所有成果
 	articls := make([]*Article, 0)
-	products, err := GetProjProducts(pid)
+	_, products, err := GetProjProducts(pid, 1)
 
 	qs2 := o.QueryTable("Article")
 	// qs3 := qs2.SetCond(cond2)

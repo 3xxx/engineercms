@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/docs.min.css"/>
-<script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/docs.min.js"></script>
 </head>

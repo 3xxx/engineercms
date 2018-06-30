@@ -11,17 +11,17 @@ import (
 
 type Product struct {
 	Id           int64
-	Code         string    `orm:"null"`                                              //编号                                          //编号                                             //编号
-	Title        string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	Label        string    `orm:"null"`                                              //关键字                                           //标签
-	Uid          int64     `orm:"null"`
-	Principal    string    `orm:"null"`      //提供人                                            //负责人id
-	ProjectId    int64     `orm:"null"`      //侧栏id
-	TopProjectId int64     `orm:"null"`      //项目id
-	Content      string    `orm:"sie(5000)"` //内容
-	Created      time.Time `orm:"auto_now_add;type(datetime)"`
-	Updated      time.Time `orm:"auto_now;type(datetime)"`
-	Views        int64
+	Code         string `orm:"null"`                                              //编号                                          //编号                                             //编号
+	Title        string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	Label        string `orm:"null"`                                              //关键字                                           //标签
+	Uid          int64  `orm:"null"`
+	Principal    string `orm:"null"`       //提供人                                            //负责人id
+	ProjectId    int64  `orm:"null"`       //侧栏id
+	TopProjectId int64  `orm:"default(0)"` //项目id
+	// Content      string    `orm:"sie(5000)"` //内容
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now;type(datetime)"`
+	// Views        int64
 	// ReplyTime         time.Time
 	// ReplyCount        int64
 	// ReplyLastUserName string
@@ -68,7 +68,7 @@ func DeleteProduct(cid int64) error {
 //添加成果到项目侧栏某个id下
 //如果这个侧栏id下的这个成果编号已经存在，则返回id
 ////应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
-func AddProduct(code, title, label, principal, content string, uid, Projectid, TopProjectId int64) (id int64, err error) {
+func AddProduct(code, title, label, principal string, uid, Projectid, TopProjectId int64) (id int64, err error) {
 	o := orm.NewOrm()
 	// err := o.QueryTable("user").Filter("name", "slene").One(&user)
 	// if err == orm.ErrMultiRows {
@@ -90,9 +90,9 @@ func AddProduct(code, title, label, principal, content string, uid, Projectid, T
 			Principal:    principal,
 			ProjectId:    Projectid,
 			TopProjectId: TopProjectId,
-			Content:      content,
-			Created:      time.Now(),
-			Updated:      time.Now(),
+			// Content:      content,
+			Created: time.Now(),
+			Updated: time.Now(),
 		}
 		id, err = o.Insert(product)
 		if err != nil {

@@ -133,6 +133,8 @@ func (c *AdminController) Admin() {
 			c.TplName = "admin_category.tpl"
 		case "013": //搜索引擎
 			c.TplName = "admin_spiderip.tpl"
+		case "014": //升级数据库
+			c.TplName = "admin_updatedatabase.tpl"
 		case "021": //角色权限分配
 			c.TplName = "admin_role.tpl"
 			// c.TplName = "admin_systemrole.tpl"

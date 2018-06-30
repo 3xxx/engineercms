@@ -94,7 +94,7 @@
             levels: 2,
             showTags:true,
             loadingIcon:"fa fa-hourglass",
-            lazyLoad:loaddata
+            lazyLoad:loaddata,
               // var $Tree = $('#tv').treeview({
               // data: defaultData,
               // lazyLoad: function (node, display) {
@@ -138,25 +138,22 @@
             success:function(data,status){
               // $.each(data,function(i,d){
                 $(".breadcrumb #nav").remove();
-                for (i=0;i<data.length;i++)
-                  {
+                for (i=0;i<data.length;i++){
                     // $(".breadcrumb").append('<li><a href="javascript:void(0)"><i class="fa fa-home">项目编号：' + {{.Category.Code}}+ '</a></li>');onclick="SomeJavaScriptCode"
                     $(".breadcrumb").append('<li id="nav"><a href="javascript:gototree('+data[i].Id+')">' + data[i].Title + '</a></li>');
-                  }
+                }
               // });
             }
           });
         }); 
-
         // var obj = {};
         // obj.text = "123";
-        
         $("#btn").click(function (e) {
             var arr = $('#tree').treeview('getSelected');
             for (var key in arr) {
                 c.innerHTML = c.innerHTML + "," + arr[key].id;
             }
-        })
+        });
     })
 
     function loaddata(node,func){//这个技巧真高，即能返回参数，又能把参数通过函数发回去

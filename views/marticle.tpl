@@ -7,7 +7,7 @@
       <meta name="apple-mobile-web-app-status-bar-style" content="yes">    
       <!-- <meta name="shenma-site-verification" content="bf32a58a3df1c3452b75fbe96c7feb42_1497604697"> -->
       <!-- <script async="" src="/static//gio.js"></script><script src="/static//hm.js"></script> -->
-      <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
       <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
       <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
