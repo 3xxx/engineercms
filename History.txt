@@ -1,4 +1,11 @@
                        EngineerCMS revision history
+
+
+12, EngineerCMS 1.06 (July 01, 2018)
+	*) Modified The parentidpath field of the project data table
+	+) Added the topprojectid field of the product data table; The conten and views fields were removed
+	$) optimised the lazyload of treeview(projects webview)
+	$) Change the bootstrap-table(only projects view web now) sidePagination to server
 11, EngineerCMS 1.06 (May 29, 2018)
 	+) Add tree product count
 	+) Add nav link to tree

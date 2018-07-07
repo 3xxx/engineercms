@@ -1005,6 +1005,16 @@
 
 		// Trigger nodeRendered event
 		this._triggerEvent('nodeRendered', node, _default.options);
+
+		//æ·»åŠ å¢žåˆ æ”¹æŒ‰é’®
+		// node.$el.append(this._template.button.add.clone());
+		// node.$el.append(this._template.button.edit.clone());
+		// node.$el.append(this._template.button.remove.clone());
+		// node.$el.mouseenter(function(){
+		// node.$el.children('button.btn').removeClass('node-hidden');
+		// }).mouseleave(function(){
+		// node.$el.children('button.btn').addClass('node-hidden');
+		// });
 	};
 
 	// Add checkable icon
@@ -1180,7 +1190,7 @@
 		image: $('<span class="image"></span>'),
 		badge: $('<span class="badge"></span>'),
 		text: $('<span class="text"></span>'),
-		//Ìí¼ÓÔöÉ¾¸ÄÍ¼±ê
+		//æ·»åŠ å¢žåˆ æ”¹å›¾æ ‡
 		// button: {
 		// add: $('<button class="btn icon-plus node-hidden"></button>'),
 		// edit: $('<button class="btn icon-edit node-hidden"></button>'),
@@ -1921,8 +1931,8 @@
 	};
 	
     /** 
-     des:À©Õ¹bootstrap-treeviewµÄ±à¼­½Úµã·½·¨
-     ±à¼­½Úµã 
+     des:æ‰©å±•bootstrap-treeviewçš„ç¼–è¾‘èŠ‚ç‚¹æ–¹æ³•
+     ç¼–è¾‘èŠ‚ç‚¹ 
      author:qlx 2017-3-31
      */
 	Tree.prototype.editNode = function (identifiers, options) {
@@ -1934,7 +1944,7 @@
 	}
 
     /** 
-    * ±à¼­½Úµã 
+    * ç¼–è¾‘èŠ‚ç‚¹ 
     */
 	Tree.prototype.setEditNode = function (node, options) {
 	    if (options) {

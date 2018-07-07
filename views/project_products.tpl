@@ -85,51 +85,12 @@
         </button> -->
 </div>
 <!--data-click-to-select="true" -->
-<table id="table0" 
-        data-toggle="table" 
-        data-url="/project/products/{{.Id}}"
-        data-search="true"
-        data-show-refresh="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-toolbar="#toolbar1"
-        data-query-params="queryParams"
-        data-sort-name="Code"
-        data-sort-order="desc"
-        data-page-size="15"
-        data-page-list="[10,15, 50, 100, All]"
-        data-unique-id="id"
-        data-pagination="true"
-        data-side-pagination="client"
-        data-single-select="true"
-        data-click-to-select="true"
-        data-show-export="true"
-        >
-    <thead>        
-      <tr>
-        <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1" data-align="center">#</th>
-        <!-- <th data-field="Id">编号</th> data-visible="false" -->
-        <th data-field="Code" data-halign="center">编号</th>
-        <th data-field="Title" data-halign="center">名称</th>
-        <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
-        <th data-field="Principal" data-halign="center" data-align="center">设计</th>
-        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents" data-halign="center" data-align="center">文章</th>
-        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-halign="center" data-align="center">附件</th>
-        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-halign="center" data-align="center">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th>
-        <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
-        <th data-field="Relevancy" data-formatter="RelevFormatter" events="actionRelevancy" data-halign="center" data-align="center">关联</th>
-      </tr>
-    </thead>
-</table>
+<table id="table0"></table>
 
 <script type="text/javascript">
   /*数据json使用json数据要删除data-toggle="table"*/
   // var json =
      // 保留***[{"Id":"1","Code":[这个数组也行"SL0001-510-08","SL0001-510-08"],"Title":"水利枢纽布置图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-
         /*初始化table数据*/
         // $(function(){
         //     $("#tabletest").bootstrapTable({
@@ -141,6 +102,156 @@
                 // }
         //     });
         // });
+  $(function () {
+    // 初始化【未接受】工作流表格
+    $("#table0").bootstrapTable({
+        url : '/project/products/{{.Id}}',
+        method: 'get',
+        search:'true',
+        showRefresh:'true',
+        showToggle:'true',
+        showColumns:'true',
+        toolbar:'#toolbar1',
+        pagination: 'true',
+        sidePagination: "server",
+        queryParamsType:'',
+        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+        // limit, offset, search, sort, order 否则, 需要包含: 
+        // pageSize, pageNumber, searchText, sortName, sortOrder. 
+        // 返回false将会终止请求。
+        pageSize: 15,
+        pageNumber: 1,
+        pageList: [15, 50, 100],
+        uniqueId:"id",
+        singleSelect:"true",
+        clickToSelect:"true",
+        showExport:"true",
+        queryParams:function queryParams(params) {   //设置查询参数
+          var param = {
+              limit: params.pageSize,   //每页多少条数据
+              pageNo: params.pageNumber, // 页码
+              searchText:$(".search .form-control").val()
+          };
+          //搜索框功能
+          //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+          // if (null != searchText) {
+          //   try {
+          //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+          //   } catch (Exception e) {
+          //     e.printStackTrace();
+          //   }
+          // }
+          return param;
+        },
+        columns: [
+          {
+            title: '选择',
+            radio: 'true',
+            width: '10',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            // field: 'Number',
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            },
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Code',
+            title: '编号',
+            // formatter:setCode,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Title',
+            title: '名称',
+            // formatter:setTitle,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Label',
+            title: '标签',
+            formatter:setLable,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Principal',
+            title: '设计',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Articlecontent',
+            title: '文章',
+            formatter:setArticle,
+            events:actionEvents,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Attachmentlink',
+            title: '附件',
+            formatter:setAttachment,
+            events:actionEvents,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Pdflink',
+            title: 'PDF',
+            formatter:setPdf,
+            events:actionEvents,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Created',
+            title: '建立时间',
+            formatter:localDateFormatter,
+            visible:"false",
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Updated',
+            title: '更新时间',
+            formatter:localDateFormatter,
+            visible:"false",
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Relevancy',
+            title: '关联',
+            formatter:RelevFormatter,
+            // events:actionRelevancy,
+            // visible："false",
+            align:"center",
+            valign:"middle"
+          }
+            // {
+            //     field: 'dContMainEntity.createTime',
+            //     title: '发起时间',
+            //     formatter: function (value, row, index) {
+            //         return new Date(value).toLocaleString().substring(0,9);
+            //     }
+            // },
+            // {
+            //     field: 'dContMainEntity.operate',
+            //     title: '操作',
+            //     formatter: operateFormatter
+            // }
+        ]
+    });
+  });
+
   function index1(value,row,index){
   // alert( "Data Loaded: " + index );
             return index+1

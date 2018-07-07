@@ -154,6 +154,38 @@ func GetProjects() (proj []*Project, err error) {
 	return proj, err
 }
 
+//分页取得项目列表
+func GetProjectsPage(limit, offset int64, searchText string) (proj []*Project, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Project")
+	if searchText != "" {
+		cond := orm.NewCondition()
+		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
+		cond2 := cond.AndCond(cond1).And("parentid", 0)
+		qs = qs.SetCond(cond2)
+		_, err = qs.Limit(limit, offset).OrderBy("-created").All(&proj)
+	} else {
+		_, err = qs.Filter("parentid", 0).Limit(limit, offset).OrderBy("-created").All(&proj)
+	}
+	return proj, err
+}
+
+//取得项目总数
+func GetProjectsCount(searchText string) (count int64, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Project")
+	if searchText != "" {
+		cond := orm.NewCondition()
+		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
+		cond2 := cond.AndCond(cond1).And("parentid", 0)
+		qs = qs.SetCond(cond2)
+		count, err = qs.Limit(-1).Count()
+	} else {
+		count, err = qs.Filter("parentid", 0).Limit(-1).Count()
+	}
+	return count, err
+}
+
 //取得所有项目目录
 func GetAllProjects() (proj []*Project, err error) {
 	o := orm.NewOrm()

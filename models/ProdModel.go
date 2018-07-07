@@ -123,8 +123,39 @@ func GetProducts(id int64) (products []*Product, err error) {
 	return products, err
 }
 
+//根据侧栏id分页查出所有成果——按编号排序
+func GetProductsPage(id int64, limit, offset int64, searchText string) (products []*Product, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Product")
+	if searchText != "" {
+		cond := orm.NewCondition()
+		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
+		cond2 := cond.AndCond(cond1).And("ProjectId", id)
+		qs = qs.SetCond(cond2)
+		_, err = qs.Limit(limit, offset).OrderBy("-created").All(&products)
+	} else {
+		_, err = qs.Filter("ProjectId", id).Limit(limit, offset).OrderBy("-created").All(&products)
+	}
+	return products, err
+}
+
+//取得侧栏id下成果总数
+func GetProductsCount(id int64, searchText string) (count int64, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Product")
+	if searchText != "" {
+		cond := orm.NewCondition()
+		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
+		cond2 := cond.AndCond(cond1).And("ProjectId", id)
+		qs = qs.SetCond(cond2)
+		count, err = qs.Limit(-1).Count()
+	} else {
+		count, err = qs.Filter("ProjectId", id).Limit(-1).Count()
+	}
+	return count, err
+}
+
 //根据项目id查出所有成果
-//查询一个项目可以，查询很多项目的话，效率就太低了！！！
 //直接把所有成果都查出来。getallproduct
 func GetProjProducts(id int64, number int) (count int64, products []*Product, err error) {
 	// idstring := strconv.FormatInt(id, 10)

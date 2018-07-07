@@ -36,6 +36,13 @@ type Project1 struct {
 	Updated   time.Time
 }
 
+//后端分页的数据结构
+type Tableserver struct {
+	Rows  []Project1 `json:"rows"`
+	Page  int64      `json:"page"`
+	Total int64      `json:"total"` //string或int64都行！
+}
+
 //项目列表页面
 func (c *ProjController) Get() {
 	// username, role := checkprodRole(c.Ctx)
@@ -81,12 +88,30 @@ func (c *ProjController) Get() {
 	c.Data["Select2"] = slice1
 }
 
-//提供给项目列表页的table中json数据，扩展后按标签显示
+//分页提供给项目列表页的table中json数据
+//http://127.0.0.1/project/getprojects?limit=15&pageNo=1
 func (c *ProjController) GetProjects() {
 	id := c.Ctx.Input.Param(":id")
+	limit := c.Input().Get("limit")
+	limit1, err := strconv.ParseInt(limit, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	page := c.Input().Get("pageNo")
+	page1, err := strconv.ParseInt(page, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	searchText := c.Input().Get("searchText")
 	if id == "" {
 		//显示全部
-		projects, err := models.GetProjects()
+		var offset int64
+		if page1 <= 1 {
+			offset = 0
+		} else {
+			offset = (page1 - 1) * limit1
+		}
+		projects, err := models.GetProjectsPage(limit1, offset, searchText)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -101,7 +126,7 @@ func (c *ProjController) GetProjects() {
 		// 	beego.Error(err)
 		// }
 		//记录开始时间
-		start := time.Now()
+		// start := time.Now()
 
 		//取得每个项目的成果数量
 		projects1 := make([]Project1, 0) //这里不能加*号
@@ -120,8 +145,7 @@ func (c *ProjController) GetProjects() {
 			// if err != nil {
 			// 	beego.Error(err)
 			// }
-			//根据项目id取得项目下所有成果
-			//效率太低
+			//根据项目id取得项目下所有成果数量
 			count, _, err := models.GetProjProducts(v.Id, 3)
 			if err != nil {
 				beego.Error(err)
@@ -144,35 +168,24 @@ func (c *ProjController) GetProjects() {
 			aa[0].Updated = v.Updated
 			projects1 = append(projects1, aa...)
 		}
-		c.Data["json"] = projects1
+		count, err := models.GetProjectsCount(searchText)
+		if err != nil {
+			beego.Error(err)
+		}
+		table := Tableserver{projects1, page1, count}
+
+		c.Data["json"] = table
 		c.ServeJSON()
 		//记录结束时间差
-		elapsed := time.Since(start)
-		beego.Info(elapsed)
+		// elapsed := time.Since(start)
+		// beego.Info(elapsed)
 	} else {
 		//根据标签查询
 	}
 }
 
-//根据id查看项目，查出项目目录
+//根据id查看项目，查出项目当前级和下一级目录
 func (c *ProjController) GetProject() {
-	// username, userrole := checkprodRole(c.Ctx)
-	// roleint, err := strconv.Atoi(userrole)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// if userrole == "1" {
-	// 	c.Data["IsAdmin"] = true
-	// } else if roleint > 1 && roleint < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// // c.Data["IsProject"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = userrole
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -211,23 +224,35 @@ func (c *ProjController) GetProject() {
 	}
 
 	//记录开始时间
-	start := time.Now()
+	// start := time.Now()
 	//取项目所有子孙
 	categories, err := models.GetProjectsbyPid(idNum)
 	if err != nil {
 		beego.Error(err)
 	}
 	//记录结束时间差
-	elapsed := time.Since(start)
-	beego.Info(elapsed)
-	//根据项目id取得项目下所有成果
-	_, products, err := models.GetProjProducts(idNum, 2)
+	// elapsed := time.Since(start)
+	// beego.Info(elapsed)
+	//根据项目顶级id取得项目下所有成果
+	var topprojectid int64
+	if category.ParentId != 0 { //如果不是根目录
+		parentidpath := strings.Replace(strings.Replace(category.ParentIdPath, "#$", "-", -1), "$", "", -1)
+		parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
+		patharray := strings.Split(parentidpath1, "-")
+		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		topprojectid = category.Id
+	}
+	_, products, err := models.GetProjProducts(topprojectid, 2)
 	if err != nil {
 		beego.Error(err)
 	}
 	//记录结束时间差
-	elapsed = time.Since(start)
-	beego.Info(elapsed)
+	// elapsed = time.Since(start)
+	// beego.Info(elapsed)
 	//一次性查出所有成果
 	//或者存储成果数据的时候存上项目id，相当于加了个索引
 	// products, err := models.GetAllProducts()
@@ -242,15 +267,41 @@ func (c *ProjController) GetProject() {
 	// 	grade = append(grade, v.Grade)
 	// }
 	// height := intmax(grade[0], grade[1:]...)
-	var count [1]string
+	var count int
+	//取得这个项目目录下的成果数量
+	productcount, err := models.GetProducts(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	count = len(productcount)
+	// beego.Info(count)
+
+	for _, proj := range cates {
+		id := proj.Id
+		for _, m := range products {
+			if id == m.ProjectId {
+				count = count + 1
+			}
+		}
+		// beego.Info(count)
+		slice := getsons(id, categories)
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			getprodcount(slice, categories, products, &count)
+		}
+	}
+	// beego.Info(count)
+	var tags [1]string
+	tags[0] = strconv.Itoa(count)
 	//递归生成目录json
-	root := FileNode1{category.Id, category.Title, "", count, true, []*FileNode1{}}
+	// root := FileNode1{category.Id, category.Title, "", count, true, []*FileNode1{}}
+	root := FileNode1{category.Id, category.Title, "", tags, false, []*FileNode1{}}
 	// walk(category.Id, &root)
 	// maketreejson1(cates, categories, products, &root)
 	maketreejson2(cates, categories, products, &root)
 	//记录结束时间差
-	elapsed = time.Since(start)
-	beego.Info(elapsed)
+	// elapsed = time.Since(start)
+	// beego.Info(elapsed)
 	// beego.Info(root)
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
@@ -271,7 +322,7 @@ func (c *ProjController) GetProject() {
 	}
 }
 
-//根据id懒加载项目目录
+//根据id懒加载项目下级目录——上面那个是显示第一级和第二级目录
 func (c *ProjController) GetProjCate() {
 	// id := c.Ctx.Input.Param(":id")
 	id := c.Input().Get("id")
@@ -310,6 +361,7 @@ func (c *ProjController) GetProjCate() {
 	if err != nil {
 		beego.Error(err)
 	}
+
 	// } else {
 	// 	topprojectid = proj.Id
 	// }
@@ -394,8 +446,10 @@ func (c *ProjController) GetProjCate() {
 	// 	slice = append(slice, child)
 	// }
 	//记录结束时间差696ms__不查询儿子则110ms
-	elapsed = time.Since(start) //97MS
-	beego.Info(elapsed)
+	// elapsed = time.Since(start) //97MS
+	// beego.Info(elapsed)
+	beego.Info(patharray[0])
+	beego.Info(topprojectid)
 
 	c.Data["json"] = slice //data
 	c.ServeJSON()

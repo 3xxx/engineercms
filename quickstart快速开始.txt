@@ -2,7 +2,7 @@
 	如果是首次使用，请：
 	1. 解压到d:\EngineerCMS\；（其他盘根目录下也行，因为上传附件会使得这个文件夹越来越大，所以，要考虑空间大一些的盘。）
 	2. 修改配置文件conf\app.conf.sample为app.conf,打开app.conf,看到里面的httpport = 80，如果要修改成8080，请修改后保存。runmode = prod表示生产模式运行系统。
-	3. 修改数据库文件database\engineercms.db.sample为engineercms.db。
+	3. 修改数据库文件database\engineer.db.sample为engineer.db。
 	4. 运行engineercms-win64/win32.exe即可在chrome浏览器中输入本地ip（127.0.0.1）和前面设置的端口号（假设是80或8080）进行访问。如果是80端口，则端口号可省略，如http://127.0.0.1。如果运行后闪退，则可能是端口号被占用了，请修改端口号再运行。运行后不要关闭窗口，它是服务。IE浏览器支持不好，推荐使用chrome，可以使用firefox、opra。加入开机启动请自行设置。
 ***********后台设置************************	
 	5. 进入admin后台页面：http://127.0.0.1/admin；系统已经将127.0.0.1这个本机ip权限设置为1级，进入admin后台页面。

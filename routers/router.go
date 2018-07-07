@@ -13,6 +13,8 @@ func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
 	//升级数据库
 	beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
+	//删除数据表和字段测试
+	beego.Router("/modifydatabase", &controllers.MainController{}, "*:ModifyDatabase")
 
 	beego.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
 	//cms中预览office回调

@@ -680,7 +680,7 @@ func (c *MainController) Pdf() {
 //升级数据库
 func (c *MainController) UpdateDatabase() {
 	beego.Info("ok")
-	err1, err2, err3, err4 := models.UpdateDatabase()
+	err1, err2, err3, err4, err5, err6, err7 := models.UpdateDatabase()
 	if err1 != nil {
 		beego.Error(err1)
 	}
@@ -693,6 +693,25 @@ func (c *MainController) UpdateDatabase() {
 	if err4 != nil {
 		beego.Error(err4)
 	}
+	if err5 != nil {
+		beego.Error(err5)
+	}
+	if err6 != nil {
+		beego.Error(err6)
+	}
+	if err7 != nil {
+		beego.Error(err7)
+	}
 	c.Data["json"] = "ok"
+	c.ServeJSON()
+}
+
+//删除数据表和字段测试
+func (c *MainController) ModifyDatabase() {
+	err := models.ModifyDatabase()
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = err
 	c.ServeJSON()
 }

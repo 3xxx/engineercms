@@ -31,9 +31,9 @@ type RoleController struct {
 
 type Userrole struct {
 	Id         int64
-	Rolename   string
+	Rolename   string `json:"name"`
 	Rolenumber string
-	Status     string
+	Status     string `json:"role"`
 	Level      string
 }
 
@@ -257,9 +257,10 @@ func (c *RoleController) Get() {
 		}
 		c.Data["json"] = userrole //用户所具有的角色，勾选
 		c.ServeJSON()
+	} else {
+		c.Data["json"] = roles //角色列表
+		c.ServeJSON()
 	}
-	c.Data["json"] = roles //角色列表
-	c.ServeJSON()
 }
 
 // swagger:operation POST /v1/auth/role/post RoleController RoleController

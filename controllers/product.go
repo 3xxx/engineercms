@@ -58,6 +58,7 @@ type PdfLink struct {
 	Created   time.Time
 	Updated   time.Time
 }
+
 type ArticleContent struct {
 	Id        int64
 	Title     string
@@ -68,6 +69,13 @@ type ArticleContent struct {
 	// Views   int64
 	Created time.Time
 	Updated time.Time
+}
+
+//后端分页的数据结构
+type prodTableserver struct {
+	Rows  []ProductLink `json:"rows"`
+	Page  int64         `json:"page"`
+	Total int64         `json:"total"` //string或int64都行！
 }
 
 //根据项目侧栏id查看这个id下的成果页面，table中的数据填充用GetProducts
@@ -196,10 +204,21 @@ func (c *ProdController) GetProjProd() {
 //专门做一个接口provideproducts,由
 func (c *ProdController) GetProducts() {
 	id := c.Ctx.Input.Param(":id")
+	limit := c.Input().Get("limit")
+	limit1, err := strconv.ParseInt(limit, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	page := c.Input().Get("pageNo")
+	page1, err := strconv.ParseInt(page, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	searchText := c.Input().Get("searchText")
 	// beego.Info(id)
 	c.Data["Id"] = id
 	var idNum int64
-	var err error
+	// var err error
 	if id != "" {
 		//id转成64为
 		idNum, err = strconv.ParseInt(id, 10, 64)
@@ -219,8 +238,14 @@ func (c *ProdController) GetProducts() {
 		// beego.Info(Url)
 	} //else {
 	//}
+	var offset int64
+	if page1 <= 1 {
+		offset = 0
+	} else {
+		offset = (page1 - 1) * limit1
+	}
 	//根据项目id取得所有成果
-	products, err := models.GetProducts(idNum)
+	products, err := models.GetProductsPage(idNum, limit1, offset, searchText)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -343,7 +368,14 @@ func (c *ProdController) GetProducts() {
 		link = append(link, linkarr...)
 	}
 
-	c.Data["json"] = link //products
+	count, err := models.GetProductsCount(idNum, searchText)
+	if err != nil {
+		beego.Error(err)
+	}
+	table := prodTableserver{link, page1, count}
+
+	c.Data["json"] = table
+	// c.Data["json"] = link //products
 	c.ServeJSON()
 	// c.Data["json"] = root
 	// c.ServeJSON()

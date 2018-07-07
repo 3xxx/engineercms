@@ -83,34 +83,7 @@
     <!-- 项目表 -->
     <div class="col-sm-6 col-md-6 col-lg-6">
       <h3>项目列表</h3>
-      <table id="table2"  
-        data-url="/project/getprojects"
-        data-toggle="table"
-        data-search="true"
-        data-show-refresh="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-click-to-select="true"
-        data-side-pagination="client"
-        data-pagination="true"
-        data-page-size="5"
-        data-page-list="[5, 10, All]"
-        data-query-params="queryParams"
-        data-select-item-name="project"
-        >
-        <thead>        
-          <tr>
-          <th data-width="10" data-radio="true"></th>
-          <th data-formatter="index1">#</th>
-          <th data-field="Code">编号</th>
-          <th data-field="Title">名称</th>
-          <!-- <th data-field="Label">标签</th> -->
-          <th data-field="Principal">负责人</th>
-          <!-- <th data-field="Product">成果数量</th> -->
-          <th data-field="Created" data-formatter="localDateFormatter" data-visible="false">建立时间</th>
-          </tr>
-        </thead>
-      </table>
+      <table id="table2"></table>
     </div>
   </div>
 
@@ -186,6 +159,7 @@
               }
       });
     });
+
     function expandTable(index, row,$detail) {
         var cur_table = $detail.html('<table id="table4"></table>').find('table');
         if (index==3){
@@ -258,6 +232,126 @@
     //         }
     //     })
     // })
+  $(function () {
+    // 初始化【未接受】工作流表格
+    $("#table2").bootstrapTable({
+        url : '/project/getprojects',
+        method: 'get',
+        search:'true',
+        showRefresh:'true',
+        showToggle:'true',
+        showColumns:'true',
+        // toolbar:'#toolbar1',
+        pagination: 'true',
+        sidePagination: "server",
+        queryParamsType:'',
+        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+        // limit, offset, search, sort, order 否则, 需要包含: 
+        // pageSize, pageNumber, searchText, sortName, sortOrder. 
+        // 返回false将会终止请求。
+        pageSize: 5,
+        pageNumber: 1,
+        pageList: [15,20, 50, 100],
+        singleSelect:"true",
+        clickToSelect:"true",
+        queryParams:function queryParams(params) {   //设置查询参数
+          var param = {
+              limit: params.pageSize,   //每页多少条数据
+              pageNo: params.pageNumber, // 页码
+              searchText:$(".search .form-control").val()
+          };
+          //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+            return param;
+        },
+        columns: [
+          {
+            title: '选择',
+            radio: 'true',
+            width: '10',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            // field: 'Number',
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            },
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Code',
+            title: '编号',
+            // formatter:setCode,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Title',
+            title: '名称',
+            // formatter:setTitle,
+            align:"center",
+            valign:"middle"
+          },
+          // {
+          //   field: 'Label',
+          //   title: '标签',
+          //   formatter:setLable,
+          //   align:"center",
+          //   valign:"middle"
+          // },
+          {
+            field: 'Principal',
+            title: '负责人',
+            align:"center",
+            valign:"middle"
+          },
+          // {
+          //   field: 'Number',
+          //   title: '成果数量',
+          //   formatter:setCode,
+          //   align:"center",
+          //   valign:"middle"
+          // },
+          // {
+          //   field: 'action',
+          //   title: '时间轴',
+          //   formatter:actionFormatter,
+          //   events:actionEvents,
+          //   align:"center",
+          //   valign:"middle"
+          // },
+          {
+            field: 'Created',
+            title: '建立时间',
+            formatter:localDateFormatter,
+            align:"center",
+            valign:"middle"
+          }
+            // {
+            //     field: 'dContMainEntity.createTime',
+            //     title: '发起时间',
+            //     formatter: function (value, row, index) {
+            //         return new Date(value).toLocaleString().substring(0,9);
+            //     }
+            // },
+            // {
+            //     field: 'dContMainEntity.operate',
+            //     title: '操作',
+            //     formatter: operateFormatter
+            // }
+        ]
+    });
+  });
 
     function index1(value,row,index){
       return index+1

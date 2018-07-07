@@ -2,6 +2,7 @@
 package controllers
 
 import (
+	// "code.google.com/p/mahonia"
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
@@ -966,20 +967,31 @@ func (c *AttachController) Attachment() {
 		// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
 		projurl = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
 	}
-
 	//由proj id取得url
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
 	}
-
 	fileext := path.Ext(attachment.FileName)
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 	case ".dwg", ".DWG":
-		c.Data["DwgLink"] = c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName
-		c.TplName = "dwg.tpl"
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
+			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+			if err != nil {
+				beego.Error(err)
+			}
+			// beego.Info(dwglink)
+			c.Data["DwgLink"] = dwglink
+			c.TplName = "dwg.tpl"
+		} else {
+			route := c.Ctx.Request.URL.String()
+			c.Data["Url"] = route
+			c.Redirect("/roleerr?url="+route, 302)
+			// c.Redirect("/roleerr", 302)
+			return
+		}
 	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		//这里缺少权限设置！！！！！！！！！！！
@@ -1002,58 +1014,19 @@ func (c *AttachController) Attachment() {
 //文章中的附件呢？
 //default中的pdf页面中的{{.pdflink}}，绝对路径
 func (c *AttachController) DownloadAttachment() {
-	// c.Data["IsLogin"] = checkAccount(c.Ctx)
-	// //4.取得客户端用户名
-	// var uname, useridstring string
-	// v := c.GetSession("uname")
-	// // var role, userrole int
-	// if v != nil {
-	// 	uname = v.(string)
-	// 	c.Data["Uname"] = v.(string)
-	// 	user, err := models.GetUserByUsername(uname)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// 	// userrole = user.Role
-	// 	useridstring = strconv.FormatInt(user.Id, 10)
-	// }
-	//else {
-	// userrole = 5
-	// route := c.Ctx.Request.URL.String()
-	// c.Data["Url"] = route
-	// c.Redirect("/roleerr?url="+route, 302)
-	// return
-	// }
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
-	// c.Data["Username"] = username
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
-	// c.Data["IsAdmin"] = isadmin
-	// c.Data["IsLogin"] = islogin
-	// c.Data["Uid"] = uid
 	useridstring := strconv.FormatInt(uid, 10)
-	// iprole := Getiprole(c.Ctx.Input.IP())
-	// if iprole <= userrole {
-	// 	role = iprole
-	// } else {
-	// 	role = userrole
-	// }
-
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
-	// filePath := path.Base(ctx.Request.RequestURI)
+	// filePath := path.Base(c.Ctx.Request.RequestURI)
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
 		beego.Error(err)
 	}
-
+	// beego.Info(filePath)
 	fileext := path.Ext(filePath)
-
-	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
-	// beego.Info(path.Dir(filePath))
 	filepath1 := path.Dir(filePath)
 	array := strings.Split(filepath1, "/")
 	// beego.Info(strings.Split(filepath1, "/"))
-
 	//查出所有项目
 	var pid int64
 	proj, err := models.GetProjects()
@@ -1092,15 +1065,20 @@ func (c *AttachController) DownloadAttachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-		//这里缺少权限设置！！！！！！！！！！！
+	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+	// beego.Info("ok")
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// beego.Info(filePath)
+	// beego.Info(useridstring)
+	//这里缺少权限设置！！！！！！！！！！！
 	default:
+		// beego.Info(useridstring)
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		} else {
+			// beego.Info(useridstring)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
 			c.Redirect("/roleerr?url="+route, 302)
@@ -1252,3 +1230,38 @@ func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Sect
 		return ProjectNumber, ProjectName, DesignStage, Section, err
 	}
 }
+
+//编码转换
+// l3, err3 := url.Parse(c.Ctx.Request.RequestURI[1:])
+// 	if err3 != nil {
+// 		beego.Error(err3)
+// 	}
+// 	beego.Info(l3.Query())
+// 	beego.Info(l3.Query().Encode())
+// 	beego.Info(url.QueryEscape("初步设计"))
+// 	dec := mahonia.NewDecoder("utf8") //定义转换乱码
+// 	//保留	fmt.Println(dec.ConvertString(j))   //转成utf-8
+// 	beego.Info(dec.ConvertString(url.QueryEscape("初步设计")))
+// 	// rd := dec.NewReader(resp.Body)
+// 	// doc, err := goquery.NewDocumentFromReader(rd)
+// 	// if err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+
+// 	bn := []byte("\xbf\xc6\xd1\xa7\xC3\xF1\xD6\xF7\xCF\xDC\xD5\xFE")
+// 	beego.Info(bn)
+// 	sn := string(bn)
+// 	beego.Info(sn)
+// 	cbn, err1, _, _ := ConvertGB2312(bn)
+// 	if err1 != nil {
+// 		beego.Error(err1)
+// 	}
+// 	beego.Info(cbn)
+// 	csn, err2, _, _ := ConvertGB2312String(c.Ctx.Request.RequestURI[1:])
+// 	if err2 != nil {
+// 		beego.Error(err2)
+// 	}
+// 	beego.Info(csn)
+// 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
+// 	beego.Info(path.Dir(filePath))
+// 	beego.Info(c.Ctx.Request.RequestURI[1:])

@@ -703,7 +703,7 @@ field：点击列的 field 名称 -->
                 <th data-width="10" data-checkbox="true" data-formatter="stateFormatter"></th>
                 <th data-formatter="index1">#</th>
                 <th data-field="Rolenumber">角色编码</th>
-                <th data-field="Rolename">角色名称</th>
+                <th data-field="name">角色名称</th>
                 <th data-align="center" data-formatter="StatusFormatter">状态</th>
                 <!-- <th data-field="domain_desc">所属域</th> -->
                 <!-- <th data-align="center"
@@ -829,7 +829,7 @@ field：点击列的 field 名称 -->
 
       function StatusFormatter(value, row, index) {
         // alert(row.Status);
-        if (row.Status == "0") {
+        if (row.role == "0") {
             return '正常';
         }else{
           return '失效';
@@ -897,9 +897,9 @@ field：点击列的 field 名称 -->
         $("input#cid").remove();
         var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
         $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-        $("#Rolename1").val(selectRow[0].Rolename);
+        $("#Rolename1").val(selectRow[0].name);
         $("#Rolenumber1").val(selectRow[0].Rolenumber);
-        $("#Status1").val(selectRow[0].Status);
+        $("#Status1").val(selectRow[0].role);
         // alert(JSON.stringify(selectRow));
         // alert(selectRow[0].Id);
         // var title = $('#'+id).attr("value");
@@ -959,7 +959,7 @@ field：点击列的 field 名称 -->
       } 
       // $(function(){$('#myModal').modal('hide')});
       $('#modalTable1').modal('hide');
-      $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
+      $('#table1').bootstrapTable('refresh', {url:'/admin/role/get'});
       // "/category/modifyfrm?cid="+cid
       // window.location.reload();//刷新页面
     }
