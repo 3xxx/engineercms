@@ -312,17 +312,6 @@ func (c *ArticleController) GetArticle() {
 
 //向某个侧栏id下添加文章
 func (c *ArticleController) AddArticle() {
-	//取得客户端用户名
-	// v := c.GetSession("uname")
-	// var user models.User
-	// var err error
-	// if v != nil {
-	// 	uname := v.(string)
-	// 	user, err = models.GetUserByUsername(uname)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// }
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	meritbasic, err := models.GetMeritBasic()
@@ -333,9 +322,6 @@ func (c *ArticleController) AddArticle() {
 	var news string
 	var cid int64
 
-	// _, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// id := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
 	code := c.Input().Get("code")
 	title := c.Input().Get("title")
@@ -503,15 +489,13 @@ func (c *ArticleController) ModifyArticle() {
 
 //编辑 成果id
 func (c *ArticleController) UpdateArticle() {
-	// _, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// id := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("aid")
 	// beego.Info(aid)
 	subtext := c.Input().Get("subtext")
 	// beego.Info(subtext)
 	// content := c.Input().Get("content")
-	content := c.Input().Get("editorValue")
+	// content := c.Input().Get("editorValue")
+	content := c.Input().Get("content")
 	// beego.Info(content)
 	//id转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
@@ -523,9 +507,9 @@ func (c *ArticleController) UpdateArticle() {
 	if err != nil {
 		beego.Error(err)
 	} else {
-		// c.Data["json"] = "ok"
-		// c.ServeJSON()
-		c.Redirect("/project/product/article/"+pid, 302) //回到修改后的文章
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+		// c.Redirect("/project/product/article/"+pid, 302) //回到修改后的文章
 	}
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()

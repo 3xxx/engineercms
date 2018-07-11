@@ -181,23 +181,7 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 
 //这个提交添加wiki的方法
 func (c *WikiController) AddWiki() {
-	// username, role := checkprodRole(c.Ctx)
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// if role == "1" {
-	// 	c.Data["IsAdmin"] = true
-	// } else if roleint > 1 && roleint < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
 	c.Data["IsWiki"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -205,33 +189,9 @@ func (c *WikiController) AddWiki() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	// var uname string
-	// if !checkAccount(c.Ctx) { //这里应该不需要
-	// 	c.Redirect("/login", 302)
-	// 	return
-	// }
-	//解析表单
-	// tid := c.Input().Get("tid") //教程里漏了这句，导致修改总是变成添加文章
+
 	title := c.Input().Get("title")
-	// beego.Info(title)
-	content := c.Input().Get("editorValue")
-	// beego.Info(content)
-	// _, h, err := c.GetFile("image")
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// var attachment string
-	// if h != nil {
-	// 	attachment = h.Filename
-	// 	err = c.SaveToFile("image", path.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// }
-	//获取用户名
-	// uname, _ := checkprodRole(c.Ctx) //login里的
-	// rolename, _ = strconv.Atoi(role)
-	// c.Data["Uname"] = uname
+	content := c.Input().Get("content")
 	if !islogin { //&& uname != category.Author
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
@@ -240,21 +200,20 @@ func (c *WikiController) AddWiki() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	_, err := models.AddWikiOne(title, content, username)
+	id, err := models.AddWikiOne(title, content, username)
 	if err != nil {
 		beego.Error(err)
+	} else {
+		c.Data["json"] = id
+		c.ServeJSON()
 	}
-	// if len(tid) == 0 {
-	// beego.Info(attachment)
-	// } else {
-	// err = models.ModifyWiki(tid, title, content)
-	// }
+
 	logs := logs.NewLogger(1000)
 	logs.SetLogger("file", `{"filename":"log/test.log"}`)
 	logs.EnableFuncCallDepth(true)
 	logs.Info(c.Ctx.Input.IP() + " " + "AddWiki:" + " " + title)
 	logs.Close()
-	c.Redirect("/wiki", 302)
+	// c.Redirect("/wiki", 302)
 }
 
 func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
@@ -452,13 +411,16 @@ func (c *WikiController) Post() { //这个post属于wiki_modify.html提交修改
 	tid := c.Input().Get("tid") //教程里漏了这句，导致修改总是变成添加文章
 	title := c.Input().Get("title")
 	//其实这里只修改title, tnumber,和content
-	content := c.Input().Get("editorValue")
+	content := c.Input().Get("content")
 	err := models.ModifyWiki(tid, title, content)
 	// }
 	if err != nil {
 		beego.Error(err)
+	} else {
+		c.Data["json"] = tid
+		c.ServeJSON()
 	}
-	c.Redirect("/wiki/view/"+tid, 302) //回到修改后的文章
+	// c.Redirect("/wiki/view/"+tid, 302) //回到修改后的文章
 }
 
 //删除文章

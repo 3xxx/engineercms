@@ -155,7 +155,7 @@ func GetProductsCount(id int64, searchText string) (count int64, err error) {
 	return count, err
 }
 
-//根据项目id查出所有成果
+//根据项目顶级id查出所有成果
 //直接把所有成果都查出来。getallproduct
 func GetProjProducts(id int64, number int) (count int64, products []*Product, err error) {
 	// idstring := strconv.FormatInt(id, 10)

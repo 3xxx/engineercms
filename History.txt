@@ -1,6 +1,8 @@
                        EngineerCMS revision history
 
-
+13, EngineerCMS 1.07 (July 11, 2018)
+	+) Add the DWG view inline 
+	$) Change the Ueditor to froala
 12, EngineerCMS 1.06 (July 01, 2018)
 	*) Modified The parentidpath field of the project data table
 	+) Added the topprojectid field of the product data table; The conten and views fields were removed

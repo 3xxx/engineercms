@@ -5,49 +5,39 @@
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
-  
-  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
-  
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-  
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
-
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
-    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
-
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
-
   <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
   <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/webuploader.js"></script> -->
-  <!-- <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css"> -->
-  <!-- <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script> -->
-  
   <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+  
+  <link rel="stylesheet" href="/static/froala/css/froala_editor.css">
+  <link rel="stylesheet" href="/static/froala/css/froala_style.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/code_view.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/draggable.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/colors.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/emoticons.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/image_manager.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/image.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/line_breaker.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/table.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/char_counter.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/video.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/fullscreen.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/file.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/quick_insert.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/help.css">
+  <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css">
+  <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
+  <link rel="stylesheet" href="/static/froala/js/codemirror.min.css">
+  <link rel="stylesheet" href="/static/froala/css/themes/red.css">
+
   <style type="text/css">
-  /*模态框效果*/
-    /*.modal-header {*/
-      /*background: #00FF00;*/
-      /*min-height: 16.42857143px;
-      padding: 15px;
-      border-bottom: 1px solid #e5e5e5;*/
-    /*}*/
-    /*.col-sm-1 input[type=checkbox]{
-　　display: inline-block;
-　　vertical-align: middle;
-　　margin-bottom: 2px; 
-    }*/
     #modalDialog .modal-header {cursor: move;}
     #modalDialog1 .modal-header {cursor: move;}
     #modalDialog2 .modal-header {cursor: move;}
@@ -56,6 +46,18 @@
     #modalDialog5 .modal-header {cursor: move;}
     #modalDialog6 .modal-header {cursor: move;}
     #modalDialog7 .modal-header {cursor: move;}
+
+      body {
+          text-align: center;
+      }
+      div#editor {
+          width: 81%;
+          margin: auto;
+          text-align: left;
+      }
+      .ss {
+        background-color: red;
+      }
   </style>
 </head>
 
@@ -88,20 +90,6 @@
 <table id="table0"></table>
 
 <script type="text/javascript">
-  /*数据json使用json数据要删除data-toggle="table"*/
-  // var json =
-     // 保留***[{"Id":"1","Code":[这个数组也行"SL0001-510-08","SL0001-510-08"],"Title":"水利枢纽布置图","Label":"水电站","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-        /*初始化table数据*/
-        // $(function(){
-        //     $("#tabletest").bootstrapTable({
-        //         data:json
-                // onClickRow: function (row, $element) {
-                //   alert( "选择了行Id为: " + row.Id );
-                //   rowid=row.Id//全局变量
-                //   $('#table1').bootstrapTable('refresh', {url:'/admincategory?pid='+row.Id});
-                // }
-        //     });
-        // });
   $(function () {
     // 初始化【未接受】工作流表格
     $("#table0").bootstrapTable({
@@ -253,8 +241,7 @@
   });
 
   function index1(value,row,index){
-  // alert( "Data Loaded: " + index );
-            return index+1
+    return index+1
   }
 
   function localDateFormatter(value) {
@@ -321,22 +308,12 @@
       }
       return labelarray.join(",");
     }
-  // }else{
-    // return "<a href='/project/product/attachment/"+value+"'>" + value + "</a>";
-  // }
-    // var x   
-    // for (x in array)
-    // {
-    // array[x];
-    // }
-          // <a href="/category?op=viewlabel&label=value">
-          // <span class="label label-info"></span></a>
   }
+
   function setTitle(value,row,index){
     return "<a href='/project/product/"+row.Id+"'>" + value + "</a>";
   }
   function setArticle(value,row,index){
-    // return '<a class="article" href="javascript:void(0)" title="article"><i class="fa fa-file-text-o"></i></a>';
     if (value){
       if (value.length==1){//'<a href="/project/product/article/'
         articleUrl= '<a href="'+value[0].Link+'/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
@@ -349,14 +326,11 @@
       }
     }
   }
-// var bb;
+
   function setAttachment(value,row,index){
     if (value){
       if (value.length==1){
-        // alert(value[0].Title);
-        // var ext = value[0].Title.substring(0, value[0].Title.lastIndexOf("."));
         var ext =/\.[^\.]+/.exec(value[0].Title);
-        // alert(ext);
         if (ext==".dwg"){
           attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="打开" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
         }else if(ext==".doc"||ext==".docx"){
@@ -399,7 +373,6 @@
     // return '<a class="attachment" href="javascript:void(0)" title="attachment"><i class="fa fa-paperclip"></i></a>';
   }
 
-  // var pdfUrl;+'&file='+value[0].Link+'/'+value[0].Title
   function setPdf(value,row,index){
     if (value){
       if (value.length==1){
@@ -642,9 +615,9 @@
   })
 
   $(document).ready(function() {
-      $list = $('#thelist1');
-      $btn = $('#ctlBtn1');
-      state = 'pending';
+    $list = $('#thelist1');
+    $btn = $('#ctlBtn1');
+    state = 'pending';
     $('#modalTable1').on('shown.bs.modal',function(e){
       var uploader=WebUploader.create({
         // 不压缩image
@@ -770,13 +743,8 @@
         });
   })
 
-
   // 编辑成果信息
   $("#editorProdButton").click(function() {
-      // if ({{.role}}!=1){
-      //   alert("权限不够！");
-      //   return;
-      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
         alert("请先勾选成果！");
@@ -786,10 +754,7 @@
         alert("请不要勾选一个以上成果！");
         return;
       }
-      // alert(selectRow[0].Uid=={{.Uid}});
-      // alert({{.Uid}});
       if (selectRow[0].Uid==={{.Uid}}||{{.RoleUpdate}}=="true"){
-      
         if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
         var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
         }
@@ -811,12 +776,10 @@
         $("#prodname3").val(selectRow[0].Title);
         $("#prodlabel3").val(selectRow[0].Label);
         $("#prodprincipal3").val(selectRow[0].Principal);
-
         $('#modalProdEditor').modal({
         show:true,
         backdrop:'static'
         });
-
       }else{
         alert("权限不够！"+selectRow[0].Uid);
         return;
@@ -869,7 +832,6 @@
         alert("权限不够！"+selectRow[0].Uid);
         return;
       }
-
   })
 
   $(document).ready(function() {
@@ -968,10 +930,6 @@
     
   // 删除成果
   $("#deleteButton").click(function() {
-      // if ({{.role}}!=1){
-      //   alert("权限不够！");
-      //   return;
-      // }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<=0) {
         alert("请先勾选成果！");
@@ -979,8 +937,6 @@
       }
      //问题：如果多选，而其中有自己的，也有自己不具备权限的********
       if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
-        
-
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
       }
@@ -1027,33 +983,6 @@
       }  
   })
 
-
-  //模态框可拖曳—要引入ui-jquery.js
-  // $("#modalTable").draggable({
-  //   handle:".modal-header",
-  //   cusor:"move",
-  //   refreshPositions:false
-  // });
-  // 来自群，保留，批量
-  // var rows= $('#account-table').bootstrapTable('getSelections');
-  //       if(rows.length==0) {
-  //           layer.alert('请您选择要删除的子账号！', {
-  //               title:'提示信息',
-  //               closeBtn: 0,
-  //               icon: 0,
-  //               skin: 'layui-layer-lan',
-  //               shift:0 //动画类型
-  //           });
-  //           return false;
-  //       }
-  //           var ids="";
-  //           for(var i=0;i<rows.length;i++){
-  //               if(i==0){
-  //                   ids=rows[i].frontUserId;
-  //               }else{
-  //                   ids=ids+","+rows[i].frontUserId;
-  //               }
-  //           }
 </script>
   <!-- 批量上传 -->
   <div class="form-horizontal">
@@ -1118,7 +1047,7 @@
     </div>
   </div>
 
-<!-- 多附件 -->
+  <!-- 多附件 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable1">
       <div class="modal-dialog"  id="modalDialog1" style="background-color: #8bc34a">
@@ -1225,9 +1154,10 @@
                 <!-- </form> --></div>
               </div>
             </div>
-            <label>文章正文:</label>
-              <div>
-                <script id="container" type="text/plain" style="height:200px;"></script><!-- width:1024px; -->
+              <label class="control-label">文章正文:</label>
+              <div id="editor" style="width: 90%">
+                <div id='edit' style="margin-top: 30px;">
+                </div>   
               </div>
           </div>
           <div class="modal-footer">
@@ -1477,28 +1407,101 @@
       </div>
     </div>
   </div>
-
 </div>
 
+  <!-- <script type="text/javascript" src="/static/froala/js/jquery.min.1.11.0.js"></script> -->
+  <script type="text/javascript" src="/static/froala/js/codemirror.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/xml.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/froala_editor.min.js" ></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/align.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/char_counter.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/code_beautifier.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/code_view.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/colors.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/draggable.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/emoticons.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/entities.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/file.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/font_size.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/font_family.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/fullscreen.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/image.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/image_manager.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/line_breaker.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/inline_style.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/link.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/lists.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/paragraph_format.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/paragraph_style.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/quick_insert.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/quote.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/table.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/save.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/url.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/video.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/help.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/print.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
+  <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script>
+  <script src="/static/froala/js/languages/zh_cn.js"></script>
+  <script>
+    // $(function(){
+    //   $('#edit').froalaEditor()
+    // });
+$(function (){
+  //超大屏幕
+  var toolbarButtons   = ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'color', 'emoticons', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'];
+  //大屏幕
+  var toolbarButtonsMD = ['fullscreen', 'bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'color', 'paragraphStyle', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', 'undo', 'redo', 'clearFormatting'];
+  //小屏幕
+  var toolbarButtonsSM = ['fullscreen', 'bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'insertLink', 'insertImage', 'insertTable', 'undo', 'redo'];
+  //手机
+  var toolbarButtonsXS = ['bold', 'italic', 'fontFamily', 'fontSize', 'undo', 'redo'];
+  var pid = $('#pid').val();
+  //编辑器初始化并赋值 
+  $('#edit').froalaEditor({
+      placeholderText: '请输入内容',
+      charCounterCount       : true,//默认
+      // charCounterMax         : -1,//默认
+      saveInterval            : 0,//不自动保存，默认10000
+      // theme                    : "red",
+      height                   : "300px",
+      toolbarBottom           : false,//默认
+      toolbarButtonsMD        : toolbarButtonsMD,
+      toolbarButtonsSM        : toolbarButtonsSM,
+      toolbarButtonsXS        : toolbarButtonsXS,
+      toolbarInline           : false,//true选中设置样式,默认false
+      imageUploadMethod       : 'POST',
+      heightMin: 450,
+      charCounterMax: 3000,
+      // imageUploadURL: "uploadImgEditor",
+      imageParams: { postId: "123" },
+      params: {
+            acl: '01',
+            AWSAccessKeyId: '02',
+            policy: '03',
+            signature: '04',
+          },
+      autosave: true,
+      autosaveInterval: 2500,
+      saveURL: 'hander/FroalaHandler.ashx',
+      saveParams: { postId: '1'},
+      spellcheck: false,
+      imageUploadURL: '/uploadimg',//上传到本地服务器
+      imageUploadParams: {pid: '{{.Id}}'},
+      imageDeleteURL: 'lib/delete_image.php',//删除图片
+      imagesLoadURL: 'lib/load_images.php',//管理图片
+      enter: $.FroalaEditor.ENTER_BR,
+      language: 'zh_cn',
+      // toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'align','color','fontSize','insertImage','insertTable','undo', 'redo']
+      });
+    })
+  </script>
+  <!-- 初始化/销毁编辑器
+$('#edit').froalaEditor({});
+$('#edit').froalaEditor('destroy'); -->
 <script type="text/javascript">
-//实例化编辑器
-    var ue = UE.getEditor('container', {
-      autoHeightEnabled: true,
-      autoFloatEnabled: false,
-      // topOffset:100,
-      initialFrameWidth:'100%'
-    });
-  /* 2.传入参数表,添加到已有参数表里 通过携带参数，实现不同的页面使用不同controllers*/
-    ue.ready(function () {
-        ue.addListener('focus', function () {//startUpload start-upload startUpload beforeExecCommand是在插入图片之前触发
-            var pid = $('#pid').val();
-            // var html = ue.getContent();
-            ue.execCommand('serverparam', {
-              "pid":pid 
-            });
-        });
-    });
-
   //添加文章
   function save2(){
     // var radio =$("input[type='radio']:checked").val();
@@ -1509,7 +1512,7 @@
     var prodprincipal = $('#prodprincipal2').val();
     var prodlabel = $('#prodlabel2').val();
     var relevancy = $('#relevancy').val();
-    var html = ue.getContent();
+    var html = $('div#edit').froalaEditor('html.get');//$('#edit')[0].childNodes[1].innerHTML;
     // $('#myModal').on('hide.bs.modal', function () {  
     if (prodname&&prodcode){  
       $.ajax({

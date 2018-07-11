@@ -78,40 +78,14 @@ type ReplyController struct {
 
 //添加wiki评论
 func (c *ReplyController) AddWiki() {
-	// if !checkAccount(c.Ctx) {
-	// 	c.Redirect("/login", 302)
-	// 	return
-	// }
-	// //由文章Id获取文章author
-	// role, _ := checkRole(c.Ctx)
-	// if role != "1" { //or（||或） 文章的作者不等于user
-	// 	c.Redirect("/roleerr", 302)
-	// 	return
-	// }
 	tid := c.Input().Get("tid") //tid是文章id
-	// content := c.Input().Get("editorValue")
-	//获取用户名，如果已经登录，则nickname用登录名
-	//4.取得客户端用户名
-	// var uname string
-	// v := c.GetSession("uname")
-	// var role, userrole int
-	// if v != nil {
-	// 	uname = v.(string)
-	// 	c.Data["Uname"] = v.(string)
-	// 	// user, err := models.GetUserByUsername(uname)
-	// 	// if err != nil {
-	// 	// 	beego.Error(err)
-	// 	// }
-	// 	// userrole = user.Role
-	// } else {
-	// 	uname = c.Input().Get("nickname")
-	// 	// userrole = 5
-	// }
 	username, _, _, _, _ := checkprodRole(c.Ctx)
-
-	err := models.AddWikiReply(tid, username, c.Input().Get("editorValue"))
+	err := models.AddWikiReply(tid, username, c.Input().Get("content"))
 	if err != nil {
 		beego.Error(err)
+	} else {
+		c.Data["json"] = tid
+		c.ServeJSON()
 	}
 	op := c.Input().Get("op")
 	switch op {
@@ -122,11 +96,6 @@ func (c *ReplyController) AddWiki() {
 	default:
 		c.Redirect("/topic/view/"+tid, 302)
 	}
-	// if op == "b" {
-	// 	c.Redirect("/topic/view_b/"+tid, 302)
-	// } else {
-	// 	c.Redirect("/topic/view/"+tid, 302)
-	// }
 }
 
 //删除wiki评论

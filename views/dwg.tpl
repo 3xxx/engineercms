@@ -2,12 +2,14 @@
 
 <HEAD>
 <title>DWGView</title>
-<!-- <LINK REL="stylesheet" TYPE="text/css" HREF="help/ie4.css"/> -->
+<meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="renderer" content="webkit">
+  <!-- 加上这句，360等浏览器就会默认使用google内核，而不是IE内核 。 -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
+  <!-- 加上这一句，如果被用户强行使用IE浏览器，就会使用IE的最高版本渲染内核 -->
+<!-- <LINK REL="stylesheet" TYPE="text/css" HREF="help/ie4.css"/> -->
 </HEAD>
 <script>
 function ZoomIn()
@@ -71,14 +73,16 @@ function Print()
         <param name="ShowLayoutBar" value="1">  
       </OBJECT>
     </td>
+  </tr>
     <!-- <td width="50%" valign="top">
       <table border="0" width="100%">-->
         <tr>
           <td width="100%" style="border-bottom:1px dashed">  <img border="0" src="/static/img/loading.gif" width="12" height="11"> 
             If the control can't display correctly, please download and install the control first.  
-            <p align="left"><a href="/static/download/dwgviewx.dll">Download DWGViewX</a></td>  
-        <!-- </tr>
-        <tr>
+            <p align="left"><a href="/static/download/dwgviewx.dll">Download DWGViewX</a>
+            </td>  
+        </tr>
+         <!--<tr>
           <td width="100%"></td>
         </tr>
         <tr>
@@ -90,7 +94,7 @@ function Print()
         </tr>
       </table>
     </td> --> 
-  </tr>
+  
 </table>
 
 </BODY>
