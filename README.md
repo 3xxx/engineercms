@@ -156,3 +156,7 @@ IPAD移动端效果
 ![snap3](https://user-images.githubusercontent.com/10678867/40973567-44c8dfc8-68f7-11e8-8d92-b67c56ed9c08.png)
 ![2](https://user-images.githubusercontent.com/10678867/33826926-7ef24c42-dea1-11e7-87a7-0b40c0906578.jpg)
 ![snap5](https://user-images.githubusercontent.com/10678867/33214106-7853fd70-d165-11e7-88c3-a0db71a1dbab.png)
+
+froala富文本编辑器支持word图片自动上传，视频和附件
+![snap13](https://user-images.githubusercontent.com/10678867/42722537-3c71c216-8780-11e8-8065-f1538bbcad18.png)
+![snap6](https://user-images.githubusercontent.com/10678867/42722539-40376bc6-8780-11e8-8173-1f6e9e60ef14.png)
