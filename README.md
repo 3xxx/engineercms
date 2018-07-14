@@ -91,6 +91,36 @@
 * 开源地址[https://github.com/3xxx/engineercms/](https://github.com/3xxx/engineercms/)
 * 问题反馈: [https://github.com/3xxx/engineercms/issues](https://github.com/3xxx/engineercms/issues)
 
+## 第三方包
+
+1. [casbin权限管理](https://github.com/casbin/casbin)
+2. [froala富文本编辑器](https://github.com/froala/wysiwyg-editor)
+3. [excel](https://github.com/360EntSecGroup-Skylar/excelize)
+4. [excel](https://github.com/tealeg/xlsx)
+5. [onlyoffice document server](https://github.com/ONLYOFFICE/DocumentServer)
+6. [pdf.js](https://github.com/mozilla/pdf.js)
+7. [html2canvas](https://github.com/niklasvh/html2canvas)
+8. [goquery](https://github.com/PuerkitoBio/goquery)
+9. [jQueryGantt](https://github.com/robicch/jQueryGantt)
+10. [gosqlite](https://github.com/mattn/go-sqlite3)
+11. [multyselect](https://github.com/davidstutz/bootstrap-multiselect)
+12. [bootstrap treeview](https://github.com/patternfly/patternfly-bootstrap-treeview)
+13. [fullcalendar](https://github.com/fullcalendar/fullcalendar)
+13. [daterangerpicker](https://github.com/dangrossman/daterangepicker)
+14. [datetimepicker](https://github.com/smalot/bootstrap-datetimepicker)
+15. [datepicker](https://github.com/uxsolutions/bootstrap-datepicker)
+16. [select2](https://github.com/select2/select2)
+17. [x-editable](https://github.com/vitalets/x-editable)
+18. [ztree](https://github.com/zTree/zTree_v3)
+19. [mahonia](https://github.com/axgle/mahonia)
+20. [request](https://github.com/mozillazg/request)
+21. [simplejson](https://github.com/bitly/go-simplejson)
+22. [ueditor](https://github.com/fex-team/ueditor)
+23. [webupload](https://github.com/fex-team/webuploader)
+24. [jqfileupload](https://github.com/blueimp/jQuery-File-Upload)
+25. [bootstrap-table](https://github.com/wenzhixin/bootstrap-table)
+26. [jquery.form.js](http://jquery.malsup.com/form/)
+
 ## LICENSE
 
 EngineerCMS source code is licensed under the Apache Licence, Version 2.0
