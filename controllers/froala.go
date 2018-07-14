@@ -367,7 +367,7 @@ func (c *FroalaController) UploadImg() {
 	if err != nil {
 		beego.Error(err)
 	}
-	beego.Info(DiskDirectory)
+	// beego.Info(DiskDirectory)
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
@@ -431,6 +431,60 @@ func (c *FroalaController) UploadWikiImg() {
 	filesize = filesize / 1000.0
 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + newname, "title": "111", "original": "demo.jpg"}
 	c.ServeJSON()
+}
+
+//添加文章里的视频上传
+func (c *FroalaController) UploadVideo() {
+	//解析表单
+	pid := c.Input().Get("pid")
+	// beego.Info(pid)
+	//pid转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据proj的parentIdpath
+	Url, DiskDirectory, err := GetUrlPath(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(DiskDirectory)
+	//获取上传的文件
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(h.Filename)
+	fileSuffix := path.Ext(h.Filename)
+	// random_name
+	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
+	// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	year, month, _ := time.Now().Date()
+	err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	if err != nil {
+		beego.Error(err)
+	}
+	var path string
+	var filesize int64
+	if h != nil {
+		//保存附件
+		path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
+		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
+		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+		}
+		filesize, _ = FileSize(path)
+		filesize = filesize / 1000.0
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + newname, "title": "111", "original": "demo.jpg"}
+		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": ""}
+		c.ServeJSON()
+	}
 }
 
 //下面这个保留

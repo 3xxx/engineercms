@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <title>{{.product.Title}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="Cache-Control" content="no-siteapp">
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
@@ -191,6 +190,10 @@ $(function (){
       imageUploadParams: {pid: '{{.product.ProjectId}}'},
       imageDeleteURL: 'lib/delete_image.php',//删除图片
       imagesLoadURL: 'lib/load_images.php',//管理图片
+      videoUploadURL:'/uploadvideo',
+      videoUploadParams: {pid: '{{.product.ProjectId}}'},
+      fileUploadURL: '/uploadimg',
+      fileUploadParams: {pid: '{{.product.ProjectId}}'},
       enter: $.FroalaEditor.ENTER_BR,
       language: 'zh_cn',
       // toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'align','color','fontSize','insertImage','insertTable','undo', 'redo']

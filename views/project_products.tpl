@@ -58,6 +58,9 @@
       .ss {
         background-color: red;
       }
+      div#modalTable2 {/*.modal .fade .in*/
+        z-index: 3;
+      }
   </style>
 </head>
 
@@ -1492,6 +1495,10 @@ $(function (){
       imageUploadParams: {pid: '{{.Id}}'},
       imageDeleteURL: 'lib/delete_image.php',//删除图片
       imagesLoadURL: 'lib/load_images.php',//管理图片
+      videoUploadURL:'/uploadvideo',
+      videoUploadParams: {pid: '{{.Id}}'},
+      fileUploadURL: '/uploadimg',
+      fileUploadParams: {pid: '{{.Id}}'},
       enter: $.FroalaEditor.ENTER_BR,
       language: 'zh_cn',
       // toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'align','color','fontSize','insertImage','insertTable','undo', 'redo']

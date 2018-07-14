@@ -363,6 +363,8 @@ func init() {
 	beego.Router("/uploadimg", &controllers.FroalaController{}, "*:UploadImg")
 	//添加wiki——froala上传插入的图片
 	beego.Router("/uploadwikiimg", &controllers.FroalaController{}, "*:UploadWikiImg")
+	//添加文章——froala上传插入的视频
+	beego.Router("/uploadvideo", &controllers.FroalaController{}, "*:UploadVideo")
 
 	//添加日历
 	beego.Router("/index/carcalendar/addcalendar", &controllers.IndexController{}, "*:AddCarCalendar")
