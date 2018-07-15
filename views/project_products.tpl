@@ -47,9 +47,9 @@
     #modalDialog6 .modal-header {cursor: move;}
     #modalDialog7 .modal-header {cursor: move;}
 
-      body {
+      /*body {
           text-align: center;
-      }
+      }*/
       div#editor {
           width: 81%;
           margin: auto;
@@ -155,14 +155,16 @@
             field: 'Code',
             title: '编号',
             // formatter:setCode,
-            align:"center",
+            halign:"center",
+            align:"left",
             valign:"middle"
           },
           {
             field: 'Title',
             title: '名称',
             // formatter:setTitle,
-            align:"center",
+            halign:"center",
+            align:"left",
             valign:"middle"
           },
           {
@@ -1453,12 +1455,12 @@
     //   $('#edit').froalaEditor()
     // });
 $(function (){
-  //超大屏幕
-  var toolbarButtons   = ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'color', 'emoticons', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'];
+  //超大屏幕'fullscreen',
+  var toolbarButtons   = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'color', 'emoticons', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html','help'];
   //大屏幕
-  var toolbarButtonsMD = ['fullscreen', 'bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'color', 'paragraphStyle', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', 'undo', 'redo', 'clearFormatting'];
-  //小屏幕
-  var toolbarButtonsSM = ['fullscreen', 'bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'insertLink', 'insertImage', 'insertTable', 'undo', 'redo'];
+  var toolbarButtonsMD = ['bold', 'italic', 'underline','strikeThrough', 'subscript', 'superscript', '|','fontFamily', 'fontSize', 'color','inlineStyle', 'paragraphStyle','|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|','specialCharacters','insertHR','undo', 'redo', 'clearFormatting','|','html','help'];
+  //小屏幕'fullscreen',
+  var toolbarButtonsSM = [ 'bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'insertLink', 'insertImage', 'insertTable', 'undo', 'redo'];
   //手机
   var toolbarButtonsXS = ['bold', 'italic', 'fontFamily', 'fontSize', 'undo', 'redo'];
   var pid = $('#pid').val();
@@ -1471,8 +1473,8 @@ $(function (){
       // theme                    : "red",
       height                   : "300px",
       toolbarBottom           : false,//默认
-      toolbarButtonsMD        : toolbarButtonsMD,
-      toolbarButtonsSM        : toolbarButtonsSM,
+      toolbarButtonsMD        : toolbarButtons,//toolbarButtonsMD,
+      toolbarButtonsSM        : toolbarButtonsMD,//toolbarButtonsSM,
       toolbarButtonsXS        : toolbarButtonsXS,
       toolbarInline           : false,//true选中设置样式,默认false
       imageUploadMethod       : 'POST',

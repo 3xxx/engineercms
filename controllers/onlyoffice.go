@@ -29,15 +29,16 @@ type OnlyController struct {
 }
 
 type Callback struct {
-	Key         string    `json:"key"`
-	Status      int       `json:"status"`
-	Url         string    `json:"url"`
-	Changesurl  string    `json:"changesurl"`
-	History     history1  `json:"history"`
-	Users       []string  `json:"users"`
-	Actions     []action  `json:"actions"`
-	Lastsave    time.Time `json:"lastsave"`
-	Notmodified bool      `json:"notmodified"`
+	Key           string    `json:"key"`
+	Status        int       `json:"status"`
+	Url           string    `json:"url"`
+	Changesurl    string    `json:"changesurl"`
+	History       history1  `json:"history"`
+	Users         []string  `json:"users"`
+	Actions       []action  `json:"actions"`
+	Lastsave      time.Time `json:"lastsave"`
+	Notmodified   bool      `json:"notmodified"`
+	Forcesavetype int       `json:"forcesavetype"`
 }
 
 type action struct {
@@ -881,14 +882,13 @@ func (c *OnlyController) UrltoCallback() {
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
 	// beego.Info(string(c.Ctx.Input.RequestBody))
 	// beego.Info(callback)
-	//•	1 - document is being edited,
-	//•	4 - document is closed with no changes,
 	if callback.Status == 1 || callback.Status == 4 {
+		//•	1 - document is being edited,
+		//•	4 - document is closed with no changes,
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
+	} else if callback.Status == 2 && callback.Notmodified == false {
 		//•	2 - document is ready for saving
-		//•	6 - document is being edited, but the current document state is saved,
-	} else if callback.Status == 2 || callback.Status == 6 {
 		resp, err := http.Get(callback.Url)
 		if err != nil {
 			beego.Error(err)
@@ -901,7 +901,6 @@ func (c *OnlyController) UrltoCallback() {
 		if err != nil {
 			beego.Error(err)
 		}
-
 		// f, err := os.OpenFile(".\\attachment\\onlyoffice\\"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
 		f, err := os.Create(".\\attachment\\onlyoffice\\" + onlyattachment.FileName)
 		if err != nil {
@@ -919,7 +918,6 @@ func (c *OnlyController) UrltoCallback() {
 			if err != nil {
 				beego.Error(err)
 			}
-
 			//写入历史版本数据
 			array := strings.Split(callback.Changesurl, "&")
 			Expires1 := strings.Split(array[1], "=")
@@ -933,7 +931,6 @@ func (c *OnlyController) UrltoCallback() {
 			//待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
 			// timeLayout := "2006-01-02T15:04:05.999Z"
 			//转化所需模板
-
 			// loc, _ := time.LoadLocation("Local") //重要：获取时区
 			// theTime, _ := time.ParseInLocation(timeLayout, toBeCharge, loc) //使用模板在对应时区转化为time.time类型
 			// sr := theTime.Unix()
@@ -985,10 +982,44 @@ func (c *OnlyController) UrltoCallback() {
 		}
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
-		//3-document saving error has occurred
-		//•	7 - error has occurred while force saving the document.
+	} else if callback.Status == 6 && callback.Forcesavetype == 1 {
+		//•	6 - document is being edited, but the current document state is saved,
+		resp, err := http.Get(callback.Url)
+		if err != nil {
+			beego.Error(err)
+		}
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			beego.Error(err)
+		}
+		defer resp.Body.Close()
+		if err != nil {
+			beego.Error(err)
+		}
+		// f, err := os.OpenFile(".\\attachment\\onlyoffice\\"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+		f, err := os.Create(".\\attachment\\onlyoffice\\" + onlyattachment.FileName)
+		if err != nil {
+			beego.Error(err)
+		}
+		defer f.Close()
+		_, err = f.Write(body) //这里直接用resp.Body如何？
+		if err != nil {
+			beego.Error(err)
+		} else {
+			//更新文档更新时间
+			err = models.UpdateDocTime(onlyattachment.DocId)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
 	} else if callback.Status == 3 || callback.Status == 7 {
+		//•	3 - document saving error has occurred.
+		//•	7 - error has occurred while force saving the document.
 		//更新附件的时间和changesurl
+		//不更新可以吗？此时有人没有关闭浏览器，有人重新打开文档，
+		//用新的key在服务器上编辑文档了！！！
 		err = models.UpdateOnlyAttachment(idNum)
 		if err != nil {
 			beego.Error(err)

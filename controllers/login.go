@@ -92,6 +92,7 @@ func (c *LoginController) Loginerr() {
 	c.TplName = "loginerr.tpl"
 }
 
+//输入用户名和密码后登陆提交
 func (c *LoginController) Post() {
 	// uname := c.Input().Get("uname")
 	// url := c.Input().Get("returnUrl")
@@ -99,10 +100,12 @@ func (c *LoginController) Post() {
 	url2 := c.Input().Get("level")
 	url3 := c.Input().Get("key")
 	var url string
-	if url2 == "" {
+	if url2 == "" && url1 != "" {
 		url = url1
-	} else {
+	} else if url2 != "" {
 		url = url1 + "&level=" + url2 + "&key=" + url3
+	} else {
+		url = c.Input().Get("referrer")
 	}
 	// beego.Info(url)
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
@@ -174,7 +177,7 @@ func (c *LoginController) Post() {
 		}
 		if url != "" {
 			c.Redirect(url, 301)
-			// beego.Info(url)
+			beego.Info(url)
 		} else {
 			c.Redirect("/", 301)
 		}
@@ -314,6 +317,7 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 		isadmin = false
 		uid = 0
 		uname = ctx.Input.IP()
+		// beego.Info(uname)
 		user, err = models.GetUserByIp(uname)
 		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
 			beego.Error(err)

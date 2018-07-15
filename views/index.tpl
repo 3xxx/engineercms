@@ -4,8 +4,8 @@
 <title>EngineerCMS</title>
   <script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
+  
 </head>
-
 
   <!-- <div class="navbar navba-default navbar-fixed-top"> -->
     <div class="container-fill">{{template "navbar" .}}</div>
