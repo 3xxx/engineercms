@@ -1,3 +1,4 @@
+[![GoDoc](https://godoc.org/github.com/3xxx/engineercms?status.svg)](https://godoc.org/github.com/3xxx/engineercms)
 ## EngineerCMS
 ————工程师知识管理系统
 
