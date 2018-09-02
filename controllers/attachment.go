@@ -977,24 +977,24 @@ func (c *AttachController) Attachment() {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 	case ".dwg", ".DWG":
-		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
-			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
-			if err != nil {
-				beego.Error(err)
-			}
-			// beego.Info(dwglink)
-			c.Data["DwgLink"] = dwglink
-			c.TplName = "dwg.tpl"
-		} else {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
-			return
+		// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
+		dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+		if err != nil {
+			beego.Error(err)
 		}
-	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-		//这里缺少权限设置！！！！！！！！！！！
+		// beego.Info(dwglink)
+		c.Data["DwgLink"] = dwglink
+		c.TplName = "dwg.tpl"
+		// } else {
+		// 	route := c.Ctx.Request.URL.String()
+		// 	c.Data["Url"] = route
+		// 	c.Redirect("/roleerr?url="+route, 302)
+		// 	// c.Redirect("/roleerr", 302)
+		// 	return
+		// }
+	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+	// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
@@ -1013,7 +1013,20 @@ func (c *AttachController) Attachment() {
 //目前只有文章中的图片采用绝对路径型式，其他都是用上面的/id型式
 //文章中的附件呢？
 //default中的pdf页面中的{{.pdflink}}，绝对路径
+// type Session struct {
+// 	Session int
+// }
 func (c *AttachController) DownloadAttachment() {
+	// c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+	// http.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+	// var sess Session
+	// json.Unmarshal(c.Ctx.Input.RequestBody, &sess)
+	//beego.Info(c.Ctx.Input.RequestBody)
+	// var ob models.Object
+	//    json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	// beego.Info(sess.Session)
+	// v := c.GetSession("uname")
+	// beego.Info(v)
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
 	useridstring := strconv.FormatInt(uid, 10)
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
@@ -1065,18 +1078,20 @@ func (c *AttachController) DownloadAttachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-	// beego.Info("ok")
-	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	// beego.Info(filePath)
-	// beego.Info(useridstring)
+	case ".dwg", ".DWG":
+		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+		// beego.Info("ok")
+		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+		// beego.Info(filePath)
+		// beego.Info(useridstring)
 	//这里缺少权限设置！！！！！！！！！！！
 	default:
-		// beego.Info(useridstring)
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+			// beego.Info(useridstring)
 		} else {
 			// beego.Info(useridstring)
 			route := c.Ctx.Request.URL.String()

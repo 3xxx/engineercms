@@ -13,7 +13,10 @@
 	<body style="height: 100%; margin: 0;">
 		<div id="placeholder" style="height: 100%"></div>
     <script type="text/javascript" src="http://192.168.99.100:9000/web-apps/apps/api/documents/api.js"></script>
-
+    <!-- http://192.168.99.101:9000/web-apps/apps/api/documents/api.js
+      https://office.ls123.site/web-apps/apps/api/documents/api.js -->
+    <!-- https://docserver.itdos.com/web-apps/apps/api/documents/api.js -->
+    <!-- http://39.104.112.149/ds-vpath/web-apps/apps/api/documents/api.js -->
     <script type="text/javascript">
       var onAppReady = function() {
           console.log("ONLYOFFICE Document Editor is ready");

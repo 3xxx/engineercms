@@ -15,14 +15,11 @@
   <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
   <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-  
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
-
 </head>
-
 
 <!-- <div class="navbar navbar-default navbar-static-top"> -->
   <div class="container-fill">{{template "navbar" .}}</div>
@@ -32,7 +29,6 @@
     ...
   </div>
 </nav> -->
-
 
 <body>
 <div class="col-lg-12">
@@ -104,6 +100,7 @@
   //         // }
   //     });
   // });
+  //项目列表
   $(function () {
     // 初始化【未接受】工作流表格
     $("#table0").bootstrapTable({
@@ -224,8 +221,75 @@
         ]
     });
   });
+
+  //项目模板中的项目列表
+  $(function () {
+    // 初始化【未接受】工作流表格
+    $("#table2").bootstrapTable({
+        url : '/project/getprojects',
+        // method: 'get',
+        search:'true',
+        showRefresh:'true',
+        showToggle:'true',
+        showColumns:'true',
+        // toolbar:'#toolbar1',
+        pagination: 'true',
+        sidePagination: "server",
+        queryParamsType:'',
+        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+        // limit, offset, search, sort, order 否则, 需要包含: 
+        // pageSize, pageNumber, searchText, sortName, sortOrder. 
+        // 返回false将会终止请求。
+        pageSize: 10,
+        pageNumber: 1,
+        pageList: [10,20, 50, 100],
+        singleSelect:"true",
+        clickToSelect:"true",
+        queryParams:function queryParams(params) {   //设置查询参数
+          var param = {
+              limit: params.pageSize,   //每页多少条数据
+              pageNo: params.pageNumber, // 页码
+              searchText:$(".search .form-control").val()
+          };
+          //搜索框功能
+            return param;
+        },
+        columns: [
+          {
+            title: '选择',
+            radio: 'true',
+            width: '10',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            },
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Code',
+            title: '编号',
+            formatter:setCode,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Title',
+            title: '名称',
+            formatter:setTitle,
+            align:"center",
+            valign:"middle"
+          }
+        ]
+    });
+  });
+
   function index1(value,row,index){
-  // alert( "Data Loaded: " + index );
+    // alert( "Data Loaded: " + index );
     return index+1
   }
 
@@ -460,10 +524,10 @@
       }
       $("label#info").remove();
       $("#saveproj").removeClass("disabled")
-        $('#modalTable').modal({
-        show:true,
-        backdrop:'static'
-        });
+      $('#modalTable').modal({
+      show:true,
+      backdrop:'static'
+      });
     })
 
     $("#editorButton").click(function() {
@@ -558,81 +622,111 @@
       });
   });
 
-//填充select选项
-$(document).ready(function(){
-  //   $(array).each(function(index){
-  //     alert(this);
-  // });
-  // $.each(array,function(index){
-  //     alert(this);
-  // });
-  if ({{.Select2}}){//20171021从meirit修改而来
-    $.each({{.Select2}},function(i,d){
-    // alert(this);
-    // alert(i);
-    // alert(d);
-      $("#admincategory").append('<option value="' + i + '">'+d+'</option>');
-    });
+  //填充select选项
+  $(document).ready(function(){
+    //   $(array).each(function(index){
+    //     alert(this);
+    // });
+    // $.each(array,function(index){
+    //     alert(this);
+    // });
+    $("#admincategory").append('<option value="a">项目模板</option>');
+    if ({{.Select2}}){//20171021从meirit修改而来
+      $.each({{.Select2}},function(i,d){
+      // alert(this);
+      // alert(i);
+      // alert(d);
+        $("#admincategory").append('<option value="' + i + '">'+d+'</option>');
+      });
+    }
+  });
+  
+  //根据选择，刷新表格
+  function refreshtable(){
+      var newcategory = $("#admincategory option:selected").text();
+      // alert("你选的是"+newcategory);
+      if (newcategory=="项目模板"){
+        //根据名字，查到id，或者另外写个categoryname的方法
+        // $('#table2').bootstrapTable('refresh', {url:'/admin/categorytitle?title='+newcategory});
+        $("#details").hide();
+        $("#details1").show();
+        // $('#table2').bootstrapTable('refresh', {url:'/project/getprojects'});
+      }else{
+        //根据名字，查到id，或者另外写个categoryname的方法
+        $('#table1').bootstrapTable('refresh', {url:'/admin/categorytitle?title='+newcategory});
+        $("#details1").hide();
+        $("#details").show();
+      }
   }
-});
-
-//根据选择，刷新表格
-function refreshtable(){
-  var newcategory = $("#admincategory option:selected").text();
-  // alert("你选的是"+newcategory);
-  //根据名字，查到id，或者另外写个categoryname的方法
-  $('#table1').bootstrapTable('refresh', {url:'/admin/categorytitle?title='+newcategory});
-  $("#details").show();
-}
 
   //保存
   function save(){
+    var projcode = $('#projcode').val();
+    var projname = $('#projname').val();
+    if (projname&&projcode){
+      var newcategory = $("#admincategory option:selected").text();
+      // alert("你选的是"+newcategory);
       // var radio =$("input[type='radio']:checked").val();
-      var projcode = $('#projcode').val();
-      var projname = $('#projname').val();
       var projlabel = $('#projlabel').val();
       var projprincipal = $('#projprincipal').val();
-
-      var selectRow3=$('#table1').bootstrapTable('getSelections');
-      if (selectRow3.length<1){
-        alert("请先勾选目录！");
-        return;
-      }
-
-      var lab="<label id='info'>建立项目中，请耐心等待几秒/分钟……</label>"
-      $(".modal-footer").prepend(lab);//这里是否要换名字$("p").remove();
-      $("#saveproj").addClass("disabled");
-
-      var ids="";
-      for(var i=0;i<selectRow3.length;i++){
-        if(i==0){
-          ids=selectRow3[i].Id;
-        }else{
-          ids=ids+","+selectRow3[i].Id;
-        }  
-      }
-
-      // $('#myModal').on('hide.bs.modal', function () {  
-      if (projname&&projcode)
-        {  
-          $.ajax({
-            type:"post",
-            url:"/project/addproject",
-            data: {code:projcode,name:projname,label:projlabel,principal:projprincipal,ids:ids},//
-            success:function(data,status){
-              alert("添加“"+data+"”成功！(status:"+status+".)");
-              //按确定后再刷新
-              $('#modalTable').modal('hide');
-              $('#table0').bootstrapTable('refresh', {url:'/project/getprojects'});
-            }
-          });  
-        }else{
-          alert("请填写编号和名称！");
+      if (newcategory=="项目模板"){
+        var selectRow3=$('#table2').bootstrapTable('getSelections');
+        if (selectRow3.length<1){
+          alert("请先勾选项目！");
           return;
-        } 
-        // $(function(){$('#myModal').modal('hide')}); 
-          // "/category/modifyfrm?cid="+cid
-          // window.location.reload();//刷新页面
+        }
+        var ispermission=document.getElementById("ispermission").checked;
+        var lab="<label id='info'>建立项目中，请耐心等待几秒/分钟……</label>"
+        $(".modal-footer").prepend(lab);//这里是否要换名字$("p").remove();
+        $("#saveproj").addClass("disabled");
+        $.ajax({
+          type:"post",
+          url:"/project/addprojtemplet",
+          data: {code:projcode,name:projname,label:projlabel,principal:projprincipal,projid:selectRow3[0].Id,ispermission:ispermission},//
+          success:function(data,status){
+            alert("添加“"+data+"”成功！(status:"+status+".)");
+            //按确定后再刷新
+            $('#modalTable').modal('hide');
+            $('#table0').bootstrapTable('refresh', {url:'/project/getprojects'});
+          }
+        });
+      }else{
+        var selectRow3=$('#table1').bootstrapTable('getSelections');
+        if (selectRow3.length<1){
+          alert("请先勾选目录！");
+          return;
+        }
+        var lab="<label id='info'>建立项目中，请耐心等待几秒/分钟……</label>"
+        $(".modal-footer").prepend(lab);//这里是否要换名字$("p").remove();
+        $("#saveproj").addClass("disabled");
+        var ids="";
+        for(var i=0;i<selectRow3.length;i++){
+          if(i==0){
+            ids=selectRow3[i].Id;
+          }else{
+            ids=ids+","+selectRow3[i].Id;
+          }  
+        }
+        // $('#myModal').on('hide.bs.modal', function () {  
+        $.ajax({
+          type:"post",
+          url:"/project/addproject",
+          data: {code:projcode,name:projname,label:projlabel,principal:projprincipal,ids:ids},//
+          success:function(data,status){
+            alert("添加“"+data+"”成功！(status:"+status+".)");
+            //按确定后再刷新
+            $('#modalTable').modal('hide');
+            $('#table0').bootstrapTable('refresh', {url:'/project/getprojects'});
+          }
+        });   
+      }
+    }else{
+      alert("请填写编号和名称！");
+      return;
+    }
+    // $(function(){$('#myModal').modal('hide')}); 
+    // "/category/modifyfrm?cid="+cid
+    // window.location.reload();//刷新页面
   }
 
   //修改项目
@@ -772,6 +866,15 @@ function refreshtable(){
                 </thead>
               </table>
             </div>
+
+            <div id="details1" style="display:none">
+              <h3>项目模板</h3>
+                <div class="col-sm-3 checkbox">
+                  <label><input type="checkbox" checked="checked" value="true" id="ispermission">权限继承</label>
+                </div>
+              <table id="table2"></table>
+            </div>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -834,7 +937,6 @@ function refreshtable(){
   //     $(this).css("background-color",getRandomColor()); 
   //   }); 
   // }) 
-
   function getRandomColor(){ 
     var c = '#'; 
     var cArray = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']; 
@@ -844,9 +946,7 @@ function refreshtable(){
     } 
     return c; 
   } 
-
 </script>
-
 <!-- <div>
   <ul>
     <li>第一个色块</li>
@@ -855,7 +955,5 @@ function refreshtable(){
     <li>第四个色块</li>
   </ul>
 </div> -->
-
-
 </body>
 </html>

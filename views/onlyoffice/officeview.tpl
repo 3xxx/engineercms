@@ -15,6 +15,7 @@
     <script type="text/javascript" src="http://192.168.99.100:9000/web-apps/apps/api/documents/api.js"></script>
 
     <script type="text/javascript">
+
       var onAppReady = function() {
           console.log("ONLYOFFICE DocumenEditor is ready");
       }; 

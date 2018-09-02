@@ -10,6 +10,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"strconv"
 	// "github.com/astaxie/beego/session"
+	// "encoding/json"
 )
 
 type LoginController struct {
@@ -177,7 +178,8 @@ func (c *LoginController) Post() {
 		}
 		if url != "" {
 			c.Redirect(url, 301)
-			beego.Info(url)
+			// c.Redirect("/onlyoffice", 301)
+			// beego.Info(url)
 		} else {
 			c.Redirect("/", 301)
 		}
@@ -282,13 +284,19 @@ func checkRole(ctx *context.Context) (role string, err error) { //这里返回�
 	// }
 }
 
+// type Session struct {
+// 	Session int
+// }
+// type Login struct {
+// 	UserName string
+// 	Password string
+// }
+
 //用户登录，则role是1则是admin，其余没有意义
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
-	// var uname string
-	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	// defer sess.SessionRelease(ctx.ResponseWriter)
 	v := ctx.Input.CruSession.Get("uname")
+	// beego.Info(v)
 	var userrole string
 	var user models.User
 	var err error

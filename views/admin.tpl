@@ -116,23 +116,6 @@
   <!-- page-content" --> </div>
   <script type="text/javascript">
     $(function () {
-      //function getTree() {
-      // text: "Node 1",
-      // icon: "glyphicon glyphicon-stop",
-      // selectedIcon: "glyphicon glyphicon-stop",
-      // color: "#000000",
-      // backColor: "#FFFFFF",
-      // href: "#node-1",
-      // selectable: true,
-      // state: {
-      //   checked: true,
-      //   disabled: true,
-      //   expanded: true,
-      //   selected: true
-      // },
-      // tags: ['available'],
-      // Some logic to retrieve, or generate tree structure
-      // <div class="hello-user">欢迎您~'. $_authUser['username'] .'  </div>
       var data = 
       [
               {
@@ -145,17 +128,9 @@
                 text: "系统设置",
                 text1: "欢迎您~{{.Ip}}",
                 icon: "fa fa-tachometer icon",
-                // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
-                // selectable: true,
                 id: '01',
                 selectable: false,
-                // state: {
-                  // checked: true,
-                  // disabled: true,
-                  // expanded: true,
-                  // selected: true
-                // },
                 tags: ['available'],
                 nodes: 
                 [
@@ -166,7 +141,7 @@
                     id: '011',
                     nodeId: '011'
                   },
-                  { 
+                { 
                     icon: "fa fa-align-right",
                     text: "分级目录",
                     id: '012',
@@ -401,12 +376,6 @@
 
 
         $('#tree').on('nodeSelected', function(event, data) {
-            // alert("名称："+data.text);
-            // alert("节点id："+data.nodeId);
-            // alert("部门id："+data.id);  
-            // alert("部门级别："+data.Level);
-            // $("#regis").html(data.text);//显示部门名称
-            // $("#regis").css("color","black");
           document.getElementById("iframepage").src="/admin/"+data.id;
           if (data.id=="010"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;日历")
@@ -453,8 +422,7 @@
           }else if(data.id=="053"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;成果清单&gt;"+data.text)
           }
-          //?secid="+data.Id+"&level="+data.Level;
-        });
+        }); 
 
         // var obj = {};
         // obj.text = "123";

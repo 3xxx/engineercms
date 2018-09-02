@@ -46,6 +46,15 @@ type ProjCalendar struct {
 	// BColor    string    `json:"borderColor",orm:"null"`
 }
 
+//树状目录数据
+type FileNode struct {
+	Id        int64  `json:"id"`
+	Title     string `json:"text"`
+	Code      string `json:"code"` //分级目录代码
+	Grade     int
+	FileNodes []*FileNode `json:"nodes"`
+}
+
 // type Product struct {
 // 	Id        int64
 // 	Code      string    `orm:"null"`                                              //编号                                             //编号
@@ -327,7 +336,7 @@ func GetProjbyParentidTitle(parentid int64, title string) (proj Project, err err
 	return proj, err
 }
 
-//递归将目录写入数据库
+//递归将分级目录写入数据库
 func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (cid []Pidstruct) {
 	o := orm.NewOrm() //实例化数据库操作对象
 	// o.Using("default")
@@ -394,6 +403,49 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 	igrade = igrade + 1
 	if igrade <= height {
 		Insertproj(cid, nodes, igrade, height)
+	}
+	return
+}
+
+//递归将项目模板目录写入数据库
+func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []*FileNode) {
+	o := orm.NewOrm() //实例化数据库操作对象
+	// o.Using("default")
+	//关闭写同步
+	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
+	// var project models.Project
+	var Id int64
+	var parentidpath1 string
+	var parenttitlepath1 string
+	for _, v1 := range nodes {
+		title := v1.Title
+		code := v1.Code
+		parentid := pid
+		grade := v1.Grade
+
+		//通过事务方式来进行数据插入
+		// err := o.Begin()
+		const lll = "2006-01-02 15:04:05.000"
+		date := time.Now().Format(lll)
+		sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
+			" values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
+		res, err := o.Raw(sql).Exec()
+		if err != nil {
+			o.Rollback()
+			// beego.Info("插入t_studentInfo表出错,事务回滚")
+		} else {
+			// o.Commit()
+			// beego.Info("插入t_studenInfo表成功,事务提交")
+			// num, _ = res.RowsAffected()
+			Id, _ = res.LastInsertId()
+
+			parentidpath1 = parentidpath + "$" + strconv.FormatInt(Id, 10) + "#"
+			parenttitlepath1 = parenttitlepath + "-" + v1.Title
+		}
+		if len(v1.FileNodes) > 0 {
+			nodes1 := v1.FileNodes
+			Insertprojtemplet(Id, parentidpath1, parenttitlepath1, nodes1)
+		}
 	}
 	return
 }

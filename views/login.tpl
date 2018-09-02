@@ -18,9 +18,8 @@
         登录
       </h3>
     <form method="POST" action="/login">
-        <span style="color: #ff0000;">
-          <input type="hidden" name="url" value="{{.Url}}"/></span>
-          <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
+        <input type="hidden" name="url" value="{{.Url}}"/>
+        <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
         <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>

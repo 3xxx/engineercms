@@ -46,7 +46,6 @@
     #modalDialog5 .modal-header {cursor: move;}
     #modalDialog6 .modal-header {cursor: move;}
     #modalDialog7 .modal-header {cursor: move;}
-
       /*body {
           text-align: center;
       }*/
@@ -61,6 +60,15 @@
       div#modalTable2 {/*.modal .fade .in*/
         z-index: 3;
       }
+
+      /*.form-horizontal .control-label{
+        padding-left:10px; 
+      }
+      .form-horizontal .form-group{
+        float: left;
+        width: 50%;
+      }*/
+          
   </style>
 </head>
 
@@ -1003,12 +1011,12 @@
           </div>
           <div class="modal-body">
             <div class="modal-body-content">
-              <div class="form-group must">
+              <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label">关键字</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="prodlabel" name="prodlabel" placeholder="以英文,号分割"></div>
               </div>
-              <div class="form-group must">
+              <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label">设计</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="prodprincipal" name="prodprincipal"></div>
@@ -1122,36 +1130,36 @@
           </div>
           <div class="modal-body">
             <div class="modal-body-content">
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">编号</label>
+              <div class="form-group must" style="float: left;width: 50%;">
+                <label class="col-sm-3 control-label" style="padding-left:10px;">编号</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="prodcode1" name="prodcode1"></div>
               </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">标题</label>
+              <div class="form-group must" style="float: left;width: 50%;">
+                <label class="col-sm-3 control-label" style="padding-left:10px;">标题</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="prodname1" name="prodname1"></div>
               </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">副标题</label>
+              <div class="form-group must" style="float: left;width: 50%;">
+                <label class="col-sm-3 control-label" style="padding-left:10px;">副标题</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="subtext1" name="subtext1"></div>
               </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">关键字</label>
+              <div class="form-group must" style="float: left;width: 50%;">
+                <label class="col-sm-3 control-label" style="padding-left:10px;">关键字</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="prodlabel2" name="prodlabel2" placeholder="以英文,号分割"></div>
               </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">设计</label>
+              <div class="form-group must" style="float: left;width: 50%;">
+                <label class="col-sm-3 control-label" style="padding-left:10px;">设计</label>
                 <div class="col-sm-7">
                   <input type="tel" class="form-control" id="prodprincipal2" name="prodprincipal2"></div>
               </div>
-              <div class="form-group must">
-                <label class="col-sm-3 control-label">关联文件</label>
+              <div class="form-group must" style="float: left;width: 50%;">
+                <label class="col-sm-3 control-label" style="padding-left:10px;">关联文件</label>
                 <div class="col-sm-1">
                 <!-- <form name="myform">  -->
-                  <input type="checkbox" name="box" id="box" value="1" onclick="station_select()">
+                  <input type="checkbox" name="box" id="box" value="1" onclick="station_select()" style="width:30px ;height: 24px">
                 </div>
                 <div class="col-sm-6">
                   <input type="tel" class="form-control" id="relevancy" name="relevancy" disabled="true" placeholder="输入文件编号，以英文,号分割">
@@ -1160,7 +1168,7 @@
               </div>
             </div>
               <label class="control-label">文章正文:</label>
-              <div id="editor" style="width: 90%">
+              <div id="editor" style="width: 100%;padding: 10px">
                 <div id='edit' style="margin-top: 30px;">
                 </div>   
               </div>

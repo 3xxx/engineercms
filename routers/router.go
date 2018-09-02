@@ -58,7 +58,9 @@ func init() {
 	beego.Router("/api/ecms", &controllers.MainController{}, "get:Getecmsapi")
 	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
 
-	beego.Router("/", &controllers.MainController{}, "get:Get")
+	// beego.Router("/", &controllers.MainController{}, "get:Get")
+	//首页放到onlyoffice
+	beego.Router("/", &controllers.OnlyController{}, "get:Get")
 
 	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
 	//显示首页
@@ -216,6 +218,9 @@ func init() {
 	beego.Router("/loginerr", &controllers.LoginController{}, "get:Loginerr")
 	beego.Router("/roleerr", &controllers.UserController{}, "*:Roleerr") //显示权限不够
 
+	beego.Router("/regist", &controllers.RegistController{})
+	beego.Router("/regist/checkuname", &controllers.RegistController{}, "post:CheckUname")
+	beego.Router("/regist/getuname", &controllers.RegistController{}, "*:GetUname")
 	//项目列表界面
 	beego.Router("/project", &controllers.ProjController{}, "*:Get")
 	//table获取所有项目数据给上面界面使用_后续扩展按标签获取
@@ -225,6 +230,9 @@ func init() {
 	beego.Router("/project/getprojcate", &controllers.ProjController{}, "*:GetProjCate")
 	//添加项目，应该是project/addproj,delproj,updateproj
 	beego.Router("/project/addproject", &controllers.ProjController{}, "*:AddProject")
+	//添加项目，根据项目模板
+	beego.Router("/project/addprojtemplet", &controllers.ProjController{}, "*:AddProjTemplet")
+
 	//修改项目
 	beego.Router("/project/updateproject", &controllers.ProjController{}, "*:UpdateProject")
 	//删除项目

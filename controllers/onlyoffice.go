@@ -746,6 +746,10 @@ func (c *OnlyController) OnlyOffice() {
 
 //cms中查阅office
 func (c *OnlyController) OfficeView() {
+	//设置响应头——没有作用
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	c.Ctx.ResponseWriter.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
+	// c.Ctx.ResponseWriter.Header().Set("content-type", "application/json")             //返回数据格式是json
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -784,7 +788,6 @@ func (c *OnlyController) OfficeView() {
 
 	c.Data["FilePath"] = fileurl + "/" + attachment.FileName
 	// beego.Info(fileurl + "/" + attachment.FileName)
-
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -793,7 +796,6 @@ func (c *OnlyController) OfficeView() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	// useridstring := strconv.FormatInt(uid, 10)
-
 	c.Data["Mode"] = "view"
 	c.Data["Edit"] = false
 	c.Data["Review"] = false

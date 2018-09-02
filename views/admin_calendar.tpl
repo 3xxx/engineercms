@@ -301,7 +301,7 @@
       				$("#title1").val(data.title);
       				$("#content1").val(data.content);
               $("#isallday1").prop('checked',data.allDay);
-                $("#ispublic1").prop('checked',false);
+              $("#ispublic1").prop('checked',false);
                 // $("#ispublic1[name='private']").prop('checked',false);
               if (data.Public==true){
                 $("#ispublic1[value='true']").prop('checked',true);

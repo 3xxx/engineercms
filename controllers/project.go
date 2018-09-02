@@ -185,6 +185,7 @@ func (c *ProjController) GetProjects() {
 }
 
 //根据id查看项目，查出项目当前级和下一级目录
+//点击第二级后，用下面的懒加载目录
 func (c *ProjController) GetProject() {
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
@@ -448,8 +449,8 @@ func (c *ProjController) GetProjCate() {
 	//记录结束时间差696ms__不查询儿子则110ms
 	// elapsed = time.Since(start) //97MS
 	// beego.Info(elapsed)
-	beego.Info(patharray[0])
-	beego.Info(topprojectid)
+	//beego.Info(patharray[0])
+	//beego.Info(topprojectid)
 
 	c.Data["json"] = slice //data
 	c.ServeJSON()
@@ -858,61 +859,6 @@ func (c *ProjController) GetProjNav() {
 	c.ServeJSON()
 }
 
-//取得某个侧栏id下的成果给table
-// func (c *ProjController) GetProducts() {
-// 	id := c.Ctx.Input.Param(":id")
-// 	beego.Info(id)
-// 	c.Data["Id"] = id
-// 	var idNum int64
-// 	var err error
-// 	if id != "" {
-// 		//id转成64为
-// 		idNum, err = strconv.ParseInt(id, 10, 64)
-// 		if err != nil {
-// 			beego.Error(err)
-// 		}
-
-// 	} else {
-
-// 	}
-// 	//根据id取得所有成果
-// 	products, err := models.GetProducts(idNum)
-// 	if err != nil {
-// 		beego.Error(err)
-// 	}
-// 	c.Data["json"] = products
-// 	c.ServeJSON()
-// 	// c.Data["json"] = root
-// 	// c.ServeJSON()
-// }
-
-// //向某个侧栏id下添加成果
-// func (c *ProjController) AddProduct() {
-// 	id := c.Ctx.Input.Param(":id")
-// 	pid := c.Input().Get("pid")
-// 	code := c.Input().Get("code")
-// 	title := c.Input().Get("title")
-// 	label := c.Input().Get("label")
-// 	principal := c.Input().Get("principal")
-// 	content := c.Input().Get("content")
-// 	// beego.Info(id)
-// 	c.Data["Id"] = id
-// 	//id转成64为
-// 	idNum, err := strconv.ParseInt(pid, 10, 64)
-// 	if err != nil {
-// 		beego.Error(err)
-// 	}
-// 	//根据id添加成果code, title, label, principal, content string, projectid int64
-// 	_, err = models.AddProduct(code, title, label, principal, content, idNum)
-// 	if err != nil {
-// 		beego.Error(err)
-// 	}
-// 	c.Data["json"] = "ok"
-// 	c.ServeJSON()
-// 	// c.Data["json"] = root
-// 	// c.ServeJSON()
-// }
-
 //添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
 	// username, role := checkprodRole(c.Ctx)
@@ -950,12 +896,12 @@ func (c *ProjController) AddProject() {
 	// beego.Info(rows)
 	projcode := c.Input().Get("code")
 	projname := c.Input().Get("name")
-	projlabe := c.Input().Get("label")
+	projlabel := c.Input().Get("label")
 	principal := c.Input().Get("principal")
 	//先保存项目名称到数据库，parentid为0，返回id作为下面二级三级四级……的parentid
 	//然后递归保存二级三级……到数据库
 	//最后递归生成硬盘目录
-	Id, err := models.AddProject(projcode, projname, projlabe, principal, 0, "", "", 1)
+	Id, err := models.AddProject(projcode, projname, projlabel, principal, 0, "", "", 1)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -991,7 +937,6 @@ func (c *ProjController) AddProject() {
 		}
 		nodes = append(nodes, category...)
 		grade = append(grade, category[0].Grade)
-
 	}
 	//找出最大级数——*****如果用户没有选择下级怎样
 	//******中间有空级怎么办？？——递归的时候注意
@@ -1010,6 +955,62 @@ func (c *ProjController) AddProject() {
 	patharr := make([]Pathstruct, 1)
 	patharr[0].ParentPath = ".\\attachment\\" + projcode + projname
 	create(patharr, nodes, 2, height)
+	c.Data["json"] = "ok"
+	c.ServeJSON()
+}
+
+//根据项目模板添加项目
+func (c *ProjController) AddProjTemplet() {
+	projcode := c.Input().Get("code")
+	projname := c.Input().Get("name")
+	projlabel := c.Input().Get("label")
+	principal := c.Input().Get("principal")
+	projid := c.Input().Get("projid")
+	ispermission := c.Input().Get("ispermission")
+	//code=sl123&name=dada&label=&principal=&projid=25001&ispermission=true
+	//先保存项目名称到数据库，parentid为0，返回id作为下面的parentid进行递归
+	//根据项目模板id，取出项目目录的json结构
+	//然后递归生成硬盘目录
+	//然后递归写入数据库
+	//根据模板项目id，取出权限数据——将目录id路径转成目录名称路径——查出新项目对应的目录id——写入权限
+	//id转成64为
+	idNum, err := strconv.ParseInt(projid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目本身
+	category, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目所有子孙
+	categories, err := models.GetProjectsbyPid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据id取出下级
+	cates := getsons(idNum, categories)
+	//递归生成目录json
+	root := models.FileNode{category.Id, category.Title, category.Code, 1, []*models.FileNode{}}
+	// walk(category.Id, &root)
+	maketreejsontemplet(cates, categories, &root)
+	//先建立第一层项目编号和名称
+	Id, err := models.AddProject(projcode, projname, projlabel, principal, 0, "", "", 1)
+	if err != nil {
+		beego.Error(err)
+	}
+	//在递归写入数据库
+	models.Insertprojtemplet(Id, "$"+strconv.FormatInt(Id, 10)+"#", projcode+projname, root.FileNodes)
+	//递归创建文件夹
+	// patharr := make([]Pathstruct, 1)
+	//先建立第一层文件夹
+	pathstring := ".\\attachment\\" + projcode + projname
+	//在递归建立下层文件夹
+	createtemplet(pathstring, root.FileNodes)
+	//权限继承
+	if ispermission == "true" {
+
+	}
 	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
@@ -1480,6 +1481,7 @@ func (c *ProjController) DeleteCalendar() {
 type List struct {
 	Name string `json:"name"`
 }
+
 type Listimage struct {
 	Id        int64    `json:"id"`
 	UserNo    string   `json:"userNo"`
@@ -1621,6 +1623,7 @@ func (c *ProjController) Timeline() {
 	c.ServeJSON()
 }
 
+//应该将日历改为froala，那么这个就可以淘汰了。
 func (c *ProjController) UploadImage() {
 	id := c.Input().Get("pid")
 	//pid转成64为
@@ -1659,99 +1662,6 @@ func (c *ProjController) UploadImage() {
 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "url": Url1 + newname, "title": h.Filename, "original": h.Filename}
 	c.ServeJSON()
 }
-
-// c.TplName = "Proj_category.tpl"
-// func (c *ProjController) Timeline() {
-// 	imagelist1 := []string{"/static/img/1.jpg", "/static/img/2.jpg", "/static/img/3.jpg"}
-// 	imagelist2 := []string{"/static/img/4.jpg", "/static/img/5.jpg", "/static/img/6.jpg"}
-// 	imagelist3 := []string{"/static/img/7.jpg", "/static/img/8.jpg", "/static/img/9.jpg"}
-// 	imagelist4 := []string{"/static/img/10.jpg", "/static/img/11.jpg", "/static/img/12.jpg"}
-// 	imagelist5 := []string{"/static/img/13.jpg", "/static/img/14.jpg", "/static/img/15.jpg"}
-// 	imagelist6 := []string{"/static/img/16.jpg", "/static/img/17.jpg", "/static/img/18.jpg"}
-
-// 	listimage1 := Listimage{
-// 		1,
-// 		"uer0001",
-// 		"2017/03/18",
-// 		"秦晓川",
-// 		"通过图像识别获得眼像特征",
-// 		"知识库自动获取的饼子",
-// 		"根据病症信息分析结果",
-// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
-// 		imagelist1,
-// 		"2017-03-18",
-// 		"",
-// 	}
-// 	listimage2 := Listimage{
-// 		2,
-// 		"uer0002",
-// 		"2017/03/14",
-// 		"秦晓川2",
-// 		"识别技术更新",
-// 		"来自库",
-// 		"分析结果",
-// 		"\n\t对综合\n\t\t\t 详细描述",
-// 		imagelist2,
-// 		"2017-03-13",
-// 		"",
-// 	}
-// 	listimage3 := Listimage{
-// 		3,
-// 		"uer0003",
-// 		"2017/03/10",
-// 		"秦晓川3",
-// 		"特征",
-// 		"自动获取",
-// 		"根据结果",
-// 		"\n\t进行\n\t\t\t 详细描述",
-// 		imagelist3,
-// 		"2017-03-10",
-// 		"",
-// 	}
-// 	listimage4 := Listimage{
-// 		4,
-// 		"uer0004",
-// 		"2017/03/02",
-// 		"秦晓川4",
-// 		"通过特征",
-// 		"知识库",
-// 		"分析结果",
-// 		"\n\t综合揭露\n\t\t\t 描述",
-// 		imagelist4,
-// 		"2014-07-13",
-// 		"",
-// 	}
-// 	listimage5 := Listimage{
-// 		5,
-// 		"uer0005",
-// 		"2016/07/14",
-// 		"秦晓川5",
-// 		"通过图像识别获得眼像特征",
-// 		"知识库自动获取的饼子",
-// 		"根据病症信息分析结果",
-// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
-// 		imagelist5,
-// 		"2014-07-13",
-// 		"",
-// 	}
-// 	listimage6 := Listimage{
-// 		6,
-// 		"uer0006",
-// 		"2015/07/14",
-// 		"秦晓川6",
-// 		"眼像特征",
-// 		"获取",
-// 		"信息结果",
-// 		"\n\t揭露进行\n\t\t\t 详细描述",
-// 		imagelist6,
-// 		"2014-07-13",
-// 		"",
-// 	}
-// 	listimage := []Listimage{listimage1, listimage2, listimage3, listimage4, listimage5, listimage6}
-// 	c.Data["json"] = listimage
-// 	// c.Data["json"] = catalogs
-// 	c.ServeJSON()
-// }
 
 //求出[]int最大值
 func intmax(first int, args ...int) int {
@@ -1959,7 +1869,7 @@ func maketreejson1(cates, categories []*models.Project, products []*models.Produ
 	return
 }
 
-//递归构造项目树状目录_不带标签，未使用
+//递归构造项目树状目录_不带标签，用于后台目录编辑使用
 func maketreejson(cates, categories []*models.Project, node *FileNode) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -1973,6 +1883,26 @@ func maketreejson(cates, categories []*models.Project, node *FileNode) {
 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
 		if len(slice) > 0 {
 			maketreejson(slice, categories, &child)
+		}
+	}
+	return
+}
+
+//递归构造项目树状目录_不带标签，用于项目模板生成项目使用
+func maketreejsontemplet(cates, categories []*models.Project, node *models.FileNode) {
+	// 遍历目录
+	for _, proj := range cates {
+		id := proj.Id
+		title := proj.Title
+		code := proj.Code
+		grade := proj.Grade
+		// 将当前名和id作为子节点添加到目录下
+		child := models.FileNode{id, title, code, grade, []*models.FileNode{}}
+		node.FileNodes = append(node.FileNodes, &child)
+		slice := getsons(id, categories)
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			maketreejsontemplet(slice, categories, &child)
 		}
 	}
 	return
@@ -2011,7 +1941,7 @@ type Pathstruct struct {
 	ParentPath string
 }
 
-//递归建立文件夹
+//根据分级目录递归建立文件夹
 func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int) (cpath []Pathstruct) {
 	for _, v := range path {
 		for _, v1 := range nodes {
@@ -2033,6 +1963,23 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 	igrade = igrade + 1
 	if igrade <= height {
 		create(cpath, nodes, igrade, height)
+	}
+	return
+}
+
+//根据项目模板递归建立文件夹
+func createtemplet(parentpath string, nodes []*models.FileNode) {
+	for _, v1 := range nodes {
+		//建立目录，并返回作为父级目录
+		err := os.MkdirAll(parentpath+"\\"+v1.Title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+		if err != nil {
+			beego.Error(err)
+		}
+		ParentPath := parentpath + "\\" + v1.Title
+		if len(v1.FileNodes) > 0 {
+			nodes1 := v1.FileNodes
+			createtemplet(ParentPath, nodes1)
+		}
 	}
 	return
 }
@@ -2085,4 +2032,152 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 // 		}
 // 	}
 // 	return
+// }
+
+// c.TplName = "Proj_category.tpl"
+// func (c *ProjController) Timeline() {
+// 	imagelist1 := []string{"/static/img/1.jpg", "/static/img/2.jpg", "/static/img/3.jpg"}
+// 	imagelist2 := []string{"/static/img/4.jpg", "/static/img/5.jpg", "/static/img/6.jpg"}
+// 	imagelist3 := []string{"/static/img/7.jpg", "/static/img/8.jpg", "/static/img/9.jpg"}
+// 	imagelist4 := []string{"/static/img/10.jpg", "/static/img/11.jpg", "/static/img/12.jpg"}
+// 	imagelist5 := []string{"/static/img/13.jpg", "/static/img/14.jpg", "/static/img/15.jpg"}
+// 	imagelist6 := []string{"/static/img/16.jpg", "/static/img/17.jpg", "/static/img/18.jpg"}
+
+// 	listimage1 := Listimage{
+// 		1,
+// 		"uer0001",
+// 		"2017/03/18",
+// 		"秦晓川",
+// 		"通过图像识别获得眼像特征",
+// 		"知识库自动获取的饼子",
+// 		"根据病症信息分析结果",
+// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
+// 		imagelist1,
+// 		"2017-03-18",
+// 		"",
+// 	}
+// 	listimage2 := Listimage{
+// 		2,
+// 		"uer0002",
+// 		"2017/03/14",
+// 		"秦晓川2",
+// 		"识别技术更新",
+// 		"来自库",
+// 		"分析结果",
+// 		"\n\t对综合\n\t\t\t 详细描述",
+// 		imagelist2,
+// 		"2017-03-13",
+// 		"",
+// 	}
+// 	listimage3 := Listimage{
+// 		3,
+// 		"uer0003",
+// 		"2017/03/10",
+// 		"秦晓川3",
+// 		"特征",
+// 		"自动获取",
+// 		"根据结果",
+// 		"\n\t进行\n\t\t\t 详细描述",
+// 		imagelist3,
+// 		"2017-03-10",
+// 		"",
+// 	}
+// 	listimage4 := Listimage{
+// 		4,
+// 		"uer0004",
+// 		"2017/03/02",
+// 		"秦晓川4",
+// 		"通过特征",
+// 		"知识库",
+// 		"分析结果",
+// 		"\n\t综合揭露\n\t\t\t 描述",
+// 		imagelist4,
+// 		"2014-07-13",
+// 		"",
+// 	}
+// 	listimage5 := Listimage{
+// 		5,
+// 		"uer0005",
+// 		"2016/07/14",
+// 		"秦晓川5",
+// 		"通过图像识别获得眼像特征",
+// 		"知识库自动获取的饼子",
+// 		"根据病症信息分析结果",
+// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
+// 		imagelist5,
+// 		"2014-07-13",
+// 		"",
+// 	}
+// 	listimage6 := Listimage{
+// 		6,
+// 		"uer0006",
+// 		"2015/07/14",
+// 		"秦晓川6",
+// 		"眼像特征",
+// 		"获取",
+// 		"信息结果",
+// 		"\n\t揭露进行\n\t\t\t 详细描述",
+// 		imagelist6,
+// 		"2014-07-13",
+// 		"",
+// 	}
+// 	listimage := []Listimage{listimage1, listimage2, listimage3, listimage4, listimage5, listimage6}
+// 	c.Data["json"] = listimage
+// 	// c.Data["json"] = catalogs
+// 	c.ServeJSON()
+// }
+
+//取得某个侧栏id下的成果给table
+// func (c *ProjController) GetProducts() {
+// 	id := c.Ctx.Input.Param(":id")
+// 	beego.Info(id)
+// 	c.Data["Id"] = id
+// 	var idNum int64
+// 	var err error
+// 	if id != "" {
+// 		//id转成64为
+// 		idNum, err = strconv.ParseInt(id, 10, 64)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
+
+// 	} else {
+
+// 	}
+// 	//根据id取得所有成果
+// 	products, err := models.GetProducts(idNum)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	c.Data["json"] = products
+// 	c.ServeJSON()
+// 	// c.Data["json"] = root
+// 	// c.ServeJSON()
+// }
+
+// //向某个侧栏id下添加成果
+// func (c *ProjController) AddProduct() {
+// 	id := c.Ctx.Input.Param(":id")
+// 	pid := c.Input().Get("pid")
+// 	code := c.Input().Get("code")
+// 	title := c.Input().Get("title")
+// 	label := c.Input().Get("label")
+// 	principal := c.Input().Get("principal")
+// 	content := c.Input().Get("content")
+// 	// beego.Info(id)
+// 	c.Data["Id"] = id
+// 	//id转成64为
+// 	idNum, err := strconv.ParseInt(pid, 10, 64)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	//根据id添加成果code, title, label, principal, content string, projectid int64
+// 	_, err = models.AddProduct(code, title, label, principal, content, idNum)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	c.Data["json"] = "ok"
+// 	c.ServeJSON()
+// 	// c.Data["json"] = root
+// 	// c.ServeJSON()
 // }

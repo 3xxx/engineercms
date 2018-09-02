@@ -1,3 +1,4 @@
+<!-- è¿™ä¸ªæ˜¯dwgviewxæ’ä»¶çš„é¢„è§ˆ -->
 <HTML>
 
 <HEAD>
@@ -6,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="renderer" content="webkit">
-  <!-- ¼ÓÉÏÕâ¾ä£¬360µÈä¯ÀÀÆ÷¾Í»áÄ¬ÈÏÊ¹ÓÃgoogleÄÚºË£¬¶ø²»ÊÇIEÄÚºË ¡£ -->
+  <!-- åŠ ä¸Šè¿™å¥ï¼Œ360ç­‰æµè§ˆå™¨å°±ä¼šé»˜è®¤ä½¿ç”¨googleå†…æ ¸ï¼Œè€Œä¸æ˜¯IEå†…æ ¸ ã€‚ -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <!-- ¼ÓÉÏÕâÒ»¾ä£¬Èç¹û±»ÓÃ»§Ç¿ÐÐÊ¹ÓÃIEä¯ÀÀÆ÷£¬¾Í»áÊ¹ÓÃIEµÄ×î¸ß°æ±¾äÖÈ¾ÄÚºË -->
+  <!-- åŠ ä¸Šè¿™ä¸€å¥ï¼Œå¦‚æžœè¢«ç”¨æˆ·å¼ºè¡Œä½¿ç”¨IEæµè§ˆå™¨ï¼Œå°±ä¼šä½¿ç”¨IEçš„æœ€é«˜ç‰ˆæœ¬æ¸²æŸ“å†…æ ¸ -->
 <!-- <LINK REL="stylesheet" TYPE="text/css" HREF="help/ie4.css"/> -->
 </HEAD>
 <script>

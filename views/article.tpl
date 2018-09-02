@@ -8,7 +8,7 @@
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="Cache-Control" content="no-siteapp">
-  <title>{{.product.Title}} - 珠三角设代</title>
+  <!-- <title>{{.product.Title}} - 珠三角设代</title> -->
   <link rel="Stylesheet" type="text/css" href="/static/css/csdn_style.css">
   <link rel="stylesheet" href="/static/css/csdn_blog_detail.min.css">
   <link rel="stylesheet" href="/static/froala/css/froala_style.css">

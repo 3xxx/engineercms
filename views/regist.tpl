@@ -1,48 +1,37 @@
-<!-- 用户登录出错页面 -->
- <!DOCTYPE html>
-<html>
-<head>
- <meta charset="UTF-8">
-  <title>EngineerCMS</title>
-<script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
- <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+<!DOCTYPE html>
+{{template "header"}}
+<title>注册 - MeritMS</title>
 </head>
 <body>
 
 <div id="content" class="col-md-8 col-md-offset-2">
     <div class="col-md-6 auth-page">
       <h3 class="title">
-        <span class="glyphicon glyphicon-remove"></span>
-        密码或用户名错误！或用户被禁止！
-      </h3><p class="well">请重新登陆。</p>
-    <form method="POST" action="/login">
-      <input type="hidden" name="url" value="{{.Url}}"/>
+        <span class="glyphicon glyphicon-user"></span>
+        注册
+      </h3>
+    <form method="POST" action="/regist">
       <div class="form-group">
-        <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-        <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
-        <div id='datalistDiv'>
-          <datalist id="cars" name="cars">
-          </datalist>
-        </div>
+        <label class="control-label" id="regis" for="LoginForm-UserName">*用户名</label>
+        <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account"></div>
       <div class="form-group">
-        <label class="control-label" for="LoginForm-Password">密码</label>
-        <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
-
-      <div class="checkbox">
-        <label>
-          <input type="checkbox">自动登陆</label>
-      </div>
-      <button type="submit" class="btn btn-default" onclick="return checkInput();">
-        登录&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        <label class="control-label" for="LoginForm-UserName">邮箱</label>
+        <input id="email" name="email" type="text" value="" class="form-control" placeholder="Enter Email"></div>
+      <div class="form-group">
+        <label class="control-label" for="LoginForm-UserName">昵称</label>
+        <input id="nickname" name="nickname" type="text" value="" class="form-control" placeholder="Enter NickName"></div>
+      <div class="form-group">
+        <label class="control-label" for="LoginForm-Password">*密码</label>
+        <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password"></div>
+      <button id="regist" name="regist" type="submit" class="btn btn-default" onclick="return checkInput();">
+        注册&nbsp;&nbsp;
+        <span class="glyphicon glyphicon-circle-arrow-right"></span>
       </button>
       <a href="./forgot" class="pull-right">
         <span class="glyphicon glyphicon-question-sign"></span>
         忘记密码
       </a>
       <button class="btn btn-default" onclick="return backToHome();">返回&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-left"></span></button>
-
   </form>
 </div>
 
@@ -52,10 +41,10 @@
       <span class="glyphicon glyphicon-question-sign"></span>
       帮助
     </h3>
-    <p class="well">如果您还没有注册帐户的话，请先注册。</p>
+    <p class="well">如果您已经注册的话，请登陆。</p>
     <p>
-      <a href="./regist" class="btn btn-default">
-        立即注册&nbsp;&nbsp; <i class="icon-chevron-sign-right"></i>
+      <a href="/login" class="btn btn-default">
+        立即登陆&nbsp;&nbsp; <i class="icon-chevron-sign-right"></i>
       </a>
     </p>
   </div>
@@ -63,126 +52,85 @@
 
 </div>
 
-<!-- <div class="row">
-    <div id="content" class="col-md-8 col-md-offset-2">
-        <div class="box">
-            <div class="cell">
-                <div class="row">
-                    <div class="col-md-6 auth-page">
-                        <h3 class="title">
-                            <span class="glyphicon glyphicon-user"></span>
-                            登录
-                        </h3>
-
-                        <div class="alert alert-success">
-                            <p>成功登出</p>
-                        </div>
-
-                        <form method="POST" action="./登录 - Go友团_files/登录 - Go友团.html">
-                            <input type="hidden" name="_xsrf" value="z2rSZ3cjoR110qfJGIKVyE62pH7Brd1L">
-                            <input type="hidden" name="_once" value="dRFmv4aizZ">
-
-                            <div class="form-group">
-
-                                <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-                                <input id="LoginForm-UserName" name="UserName" type="text" value="" class="form-control"></div>
-
-                            <div class="form-group">
-
-                                <label class="control-label" for="LoginForm-Password">密码</label>
-
-                                <input id="LoginForm-Password" name="Password" type="password" value="" class="form-control"></div>
-
-                            <div class="form-group">
-
-                                <label>
-                                    <input type="hidden" name="Remember" value="false">
-                                    <button type="button" data-toggle="button" data-name="Remember" class="btn btn-default btn-xs btn-checked">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                    </button>
-                                    记住登录
-                                </label>
-
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">
-                                登录&nbsp;&nbsp;
-                                <span class="glyphicon glyphicon-circle-arrow-right"></span>
-                            </button>
-                            <a href="http://golanghome.com/forgot" class="pull-right">
-                                <span class="glyphicon glyphicon-question-sign"></span>
-                                忘记密码
-                            </a>
-                        </form>
-                    </div>
-
-                    <div class="col-md-6 auth-page">
-                        <div class="auth-page">
-                            <h3 class="title">
-                                <span class="glyphicon glyphicon-question-sign"></span>
-                                帮助
-                            </h3>
-                            <p class="well">如果您还没有注册帐户的话，请先注册。</p>
-                            <p>
-                                <a href="./regist" class="btn btn-default">
-                                    立即注册&nbsp;&nbsp; <i class="icon-chevron-sign-right"></i>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
 <script type="text/javascript">
+
+$(document).ready(function(){
+  $("#uname").blur(function(){
+    $.ajax({
+      type:"post",//这里是否一定要用post？？？
+      url:"/regist/checkuname",
+      // data:$('#form').serialize(),
+      //格式化表单参数或者也可以使用data:{'folder':$('input[name=folder]').val(),'page':$('input[name=page]').val()},
+        // data:{'aid':54,'content':55,'aid':56,'content':57},
+        // data:o,
+        // datetype:'text',
+        data: { uname: $("#uname").val()},
+        // success: function(responseText) {
+        // $("#divResult").html(responseText);
+        // }
+        success:function(data,status){//数据提交成功时返回数据
+          //假设有数字a、b、c。当a大于5与b小于6或者c不等于8与a等于‘3’时，输出1306
+          //var a,b,c;
+          //alert (a > 5 && b < 6 || c != 8 && a == 3 ? 1306 : '');
+            if ( $("#uname").val().length>0 && data=="false"){
+                $("#regis").html("用户名已存在！");
+                $("#regis").css("color","red");
+            }else if ( $("#uname").val().length>0 && data=="true"){
+                $("#regis").html("用户名可用！");
+                $("#regis").css("color","green");
+            }else if ( $("#uname").val().length==0){
+                $("#regis").html("用户名");
+                $("#regis").css("color","black");
+            }
+            // else if ( hob == "basketball")
+            // {
+            // alert("我也爱看！")
+            // }
+            // else//既不是JavaScript又不是足球
+            // {
+            // alert("没有评价……");
+            // } 
+            //   alert("Data: " + data + "\nStatus: " + status);
+            //   if (data="false"){
+            //   $("#regis").html("用户名已存在！");
+            //   $("#regis").css("color","red");
+            // } else {
+            //   $("#regis").html("用户名可用！");
+            //   $("#regis").css("color","green");
+            //   // css("background-color","red");
+            // }
+              // alert(data);
+              // alert("导出成功！")
+              // return false; 
+      }
+      // return true;//这里false应该是不刷新页面的意思?
+    });
+  });
+});
+
 function checkInput(){
   var uname=document.getElementById("uname");
   if (uname.value.length==0){
     alert("请输入账号");
     return false;
   }
-    var pwd=document.getElementById("pwd");
+  var pwd=document.getElementById("pwd");
   if (pwd.value.length==0){
     alert("请输入密码");
     return false;
-    }
-    return true
+  }
+  if ( $("#uname").val().length>0 && $("#regis").html()=="用户名已存在！"){
+    alert("用户名已存在！");
+    return false;
+  }
+// return true
 }
 function backToHome(){
   window.location.href="/";
   return false;
 }
 
-$('#uname').attr("autocomplete","off"); 
-$(document).ready(function(){
-  $("#uname").keyup(function(event){
-    var uname1=document.getElementById("uname");
-    // alert(event.keyCode);
-   if (event.keyCode != 38 && event.keyCode != 40 && uname1.value.length==2){
-    $.ajax({
-                type:"post",//这里是否一定要用post？？？
-                url:"/regist/getuname",
-                data: { uname: $("#uname").val()},
-                dataType:'json',//dataType:JSON,这种是jquerylatest版本的表达方法。不支持新版jquery。
-                success:function(data,status){
-                  $(".option").remove();
-                  $.each(data,function(i,d){
-                      $("#cars").append('<option class="option" value="' + data[i].Username + '">' + data[i].Nickname + '</option>');
-                  });
-                }
-      });
-                // $("#uname").keydown(function(){
-                //   $("option").remove();
-                // }); 
-    }
- });
-}); 
 </script>
-
-
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAjMUlEQVR42u2dD4xlV13Hz7RAt7TQ
 WSJ0miJ9K4XuarQDKJ0tKlONdqsos8a424jplHWzs8SEKQpsTXC3GtwpojuQyE5jhg6a2KlIuhi0
 0xBkkMAOgukof3YLA50idRf501GhOyW0z9/3nvN7c95997537rt/3z2/T3Lm3PfmvvvO79z7+77z
@@ -342,7 +290,6 @@ bp/D/70dHejzg5UFIgD5M2liEYAc8PnByhIU1/kBDY+1T7sgiD0D0Gd4kRVUt3Za77vkL+cn2gOW
 zTEvwYYqAguAd/ksApA9aBe4zRyP9jjXzv9wu8EtJl5Sgg1KWjwycjLFdThfMf14tWyjykIEIHtE
 APJFBCBDRADypaG2iq6vV+1rBUbBvQR3K48fygQ01JbI2mKLAVPcZbquPGzdd0UEIF8aSgQgTxpK
 BCAVIgCC4DEiAILgMSIAguAxIgCC4DEiAILgMSIAguAxIgCC4DH/D9TfTQ82Of+KAAAAAElFTkSu
-QmCC" width="10%" align ="left"> 
-
+QmCC" width="10%" align ="left">
 </body>
 </html>

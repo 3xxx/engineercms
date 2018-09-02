@@ -286,6 +286,7 @@ func (c *RoleController) Get() {
 //   '200':
 //     description: success
 
+//添加角色
 func (c *RoleController) Post() {
 	// u := m.Role{}
 	// if err := c.ParseForm(&u); err != nil {

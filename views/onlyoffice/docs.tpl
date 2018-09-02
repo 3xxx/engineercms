@@ -14,7 +14,6 @@
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
@@ -359,10 +358,10 @@
 
   // 批量上传
   $("#addButton").click(function() {
-      // if ({{.RoleAdd}}!="true"){
-      //   alert("权限不够！");
-      //   return;
-      // }
+      if ({{.IsLogin}}!="true"){
+        alert("请登录！");
+        return;
+      }
       $("input#pid").remove();
       var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
         $(".modal-body").append(th1);

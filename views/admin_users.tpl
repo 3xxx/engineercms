@@ -1040,6 +1040,29 @@ field：点击列的 field 名称 -->
         }
       },
     };
+
+    //删除按钮与修改按钮的出现与消失
+    //只勾选一项，可以修改删除 
+    //勾选多项只能删除
+    $('.bootstrap-table').change(function(){
+      var dataArr=$('#mytab .selected');
+      if(dataArr.length==1){
+        $('#btn_edit').css('display','block').removeClass('fadeOutRight').addClass('animated fadeInRight');
+      }else{
+        $('#btn_edit').addClass('fadeOutRight');
+        setTimeout(function(){
+          $('#btn_edit').css('display','none');
+        },400); 
+      }
+      if(dataArr.length>=1){
+        $('#btn_delete').css('display','block').removeClass('fadeOutRight').addClass('animated fadeInRight');
+      }else{
+        $('#btn_delete').addClass('fadeOutRight');
+        setTimeout(function(){
+          $('#btn_delete').css('display','none');
+        },400); 
+      }
+    });
   </script>
 </div>
 

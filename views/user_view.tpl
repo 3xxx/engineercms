@@ -20,8 +20,8 @@
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <!-- <script src="/static/js/jquery.form.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/>
-  <script type="text/javascript" src="/static/js/select2.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/> -->
+  <!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
 </head>
 
   <!-- <div class="navbar navba-default navbar-fixed-top"> -->
@@ -29,7 +29,7 @@
   <!-- </div> -->
 <body>
   <div class="col-lg-12">
-  <h3>用户表-{{.User}}</h3>
+  <h3>用户表-{{.Username}}</h3>
     <div id="toolbar1" class="btn-group">
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
@@ -185,12 +185,12 @@
             field: 'name',//这里用user数据库json字段，不能是username
             title: '用户名',
             sortable:'true',
-            editable: {
-                type: 'text',
-                pk: 1,
-                url: '/admin/user/updateuser',
-                title: 'Enter ProjectNumber' 
-            }
+            // editable: {
+            //     type: 'text',
+            //     pk: 1,
+            //     url: '/admin/user/updateuser',
+            //     title: 'Enter ProjectNumber' 
+            // }
           },{
             field: 'Nickname',
             title: '昵称',
@@ -253,14 +253,14 @@
           },{
             field: 'Status',
             title: '状态',
-            editable: {
-              type: 'select2',
+            // editable: {
+              // type: 'select2',
             //   // source:{{.Userselect}},//'/regist/getuname1',
-              source: [
-                {id: '1', text: '显示',value:1},
-                {id: '2', text: '隐藏',value:2},
-                {id: '3', text: '禁止',value:3}
-              ],
+              // source: [
+              //   {id: '1', text: '显示',value:1},
+              //   {id: '2', text: '隐藏',value:2},
+              //   {id: '3', text: '禁止',value:3}
+              // ],
             //   //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
             //   select2: {
             //     allowClear: true,
@@ -270,8 +270,8 @@
             //   },//'/regist/getuname1',//这里用get方法，所以要换一个
             //   pk: 1,
             //   url: '/admin/user/updateuser',
-              title: 'Enter Status'  
-            }
+              // title: 'Enter Status'  
+            // }
           },{
             field: 'Lastlogintime',
             title: '最后登录',
@@ -281,7 +281,7 @@
             title: '建立',
             formatter:localDateFormatter,
           },{
-            field: 'Role',
+            field: 'role',
             title: '权限',
             // editable: {
             //   type: 'select2', 
@@ -357,7 +357,7 @@
                 <th data-width="10" data-checkbox="true" data-formatter="stateFormatter"></th>
                 <th data-formatter="index1">#</th>
                 <th data-field="Rolenumber">角色编码</th>
-                <th data-field="Rolename">角色名称</th>
+                <th data-field="name">角色名称</th>
                 <th data-align="center" data-formatter="StatusFormatter">状态</th>
                 <!-- <th data-field="domain_desc">所属域</th> -->
                 <!-- <th data-align="center"
@@ -393,7 +393,7 @@
       }
       function StatusFormatter(value, row, index) {
         // alert(row.Status);
-        if (row.Status == "0") {
+        if (row.role == "0") {
             return '正常';
         }else{
           return '失效';
