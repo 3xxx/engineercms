@@ -10,9 +10,9 @@ import (
 )
 
 type Article struct {
-	Id        int64     `form:"-"`
+	Id        int64     `json:"id",form:"-"`
 	Subtext   string    `orm:"sie(20)"`
-	Content   string    `orm:"sie(5000)"`
+	Content   string    `json:"html",orm:"sie(5000)"`
 	ProductId int64     `orm:"null"`
 	Views     int64     `orm:"default(0)"`
 	Created   time.Time `orm:"auto_now_add;type(datetime)"`
@@ -86,6 +86,17 @@ func GetArticles(pid int64) (Articles []*Article, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Article")
 	_, err = qs.Filter("Productid", pid).All(&Articles, "Id", "ProductId", "Created", "Updated")
+	if err != nil {
+		return nil, err
+	}
+	return Articles, err
+}
+
+//微信小程序，根据成果id取得所有文章——返回id和prodid，content……
+func GetWxArticles(pid int64) (Articles []*Article, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Article")
+	_, err = qs.Filter("Productid", pid).All(&Articles)
 	if err != nil {
 		return nil, err
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	// "regexp"
 	"strconv"
-	// "strings"
+	"strings"
 )
 
 type WikiController struct {
@@ -205,6 +205,53 @@ func (c *WikiController) AddWiki() {
 		beego.Error(err)
 	} else {
 		c.Data["json"] = id
+		c.ServeJSON()
+	}
+
+	logs := logs.NewLogger(1000)
+	logs.SetLogger("file", `{"filename":"log/test.log"}`)
+	logs.EnableFuncCallDepth(true)
+	logs.Info(c.Ctx.Input.IP() + " " + "AddWiki:" + " " + title)
+	logs.Close()
+	// c.Redirect("/wiki", 302)
+}
+
+//这个是微信小程序添加wiki的方法
+func (c *WikiController) AddPic() {
+	// c.Data["IsWiki"] = true
+	// username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	content = "<p>" + content + "</p>"
+	imagesurl := c.Input().Get("images")
+	array := strings.Split(imagesurl, ",")
+	for _, v := range array {
+		content = content + "<p><img src='" + v + "'></p>"
+	}
+	// if !islogin { //&& uname != category.Author
+	// 	// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
+	// <p><img src="/attachment/wiki/2018January/1515026559287477900.jpg" title="Snap2.jpg" alt="Snap2.jpg" class="fr-fic fr-dii"></p>
+	id, err := models.AddWikiOne(title, content, "test")
+	if err != nil {
+		beego.Error(err)
+		c.Data["json"] = map[string]interface{}{"info": "ERR", "id": id}
+		c.ServeJSON()
+	} else {
+		// c.Data["json"] = id
+		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "id": id}
 		c.ServeJSON()
 	}
 

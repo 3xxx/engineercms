@@ -58,9 +58,9 @@ func init() {
 	beego.Router("/api/ecms", &controllers.MainController{}, "get:Getecmsapi")
 	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
 
-	// beego.Router("/", &controllers.MainController{}, "get:Get")
+	beego.Router("/", &controllers.MainController{}, "get:Get")
 	//首页放到onlyoffice
-	beego.Router("/", &controllers.OnlyController{}, "get:Get")
+	// beego.Router("/", &controllers.OnlyController{}, "get:Get")
 
 	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
 	//显示首页
@@ -406,6 +406,7 @@ func init() {
 	beego.Router("/wiki/add", &controllers.WikiController{}, "get:Add")
 	//发表文章提交
 	beego.Router("/wiki/addwiki", &controllers.WikiController{}, "post:AddWiki")
+
 	//查看一个文章
 	beego.Router("/wiki/view/", &controllers.WikiController{}, "get:View")
 	//删除wiki
@@ -419,5 +420,18 @@ func init() {
 	beego.SetStaticPath("/attachment/wiki", "attachment/wiki")
 	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
 	beego.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
+	beego.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")
+
+	//微信小程序
+	//小程序发表文章提交
+	beego.Router("/wx/addwxarticle", &controllers.ArticleController{}, "post:AddWxArticle")
+	//小程序上传图片，返回地址
+	beego.Router("/wx/uploadwximg", &controllers.FroalaController{}, "*:UploadWxImg")
+	//小程序获得文章列表，分页
+	beego.Router("/wx/getwxarticles", &controllers.ArticleController{}, "*:GetWxArticles")
+	//小程序根据文章id返回文章数据
+	beego.Router("/wx/getwxarticle/:id:string", &controllers.ArticleController{}, "*:GetWxArticle")
+	//微信登录
+	beego.Router("/wx/wxlogin", &controllers.LoginController{}, "*:WxLogin")
 
 }

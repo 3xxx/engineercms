@@ -9,6 +9,8 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/logs"
 	"net"
+	"net/http"
+	// "net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -1505,6 +1507,14 @@ func (c *AdminController) DownMeritlist() {
 			c.Ctx.WriteString(data)
 		}
 	}
+}
+
+func (c *AdminController) Testdown() {
+	// filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, "static/download/AC9A20F9BD09F18D247337AABC67BC06.txt")
 }
 
 // include_once('connect.php');//连接数据库

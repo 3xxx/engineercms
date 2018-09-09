@@ -816,6 +816,11 @@
       return;
       }
 
+      if ({{.Uid}}==0){
+        alert("权限不足！");
+        return;
+      }
+
       if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
 
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
@@ -949,6 +954,10 @@
         return false;
       }
      //问题：如果多选，而其中有自己的，也有自己不具备权限的********
+      if ({{.Uid}}==0){
+        alert("权限不足！");
+        return;
+      }
       if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
       if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
       var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 

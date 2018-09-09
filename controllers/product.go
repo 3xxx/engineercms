@@ -306,6 +306,7 @@ func (c *ProdController) GetProducts() {
 		Attachslice = make([]AttachmentLink, 0) //再把slice置0
 		Pdfslice = make([]PdfLink, 0)           //再把slice置0
 		// link = append(link, linkarr...)
+
 		//取得文章
 		Articles, err := models.GetArticles(w.Id)
 		if err != nil {
@@ -320,7 +321,6 @@ func (c *ProdController) GetProducts() {
 		}
 		linkarr[0].Articlecontent = Articleslice
 		Articleslice = make([]ArticleContent, 0)
-
 		//取得关联
 		relevancies, err := models.GetRelevancy(w.Id)
 		if err != nil {

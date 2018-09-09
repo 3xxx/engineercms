@@ -406,6 +406,53 @@ func (c *FroalaController) UploadImg() {
 	}
 }
 
+//微信wx添加文章里的图片上传
+func (c *FroalaController) UploadWxImg() {
+	//解析表单
+	pid := "26159" //c.Input().Get("pid")
+	//pid转成64为
+	pidNum, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据proj的parentIdpath
+	Url, DiskDirectory, err := GetUrlPath(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//获取上传的文件
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+	fileSuffix := path.Ext(h.Filename)
+	// random_name
+	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
+	year, month, _ := time.Now().Date()
+	err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	if err != nil {
+		beego.Error(err)
+	}
+	var path string
+	var filesize int64
+	if h != nil {
+		//保存附件
+		path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
+		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
+		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+		}
+		filesize, _ = FileSize(path)
+		filesize = filesize / 1000.0
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + newname, "title": "111", "original": "demo.jpg"}
+		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": ""}
+		c.ServeJSON()
+	}
+}
+
 //添加wiki里的图片上传
 func (c *FroalaController) UploadWikiImg() {
 	//保存上传的图片
@@ -432,6 +479,33 @@ func (c *FroalaController) UploadWikiImg() {
 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + newname, "title": "111", "original": "demo.jpg"}
 	c.ServeJSON()
 }
+
+// wx-file.jpg
+//添加微信图片上传
+// func (c *FroalaController) UploadWxImg() {
+// 	_, h, err := c.GetFile("file")
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	var filesize int64
+// 	fileSuffix := path.Ext(h.Filename)
+// 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
+// 	year, month, _ := time.Now().Date()
+// 	err = os.MkdirAll(".\\attachment\\wiki\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	path1 := ".\\attachment\\wiki\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
+// 	Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
+// 	err = c.SaveToFile("file", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	filesize, _ = FileSize(path1)
+// 	filesize = filesize / 1000.0
+// 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + newname, "title": "111", "original": "demo.jpg"}
+// 	c.ServeJSON()
+// }
 
 //添加文章里的视频上传
 func (c *FroalaController) UploadVideo() {

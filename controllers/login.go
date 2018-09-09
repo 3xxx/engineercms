@@ -10,7 +10,8 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"strconv"
 	// "github.com/astaxie/beego/session"
-	// "encoding/json"
+	"encoding/json"
+	"net/http"
 )
 
 type LoginController struct {
@@ -214,6 +215,89 @@ func (c *LoginController) Post() {
 	// } else {
 	// 	fmt.Println(err)
 	// 	index.TplName = "error.tpl"
+	// }
+}
+
+//微信小程序访问微信服务器获取用户信息
+func (c *LoginController) WxLogin() {
+	JSCODE := c.Input().Get("code")
+	APPID := "wx7f77b90a1a891d93"
+	SECRET := "f58ca4f28cbb52ccd805d66118060449"
+	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
+	resp, err := http.Get(requestUrl)
+	if err != nil {
+		beego.Error(err)
+		return
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		beego.Error(err)
+		return
+	}
+
+	var data map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		beego.Error(err)
+		return
+	}
+
+	if _, ok := data["session_key"]; !ok {
+		beego.Info("session_key 不存在")
+		beego.Info(data)
+		beego.Error(err)
+		return
+	}
+
+	var openID string
+	var sessionKey string
+	var unionId string
+	openID = data["openid"].(string)
+	sessionKey = data["session_key"].(string)
+	unionId = data["unionid"].(string)
+	beego.Info(openID)
+	beego.Info(sessionKey)
+	beego.Info(unionId)
+
+	//如果数据库存在记录，则存入session？
+	//上传文档的时候，检查session？
+	c.SetSession("uname", openID)
+	c.SetSession("pwd", sessionKey)
+	c.Data["json"] = map[string]interface{}{"errNo": 0, "msg": "success", "data": "3rd_session"}
+	c.ServeJSON()
+	// ctx.JSON(iris.StatusOK, iris.Map{
+	// 	"errNo": model.ErrorCode.SUCCESS,
+	// 	"msg":   "success",
+	// 	"data":  resData,
+	// })
+	// session := ctx.Session()
+	// session.Set("weAppOpenID", openID)
+	// session.Set("weAppSessionKey", sessionKey)
+
+	// client := http.Client{}                                        //  结构化这个你想要的东西，因为返回的东西不一定都是你想要的，把你想要的建立一个struct来接收
+	// formResponse, err := client.PostForm(requestUrl, url.Values{}) // 递交请求
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer formResponse.Body.Close()
+	// body, err := ioutil.ReadAll(formResponse.Body) // 将内容读取出来。
+	// type BaseInfo struct {
+	// 	OpenId string `json:"openid”`
+	// 	Token  string `json:"access_token”`
+	// }
+
+	// var user models.User
+	// user.Username = c.Input().Get("uname")
+	// err = models.ValidateUser(user)
+	// if err == nil {
+	// 	c.SetSession("uname", user.Username)
+	// 	c.SetSession("pwd", user.Password)
+	// 	User, err := models.GetUserByUsername(user.Username)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
 	// }
 }
 
