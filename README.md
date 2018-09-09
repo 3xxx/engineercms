@@ -20,6 +20,8 @@
 
 6. 采用最新的froala富文本编辑器，支持word图文直接粘贴发布，word中的图片自动上传，发布文章轻松快捷，文章支持视频和文件附件。
 
+7.微信小程序客户端访问和添加图文。
+
 一 特性：
 
 1. 后台预定义工程目录类型和分层级别，支持无限级；目录采用懒加载模式，支持百万级目录数据快速显示；
@@ -147,6 +149,10 @@ ONLYOFFICE实时文档协作效果——除了支持office的docx，xlsx及pptx�
 ![default](https://user-images.githubusercontent.com/10678867/41599295-4fb72070-7405-11e8-82fb-e746950ffa0d.gif)
 
 手机端访问文章效果
+
+微信小程序访问文章和添加文章：
+
+![_20180908153913](https://user-images.githubusercontent.com/10678867/45264560-2a5f6880-b471-11e8-88f4-a747df7316f6.jpg)
 
 ![](https://user-images.githubusercontent.com/10678867/34637355-7391a26e-f2ef-11e7-8c9d-9f3edcce9004.png)
 
