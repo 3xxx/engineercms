@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](LICENSE) [![Build Status](https://travis-ci.org/3xxx/engineercms.svg?branch=master)](https://travis-ci.org/3xxx/engineercms) [![GoDoc](https://godoc.org/github.com/3xxx/engineercms?status.svg)](https://godoc.org/github.com/3xxx/engineercms)
 
-[Demo2](http://112.74.42.44:8086/)
+[Demo2](https://zsj.itdos.com/)
 ——基于engineercms的设代资料管理平台（真实应用环境）
 
 1. 本系统采用go语言开发，运行文件为编译后的二进制exe文件，所以无需像其他语言（php、nodejs、java等语言）编写的web应用那样，需要配置运行服务环境。
