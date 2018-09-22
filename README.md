@@ -84,6 +84,10 @@
 
 将二进制文件放到源码文件夹下直接运行即可。
 
+或者去百度网盘下载，直接运行。[https://pan.baidu.com/s/1gf0ucuR](https://pan.baidu.com/s/1gf0ucuR)
+
+不清楚的，可以加我QQ504284聊。
+
 ## Quick Start
 
 * 参见quickstart快速开始。
