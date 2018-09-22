@@ -3,6 +3,8 @@
 <head>
 	<meta name="renderer" content="webkit">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" /> -->
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=9" /> -->
 	<!-- <meta name="renderer" content="webkit">
 加上这句，360等浏览器就会默认使用google内核，而不是IE内核 。
 因为你没加，所以我打开你的那个地址，默认就使用IE内核了。
@@ -18,9 +20,13 @@
 	<script src="bootstrap/js/respond.min.js"></script>
 	<script src="bootstrap/js/html5.js"></script>
 	<![endif]-->
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
 <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
- 
 <!-- <script src="/static/js/respond.min.js"></script> -->
 <!-- <script src="/static/js/html5shiv.min.js"></script> -->
  <!-- <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAi20lEQVR42u2dD4xcx13HZ5OWOE3a

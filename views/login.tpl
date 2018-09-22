@@ -14,12 +14,10 @@
 <div id="content" class="col-md-8 col-md-offset-2">
     <div class="col-md-6 auth-page">
       <h3 class="title">
-        <span class="glyphicon glyphicon-user"></span>
-        登录
-      </h3>
-    <form method="POST" action="/login">
-        <input type="hidden" name="url" value="{{.Url}}"/>
-        <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
+        <span class="glyphicon glyphicon-user"></span>登录</h3>
+    <form method="POST" action="/post">
+      <input type="hidden" name="url" value="{{.Url}}"/>
+      <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
         <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
@@ -30,21 +28,17 @@
       <div class="form-group">
         <label class="control-label" for="LoginForm-Password">密码</label>
         <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
-
       <div class="checkbox">
         <label>
           <input type="checkbox">自动登陆</label>
       </div>
-      <button type="submit" class="btn btn-default" onclick="return checkInput();">
-        登录&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-right"></span>
+      <button type="submit" class="btn btn-default" onclick="return checkInput();">登录&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-right"></span>
       </button>
       <a href="./forgot" class="pull-right">
-        <span class="glyphicon glyphicon-question-sign"></span>
-        忘记密码
+        <span class="glyphicon glyphicon-question-sign"></span>忘记密码
       </a>
       <button class="btn btn-default" onclick="return backToHome();">返回&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-left"></span></button>
-
-  </form>
+    </form>
 </div>
 
 <div class="col-md-6 auth-page">

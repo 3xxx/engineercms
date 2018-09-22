@@ -17,7 +17,7 @@
         <span class="glyphicon glyphicon-remove"></span>
         密码或用户名错误！或用户被禁止！
       </h3><p class="well">请重新登陆。</p>
-    <form method="POST" action="/login">
+    <form method="POST" action="/post">
       <input type="hidden" name="url" value="{{.Url}}"/>
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>

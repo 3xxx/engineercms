@@ -1,5 +1,5 @@
 <!-- 这个是dwgviewx插件的预览 -->
-<HTML>
+<!DOCTYPE html>
 
 <HEAD>
 <title>DWGView</title>
@@ -12,7 +12,7 @@
   <!-- 加上这一句，如果被用户强行使用IE浏览器，就会使用IE的最高版本渲染内核 -->
 <!-- <LINK REL="stylesheet" TYPE="text/css" HREF="help/ie4.css"/> -->
 </HEAD>
-<script>
+<script type="text/javascript">
 function ZoomIn()
 {
      DWGViewX.ZoomIn();
@@ -69,7 +69,7 @@ function Print()
         <param name="_ExtentY" value="13758">
         <param name="_StockProps" value="0">
         <param name="FontPath" value="http://127.0.0.1/static/img/Fonts/">
-        <param name="DrawingFile" value="{{.DwgLink}}">
+        <param name="DrawingFile" value="{{.DwgLink}}?hotqinsessionid={{.Sessionid}}">
         <param name="ShowToobar" value="-1">
         <param name="ShowLayoutBar" value="1">  
       </OBJECT>
@@ -99,4 +99,4 @@ function Print()
 </table>
 
 </BODY>
-</HTML>
+</html>

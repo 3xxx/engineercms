@@ -3,8 +3,7 @@
 {{template "header"}}
 <title>EngineerCMS</title>
   <script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
-  
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/> 
 </head>
 
   <!-- <div class="navbar navba-default navbar-fixed-top"> -->
@@ -33,6 +32,8 @@
       和
       <a target="_blank" href="http://beego.me">beego</a>
       提供动力。
+      <a target="_blank" href="https://github.com/3xxx" target="_blank"><strong><i class="icon-github-sign"></i> Github</strong></a>
+                    - {{.PageStartTime|loadtimes}}ms.
     </p>
 
     <p>

@@ -36,7 +36,7 @@
       <p>成功登出</p>
     </div>
     -->
-    <form method="POST" action="/login">
+    <form method="POST" action="/post">
      <!-- <input type="hidden" name="_xsrf" value="z2rSZ3cjoR110qfJGIKVyE62pH7Brd1L">
       -->
       <!-- <input type="hidden" name="_once" value="dRFmv4aizZ">
@@ -65,7 +65,6 @@
         忘记密码
       </a>
       <button class="btn btn-default" onclick="return backToHome();">返回&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-left"></span></button>
-
   </form>
 </div>
 

@@ -86,7 +86,7 @@
       <a href="#">
         <i class="fa fa-gear"></i>
       </a>
-      <a href="#">
+      <a href="/">
         <i class="fa fa-power-off"></i>
       </a>
     </div>

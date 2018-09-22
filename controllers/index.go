@@ -1,4 +1,4 @@
-//在线成果登记
+//
 package controllers
 
 import (
@@ -95,7 +95,7 @@ func (c *IndexController) GetIndex() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-
+	c.Data["PageStartTime"] = time.Now()
 	achemployee := make([]AchEmployee, 0)
 	achsecoffice := make([]AchSecoffice, 0)
 	achdepart := make([]AchDepart, 0)

@@ -48,7 +48,7 @@
           location.href=he;
       };
 
-      var Url="http://192.168.99.1/"+{{.FilePath}};
+      var Url="http://192.168.99.1/{{.FilePath}}?hotqinsessionid={{.Sessionid}}";
       // var Url2="http://192.168.99.1/"+Url.replace(/\u0026/,"");
       // alert(Url2);
     	window.docEditor = new DocsAPI.DocEditor("placeholder",

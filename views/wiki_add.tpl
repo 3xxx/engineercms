@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="/static/froala/css/plugins/file.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/quick_insert.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/help.css">
-  <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css">
+  <!-- <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css"> -->
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
   <link rel="stylesheet" href="/static/froala/js/codemirror.min.css">
   <link rel="stylesheet" href="/static/froala/css/themes/red.css">
@@ -114,7 +114,7 @@
   <script type="text/javascript" src="/static/froala/js/plugins/video.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/help.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/print.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script> -->
   <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script>
   <script src="/static/froala/js/languages/zh_cn.js"></script>

@@ -22,6 +22,7 @@ import (
 	// "crypto/aes"
 	// "crypto/cipher"
 	// "io"
+	// "github.com/astaxie/beego/session"
 )
 
 type OnlyController struct {
@@ -504,7 +505,13 @@ func (c *OnlyController) OnlyOffice() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	useridstring = strconv.FormatInt(uid, 10)
-
+	var usersessionid string //客户端sesssionid
+	if islogin {
+		usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
+		//服务端sessionid怎么取出
+		// v := c.GetSession("uname")
+		// beego.Info(v.(string))
+	}
 	// v := c.GetSession("uname")
 	// var role, userrole int
 	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
@@ -616,12 +623,13 @@ func (c *OnlyController) OnlyOffice() {
 		c.Data["Download"] = false
 		c.Data["Print"] = false
 	} else if Permission == "4" {
-		route := c.Ctx.Request.URL.String()
-		c.Redirect("/roleerr?url="+route, 302)
+		// route := c.Ctx.Request.URL.String()
+		// c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
 
 	c.Data["Doc"] = onlyattachment
+	c.Data["Sessionid"] = usersessionid
 	c.Data["attachid"] = idNum
 	c.Data["Key"] = strconv.FormatInt(onlyattachment.Updated.UnixNano(), 10)
 
@@ -747,8 +755,8 @@ func (c *OnlyController) OnlyOffice() {
 //cms中查阅office
 func (c *OnlyController) OfficeView() {
 	//设置响应头——没有作用
-	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
-	c.Ctx.ResponseWriter.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
+	// c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	// c.Ctx.ResponseWriter.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	// c.Ctx.ResponseWriter.Header().Set("content-type", "application/json")             //返回数据格式是json
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
@@ -761,106 +769,129 @@ func (c *OnlyController) OfficeView() {
 	if err != nil {
 		beego.Error(err)
 	}
-
+	fileext := path.Ext(attachment.FileName)
 	product, err := models.GetProd(attachment.ProductId)
 	if err != nil {
 		beego.Error(err)
 	}
 
 	//根据projid取出路径
-	// proj, err := models.GetProj(product.ProjectId)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
+	proj, err := models.GetProj(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
 
-	// if proj.ParentIdPath == "" {
-	// 	projurl := "/" + strconv.FormatInt(proj.Id, 10) + "/"
-	// } else {
-	// 	// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
-	// 	projurl := "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
-	// }
-
+	var projurl string
+	if proj.ParentIdPath == "" {
+		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
+	} else {
+		// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+		projurl = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
+	}
 	//由proj id取得url
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
 	}
-
-	c.Data["FilePath"] = fileurl + "/" + attachment.FileName
 	// beego.Info(fileurl + "/" + attachment.FileName)
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	// useridstring := strconv.FormatInt(uid, 10)
-	c.Data["Mode"] = "view"
-	c.Data["Edit"] = false
-	c.Data["Review"] = false
-	c.Data["Comment"] = false
-	c.Data["Download"] = true
-	c.Data["Print"] = true
+	useridstring := strconv.FormatInt(uid, 10)
+	var usersessionid string //客户端sesssionid
+	if islogin {
+		usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
+		//服务端sessionid怎么取出
+		// v := c.GetSession("uname")
+		// beego.Info(v.(string))
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
+			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
+			// c.Redirect(url+"/"+attachment.FileName, 302)
+			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+			c.Data["FilePath"] = fileurl + "/" + attachment.FileName
+			c.Data["Username"] = username
+			c.Data["Ip"] = c.Ctx.Input.IP()
+			c.Data["role"] = role
+			c.Data["IsAdmin"] = isadmin
+			c.Data["IsLogin"] = islogin
+			c.Data["Uid"] = uid
+			c.Data["Mode"] = "view"
+			c.Data["Edit"] = false
+			c.Data["Review"] = false
+			c.Data["Comment"] = false
+			c.Data["Download"] = true
+			c.Data["Print"] = true
+			c.Data["Doc"] = attachment
+			c.Data["attachid"] = idNum
+			c.Data["Key"] = strconv.FormatInt(attachment.Updated.UnixNano(), 10)
+			c.Data["Sessionid"] = usersessionid
 
-	c.Data["Doc"] = attachment
-	c.Data["attachid"] = idNum
-	c.Data["Key"] = strconv.FormatInt(attachment.Updated.UnixNano(), 10)
+			if path.Ext(attachment.FileName) == ".docx" || path.Ext(attachment.FileName) == ".DOCX" {
+				c.Data["fileType"] = "docx"
+				c.Data["documentType"] = "text"
+			} else if path.Ext(attachment.FileName) == ".wps" || path.Ext(attachment.FileName) == ".WPS" {
+				c.Data["fileType"] = "docx"
+				c.Data["documentType"] = "text"
+			} else if path.Ext(attachment.FileName) == ".XLSX" || path.Ext(attachment.FileName) == ".xlsx" {
+				c.Data["fileType"] = "xlsx"
+				c.Data["documentType"] = "spreadsheet"
+			} else if path.Ext(attachment.FileName) == ".ET" || path.Ext(attachment.FileName) == ".et" {
+				c.Data["fileType"] = "xlsx"
+				c.Data["documentType"] = "spreadsheet"
+			} else if path.Ext(attachment.FileName) == ".pptx" || path.Ext(attachment.FileName) == ".PPTX" {
+				c.Data["fileType"] = "pptx"
+				c.Data["documentType"] = "presentation"
+			} else if path.Ext(attachment.FileName) == ".dps" || path.Ext(attachment.FileName) == ".DPS" {
+				c.Data["fileType"] = "pptx"
+				c.Data["documentType"] = "presentation"
+			} else if path.Ext(attachment.FileName) == ".doc" || path.Ext(attachment.FileName) == ".DOC" {
+				c.Data["fileType"] = "doc"
+				c.Data["documentType"] = "text"
+			} else if path.Ext(attachment.FileName) == ".txt" || path.Ext(attachment.FileName) == ".TXT" {
+				c.Data["fileType"] = "txt"
+				c.Data["documentType"] = "text"
+			} else if path.Ext(attachment.FileName) == ".XLS" || path.Ext(attachment.FileName) == ".xls" {
+				c.Data["fileType"] = "xls"
+				c.Data["documentType"] = "spreadsheet"
+			} else if path.Ext(attachment.FileName) == ".csv" || path.Ext(attachment.FileName) == ".CSV" {
+				c.Data["fileType"] = "csv"
+				c.Data["documentType"] = "spreadsheet"
+			} else if path.Ext(attachment.FileName) == ".ppt" || path.Ext(attachment.FileName) == ".PPT" {
+				c.Data["fileType"] = "ppt"
+				c.Data["documentType"] = "presentation"
+			} else if path.Ext(attachment.FileName) == ".pdf" || path.Ext(attachment.FileName) == ".PDF" {
+				c.Data["fileType"] = "pdf"
+				c.Data["documentType"] = "text"
+				c.Data["Mode"] = "view"
+			}
 
-	if path.Ext(attachment.FileName) == ".docx" || path.Ext(attachment.FileName) == ".DOCX" {
-		c.Data["fileType"] = "docx"
-		c.Data["documentType"] = "text"
-	} else if path.Ext(attachment.FileName) == ".wps" || path.Ext(attachment.FileName) == ".WPS" {
-		c.Data["fileType"] = "docx"
-		c.Data["documentType"] = "text"
-	} else if path.Ext(attachment.FileName) == ".XLSX" || path.Ext(attachment.FileName) == ".xlsx" {
-		c.Data["fileType"] = "xlsx"
-		c.Data["documentType"] = "spreadsheet"
-	} else if path.Ext(attachment.FileName) == ".ET" || path.Ext(attachment.FileName) == ".et" {
-		c.Data["fileType"] = "xlsx"
-		c.Data["documentType"] = "spreadsheet"
-	} else if path.Ext(attachment.FileName) == ".pptx" || path.Ext(attachment.FileName) == ".PPTX" {
-		c.Data["fileType"] = "pptx"
-		c.Data["documentType"] = "presentation"
-	} else if path.Ext(attachment.FileName) == ".dps" || path.Ext(attachment.FileName) == ".DPS" {
-		c.Data["fileType"] = "pptx"
-		c.Data["documentType"] = "presentation"
-	} else if path.Ext(attachment.FileName) == ".doc" || path.Ext(attachment.FileName) == ".DOC" {
-		c.Data["fileType"] = "doc"
-		c.Data["documentType"] = "text"
-	} else if path.Ext(attachment.FileName) == ".txt" || path.Ext(attachment.FileName) == ".TXT" {
-		c.Data["fileType"] = "txt"
-		c.Data["documentType"] = "text"
-	} else if path.Ext(attachment.FileName) == ".XLS" || path.Ext(attachment.FileName) == ".xls" {
-		c.Data["fileType"] = "xls"
-		c.Data["documentType"] = "spreadsheet"
-	} else if path.Ext(attachment.FileName) == ".csv" || path.Ext(attachment.FileName) == ".CSV" {
-		c.Data["fileType"] = "csv"
-		c.Data["documentType"] = "spreadsheet"
-	} else if path.Ext(attachment.FileName) == ".ppt" || path.Ext(attachment.FileName) == ".PPT" {
-		c.Data["fileType"] = "ppt"
-		c.Data["documentType"] = "presentation"
-	} else if path.Ext(attachment.FileName) == ".pdf" || path.Ext(attachment.FileName) == ".PDF" {
-		c.Data["fileType"] = "pdf"
-		c.Data["documentType"] = "text"
-		c.Data["Mode"] = "view"
-	}
-
-	u := c.Ctx.Input.UserAgent()
-	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
-	if err != nil {
-		beego.Error(err)
-	}
-	if matched == true {
-		// beego.Info("移动端~")
-		// c.TplName = "onlyoffice/onlyoffice.tpl"
-		c.Data["Type"] = "mobile"
+			u := c.Ctx.Input.UserAgent()
+			matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+			if err != nil {
+				beego.Error(err)
+			}
+			if matched == true {
+				// beego.Info("移动端~")
+				// c.TplName = "onlyoffice/onlyoffice.tpl"
+				c.Data["Type"] = "mobile"
+			} else {
+				// beego.Info("电脑端！")
+				// c.TplName = "onlyoffice/onlyoffice.tpl"
+				c.Data["Type"] = "desktop"
+			}
+			c.TplName = "onlyoffice/officeview.tpl"
+		} else {
+			route := c.Ctx.Request.URL.String()
+			c.Data["Url"] = route
+			c.Redirect("/roleerr?url="+route, 302)
+			// c.Redirect("/roleerr", 302)
+			return
+		}
 	} else {
-		// beego.Info("电脑端！")
-		// c.TplName = "onlyoffice/onlyoffice.tpl"
-		c.Data["Type"] = "desktop"
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/login?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
 	}
-	c.TplName = "onlyoffice/officeview.tpl"
 }
 
 //协作页面的保存和回调
@@ -1184,6 +1215,17 @@ func (c *OnlyController) AddOnlyAttachment() {
 
 //协作页面下载的文档，采用绝对路径型式
 func (c *OnlyController) DownloadDoc() {
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// uname := v.(string)
+	// beego.Info(uname)
+	// 	c.Data["Uname"] = v.(string)
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
 	// var uname, useridstring string
@@ -1198,11 +1240,18 @@ func (c *OnlyController) DownloadDoc() {
 	// 	useridstring = strconv.FormatInt(user.Id, 10)
 	// }
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
-	// filePath := path.Base(ctx.Request.RequestURI)
-	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
+	// filePath1 := path.Base(c.Ctx.Request.RequestURI)
+	// beego.Info(filePath1)
+	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
 		beego.Error(err)
 	}
+	if strings.Contains(filePath, "?hotqinsessionid=") {
+		filePathtemp := strings.Split(filePath, "?")
+		filePath = filePathtemp[0]
+		// beego.Info(filePath)
+	}
+	// beego.Info(filePath)
 	// fileext := path.Ext(filePath)
 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
 	// beego.Info(path.Dir(filePath))
@@ -1217,16 +1266,17 @@ func (c *OnlyController) Download() {
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
 	// var uname, useridstring string
-	// v := c.GetSession("uname")
-	// if v != nil {
-	// 	uname = v.(string)
-	// 	c.Data["Uname"] = v.(string)
-	// 	user, err := models.GetUserByUsername(uname)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// 	useridstring = strconv.FormatInt(user.Id, 10)
-	// }
+	v := c.GetSession("uname")
+	if v != nil {
+		uname := v.(string)
+		beego.Info(uname)
+		// 	c.Data["Uname"] = v.(string)
+		// 	user, err := models.GetUserByUsername(uname)
+		// 	if err != nil {
+		// 		beego.Error(err)
+		// 	}
+		// 	useridstring = strconv.FormatInt(user.Id, 10)
+	}
 	docid := c.Ctx.Input.Param(":id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(docid, 10, 64)

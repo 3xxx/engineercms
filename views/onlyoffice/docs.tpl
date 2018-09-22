@@ -358,10 +358,10 @@
 
   // 批量上传
   $("#addButton").click(function() {
-      if ({{.IsLogin}}!="true"){
-        alert("请登录！");
-        return;
-      }
+      // if ({{.IsLogin}}!=true){
+      //   alert("请登录！");
+      //   return;
+      // }
       $("input#pid").remove();
       var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
         $(".modal-body").append(th1);
@@ -380,8 +380,8 @@
       var uploader=WebUploader.create({
         // 不压缩image
         resize: false,
-        fileSingleSizeLimit: 60*1024*1024,//限制大小10M，单文件
-        fileSizeLimit: allMaxSize*1024*1024,//限制大小10M，所有被选文件，超出选择不上
+        fileSingleSizeLimit: 100*1024*1024,//限制大小100M，单文件
+        fileSizeLimit: allMaxSize*1024*1024,//限制大小100M，所有被选文件，超出选择不上
         // swf文件路径
         swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
@@ -407,7 +407,7 @@
          }else if (type=="Q_TYPE_DENIED"){
           alert("请上传文档格式文件");
         }else if(type=="F_EXCEED_SIZE"){
-          alert("单个文件大小不能超过10M");
+          alert("单个文件大小不能超过100M");
         }
       });
 

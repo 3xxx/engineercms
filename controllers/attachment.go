@@ -914,8 +914,10 @@ func ImageFilter(ctx *context.Context) {
 	// }
 }
 
-//根据权限查看附件
-func (c *AttachController) Attachment() {
+//根据权限查看附件/downloadattachment?id=
+func (c *AttachController) DownloadAttachment() {
+	// v := c.GetSession("pwd")
+	// beego.Info("v.(string)")
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
 	var projurl string
@@ -937,7 +939,13 @@ func (c *AttachController) Attachment() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	useridstring := strconv.FormatInt(uid, 10)
-
+	var usersessionid string //客户端sesssionid
+	if islogin {
+		usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
+		//服务端sessionid怎么取出
+		// v := c.GetSession("uname")
+		// beego.Info(v.(string))
+	}
 	id := c.Input().Get("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -977,24 +985,30 @@ func (c *AttachController) Attachment() {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 	case ".dwg", ".DWG":
-		// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
-		dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
-		if err != nil {
-			beego.Error(err)
+		//beego.Info(c.Ctx.Input.Site())
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
+			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+			// dwglink, err := url.ParseRequestURI(c.Ctx.Input.Scheme() + "://" + c.Ctx.Input.IP() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+			if err != nil {
+				beego.Error(err)
+			}
+			// beego.Info(dwglink)
+			// beego.Info(usersessionid)
+			c.Data["DwgLink"] = dwglink
+			c.Data["Sessionid"] = usersessionid
+			c.TplName = "dwg.tpl"
+		} else {
+			route := c.Ctx.Request.URL.String()
+			c.Data["Url"] = route
+			c.Redirect("/roleerr?url="+route, 302)
+			// c.Redirect("/roleerr", 302)
+			return
 		}
-		// beego.Info(dwglink)
-		c.Data["DwgLink"] = dwglink
-		c.TplName = "dwg.tpl"
-		// } else {
-		// 	route := c.Ctx.Request.URL.String()
-		// 	c.Data["Url"] = route
-		// 	c.Redirect("/roleerr?url="+route, 302)
-		// 	// c.Redirect("/roleerr", 302)
-		// 	return
-		// }
-	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-	// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-	//这里缺少权限设置！！！！！！！！！！！
+		// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+		// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+		//这里缺少权限设置！！！！！！！！！！！
+		// beego.Info(useridstring)
+		// beego.Info(isadmin)
 	default:
 		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
@@ -1010,13 +1024,15 @@ func (c *AttachController) Attachment() {
 	}
 }
 
-//目前只有文章中的图片采用绝对路径型式，其他都是用上面的/id型式
+//目前有文章中的图片、成果中文档的预览、onlyoffice中的文档协作、pdf中的附件路径等均采用绝对路径型式
 //文章中的附件呢？
 //default中的pdf页面中的{{.pdflink}}，绝对路径
 // type Session struct {
 // 	Session int
 // }
-func (c *AttachController) DownloadAttachment() {
+//attachment/路径/附件名称
+func (c *AttachController) Attachment() {
+	// beego.Info("v111.(string)")
 	// c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
 	// http.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
 	// var sess Session
@@ -1025,15 +1041,43 @@ func (c *AttachController) DownloadAttachment() {
 	// var ob models.Object
 	//    json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
 	// beego.Info(sess.Session)
-	// v := c.GetSession("uname")
-	// beego.Info(v)
+	//如果url带了sessionid,就能取到uid等信息
+	var useridstring string
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
-	useridstring := strconv.FormatInt(uid, 10)
+	// if uid != 0 {
+	useridstring = strconv.FormatInt(uid, 10)
+	// beego.Info(useridstring)
+	// beego.Info(isadmin)
+	// } else {
+	// 	//根据url携带的sessionid
+	// 	v := c.GetSession("uname")
+	// 	if v != nil {
+	// 		user, err := models.GetUserByUsername(v.(string))
+	// 		if err != nil {
+	// 			beego.Error(err)
+	// 		} else {
+	// 			useridstring = strconv.FormatInt(user.Id, 10)
+	// 			if user.Role == "1" {
+	// 				isadmin = true
+	// 			} else {
+	// 				isadmin = false
+	// 			}
+	// 		}
+	// 	}
+	// 	beego.Info(useridstring)
+	// 	beego.Info(isadmin)
+	// }
+	// }
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(c.Ctx.Request.RequestURI)
-	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
+	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
 		beego.Error(err)
+	}
+	if strings.Contains(filePath, "?hotqinsessionid=") {
+		filePathtemp := strings.Split(filePath, "?")
+		filePath = filePathtemp[0]
+		// beego.Info(filePath)
 	}
 	// beego.Info(filePath)
 	fileext := path.Ext(filePath)
@@ -1078,20 +1122,19 @@ func (c *AttachController) DownloadAttachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	case ".dwg", ".DWG":
-		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-		// beego.Info("ok")
-		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-		// beego.Info(filePath)
-		// beego.Info(useridstring)
+	// case ".dwg", ".DWG":
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+	// beego.Info("ok")
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// beego.Info(filePath)
+	// beego.Info(useridstring)
 	//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-			// beego.Info(useridstring)
 		} else {
 			// beego.Info(useridstring)
 			route := c.Ctx.Request.URL.String()

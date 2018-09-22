@@ -144,17 +144,17 @@ func (c *ProdController) GetProjProd() {
 		projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 	}
 
-	if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
+	if e.Enforce(useridstring, projurls+"/", "POST", ".1") || isadmin {
 		c.Data["RoleAdd"] = "true"
 	} else {
 		c.Data["RoleAdd"] = "false"
 	}
-	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") || isadmin {
 		c.Data["RoleUpdate"] = "true"
 	} else {
 		c.Data["RoleUpdate"] = "false"
 	}
-	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") || isadmin {
 		c.Data["RoleDelete"] = "true"
 	} else {
 		c.Data["RoleDelete"] = "false"

@@ -1,0 +1,156 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "EngineerCMS API",
+        "description": "ECMS has every tool to get any job done, so codename for the new ECMS APIs.",
+        "version": "1.0.0",
+        "contact": {
+            "email": "hotqin888"
+        }
+    },
+    "basePath": "/admin",
+    "paths": {
+        "/category/addcategory": {
+            "post": {
+                "tags": [
+                    "category"
+                ],
+                "description": "Get Category list by title info",
+                "operationId": "AdminController.Post Category by pid title code grade",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "pid",
+                        "description": "parentid of category",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "title of category",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "code of category",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "grade",
+                        "description": "grade of category",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.AddAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/categorytitle": {
+            "get": {
+                "tags": [
+                    "category"
+                ],
+                "description": "Get Category list by title info",
+                "operationId": "AdminController.Get Category by title",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "title of search",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "get": {
+                "tags": [
+                    "category"
+                ],
+                "description": "Get Category list by some info",
+                "operationId": "AdminController.Get Category list",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "category id",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/{key}": {
+            "get": {
+                "tags": [
+                    "category"
+                ],
+                "description": "get all the staticblock by key",
+                "operationId": "AdminController.getStaticBlock",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "key",
+                        "description": "The email for login",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.Customer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        ".AddAdminCategory": {
+            "type": "object"
+        },
+        ".Customer": {
+            "type": "object"
+        },
+        ".GetAdminCategory": {
+            "type": "object"
+        }
+    },
+    "tags": [
+        {
+            "name": "category",
+            "description": "CMSADMIN API\n"
+        }
+    ]
+}

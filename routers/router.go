@@ -1,15 +1,59 @@
 // @APIVersion 1.0.0
-// @Title mobile API
-// @Description mobile has every tool to get any job done, so codename for the new mobile APIs.
-// @Contact astaxie@gmail.com
+// @Title EngineerCMS API
+// @Description ECMS has every tool to get any job done, so codename for the new ECMS APIs.
+// @Contact hotqin888
 package routers
 
 import (
 	"github.com/3xxx/engineercms/controllers"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/plugins/cors"
 )
 
 func init() {
+	//运行跨域请求
+	//在http请求的响应流头部加上如下信息
+	//rw.Header().Set("Access-Control-Allow-Origin", "*")
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
+
+	//自动化文档
+	ns :=
+		beego.NewNamespace("/admin",
+			beego.NSNamespace("/category",
+				beego.NSInclude(
+					&controllers.AdminController{},
+					// &controllers.CustomerCookieCheckerController{},
+				),
+			),
+			// beego.NSNamespace("/catalog",
+			// 	beego.NSInclude(
+			// 		&controllers.CatalogController{},
+			// 	),
+			// ),
+			// beego.NSNamespace("/newsletter",
+			// 	beego.NSInclude(
+			// 		&controllers.NewsLetterController{},
+			// 	),
+			// ),
+			// beego.NSNamespace("/cms",
+			// 	beego.NSInclude(
+			// 		&controllers.CMSController{},
+			// 	),
+			// ),
+			// beego.NSNamespace("/suggest",
+			// 	beego.NSInclude(
+			// 		&controllers.SearchController{},
+			// 	),
+			// ),
+		)
+	beego.AddNamespace(ns)
+
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
 	//升级数据库
 	beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
@@ -59,12 +103,11 @@ func init() {
 	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
 
 	beego.Router("/", &controllers.MainController{}, "get:Get")
-	//首页放到onlyoffice
-	// beego.Router("/", &controllers.OnlyController{}, "get:Get")
-
-	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
 	//显示首页
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
+	//首页放到onlyoffice
+	// beego.Router("/", &controllers.OnlyController{}, "get:Get")
+	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
 	//显示右侧页面框架
 	beego.Router("/index/user", &controllers.IndexController{}, "*:GetUser")
 	//这里显示用户查看主人日程
@@ -97,7 +140,7 @@ func init() {
 
 	//根据数字id查询类别或目录分级表
 	beego.Router("/admin/category/?:id:string", &controllers.AdminController{}, "*:Category")
-	//根据名字查询目录分级表
+	//根据名字查询目录分级表_这里应该放多一个/category路径下
 	beego.Router("/admin/categorytitle", &controllers.AdminController{}, "*:CategoryTitle")
 	//添加目录类别
 	beego.Router("/admin/category/addcategory", &controllers.AdminController{}, "*:AddCategory")
@@ -214,7 +257,12 @@ func init() {
 	//用户产看自己的table中数据填充
 	beego.Router("/usermyself", &controllers.UserController{}, "get:Usermyself")
 
-	beego.Router("/login", &controllers.LoginController{})
+	beego.Router("/login", &controllers.LoginController{}, "get:Login")
+	//页面登录提交用户名和密码
+	beego.Router("/post", &controllers.LoginController{}, "post:Post")
+	//弹框登录提交用户名和密码
+	beego.Router("/loginpost", &controllers.LoginController{}, "post:LoginPost")
+	beego.Router("/logout", &controllers.LoginController{}, "get:Logout")
 	beego.Router("/loginerr", &controllers.LoginController{}, "get:Loginerr")
 	beego.Router("/roleerr", &controllers.UserController{}, "*:Roleerr") //显示权限不够
 
@@ -356,10 +404,10 @@ func init() {
 
 	//附件下载"/attachment/*", &controllers.AttachController{}
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
-	//根据附件地址下载
-	beego.Router("/attachment/*", &controllers.AttachController{}, "get:DownloadAttachment")
-	//根据权限下载附件id号
-	beego.Router("/attachment", &controllers.AttachController{}, "get:Attachment")
+	//根据附件绝对地址下载
+	beego.Router("/attachment/*", &controllers.AttachController{}, "get:Attachment")
+	//根据附件id号，判断权限下载
+	beego.Router("/downloadattachment", &controllers.AttachController{}, "get:DownloadAttachment")
 
 	//上面用attachment.ImageFilter是不行的，必须是package.func
 	//首页轮播图片的权限
@@ -417,7 +465,9 @@ func init() {
 	//添加删除wiki的评论
 	beego.Router("/reply/addwiki", &controllers.ReplyController{}, "post:AddWiki")
 	beego.Router("/reply/deletewiki", &controllers.ReplyController{}, "get:DeleteWiki")
+	//这个有哦何用？
 	beego.SetStaticPath("/attachment/wiki", "attachment/wiki")
+	beego.SetStaticPath("/swagger", "swagger")
 	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
 	beego.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
 	beego.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")
@@ -435,3 +485,13 @@ func init() {
 	beego.Router("/wx/wxlogin", &controllers.LoginController{}, "*:WxLogin")
 
 }
+
+// 那么Session在何时创建呢？当然还是在服务器端程序运行的过程中创建的，
+// 不同语言实现的应用程序有不同创建Session的方法，
+// 而在Java中是通过调用HttpServletRequest的getSession方法（使用true作为参数）创建的。
+// 在创建了Session的同时，服务器会为该Session生成唯一的Session id，
+// 而这个Session id在随后的请求中会被用来重新获得已经创建的Session；
+// 在Session被创建之后，就可以调用Session相关的方法往Session中增加内容了，
+// 而这些内容只会保存在服务器中，发到客户端的只有Session id；
+// 当客户端再次发送请求的时候，会将这个Session id带上，
+// 服务器接受到请求之后就会依据Session id找到相应的Session，从而再次使用之

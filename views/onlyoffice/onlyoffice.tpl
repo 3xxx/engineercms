@@ -164,7 +164,7 @@
           "fileType": "{{.fileType}}",
           "key": "{{.Key}}",//"Khirz6zTPdfd7"
           "title": "{{.Doc.FileName}}",
-          "url": "http://192.168.99.1/attachment/onlyoffice/{{.Doc.FileName}}",
+          "url": "http://192.168.99.1/attachment/onlyoffice/{{.Doc.FileName}}?hotqinsessionid={{.Sessionid}}",
           "info": {
             "author": "John Smith",
             "created": "2010-07-07 3:46 PM",

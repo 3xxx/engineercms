@@ -120,7 +120,7 @@
 
 {{if .IsLogin}}
         <div align="center">
-        <a href="/member/{{.Username}}"><img class="gravatar img-rounded" src="http://77fkk5.com1.z0.glb.clouddn.com/avatar/dcb8d7fd628811e5b9bc525400020562.jpg?imageView2/2/w/48/h/48/q/100"></a>
+        <a href="/member/{{.Username}}"><img class="gravatar img-rounded" src="/static/img/go.jpg"></a>
         <h4><a href="/member/{{.Username}}">{{.Username}}</a><br><small></small></h4>
         <a href="/login?exit=true">退出</a>
         <div class="clearfix"></div>

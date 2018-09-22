@@ -16,6 +16,7 @@ import (
 	"time"
 )
 
+// CMSADMIN API
 type AdminController struct {
 	beego.Controller
 }
@@ -62,6 +63,13 @@ type CatalogLinkEditable struct {
 	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
+// @Title getStaticBlock
+// @Description get all the staticblock by key
+// @Param   key     path    string  true        "The email for login"
+// @Success 200 {object} models.ZDTCustomer.Customer
+// @Failure 400 Invalid email supplied
+// @Failure 404 User not found
+// @router /:key [get]
 func (c *AdminController) Get() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -176,6 +184,11 @@ func (c *AdminController) Admin() {
 	}
 }
 
+// @Title Get Category list
+// @Description Get Category list by some info
+// @Success 200 {object} models.GetAdminCategory
+// @Param   id     path   string false       "category id"
+// @router /:id [get]
 //根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
 func (c *AdminController) Category() {
 	id := c.Ctx.Input.Param(":id")
@@ -201,6 +214,11 @@ func (c *AdminController) Category() {
 	// c.TplName = "admin_category.tpl"
 }
 
+// @Title Get Category by title
+// @Description Get Category list by title info
+// @Success 200 {object} models.GetAdminCategory
+// @Param   title   query   string  false       "title of search"
+// @router /categorytitle [get]
 //根据名称title查询分级表
 func (c *AdminController) CategoryTitle() {
 	// title := c.Ctx.Input.Param(":id")
@@ -216,6 +234,14 @@ func (c *AdminController) CategoryTitle() {
 	// c.TplName = "admin_category.tpl"
 }
 
+// @Title Post Category by pid title code grade
+// @Description Get Category list by title info
+// @Success 200 {object} models.AddAdminCategory
+// @Param   pid   query   string  false       "parentid of category"
+// @Param   title   query   string  false       "title of category"
+// @Param   code   query   string  false       "code of category"
+// @Param   grade   query   string  false       "grade of category"
+// @router /addcategory [post]
 //添加
 func (c *AdminController) AddCategory() {
 	// pid := c.Ctx.Input.Param(":id")

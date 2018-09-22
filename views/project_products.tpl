@@ -32,7 +32,7 @@
   <link rel="stylesheet" href="/static/froala/css/plugins/file.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/quick_insert.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/help.css">
-  <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css">
+  <!-- <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css"> -->
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
   <link rel="stylesheet" href="/static/froala/js/codemirror.min.css">
   <link rel="stylesheet" href="/static/froala/css/themes/red.css">
@@ -77,20 +77,20 @@
 <div class="col-lg-12">
   <h3>成果列表</h3>
 <div id="toolbar1" class="btn-group">
-        <!-- 多文件批量上传 -->
-        <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
+        <!-- 多文件批量上传  {{if not .RoleAdd}}style="display:none"{{end}}-->
+        <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
         </button>
         <!-- 多附件上传 -->
-        <button type="button" data-name="addButton1" id="addButton1" class="btn btn-default"> <i class="fa fa-plus-square-o" title="多附件模式">添加</i>
+        <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" data-name="addButton1" id="addButton1" class="btn btn-default"> <i class="fa fa-plus-square-o" title="多附件模式">添加</i>
         </button>
         <!-- 添加文章 -->
-        <button type="button" data-name="addButton2" id="addButton2" class="btn btn-default"> <i class="fa fa-plus-square" title="文章模式">添加</i>
+        <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" data-name="addButton2" id="addButton2" class="btn btn-default"> <i class="fa fa-plus-square" title="文章模式">添加</i>
         </button>
-        <button type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
+        <button {{if ne "true" .RoleUpdate}} style="display:none" {{end}} type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
         </button>
-        <button type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
+        <button {{if ne "true" .RoleUpdate}} style="display:none" {{end}} type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
         </button>
-        <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
+        <button {{if ne "true" .RoleDelete}} style="display:none" {{end}} type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
         <!-- <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
@@ -345,7 +345,7 @@
       if (value.length==1){
         var ext =/\.[^\.]+/.exec(value[0].Title);
         if (ext==".dwg"){
-          attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="打开" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
+          attachUrl= '<a href="/downloadattachment?id='+value[0].Id+'" title="打开" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
         }else if(ext==".doc"||ext==".docx"){
           attachUrl= '<a href=/officeview/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
         }else if(ext==".xls"||ext==".xlsx"){
@@ -353,7 +353,7 @@
         }else if(ext==".ppt"||ext==".pptx"){
           attachUrl= '<a href=/officeview/'+value[0].Id+' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
         }else{
-          attachUrl= '<a href="/attachment?id='+value[0].Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+          attachUrl= '<a href="/downloadattachment?id='+value[0].Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
         }
         return attachUrl;
       }else if(value.length==0){
@@ -456,7 +456,7 @@
   }
   //最后面弹出附件列表中用的<a href="'+value+
   function setAttachlink(value,row,index){
-    attachUrl= '<a href="/attachment?id='+row.Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+    attachUrl= '<a href="/downloadattachment?id='+row.Id+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
       return attachUrl;
   }
   //最后面弹出pdf列表中用的'&file='+value+
@@ -1463,7 +1463,7 @@
   <script type="text/javascript" src="/static/froala/js/plugins/video.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/help.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/print.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script> -->
   <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script>
   <script src="/static/froala/js/languages/zh_cn.js"></script>

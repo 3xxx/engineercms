@@ -34,11 +34,11 @@
 <div class="col-lg-12">
   <h3>项目列表</h3>
 <div id="toolbar1" class="btn-group">
-        <button type="button" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
+        <button {{if ne true .IsAdmin}} style="display:none" {{end}} type="button" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>
-        <button type="button" id="editorButton" class="btn btn-default"> <i class="fa fa-edit">编辑</i>
+        <button {{if ne true .IsAdmin}} style="display:none" {{end}} type="button" id="editorButton" class="btn btn-default"> <i class="fa fa-edit">编辑</i>
         </button>
-        <button type="button" id="deleteButton" class="btn btn-default">
+        <button {{if ne true .IsAdmin}} style="display:none" {{end}} type="button" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
 </div>
@@ -537,7 +537,7 @@
       }
       var selectRow=$('#table0').bootstrapTable('getSelections');
       if (selectRow.length<1){
-        alert("请先勾选类别！");
+        alert("请先勾选项目！");
         return;
       }
       if (selectRow.length>1){

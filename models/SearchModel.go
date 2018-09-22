@@ -30,7 +30,7 @@ func SearchProject(key string) (proj []*Project, err error) {
 //搜索本地成果
 func SearchProduct(key string) (prod []*Product, err error) {
 	cond := orm.NewCondition()
-	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key).Or("Content__contains", key)
+	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
 	qs = qs.SetCond(cond1)

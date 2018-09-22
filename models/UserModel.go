@@ -4,9 +4,9 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"strconv"
-	// "fmt"
+	"fmt"
 	"log"
+	"strconv"
 	"time"
 	// "github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -542,3 +542,53 @@ func GetUserByUserId(userid int64) (user User) {
 	o.Read(&user) //这里是默认主键查询。=(&user,"Id")
 	return user
 }
+
+//*********初始化数据库中的用户********
+func InsertUser() {
+	fmt.Println("insert user ...")
+	// u := new(User)
+	var u User
+	u.Username = "admin"
+	u.Nickname = "Hotqin888"
+	Pwd1 := "admin"
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(Pwd1))
+	cipherStr := md5Ctx.Sum(nil)
+	u.Password = hex.EncodeToString(cipherStr)
+	// u.Password = Pwdhash("admin")
+	u.Email = "504284@qq.com"
+	u.Remark = "I'm admin"
+	u.Status = 1
+	u.Role = "1"
+	id, err := SaveUser(u)
+	// o = orm.NewOrm()
+	// o.Insert(u)
+	// fmt.Println("insert user end")
+	if err == nil && id > 0 {
+		fmt.Println("insert user end")
+	} else {
+		log.Println(err)
+	}
+}
+
+// func insertGroup() {
+// 	fmt.Println("insert group ...")
+// 	g := new(Group)
+// 	g.Name = "APP"
+// 	g.Title = "System"
+// 	g.Sort = 1
+// 	g.Status = 2
+// 	o.Insert(g)
+// 	fmt.Println("insert group end")
+// }
+
+// func insertRole() {
+// 	fmt.Println("insert role ...")
+// 	r := new(Role)
+// 	r.Name = "Admin"
+// 	r.Remark = "I'm a admin role"
+// 	r.Status = 2
+// 	r.Title = "Admin role"
+// 	o.Insert(r)
+// 	fmt.Println("insert role end")
+// }
