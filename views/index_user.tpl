@@ -2,15 +2,14 @@
 <!-- <!DOCTYPE html> -->
 <html>
 <head>  
-    <meta charset="utf-8"> 
-<script src="/static/js/echarts.min.js"></script>
-<script src="/static/js/china.js"></script>  
-<!-- <script src="/static/js/world.js"></script>   -->
-<!-- <script src="/static/js/jquery.min223.js"></script>   -->
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh"></script> 
-
-<script src="/static/js/echarts-gl.min.js "></script> 
-<script src="/static/js/bmap.min.js"></script> 
+  <meta charset="utf-8"> 
+  <script src="/static/js/echarts.min.js"></script>
+  <script src="/static/js/china.js"></script>  
+  <!-- <script src="/static/js/world.js"></script>   -->
+  <!-- <script src="/static/js/jquery.min223.js"></script>   -->
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh"></script> 
+  <script src="/static/js/echarts-gl.min.js "></script> 
+  <script src="/static/js/bmap.min.js"></script> 
 
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -439,7 +438,7 @@
     </div>
   </div>
 
-<script>  
+  <script>  
     var myChart = echarts.init(document.getElementById('main'));  
     var szRoad = {
     success: true,
@@ -478,26 +477,26 @@
 
     var i = 0;
     for (var x in data) {
-    // i++;
-    // if(i<5000)
-    //     continue;
-    var line = data[x];
-    // if(busLines.length>500)
-    //     break;
-    var pointString = line.ROAD_LINE;
-    var pointArr = pointString.split(';');
-    var lnglats = [];
-    for (var j in pointArr) {
-        lnglats.push(pointArr[j].split(','))
-    }
-    busLines.push({
+      // i++;
+      // if(i<5000)
+      //     continue;
+      var line = data[x];
+      // if(busLines.length>500)
+      //     break;
+      var pointString = line.ROAD_LINE;
+      var pointArr = pointString.split(';');
+      var lnglats = [];
+      for (var j in pointArr) {
+          lnglats.push(pointArr[j].split(','))
+      }
+      busLines.push({
         coords: lnglats,
         lineStyle: {
             normal: {
                 color: echarts.color.modifyHSL('#5A94DF', Math.round(hStep * x))
             }
         }
-    })
+      })
     }
 
     option = {
@@ -893,8 +892,7 @@
         }]
     }; 
     myChart.setOption(option);  
-</script>
-
+  </script>
 
 </body>  
 </html>

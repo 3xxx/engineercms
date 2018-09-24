@@ -22,6 +22,7 @@ import (
 	"time"
 )
 
+// CMSWX froala API
 type FroalaController struct {
 	beego.Controller
 }
@@ -406,10 +407,16 @@ func (c *FroalaController) UploadImg() {
 	}
 }
 
+// @Title post wx artile img by catalogId
+// @Description post article img by catalogid
+// @Success 200 {object} SUCCESS
+// @Failure 400 Invalid page supplied
+// @Failure 404 articl not found
+// @router /uploadwximg [post]
 //微信wx添加文章里的图片上传
 func (c *FroalaController) UploadWxImg() {
 	//解析表单
-	pid := "26159" //c.Input().Get("pid")
+	pid := beego.AppConfig.String("wxcatalogid") //"26159" //c.Input().Get("pid")
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {

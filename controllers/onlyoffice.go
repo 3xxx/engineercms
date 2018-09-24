@@ -200,7 +200,6 @@ func (c *OnlyController) Get() {
 	// c.Data["Username"] = username
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -302,7 +301,6 @@ func (c *OnlyController) GetData() {
 	// 	// userrole = user.Role
 	// 	useridstring = strconv.FormatInt(user.Id, 10)
 	// }
-
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -311,6 +309,7 @@ func (c *OnlyController) GetData() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	useridstring := strconv.FormatInt(uid, 10)
+	//增加admin，everyone，isme
 
 	var myRes, roleRes [][]string
 	if useridstring != "0" {
@@ -388,6 +387,7 @@ func (c *OnlyController) GetData() {
 								if int1 < int2 {
 									docxarr[0].Permission = k[2] //按最小值权限
 								}
+								//补充everyone
 							}
 						}
 					}
@@ -403,6 +403,7 @@ func (c *OnlyController) GetData() {
 						// beego.Info(strconv.FormatInt(v.Id, 10))
 						// beego.Info(path.Base(k[1]))
 					}
+					//如果有everyone权限，则按everyone的
 				}
 			}
 
@@ -505,6 +506,8 @@ func (c *OnlyController) OnlyOffice() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	useridstring = strconv.FormatInt(uid, 10)
+	//增加admin，everyone，isme
+
 	var usersessionid string //客户端sesssionid
 	if islogin {
 		usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
@@ -524,9 +527,9 @@ func (c *OnlyController) OnlyOffice() {
 		// }
 		// useridstring = strconv.FormatInt(user.Id, 10)
 		myRes = e.GetPermissionsForUser(useridstring)
-		if doc.Uid == uid {
+		if doc.Uid == uid { //isme
 			Permission = "1"
-		} else { //如果是登录用户，则设置了权限的文档不能看
+		} else { //如果是登录用户，则设置了权限的文档根据权限查看
 			Permission = "1"
 			for _, k := range myResall {
 				if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
@@ -557,6 +560,7 @@ func (c *OnlyController) OnlyOffice() {
 						if int1 < int2 {
 							Permission = k[2] //按最小值权限
 						}
+						//补充everyone权限，如果登录用户权限大于everyone，则用小的
 					}
 				}
 			}
@@ -569,6 +573,7 @@ func (c *OnlyController) OnlyOffice() {
 			if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
 				Permission = "4"
 			}
+			//如果设置了everyone用户权限，则按everyone的权限
 		}
 		// c.Data["Uname"] = c.Ctx.Input.IP()
 		// c.Data["Uid"] = 0

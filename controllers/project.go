@@ -194,19 +194,37 @@ func (c *ProjController) GetProject() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-
 	id := c.Ctx.Input.Param(":id")
+
+	navid1 := beego.AppConfig.String("navigationid1")
+	navid2 := beego.AppConfig.String("navigationid2")
+	navid3 := beego.AppConfig.String("navigationid3")
+	navid4 := beego.AppConfig.String("navigationid4")
+	navid5 := beego.AppConfig.String("navigationid5")
+	navid6 := beego.AppConfig.String("navigationid6")
+	navid7 := beego.AppConfig.String("navigationid7")
+	navid8 := beego.AppConfig.String("navigationid8")
+	navid9 := beego.AppConfig.String("navigationid9")
+
 	switch id {
-	case "25001":
-		c.Data["IsProject"] = true
-	case "25002":
-		c.Data["IsDesign"] = true
-	case "25003":
-		c.Data["IsConstruct"] = true
-	case "25004":
-		c.Data["IsSupervision"] = true
-	case "25005":
-		c.Data["IsBuild"] = true
+	case navid1:
+		c.Data["IsNav1"] = true
+	case navid2:
+		c.Data["IsNav2"] = true
+	case navid3:
+		c.Data["IsNav3"] = true
+	case navid4:
+		c.Data["IsNav4"] = true
+	case navid5:
+		c.Data["IsNav5"] = true
+	case navid6:
+		c.Data["IsNav6"] = true
+	case navid7:
+		c.Data["IsNav7"] = true
+	case navid8:
+		c.Data["IsNav8"] = true
+	case navid9:
+		c.Data["IsNav9"] = true
 	default:
 		c.Data["IsProject"] = true
 	}

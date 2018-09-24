@@ -5,15 +5,38 @@
         "description": "ECMS has every tool to get any job done, so codename for the new ECMS APIs.",
         "version": "1.0.0",
         "contact": {
-            "email": "hotqin888"
+            "email": "504284@qq.com"
         }
     },
-    "basePath": "/admin",
+    "basePath": "/v1",
     "paths": {
-        "/category/addcategory": {
+        "/admin/": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "description": "get admin page",
+                "operationId": "AdminController.getAdminBlock",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/admin/category/addcategory": {
             "post": {
                 "tags": [
-                    "category"
+                    "admin"
                 ],
                 "description": "Get Category list by title info",
                 "operationId": "AdminController.Post Category by pid title code grade",
@@ -53,35 +76,10 @@
                 }
             }
         },
-        "/category/categorytitle": {
+        "/admin/category/{id}": {
             "get": {
                 "tags": [
-                    "category"
-                ],
-                "description": "Get Category list by title info",
-                "operationId": "AdminController.Get Category by title",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "title",
-                        "description": "title of search",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/.GetAdminCategory"
-                        }
-                    }
-                }
-            }
-        },
-        "/category/{id}": {
-            "get": {
-                "tags": [
-                    "category"
+                    "admin"
                 ],
                 "description": "Get Category list by some info",
                 "operationId": "AdminController.Get Category list",
@@ -103,18 +101,96 @@
                 }
             }
         },
-        "/category/{key}": {
+        "/admin/categorytitle": {
             "get": {
                 "tags": [
-                    "category"
+                    "admin"
                 ],
-                "description": "get all the staticblock by key",
-                "operationId": "AdminController.getStaticBlock",
+                "description": "Get Category list by title info",
+                "operationId": "AdminController.Get Category by title",
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "key",
-                        "description": "The email for login",
+                        "in": "query",
+                        "name": "title",
+                        "description": "title of search",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/adminlog/errlog": {
+            "get": {
+                "tags": [
+                    "adminlog"
+                ],
+                "description": "get log list",
+                "operationId": "AdminLogController.getAdminBlock",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/adminlog/infolog": {
+            "get": {
+                "tags": [
+                    "adminlog"
+                ],
+                "description": "get log list",
+                "operationId": "AdminLogController.getAdminBlock",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/wx/addwxarticle": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post article by catalogid",
+                "operationId": "ArticleController.post wx artile by catalogId",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "The title of article",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "description": "The content of article",
                         "required": true,
                         "type": "string"
                     }
@@ -123,14 +199,133 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.Customer"
+                            "$ref": "#/definitions/.AddArticle"
                         }
                     },
                     "400": {
-                        "description": "Invalid email supplied"
+                        "description": "Invalid page supplied"
                     },
                     "404": {
-                        "description": "User not found"
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/getwxarticle/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get article by articleid",
+                "operationId": "ArticleController.get wx artile by articleId",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of article",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/getwxarticles": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get articles by page",
+                "operationId": "ArticleController.get wx artiles list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for articles list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/uploadwximg": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post article img by catalogid",
+                "operationId": "FroalaController.post wx artile img by catalogId",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/wxlogin": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post wx login",
+                "operationId": "LoginController.post wx login",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "code",
+                        "description": "The jscode of wxuser",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
                     }
                 }
             }
@@ -140,16 +335,36 @@
         ".AddAdminCategory": {
             "type": "object"
         },
-        ".Customer": {
+        ".AddArticle": {
             "type": "object"
         },
         ".GetAdminCategory": {
+            "type": "object"
+        },
+        ".GetArticle": {
+            "type": "object"
+        },
+        ".GetProductsPage": {
+            "type": "object"
+        },
+        ".SUCCESS": {
+            "type": "object"
+        },
+        ".success": {
             "type": "object"
         }
     },
     "tags": [
         {
-            "name": "category",
+            "name": "admin",
+            "description": "CMSADMIN API\n"
+        },
+        {
+            "name": "wx",
+            "description": "CMSWX login API\n"
+        },
+        {
+            "name": "adminlog",
             "description": "CMSADMIN API\n"
         }
     ]

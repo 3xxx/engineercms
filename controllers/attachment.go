@@ -4,10 +4,12 @@ package controllers
 import (
 	// "code.google.com/p/mahonia"
 	"encoding/json"
+	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/httplib"
+	// "github.com/astaxie/beego/logs"
 	"net/http"
 	"net/url"
 	"os"
@@ -916,6 +918,9 @@ func ImageFilter(ctx *context.Context) {
 
 //根据权限查看附件/downloadattachment?id=
 func (c *AttachController) DownloadAttachment() {
+	// logs := logs.NewLogger()
+	// logs.EnableFuncCallDepth(true)
+	// logs.SetLogger("multifile", `{"filename":"log/engineercms.log","level":7,"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info"]}`)
 	// v := c.GetSession("pwd")
 	// beego.Info("v.(string)")
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
@@ -951,23 +956,27 @@ func (c *AttachController) DownloadAttachment() {
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 转换id " + err.Error())
 	}
 
 	//根据附件id取得附件的prodid，路径
 	attachment, err := models.GetAttachbyId(idNum)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 查询附件 " + err.Error())
 	}
 
 	product, err := models.GetProd(attachment.ProductId)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 用附件查询成果 " + err.Error())
 	}
 
 	//根据projid取出路径
 	proj, err := models.GetProj(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(err.Error())
 	}
 	if proj.ParentIdPath == "" {
 		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
@@ -979,6 +988,7 @@ func (c *AttachController) DownloadAttachment() {
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 查询成果路径 " + err.Error())
 	}
 	fileext := path.Ext(attachment.FileName)
 	switch fileext {
@@ -986,11 +996,12 @@ func (c *AttachController) DownloadAttachment() {
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 	case ".dwg", ".DWG":
 		//beego.Info(c.Ctx.Input.Site())
-		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
-			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin { //+ strconv.Itoa(c.Ctx.Input.Port())
+			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + "/" + fileurl + "/" + attachment.FileName)
 			// dwglink, err := url.ParseRequestURI(c.Ctx.Input.Scheme() + "://" + c.Ctx.Input.IP() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
 			if err != nil {
 				beego.Error(err)
+				utils.FileLogs.Error(c.Ctx.Input.IP() + " 获取dwg路径 " + err.Error())
 			}
 			// beego.Info(dwglink)
 			// beego.Info(usersessionid)
@@ -1014,7 +1025,9 @@ func (c *AttachController) DownloadAttachment() {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+			utils.FileLogs.Info(username + " " + "download" + " " + fileurl + "/" + attachment.FileName)
 		} else {
+			utils.FileLogs.Info(c.Ctx.Input.IP() + "want " + "download" + " " + fileurl + "/" + attachment.FileName)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
 			c.Redirect("/roleerr?url="+route, 302)
@@ -1022,6 +1035,34 @@ func (c *AttachController) DownloadAttachment() {
 			return
 		}
 	}
+	// config := make(map[string]interface{})
+	// config["filename"] = "e:/golang/go_pro/logs/logcollect.log"
+	// config["filename"] = "e://golang//go_pro//logs//logcollect.log"
+	// config["filename"] = "e:\\golang\\go_pro\\logs\\logcollect.log"
+	// config["level"] = logs.LevelDebug
+	// configStr, err := json.Marshal(config)
+	// if err != nil {
+	// 	fmt.Println("marshal failed, err:", err)
+	// 	return
+	// }
+	// logs.SetLogger(logs.AdapterFile, string(configStr))
+	// utils.FileLogs.Warn("this is a warn, my name is %s", map[string]int{"key": 2016})
+	// utils.FileLogs.Critical("oh,crash")
+	// logs.Close()
+	// 日志有以下7个级别                  对应的方法
+	// LevelEmergency = 0      --> logs.Emergency()
+	// LevelAlert = 1          --> logs.Alert()
+	// LevelCritical = 2       --> logs.Critical()
+	// LevelError = 3          --> logs.Error()
+	// LevelWarning = 4        --> logs.Warning()
+	// LevelNotice = 5         --> logs.Notice()
+	// LevelInformational = 6  --> logs.Informational()
+	// LevelDebug = 7          --> logs.Debug()
+	// utils.FileLogs.Info("this is a file log with info.")
+	// utils.FileLogs.Debug("this is a file log with debug.")
+	// utils.FileLogs.Alert("this is a file log with alert.")
+	// utils.FileLogs.Error("this is a file log with error.")
+	// utils.FileLogs.Trace("this is a file log with trace.")
 }
 
 //目前有文章中的图片、成果中文档的预览、onlyoffice中的文档协作、pdf中的附件路径等均采用绝对路径型式

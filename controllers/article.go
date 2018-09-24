@@ -9,12 +9,14 @@ import (
 	// "os"
 	"github.com/PuerkitoBio/goquery"
 	"io"
+	"net/http"
 	"path"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
+// CMSWX article API
 type ArticleController struct {
 	beego.Controller
 }
@@ -317,10 +319,18 @@ type prodWxTableserver struct {
 	Total int64       `json:"total"` //string或int64都行！
 }
 
+// @Title get wx artiles list
+// @Description get articles by page
+// @Param page query string  true "The page for articles list"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /getwxarticles [get]
 //小程序取得所有文章列表，分页
 func (c *ArticleController) GetWxArticles() {
 	// id := c.Ctx.Input.Param(":id")
-	id := "26159" //25002珠三角设代日记id26159
+	id := beego.AppConfig.String("wxcatalogid") //"26159" //25002珠三角设代日记id26159
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 	limit := "5"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
@@ -344,16 +354,16 @@ func (c *ArticleController) GetWxArticles() {
 	} else {
 		offset = (page1 - 1) * limit1
 	}
+	// articleslice := make([]*WxArticle, 0)
+	// getwxarticles(idNum, limit1, offset, articleslice, wxsite)
 	//根据项目id取得所有成果
+	//bug_如果5个成果里都没有文章，则显示文章失败；如果多个文章，会超过5个
 	products, err := models.GetProductsPage(idNum, limit1, offset, "")
 	if err != nil {
 		beego.Error(err)
 	}
-
-	// link := make([]ProductLink, 0)
 	Articleslice := make([]WxArticle, 0)
 	for _, w := range products {
-		// linkarr := make([]ProductLink, 1)
 		//取得文章
 		Articles, err := models.GetWxArticles(w.Id)
 		if err != nil {
@@ -374,16 +384,66 @@ func (c *ArticleController) GetWxArticles() {
 				aa[0].name = path.Base(sel)
 				slice2 = append(slice2, aa...)
 			})
-			// beego.Info(len(slice2))
 			articlearr := make([]WxArticle, 1)
 			articlearr[0].Id = x.Id
 			articlearr[0].Title = w.Title
 			articlearr[0].Subtext = x.Subtext
 			articlearr[0].Author = w.Principal
 			if len(slice2) > 0 {
-				articlearr[0].ImgUrl = "https://zsj.itdos.com" + slice2[0].src
+				articlearr[0].ImgUrl = wxsite + slice2[0].src
 			} else {
-				articlearr[0].ImgUrl = "https://zsj.itdos.com/static/img/go.jpg"
+				articlearr[0].ImgUrl = wxsite + "/static/img/go.jpg"
+			}
+			articlearr[0].LeassonType = 1
+			articlearr[0].ProductId = x.ProductId
+			Articleslice = append(Articleslice, articlearr...)
+		}
+	}
+	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "articles": Articleslice}
+	c.ServeJSON()
+}
+
+//递归取得至少5篇文章——逻辑上无法实现
+func getwxarticles(id, limit, offset int64, articleslice []*WxArticle, wxsite string) {
+	//bug_如果5个成果里都没有文章，则显示文章失败；如果多个文章，会超过5个
+	products, err := models.GetProductsPage(id, limit, offset, "")
+	if err != nil {
+		beego.Error(err)
+	}
+	// Articleslice := make([]WxArticle, 0)
+	for _, w := range products {
+		//取得文章
+		Articles, err := models.GetWxArticles(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		beego.Info(Articles)
+		for _, x := range Articles {
+			//取到文章里的图片地址
+			slice2 := make([]img, 0)
+			var r io.Reader = strings.NewReader(string(x.Content))
+			doc, err := goquery.NewDocumentFromReader(r)
+			if err != nil {
+				beego.Error(err)
+			}
+			doc.Find("img").Each(func(i int, s *goquery.Selection) {
+				sel, _ := s.Attr("src")
+				aa := make([]img, 1)
+				aa[0].src = sel
+				aa[0].name = path.Base(sel)
+				slice2 = append(slice2, aa...)
+			})
+			articlearr := make([]*WxArticle, 1)
+			beego.Info(x.Id)
+			articlearr[0].Id = x.Id //不知为何这里出错？？
+			beego.Info(x.Id)
+			articlearr[0].Title = w.Title
+			articlearr[0].Subtext = x.Subtext
+			articlearr[0].Author = w.Principal
+			if len(slice2) > 0 {
+				articlearr[0].ImgUrl = wxsite + slice2[0].src
+			} else {
+				articlearr[0].ImgUrl = wxsite + "/static/img/go.jpg"
 			}
 			// articlearr[0].Content = x.Content
 			articlearr[0].LeassonType = 1
@@ -391,16 +451,24 @@ func (c *ArticleController) GetWxArticles() {
 			// articlearr[0].Views = x.Views
 			// articlearr[0].Created = x.Created
 			// articlearr[0].Updated = x.Updated
-			Articleslice = append(Articleslice, articlearr...)
+			articleslice = append(articleslice, articlearr...)
 		}
 		// linkarr[0].Articlecontent = Articleslice
 		// Articleslice = make([]ArticleContent, 0)
 		// link = append(link, linkarr...)
 	}
-	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "articles": Articleslice}
-	c.ServeJSON()
+	if len(articleslice) < 5 {
+		getwxarticles(id, 1, offset+1, articleslice, wxsite)
+	}
 }
 
+// @Title get wx artile by articleId
+// @Description get article by articleid
+// @Param id path string  true "The id of article"
+// @Success 200 {object} models.GetArticle
+// @Failure 400 Invalid page supplied
+// @Failure 404 articl not found
+// @router /getwxarticle/:id [get]
 //根据id查看微信文章
 func (c *ArticleController) GetWxArticle() {
 	// username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
@@ -412,6 +480,7 @@ func (c *ArticleController) GetWxArticle() {
 	// c.Data["Uid"] = uid
 	// useridstring := strconv.FormatInt(uid, 10)
 	id := c.Ctx.Input.Param(":id")
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 	// beego.Info(id)
 	var err error
 	//id转成64为
@@ -446,7 +515,7 @@ func (c *ArticleController) GetWxArticle() {
 	// 	slice2 = make([]img, 1)
 	// 	slice2[0].src = "https://zsj.itdos.com/static/img/go.jpg"
 	// }
-	content := strings.Replace(Article.Content, "/attachment/", "https://zsj.itdos.com/attachment/", -1)
+	content := strings.Replace(Article.Content, "/attachment/", wxsite+"/attachment/", -1)
 	const lll = "2006-01-02 15:04"
 	articletime := Article.Updated.Format(lll)
 
@@ -705,8 +774,54 @@ func (c *ArticleController) AddArticle() {
 	// }
 }
 
+// @Title post wx artile by catalogId
+// @Description post article by catalogid
+// @Param title query string  true "The title of article"
+// @Param content query string  true "The content of article"
+// @Success 200 {object} models.AddArticle
+// @Failure 400 Invalid page supplied
+// @Failure 404 articl not found
+// @router /addwxarticle [post]
 //向设代日记id下添加微信小程序文章
 func (c *ArticleController) AddWxArticle() {
+	JSCODE := c.Input().Get("code")
+	// beego.Info(JSCODE)
+	APPID := "wx7f77b90a1a891d93"
+	SECRET := "f58ca4f28cbb52ccd805d66118060449"
+	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
+	resp, err := http.Get(requestUrl)
+	if err != nil {
+		beego.Error(err)
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		beego.Error(err)
+		// return
+	}
+	var data map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		beego.Error(err)
+		// return
+	}
+	// beego.Info(data)
+	var openID string
+	// var sessionKey string
+	if _, ok := data["session_key"]; !ok {
+		errcode := data["errcode"]
+		errmsg := data["errmsg"].(string)
+		// return
+		c.Data["json"] = map[string]interface{}{"errNo": errcode, "msg": errmsg, "data": "session_key 不存在"}
+		c.ServeJSON()
+	} else {
+		// var unionId string
+		openID = data["openid"].(string)
+		// sessionKey = data["session_key"].(string)
+		// unionId = data["unionid"].(string)
+		// beego.Info(openID)
+		// beego.Info(sessionKey)
+	}
 	// _, _, _, _, islogin := checkprodRole(c.Ctx)
 	// if !islogin {
 	// 	return
@@ -714,7 +829,7 @@ func (c *ArticleController) AddWxArticle() {
 	//设代日记26159
 	//项目id25002
 	// code := c.Input().Get("code")
-	pid := "26159"
+	pid := beego.AppConfig.String("wxcatalogid") //"26159"
 	// title := c.Input().Get("title")
 	// subtext := c.Input().Get("subtext")
 	// label := c.Input().Get("label")
@@ -723,7 +838,7 @@ func (c *ArticleController) AddWxArticle() {
 	// content := c.Input().Get("content")
 	title := c.Input().Get("title")
 	content := c.Input().Get("content")
-	content = "<p>" + content + "</p>"
+	content = "<p style='font-size: 18px;'>" + openID + "~" + content + "</p>" //<span style="font-size: 18px;">这个字体到底是多大才好看</span>
 	imagesurl := c.Input().Get("images")
 	array := strings.Split(imagesurl, ",")
 	for _, v := range array {
@@ -779,7 +894,6 @@ func (c *ArticleController) AddWxArticle() {
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "id": aid}
 		c.ServeJSON()
 	}
-
 }
 
 //向成果id下添加文章——这个没用，上面那个已经包含了

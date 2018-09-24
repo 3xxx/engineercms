@@ -71,3 +71,12 @@ func loadtimes(t time.Time) int {
 //     }
 //     return string(f)
 // }
+
+// func read3(path string)string{
+//     fi,err := os.Open(path)
+//     if err != nil{panic(err)}
+//     defer fi.Close()
+//     fd,err := ioutil.ReadAll(fi)
+//     // fmt.Println(string(fd))
+//     return string(fd)
+// }

@@ -355,6 +355,31 @@
                     id: '054',
                   }
                 ]
+              },
+              {
+                text: "系统日志",
+                icon: "fa fa-list-alt icon",
+                // selectedIcon: "glyphicon glyphicon-stop",
+                href: "#node-6",
+                // selectable: true,
+                id: '06',
+                selectable: false,
+                showTags:false,
+                tags: ['available'],
+                nodes: 
+                [
+                  { 
+                    icon: "fa fa-edit",
+                    text: "info信息级别",
+                    id: '061',
+                    tags: [''],
+                  },
+                  { 
+                    icon: "fa fa-edit",
+                    text: "error错误信息",
+                    id: '062'
+                  },
+                ]
               } 
       ]
       // return data;
@@ -421,9 +446,12 @@
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;成果清单&gt;"+data.text)
           }else if(data.id=="053"){
             $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;成果清单&gt;"+data.text)
+          }else if(data.id=="061"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统日志&gt;"+data.text)
+          }else if(data.id=="062"){
+            $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;系统日志&gt;"+data.text)
           }
         }); 
-
         // var obj = {};
         // obj.text = "123";
         // $("#btn").click(function (e) {

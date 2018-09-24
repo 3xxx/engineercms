@@ -1,7 +1,7 @@
 // @APIVersion 1.0.0
 // @Title EngineerCMS API
 // @Description ECMS has every tool to get any job done, so codename for the new ECMS APIs.
-// @Contact hotqin888
+// @Contact 504284@qq.com
 package routers
 
 import (
@@ -21,26 +21,27 @@ func init() {
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
 		AllowCredentials: true,
 	}))
-
 	//自动化文档
 	ns :=
-		beego.NewNamespace("/admin",
-			beego.NSNamespace("/category",
+		beego.NewNamespace("/v1",
+			beego.NSNamespace("/admin",
 				beego.NSInclude(
 					&controllers.AdminController{},
 					// &controllers.CustomerCookieCheckerController{},
 				),
 			),
-			// beego.NSNamespace("/catalog",
-			// 	beego.NSInclude(
-			// 		&controllers.CatalogController{},
-			// 	),
-			// ),
-			// beego.NSNamespace("/newsletter",
-			// 	beego.NSInclude(
-			// 		&controllers.NewsLetterController{},
-			// 	),
-			// ),
+			beego.NSNamespace("/wx",
+				beego.NSInclude(
+					&controllers.ArticleController{},
+					&controllers.FroalaController{},
+					&controllers.LoginController{},
+				),
+			),
+			beego.NSNamespace("/adminlog",
+				beego.NSInclude(
+					&controllers.AdminLogController{},
+				),
+			),
 			// beego.NSNamespace("/cms",
 			// 	beego.NSInclude(
 			// 		&controllers.CMSController{},
@@ -101,7 +102,7 @@ func init() {
 	//api接口
 	beego.Router("/api/ecms", &controllers.MainController{}, "get:Getecmsapi")
 	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
-
+	//根据app.conf里的设置，显示首页
 	beego.Router("/", &controllers.MainController{}, "get:Get")
 	//显示首页
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
@@ -474,15 +475,15 @@ func init() {
 
 	//微信小程序
 	//小程序发表文章提交
-	beego.Router("/wx/addwxarticle", &controllers.ArticleController{}, "post:AddWxArticle")
+	// beego.Router("/wx/addwxarticle", &controllers.ArticleController{}, "post:AddWxArticle")
 	//小程序上传图片，返回地址
-	beego.Router("/wx/uploadwximg", &controllers.FroalaController{}, "*:UploadWxImg")
+	// beego.Router("/wx/uploadwximg", &controllers.FroalaController{}, "*:UploadWxImg")
 	//小程序获得文章列表，分页
-	beego.Router("/wx/getwxarticles", &controllers.ArticleController{}, "*:GetWxArticles")
+	// beego.Router("/wx/getwxarticles", &controllers.ArticleController{}, "*:GetWxArticles")
 	//小程序根据文章id返回文章数据
-	beego.Router("/wx/getwxarticle/:id:string", &controllers.ArticleController{}, "*:GetWxArticle")
+	// beego.Router("/wx/getwxarticle/:id:string", &controllers.ArticleController{}, "*:GetWxArticle")
 	//微信登录
-	beego.Router("/wx/wxlogin", &controllers.LoginController{}, "*:WxLogin")
+	// beego.Router("/wx/wxlogin", &controllers.LoginController{}, "*:WxLogin")
 
 }
 

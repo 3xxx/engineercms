@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	// "net/url"
+	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
 	"strconv"
 	// "github.com/astaxie/beego/session"
@@ -14,6 +15,7 @@ import (
 	"net/http"
 )
 
+// CMSWX login API
 type LoginController struct {
 	beego.Controller
 }
@@ -105,20 +107,24 @@ func (c *LoginController) Post() {
 	if err == nil {
 		c.SetSession("uname", user.Username)
 		c.SetSession("pwd", user.Password)
+		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
 		User, err := models.GetUserByUsername(user.Username)
 		if err != nil {
 			beego.Error(err)
+			utils.FileLogs.Error(user.Username + " 查询用户 " + err.Error())
 		}
 		if User.Ip == "" {
 			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
 			if err != nil {
 				beego.Error(err)
+				utils.FileLogs.Error(user.Username + " 添加用户ip " + err.Error())
 			}
 		} else {
 			//更新user表的lastlogintime
 			err = models.UpdateUserlastlogintime(user.Username)
 			if err != nil {
 				beego.Error(err)
+				utils.FileLogs.Error(user.Username + " 更新用户登录时间 " + err.Error())
 			}
 		}
 		if url != "" {
@@ -146,7 +152,6 @@ func (c *LoginController) LoginPost() {
 	// }
 	// c.Ctx.SetCookie("uname", uname, maxAge, "/")
 	// c.Ctx.SetCookie("pwd", pwd, maxAge, "/")
-
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
@@ -155,31 +160,33 @@ func (c *LoginController) LoginPost() {
 	if err == nil {
 		c.SetSession("uname", user.Username)
 		c.SetSession("pwd", user.Password)
+		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
 		User, err := models.GetUserByUsername(user.Username)
 		if err != nil {
 			beego.Error(err)
+			utils.FileLogs.Error(user.Username + " 查询用户 " + err.Error())
 		}
 		if User.Ip == "" {
 			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
 			if err != nil {
 				beego.Error(err)
+				utils.FileLogs.Error(user.Username + " 添加用户ip " + err.Error())
 			}
 		} else {
 			//更新user表的lastlogintime
 			err = models.UpdateUserlastlogintime(user.Username)
 			if err != nil {
 				beego.Error(err)
+				utils.FileLogs.Error(user.Username + " 更新用户登录时间 " + err.Error())
 			}
 		}
 	} else {
 		islogin = 1
 	}
-
 	// if name == "admin" && pwd == "123456" {
 	// 	c.SetSession("loginuser", "adminuser")
 	// 	fmt.Println("当前的session:")
 	// 	fmt.Println(c.CruSession)
-
 	c.Data["json"] = map[string]interface{}{"islogin": islogin}
 	c.ServeJSON()
 }
@@ -217,6 +224,13 @@ func (c *LoginController) Loginerr() {
 	c.TplName = "loginerr.tpl"
 }
 
+// @Title post wx login
+// @Description post wx login
+// @Param code path string  true "The jscode of wxuser"
+// @Success 200 {object} success
+// @Failure 400 Invalid page supplied
+// @Failure 404 articl not found
+// @router /wxlogin [get]
 //微信小程序访问微信服务器获取用户信息
 func (c *LoginController) WxLogin() {
 	JSCODE := c.Input().Get("code")
@@ -229,14 +243,11 @@ func (c *LoginController) WxLogin() {
 		beego.Error(err)
 		return
 	}
-
 	defer resp.Body.Close()
-
 	if resp.StatusCode != 200 {
 		beego.Error(err)
 		// return
 	}
-
 	var data map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
@@ -260,7 +271,6 @@ func (c *LoginController) WxLogin() {
 		beego.Info(openID)
 		beego.Info(sessionKey)
 		// beego.Info(unionId)
-
 		//如果数据库存在记录，则存入session？
 		//上传文档的时候，检查session？
 		c.SetSession("uname", openID)

@@ -3,7 +3,7 @@ package controllers
 import (
 	// "fmt"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
+	// "github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/utils/pagination"
 	// "github.com/tealeg/xlsx"
 	// "os"
@@ -207,12 +207,6 @@ func (c *WikiController) AddWiki() {
 		c.Data["json"] = id
 		c.ServeJSON()
 	}
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/test.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "AddWiki:" + " " + title)
-	logs.Close()
 	// c.Redirect("/wiki", 302)
 }
 
@@ -254,12 +248,6 @@ func (c *WikiController) AddPic() {
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "id": id}
 		c.ServeJSON()
 	}
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/test.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "AddWiki:" + " " + title)
-	logs.Close()
 	// c.Redirect("/wiki", 302)
 }
 
@@ -385,12 +373,6 @@ func (c *WikiController) View() {
 		return
 	}
 	c.Data["Replies"] = replies
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/test.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "ViewWiki:" + " " + wiki.Title)
-	logs.Close()
 }
 
 //修改wiki页面

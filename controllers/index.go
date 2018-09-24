@@ -71,23 +71,7 @@ type Employee struct { //职员的分院和科室属性
 
 //显示侧栏结构，科室里员工
 func (c *IndexController) GetIndex() {
-	// username, role := checkprodRole(c.Ctx)
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// if role == "1" {
-	// 	c.Data["IsAdmin"] = true
-	// } else if roleint > 1 && roleint < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
 	c.Data["IsIndex"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -115,14 +99,11 @@ func (c *IndexController) GetIndex() {
 		aa := make([]AchDepart, 1)
 		aa[0].Id = category1[i1].Id
 		aa[0].Level = "1"
-		// aa[0].Pid = category[0].Id
-		aa[0].Title = category1[i1].Title //分院名称
-		// beego.Info(category1[i1].Title)
+		aa[0].Title = category1[i1].Title                         //分院名称
 		category2, err := models.GetAdminDepart(category1[i1].Id) //得到所有科室
 		if err != nil {
 			beego.Error(err)
 		}
-		// beego.Info(category2)
 		//如果返回科室为空，则直接取得员工
 		//这个逻辑判断不完美，如果一个部门即有科室，又有人没有科室属性怎么办，直接挂在部门下的呢？
 		//应该是反过来找出所有没有科室字段的人员，把他放在部门下
@@ -136,13 +117,11 @@ func (c *IndexController) GetIndex() {
 				bb[0].Level = "2"
 				bb[0].Pid = category1[i1].Id
 				bb[0].Title = category2[i2].Title //科室名称
-				// beego.Info(category2[i2].Title)
 				//根据分院和科室查所有员工
 				users, count, err := models.GetUsersbySec(category1[i1].Title, category2[i2].Title) //得到员工姓名
 				if err != nil {
 					beego.Error(err)
 				}
-				// beego.Info(count)
 				for i3, _ := range users {
 					cc := make([]AchEmployee, 1)
 					cc[0].Id = users[i3].Id
@@ -150,8 +129,6 @@ func (c *IndexController) GetIndex() {
 					cc[0].Href = users[i3].Ip + ":" + users[i3].Port
 					cc[0].Pid = category2[i2].Id
 					cc[0].Nickname = users[i3].Nickname //名称
-					// beego.Info(users[i3].Nickname)
-					// cc[0].Selectable = false
 					achemployee = append(achemployee, cc...)
 				}
 				bb[0].Tags[0] = strconv.Itoa(count)
@@ -161,11 +138,6 @@ func (c *IndexController) GetIndex() {
 				achsecoffice = append(achsecoffice, bb...)
 				depcount = depcount + count //部门人员数=科室人员数相加
 			}
-			// aa[0].Tags[0] = depcount
-			// aa[0].Secoffice = achsecoffice
-			// aa[0].Selectable = false               //点击展开，默认是true
-			// achsecoffice = make([]AchSecoffice, 0) //再把slice置0
-			// achdepart = append(achdepart, aa...)
 		}
 		//查出所有有这个部门但科室名为空的人员
 		//根据分院查所有员工
@@ -184,7 +156,6 @@ func (c *IndexController) GetIndex() {
 			achsecoffice = append(achsecoffice, dd...)
 		}
 		aa[0].Tags[0] = count + depcount
-		// count = 0
 		depcount = 0
 		aa[0].Secoffice = achsecoffice
 		aa[0].Selectable = false               //点击展开，默认是true
@@ -193,7 +164,6 @@ func (c *IndexController) GetIndex() {
 	}
 	c.Data["json"] = achdepart
 	c.TplName = "index.tpl"
-	// beego.Info(achdepart)
 }
 
 //上面那个是显示侧栏

@@ -124,7 +124,7 @@ func GetProducts(id int64) (products []*Product, err error) {
 }
 
 //根据侧栏id分页查出所有成果——按编号排序
-func GetProductsPage(id int64, limit, offset int64, searchText string) (products []*Product, err error) {
+func GetProductsPage(id, limit, offset int64, searchText string) (products []*Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
 	if searchText != "" {

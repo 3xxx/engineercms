@@ -22,12 +22,21 @@
   </div>
   <div class="collapse navbar-collapse" id = "target-menu"> 
     <ul class="nav navbar-nav">
-       <li {{if .IsIndex}}class="active"{{end}}>
+      <li {{if .IsIndex}}class="active"{{end}}>
         <a href="/index">首页</a>
       </li>
       <li {{if .IsProject}}class="active"{{end}}>
         <a href="/project/">项目</a>
-      </li>      
+      </li>
+      <!-- **********定制导航条菜单开始******** -->
+        <!-- /project/id——此处id为app.conf里的navigationid1~navigationid9 -->
+      <li {{if .IsNav1}}class="active"{{end}}>
+        <a href="/project/25002">设计单位</a>
+      </li>
+      <li {{if .IsNav2}}class="active"{{end}}>
+        <a href="/project/25012">施工专业</a>
+      </li>
+      <!-- **********定制导航条菜单结束******** -->
       <li {{if .IsOnlyOffice}}class="active"{{end}}>
         <a href="/onlyoffice">OnlyOffice</a>
       </li>

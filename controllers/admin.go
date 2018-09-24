@@ -63,13 +63,12 @@ type CatalogLinkEditable struct {
 	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
-// @Title getStaticBlock
-// @Description get all the staticblock by key
-// @Param   key     path    string  true        "The email for login"
-// @Success 200 {object} models.ZDTCustomer.Customer
-// @Failure 400 Invalid email supplied
-// @Failure 404 User not found
-// @router /:key [get]
+// @Title getAdminBlock
+// @Description get admin page
+// @Success 200 {object} success
+// @Failure 400 Invalid page
+// @Failure 404 page not found
+// @router / [get]
 func (c *AdminController) Get() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -178,6 +177,11 @@ func (c *AdminController) Admin() {
 			c.TplName = "admin_meritlist.tpl"
 		case "053": //预留
 			c.TplName = "admin_merit.tpl"
+		case "061": //系统信息日志
+			c.TplName = "admin_infolog.tpl"
+		case "062": //系统错误日志
+			c.TplName = "admin_errlog.tpl"
+
 		default:
 			c.TplName = "admin_calendar.tpl"
 		}
@@ -188,7 +192,7 @@ func (c *AdminController) Admin() {
 // @Description Get Category list by some info
 // @Success 200 {object} models.GetAdminCategory
 // @Param   id     path   string false       "category id"
-// @router /:id [get]
+// @router /category/:id [get]
 //根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
 func (c *AdminController) Category() {
 	id := c.Ctx.Input.Param(":id")
@@ -241,7 +245,7 @@ func (c *AdminController) CategoryTitle() {
 // @Param   title   query   string  false       "title of category"
 // @Param   code   query   string  false       "code of category"
 // @Param   grade   query   string  false       "grade of category"
-// @router /addcategory [post]
+// @router /category/addcategory [post]
 //添加
 func (c *AdminController) AddCategory() {
 	// pid := c.Ctx.Input.Param(":id")
@@ -1221,12 +1225,6 @@ func (c *AdminController) UpdateMeritBasic() {
 		data := "ok!"
 		c.Ctx.WriteString(data)
 	}
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "修改保存meritbasic" + pk)
-	logs.Close()
 }
 
 //取得成果给table
@@ -1438,12 +1436,6 @@ func (c *AdminController) ModifyLink() {
 		data := value
 		c.Ctx.WriteString(data)
 	}
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "修改保存设计记录" + pk)
-	logs.Close()
 }
 
 //提交meritlist给merit，这个是关键代码

@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	m "github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
+	// "github.com/astaxie/beego/logs"
 	"github.com/tealeg/xlsx"
 	"os"
 	"strconv"
@@ -261,12 +261,6 @@ func (c *UserController) UpdateUser() {
 		data := "ok!"
 		c.Ctx.WriteString(data)
 	}
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "修改保存设计记录" + pk)
-	logs.Close()
 }
 
 //这个作废，用在线修改

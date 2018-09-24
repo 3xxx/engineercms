@@ -8,11 +8,10 @@
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
+
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
+
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script src="/static/js/tableExport.js"></script>
@@ -28,39 +27,7 @@
         {{end}} 
       </ol> -->
       <div class="carousel-inner">
-        <!-- <div class="item active" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/1.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/2.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/3.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/4.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/5.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/6.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/7.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/8.jpg" alt="Second slide" style="height:300px;">
-        </div> 
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/9.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/10.jpg" alt="Second slide" style="height:300px;">
-        </div>
-        <div class="item" align=center>
-            <img src="/attachment/SL2019parenttitlepath/2017January/11.jpg" alt="Second slide" style="height:300px;">
-        </div> -->
+
         {{range $index, $elem :=.Carousel}}
           <div {{if eq 0 $index}} class="item active" {{else}}class="item"{{end}}  align=center>
             <img src="{{.Url}}/{{.Title}}" alt="First slide" style="height:300px;">
@@ -79,14 +46,11 @@
     </div>
   </div> 
 
-
 <div class="text-center">
   <h1><i class="fa fa-terminal" style="font-size:80px"></i>
   </h1>
   <!-- <i class="glyphicon glyphicon-chevron-right"></i> <i class="glyphicon glyphicon-minus"></i> -->
-  
   <h1 >搜索{{.Length}}个 文件</h1>
-
 <!--   <p class="large">
     如果说基于服务器的系统体现了产品特性。
   </p>
@@ -117,37 +81,12 @@
         <label >全局</label> 
   </div>
 <div class="col-lg-4">
-  <!-- <p class="large">
-    系统
-  </p> -->
+
 </div>
 <div id="details" style="display:none">
 <h3 id="rowtitle"></h3>
-<!-- data-url="/admin/category/2" 没有了这个，当然table1表格无法支持刷新了！！！data-show-refresh="true"-->
-<!-- <table id="table1"
-        data-toggle="table"
-        data-search="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-toolbar="#btn_toolbar1"
-        data-sort-name="Grade"
-        data-page-size="5"
-        data-page-list="[5, 25, 50, All]"
-        data-unique-id="id"
-        data-pagination="true"
-        data-side-pagination="client"
-        data-click-to-select="true">
-    <thead>        
-      <tr>
-        <th data-width="10" data-checkbox="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Code">代码</th>
-        <th data-field="Grade" data-sortable="true">级别</th>
-      </tr>
-    </thead>
-</table> -->
-<table id="table1" 
+
+  <table id="table1" 
         data-toggle="table" 
         data-search="true"
         data-show-refresh="true"
@@ -183,31 +122,9 @@
         <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
       </tr>
     </thead>
-</table>
+  </table>
 </div>
-  <!-- <div class="col-lg-12">
-        <h1 class="ui icon header">
-          <i class="browser icon"></i>
-          查询结果
-        </h1>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>编号</th>
-              <th>名称</th>
-              <th>链接</th>
-              <th>分类/Ip</th>
-              <th>上传者/主机</th>
-            </tr>
-          </thead>
-          <tbody id="results">
-          </tbody>
-        </table>
-  </div> -->
-<!-- <div class="col-lg-12"> 
-<br>
-<hr/>
-</div>  -->
+
 </div>  
 
 <script type="text/javascript">
