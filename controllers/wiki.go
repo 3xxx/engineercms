@@ -269,8 +269,8 @@ func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 		//保存附件
 		// attachment := h.Filename
 		// beego.Info(attachment)
-		// path =  + categoryproj.Number + categoryproj.Title + "\\" + categoryphase.Title + "\\" + categoryspec.Title + "\\" + category + "\\" + h.Filename
-		path = ".\\attachment\\wiki\\" + h.Filename
+		// path =  + categoryproj.Number + categoryproj.Title + "/" + categoryphase.Title + "/" + categoryspec.Title + "/" + category + "/" + h.Filename
+		path = "./attachment/wiki/" + h.Filename
 		// path := c.Input().Get("url")  //存文件的路径
 		// path = path[3:]
 		// path = "./attachment" + "/" + h.Filename

@@ -301,7 +301,7 @@
                     text: "快捷编辑",
                     state: {
                       // checked: true,
-                      disabled: true,
+                      disabled: false,
                       // expanded: true,
                       // selected: true
                     },

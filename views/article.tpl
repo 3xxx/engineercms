@@ -21,7 +21,6 @@
     padding: 0px;
     padding-left: 30px;
   }
-
 </style>
 </head>
 <body>

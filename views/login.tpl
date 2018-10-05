@@ -20,14 +20,14 @@
       <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-        <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
+        <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars" onkeypress="getKey()"></div>
         <div id='datalistDiv'>
           <datalist id="cars" name="cars">
           </datalist>
         </div>
       <div class="form-group">
         <label class="control-label" for="LoginForm-Password">密码</label>
-        <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
+        <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password" onkeypress="getKey()"></div>
       <div class="checkbox">
         <label>
           <input type="checkbox">自动登陆</label>
@@ -62,23 +62,31 @@
 
   $('#referrer').val(document.referrer);
 
-function checkInput(){
-  var uname=document.getElementById("uname");
-  if (uname.value.length==0){
-    alert("请输入账号");
+  function checkInput(){
+    var uname=document.getElementById("uname");
+    if (uname.value.length==0){
+      alert("请输入账号");
+      return false;
+    }
+      var pwd=document.getElementById("pwd");
+    if (pwd.value.length==0){
+      alert("请输入密码");
+      return false;
+      }
+      return true
+  }
+
+  function backToHome(){
+    window.location.href="/";
     return false;
   }
-    var pwd=document.getElementById("pwd");
-  if (pwd.value.length==0){
-    alert("请输入密码");
-    return false;
-    }
-    return true
-}
-function backToHome(){
-  window.location.href="/";
-  return false;
-}
+
+  //监听输入框中回车键
+  function getKey(){  
+    if(event.keyCode==13){  
+      login()
+    }     
+  }
 </script>
 
 <script type="text/javascript">
@@ -105,7 +113,7 @@ $(document).ready(function(){
                 //   $("option").remove();
                 // }); 
     }
- });
+  });
 });   
   // $("#uname").focus(function(){
   // $("#uname").blur(function(){

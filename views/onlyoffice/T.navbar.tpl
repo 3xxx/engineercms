@@ -175,12 +175,12 @@
               <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label">用户名 或 邮箱</label>
                 <div class="col-sm-7">
-                  <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
+                  <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars" onkeypress="getKey()"></div>
               </div>
               <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label">密码</label>
                 <div class="col-sm-7">
-                  <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
+                  <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password" onkeypress="getKey()"></div>
               </div>
               <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label"><input type="checkbox">自动登陆</label>
@@ -238,7 +238,7 @@
         })
     }
     //登出功能
-     function logout(){
+    function logout(){
         $.ajax({
             type:'get',
             url:'/logout',
@@ -255,6 +255,13 @@
            }
         })
     }
+
+  //监听输入框中回车键
+  function getKey(){  
+    if(event.keyCode==13){  
+      login()
+    }     
+  }
 </script>
 
 {{end}}

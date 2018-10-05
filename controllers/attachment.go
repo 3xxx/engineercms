@@ -487,18 +487,18 @@ func (c *AttachController) AddAttachment() {
 				beego.Error(err)
 			}
 			if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
-				DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
+				DiskDirectory = "./attachment/" + proj1.Code + proj1.Title
 				Url = "/attachment/" + proj1.Code + proj1.Title
 			} else {
 				filepath = proj1.Title
-				DiskDirectory = DiskDirectory + "\\" + filepath
+				DiskDirectory = DiskDirectory + "/" + filepath
 				Url = Url + "/" + filepath
 			}
 		}
-		DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
+		DiskDirectory = DiskDirectory + "/" + proj.Title //加上自身
 		Url = Url + "/" + proj.Title
 	} else { //如果是根目录
-		DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
+		DiskDirectory = "./attachment/" + proj.Code + proj.Title //加上自身
 		Url = "/attachment/" + proj.Title
 		catalog.ProjectNumber = proj.Code
 		catalog.ProjectName = proj.Title
@@ -513,7 +513,7 @@ func (c *AttachController) AddAttachment() {
 		//保存附件
 		attachment = h.Filename
 
-		// filepath = DiskDirectory + "\\" + h.Filename
+		// filepath = DiskDirectory + "/" + h.Filename
 		// f.Close() // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		//将附件的编号和名称写入数据库
 		_, filename1, filename2, _, _, _, _ := Record(attachment)
@@ -565,7 +565,7 @@ func (c *AttachController) AddAttachment() {
 			beego.Error(err)
 		} else {
 			link1 := Url + "/" + filename1 + filename2 + FileSuffix //附件链接地址
-			filepath = DiskDirectory + "\\" + filename1 + filename2 + FileSuffix
+			filepath = DiskDirectory + "/" + filename1 + filename2 + FileSuffix
 			_, err = models.AddCatalogLink(cid, link1)
 			if err != nil {
 				beego.Error(err)
@@ -688,7 +688,7 @@ func (c *AttachController) AddAttachment2() {
 	if h != nil {
 		//保存附件
 		attachment = h.Filename
-		path = DiskDirectory + "\\" + h.Filename
+		path = DiskDirectory + "/" + h.Filename
 		// f.Close()// 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		//存入成果数据库
 		//如果编号重复，则不写入，值返回Id值。
@@ -797,7 +797,7 @@ func (c *AttachController) UpdateAttachment() {
 	if h != nil {
 		//保存附件
 		attachment = h.Filename
-		path = DiskDirectory + "\\" + h.Filename // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		path = DiskDirectory + "/" + h.Filename // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		// filesize, _ = FileSize(path)
 		// filesize = filesize / 1000.0
 		//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
@@ -851,7 +851,7 @@ func (c *AttachController) DeleteAttachment() {
 		if err != nil {
 			beego.Error(err)
 		} else {
-			path := DiskDirectory + "\\" + attach.FileName
+			path := DiskDirectory + "/" + attach.FileName
 			err = os.Remove(path)
 			if err != nil {
 				beego.Error(err)
@@ -1038,7 +1038,7 @@ func (c *AttachController) DownloadAttachment() {
 	// config := make(map[string]interface{})
 	// config["filename"] = "e:/golang/go_pro/logs/logcollect.log"
 	// config["filename"] = "e://golang//go_pro//logs//logcollect.log"
-	// config["filename"] = "e:\\golang\\go_pro\\logs\\logcollect.log"
+	// config["filename"] = "e:/golang/go_pro/logs/logcollect.log"
 	// config["level"] = logs.LevelDebug
 	// configStr, err := json.Marshal(config)
 	// if err != nil {
@@ -1253,18 +1253,18 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 					beego.Error(err)
 				}
 				if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
-					DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
+					DiskDirectory = "./attachment/" + proj1.Code + proj1.Title
 					Url = "attachment/" + proj1.Code + proj1.Title
 				} else {
 					path = proj1.Title
-					DiskDirectory = DiskDirectory + "\\" + path
+					DiskDirectory = DiskDirectory + "/" + path
 					Url = Url + "/" + path
 				}
 			}
-			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
+			DiskDirectory = DiskDirectory + "/" + proj.Title //加上自身
 			Url = Url + "/" + proj.Title
 		} else { //如果是根目录
-			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
+			DiskDirectory = "./attachment/" + proj.Code + proj.Title //加上自身
 			Url = "attachment/" + proj.Code + proj.Title
 		}
 		return Url, DiskDirectory, err

@@ -939,8 +939,8 @@ func (c *OnlyController) UrltoCallback() {
 		if err != nil {
 			beego.Error(err)
 		}
-		// f, err := os.OpenFile(".\\attachment\\onlyoffice\\"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
-		f, err := os.Create(".\\attachment\\onlyoffice\\" + onlyattachment.FileName)
+		// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+		f, err := os.Create("./attachment/onlyoffice/" + onlyattachment.FileName)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -1034,8 +1034,8 @@ func (c *OnlyController) UrltoCallback() {
 		if err != nil {
 			beego.Error(err)
 		}
-		// f, err := os.OpenFile(".\\attachment\\onlyoffice\\"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
-		f, err := os.Create(".\\attachment\\onlyoffice\\" + onlyattachment.FileName)
+		// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+		f, err := os.Create("./attachment/onlyoffice/" + onlyattachment.FileName)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -1113,11 +1113,11 @@ func (c *OnlyController) AddOnlyAttachment() {
 	// }
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 	var filepath, DiskDirectory, Url string
-	err := os.MkdirAll(".\\attachment\\onlyoffice\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	err := os.MkdirAll("./attachment/onlyoffice/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
 	}
-	DiskDirectory = ".\\attachment\\onlyoffice\\"
+	DiskDirectory = "./attachment/onlyoffice/"
 	Url = "/attachment/onlyoffice/"
 
 	//获取上传的文件
@@ -1183,9 +1183,9 @@ func (c *OnlyController) AddOnlyAttachment() {
 		title = strings.Replace(title, "/", "-", -1)
 
 		// FileSuffix := path.Ext(h.Filename)
-		// filepath = DiskDirectory + "\\" + code + title + FileSuffix
+		// filepath = DiskDirectory + "/" + code + title + FileSuffix
 		// attachmentname := code + title + FileSuffix
-		filepath = DiskDirectory + "\\" + h.Filename
+		filepath = DiskDirectory + "/" + h.Filename
 		//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
 		//如果附件名称相同，则不能上传，数据库添加
 		attachmentname := h.Filename
@@ -1417,7 +1417,7 @@ func (c *OnlyController) DeleteDoc() {
 			if err != nil {
 				beego.Error(err)
 			}
-			path := ".\\attachment\\onlyoffice\\" + attach.FileName
+			path := "./attachment/onlyoffice/" + attach.FileName
 			//删除附件
 			err = os.Remove(path)
 			if err != nil {
@@ -1683,7 +1683,7 @@ func (c *OnlyController) Getpermission() {
 // }
 // defer resp1.Body.Close()
 
-// err = c.SaveToFile("tt", "\\attachment\\wiki\\2018February\\1.doc")
+// err = c.SaveToFile("tt", "/attachment/wiki/2018February/1.doc")
 // if err != nil {
 // 	beego.Error(err)
 // }
@@ -1742,7 +1742,7 @@ func (c *OnlyController) Getpermission() {
 // 	}
 // 	if h != nil {
 // 		//存入文件夹
-// 		err = c.SaveToFile("uploadfile", ".\\attachment\\onlyoffice\\"+h.Filename)
+// 		err = c.SaveToFile("uploadfile", "./attachment/onlyoffice/"+h.Filename)
 // 		if err != nil {
 // 			beego.Error(err)
 // 		} else {

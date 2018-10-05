@@ -1157,8 +1157,8 @@ func (c *AdminController) AddCarousel() {
 			//保存附件
 			// attachment = h.Filename
 			// beego.Info(attachment)
-			path := ".\\attachment\\carousel\\" // + h.Filename
-			url := "/attachment/carousel"       //+ h.Filename
+			path := "./attachment/carousel/" // + h.Filename
+			url := "/attachment/carousel"    //+ h.Filename
 			//存入成果数据库
 			//如果编号重复，则不写入，值返回Id值。
 			//根据id添加成果code, title, label, principal, content string, projectid int64

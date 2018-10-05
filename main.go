@@ -17,7 +17,7 @@ func main() {
 
 	//开启orm调试模式
 	orm.Debug = true
-	//创建附件目录
+	//创建附件目录ModePerm FileMode = 0777 // 覆盖所有Unix权限位（用于通过&获取类型位）
 	os.Mkdir("attachment", os.ModePerm)
 	//创建轮播图片存放目录
 	os.Mkdir("attachment//carousel", os.ModePerm)
@@ -33,6 +33,29 @@ func main() {
 func loadtimes(t time.Time) int {
 	return int(time.Now().Sub(t).Nanoseconds() / 1e6)
 }
+
+// func Create(name string) (file *File, err error)
+// func OpenFile(name string, flag int, perm FileMode) (file *File, err error)
+//这里的flag int是用下面的这些方式，O_CREAT
+// const (
+//     O_RDONLY int = syscall.O_RDONLY // 只读模式打开文件
+//     O_WRONLY int = syscall.O_WRONLY // 只写模式打开文件
+//     O_RDWR   int = syscall.O_RDWR   // 读写模式打开文件
+//     O_APPEND int = syscall.O_APPEND // 写操作时将数据附加到文件尾部
+//     O_CREATE int = syscall.O_CREAT  // 如果不存在将创建一个新文件
+//     O_EXCL   int = syscall.O_EXCL   // 和O_CREATE配合使用，文件必须不存在
+//     O_SYNC   int = syscall.O_SYNC   // 打开文件用于同步I/O
+//     O_TRUNC  int = syscall.O_TRUNC  // 如果可能，打开时清空文件
+// )
+//打开 以只读,文件不存在将创建 方式打开  要存放的路径资源
+// f, f_err := os.OpenFile(file_save, os.O_WRONLY|os.O_CREATE, 0666)
+// 		if f_err != nil {
+// 					fmt.Fprintf(w, "file open fail:%s", f_err)
+// 							}		//文件 copy
+// 									_, copy_err := io.Copy(f, file)
+// 											if copy_err != nil {
+// 														fmt.Fprintf(w, "file copy fail:%s", copy_err)
+// 																}		//关闭对应打开的文件		defer f.Close()		defer file.Close()
 
 //获得文件名最快的代码实现方式比较
 // func main() {

@@ -120,11 +120,11 @@ func (c *UeditorController) ControllerUE() {
 			fileSuffix := path.Ext(h.Filename)
 			newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 			year, month, _ := time.Now().Date()
-			err = os.MkdirAll(".\\attachment\\wiki\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+			err = os.MkdirAll("./attachment/wiki/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 			if err != nil {
 				beego.Error(err)
 			}
-			path1 := ".\\attachment\\wiki\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
+			path1 := "./attachment/wiki/" + strconv.Itoa(year) + month.String() + "/" + newname //h.Filename
 			Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
 			err = c.SaveToFile("upfile", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 			if err != nil {
@@ -163,7 +163,7 @@ func (c *UeditorController) ControllerUE() {
 			// 	beego.Error(err)
 			// }
 			year, month, _ := time.Now().Date()
-			err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+			err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 			if err != nil {
 				beego.Error(err)
 			}
@@ -171,7 +171,7 @@ func (c *UeditorController) ControllerUE() {
 			var filesize int64
 			if h != nil {
 				//保存附件
-				path = DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname
+				path = DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + newname
 				Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 				err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 				if err != nil {
@@ -190,11 +190,11 @@ func (c *UeditorController) ControllerUE() {
 		number := c.Input().Get("number")
 
 		name := c.Input().Get("name")
-		err := os.MkdirAll(".\\attachment\\"+number+name, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+		err := os.MkdirAll("./attachment/"+number+name, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
 			beego.Error(err)
 		}
-		path1 := ".\\attachment\\" + number + name + "\\"
+		path1 := "./attachment/" + number + name + "/"
 		//保存上传的图片
 		//upfile为base64格式文件，转成图片保存
 		ww := c.Input().Get("upfile")

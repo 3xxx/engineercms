@@ -527,7 +527,7 @@ func (c *ProjGantController) ImportProjGant() {
 	// var filesize int64
 	if h != nil {
 		//保存附件
-		path = ".\\attachment\\" + h.Filename  // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		path = "./attachment/" + h.Filename    // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		err = c.SaveToFile("gantsexcel", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
 			beego.Error(err)

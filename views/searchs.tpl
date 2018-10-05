@@ -152,7 +152,7 @@
       }
     }
   }
-// var bb;
+
   function setAttachment(value,row,index){
     if (value){
       if (value.length==1){

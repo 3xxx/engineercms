@@ -832,7 +832,7 @@ func (c *ProdController) DeleteProduct() {
 			if err != nil {
 				beego.Error(err)
 			} else {
-				path := DiskDirectory + "\\" + attach.FileName
+				path := DiskDirectory + "/" + attach.FileName
 				//删除附件
 				err = os.Remove(path)
 				if err != nil {

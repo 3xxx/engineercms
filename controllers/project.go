@@ -636,7 +636,7 @@ func (c *ProjController) AddProjectCate() {
 	parentpath := DiskDirectory
 	// beego.Info(newpath)
 	//建立目录，并返回作为父级目录
-	err = os.MkdirAll(parentpath+"\\"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	err = os.MkdirAll(parentpath+"/"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
 	}
@@ -696,7 +696,7 @@ func (c *ProjController) UpdateProjectCate() {
 	path1 := DiskDirectory
 	newpath1 := filepath.Dir(DiskDirectory)
 	// beego.Info(newpath1)
-	newpath := newpath1 + "\\" + title
+	newpath := newpath1 + "/" + title
 	// beego.Info(newpath)
 	err = os.Rename(path1, newpath)
 	if err != nil {
@@ -971,7 +971,7 @@ func (c *ProjController) AddProject() {
 	models.Insertproj(idarr, nodes, 2, height)
 	//递归创建文件夹
 	patharr := make([]Pathstruct, 1)
-	patharr[0].ParentPath = ".\\attachment\\" + projcode + projname
+	patharr[0].ParentPath = "./attachment/" + projcode + projname
 	create(patharr, nodes, 2, height)
 	c.Data["json"] = "ok"
 	c.ServeJSON()
@@ -1022,7 +1022,7 @@ func (c *ProjController) AddProjTemplet() {
 	//递归创建文件夹
 	// patharr := make([]Pathstruct, 1)
 	//先建立第一层文件夹
-	pathstring := ".\\attachment\\" + projcode + projname
+	pathstring := "./attachment/" + projcode + projname
 	//在递归建立下层文件夹
 	createtemplet(pathstring, root.FileNodes)
 	//权限继承
@@ -1665,11 +1665,11 @@ func (c *ProjController) UploadImage() {
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix
 	year, month, _ := time.Now().Date()
 
-	err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
 	}
-	path1 := DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
+	path1 := DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + newname //h.Filename
 	Url1 := Url + "/" + strconv.Itoa(year) + month.String() + "/"
 	err = c.SaveToFile("file", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 	if err != nil {
@@ -1967,13 +1967,13 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 				title := v1.Title
 				parentpath := v.ParentPath
 				//建立目录，并返回作为父级目录
-				err := os.MkdirAll(parentpath+"\\"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+				err := os.MkdirAll(parentpath+"/"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 				if err != nil {
 					beego.Error(err)
 				}
 
 				var cpath1 Pathstruct
-				cpath1.ParentPath = parentpath + "\\" + title
+				cpath1.ParentPath = parentpath + "/" + title
 				cpath = append(cpath, cpath1) //每次要清0吗？
 			}
 		}
@@ -1989,11 +1989,11 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 func createtemplet(parentpath string, nodes []*models.FileNode) {
 	for _, v1 := range nodes {
 		//建立目录，并返回作为父级目录
-		err := os.MkdirAll(parentpath+"\\"+v1.Title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+		err := os.MkdirAll(parentpath+"/"+v1.Title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
 			beego.Error(err)
 		}
-		ParentPath := parentpath + "\\" + v1.Title
+		ParentPath := parentpath + "/" + v1.Title
 		if len(v1.FileNodes) > 0 {
 			nodes1 := v1.FileNodes
 			createtemplet(ParentPath, nodes1)

@@ -30,11 +30,11 @@
       </li>
       <!-- **********定制导航条菜单开始******** -->
         <!-- /project/id——此处id为app.conf里的navigationid1~navigationid9 -->
-      <li {{if .IsNav1}}class="active"{{end}}>
+      <li {{if .IsNav2}}class="active"{{end}}>
         <a href="/project/25002">设计单位</a>
       </li>
-      <li {{if .IsNav2}}class="active"{{end}}>
-        <a href="/project/25012">施工专业</a>
+      <li {{if .IsNav3}}class="active"{{end}}>
+        <a href="/project/25003">施工专业</a>
       </li>
       <!-- **********定制导航条菜单结束******** -->
       <li {{if .IsOnlyOffice}}class="active"{{end}}>
@@ -175,12 +175,12 @@
               <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label">用户名 或 邮箱</label>
                 <div class="col-sm-7">
-                  <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
+                  <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars" onkeypress="getKey()"></div>
               </div>
               <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label">密码</label>
                 <div class="col-sm-7">
-                  <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
+                  <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password" onkeypress="getKey()"></div>
               </div>
               <div class="form-group" style="width: 100%;">
                 <label class="col-sm-3 control-label"><input type="checkbox">自动登陆</label>
@@ -198,12 +198,14 @@
 
 <script type="text/javascript">
     // 弹出登录模态框
-  $("#login").click(function() {
-    $('#modalNav').modal({
-    show:true,
-    backdrop:'static'
-    });
-  })
+    $("#login").click(function() {
+      $('#modalNav').modal({
+      show:true,
+      backdrop:'static'
+      });
+    })
+    
+
     //登陆功能
     function login(){
         var uname=document.getElementById("uname");
@@ -238,7 +240,7 @@
         })
     }
     //登出功能
-     function logout(){
+    function logout(){
         $.ajax({
             type:'get',
             url:'/logout',
@@ -255,6 +257,12 @@
            }
         })
     }
+
+  function getKey(){  
+    if(event.keyCode==13){  
+      login()
+    }     
+  } 
 </script>
 
 {{end}}
