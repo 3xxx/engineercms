@@ -561,7 +561,7 @@ func (c *RoleController) RolePermission() {
 					if err != nil {
 						beego.Error(err)
 					}
-					if proj.ParentIdPath == "" {
+					if proj.ParentIdPath == "" || proj.ParentIdPath == "$#" {
 						projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
 					} else {
 						// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
@@ -755,13 +755,11 @@ func (c *RoleController) Update() {
 	role.Id = idNum
 	role.Rolename = c.Input().Get("rolename")
 	role.Rolenumber = c.Input().Get("rolenumber")
-
 	// statusint, err := strconv.Atoi(c.Input().Get("status"))
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
 	role.Status = c.Input().Get("status")
-
 	err = m.UpdateRole(role)
 	if err == nil {
 		// c.Rsp(true, "Success")

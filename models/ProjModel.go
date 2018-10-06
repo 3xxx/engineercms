@@ -289,11 +289,11 @@ func Projhasson(id int64) bool {
 }
 
 //根据名字title查询到项目目录
-func GetProjectTitle(title string) (cate Project, err error) {
+func GetProjectCodeTitle(code, title string) (proj Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")
 	// var cate Project
-	err = qs.Filter("title", title).One(&cate)
+	err = qs.Filter("code", code).Filter("title", title).One(&proj)
 	// if pid != "" {
 	// cate := Project{Title: title}这句无效
 	// categories = make([]*Project, 0)
@@ -301,7 +301,7 @@ func GetProjectTitle(title string) (cate Project, err error) {
 	// if err != nil {
 	// 	return nil, err
 	// }
-	return cate, err
+	return proj, err
 	// } else { //如果不给定父id（PID=0），则取所有一级
 	// _, err = qs.Filter("parentid", 0).All(&categories)
 	// if err != nil {

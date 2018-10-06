@@ -978,7 +978,7 @@ func (c *AttachController) DownloadAttachment() {
 		beego.Error(err)
 		utils.FileLogs.Error(err.Error())
 	}
-	if proj.ParentIdPath == "" {
+	if proj.ParentIdPath == "" || proj.ParentIdPath == "$#" {
 		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
 	} else {
 		// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"

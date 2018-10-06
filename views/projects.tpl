@@ -2,33 +2,23 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目列表-EngiCMS</title>
-<!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/> -->
-<!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
   <script src="/static/js/bootstrap-treeview.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script> -->
-  
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/> -->
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/> -->
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+  <style type="text/css">
+    #modalTable .modal-header {cursor: move;}
+    #modalTable1 .modal-header {cursor: move;}
+  </style>
 </head>
 
-<!-- <div class="navbar navbar-default navbar-static-top"> -->
   <div class="container-fill">{{template "navbar" .}}</div>
-<!-- </div> -->
-<!-- <nav class="navbar navbar-default navbar-static-top">
-  <div class="container">
-    ...
-  </div>
-</nav> -->
+
 
 <body>
 <div class="col-lg-12">
@@ -81,25 +71,6 @@
 <!-- <div class="gridview2"></div> -->
 
 <script type="text/javascript">
-  /*数据json*/
-  var json =
-     [{"Id":"1","Code":"SL0001","Title":"***水利枢纽工程","Label":"水电站,枢纽","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      {"Id":"2","Code":"SL0002","Title":"***电力工程","Label":"输电,高压","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      {"Id":"3","Code":"SL0003","Title":"***市政工程","Label":"管网,给水","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      {"Id":"4","Code":"SL0004","Title":"***建筑工程","Label":"写字楼,高层","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      {"Id":"5","Code":"SL0005","Title":"***交通工程","Label":"进场路,一级","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
-      {"Id":"6","Code":"SL0006","Title":"***境外工程","Label":"水电站,枢纽","Principal":"秦晓川","Product":"8","Created":"2016-11-26"}];
-  /*初始化table数据*/
-  // $(function(){
-  //     $("#table0").bootstrapTable({
-  //         data:json
-  //         // onClickRow: function (row, $element) {
-  //           // alert( "选择了行Id为: " + row.Id );
-  //           // rowid=row.Id//全局变量
-  //           // $('#table1').bootstrapTable('refresh', {url:'/admincategory?pid='+row.Id});
-  //         // }
-  //     });
-  // });
   //项目列表
   $(function () {
     // 初始化【未接受】工作流表格
@@ -451,7 +422,6 @@
   // $(function () {
   //     var $result = $('#eventsResult');
   //     var selectRow=$('#table').bootstrapTable('getSelections');
-  
   //     $('#table').on('all.bs.table', function (e, name, args) {
   //         console.log('Event:', name, ', data:', args);
   //     })
@@ -499,10 +469,8 @@
   //     });
   // });
 
-
   // $(document).ready(function() {
   // $("#addButton").click(function() {
-    
   // var selectRow=$('#table').bootstrapTable('getSelections');  
   // if (selectRow.length<1){
   // selectRow=$('#table').bootstrapTable('getSelections');
@@ -932,6 +900,11 @@
 </div>
 
 <script type="text/javascript"> 
+  $(document).ready(function(){
+        $("#modalTable").draggable({ handle: ".modal-header" });//为模态对话框添加拖拽
+        $("#modalTable1").draggable({ handle: ".modal-header" });
+        $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
+    })
   // $(function(){ 
   //   $("ul li").each(function(){ 
   //     $(this).css("background-color",getRandomColor()); 

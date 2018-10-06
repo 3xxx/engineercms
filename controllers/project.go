@@ -5,7 +5,10 @@ import (
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/utils/pagination"
+	"github.com/casbin/beego-orm-adapter"
+	// "github.com/casbin/casbin"
 	"os"
 	"path"
 	"path/filepath"
@@ -1025,11 +1028,64 @@ func (c *ProjController) AddProjTemplet() {
 	pathstring := "./attachment/" + projcode + projname
 	//在递归建立下层文件夹
 	createtemplet(pathstring, root.FileNodes)
-	//权限继承
-	if ispermission == "true" {
 
+	//权限继承
+	var success bool
+	var casbinv1 string
+	if ispermission == "true" {
+		//读取权限里包含projid的
+		var paths []beegoormadapter.CasbinRule
+		o := orm.NewOrm()
+		qs := o.QueryTable("casbin_rule")
+		_, err := qs.Filter("PType", "p").Filter("v1__contains", "/"+projid+"/").All(&paths)
+		if err != nil {
+			beego.Error(err)
+		}
+		//根据最后的/id/*查出proj的parenttitlepath，修改titlepath的项目编号和项目名称
+		//据此再查出新项目对应的parentidpath和id
+		//末端加上/id/*存入casbin
+		for _, v := range paths {
+			array := strings.Split(v.V1, "/")
+			// lenth := len(array)
+			// if len(array) <= 3 { //根目录
+			// id := strings.Replace(strings.Replace(v.V1, "/*", "", -1), "/", "", -1)
+			// } else {
+			id := array[len(array)-2]
+			// parentidpath := strings.Replace(v.V1, "/"+array[len(array)-2]+"/*", "/", -1)
+			// }
+			//id转成64为
+			idNum, err = strconv.ParseInt(id, 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			oldproj, err := models.GetProj(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			if len(array) <= 3 { //根目录
+				newproj, err := models.GetProjectCodeTitle(projcode, projname)
+				if err != nil {
+					beego.Error(err)
+				}
+				casbinv1 = "/" + strconv.FormatInt(newproj.Id, 10) + "/*"
+			} else {
+				array1 := strings.Split(oldproj.ParentTitlePath, "-")
+				newprojparenttitlepath := strings.Replace(oldproj.ParentTitlePath, array1[0], projcode+projname, -1)
+				newproj, err := models.GetProjbyParenttitlepath(newprojparenttitlepath, oldproj.Title)
+				if err != nil {
+					beego.Error(err)
+				}
+				casbinv1 = strings.Replace(strings.Replace(strings.Replace(newproj.ParentIdPath, "#$", "/", -1), "$", "/", -1), "#", "/", -1) + strconv.FormatInt(newproj.Id, 10) + "/*"
+			}
+			success = e.AddPermissionForUser(v.V0, casbinv1, v.V2, v.V3)
+			//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+		}
 	}
-	c.Data["json"] = "ok"
+	if success == true {
+		c.Data["json"] = "ok"
+	} else {
+		c.Data["json"] = "wrong"
+	}
 	c.ServeJSON()
 }
 
