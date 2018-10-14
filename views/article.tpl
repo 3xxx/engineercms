@@ -42,7 +42,7 @@
               <label>&nbsp;作者：{{.product.Principal}}</label>
               <small>发表于：{{dateformat .product.Created "2006-01-02 15:04:05"}}</small>
               <small id="publish">阅读{{.article.Views}}次</small>
-              <a href="/project/product/modifyarticle/{{.article.Id}}" class="btn btn-warning btn-xs">修改</a>
+              <a {{if ne true .RoleUpdate}} style="display:none" {{end}} href="/project/product/modifyarticle/{{.article.Id}}" class="btn btn-warning btn-xs">修改</a>
               <button type="button" class="btn btn-danger btn-xs" id="deletearticle">删除</button>
             </div>  
             <div class="article_manage clearfix">
@@ -90,7 +90,7 @@
     }
   })
 
-    //****编辑文章
+    //****编辑文章_这个没用到
     $("#updatearticle").click(function() {
       if ({{.product.Uid}}==={{.Uid}}||{{.RoleUpdate}}=="true"){
       $("input#cid").remove();//文章id

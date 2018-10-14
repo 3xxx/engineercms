@@ -774,18 +774,19 @@ func (c *ProjController) DeleteProjectCate() {
 		_, DiskDirectory, err := GetUrlPath(idNum)
 		if err != nil {
 			beego.Error(err)
-		}
-		// beego.Info(DiskDirectory)
-		path := DiskDirectory
-		//直接删除这个文件夹，remove删除文件
-		err = os.RemoveAll(path)
-		if err != nil {
-			beego.Error(err)
-		}
-		//删除目录本身
-		err = models.DeleteProject(idNum)
-		if err != nil {
-			beego.Error(err)
+		} else if DiskDirectory != "" {
+			// beego.Info(DiskDirectory)
+			// path := DiskDirectory
+			// //直接删除这个文件夹，remove删除文件
+			// err = os.RemoveAll(path)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			//删除目录本身
+			err = models.DeleteProject(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
 		}
 	}
 	c.Data["json"] = "ok" //data
@@ -899,14 +900,14 @@ func (c *ProjController) AddProject() {
 	c.Data["IsProjects"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	if role != "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -982,6 +983,21 @@ func (c *ProjController) AddProject() {
 
 //根据项目模板添加项目
 func (c *ProjController) AddProjTemplet() {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+
 	projcode := c.Input().Get("code")
 	projname := c.Input().Get("name")
 	projlabel := c.Input().Get("label")
@@ -1108,14 +1124,14 @@ func (c *ProjController) UpdateProject() {
 	c.Data["IsProjects"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	if role != "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -1168,14 +1184,14 @@ func (c *ProjController) DeleteProject() {
 	c.Data["IsProjects"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	if role != "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -1255,14 +1271,18 @@ func (c *ProjController) DeleteProject() {
 		_, DiskDirectory, err := GetUrlPath(projid)
 		if err != nil {
 			beego.Error(err)
-		} else {
+		} else if DiskDirectory != "" {
 			// beego.Info(DiskDirectory)
-			path := DiskDirectory
-			//直接删除这个文件夹，remove删除文件
-			err = os.RemoveAll(path)
-			if err != nil {
-				beego.Error(err)
-			}
+			// path := DiskDirectory
+			// //直接删除这个文件夹，remove删除文件
+			// err = os.RemoveAll(path)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			//20181008删除一个“空”项目，导致attachment文件夹下所有附件都删除的悲惨事件
+			//所以，不再提供删除文件夹功能
+			//只修改文件夹名称??
+
 			//删除项目自身数据表
 			err = models.DeleteProject(projid)
 			if err != nil {

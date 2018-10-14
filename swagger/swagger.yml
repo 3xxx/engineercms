@@ -139,6 +139,37 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/addwxarticles/{id}:
+    post:
+      tags:
+      - wx
+      description: post article by catalogid
+      operationId: ArticleController.post wx artile by catalogId
+      parameters:
+      - in: query
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      - in: query
+        name: title
+        description: The title of article
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of article
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
   /wx/getwxarticle/{id}:
     get:
       tags:
@@ -181,12 +212,59 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/getwxarticless/{id}:
+    get:
+      tags:
+      - wx
+      description: get articles by page
+      operationId: ArticleController.get wx artiles list
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page for articles list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/uploadwximg:
     post:
       tags:
       - wx
       description: post article img by catalogid
       operationId: FroalaController.post wx artile img by catalogId
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
+  /wx/uploadwximgs/{id}:
+    post:
+      tags:
+      - wx
+      description: post article img by catalogid
+      operationId: FroalaController.post wx artile img by catalogId
+      parameters:
+      - in: query
+        name: id
+        description: The id of project
+        required: true
+        type: string
       responses:
         "200":
           description: ""

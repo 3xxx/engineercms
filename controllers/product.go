@@ -831,7 +831,7 @@ func (c *ProdController) DeleteProduct() {
 			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 			if err != nil {
 				beego.Error(err)
-			} else {
+			} else if DiskDirectory != "" {
 				path := DiskDirectory + "/" + attach.FileName
 				//删除附件
 				err = os.Remove(path)

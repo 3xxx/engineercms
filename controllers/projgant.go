@@ -524,6 +524,12 @@ func (c *ProjGantController) ImportProjGant() {
 	// beego.Info(h.path)
 	// var attachment string
 	var path string
+	const lll = "2006-01-02"
+	var convdate string
+	var id, secid int64
+	var duration, progress int
+	var code, name, description string
+	var date, t1 time.Time
 	// var filesize int64
 	if h != nil {
 		//保存附件
@@ -531,197 +537,196 @@ func (c *ProjGantController) ImportProjGant() {
 		err = c.SaveToFile("gantsexcel", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
 			beego.Error(err)
-		}
-	}
-
-	const lll = "2006-01-02"
-	var convdate string
-	var id, secid int64
-	var duration, progress int
-	var code, name, description string
-	var date, t1 time.Time
-	//读出excel内容写入数据库
-	xlFile, err := xlsx.OpenFile(path) //
-	if err != nil {
-		beego.Error(err)
-	}
-	for _, sheet := range xlFile.Sheets {
-		for i, row := range sheet.Rows {
-			if i != 0 { //忽略第一行标题
-				// 这里要判断单元格列数，如果超过单元格使用范围的列数，则出错for j := 2; j < 7; j += 5 {
-				j := 1
-				//读取编号
-				if len(row.Cells) >= 2 { //总列数，从1开始
-					code = row.Cells[j].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				//读取开始时间
-				if len(row.Cells) >= 7 {
-					if row.Cells[j+5].Value != "" {
-						Starttime, err := row.Cells[j+5].Float()
-						if err != nil {
-							beego.Error(err)
-						} else {
-							date = xlsx.TimeFromExcelTime(Starttime, false)
-						}
-					} else {
-						date = time.Now()
-					}
-					convdate = date.Format(lll)
-
-					date, err = time.Parse(lll, convdate)
-					if err != nil {
-						beego.Error(err)
-					}
-					t1 = date
-				}
-				//读取时间跨度
-				if len(row.Cells) >= 8 {
-					duration, err = row.Cells[j+6].Int()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				//读取进度
-				if len(row.Cells) >= 9 {
-					progress, err = row.Cells[j+7].Int()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				//读取描述
-				if len(row.Cells) >= 10 {
-					description = row.Cells[j+8].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				//读取项目名称
-				if len(row.Cells) >= 3 {
-					name = row.Cells[j+1].String()
-					if err != nil {
-						beego.Error(err)
-					}
-					//查询编号和名称，如果存在，则返回id作为parentid
-					gantname, err := models.GetProjGantName(code, name)
-					if err != nil {
-						beego.Error(err) //没找到记录，新建
-						id, err = models.AddProjGant(0, 0, "STATUS_ACTIVE", code, name, "", "", 0, duration, progress, t1, t1, false, false, true)
-						if err != nil {
-							beego.Error(err)
-						}
-					} else { //找到，则作为parentid
-						id = gantname.Id
-					}
-				}
-				//读取阶段
-				if len(row.Cells) >= 4 {
-					designstage := row.Cells[j+2].String()
-					if err != nil {
-						beego.Error(err)
-					}
-					//查询名称和parentid，如果存在，则返回id作为parentid
-					gantparent, err := models.GetProjGantParent(designstage, id)
-					if err != nil {
-						beego.Error(err) //没找到记录，新建
-						secid, err = models.AddProjGant(0, id, "STATUS_ACTIVE", "", designstage, "", "", 1, duration, progress, t1, t1, false, false, true)
-						if err != nil {
-							beego.Error(err)
-						}
-					} else { //找到，则作为parentid
-						secid = gantparent.Id
-					}
-				}
-
-				//读取专业
-				if len(row.Cells) >= 5 {
-					section := row.Cells[j+3].String()
-					if err != nil {
-						beego.Error(err)
-					}
-					//查询名称和parentid，如果存在，则返回id作为parentid
-					_, err = models.GetProjGantParent(section, secid)
-					if err != nil {
-						beego.Error(err) //没找到记录，新建
-						_, err := models.AddProjGant(0, secid, "STATUS_ACTIVE", "", section, "", description, 2, duration, progress, t1, t1, false, false, false)
-						if err != nil {
-							beego.Error(err)
-						}
-					}
-				}
-				//读取任务
-				// if len(row.Cells) >= 6 {
-				// 	task, err = row.Cells[j+4].String()
-				// 	if err != nil {
-				// 		beego.Error(err)
-				// 	}
-				// 	//查询名称和parentid，如果存在，则返回id作为parentid
-				// 	gantparent, err := models.GetProjGantParent(task, id3)
-				// 	if err != nil {
-				// 		beego.Error(err) //没找到记录，新建
-				// 		_, err := models.AddProjGant2(id3, "", task, start, duration, progress)
-				// 		if err != nil {
-				// 			beego.Error(err)
-				// 		}
-				// 	} else { //找到，则作为parentid
-				// 		id = gantparent.Id
-				// 	}
-				// }
-
-				// if len(row.Cells) >= 10 {
-				// 	if row.Cells[j+8].Value != "" {
-				// 		endtime2, err := row.Cells[j+8].Float()
-				// 		if err != nil {
-				// 			beego.Error(err)
-				// 		} else {
-				// 			date = xlsx.TimeFromExcelTime(endtime2, false)
-				// 		}
-				// 	} else {
-				// 		date = time.Now()
-				// 	}
-				// 	convdate = date.Format(lll)
-
-				// 	date, err = time.Parse(lll, convdate)
-				// 	if err != nil {
-				// 		beego.Error(err)
-				// 	}
-				// 	t1 = date
-				// }
-				// if len(row.Cells) >= 11 {
-				// 	if row.Cells[j+9].Value != "" {
-				// 		endtime2, err := row.Cells[j+9].Float()
-				// 		if err != nil {
-				// 			beego.Error(err)
-				// 		} else {
-				// 			date = xlsx.TimeFromExcelTime(endtime2, false)
-				// 		}
-				// 	} else {
-				// 		date = time.Now()
-				// 	}
-				// 	convdate = date.Format(lll)
-
-				// 	date, err = time.Parse(lll, convdate)
-				// 	if err != nil {
-				// 		beego.Error(err)
-				// 	}
-				// 	t2 = date
-				// }
-				// _, err := models.AddProjGant(code, title, designstage, section, label, desc, customclass, dataobj, t1, t2)
-				// if err != nil {
-				// 	beego.Error(err)
-				// }
+			c.Data["json"] = "err保存文件失败！"
+			c.ServeJSON()
+		} else {
+			//读出excel内容写入数据库
+			xlFile, err := xlsx.OpenFile(path) //
+			if err != nil {
+				beego.Error(err)
 			}
+			for _, sheet := range xlFile.Sheets {
+				for i, row := range sheet.Rows {
+					if i != 0 { //忽略第一行标题
+						// 这里要判断单元格列数，如果超过单元格使用范围的列数，则出错for j := 2; j < 7; j += 5 {
+						j := 1
+						//读取编号
+						if len(row.Cells) >= 2 { //总列数，从1开始
+							code = row.Cells[j].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						//读取开始时间
+						if len(row.Cells) >= 7 {
+							if row.Cells[j+5].Value != "" {
+								Starttime, err := row.Cells[j+5].Float()
+								if err != nil {
+									beego.Error(err)
+								} else {
+									date = xlsx.TimeFromExcelTime(Starttime, false)
+								}
+							} else {
+								date = time.Now()
+							}
+							convdate = date.Format(lll)
+
+							date, err = time.Parse(lll, convdate)
+							if err != nil {
+								beego.Error(err)
+							}
+							t1 = date
+						}
+						//读取时间跨度
+						if len(row.Cells) >= 8 {
+							duration, err = row.Cells[j+6].Int()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						//读取进度
+						if len(row.Cells) >= 9 {
+							progress, err = row.Cells[j+7].Int()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						//读取描述
+						if len(row.Cells) >= 10 {
+							description = row.Cells[j+8].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						//读取项目名称
+						if len(row.Cells) >= 3 {
+							name = row.Cells[j+1].String()
+							if err != nil {
+								beego.Error(err)
+							}
+							//查询编号和名称，如果存在，则返回id作为parentid
+							gantname, err := models.GetProjGantName(code, name)
+							if err != nil {
+								beego.Error(err) //没找到记录，新建
+								id, err = models.AddProjGant(0, 0, "STATUS_ACTIVE", code, name, "", "", 0, duration, progress, t1, t1, false, false, true)
+								if err != nil {
+									beego.Error(err)
+								}
+							} else { //找到，则作为parentid
+								id = gantname.Id
+							}
+						}
+						//读取阶段
+						if len(row.Cells) >= 4 {
+							designstage := row.Cells[j+2].String()
+							if err != nil {
+								beego.Error(err)
+							}
+							//查询名称和parentid，如果存在，则返回id作为parentid
+							gantparent, err := models.GetProjGantParent(designstage, id)
+							if err != nil {
+								beego.Error(err) //没找到记录，新建
+								secid, err = models.AddProjGant(0, id, "STATUS_ACTIVE", "", designstage, "", "", 1, duration, progress, t1, t1, false, false, true)
+								if err != nil {
+									beego.Error(err)
+								}
+							} else { //找到，则作为parentid
+								secid = gantparent.Id
+							}
+						}
+
+						//读取专业
+						if len(row.Cells) >= 5 {
+							section := row.Cells[j+3].String()
+							if err != nil {
+								beego.Error(err)
+							}
+							//查询名称和parentid，如果存在，则返回id作为parentid
+							_, err = models.GetProjGantParent(section, secid)
+							if err != nil {
+								beego.Error(err) //没找到记录，新建
+								_, err := models.AddProjGant(0, secid, "STATUS_ACTIVE", "", section, "", description, 2, duration, progress, t1, t1, false, false, false)
+								if err != nil {
+									beego.Error(err)
+								}
+							}
+						}
+						//读取任务
+						// if len(row.Cells) >= 6 {
+						// 	task, err = row.Cells[j+4].String()
+						// 	if err != nil {
+						// 		beego.Error(err)
+						// 	}
+						// 	//查询名称和parentid，如果存在，则返回id作为parentid
+						// 	gantparent, err := models.GetProjGantParent(task, id3)
+						// 	if err != nil {
+						// 		beego.Error(err) //没找到记录，新建
+						// 		_, err := models.AddProjGant2(id3, "", task, start, duration, progress)
+						// 		if err != nil {
+						// 			beego.Error(err)
+						// 		}
+						// 	} else { //找到，则作为parentid
+						// 		id = gantparent.Id
+						// 	}
+						// }
+
+						// if len(row.Cells) >= 10 {
+						// 	if row.Cells[j+8].Value != "" {
+						// 		endtime2, err := row.Cells[j+8].Float()
+						// 		if err != nil {
+						// 			beego.Error(err)
+						// 		} else {
+						// 			date = xlsx.TimeFromExcelTime(endtime2, false)
+						// 		}
+						// 	} else {
+						// 		date = time.Now()
+						// 	}
+						// 	convdate = date.Format(lll)
+
+						// 	date, err = time.Parse(lll, convdate)
+						// 	if err != nil {
+						// 		beego.Error(err)
+						// 	}
+						// 	t1 = date
+						// }
+						// if len(row.Cells) >= 11 {
+						// 	if row.Cells[j+9].Value != "" {
+						// 		endtime2, err := row.Cells[j+9].Float()
+						// 		if err != nil {
+						// 			beego.Error(err)
+						// 		} else {
+						// 			date = xlsx.TimeFromExcelTime(endtime2, false)
+						// 		}
+						// 	} else {
+						// 		date = time.Now()
+						// 	}
+						// 	convdate = date.Format(lll)
+
+						// 	date, err = time.Parse(lll, convdate)
+						// 	if err != nil {
+						// 		beego.Error(err)
+						// 	}
+						// 	t2 = date
+						// }
+						// _, err := models.AddProjGant(code, title, designstage, section, label, desc, customclass, dataobj, t1, t2)
+						// if err != nil {
+						// 	beego.Error(err)
+						// }
+					}
+				}
+			}
+			//删除附件
+			err = os.Remove(path)
+			if err != nil {
+				beego.Error(err)
+			}
+			c.Data["json"] = "ok"
+			c.ServeJSON()
 		}
+	} else {
+		c.Data["json"] = "err文件为空！"
+		c.ServeJSON()
 	}
-	//删除附件
-	err = os.Remove(path)
-	if err != nil {
-		beego.Error(err)
-	}
-	c.Data["json"] = "ok"
-	c.ServeJSON()
 }
 
 //修改项目名称、负责人等，

@@ -823,28 +823,28 @@
 
       if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
 
-      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Articlecontent[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Pdflink[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
-      }
-      if (site){
-        alert("同步成果不允许！");
-        return;
-      }
-      selectrowid=selectRow[0].Id;
-      $("input#pid").remove();
-      var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $('#attachments').bootstrapTable('refresh', {url:'/project/product/allattachments/'+selectRow[0].Id});//取得所有附件列表和文章列表
-      $('#modalAttachEditor').modal({
-      show:true,
-      backdrop:'static'
-      });
+        if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+          var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Articlecontent[0]){
+          var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Pdflink[0]){
+          var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+        }
+        if (site){
+          alert("同步成果不允许！");
+          return;
+        }
+        selectrowid=selectRow[0].Id;
+        $("input#pid").remove();
+        var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $('#attachments').bootstrapTable('refresh', {url:'/project/product/allattachments/'+selectRow[0].Id});//取得所有附件列表和文章列表
+        $('#modalAttachEditor').modal({
+          show:true,
+          backdrop:'static'
+        });
 
       }else{
         alert("权限不够！"+selectRow[0].Uid);

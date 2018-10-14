@@ -850,7 +850,7 @@ func (c *AttachController) DeleteAttachment() {
 		_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 		if err != nil {
 			beego.Error(err)
-		} else {
+		} else if DiskDirectory != "" {
 			path := DiskDirectory + "/" + attach.FileName
 			err = os.Remove(path)
 			if err != nil {
@@ -1251,14 +1251,15 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 				proj1, err := models.GetProj(idNum)
 				if err != nil {
 					beego.Error(err)
-				}
-				if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
-					DiskDirectory = "./attachment/" + proj1.Code + proj1.Title
-					Url = "attachment/" + proj1.Code + proj1.Title
 				} else {
-					path = proj1.Title
-					DiskDirectory = DiskDirectory + "/" + path
-					Url = Url + "/" + path
+					if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
+						DiskDirectory = "./attachment/" + proj1.Code + proj1.Title
+						Url = "attachment/" + proj1.Code + proj1.Title
+					} else {
+						path = proj1.Title
+						DiskDirectory = DiskDirectory + "/" + path
+						Url = Url + "/" + path
+					}
 				}
 			}
 			DiskDirectory = DiskDirectory + "/" + proj.Title //加上自身
