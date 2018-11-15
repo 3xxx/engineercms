@@ -35,12 +35,19 @@ type User struct {
 	// Roles         []*Role   `orm:"rel(m2m)"`
 }
 
+//用户和openid对应表,一个用户对应多个openid
+type UserOpenID struct {
+	Id     int64
+	Uid    int64
+	OpenID string
+}
+
 // Id            int64
 // Username      string    `orm:"unique;size(32)" form:"Username"  valid:"Required;MaxSize(20);MinSize(6)"`
 // Password      string    `orm:"size(32)" form:"Password" valid:"Required;MaxSize(20);MinSize(6)"`
 
 func init() {
-	orm.RegisterModel(new(User))
+	orm.RegisterModel(new(User), new(UserOpenID))
 }
 
 //这个是使用的，下面那个adduser不知干啥的
@@ -77,6 +84,38 @@ func SaveUser(user User) (uid int64, err error) {
 	// 	uid = user1.Id
 	// }
 	return uid, err
+}
+
+//后台手工操作添加微信小程序openid和用户名
+func AddUserOpenID(userid int64, openid string) (id int64, err error) {
+	o := orm.NewOrm()
+	var user UserOpenID
+	//判断是否有重名
+	err = o.QueryTable("UserOpenID").Filter("userid", userid).One(&user, "Id")
+	if err == orm.ErrNoRows { //Filter("tnumber", tnumber).One(topic, "Id")==nil则无法建立
+		// 没有找到记录
+		id, err = o.Insert(&user)
+		if err != nil {
+			return id, err
+		}
+	}
+	return id, err
+}
+
+//根据openid查user
+func GetUserByOpenID(openid string) (user User, err error) {
+	o := orm.NewOrm()
+	var useropenid UserOpenID
+	qs := o.QueryTable("UserOpenID")
+	//进行编号唯一性检查
+	err = qs.Filter("openid", openid).One(&useropenid)
+	if err != nil {
+		return user, err
+	}
+	//查询user
+	user = User{Id: useropenid.Uid}
+	o.Read(&user) //这里是默认主键查询。=(&user,"Id")
+	return user, err
 }
 
 func ValidateUser(user User) error {

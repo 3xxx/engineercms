@@ -170,6 +170,90 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/addwxlike/{id}:
+    post:
+      tags:
+      - wx
+      description: post like by articleId
+      operationId: ReplyController.post wx like by articleId
+      parameters:
+      - in: query
+        name: id
+        description: The id of article
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.AddTopicLike'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /wx/addwxrelease/{id}:
+    post:
+      tags:
+      - wx
+      description: post release by articleId
+      operationId: ReplyController.post wx release by articleId
+      parameters:
+      - in: query
+        name: id
+        description: The id of article
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of release
+        required: true
+        type: string
+      - in: query
+        name: code
+        description: The code of wx
+        type: string
+      - in: query
+        name: avatar
+        description: The avatar of release
+        type: string
+      - in: query
+        name: username
+        description: The username of release
+        type: string
+      - in: query
+        name: created
+        description: The time of release
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.AddTopicReply'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /wx/deletewxrelease/{id}:
+    post:
+      tags:
+      - wx
+      description: delete release by releaseid
+      operationId: ReplyController.delete wx release by releaseid
+      parameters:
+      - in: query
+        name: id
+        description: The id of release
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.DeleteTopicReply'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
   /wx/getwxarticle/{id}:
     get:
       tags:
@@ -238,6 +322,62 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/searchwxdrawings:
+    get:
+      tags:
+      - wx
+      description: get drawings by page
+      operationId: SearchController.get wx drawings list
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of drawings
+        required: true
+        type: string
+      - in: query
+        name: projid
+        description: The projectid of drawings
+        type: string
+      - in: query
+        name: page
+        description: The page for drawings list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: drawings not found
+  /wx/searchwxstandards:
+    get:
+      tags:
+      - wx
+      description: get standards by page
+      operationId: StandardController.get wx standards list
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of standards
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page for drawings list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: standards not found
   /wx/uploadwximg:
     post:
       tags:
@@ -274,13 +414,18 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
-  /wx/wxlogin:
+  /wx/wxlogin/{id}:
     get:
       tags:
       - wx
       description: post wx login
       operationId: LoginController.post wx login
       parameters:
+      - in: path
+        name: id
+        description: The id of wx
+        required: true
+        type: string
       - in: path
         name: code
         description: The jscode of wxuser
@@ -295,14 +440,64 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/wxpdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get wx pdf by id
+      operationId: MainController.dowload wx pdf
+      parameters:
+      - in: path
+        name: id
+        description: The id of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/wxstandardpdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get wx standardpdf by id
+      operationId: MainController.dowload wx standardpdf
+      parameters:
+      - in: path
+        name: id
+        description: The id of standardpdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
 definitions:
   .AddAdminCategory:
     type: object
   .AddArticle:
     type: object
+  .AddTopicLike:
+    type: object
+  .AddTopicReply:
+    type: object
+  .DeleteTopicReply:
+    type: object
   .GetAdminCategory:
     type: object
   .GetArticle:
+    type: object
+  .GetAttachbyId:
     type: object
   .GetProductsPage:
     type: object
@@ -314,9 +509,6 @@ tags:
 - name: admin
   description: |
     CMSADMIN API
-- name: wx
-  description: |
-    CMSWX login API
 - name: adminlog
   description: |
     CMSADMIN API

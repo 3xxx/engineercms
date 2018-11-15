@@ -144,6 +144,141 @@ func (c *SearchController) SearchProduct() { //search用的是get方法
 	}
 }
 
+// @Title get wx drawings list
+// @Description get drawings by page
+// @Param keyword query string  true "The keyword of drawings"
+// @Param projid query string  false "The projectid of drawings"
+// @Param page query string  true "The page for drawings list"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 drawings not found
+// @router /searchwxdrawings [get]
+//小程序取得所有图纸列表，分页_plus
+func (c *SearchController) SearchWxDrawings() {
+	wxsite := beego.AppConfig.String("wxreqeustsite")
+	limit := "5"
+	limit1, err := strconv.ParseInt(limit, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	page := c.Input().Get("searchpage")
+	page1, err := strconv.ParseInt(page, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	pid := c.Input().Get("projectid")
+	var pidNum int64
+	if pid != "" {
+		pidNum, err = strconv.ParseInt(pid, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
+	var offset int64
+	if page1 <= 1 {
+		offset = 0
+	} else {
+		offset = (page1 - 1) * limit1
+	}
+
+	key := c.Input().Get("keyword")
+	var products []*models.Product
+	if key != "" {
+		if pidNum == 0 { //搜索所有成果
+			products, err = models.SearchProductPage(limit1, offset, key)
+			if err != nil {
+				beego.Error(err.Error)
+			}
+		} else {
+			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
+			if err != nil {
+				beego.Error(err.Error)
+			}
+		}
+		Pdfslice := make([]PdfLink, 0)
+		for _, w := range products {
+			//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
+			//循环成果
+			//每个成果取到所有附件
+			//一个附件则直接打开/下载；2个以上则打开模态框
+			Attachments, err := models.GetAttachments(w.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+			//对成果进行循环
+			//赋予url
+			for _, v := range Attachments {
+				if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
+					pdfarr := make([]PdfLink, 1)
+					pdfarr[0].Id = v.Id
+					pdfarr[0].Title = v.FileName
+					pdfarr[0].Link = wxsite + "/static/img/go.jpg" //当做微信里的src来用
+					pdfarr[0].ActIndex = "drawing"
+					pdfarr[0].Created = v.Created
+					// timeformatdate, _ := time.Parse(datetime, thisdate)
+					// const lll = "2006-01-02 15:04"
+					pdfarr[0].Updated = v.Updated //.Format(lll)
+					Pdfslice = append(Pdfslice, pdfarr...)
+				}
+			}
+		}
+		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "searchers": Pdfslice}
+		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"info": "关键字为空"}
+		c.ServeJSON()
+	}
+	// var user models.User
+	// //取出用户openid
+	// JSCODE := c.Input().Get("code")
+	// if JSCODE != "" {
+	// 	APPID := beego.AppConfig.String("wxAPPID2")
+	// 	SECRET := beego.AppConfig.String("wxSECRET2")
+	// 	app_version := c.Input().Get("app_version")
+	// 	if app_version == "3" {
+	// 		APPID = beego.AppConfig.String("wxAPPID3")
+	// 		SECRET = beego.AppConfig.String("wxSECRET3")
+	// 	}
+	// 	// APPID := "wx7f77b90a1a891d93"
+	// 	// SECRET := "f58ca4f28cbb52ccd805d66118060449"
+	// 	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
+	// 	resp, err := http.Get(requestUrl)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 		return
+	// 	}
+	// 	defer resp.Body.Close()
+	// 	if resp.StatusCode != 200 {
+	// 		beego.Error(err)
+	// 	}
+	// 	var data map[string]interface{}
+	// 	err = json.NewDecoder(resp.Body).Decode(&data)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	var openID string
+	// 	if _, ok := data["session_key"]; !ok {
+	// 		errcode := data["errcode"]
+	// 		errmsg := data["errmsg"].(string)
+	// 		c.Data["json"] = map[string]interface{}{"errNo": errcode, "msg": errmsg, "data": "session_key 不存在"}
+	// 	} else {
+	// 		openID = data["openid"].(string)
+	// 		user, err = models.GetUserByOpenID(openID)
+	// 		if err != nil {
+	// 			beego.Error(err)
+	// 		}
+	// 	}
+	// }
+	// var userid int64
+	// if user.Nickname != "" {
+	// 	userid = user.Id
+	// } else {
+	// 	userid = 0
+	// }
+}
+
 //在某个项目里搜索成果：全文搜索，article全文，编号，名称，关键字，作者……
 func (c *SearchController) SearchProjProducts() {
 	pid := c.Input().Get("productid")

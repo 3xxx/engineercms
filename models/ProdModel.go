@@ -124,7 +124,7 @@ func GetProducts(id int64) (products []*Product, err error) {
 }
 
 //根据侧栏id分页查出所有成果——按编号排序
-func GetProductsPage(id, limit, offset int64, searchText string) (products []*Product, err error) {
+func GetProductsPage(id, limit, offset, uid int64, searchText string) (products []*Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
 	if searchText != "" {
@@ -133,8 +133,10 @@ func GetProductsPage(id, limit, offset int64, searchText string) (products []*Pr
 		cond2 := cond.AndCond(cond1).And("ProjectId", id)
 		qs = qs.SetCond(cond2)
 		_, err = qs.Limit(limit, offset).OrderBy("-created").All(&products)
-	} else {
+	} else if uid == 0 {
 		_, err = qs.Filter("ProjectId", id).Limit(limit, offset).OrderBy("-created").All(&products)
+	} else if uid != 0 {
+		_, err = qs.Filter("ProjectId", id).Filter("Uid", uid).Limit(limit, offset).OrderBy("-created").All(&products)
 	}
 	return products, err
 }

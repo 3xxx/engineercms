@@ -41,12 +41,25 @@ func SearchProduct(key string) (prod []*Product, err error) {
 	return prod, err
 }
 
+//搜索本地成果,分页
+func SearchProductPage(limit, offset int64, key string) (prod []*Product, err error) {
+	cond := orm.NewCondition()
+	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	o := orm.NewOrm()
+	qs := o.QueryTable("Product")
+	qs = qs.SetCond(cond1)
+	_, err = qs.Distinct().Limit(limit, offset).OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
+	if err != nil {
+		return prod, err
+	}
+	return prod, err
+}
+
 //搜索某个项目里的成果：article的全文，待完善
 func SearchProjProduct(pid int64, key string) (prod []*Product, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
 	// cond2 := cond.Or("Content__contains", key)
-
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
 	qs1 := qs.SetCond(cond1)
@@ -60,7 +73,6 @@ func SearchProjProduct(pid int64, key string) (prod []*Product, err error) {
 
 	qs2 := o.QueryTable("Article")
 	// qs3 := qs2.SetCond(cond2)
-
 	for _, v := range products {
 		_, err = qs2.Filter("ProductId", v.Id).Filter("Content__contains", key).OrderBy("-created").All(&articls)
 		if err != nil {
@@ -71,7 +83,21 @@ func SearchProjProduct(pid int64, key string) (prod []*Product, err error) {
 		}
 		articls = make([]*Article, 0)
 	}
+	return prod, err
+}
 
+//搜索某个项目里的成果，分页，不含文章：article的全文，待完善
+func SearchProjProductPage(pid, limit, offset int64, key string) (prod []*Product, err error) {
+	cond := orm.NewCondition()
+	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	// cond2 := cond.Or("Content__contains", key)
+	o := orm.NewOrm()
+	qs := o.QueryTable("Product")
+	qs1 := qs.SetCond(cond1)
+	_, err = qs1.Limit(limit, offset).Filter("ProjectId", pid).Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
+	if err != nil {
+		return prod, err
+	}
 	return prod, err
 }
 

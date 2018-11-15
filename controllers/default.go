@@ -691,6 +691,70 @@ func (c *MainController) Pdf() {
 	// }
 }
 
+// @Title dowload wx pdf
+// @Description get wx pdf by id
+// @Param id path string  true "The id of pdf"
+// @Success 200 {object} models.GetAttachbyId
+// @Failure 400 Invalid page supplied
+// @Failure 404 pdf not found
+// @router /wxpdf/:id [get]
+func (c *MainController) WxPdf() {
+	// id := c.Input().Get("id")
+	id := c.Ctx.Input.Param(":id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//根据附件id取得附件的prodid，路径
+	attachment, err := models.GetAttachbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	product, err := models.GetProd(attachment.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//由proj id取得url
+	fileurl, _, err := GetUrlPath(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(fileurl)
+	// beego.Info(attachment.FileName)
+	c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+}
+
+// @Title dowload wx standardpdf
+// @Description get wx standardpdf by id
+// @Param id path string  true "The id of standardpdf"
+// @Success 200 {object} models.GetAttachbyId
+// @Failure 400 Invalid page supplied
+// @Failure 404 pdf not found
+// @router /wxstandardpdf/:id [get]
+func (c *MainController) WxStandardPdf() {
+	// id := c.Input().Get("id")
+	id := c.Ctx.Input.Param(":id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//根据id取得规范的路径
+	standard, err := models.GetStandard(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(standard.Route)
+	fileurl := strings.Replace(standard.Route, "/attachment/", "attachment/", -1)
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, standard.Route)
+	c.Ctx.Output.Download(fileurl)
+}
+
 //升级数据库
 func (c *MainController) UpdateDatabase() {
 	beego.Info("ok")

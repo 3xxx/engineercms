@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego"
 	// "github.com/astaxie/beego/orm"
 	// "github.com/casbin/beego-orm-adapter"
+	"baliance.com/gooxml/document"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -1576,6 +1577,113 @@ func (c *OnlyController) Getpermission() {
 	}
 	c.Data["json"] = rolepermission
 	c.ServeJSON()
+}
+
+//文档结构数据
+type DocNode struct {
+	Id       int    `json:"id"`
+	Heading  string `json:"text"`
+	Level    int    `json:"level"` //分级
+	ParentId int
+}
+
+//树状目录数据——如何定位到word的位置呢
+type WordTree struct {
+	Id        int         `json:"id"`
+	Heading   string      `json:"text"`
+	Level     int         `json:"level"` //分级目录，这里其实没什么用了
+	WordTrees []*WordTree `json:"nodes"`
+}
+
+//生成word文档的文档结构图
+func (c *OnlyController) GetTree() {
+	doc, err := document.Open("./attachment/toc.docx")
+	if err != nil {
+		// log.Fatalf("error opening document: %s", err)
+		beego.Error(err)
+	}
+	var docnode []DocNode
+	var id int
+	id = 1
+	for _, para := range doc.Paragraphs() {
+		//if para.Style() == "1" || para.Style() == "Heading1" {
+		if para.Style() != "" {
+			var text1 string
+			for _, run := range para.Runs() {
+				text1 = text1 + run.Text()
+			}
+			aa := make([]DocNode, 1)
+			aa[0].Id = id
+			aa[0].Heading = text1
+			level, err := strconv.Atoi(strings.Replace(para.Style(), "Heading", "", -1))
+			if err != nil {
+				beego.Error(err)
+			}
+			aa[0].Level = level
+			//循环赋给parentid
+			var ispass bool
+			ispass = false
+			if len(docnode) > 0 {
+				for i := len(docnode); i > 0; i-- {
+					if level > docnode[i-1].Level {
+						aa[0].ParentId = docnode[i-1].Id
+						ispass = true
+						break
+					}
+				}
+			}
+			if !ispass {
+				aa[0].ParentId = 0
+			}
+			//aa := DocNode{id, text1, level, parentid}
+			docnode = append(docnode, aa...)
+			id++
+		}
+	}
+	//先构造第0级的树状数据结构
+	root := WordTree{0, "文档结构", 0, []*WordTree{}}
+	//下面node是那些level=1的
+	var node []DocNode
+	for _, k := range docnode {
+		if k.Level == 1 {
+			node = append(node, k)
+		}
+	}
+	//递归生成目录json
+	makedoctree(node, docnode, &root)
+	// beego.Info(root.WordTrees[0])//指针是这样显示的！！！！！！！
+	c.Data["json"] = root
+	c.TplName = "doctree.tpl"
+}
+
+//递归生成树状结构数据
+func makedoctree(node, nodes []DocNode, tree *WordTree) {
+	// 遍历第一层
+	for _, v := range node {
+		id := v.Id
+		heading := v.Heading
+		level := v.Level
+		// 将当前名、层级和id作为子节点添加到目录下
+		child := WordTree{id, heading, level, []*WordTree{}}
+		tree.WordTrees = append(tree.WordTrees, &child)
+		slice := getnodesons(id, nodes)
+		//fmt.Println(slice)
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			makedoctree(slice, nodes, &child)
+		}
+	}
+	return
+}
+
+//取得这个id的下级（儿子）目录
+func getnodesons(idNum int, nodes []DocNode) (slice []DocNode) {
+	for _, k := range nodes {
+		if k.ParentId == idNum {
+			slice = append(slice, k)
+		}
+	}
+	return slice
 }
 
 // 原来golang下载文件这么简单

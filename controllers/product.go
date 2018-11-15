@@ -53,6 +53,7 @@ type PdfLink struct {
 	Id        int64
 	Title     string
 	Link      string
+	ActIndex  string
 	FileSize  int64
 	Downloads int64
 	Created   time.Time
@@ -245,7 +246,7 @@ func (c *ProdController) GetProducts() {
 		offset = (page1 - 1) * limit1
 	}
 	//根据项目id取得所有成果
-	products, err := models.GetProductsPage(idNum, limit1, offset, searchText)
+	products, err := models.GetProductsPage(idNum, limit1, offset, 0, searchText)
 	if err != nil {
 		beego.Error(err)
 	}

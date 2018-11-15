@@ -226,17 +226,29 @@ func (c *LoginController) Loginerr() {
 
 // @Title post wx login
 // @Description post wx login
+// @Param id path string  true "The id of wx"
 // @Param code path string  true "The jscode of wxuser"
 // @Success 200 {object} success
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
-// @router /wxlogin [get]
+// @router /wxlogin/:id [get]
 //微信小程序访问微信服务器获取用户信息
 func (c *LoginController) WxLogin() {
+	id := c.Ctx.Input.Param(":id")
 	JSCODE := c.Input().Get("code")
-	beego.Info(JSCODE)
-	APPID := "wx7f77b90a1a891d93"
-	SECRET := "f58ca4f28cbb52ccd805d66118060449"
+	// beego.Info(JSCODE)
+	var APPID, SECRET string
+	if id == "1" {
+		APPID = "wx7f77b90a1a891d93"
+		SECRET = "f58ca4f28cbb52ccd805d66118060449"
+	} else if id == "2" {
+		APPID = beego.AppConfig.String("wxAPPID2")
+		SECRET = beego.AppConfig.String("wxSECRET2")
+	} else if id == "3" {
+		APPID = beego.AppConfig.String("wxAPPID3")
+		SECRET = beego.AppConfig.String("wxSECRET3")
+	}
+
 	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
 	resp, err := http.Get(requestUrl)
 	if err != nil {
@@ -254,13 +266,13 @@ func (c *LoginController) WxLogin() {
 		beego.Error(err)
 		// return
 	}
-	beego.Info(data)
+	// beego.Info(data)
 	if _, ok := data["session_key"]; !ok {
 		errcode := data["errcode"]
 		errmsg := data["errmsg"].(string)
 		// return
 		c.Data["json"] = map[string]interface{}{"errNo": errcode, "msg": errmsg, "data": "session_key 不存在"}
-		c.ServeJSON()
+		// c.ServeJSON()
 	} else {
 		var openID string
 		var sessionKey string
@@ -268,8 +280,8 @@ func (c *LoginController) WxLogin() {
 		openID = data["openid"].(string)
 		sessionKey = data["session_key"].(string)
 		// unionId = data["unionid"].(string)
-		beego.Info(openID)
-		beego.Info(sessionKey)
+		// beego.Info(openID)
+		// beego.Info(sessionKey)
 		// beego.Info(unionId)
 		//如果数据库存在记录，则存入session？
 		//上传文档的时候，检查session？
@@ -370,7 +382,7 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 		// beego.Info(uname)
 		user, err = models.GetUserByIp(uname)
 		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
-			beego.Error(err)
+			// beego.Error(err)
 			iprole = Getiprole(ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
 			userrole = strconv.Itoa(iprole)
 		} else { //如果查到，则role和用户名

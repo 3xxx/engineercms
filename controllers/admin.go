@@ -248,6 +248,14 @@ func (c *AdminController) CategoryTitle() {
 // @router /category/addcategory [post]
 //添加
 func (c *AdminController) AddCategory() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
 	title := c.Input().Get("title")
@@ -279,6 +287,15 @@ func (c *AdminController) AddCategory() {
 
 //修改
 func (c *AdminController) UpdateCategory() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
 	title := c.Input().Get("title")
@@ -304,6 +321,15 @@ func (c *AdminController) UpdateCategory() {
 
 //删除，如果有下级，一起删除
 func (c *AdminController) DeleteCategory() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
 	for _, v := range array {
@@ -337,6 +363,15 @@ func (c *AdminController) DeleteCategory() {
 
 //添加ip地址段
 func (c *AdminController) AddIpsegment() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	title := c.Input().Get("title")
 	startip := c.Input().Get("startip")
@@ -358,6 +393,15 @@ func (c *AdminController) AddIpsegment() {
 
 //修改ip地址段
 func (c *AdminController) UpdateIpsegment() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
 	title := c.Input().Get("title")
@@ -385,6 +429,14 @@ func (c *AdminController) UpdateIpsegment() {
 
 //删除ip
 func (c *AdminController) DeleteIpsegment() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
 	for _, v := range array {
@@ -649,6 +701,14 @@ func processFlag(arg []string) (maps map[string]int) {
 //********************日历开始**************
 //添加日历
 func (c *AdminController) AddCalendar() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	title := c.Input().Get("title")
 	content := c.Input().Get("content")
 	start := c.Input().Get("start")
@@ -739,6 +799,14 @@ func (c *AdminController) Calendar() {
 
 //修改
 func (c *AdminController) UpdateCalendar() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	cid := c.Input().Get("cid")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
@@ -816,6 +884,14 @@ func (c *AdminController) UpdateCalendar() {
 
 //拖曳
 func (c *AdminController) DropCalendar() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	id := c.Input().Get("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -844,6 +920,14 @@ func (c *AdminController) DropCalendar() {
 
 //resize
 func (c *AdminController) ResizeCalendar() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	id := c.Input().Get("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -874,6 +958,14 @@ func (c *AdminController) ResizeCalendar() {
 
 //删除，如果有下级，一起删除
 func (c *AdminController) DeleteCalendar() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	cid := c.Input().Get("cid")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
@@ -943,6 +1035,14 @@ func (c *AdminController) SynchIp() {
 
 //添加
 func (c *AdminController) AddsynchIp() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
 	username := c.Input().Get("username")
@@ -974,6 +1074,14 @@ func (c *AdminController) AddsynchIp() {
 
 //修改
 func (c *AdminController) UpdatesynchIp() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
 	username := c.Input().Get("username")
@@ -999,6 +1107,14 @@ func (c *AdminController) UpdatesynchIp() {
 
 //删除
 func (c *AdminController) DeletesynchIp() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
 	for _, v := range array {
@@ -1062,6 +1178,14 @@ func (c *AdminController) DepartmentTitle() {
 
 //添加
 func (c *AdminController) AddDepartment() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
 	title := c.Input().Get("title")
@@ -1089,6 +1213,14 @@ func (c *AdminController) AddDepartment() {
 
 //修改
 func (c *AdminController) UpdateDepartment() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pid := c.Ctx.Input.Param(":id")
 	cid := c.Input().Get("cid")
 	title := c.Input().Get("title")
@@ -1110,6 +1242,14 @@ func (c *AdminController) UpdateDepartment() {
 
 //删除，如果有下级，一起删除
 func (c *AdminController) DeleteDepartment() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
 	for _, v := range array {
@@ -1211,6 +1351,14 @@ func (c *AdminController) MeritBasic() {
 
 //在线修改保存某个字段
 func (c *AdminController) UpdateMeritBasic() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	name := c.Input().Get("name")
 	value := c.Input().Get("value")
 	pk := c.Input().Get("pk")
@@ -1302,6 +1450,14 @@ func (c *AdminController) GetPostMerit() {
 
 //在线修改保存某个字段
 func (c *AdminController) ModifyCatalog() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	name := c.Input().Get("name")
 	value := c.Input().Get("value")
 	pk := c.Input().Get("pk")
@@ -1415,6 +1571,14 @@ func (c *AdminController) CatalogAttachment() {
 
 //修改link
 func (c *AdminController) ModifyLink() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	name := c.Input().Get("name")
 	value := c.Input().Get("value")
 	pk := c.Input().Get("pk")
@@ -1440,6 +1604,14 @@ func (c *AdminController) ModifyLink() {
 
 //提交meritlist给merit，这个是关键代码
 func (c *AdminController) SendMeritlist() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// req1 := httplib.Post("http://beego.me/")
 	// req1.Param("username","astaxie")
 	// req1.Param("password","123456")
@@ -1497,6 +1669,14 @@ func (c *AdminController) SendMeritlist() {
 
 //删除meritlist
 func (c *AdminController) DeleteMeritlist() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pk1 := c.Ctx.Input.RequestBody
 	var ob []models.PostMerit
 	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
@@ -1513,6 +1693,14 @@ func (c *AdminController) DeleteMeritlist() {
 
 //回退meritlist已提交给未提交
 func (c *AdminController) DownMeritlist() {
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role != "1" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
 	// pk1 := c.Ctx.Input.RequestBody
 	var ob []models.PostMerit
 	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)

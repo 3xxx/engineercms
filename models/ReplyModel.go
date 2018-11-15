@@ -37,15 +37,24 @@ import (
 // 	ReplyLastUserName string
 // 	// Attachments     []*Attachment `orm:"reverse(many)"` // fk 的反向关系
 // }
+//文章点赞
+type Like struct {
+	Id      int64
+	Tid     int64
+	OpenID  string `json:"openID"`
+	Created time.Time
+}
 
 //文章评论
-// type Commenttopic struct {
-// 	Id      int64
-// 	Tid     int64
-// 	Name    string
-// 	Content string `orm:"size(1000)"`
-// 	Created time.Time
-// }
+type Commenttopic struct {
+	Id       int64
+	Tid      int64
+	OpenID   string `orm:"size(30)"`
+	Content  string `orm:"size(100)"`
+	Avatar   string
+	Username string `orm:"size(20)"`
+	Created  string `orm:"size(20)"`
+}
 
 //wiki评论
 type Commentwiki struct {
@@ -57,82 +66,83 @@ type Commentwiki struct {
 }
 
 func init() {
-	orm.RegisterModel(new(Commentwiki)) //new(Commenttopic),
+	orm.RegisterModel(new(Commentwiki), new(Commenttopic), new(Like)) //new(Commenttopic),
 }
 
-// func DeleteTopicReply(rid string) error {
-// 	ridNum, err := strconv.ParseInt(rid, 10, 64)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	o := orm.NewOrm()
+func DeleteTopicReply(id int64) error {
+	o := orm.NewOrm()
+	reply := &Commenttopic{Id: id}
+	if o.Read(reply) == nil {
+		_, err := o.Delete(reply)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
-// 	var tidNum int64
-// 	reply := &Commenttopic{Id: ridNum}
-// 	if o.Read(reply) == nil {
-// 		tidNum = reply.Tid
-// 		_, err = o.Delete(reply)
-// 		if err != nil {
-// 			return err
-// 		}
-// 	}
-// 	replies := make([]*Commenttopic, 0) //slice,将所有文章取出来
-// 	qs := o.QueryTable("commenttopic")
-// 	_, err = qs.Filter("tid", tidNum).OrderBy("-created").All(&replies)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	topic := &Topic{Id: tidNum}
-// 	if o.Read(topic) == nil { //如果错误为空
-// 		if len(replies) != 0 { //如果回复不为空，则……
-// 			topic.ReplyTime = replies[0].Created
-// 			topic.ReplyLastUserName = replies[0].Name
-// 			topic.ReplyCount = int64(len(replies))
-// 			_, err = o.Update(topic)
-// 		}
-// 	}
-// 	return err
-// }
+func AddTopicReply(tid int64, openid, content, avatar, username, created string) (id int64, err error) {
+	reply := &Commenttopic{
+		Tid:      tid,
+		OpenID:   openid,
+		Content:  content,
+		Avatar:   avatar,
+		Username: username,
+		Created:  created,
+	}
+	o := orm.NewOrm()
+	id, err = o.Insert(reply)
+	if err != nil {
+		return id, err
+	}
+	// topic := &Article{Id: tid}
+	// if o.Read(topic) == nil {
+	// 	topic.ReplyTime = time.Now()
+	// 	topic.ReplyLastUserName = nickname
+	// 	topic.ReplyCount++
+	// 	_, err = o.Update(topic)
+	// }
+	return id, err
+}
 
-// func AddTopicReply(tid, nickname, content string) error {
-// 	tidNum, err := strconv.ParseInt(tid, 10, 64)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	reply := &Commenttopic{
-// 		Tid:     tidNum,
-// 		Name:    nickname,
-// 		Content: content,
-// 		Created: time.Now(),
-// 	}
-// 	o := orm.NewOrm()
-// 	_, err = o.Insert(reply)
-// 	if err != nil {
-// 		return err
-// 	}
+func GetAllTopicReplies(tid int64) (replies []*Commenttopic, err error) {
+	replies = make([]*Commenttopic, 0)
+	o := orm.NewOrm()
+	qs := o.QueryTable("commenttopic")
+	_, err = qs.Filter("tid", tid).All(&replies)
+	return replies, err
+}
 
-// 	topic := &Topic{Id: tidNum}
-// 	if o.Read(topic) == nil {
-// 		topic.ReplyTime = time.Now()
-// 		topic.ReplyLastUserName = nickname
-// 		topic.ReplyCount++
-// 		_, err = o.Update(topic)
-// 	}
-// 	return err
-// }
+func DeleteTopicLike(openid string) error {
+	o := orm.NewOrm()
+	_, err := o.QueryTable("like").Filter("OpenId", openid).Delete()
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
-// func GetAllTopicReplies(tid string) (replies []*Commenttopic, err error) {
-// 	tidNum, err := strconv.ParseInt(tid, 10, 64)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	replies = make([]*Commenttopic, 0)
+func AddTopicLike(tid int64, openid string) (id int64, err error) {
+	like := &Like{
+		Tid:     tid,
+		OpenID:  openid,
+		Created: time.Now(),
+	}
+	o := orm.NewOrm()
+	id, err = o.Insert(like)
+	if err != nil {
+		return id, err
+	}
+	return id, err
+}
 
-// 	o := orm.NewOrm()
-// 	qs := o.QueryTable("commenttopic")
-// 	_, err = qs.Filter("tid", tidNum).All(&replies)
-// 	return replies, err
-// }
+func GetAllTopicLikes(tid int64) (likes []*Like, err error) {
+	likes = make([]*Like, 0)
+	o := orm.NewOrm()
+	qs := o.QueryTable("Like")
+	_, err = qs.Filter("tid", tid).All(&likes)
+	return likes, err
+}
 
 func DeleteWikiReply(rid string) error {
 	ridNum, err := strconv.ParseInt(rid, 10, 64)

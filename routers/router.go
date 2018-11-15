@@ -35,6 +35,10 @@ func init() {
 					&controllers.ArticleController{},
 					&controllers.FroalaController{},
 					&controllers.LoginController{},
+					&controllers.ReplyController{},
+					&controllers.SearchController{},
+					&controllers.MainController{},
+					&controllers.StandardController{},
 				),
 			),
 			beego.NSNamespace("/adminlog",
@@ -42,6 +46,7 @@ func init() {
 					&controllers.AdminLogController{},
 				),
 			),
+
 			// beego.NSNamespace("/cms",
 			// 	beego.NSInclude(
 			// 		&controllers.CMSController{},
@@ -56,6 +61,7 @@ func init() {
 	beego.AddNamespace(ns)
 
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	beego.Router("/doctree", &controllers.OnlyController{}, "*:GetTree")
 	//升级数据库
 	beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
 	//删除数据表和字段测试
@@ -472,6 +478,24 @@ func init() {
 	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
 	beego.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
 	beego.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")
+
+	//规范管理
+	beego.Router("/standard", &controllers.StandardController{}, "*:Index")
+	beego.Router("/standard/search", &controllers.StandardController{}, "*:Search")
+	beego.Router("/standard/importexcel", &controllers.StandardController{}, "*:ImportExcel")
+	beego.Router("/standard/standard_one_addbaidu", &controllers.StandardController{}, "post:Standard_one_addbaidu")
+	beego.Router("/standard/importlibrary", &controllers.StandardController{}, "post:ImportLibrary")
+	//显示规范所有
+	beego.Router("/standard/getstandard", &controllers.StandardController{}, "get:GetStandard")
+	//修改规范库
+	beego.Router("/standard/updatestandard", &controllers.StandardController{}, "post:UpdateStandard")
+	//删除规范库
+	beego.Router("/standard/deletestandard", &controllers.StandardController{}, "post:DeleteStandard")
+
+	//显示有效库所有
+	beego.Router("/standard/valid", &controllers.StandardController{}, "get:Valid")
+	//删除有效库中选中
+	beego.Router("/standard/deletevalid", &controllers.StandardController{}, "post:DeleteValid")
 
 	//微信小程序
 	//小程序发表文章提交
