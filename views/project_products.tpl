@@ -104,152 +104,152 @@
   $(function () {
     // 初始化【未接受】工作流表格
     $("#table0").bootstrapTable({
-        url : '/project/products/{{.Id}}',
-        method: 'get',
-        search:'true',
-        showRefresh:'true',
-        showToggle:'true',
-        showColumns:'true',
-        toolbar:'#toolbar1',
-        pagination: 'true',
-        sidePagination: "server",
-        queryParamsType:'',
-        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
-        // limit, offset, search, sort, order 否则, 需要包含: 
-        // pageSize, pageNumber, searchText, sortName, sortOrder. 
-        // 返回false将会终止请求。
-        pageSize: 15,
-        pageNumber: 1,
-        pageList: [15, 50, 100],
-        uniqueId:"id",
-        singleSelect:"true",
-        clickToSelect:"true",
-        showExport:"true",
-        queryParams:function queryParams(params) {   //设置查询参数
-          var param = {
-              limit: params.pageSize,   //每页多少条数据
-              pageNo: params.pageNumber, // 页码
-              searchText:$(".search .form-control").val()
-          };
-          //搜索框功能
-          //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
-          // if (null != searchText) {
-          //   try {
-          //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
-          //   } catch (Exception e) {
-          //     e.printStackTrace();
-          //   }
-          // }
-          return param;
+      url : '/project/products/{{.Id}}',
+      method: 'get',
+      search:'true',
+      showRefresh:'true',
+      showToggle:'true',
+      showColumns:'true',
+      toolbar:'#toolbar1',
+      pagination: 'true',
+      sidePagination: "server",
+      queryParamsType:'',
+      //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+      // limit, offset, search, sort, order 否则, 需要包含: 
+      // pageSize, pageNumber, searchText, sortName, sortOrder. 
+      // 返回false将会终止请求。
+      pageSize: 15,
+      pageNumber: 1,
+      pageList: [15, 50, 100],
+      uniqueId:"id",
+      singleSelect:"true",
+      clickToSelect:"true",
+      showExport:"true",
+      queryParams:function queryParams(params) {   //设置查询参数
+        var param = {
+            limit: params.pageSize,   //每页多少条数据
+            pageNo: params.pageNumber, // 页码
+            searchText:$(".search .form-control").val()
+        };
+        //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+        return param;
+      },
+      columns: [
+        {
+          title: '选择',
+          radio: 'true',
+          width: '10',
+          align:"center",
+          valign:"middle"
         },
-        columns: [
-          {
-            title: '选择',
-            radio: 'true',
-            width: '10',
-            align:"center",
-            valign:"middle"
+        {
+          // field: 'Number',
+          title: '序号',
+          formatter:function(value,row,index){
+            return index+1
           },
-          {
-            // field: 'Number',
-            title: '序号',
-            formatter:function(value,row,index){
-              return index+1
-            },
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Code',
-            title: '编号',
-            // formatter:setCode,
-            halign:"center",
-            align:"left",
-            valign:"middle"
-          },
-          {
-            field: 'Title',
-            title: '名称',
-            // formatter:setTitle,
-            halign:"center",
-            align:"left",
-            valign:"middle"
-          },
-          {
-            field: 'Label',
-            title: '标签',
-            formatter:setLable,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Principal',
-            title: '设计',
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Articlecontent',
-            title: '文章',
-            formatter:setArticle,
-            events:actionEvents,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Attachmentlink',
-            title: '附件',
-            formatter:setAttachment,
-            events:actionEvents,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Pdflink',
-            title: 'PDF',
-            formatter:setPdf,
-            events:actionEvents,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Created',
-            title: '建立时间',
-            formatter:localDateFormatter,
-            visible:"false",
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Updated',
-            title: '更新时间',
-            formatter:localDateFormatter,
-            visible:"false",
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Relevancy',
-            title: '关联',
-            formatter:RelevFormatter,
-            // events:actionRelevancy,
-            // visible："false",
-            align:"center",
-            valign:"middle"
-          }
-            // {
-            //     field: 'dContMainEntity.createTime',
-            //     title: '发起时间',
-            //     formatter: function (value, row, index) {
-            //         return new Date(value).toLocaleString().substring(0,9);
-            //     }
-            // },
-            // {
-            //     field: 'dContMainEntity.operate',
-            //     title: '操作',
-            //     formatter: operateFormatter
-            // }
-        ]
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Code',
+          title: '编号',
+          // formatter:setCode,
+          halign:"center",
+          align:"left",
+          valign:"middle"
+        },
+        {
+          field: 'Title',
+          title: '名称',
+          // formatter:setTitle,
+          halign:"center",
+          align:"left",
+          valign:"middle"
+        },
+        {
+          field: 'Label',
+          title: '标签',
+          formatter:setLable,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Principal',
+          title: '设计',
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Articlecontent',
+          title: '文章',
+          formatter:setArticle,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Attachmentlink',
+          title: '附件',
+          formatter:setAttachment,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Pdflink',
+          title: 'PDF',
+          formatter:setPdf,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Created',
+          title: '建立时间',
+          formatter:localDateFormatter,
+          visible:"false",
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Updated',
+          title: '更新时间',
+          formatter:localDateFormatter,
+          visible:"false",
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Relevancy',
+          title: '关联',
+          formatter:RelevFormatter,
+          // events:actionRelevancy,
+          // visible："false",
+          align:"center",
+          valign:"middle"
+        }
+        // {
+        //     field: 'dContMainEntity.createTime',
+        //     title: '发起时间',
+        //     formatter: function (value, row, index) {
+        //         return new Date(value).toLocaleString().substring(0,9);
+        //     }
+        // },
+        // {
+        //     field: 'dContMainEntity.operate',
+        //     title: '操作',
+        //     formatter: operateFormatter
+        // }
+      ]
     });
   });
 

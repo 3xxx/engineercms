@@ -23,49 +23,151 @@
 <div id="details">
 <h3 id="rowtitle">搜索结果</h3>
 
-<table id="table1" 
-        data-toggle="table" 
-        data-search="true"
-        data-url="/project/product/search?keyword={{.Key}}&productid={{.Pid}}"
-        data-show-refresh="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-toolbar="#toolbar1"
-        data-query-params="queryParams"
-        data-sort-name="Code"
-        data-sort-order="desc"
-        data-page-size="15"
-        data-page-list="[10,15, 50, 100, All]"
-        data-unique-id="id"
-        data-pagination="true"
-        data-side-pagination="client"
-        data-single-select="true"
-        data-click-to-select="true"
-        data-show-export="true"
-        >
-    <thead>        
-      <tr>
-        <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <!-- <th data-field="Id">编号</th> -->
-        <th data-field="Code">编号</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Label" data-formatter="setLable">关键字</th>
-        <th data-field="Principal">设计</th>
-        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents">文章</th>
-        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents">附件</th>
-        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-        <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
-      </tr>
-    </thead>
-</table>
+<table id="table1"></table>
 </div>
 
 </div>  
 
 <script type="text/javascript">
+  $(function () {
+    // 初始化【未接受】工作流表格
+    $("#table1").bootstrapTable({
+      url : '/project/product/search?keyword={{.Key}}&productid={{.Pid}}',
+      method: 'get',
+      search:'true',
+      showRefresh:'true',
+      showToggle:'true',
+      showColumns:'true',
+      // toolbar:'#toolbar1',
+      pagination: 'true',
+      sidePagination: "server",
+      queryParamsType:'',
+      //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+      // limit, offset, search, sort, order 否则, 需要包含: 
+      // pageSize, pageNumber, searchText, sortName, sortOrder. 
+      // 返回false将会终止请求。
+      pageSize: 15,
+      pageNumber: 1,
+      pageList: [15, 50, 100],
+      uniqueId:"id",
+      singleSelect:"true",
+      clickToSelect:"true",
+      showExport:"true",
+      queryParams:function queryParams(params) {   //设置查询参数
+        var param = {
+            limit: params.pageSize,   //每页多少条数据
+            pageNo: params.pageNumber, // 页码
+            searchText:$(".search .form-control").val()
+        };
+        //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+        return param;
+      },
+      columns: [
+        {
+          title: '选择',
+          radio: 'true',
+          width: '10',
+          align:"center",
+          valign:"middle"
+        },
+        {
+          // field: 'Number',
+          title: '序号',
+          formatter:function(value,row,index){
+            return index+1
+          },
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Code',
+          title: '编号',
+          // formatter:setCode,
+          halign:"center",
+          align:"left",
+          valign:"middle"
+        },
+        {
+          field: 'Title',
+          title: '名称',
+          // formatter:setTitle,
+          halign:"center",
+          align:"left",
+          valign:"middle"
+        },
+        {
+          field: 'Label',
+          title: '标签',
+          formatter:setLable,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Principal',
+          title: '设计',
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Articlecontent',
+          title: '文章',
+          formatter:setArticle,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Attachmentlink',
+          title: '附件',
+          formatter:setAttachment,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Pdflink',
+          title: 'PDF',
+          formatter:setPdf,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Created',
+          title: '建立时间',
+          formatter:localDateFormatter,
+          visible:"false",
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Updated',
+          title: '更新时间',
+          formatter:localDateFormatter,
+          visible:"false",
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Relevancy',
+          title: '关联',
+          formatter:RelevFormatter,
+          // events:actionRelevancy,
+          // visible："false",
+          align:"center",
+          valign:"middle"
+        }
+      ]
+    });
+  });
 // 改变点击行颜色
   $(function(){
      $("#table0").on("click-row.bs.table",function(e,row,ele){
@@ -120,9 +222,38 @@
   function localDateFormatter(value) {
     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }
+  //关联
+  function RelevFormatter(value) {
+    if (value){
+      if (value.length==1){//'<a href="/project/product/article/'
+        var array=value[0].Relevancy.split(",")
+        var relevarray = new Array() 
+        for (i=0;i<array.length;i++)
+        {
+          relevarray[i]=array[i];
+        }
+        return relevarray.join(",");
+        // articleUrl= '<a href="'+value[0].Link+'/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
+        // return articleUrl;
+      }else if(value.length==0){
+                    
+      }else if(value.length>1){
+        var relevarray = new Array()
+        for (i=0;i<value.length;i++)
+          {
+            relevarray[i]=value[i].Relevancy;
+          }
+        return relevarray.join(",");
+        // articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
+        // return articleUrl;
+      }
+    }
+  }
+
   function setCode(value,row,index){
     return "<a href='/project/product/attachment/"+row.Id+"'>" + value + "</a>";
   }
+
   function setLable(value,row,index){
     // alert(value);
     if (value){//注意这里如果value未定义则出错，一定要加这个判断。
@@ -135,9 +266,11 @@
         return labelarray.join(",");
       }
   } 
+
   function setTitle(value,row,index){
     return "<a href='/project/product/"+row.Id+"'>" + value + "</a>";
   }
+
   function setArticle(value,row,index){
     // return '<a class="article" href="javascript:void(0)" title="article"><i class="fa fa-file-text-o"></i></a>';
     if (value){
@@ -166,6 +299,7 @@
       }
     }
   }
+
   function setPdf(value,row,index){
     if (value){
       if (value.length==1){

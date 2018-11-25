@@ -56,50 +56,131 @@ func SearchProductPage(limit, offset int64, key string) (prod []*Product, err er
 }
 
 //搜索某个项目里的成果：article的全文，待完善
-func SearchProjProduct(pid int64, key string) (prod []*Product, err error) {
+func SearchProjProduct(pid, limit, offset int64, key, searchtext string) (count int64, prod []*Product, err error) {
 	cond := orm.NewCondition()
-	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
-	// cond2 := cond.Or("Content__contains", key)
+	cond1 := cond.Or("ProjectId", pid)
+	//查出所有子孙项目
+	//取到所有子孙pid
+	sonproj, _ := GetProjectsbyPid(pid)
+	for _, v := range sonproj {
+		cond1 = cond1.Or("ProjectId", v.Id)
+	}
+	cond2 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	//(...or...or...)and()
+	var cond4 *orm.Condition
+	if searchtext != "" {
+		cond3 := cond.Or("Code__contains", searchtext).Or("Title__contains", searchtext).Or("Label__contains", searchtext).Or("Principal__contains", searchtext)
+		cond4 = cond.AndCond(cond1).AndCond(cond2).AndCond(cond3)
+	} else {
+		cond4 = cond.AndCond(cond1).AndCond(cond2)
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	qs1 := qs.SetCond(cond1)
-	_, err = qs1.Filter("ProjectId", pid).Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
+	qs = qs.SetCond(cond4)
+
+	// cond := orm.NewCondition()
+	// cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	// cond2 := cond.AndCond(cond1).And("Content__contains", key)
+	// o := orm.NewOrm()
+	// qs := o.QueryTable("Product")
+	// qs1 := qs.SetCond(cond2)
+	_, err = qs.Limit(limit, offset).Distinct().OrderBy("-created").All(&prod)
+	// _, err = qs.Filter("ProjectId", pid).Distinct().OrderBy("-created").All(&prod)
 	if err != nil {
-		return prod, err
+		return count, prod, err
+	}
+	count, err = qs.Distinct().Count()
+	if err != nil {
+		return count, prod, err
 	}
 	//取出所有成果
-	articls := make([]*Article, 0)
-	_, products, err := GetProjProducts(pid, 1)
-
-	qs2 := o.QueryTable("Article")
-	// qs3 := qs2.SetCond(cond2)
-	for _, v := range products {
-		_, err = qs2.Filter("ProductId", v.Id).Filter("Content__contains", key).OrderBy("-created").All(&articls)
-		if err != nil {
-			return nil, err
-		}
-		if len(articls) > 0 {
-			prod = append(prod, v)
-		}
-		articls = make([]*Article, 0)
-	}
-	return prod, err
+	// articls := make([]*Article, 0)
+	// _, products, err := GetProjProducts(pid, 1)
+	// qs2 := o.QueryTable("Article")
+	// for _, v := range prod {
+	// 	_, err = qs2.Filter("ProductId", v.Id).Filter("Content__contains", key).OrderBy("-created").All(&articls)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	if len(articls) > 0 {
+	// 		prod = append(prod, v)
+	// 	}
+	// 	articls = make([]*Article, 0)
+	// }
+	return count, prod, err
 }
 
-//搜索某个项目里的成果，分页，不含文章：article的全文，待完善
+//搜索某个项目里的成果，分页，
+//递归出所有子孙项目，这个厉害
 func SearchProjProductPage(pid, limit, offset int64, key string) (prod []*Product, err error) {
 	cond := orm.NewCondition()
-	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
-	// cond2 := cond.Or("Content__contains", key)
+	cond1 := cond.Or("ProjectId", pid)
+	//查出所有子孙项目
+	//取到所有子孙pid
+	sonproj, _ := GetProjectsbyPid(pid)
+
+	for _, v := range sonproj {
+		cond1 = cond1.Or("ProjectId", v.Id)
+	}
+
+	cond2 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+
+	//循环
+	// cond2 := cond.Or("ProjectId", pid1).Or("ProjectId", pid2)……
+	// ids := []int{1, 2, 3}
+	// p.Raw("SELECT name FROM user WHERE id IN (?, ?, ?)", ids)
+
+	// 假定表名test,列id是数值类型。
+	// 用同一个字段的多个值作为条件来查询可以使用in或者or
+	// select * from test where id in (1,2,3)
+
+	// SELECT * FROM `employee`' AND ' : ' WHERE '
+	// SELECT id, user_name FROM user WHERE id = ?
+	// elect * from tbl_employee where id=#{id} and last_name like #{lastName} and email=#{email}
+	cond3 := cond.AndCond(cond1).AndCond(cond2)
+	//(...or...or...)and()
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	qs1 := qs.SetCond(cond1)
-	_, err = qs1.Limit(limit, offset).Filter("ProjectId", pid).Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
+	qs = qs.SetCond(cond3)
+	//循环这个id下所有项目？
+	_, err = qs.Limit(limit, offset).Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	if err != nil {
 		return prod, err
 	}
 	return prod, err
 }
+
+// String name = request.getParameter("name");  //姓名
+// String rank= request.getParameter("age");  //年龄
+// String address= request.getParameter("address");  //地址
+// String sql = "select * from  student where 1=1 ";
+// if(name!=null && !name.equals("")){
+//     sql += "t.name like '%"+name+"%'";
+// }
+// if(rank!=null && !rank.equals("")){
+//     sql += "t.age like '%"+age+"%'";
+// }
+// if(address!=null && !address.equals("")){
+//     sql += "t.address like '%"+address+"%'";
+// }
+
+//定义一个存储实际参数的容器
+// List<String>list=new ArrayList<String>();
+// Stringsql = "select * from product where 1=1";
+// if(condition.getPname()!=null&&condition.getPname().trim().equals("")){
+//        sql+="and pname  like ? ";
+//        list.add("%"+condition.getPname().trim()+"%");
+// }
+// if(condition.getIsHot()!=null&&condition.getIsHot().trim().equals("")){
+// sql+="and is_hot=?  ";
+// list.add(condition.getIsHot().trim());
+// }
+// if(condition.getCid()!=null&&condition.getCid().trim().equals("")){
+//        sql+="and cid=? ";
+//        list.add("%"+condition.getCid().trim()+"%");
+//        }
+// List<Product>productList = runner.query(sql,new BeanListHandler<Product>(Product.class),list.toArray());
+// return  productList;
 
 //设计院首页全局搜索——未修改
 // func Searchspidertopics(title string, isDesc bool) ([]*Spidertopic, []*Spidercategory, error) {

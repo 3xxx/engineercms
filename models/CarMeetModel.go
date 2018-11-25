@@ -292,18 +292,20 @@ func DeleteMeetCalendar(cid int64) error {
 }
 
 //取所有——要修改为支持时间段的，比如某个月份
+//未测试20181117修改filter为cond3
 func SearchMeetCalendar(title string, public bool) (calendars []*MeetCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("title__contains", title).Or("content__contains", title)
-
+	cond2 := cond.And("title", title).And("public", true)
+	cond3 := cond.AndCond(cond1).AndCond(cond2)
 	o := orm.NewOrm()
 	qs := o.QueryTable("MeetCalendar")
-	qs = qs.SetCond(cond1)
+	qs = qs.SetCond(cond3)
 
 	calendars = make([]*MeetCalendar, 0)
 	// qs := o.QueryTable("AdminCalendar")
 	if public { //只取公开的
-		_, err = qs.Filter("title", title).Filter("public", true).OrderBy("-Starttime").Distinct().All(&calendars)
+		_, err = qs.OrderBy("-Starttime").Distinct().All(&calendars)
 		if err != nil {
 			return calendars, err
 		}

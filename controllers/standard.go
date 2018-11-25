@@ -210,14 +210,14 @@ func (c *StandardController) Search() { //search用的是post方法
 // @Title get wx standards list
 // @Description get standards by page
 // @Param keyword query string  true "The keyword of standards"
-// @Param page query string  true "The page for drawings list"
+// @Param searchpage query string  true "The page for drawings list"
 // @Success 200 {object} models.GetProductsPage
 // @Failure 400 Invalid page supplied
 // @Failure 404 standards not found
 // @router /searchwxstandards [get]
 //小程序取得规范列表，分页_plus
 func (c *StandardController) SearchWxStandards() { //search用的是post方法
-	wxsite := beego.AppConfig.String("wxreqeustsite")
+	// wxsite := beego.AppConfig.String("wxreqeustsite")
 	limit := "5"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
@@ -265,10 +265,10 @@ func (c *StandardController) SearchWxStandards() { //search用的是post方法
 			}
 			aa[i].Id = v.Id
 			aa[i].Number = v.Number //`orm:"unique"`
-			aa[i].Title = v.Title
-			aa[i].NumTitle = v.Number + v.Title
-			aa[i].Route = v.Route
-			aa[i].Link = wxsite + "/static/img/go.jpg"
+			aa[i].Title = v.Number + v.Title
+			// aa[i].NumTitle = v.Number + v.Title
+			// aa[i].Route = v.Route
+			aa[i].Link = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%3E%3Crect%20fill%3D%22%234CAF50%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%3C%2Frect%3E%3Ctext%20fill%3D%22%23FFF%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20font-size%3D%2216%22%20font-family%3D%22Verdana%2C%20Geneva%2C%20sans-serif%22%20alignment-baseline%3D%22middle%22%3E%E6%A0%87%3C%2Ftext%3E%3C%2Fsvg%3E" //wxsite + "/static/img/go.jpg"
 			aa[i].ActIndex = "standard"
 			aa[i].Created = v.Created
 			aa[i].Updated = v.Updated

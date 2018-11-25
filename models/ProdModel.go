@@ -152,12 +152,13 @@ func GetProductsCount(id int64, searchText string) (count int64, err error) {
 		qs = qs.SetCond(cond2)
 		count, err = qs.Limit(-1).Count()
 	} else {
-		count, err = qs.Filter("ProjectId", id).Limit(-1).Count()
+		count, err = qs.Filter("ProjectId", id).Count()
 	}
 	return count, err
 }
 
 //根据项目顶级id查出所有成果
+//这个不优雅，应该用循环子孙id，查询字段在id数组中，参考SearchProjProductPage
 //直接把所有成果都查出来。getallproduct
 func GetProjProducts(id int64, number int) (count int64, products []*Product, err error) {
 	// idstring := strconv.FormatInt(id, 10)

@@ -1,0 +1,10 @@
+document.write("<script type='text/javascript'  src='writexdata.js'></script>");
+document.write("<script type='text/javascript'  src='readxdata.js'></script>");
+document.write("<script type='text/javascript'  src='setxdata.js'></script>");
+document.write("<script type='text/javascript'  src='getxdata.js'></script>");
+document.write("<script type='text/javascript'  src='getxdatadouble.js'></script>");
+document.write("<script type='text/javascript'  src='getxdatalong.js'></script>");
+document.write("<script type='text/javascript'  src='setxdatadouble.js'></script>");
+document.write("<script type='text/javascript'  src='setxdatalong.js'></script>");
+document.write("<script type='text/javascript'  src='getallappname.js'></script>");
+document.write("<script type='text/javascript'  src='deletexdata.js'></script>");

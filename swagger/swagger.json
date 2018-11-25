@@ -504,13 +504,13 @@
                     },
                     {
                         "in": "query",
-                        "name": "projid",
+                        "name": "projectid",
                         "description": "The projectid of drawings",
                         "type": "string"
                     },
                     {
                         "in": "query",
-                        "name": "page",
+                        "name": "searchpage",
                         "description": "The page for drawings list",
                         "required": true,
                         "type": "string"
@@ -549,7 +549,7 @@
                     },
                     {
                         "in": "query",
-                        "name": "page",
+                        "name": "searchpage",
                         "description": "The page for drawings list",
                         "required": true,
                         "type": "string"

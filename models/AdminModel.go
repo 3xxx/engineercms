@@ -331,6 +331,7 @@ func AddAdminCalendar(title, content, color string, allday, public bool, start, 
 func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
+
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminCalendar")
 	qs = qs.SetCond(cond1)
@@ -353,18 +354,20 @@ func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCale
 }
 
 //取所有——要修改为支持时间段的，比如某个月份
+//未测试！！！20181117修改filter为cond2
 func SearchAdminCalendar(title string, public bool) (calendars []*AdminCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("title__contains", title).Or("content__contains", title)
-
+	cond2 := cond.And("title", title).And("public", true)
+	cond3 := cond.AndCond(cond1).AndCond(cond2)
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminCalendar")
-	qs = qs.SetCond(cond1)
+	qs = qs.SetCond(cond3)
 
 	calendars = make([]*AdminCalendar, 0)
 	// qs := o.QueryTable("AdminCalendar")
 	if public { //只取公开的
-		_, err = qs.Filter("title", title).Filter("public", true).OrderBy("-Starttime").Distinct().All(&calendars)
+		_, err = qs.OrderBy("-Starttime").Distinct().All(&calendars)
 		if err != nil {
 			return calendars, err
 		}

@@ -59,16 +59,16 @@
           <input type="hidden" name="productid" id="productid" value="{{.Category.Id}}">
           <button type="submit" class="btn btn-default" id="search">Submit</button>
       </form>
-      <li class="dropdown">
+      <li {{if or .IsStandard .IsLegislation}}class="dropdown active"{{end}} class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           规范 <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li>
-            <a href="http://112.74.42.44:8081" target="_blank">查询</a>
+          <li {{if .IsStandard}}class="active"{{end}}>
+            <a href="/standard" target="_blank">查询</a>
           </li>
-          <li>
-            <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
+          <li {{if .IsLegislation}}class="active"{{end}}>
+            <a href="/legislation" target="_blank">对标</a>
           </li>
         </ul>
       </li>
@@ -102,7 +102,10 @@
               <ul class="dropdown-menu">
                 <li><a href="/admin" title="管理">进入后台</a></li>
                 <li><a href="javascript:void(0)" id="login">重新登录</a></li>
-                <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
+                 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
+                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
+                <li><a href="/calendar" title="日程安排">日程安排</a></li>
+		<li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
               </ul>
             </li>
           {{else}}
@@ -111,6 +114,9 @@
               <ul class="dropdown-menu">
                 <li><a href="/user" title="用户资料">用户资料</a></li>
                 <li><a href="javascript:void(0)" id="login">重新登录</a></li>
+		<li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
+                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
+                <li><a href="/calendar" title="日程安排">日程安排</a></li>
                 <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
               </ul>
             </li>
@@ -122,6 +128,9 @@
               <ul class="dropdown-menu">
                 <li><a href="/admin" title="管理">进入后台</a></li>
                 <li><a href="javascript:void(0)" id="login">重新登录</a></li>
+		 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
+                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
+                <li><a href="/calendar" title="日程安排">日程安排</a></li>
                 <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
               </ul>
             </li>
