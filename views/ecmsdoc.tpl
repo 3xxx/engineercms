@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+  <title>帮助</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -101,6 +102,9 @@
         <li>
           <a href="#onlyoffice">文档协作</a>
         </li>
+        <li>
+          <a href="#wechat">手机端-小程序</a>
+        </li>
 
       </ul>
       <a class="back-to-top" href="#top">返回顶部</a>
@@ -119,7 +123,7 @@
     <p class="lead">
       EngineerCMS 具有功能：资料管理，文档协作，图文发布，团队协同，进度展示，结合MeritMS进行校审流程，成果统计等。</p>
     <p class="lead">
-      创新：集ONLYOFFICE文档协作，档案系统，ProjectWise(PW)协同设计，Redmine项目管理，SharePoint发布，网络云盘等特色；是基于个人电脑的知识管理与共享的web微服务。
+      创新：集ONLYOFFICE文档协作，档案系统，ProjectWise(PW)协同设计，Redmine项目管理，SharePoint发布，网络云盘等特色；是基于个人电脑的知识管理与共享的web微服务；小程序作为手机端，项目现场随拍随传，查阅、分享资料链接。
     </p>
     <p class="lead">
       特色：采用Go语言编写，嵌入式数据库，天生部署简单，无需web服务环境，无需数据库服务，省心。
@@ -175,6 +179,10 @@
     <li>上传成果后，自动生成提供给MeritMS的成果清单，可提交给MeritMS系统进行设计成果校审流程和工作量统计；</li>
     <li>标准化管理自己的知识体系，可开放共享，供其他人查阅；退休后可将自己个人的ECMS系统导入服务器版，实现知识继承；</li>
     <li>硬盘中存储文件的目录与页面目录一致；</li>
+    <li>使用微信小程序作为移动端，用完既弃，可访问资源，分享链接给好友和群，生成分享图片发朋友圈，打开微信，搜索“珠三角设代”或“青少儿书画”体验一下吧；</li>
+    <li>swagger API自动化文档，方便前后端分离开发；</li>
+    <li>可在conf里定制9个导航条菜单；</li>
+    <li>后台查看日志</li>
     <li>会议室和车辆的预定，用餐人数统计等常用功能；</li>
     <li>wiki技术讨论；</li>
     <li>工程大事记时间轴，工程进展甘特图；</li>
@@ -190,10 +198,12 @@
     </h2>
   <ol>
     <li>如果是首次使用，请：</li>
-    <li> 解压到D:\EngineerCMS\；（其他盘根目录下也行，因为上传附件会使得这个文件夹越来越大，所以，要考虑空间大一些的盘。）</li>
+    <li> 解压到比如D:\EngineerCMS\；（其他盘根目录下也行，因为上传附件会使得这个文件夹越来越大，所以，要考虑空间大一些的盘。）</li>
     <li> 修改配置文件conf\app.conf.sample为app.conf,打开app.conf,看到里面的httpport = 80，如果要修改成8080，请修改后保存。runmode = prod表示生产模式运行系统。</li>
     <li> 修改数据库文件database\engineercms.db.sample为engineercms.db。</li>
     <li> 运行engineercms-win64/win32.exe即可在chrome浏览器中输入本地ip（127.0.0.1）和前面设置的端口号（假设是80或8080）进行访问。如果是80端口，则端口号可省略，如http://127.0.0.1。如果运行后闪退，则可能是端口号被占用了，请修改端口号再运行。运行后不要关闭窗口，它是服务。IE浏览器支持不好，推荐使用chrome，可以使用firefox、opra。加入开机启动请自行设置。</li>
+    <li> Linux系统里，下载对应的linux平台编译的二进制文件，放到解压后的文件夹engineercms里，运行可执行文件即可。</li>
+    <li> 百度网盘里有linux系统安装——安装docker容器——部署onlyoffice文档协作——运行engineercms……；也有win下部署onlyoffice文档协作的教程，<a href="https://pan.baidu.com/s/1gf0ucuR" target="_blank">百度网盘</a>。</li>
   </ol>
   <img src="/static/img/局域网meritecms.png" style="width: 100%">
     <h1 id="backroud" class="page-header">
@@ -241,10 +251,10 @@
     </ol>
     <h2 id="backroud-addip">
       <a class="anchorjs-link " href="#backroud-addip" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
-      添加IP地址段
+      用户IP地址
     </h2>
     <ol>
-      <p>admin页——IP地址段：因为本系统适合于有固定ip地址的局域网内使用，所以这里填写自己机器的真实ip，权限设为1。1级权限可以建立项目和进入后台。</p>
+      <p>用户首次用用户名和密码登录后，系统会记录下ip，下次就用这个ip访问会自动匹配用户；如果需要禁用这个功能，需要将用户ip随便填写一个比如0.0.0.0。</p>
     </ol>
     <h2 id="backroud-permission">
       <a class="anchorjs-link " href="#backroud-permission" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
@@ -274,20 +284,20 @@
       <a class="anchorjs-link " href="#addproj" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
       添加项目
     </h1>
-    <p>项目——项目列表页——添加：分级目录就是后台admin页上文定义的。新建项目除了建立数据表中的目录，还在cms系统文件夹attachment中建立目录文件夹，以后所有上传的成果附件都放在这些文件夹中。</p>
+    <p>项目——项目列表页——添加：类别里选择“模板”可以将旧项目目录复制过来，可以选择是否继承权限；类别里选择其他分级目录模板，就是后台admin页（上文）定义的树状目录。新建项目除了建立数据表中的目录，还在cms系统文件夹attachment中建立目录文件夹，以后所有上传的成果附件都放在这些文件夹中。</p>
     <img src="/static/img/添加项目.png" style="width: 100%">
     <h1 id="addprojcallendar" class="page-header">
       <a class="anchorjs-link " href="#addprojcallendar" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
       项目日历事件
     </h1>
-    <p>每个项目都有自己的日历事件，勾选大事记，可以生成时间轴。</p>
+    <p>每个项目都有自己的日历事件，勾选大事记，则作为显示大事记时间轴里的内容。</p>
     <img src="/static/img/时间轴.png" style="width: 100%">
     <h1 id="addprod" class="page-header">
       <a class="anchorjs-link " href="#addprod" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
       向项目中添加成果
     </h1>
     <p class="lead">
-      有多种添加模式，并且使用3种模式展示，分别是pdf，图文和其他附件。
+      有多种添加模式，并且分3类展示，分别是pdf类，图文类和其他附件类。其他附件还支持office、wps格式的直接阅览，前提是设置了onlyoffice document server服务。
     </p>
     <h2 id="addprod-multi">
       <a class="anchorjs-link " href="#addprod-multi" aria-label="Anchor link for: whats included source" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
@@ -344,7 +354,7 @@
       文档协作
     </h1>
     <p class="lead">
-      文档协作功能即团队成员可以同时编辑一个文档，支持word,excel,powerpoint，解决多人文档合作需要汇总的问题，比如月报，任务进度控制表，会务安排进度控制，excel计算书共享，会议纪要等需要多人审阅的文件，发个链接给大家，大家有意见直接在上面修改，也用于校审流程，简单高效快捷，体验良好。EngineerCMS基于ONLYOFFICE document server进行的二次开发，提供文档管理和更新后的文档存储。
+      文档协作功能即团队成员可以同时编辑一个文档，支持word,excel,powerpoint，WPS，解决多人文档合作需要邮件传递、手动汇总的问题，比如月报，任务进度控制表，会务安排进度控制，excel计算书共享，会议纪要等需要多人审阅的文件，发个链接给大家，大家有意见直接在上面修改，也用于校审流程，根据权限，只读和添加批注，简单高效快捷，体验良好。EngineerCMS基于ONLYOFFICE document server进行的二次开发，提供文档版本管理。
     </p>
     <p class="lead">文档管理界面</p>
     <img src="/static/img/EngineerCMS onlyoffice.png" style="width: 100%">
@@ -358,6 +368,26 @@
     <img src="/static/img/onlyoffice powerpoint.jpg" style="width: 100%">
     <p class="lead">Excel协作效果</p>
     <img src="/static/img/onlyoffice excel.jpg" style="width: 100%">
+
+    <h1 id="wechat" class="page-header">
+      <a class="anchorjs-link " href="#onlyoffice" aria-label="Anchor link for: about" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>
+      小程序
+    </h1>
+    <p class="lead">
+      小程序的好处是用完既弃，对用户来讲，比公众号，比app等更加方便，不用安装app，对企业来说，开发成本低。
+      功能上可以发布现场进度照片，发布文章新闻报道，查阅最新工程信息，根据权限查阅图纸，查阅会议纪要，查阅电子规范，处理现场事项，评论。
+    </p>
+    <p class="lead">小程序发布图文</p>
+    <img src="/static/img/小程序发布图文.png" style="width: 50%">
+    <p class="lead">图纸检索</p>
+    <img src="/static/img/小程序图纸.png" style="width: 50%">
+    <p class="lead">可以分享连接给好友、群</p>
+    <img src="/static/img/小程序分享图纸链接.png" style="width: 50%">
+    <img src="/static/img/小程序分享链接给好友.png" style="width: 50%">
+    <p class="lead">检索电子版规范</p>
+    <img src="/static/img/小程序标准.png" style="width: 50%">
+    <p class="lead">检索会议纪要</p>
+    <img src="/static/img/小程序纪要.png" style="width: 50%">
 
   </div>
 </div>
