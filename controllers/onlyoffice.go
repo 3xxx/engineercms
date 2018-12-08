@@ -819,14 +819,14 @@ func (c *OnlyController) OfficeView() {
 			c.Data["IsAdmin"] = isadmin
 			c.Data["IsLogin"] = islogin
 			c.Data["Uid"] = uid
-			c.Data["Mode"] = "view"
-			c.Data["Edit"] = false
-			c.Data["Review"] = false
-			c.Data["Comment"] = false
+			c.Data["Mode"] = "edit"
+			c.Data["Edit"] = true    //false
+			c.Data["Review"] = true  //false
+			c.Data["Comment"] = true //false
 			c.Data["Download"] = true
 			c.Data["Print"] = true
 			c.Data["Doc"] = attachment
-			c.Data["attachid"] = idNum
+			c.Data["AttachId"] = idNum
 			c.Data["Key"] = strconv.FormatInt(attachment.Updated.UnixNano(), 10)
 			c.Data["Sessionid"] = usersessionid
 
@@ -1073,10 +1073,30 @@ func (c *OnlyController) UrltoCallback() {
 
 //cms中返回值
 func (c *OnlyController) OfficeViewCallback() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据附件id取得附件的prodid，路径
+	attachment, err := models.GetAttachbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	product, err := models.GetProd(attachment.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+	//由proj id取得文件路径
+	_, diskdirectory, err := GetUrlPath(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+
 	var callback Callback
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
-	beego.Info(string(c.Ctx.Input.RequestBody))
-	// beego.Info(callback)
 	//•	1 - document is being edited,
 	//•	4 - document is closed with no changes,
 	if callback.Status == 1 || callback.Status == 4 {
@@ -1084,12 +1104,114 @@ func (c *OnlyController) OfficeViewCallback() {
 		c.ServeJSON()
 		//•	2 - document is ready for saving
 		//•	6 - document is being edited, but the current document state is saved,
-		// c.Data["json"] = map[string]interface{}{"error": 0}
-		// c.ServeJSON()
+	} else if callback.Status == 2 && callback.Notmodified == false {
+		//•	2 - document is ready for saving
+		resp, err := http.Get(callback.Url)
+		if err != nil {
+			beego.Error(err)
+		}
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			beego.Error(err)
+		}
+		defer resp.Body.Close()
+		if err != nil {
+			beego.Error(err)
+		}
+		// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+		f, err := os.Create(diskdirectory + "/" + attachment.FileName)
+		if err != nil {
+			beego.Error(err)
+		}
+		defer f.Close()
+		_, err = f.Write(body) //这里直接用resp.Body如何？
+		// _, err = f.WriteString(str)
+		// _, err = io.Copy(body, f)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			//更新附件的时间和changesurl
+			err = models.UpdateAttachmentTime(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			//写入历史版本数据
+			// array := strings.Split(callback.Changesurl, "&")
+			// Expires1 := strings.Split(array[1], "=")
+			// Expires := Expires1[1]
+			// Expirestime, err := strconv.ParseInt(Expires, 10, 64)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			//获取本地location
+			// toBeCharge := "2015-01-01 00:00:00"
+			//待转化为时间戳的字符串 注意 这里的小时和分钟还要秒必须写 因为是跟着模板走的 修改模板的话也可以不写
+			// timeLayout := "2006-01-02T15:04:05.999Z"
+			//转化所需模板
+			// loc, _ := time.LoadLocation("Local") //重要：获取时区
+			// theTime, _ := time.ParseInLocation(timeLayout, toBeCharge, loc) //使用模板在对应时区转化为time.time类型
+			// sr := theTime.Unix()
+			//转化为时间戳 类型是int64
+			//打印输出时间戳 1420041600
+			//时间戳转日期
+			// dataTimeStr := time.Unix(Expirestime, 0) //.Format(timeLayout) //设置时间戳 使用模板格式化为日期字符串
+			// // t, _ := time.Parse(timeLayout, callback.Lastsave)
+			// // beego.Info(callback.Lastsave)
+			// //写入历史版本
+			// historyversion, err := models.GetOnlyHistoryVersion(onlyattachment.Id)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			// var first int
+			// for _, v := range historyversion {
+			// 	if first < v.Version {
+			// 		first = v.Version
+			// 	}
+			// }
+
+			// if len(callback.Actions) == 0 {
+			// 	actionuserid = 0
+			// } else {
+			// 	actionuserid = callback.Actions[0].Userid
+			// }
+			// _, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, actionuserid, callback.History.ServerVersion, first+1, callback.Key, callback.Url, callback.Changesurl, dataTimeStr, callback.Lastsave)
+			// if err1 != nil {
+			// 	beego.Error(err1)
+			// }
+			// if err2 != nil {
+			// 	beego.Error(err2)
+			// }
+			// //写入changes
+			// for _, v := range callback.History.Changes {
+			// 	_, err1, err2 = models.AddOnlyChanges(callback.Key, v.User.Id, v.User.Name, v.Created)
+			// 	if err1 != nil {
+			// 		beego.Error(err1)
+			// 	}
+			// 	if err2 != nil {
+			// 		beego.Error(err2)
+			// 	}
+			// }
+			//更新文档更新时间
+			err = models.UpdateProductTime(product.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		c.Data["json"] = map[string]interface{}{"error": 0}
+		c.ServeJSON()
 		//3-document saving error has occurred
 		//•	7 - error has occurred while force saving the document.
 	} else if callback.Status == 3 || callback.Status == 7 {
 		//更新附件的时间和changesurl
+		err = models.UpdateAttachmentTime(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		//更新文档更新时间
+		// err = models.UpdateProductTime(product.Id)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
 	} else {

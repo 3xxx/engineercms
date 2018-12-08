@@ -71,6 +71,20 @@ func UpdateAttachment(cid int64, filename string, filesize, downloads int64) (er
 	return err
 }
 
+//修改附件的日期和changesurl修改记录地址
+func UpdateAttachmentTime(cid int64) (err error) {
+	o := orm.NewOrm()
+	attachment := &Attachment{Id: cid}
+	if o.Read(attachment) == nil {
+		attachment.Updated = time.Now()
+		_, err = o.Update(attachment, "Updated")
+		if err != nil {
+			return err
+		}
+	}
+	return err
+}
+
 //删除
 func DeleteAttachment(cid int64) error {
 	o := orm.NewOrm()

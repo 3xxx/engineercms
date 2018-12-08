@@ -130,7 +130,7 @@
         <th data-formatter="index1" data-align="center">#</th>
         <th data-field="Code" data-halign="center">编号</th>
         <th data-field="Title" data-halign="center">名称</th>
-        <th data-field="Title"  data-formatter="setDocTitle" data-halign="center">名称</th>
+        <!-- <th data-field="Title"  data-formatter="setDocTitle" data-halign="center">名称</th> -->
         <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
         <th data-field="Principal" data-halign="center" data-align="center">负责人</th>
         <th data-field="Uname" data-halign="center" data-align="center">上传者</th>
@@ -139,8 +139,8 @@
         <!-- <th data-field="Xlsxlink" data-formatter="setXlsx" data-events="actionEvents" data-halign="center" data-align="center">XLSX</th> -->
         <!-- <th data-field="Pptxlink" data-formatter="setPptx" data-events="actionEvents" data-halign="center" data-align="center">PPTX</th> -->
         <th data-field="End" data-formatter="localDateFormatter" data-halign="center" data-align="center">结束时间</th>
-        <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th>
-        <th data-field="Updated" data-formatter="localDateFormatter" data-halign="center" data-align="center">更新时间</th>
+        <!-- <th data-field="Created" data-formatter="localDateFormatter" data-halign="center" data-visible="false" data-align="center">建立时间</th> -->
+        <th data-field="Updated" data-formatter="localDateFormatter1" data-halign="center" data-align="center">更新时间</th>
       </tr>
     </thead>
   </table>
@@ -152,6 +152,10 @@
 
   function localDateFormatter(value) {
     return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  }
+
+  function localDateFormatter1(value) {
+    return moment(value, 'YYYY-MM-DD h:mm:ss').format('YYYY-MM-DD,h:mm:ss a');
   }
 
   function setCode(value,row,index){

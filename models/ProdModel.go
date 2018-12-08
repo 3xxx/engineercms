@@ -52,6 +52,20 @@ func UpdateProduct(cid int64, code, title, label, principal string) error {
 	return nil
 }
 
+//修改成果时间信息
+func UpdateProductTime(cid int64) error {
+	o := orm.NewOrm()
+	product := &Product{Id: cid}
+	if o.Read(product) == nil {
+		product.Updated = time.Now()
+		_, err := o.Update(product, "Updated")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 //删除_把附件也一并删除（在controllers中实现吧）
 func DeleteProduct(cid int64) error {
 	o := orm.NewOrm()

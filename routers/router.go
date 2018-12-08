@@ -61,6 +61,9 @@ func init() {
 	beego.AddNamespace(ns)
 
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	// beego.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")
+	beego.Router("/.well-known/pki-validation/*", &controllers.AdminController{}, "*:Testdown")
+
 	beego.Router("/doctree", &controllers.OnlyController{}, "*:GetTree")
 	//升级数据库
 	beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
@@ -376,6 +379,9 @@ func init() {
 
 	//向成果里添加附件：批量一对一模式
 	beego.Router("/project/product/addattachment", &controllers.AttachController{}, "post:AddAttachment")
+	//dwg写入服务器
+	beego.Router("/project/product/savedwgfile", &controllers.AttachController{}, "post:SaveDwgfile")
+
 	//向成果里添加附件：多附件模式
 	beego.Router("/project/product/addattachment2", &controllers.AttachController{}, "post:AddAttachment2")
 	//编辑附件列表：向成果里追加附件：多附件模式
@@ -477,7 +483,6 @@ func init() {
 	beego.SetStaticPath("/swagger", "swagger")
 	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
 	beego.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
-	beego.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")
 
 	//规范管理
 	beego.Router("/standard", &controllers.StandardController{}, "*:Index")

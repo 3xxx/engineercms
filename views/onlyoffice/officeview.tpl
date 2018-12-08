@@ -78,7 +78,7 @@
         },
         "documentType": "{{.documentType}}",
         "editorConfig": {
-          "callbackUrl": "http://192.168.99.1/officeviewcallback",
+          "callbackUrl": "http://192.168.99.1/officeviewcallback?id={{.AttachId}}",
           "user": {
             "id": {{.Uid}},
             "name": "{{.Username}}"

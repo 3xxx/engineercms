@@ -378,18 +378,6 @@ func (c *AttachController) ProvidePdfs() {
 
 //向某个侧栏id下添加成果——用于第一种批量添加一对一模式
 func (c *AttachController) AddAttachment() {
-	// _, role := checkprodRole(c.Ctx)
-	//取得客户端用户名
-	// v := c.GetSession("uname")
-	// var user models.User
-	// var err error
-	// if v != nil {
-	// 	uname := v.(string)
-	// 	user, err = models.GetUserByUsername(uname)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// }
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	meritbasic, err := models.GetMeritBasic()
@@ -603,6 +591,51 @@ func (c *AttachController) AddAttachment() {
 	// success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
 	//    message : "提示的信息，上传成功或上传失败及错误信息等。",
 	//    url     : "图片地址"        // 上传成功时才返回
+}
+
+//向服务器保存dwg文件
+func (c *AttachController) SaveDwgfile() {
+
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据附件id取得附件的prodid，路径
+	attachment, err := models.GetAttachbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	product, err := models.GetProd(attachment.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+	//由proj id取得文件路径
+	_, diskdirectory, err := GetUrlPath(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//获取上传的文件
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+	if h != nil {
+		//保存附件
+		filepath := diskdirectory + "/" + attachment.FileName
+		// f.Close() // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		//存入文件夹
+		err = c.SaveToFile("file", filepath) //.Join("attachment", attachment)) //存文件    WaterMark(filepath)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": attachment, "original": attachment}
+			c.ServeJSON()
+		}
+	}
 }
 
 //向某个侧栏id下添加成果——用于第二种添加，多附件模式
@@ -997,14 +1030,15 @@ func (c *AttachController) DownloadAttachment() {
 	case ".dwg", ".DWG":
 		//beego.Info(c.Ctx.Input.Site())
 		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin { //+ strconv.Itoa(c.Ctx.Input.Port())
-			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + "/" + fileurl + "/" + attachment.FileName)
-			// dwglink, err := url.ParseRequestURI(c.Ctx.Input.Scheme() + "://" + c.Ctx.Input.IP() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+			// dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + "/" + fileurl + "/" + attachment.FileName)
+			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Scheme() + "://" + c.Ctx.Input.IP() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
 			if err != nil {
 				beego.Error(err)
 				utils.FileLogs.Error(c.Ctx.Input.IP() + " 获取dwg路径 " + err.Error())
 			}
 			// beego.Info(dwglink)
 			// beego.Info(usersessionid)
+			c.Data["Id"] = id
 			c.Data["DwgLink"] = dwglink
 			c.Data["Sessionid"] = usersessionid
 			c.TplName = "dwg.tpl"
