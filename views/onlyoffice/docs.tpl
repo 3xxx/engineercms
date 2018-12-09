@@ -362,8 +362,8 @@
 
   // 批量上传
   $("#addButton").click(function() {
-      // if ({{.IsLogin}}!=true){
-      //   alert("请登录！");
+      // if ({{.RoleAdd}}!="true"){
+      //   alert("权限不够！");
       //   return;
       // }
       $("input#pid").remove();

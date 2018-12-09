@@ -595,7 +595,6 @@ func (c *AttachController) AddAttachment() {
 
 //向服务器保存dwg文件
 func (c *AttachController) SaveDwgfile() {
-
 	id := c.Input().Get("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -1038,6 +1037,7 @@ func (c *AttachController) DownloadAttachment() {
 			}
 			// beego.Info(dwglink)
 			// beego.Info(usersessionid)
+			c.Data["FileName"] = attachment.FileName
 			c.Data["Id"] = id
 			c.Data["DwgLink"] = dwglink
 			c.Data["Sessionid"] = usersessionid

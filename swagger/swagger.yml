@@ -461,6 +461,32 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/wxregist:
+    post:
+      tags:
+      - wx
+      description: post wx regist
+      operationId: RegistController.post wx regist
+      parameters:
+      - in: query
+        name: uname
+        description: The username of ueser
+        required: true
+        type: string
+      - in: query
+        name: password
+        description: The password of account
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.SaveUser'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/wxstandardpdf/{id}:
     get:
       tags:
@@ -502,6 +528,8 @@ definitions:
   .GetProductsPage:
     type: object
   .SUCCESS:
+    type: object
+  .SaveUser:
     type: object
   .success:
     type: object

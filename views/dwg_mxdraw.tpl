@@ -197,7 +197,7 @@
 
 <DIV style="height: 900px;"><!--  width: 150%; float: right; -->
   <SCRIPT type="text/javascript">
-        LoadMxDrawX("http://127.0.0.1/static/img/05.dwg", "", "");
+        LoadMxDrawX("{{.DwgLink}}?hotqinsessionid={{.Sessionid}}", "", "");
         // {{.DwgLink}}
         // LoadMxDrawX("http://127.0.0.1/static/img/05.dwg", "http://www.mxcad.net:2080/MxDrawX52.CAB#version=10,0,0,1", "http://www.mxdraw.com/MxDrawX52.msi");
         // var isShow = false;

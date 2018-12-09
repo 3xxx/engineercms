@@ -6,12 +6,14 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
 	// "io"
-	// "net/http"
+	"encoding/json"
+	"net/http"
 	// "github.com/astaxie/beego/httplib"
 	// "bytes"
 	// "io/ioutil"
 	// "mime/multipart"
 	// "os"
+	"github.com/3xxx/engineercms/controllers/utils"
 	"path"
 	"regexp"
 	"strconv"
@@ -35,7 +37,7 @@ func (c *MainController) Get() {
 	navid8 := beego.AppConfig.String("navigationid8")
 	navid9 := beego.AppConfig.String("navigationid9")
 	index := beego.AppConfig.String("defaultindex")
-	beego.Info(index)
+	// beego.Info(index)
 	switch index {
 	case "IsNav1":
 		id = navid1
@@ -699,6 +701,48 @@ func (c *MainController) Pdf() {
 // @Failure 404 pdf not found
 // @router /wxpdf/:id [get]
 func (c *MainController) WxPdf() {
+	JSCODE := c.Input().Get("code")
+	beego.Info(JSCODE)
+	APPID := beego.AppConfig.String("wxAPPID4")
+	SECRET := beego.AppConfig.String("wxSECRET4")
+	beego.Info(APPID)
+	// APPID := "wx7f77b90a1a891d93"
+	// SECRET := "f58ca4f28cbb52ccd805d66118060449"
+	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
+	resp, err := http.Get(requestUrl)
+	if err != nil {
+		beego.Error(err)
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		beego.Error(err)
+	}
+	var data map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		beego.Error(err)
+	}
+	beego.Info(data)
+	var openID, useridstring, projurl string
+	var user models.User
+	// var sessionKey string
+	if _, ok := data["session_key"]; !ok {
+		errcode := data["errcode"]
+		beego.Info(errcode)
+		errmsg := data["errmsg"].(string)
+		c.Data["json"] = map[string]interface{}{"errNo": errcode, "msg": errmsg, "data": "session_key 不存在"}
+	} else {
+		openID = data["openid"].(string)
+		beego.Info(openID)
+		user, err = models.GetUserByOpenID(openID)
+		if err != nil {
+			beego.Error(err)
+		}
+		useridstring = strconv.FormatInt(user.Id, 10)
+		beego.Info(useridstring)
+	}
+
 	// id := c.Input().Get("id")
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
@@ -717,15 +761,26 @@ func (c *MainController) WxPdf() {
 	if err != nil {
 		beego.Error(err)
 	}
-
+	//根据projid取出路径
+	proj, err := models.GetProj(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+		utils.FileLogs.Error(err.Error())
+	}
+	if proj.ParentIdPath == "" || proj.ParentIdPath == "$#" {
+		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
+	} else {
+		projurl = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
+	}
 	//由proj id取得url
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
 	}
-	// beego.Info(fileurl)
-	// beego.Info(attachment.FileName)
-	c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	fileext := path.Ext(attachment.FileName)
+	if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) {
+		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	}
 }
 
 // @Title dowload wx standardpdf

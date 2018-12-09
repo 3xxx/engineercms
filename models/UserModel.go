@@ -89,17 +89,19 @@ func SaveUser(user User) (uid int64, err error) {
 //后台手工操作添加微信小程序openid和用户名
 func AddUserOpenID(userid int64, openid string) (id int64, err error) {
 	o := orm.NewOrm()
-	var user UserOpenID
+	var useropenid UserOpenID
 	//判断是否有重名
-	err = o.QueryTable("UserOpenID").Filter("userid", userid).One(&user, "Id")
+	err = o.QueryTable("UserOpenID").Filter("openid", openid).One(&useropenid, "Id")
 	if err == orm.ErrNoRows { //Filter("tnumber", tnumber).One(topic, "Id")==nil则无法建立
 		// 没有找到记录
-		id, err = o.Insert(&user)
+		useropenid.Uid = userid
+		useropenid.OpenID = openid
+		id, err = o.Insert(&useropenid)
 		if err != nil {
 			return id, err
 		}
 	}
-	return id, err
+	return id, err //这里需要改改，否则，即使已经存在，则err为空。
 }
 
 //根据openid查user

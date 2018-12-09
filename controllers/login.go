@@ -156,6 +156,7 @@ func (c *LoginController) LoginPost() {
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
+	beego.Info(user.Password)
 	err := models.ValidateUser(user)
 	if err == nil {
 		c.SetSession("uname", user.Username)

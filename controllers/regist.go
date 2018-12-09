@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"github.com/astaxie/beego"
 	// "github.com/bitly/go-simplejson"
+	"encoding/json"
 	"github.com/3xxx/engineercms/models"
+	"net/http"
 	"time"
 )
 
@@ -71,6 +73,83 @@ func (this *RegistController) Post() {
 		// fmt.Println(err)
 		this.TplName = "registerr.tpl"
 	}
+}
+
+// @Title post wx regist
+// @Description post wx regist
+// @Param uname query string  true "The username of ueser"
+// @Param password query string  true "The password of account"
+// @Success 200 {object} models.SaveUser
+// @Failure 400 Invalid page supplied
+// @Failure 404 user not found
+// @router /wxregist [post]
+//添加微信小程序珠三角设代阅览版注册
+func (c *RegistController) WxRegist() {
+	var user models.User
+	user.Username = c.Input().Get("uname")
+	Pwd1 := c.Input().Get("password") //注意这里用的是全称password，不是pwd
+	// autoLogin := c.Input().Get("autoLogin") == "on"
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(Pwd1))
+	cipherStr := md5Ctx.Sum(nil)
+	user.Password = hex.EncodeToString(cipherStr)
+
+	beego.Info(user.Password)
+	beego.Info(user.Username)
+	err := models.ValidateUser(user)
+	if err == nil {
+		JSCODE := c.Input().Get("code")
+		beego.Info(JSCODE)
+		APPID := beego.AppConfig.String("wxAPPID4")
+		SECRET := beego.AppConfig.String("wxSECRET4")
+		beego.Info(APPID)
+
+		requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
+		resp, err := http.Get(requestUrl)
+		if err != nil {
+			beego.Error(err)
+			return
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != 200 {
+			beego.Error(err)
+		}
+		var data map[string]interface{}
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			beego.Error(err)
+		}
+		beego.Info(data)
+		var openID string
+		// var sessionKey string
+		if _, ok := data["session_key"]; !ok {
+			errcode := data["errcode"]
+			beego.Info(errcode)
+			errmsg := data["errmsg"].(string)
+			c.Data["json"] = map[string]interface{}{"errNo": errcode, "msg": errmsg, "data": "session_key 不存在"}
+		} else {
+			openID = data["openid"].(string)
+			beego.Info(openID)
+			//将openid写入数据库
+			user, err = models.GetUserByUsername(user.Username)
+			if err != nil {
+				beego.Error(err)
+			}
+			_, err = models.AddUserOpenID(user.Id, openID)
+			if err != nil {
+				beego.Error(err)
+				c.Data["json"] = map[string]interface{}{"info": "已经注册", "data": ""}
+				c.ServeJSON()
+			} else {
+				c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "data": openID}
+				c.ServeJSON()
+			}
+		}
+	} else {
+		c.Data["json"] = map[string]interface{}{"info": "用户名或密码错误", "data": ""}
+		c.ServeJSON()
+	}
+
 }
 
 //post方法
