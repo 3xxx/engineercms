@@ -1,0 +1,1 @@
+$(function(){$(".filtr-container").filterizr();$(".simplefilter li").click(function(){$(".simplefilter li").removeClass("active");$(this).addClass("active")});$(".image-popup").magnificPopup({type:"image",removalDelay:300,mainClass:"mfp-fade"})});

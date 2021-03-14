@@ -1,0 +1,327 @@
+
+D:\gowork\src\engineercms>rem cmd /k cd/d "d:\gowork\src\github.com\3xxx\enginee
+rcms"
+______
+| ___ \
+| |_/ /  ___   ___
+| ___ \ / _ \ / _ \
+| |_/ /|  __/|  __/
+\____/  \___| \___| v1.10.0
+2020/06/23 19:44:15 INFO     ? 0001 Using 'engineercms' as 'appname'
+2020/06/23 19:44:16 INFO     ? 0002 Initializing watcher...
+golang.org/x/net/html/atom
+github.com/unidoc/unioffice/measurement
+github.com/lib/pq/oid
+github.com/casbin/casbin/rbac
+github.com/hashicorp/golang-lru/simplelru
+github.com/shurcooL/sanitized_anchor_name
+github.com/astaxie/beego/logs
+github.com/hashicorp/golang-lru
+github.com/astaxie/beego/cache
+github.com/astaxie/beego/config
+github.com/astaxie/beego/toolbox
+github.com/astaxie/beego/utils
+github.com/astaxie/beego/grace
+github.com/dgrijalva/jwt-go
+golang.org/x/net/html
+gopkg.in/asn1-ber.v1
+golang.org/x/text/internal/tag
+github.com/3xxx/engineercms/controllers/utils/filetil
+github.com/3xxx/engineercms/controllers/utils/cryptil
+github.com/3xxx/engineercms/controllers/utils/gopool
+golang.org/x/text/language
+github.com/3xxx/engineercms/controllers/utils/requests
+github.com/astaxie/beego/session
+gopkg.in/ldap.v2
+github.com/astaxie/beego/orm
+github.com/astaxie/beego/validation
+github.com/beego/admin/src/lib
+github.com/go-sql-driver/mysql
+github.com/jinzhu/inflection
+github.com/astaxie/beego/context
+github.com/andybalholm/cascadia
+github.com/3xxx/engineercms/controllers/tool/result
+github.com/lib/pq
+github.com/nu7hatch/gouuid
+github.com/mattn/go-sqlite3
+github.com/jinzhu/gorm
+github.com/astaxie/beego/context/param
+github.com/PuerkitoBio/goquery
+xorm.io/builder
+github.com/astaxie/beego
+gopkg.in/russross/blackfriday.v2
+xorm.io/core
+github.com/bradfitz/gomemcache/memcache
+github.com/howeyc/fsnotify
+github.com/gomodule/redigo/redis
+golang.org/x/image/math/fixed
+xorm.io/xorm
+github.com/astaxie/beego/cache/memcache
+github.com/3xxx/engineercms/controllers/utils/pagination
+github.com/3xxx/engineercms/controllers/utils/sqltil
+github.com/golang/freetype/raster
+golang.org/x/image/font
+github.com/3xxx/engineercms/cache
+github.com/nfnt/resize
+github.com/lifei6671/mindoc/conf
+github.com/astaxie/beego/cache/redis
+github.com/3xxx/engineercms/mail
+github.com/3xxx/engineercms/conf
+github.com/golang/freetype/truetype
+github.com/3xxx/flow
+github.com/3xxx/engineercms/graphics
+github.com/astaxie/beego/utils/pagination
+github.com/astaxie/beego/httplib
+github.com/3xxx/engineercms/controllers/utils
+github.com/golang/freetype
+github.com/boombuler/barcode
+github.com/bitly/go-simplejson
+github.com/casbin/casbin/config
+github.com/casbin/casbin/util
+github.com/lifei6671/gocaptcha
+github.com/boombuler/barcode/utils
+github.com/Knetic/govaluate
+github.com/casbin/casbin/rbac/default-role-manager
+github.com/pkg/errors
+github.com/boombuler/barcode/qr
+github.com/casbin/casbin/model
+github.com/pborman/uuid
+github.com/pdfcpu/pdfcpu/pkg/types
+github.com/casbin/casbin/effect
+github.com/casbin/casbin/persist
+github.com/pdfcpu/pdfcpu/pkg/log
+github.com/hhrutter/lzw
+golang.org/x/image/ccitt
+github.com/pdfcpu/pdfcpu/internal/corefont/metrics
+github.com/casbin/casbin/persist/file-adapter
+github.com/unidoc/unioffice/algo
+github.com/unidoc/unioffice/schema/soo/ofc/sharedTypes
+github.com/tealeg/xlsx
+github.com/casbin/xorm-adapter
+github.com/pdfcpu/pdfcpu/pkg/filter
+github.com/hhrutter/tiff
+github.com/casbin/casbin
+github.com/unidoc/unioffice
+github.com/pdfcpu/pdfcpu/pkg/font
+golang.org/x/sys/windows
+github.com/3xxx/engineercms/controllers/version
+github.com/astaxie/beego/session/memcache
+github.com/pdfcpu/pdfcpu/pkg/pdfcpu
+github.com/unidoc/unioffice/schema/soo/ofc/docPropsVTypes
+github.com/astaxie/beego/plugins/cors
+github.com/unidoc/unioffice/schema/soo/pkg/content_types
+github.com/unidoc/unioffice/schema/soo/dml
+github.com/unidoc/unioffice/schema/soo/pkg/metadata/core_properties
+github.com/unidoc/unioffice/schema/soo/ofc/custom_properties
+github.com/unidoc/unioffice/schema/soo/ofc/extended_properties
+github.com/unidoc/unioffice/schema/soo/pkg/relationships
+github.com/unidoc/unioffice/color
+github.com/unidoc/unioffice/schema/soo/schemaLibrary
+golang.org/x/sys/windows/registry
+golang.org/x/sys/windows/svc
+github.com/unidoc/unioffice/zippkg
+github.com/unidoc/unioffice/schema/soo/ofc/math
+golang.org/x/sys/windows/svc/eventlog
+github.com/astaxie/beego/session/mysql
+github.com/garyburd/redigo/internal
+github.com/pdfcpu/pdfcpu/pkg/pdfcpu/validate
+github.com/garyburd/redigo/redis
+golang.org/x/sys/windows/svc/mgr
+github.com/astaxie/beego/session/redis
+github.com/pdfcpu/pdfcpu/pkg/api
+github.com/kardianos/service
+github.com/unidoc/unioffice/schema/soo/dml/picture
+github.com/unidoc/unioffice/common
+github.com/unidoc/unioffice/schema/soo/wml
+github.com/unidoc/unioffice/common/license
+github.com/unidoc/unioffice/document
+
+
+github.com/casbin/beego-orm-adapter
+github.com/3xxx/engineercms/commands
+github.com/3xxx/engineercms/routers
+github.com/3xxx/engineercms/commands/daemon
+2020/06/23 19:44:52 INFO     ? 0003 Generating the docs...
+2020/06/23 19:44:52 SUCCESS  ? 0004 Docs generated!
+2020/06/23 19:45:03 SUCCESS  ? 0005 Built Successfully!
+2020/06/23 19:45:03 INFO     ? 0006 Restarting 'engineercms.exe'...
+2020/06/23 19:45:03 SUCCESS  ? 0007 './engineercms.exe' is running...
+
+[35m(D:/gowork/src/github.com/3xxx/engineercms/models/PayModel.go:71)[0m
+[33m[2020-06-23 19:45:04][0m [31;1m table "pay" already exists [0m
+
+[35m(D:/gowork/src/github.com/3xxx/engineercms/models/PayModel.go:71)[0m
+[33m[2020-06-23 19:45:04][0m [31;1m table "pay" already exists [0m
+
+[35m(D:/gowork/src/github.com/3xxx/engineercms/models/PayModel.go:71)[0m
+[33m[2020-06-23 19:45:04][0m [31;1m table "pay" already exists [0m
+2020/06/23 19:45:04.729217 log_util.go:25: [Model:]
+2020/06/23 19:45:04.729217 log_util.go:32: r.r: sub, obj, act, suf
+2020/06/23 19:45:04.730217 log_util.go:32: p.p: sub, obj, act, suf
+2020/06/23 19:45:04.730217 log_util.go:32: e.e: some(where (p_eft == allow))
+2020/06/23 19:45:04.730217 log_util.go:32: m.m: g(r_sub, p_sub) && keyMatch(r_ob
+j, p_obj) && regexMatch(r_suf, p_suf) && r_act == p_act
+2020/06/23 19:45:04.731217 log_util.go:32: g.g: _, _
+2020/06/23 19:45:04.733218 log_util.go:25: [Policy:]
+2020/06/23 19:45:04.733218 log_util.go:25: [p :  sub, obj, act, suf :  [[role_ad
+min /* * .*] [role_anonymous /login * .*] [role_everyone /login * .*] [role_memb
+er /logout * .*] [role_member /member * .*]]]
+2020/06/23 19:45:04.733218 log_util.go:25: [g :  _, _ :  []]
+2020/06/23 19:45:04.733218 log_util.go:25: [Role links for: g]
+2020/06/23 19:45:04.734218 log_util.go:25: [Policy:]
+2020/06/23 19:45:04.734218 log_util.go:25: [p :  sub, obj, act, suf :  [[role_ad
+min /* * .*] [role_anonymous /login * .*] [role_everyone /login * .*] [role_memb
+er /logout * .*] [role_member /member * .*]]]
+2020/06/23 19:45:04.734218 log_util.go:25: [g :  _, _ :  []]
+2020/06/23 19:45:04.734218 log_util.go:25: [Role links for: g]
+2020/06/23 19:45:04.736 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.738 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.743 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.744 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.746 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.747 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.748 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.749 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.750 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.751 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.751 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+2020/06/23 19:45:04.752 [I] [router.go:269] D:\gowork\src\github.com\3xxx\engine
+ercms\controllers no changed
+table `admin_category` already exists, skip
+table `admin_ipsegment` already exists, skip
+table `admin_calendar` already exists, skip
+table `admin_synch_ip` already exists, skip
+table `admin_department` already exists, skip
+table `admin_carousel` already exists, skip
+table `md_members` already exists, skip
+table `md_books` already exists, skip
+table `md_relationship` already exists, skip
+table `md_options` already exists, skip
+table `md_documents` already exists, skip
+table `md_attachment` already exists, skip
+table `md_logs` already exists, skip
+table `md_member_token` already exists, skip
+table `md_document_history` already exists, skip
+table `md_migrations` already exists, skip
+table `md_label` already exists, skip
+table `md_blogs` already exists, skip
+table `md_templates` already exists, skip
+table `md_teams` already exists, skip
+table `md_team_member` already exists, skip
+table `md_team_relationship` already exists, skip
+table `md_itemsets` already exists, skip
+table `share_bridge` already exists, skip
+table `share_share` already exists, skip
+table `article` already exists, skip
+table `attachment` already exists, skip
+table `bbs` already exists, skip
+table `car_calendar` already exists, skip
+table `meet_calendar` already exists, skip
+table `activity` already exists, skip
+table `apply` already exists, skip
+table `checkin` already exists, skip
+table `openid_tmpl_id` already exists, skip
+table `diary` already exists, skip
+table `finance` already exists, skip
+table `proj_gant` already exists, skip
+table `only_office` already exists, skip
+table `only_attachment` already exists, skip
+table `only_history` already exists, skip
+table `only_changes` already exists, skip
+table `post_merit` already exists, skip
+table `catalog_link` already exists, skip
+table `merit_basic` already exists, skip
+table `product` already exists, skip
+table `product_document` already exists, skip
+table `project` already exists, skip
+table `proj_calendar` already exists, skip
+table `relevancy` already exists, skip
+table `commentwiki` already exists, skip
+table `commenttopic` already exists, skip
+table `like` already exists, skip
+table `role` already exists, skip
+table `user_role` already exists, skip
+table `standard` already exists, skip
+table `library` already exists, skip
+table `todo` already exists, skip
+table `todolog` already exists, skip
+table `user` already exists, skip
+table `user_open_i_d` already exists, skip
+table `user_avatar` already exists, skip
+table `user_appreciation` already exists, skip
+table `wiki` already exists, skip
+table `casbin_rule` already exists, skip
+insert user ...
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id` FROM `user` T0 WHERE T0.`username` = ? LIMIT 1] - `admin`
+2020/06/23 19:45:04.782220 UserModel.go:691: <nil>
+insert role ...
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id` FROM `role` T0 WHERE T0.`rolename` = ? LIMIT 1] - `admin`
+2020/06/23 19:45:04.783220 UserModel.go:705: <nil>
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id`, T0.`rolename`, T0.`rolenumber`, T0.`status`, T0.`createtime`,
+ T0.`updated` FROM `role` T0 WHERE T0.`rolename` = ? LIMIT 1] - `admin`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     1.0ms]
+- [SELECT T0.`id`, T0.`username`, T0.`nickname`, T0.`password`, T0.`email`, T0.`
+department`, T0.`secoffice`, T0.`remark`, T0.`ip`, T0.`port`, T0.`status`, T0.`l
+astlogintime`, T0.`createtime`, T0.`updated`, T0.`role` FROM `user` T0 WHERE T0.
+`username` = ? LIMIT 1] - `admin`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id` FROM `user_role` T0 WHERE T0.`user_id` = ? AND T0.`role_id` =
+? LIMIT 1] - `1`, `1`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id` FROM `role` T0 WHERE T0.`rolename` = ? LIMIT 1] - `anonymous`
+2020/06/23 19:45:04.784220 UserModel.go:736: <nil>
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id` FROM `role` T0 WHERE T0.`rolename` = ? LIMIT 1] - `everyone`
+2020/06/23 19:45:04.785221 UserModel.go:750: <nil>
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`id` FROM `role` T0 WHERE T0.`rolename` = ? LIMIT 1] - `isme`
+2020/06/23 19:45:04.786221 UserModel.go:764: <nil>
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `ENABLED_
+REGISTER`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `ENABLE_D
+OCUMENT_HISTORY`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `ENABLED_
+CAPTCHA`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `ENABLE_A
+NONYMOUS`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `SITE_NAM
+E`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `site_des
+cription`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_options` T0 WHERE T0.`option_name` = ? ] - `site_bei
+an`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK /    db.Query /     0.0ms]
+- [SELECT T0.`member_id`, T0.`account`, T0.`real_name`, T0.`password`, T0.`auth_
+method`, T0.`description`, T0.`email`, T0.`phone`, T0.`avatar`, T0.`role`, T0.`s
+tatus`, T0.`create_time`, T0.`create_at`, T0.`last_login_time` FROM `md_members`
+ T0 WHERE T0.`account` = ? ORDER BY T0.`member_id` DESC LIMIT 1] - `admin`
+[ORM]2020/06/23 19:45:04  -[Queries/default] - [  OK / db.QueryRow /     0.0ms]
+- [SELECT COUNT(*) FROM `md_itemsets` T0 WHERE T0.`item_id` = ? ] - `1`
+MinDoc version =>
+build time =>
+start directory => d:\gowork\src\github.com\3xxx\engineercms\engineercms.exe
+
+2020/06/23 19:45:07.190 [I] [asm_amd64.s:1357] http server Running on http://:80
+
+

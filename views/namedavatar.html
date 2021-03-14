@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <script type="text/javascript" src="./dist/jquery-3.3.1.min.js"></script> -->
+  <script src="../static/js/namedavatar.js"></script>
+</head>
+
+<body>
+  <!-- <img id="avatar1" alt="供" width="100" > -->
+  <img id="avatar1" src="../static/img/qin.png" alt="X" width="100" style="border-radius: 100%">
+  <script>
+  namedavatar.config({
+    nameType: 'firstName',
+    fontFamily:'sans-serif',//sans-serif,Verdana, Geneva, 
+    // backgroundColors:'',
+    // textColor:'#FFF',
+    minFontSize: '8',
+    maxFontSize:'50'
+  });
+
+  // fill single <img>
+  (function(img) {
+    namedavatar.setImg(img, img.alt)
+  })(document.getElementById('avatar1'))
+
+  // fill single <img>
+// var img = document.getElementById('avatar1')
+// namedavatar.setImg(img, img.alt)
+
+// fill multi <img>
+// var imgs = document.querySelectorAll('img[data-name]')
+// namedavatar.setImgs(imgs, 'data-name')
+
+  </script>
+</body>
+
+</html>
+
+<!-- filed	type	default	description
+nameType	string	'firstName'	pick from: firstName, lastName, initials
+fontFamily	string	'Verdana, Geneva, sans-serif'	font family
+backgroundColors	Array	Material Design colors *-500	random background color list
+textColor	string	'#FFF'	name text color
+minFontSize	number	8	min font size limit
+maxFontSize	number	16	max font size limit -->

@@ -1,0 +1,87 @@
+                       EngineerCMS revision history
+		       
+24,engineercms 1.17 (Jun 9, 2021)
+	+) Add businesscheck
+
+23,engineercms 1.16 (Aug 9, 2020)
+	+) Add cart,user gorm join
+	+) Add article_pie.tpl user gorm group count
+
+22,engineercms 1.15 (Apr 11, 2020)
+	+) Add flv
+	+) Add photoswipe
+	+) Add mindoc
+	+) Add sharecode
+  +) Add photoswipe
+
+21,engineercms 1.14 (Feb 14, 2020)
+	+) Update wxflow
+	+) Add wxMsgSecCheck
+
+20, engineercms 1.13 (Nov 03, 2019)
+	+) Add bootstrap fileinput
+	+) Add legislation excle compare
+
+19, engineercms 1.12 (Oct 06, 2019)
+	+) Add flowchart	
+
+18, engineercms 1.11 (Au 11, 2019)
+	+) Add wechat diary		       
+		       
+17, engineercms 1.10 (May 27, 2019)
+	+) Add wechat todolist
+
+16, engineercms 1.09 (May 12, 2019)
+	+) Add relevancy
+
+15, engineercms 1.08 (May 6, 2019)
+	+) Add wechat checkin 		       
+		       
+14, engineercms 1.08 (April 15, 2019)
+	+) Add vue.js index.html 
+
+13, EngineerCMS 1.07 (July 11, 2018)
+	+) Add the DWG view inline 
+	$) Change the Ueditor to froala
+12, EngineerCMS 1.06 (July 01, 2018)
+	*) Modified The parentidpath field of the project data table
+	+) Added the topprojectid field of the product data table; The conten and views fields were removed
+	$) optimised the lazyload of treeview(projects webview)
+	$) Change the bootstrap-table(only projects view web now) sidePagination to server
+11, EngineerCMS 1.06 (May 29, 2018)
+	+) Add tree product count
+	+) Add nav link to tree
+	*) Fixed bug of allproduct tpl
+	$) optimised the projects product count		       
+10, EngineerCMS 1.05 (May 24, 2018)
+	+) Add Download permission
+	*) Fixed bug of attachmentname	       
+9, EngineerCMS 1.04 (May 12, 2018)
+	+) Add IP permission
+	*) Fixed bug of delete role permission	       
+8, EngineerCMS 1.03 (May 3, 2018)
+	*) Fixed bug of role permission
+7, EngineerCMS 1.02 (Apr 30, 2018)
+	*) Fixed bug of onlyoffice permission	       
+6, EngineerCMS 1.01 (Apr 25, 2018)
+	+) Add project permission query&update		       
+5, EngineerCMS 1.0 (Feb 20, 2018)
+	+) Add ONLYOFFICE Document Server
+4, EngineerCMS 0.93 (Feb 10, 2017)
+	+) Add project role
+	+) Add cms service
+	*) Fixed bug of product editor
+3, EngineerCMS 0.92 (Jan 29, 2017)
+	+) Add treeview editor
+	+) Add user login
+	+) Add index tpl
+	+) Add product synchronization
+	*) Fixed bug of ipmap
+2, EngineerCMS 0.91 (Sep 7, 2016)
+	+) Add admin ipsegment
+	+) Add admin secoffice
+	+) Add admin calendar
+	*) Fixed bug of project
+1, EngineerCMS 0.9 (Sep 1, 2016)
+	+) Initial public released edition
+	*) Fixed bug of product attachment
