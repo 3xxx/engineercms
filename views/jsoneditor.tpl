@@ -135,7 +135,7 @@
     var json = editor.get();
     // alert(JSON.stringify(json, null, 2));
     // editor1.set(json);
-    var projectconfig=JSON.stringify(json)
+    // var projectconfig=JSON.stringify(json)
     $.ajax({
       type: "POST",
       url: "/v1/admin/putwxprojectconfig?projectid="+{{.ProjectId}},

@@ -224,7 +224,7 @@
             <div class="form-group must">
               <label class="col-sm-3 control-label">上传者</label>
               <div class="col-sm-7">
-                <input type="tel" class="form-control" id="uname1"></div>
+                <input type="tel" class="form-control" id="uname1" placeholder="输入用户名如qin.xc，不是nickname"></div>
             </div>
           </div>
           <div class="modal-footer">
@@ -686,12 +686,12 @@
         data: { cid: cid, number: number1, title: title1, route: route1, uname: uname1 },
         success: function(data, status) {
           alert("修改“" + data + "”成功！(status:" + status + ".)");
+          $('#table').bootstrapTable('refresh');//, { url: '/standard/search' }
         }
       });
     }
     // $(function(){$('#myModal').modal('hide')});
     $('#editorstandardmodal').modal('hide');
-    $('#table').bootstrapTable('refresh', { url: '/getstandard' });
     // "/category/modifyfrm?cid="+cid
     // window.location.reload();//刷新页面
   }

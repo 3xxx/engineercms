@@ -74,8 +74,17 @@ func (c *StandardController) UpdateStandard() {
 	number := c.Input().Get("number")
 	title := c.Input().Get("title")
 	route := c.Input().Get("route")
-	// uname := c.Input().Get("uname")
-	err = models.UpdateStandard(idNum, number, title, route)
+	uname := c.Input().Get("uname")
+	var uid int64
+	// uname查询出uid
+	if uname != "" {
+		user, err := models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		}
+		uid = user.Id
+	}
+	err = models.UpdateStandard(idNum, uid, number, title, route)
 	if err != nil {
 		beego.Error(err)
 		c.Data["json"] = "修改出错"

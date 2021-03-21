@@ -923,8 +923,6 @@
       // }
     }
   });
-
-
       // var fileArr = new Array();
       // Dropzone.autoDiscover = false;
       // // $(document).ready(function() {

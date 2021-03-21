@@ -3,6 +3,7 @@ package controllers
 
 import (
 	// "encoding/json"
+	// "github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -1320,6 +1321,173 @@ func (c *ProjController) AddProjTemplet() {
 		c.Data["json"] = "ok"
 	} else {
 		c.Data["json"] = "wrong"
+	}
+	c.ServeJSON()
+}
+
+// @Title post wx quickaddproject...
+// @Description post quickaddproject..
+// @Param projectcode query string true "The projectcode of project"
+// @Param projecttitle query string true "The projecttitle of project"
+// @Param tempprojid query string true "The tempprojid of project"
+// @Param istemppermission query string false "The permission of project"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 data not found
+// @router /quickaddwxproject [post]
+//根据项目模板添加项目
+func (c *ProjController) QuickAddWxProjTemplet() {
+	//content去验证
+	// app_version := c.Input().Get("app_version")
+	// accessToken, _, _, err := utils.GetAccessToken(app_version)
+	// if err != nil {
+	// 	beego.Error(err)
+	// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
+	// 	c.ServeJSON()
+	// }
+	var user models.User
+	var err error
+	openID := c.GetSession("openID")
+	if openID != nil {
+		user, err = models.GetUserByOpenID(openID.(string))
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		// c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录"}
+		// c.ServeJSON()
+		// return
+		user.Id = 9
+	}
+
+	projcode := c.Input().Get("projectcode")
+	projname := c.Input().Get("projecttitle")
+	tempprojid := c.Input().Get("tempprojid")
+	istemppermission := c.Input().Get("istemppermission")
+	// beego.Info(istemppermission)
+	if istemppermission == "" {
+		istemppermission = "true"
+	}
+	//code=sl123&name=dada&label=&principal=&projid=25001&ispermission=true
+	//先保存项目名称到数据库，parentid为0，返回id作为下面的parentid进行递归
+	//根据项目模板id，取出项目目录的json结构
+	//然后递归生成硬盘目录
+	//然后递归写入数据库
+	//根据模板项目id，取出权限数据——将目录id路径转成目录名称路径——查出新项目对应的目录id——写入权限
+	//id转成64为
+	idNum, err := strconv.ParseInt(tempprojid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目本身
+	category, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//取项目所有子孙
+	categories, err := models.GetProjectsbyPid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据id取出下级
+	cates := getsons(idNum, categories)
+	//递归生成目录json
+	root := models.FileNode{category.Id, category.Title, category.Code, 1, []*models.FileNode{}}
+	// walk(category.Id, &root)
+	maketreejsontemplet(cates, categories, &root)
+	//先建立第一层项目编号和名称
+	Id, err := models.AddProject(projcode, projname, "projlabel", "principal", 0, "", "", 1)
+	if err != nil {
+		beego.Error(err)
+	}
+	_, err = models.AddProjectUser(Id, user.Id)
+	if err != nil {
+		beego.Error(err)
+	}
+	_, err = models.AddProjectLabel(Id, "projlabel")
+	if err != nil {
+		beego.Error(err)
+	}
+	//在递归写入数据库
+	lastid := models.Insertprojtemplet(Id, "$"+strconv.FormatInt(Id, 10)+"#", projcode+projname, root.FileNodes)
+	//递归创建文件夹
+	// patharr := make([]Pathstruct, 1)
+	//先建立第一层文件夹
+	pathstring := "./attachment/" + projcode + projname
+	//在递归建立下层文件夹
+	createtemplet(pathstring, root.FileNodes)
+
+	projectjson := `{"articleid": "` + strconv.FormatInt(lastid, 10) + `", "articleprojid": "` + strconv.FormatInt(lastid, 10) + `",
+	 "collapse": [], "diaryprojid": "` + strconv.FormatInt(Id, 10) + `", "financeprojid": "` + strconv.FormatInt(Id, 10) + `",
+  "projectcode": "` + projcode + `", "projectid": "` + strconv.FormatInt(Id, 10) + `", "projecttitle": "` + projname + `", "text": ""}`
+	f, err := os.Create("./conf/" + strconv.FormatInt(Id, 10) + ".json")
+	if err != nil {
+		beego.Error(err)
+	}
+	defer f.Close()
+	// _, err = f.Write(body) //这里直接用resp.Body如何？
+	// _, err = f.Write(c.Ctx.Input.RequestBody)
+	_, err = f.WriteString(projectjson)
+	// _, err = io.Copy(body, f)
+	if err != nil {
+		beego.Error(err)
+	}
+	//权限继承
+	var success bool
+	var casbinv1 string
+	if istemppermission == "true" {
+		//读取权限里包含projid的
+		var paths []beegoormadapter.CasbinRule
+		o := orm.NewOrm()
+		qs := o.QueryTable("casbin_rule")
+		_, err := qs.Filter("PType", "p").Filter("v1__contains", "/"+tempprojid+"/").All(&paths)
+		if err != nil {
+			beego.Error(err)
+		}
+		//根据最后的/id/*查出proj的parenttitlepath，修改titlepath的项目编号和项目名称
+		//据此再查出新项目对应的parentidpath和id
+		//末端加上/id/*存入casbin
+		for _, v := range paths {
+			array := strings.Split(v.V1, "/")
+			// lenth := len(array)
+			// if len(array) <= 3 { //根目录
+			// id := strings.Replace(strings.Replace(v.V1, "/*", "", -1), "/", "", -1)
+			// } else {
+			id := array[len(array)-2]
+			// parentidpath := strings.Replace(v.V1, "/"+array[len(array)-2]+"/*", "/", -1)
+			// }
+			//id转成64为
+			idNum, err = strconv.ParseInt(id, 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			oldproj, err := models.GetProj(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			if len(array) <= 3 { //根目录
+				newproj, err := models.GetProjectCodeTitle(projcode, projname)
+				if err != nil {
+					beego.Error(err)
+				}
+				casbinv1 = "/" + strconv.FormatInt(newproj.Id, 10) + "/*"
+			} else {
+				array1 := strings.Split(oldproj.ParentTitlePath, "-")
+				newprojparenttitlepath := strings.Replace(oldproj.ParentTitlePath, array1[0], projcode+projname, -1)
+				newproj, err := models.GetProjbyParenttitlepath(newprojparenttitlepath, oldproj.Title)
+				if err != nil {
+					beego.Error(err)
+				}
+				casbinv1 = strings.Replace(strings.Replace(strings.Replace(newproj.ParentIdPath, "#$", "/", -1), "$", "/", -1), "#", "/", -1) + strconv.FormatInt(newproj.Id, 10) + "/*"
+			}
+			success = e.AddPermissionForUser(v.V0, casbinv1, v.V2, v.V3)
+			//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+		}
+	}
+	if success == true {
+		c.Data["json"] = map[string]interface{}{"data": "OK", "info": "SUCCESS"}
+	} else {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录"}
 	}
 	c.ServeJSON()
 }

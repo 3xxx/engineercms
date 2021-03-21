@@ -510,7 +510,7 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 }
 
 //递归将项目模板目录写入数据库
-func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []*FileNode) {
+func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []*FileNode) (id int64) {
 	o := orm.NewOrm() //实例化数据库操作对象
 	// o.Using("default")
 	//关闭写同步
@@ -549,7 +549,7 @@ func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []
 			Insertprojtemplet(Id, parentidpath1, parenttitlepath1, nodes1)
 		}
 	}
-	return
+	return Id
 }
 
 //************项目日历

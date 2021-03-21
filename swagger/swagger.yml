@@ -2502,6 +2502,41 @@ paths:
           description: Invalid page supplied
         "404":
           description: project not found
+  /project/quickaddwxproject:
+    post:
+      tags:
+      - project
+      description: post quickaddproject..
+      operationId: ProjController.post wx quickaddproject...
+      parameters:
+      - in: query
+        name: projectcode
+        description: The projectcode of project
+        required: true
+        type: string
+      - in: query
+        name: projecttitle
+        description: The projecttitle of project
+        required: true
+        type: string
+      - in: query
+        name: tempprojid
+        description: The tempprojid of project
+        required: true
+        type: string
+      - in: query
+        name: istemppermission
+        description: The permission of project
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /project/userprojecteditortree:
     get:
       tags:
@@ -2844,6 +2879,95 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/.CreateBusiness'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pas not found
+  /wx/addlocationnavigate/{id}:
+    post:
+      tags:
+      - wx
+      description: post locationnavigate by locationid
+      operationId: LocationController.post locationnavigate by locationid
+      parameters:
+      - in: query
+        name: title
+        description: The title of location
+        required: true
+        type: string
+      - in: query
+        name: label
+        description: The label of locationnavigate
+        required: true
+        type: string
+      - in: query
+        name: location
+        description: The location of location
+        required: true
+        type: string
+      - in: query
+        name: address
+        description: The address of location
+        type: string
+      - in: query
+        name: lat
+        description: The lat of location
+        type: string
+      - in: query
+        name: lng
+        description: The lng of location
+        type: string
+      - in: path
+        name: id
+        description: The locationid of location
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.CreateLocation'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pas not found
+  /wx/addlocationpart/{id}:
+    post:
+      tags:
+      - wx
+      description: post location by projectid
+      operationId: LocationController.post location by projectid
+      parameters:
+      - in: query
+        name: title
+        description: The title of locationpart
+        required: true
+        type: string
+      - in: query
+        name: describe
+        description: The describe of locationpart
+        required: true
+        type: string
+      - in: query
+        name: sort
+        description: The sort of locationpart
+        required: true
+        type: string
+      - in: query
+        name: userid
+        description: The userid of location
+        required: true
+        type: string
+      - in: path
+        name: id
+        description: The projectid of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.CreateLocation'
         "400":
           description: Invalid page supplied
         "404":
@@ -3709,6 +3833,48 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/getlocation/{id}:
+    get:
+      tags:
+      - wx
+      description: get location by userid
+      operationId: LocationController.get location by userid
+      parameters:
+      - in: path
+        name: id
+        description: The projectid of location
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetLocationPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: location not found
+  /wx/getlocationbyid/{id}:
+    get:
+      tags:
+      - wx
+      description: get location by locationid
+      operationId: LocationController.get location by locationid
+      parameters:
+      - in: path
+        name: id
+        description: The id of location
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetLocationPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: location not found
   /wx/getuserarticle:
     get:
       tags:
@@ -5199,6 +5365,8 @@ definitions:
     type: object
   .CreateBusiness:
     type: object
+  .CreateLocation:
+    type: object
   .DeleteTopicReply:
     type: object
   .DeleteUserCart:
@@ -5214,6 +5382,8 @@ definitions:
   .GetDiary:
     type: object
   .GetFinance:
+    type: object
+  .GetLocationPage:
     type: object
   .GetOnlyPdf:
     type: object

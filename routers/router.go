@@ -104,6 +104,7 @@ func init() {
 					&controllers.FinanceController{},
 					&controllers.VideoController{},
 					&controllers.BusinessController{},
+					&controllers.LocationController{},
 				),
 			),
 			beego.NSNamespace("/share",

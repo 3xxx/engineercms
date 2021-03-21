@@ -309,7 +309,7 @@ func GetStandard(id int64) (standard Standard, err error) {
 	return standard, err
 }
 
-func UpdateStandard(id int64, number, title, route string) error {
+func UpdateStandard(id, uid int64, number, title, route string) error {
 	o := orm.NewOrm()
 	standard := &Standard{Id: id}
 	if o.Read(standard) == nil {
@@ -317,6 +317,7 @@ func UpdateStandard(id int64, number, title, route string) error {
 		standard.Title = title
 		standard.Updated = time.Now()
 		standard.Route = route
+		standard.Uid = uid
 		_, err := o.Update(standard)
 		if err != nil {
 			return err
