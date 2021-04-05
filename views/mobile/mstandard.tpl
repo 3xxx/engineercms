@@ -281,7 +281,7 @@ body.search-show {
 
   function setLink(value, row, index) {
     // return '<a href="' + row.Route + '" title="查阅" target="_blank"><i class="fa fa-paperclip"></i></a>';
-    pdfUrl = '<a href="/v1/wx/standardpdf?pdflink=' + row.Route + '" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o fa-lg text-danger"></i></a>';
+    pdfUrl = '<a href="/v1/wx/standardpdf?file=' + row.Route + '" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o fa-lg text-danger"></i></a>';
     return pdfUrl;
   }
 

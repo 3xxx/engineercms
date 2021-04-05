@@ -17,6 +17,7 @@
   <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
   <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
   <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="/static/js/clipboard.min.js"></script>
   <link rel="stylesheet" href="/static/froala/css/froala_editor.css">
   <link rel="stylesheet" href="/static/froala/css/froala_style.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/code_view.css">
@@ -37,7 +38,14 @@
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
   <link rel="stylesheet" href="/static/froala/js/codemirror.min.css">
   <link rel="stylesheet" href="/static/froala/css/themes/red.css">
+  <!-- <link rel="stylesheet" href="/static/css/magnific-popup.css" /> -->
+  <!-- <script type="text/javascript" src="/static/js/jquery.magnific-popup.min.js"></script> -->
+  <!-- <script src="/static/toast/toast.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="/static/toast/toast.min.css"> -->
   <style type="text/css">
+  #imgmodalDialog .modal-header {
+    cursor: move;
+  }
   #modalDialog .modal-header {
     cursor: move;
   }
@@ -70,10 +78,24 @@
     cursor: move;
   }
 
-  #modalNewDwg .modal-header {
+  #modalDialog8 .modal-header {
     cursor: move;
   }
 
+  #modalDialog9 .modal-header {
+    cursor: move;
+  }
+
+  #modalDialog10 .modal-header {
+    cursor: move;
+  }
+
+  #modalDialog11 .modal-header {
+    cursor: move;
+  }
+
+  /*#modalNewDwg .modal-header {cursor: move;}*/
+  /*#modalFlow .modal-header {cursor: move;}*/
   /*body {
           text-align: center;
       }*/
@@ -93,53 +115,146 @@
   }
 
   /*.form-horizontal .control-label{
-        padding-left:10px; 
-      }
-      .form-horizontal .form-group{
-        float: left;
-        width: 50%;
-      }*/
+    padding-left:10px; 
+  }
+  .form-horizontal .form-group{
+    float: left;
+    width: 50%;
+  }*/
+  h3 .share-icon {
+    width: 30px;
+    height: 30px
+  }
   </style>
 </head>
 
 <body>
   <div class="col-lg-12">
-    <h3>成果列表</h3>
-    <div id="toolbar1" class="btn-group">
-      <!-- 多文件批量上传  {{if not .RoleAdd}}style="display:none"{{end}}-->
-      <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
-      </button>
-      <!-- 多附件上传 -->
-      <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" data-name="addButton1" id="addButton1" class="btn btn-default"> <i class="fa fa-plus-square-o" title="多附件模式">添加</i>
-      </button>
-      <!-- 添加文章 -->
-      <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" data-name="addButton2" id="addButton2" class="btn btn-default"> <i class="fa fa-plus-square" title="文章模式">添加</i>
-      </button>
-      <button {{if ne "true" .RoleUpdate}} style="display:none" {{end}} type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
-      </button>
-      <button {{if ne "true" .RoleUpdate}} style="display:none" {{end}} type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
-      </button>
-      <button {{if ne "true" .RoleDelete}} style="display:none" {{end}} type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
-        <i class="fa fa-trash">删除</i>
-      </button>
-      <button {{if ne "true" .RoleNewDwg}} style="display:none" {{end}} type="button" data-name="newdwgButton" id="newdwgButton" class="btn btn-default">
+    <div id="toolbar1" class="btn-toolbar" role="toolbar" aria-label="...">
+      <div class="btn-group">
+        <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="添加资料">
+          <i class="fa fa-plus">&nbsp;&nbsp;添加</i>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="">
+          <li>
+            <a href="#" onclick="addButton()"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></a>
+          </li>
+          <li>
+            <a href="#" onclick="addButton1()"><i class="fa fa-plus-square-o">&nbsp;&nbsp;多附件模式</i></a>
+          </li>
+          <li>
+            <a href="#" onclick="addButton2()"><i class="fa fa-plus-square">&nbsp;&nbsp;文章模式</i></a>
+          </li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button {{if ne "true" .RoleUpdate}} style="display:none" {{end}} type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="编辑">
+          <i class="fa fa-edit">&nbsp;&nbsp;编辑</i>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="">
+          <li>
+            <a href="#" onclick="editorProdButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑成果信息</i></a>
+          </li>
+          <li>
+            <a href="#" onclick="editorAttachButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑成果附件</i></a>
+          </li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <!-- <button href="#" onclick="addButton()"  class="btn btn-default"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></button> -->
+        <button {{if ne "true" .RoleDelete}} style="display:none" {{end}} type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default" title="删除">
+          <i class="fa fa-trash">&nbsp;&nbsp;删除</i>
+        </button>
+        <button {{if ne "true" .RoleGet}} style="display:none" {{end}} type="button" data-name="shareButton" id="shareButton" class="btn btn-default" title="分享文件">
+          <i class="fa fa-share">&nbsp;&nbsp;分享</i>
+        </button>
+        <button {{if ne "true" .RoleFlow}} style="display:none" {{end}} type="button" data-name="flowButton" id="flowButton" class="btn btn-default" title="流程、状态">
+          <i class="fa fa-share-alt">&nbsp;&nbsp;Flow</i>
+        </button>
+      </div>
+      <div class="btn-group">
+        <button type="button" data-name="cartButton" id="cartButton" class="btn btn-default" title="购物车">
+          <i class="fa fa-shopping-cart">&nbsp;&nbsp;Cart</i>
+        </button>
+      </div>
+      <!-- 保留<button {{if ne "true" .RoleNewDwg}} style="display:none" {{end}} type="button" data-name="newdwgButton" id="newdwgButton" class="btn btn-default">
         <i class="fa fa-trash">NEWdwg</i>
-      </button>
-      <!-- <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
+        </button> -->
+      <!-- 保留<button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
         <i class="fa fa-refresh">同步</i>
         </button> -->
     </div>
     <!--data-click-to-select="true" -->
     <table id="table0"></table>
+    <!-- <div class="modal fade" id="imgModal"tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" style="display: inline-block; width: auto;">
+        <div class="modal-content">
+         <img id="imgInModalID" src="" >
+        </div>
+      </div>
+    </div> -->
+    <div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" style="display: inline-block; width: auto;" id="imgmodalDialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #1E90FF">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel" style="color: #FFFFFF"> 图片预览</h4>
+          </div>
+          <div class="modal-body text-center">
+            <!-- -text-cente  bootstrap子元素居中--->
+            <span id="myImg">
+              <!--预览图片位置，默认图片-->
+              <!-- <img src="./img/notlogin.jpg" class="img-circle"> -->
+              <img id="imgInModalID" src="">
+            </span>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="text/javascript">
+    // 图片预览 
+    function savepic(o) {
+      // pic=window.open(o.src,"demo")
+      // setTimeout('pic.document.execCommand("saveas")',0);
+      // window.open(o.src, null, "dialogHeight:500px; dialogWidth:600px; resizable:yes");
+      // var img = new Image();// 创建对象 
+      // img.src =url;// 改变图片的src
+      // alert(o.src)
+      $("#imgInModalID").attr("src",o.src);
+      $('#imgModal').modal({
+        show: true,
+        backdrop: 'static'
+      });
+      
+      $('#modalattach').modal('hide')
+      // var fatherBody = $(window.top.document.body);
+      // //定义页面存放模态窗口的元素
+      // var id = 'iframeModalPages';
+      // var dialog = $('#' + id);
+      // if (dialog.length == 0) {
+      //   dialog = $('<div class="modal fade" role="dialog" id="' + id + '">'+$('#imgModal').html()+'</div>');
+      //   dialog.appendTo(fatherBody);
+      // }
+      //加载
+      // dialog.load("/project.tpl", function() {
+      //   dialog.modal({
+      //     backdrop: false
+      //   });
+      // });
+    }
+
     $(function() {
-      // 初始化【未接受】工作流表格
+      // 初始化【未接受】工作流表格showToggle:'true',
       $("#table0").bootstrapTable({
         url: '/project/products/{{.Id}}',
         method: 'get',
         search: 'true',
         showRefresh: 'true',
-        showToggle: 'true',
         showColumns: 'true',
         toolbar: '#toolbar1',
         pagination: 'true',
@@ -151,9 +266,9 @@
         // 返回false将会终止请求。
         pageSize: 15,
         pageNumber: 1,
-        pageList: [15, 50, 100],
+        pageList: [15, 50, 100, 'All'],
         uniqueId: "id",
-        singleSelect: "true",
+        // singleSelect:"true",
         clickToSelect: "true",
         showExport: "true",
         queryParams: function queryParams(params) { //设置查询参数
@@ -175,7 +290,8 @@
         },
         columns: [{
             title: '选择',
-            radio: 'true',
+            // radio: 'true',
+            checkbox: 'true',
             width: '10',
             align: "center",
             valign: "middle"
@@ -266,6 +382,14 @@
             // visible："false",
             align: "center",
             valign: "middle"
+          },
+          {
+            field: 'DocState',
+            title: '状态',
+            formatter: setDocState,
+            events: actionEvents,
+            align: "center",
+            valign: "middle"
           }
           // {
           //     field: 'dContMainEntity.createTime',
@@ -297,7 +421,8 @@
           var array = value[0].Relevancy.split(",")
           var relevarray = new Array()
           for (i = 0; i < array.length; i++) {
-            relevarray[i] = array[i];
+            // relevarray[i]=array[i];
+            relevarray[i] = '<a href="javascript:gototree(' + value[i].ProjectId + ')" title="查看" target="_blank">' + value[i].Relevancy + '</a>';
           }
           return relevarray.join(",");
           // articleUrl= '<a href="'+value[0].Link+'/'+value[0].Id+'" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
@@ -307,13 +432,31 @@
         } else if (value.length > 1) {
           var relevarray = new Array()
           for (i = 0; i < value.length; i++) {
-            relevarray[i] = value[i].Relevancy;
+            // relevarray[i]=value[i].Relevancy;
+            relevarray[i] = '<a href="javascript:gototree(' + value[i].ProjectId + ')" title="查看" target="_blank">' + value[i].Relevancy + '</a>';
           }
           return relevarray.join(",");
           // articleUrl= "<a class='article' href='javascript:void(0)' title='查看文章列表'><i class='fa fa-list-ol'></i></a>";
           // return articleUrl;
         }
       }
+    }
+
+    // 关联成果跳转到对应的树状目录下
+    function gototree(e) {
+      // $(window.parent.document).find("input:radio").attr("checked","true");
+      // $('#objId', parent.document);
+      // 格式：$("#父页面元素id" , parent.document);
+      parent.gototree(e); // pClick 为父页面 js 方法
+      // window.parent.document.getElementById("父窗口元素ID");
+      // window.parent.document.getElementById("iframepage").src="/project/{{.Id}}/"+e;
+      // var findCheckableNodess = function() {
+      //   return $('#tree',parent.document).treeview('findNodes', [e, 'id']);
+      // }; 
+      // var checkableNodes = findCheckableNodess();
+      //   $('#tree',parent.document).treeview('toggleNodeSelected', [ checkableNodes, { silent: true } ]);
+      //   $('#tree',parent.document).treeview('toggleNodeExpanded', [ checkableNodes, { silent: true } ]);
+      //   $('#tree',parent.document).treeview('revealNode', [ checkableNodes, { silent: true } ]);
     }
 
     function setCode(value, row, index) {
@@ -378,12 +521,21 @@
           var ext = filename.substring(index);
           // alert(ext);
           if (ext == ".dwg") {
-            attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="打开" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
-          } else if (ext == ".doc" || ext == ".docx") {
+            attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
+          } else if (ext == ".JPG"||ext ==".jpg"||ext ==".png"||ext ==".PNG"||ext ==".bmp"||ext ==".BMP") {
+            attachUrl = '<a class = "view" href="javascript:void(0)"><img style="width:70;height:30px;" src="/downloadattachment?id=' + value[0].Id + '" title="预览" onclick="savepic(this)"/></a>'
+          } else if (ext == ".mp4"||ext ==".MP4") {
+            attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-video-o fa-lg text-info"></i></a>'
+          } else if (ext == ".doc" || ext == ".docx" || ext == ".wps") {
+            // attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
             attachUrl = '<a href=/officeview/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
-          } else if (ext == ".xls" || ext == ".xlsx") {
+
+          } else if (ext == ".xls" || ext == ".xlsx" || ext == ".et") {
+            // attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
             attachUrl = '<a href=/officeview/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
-          } else if (ext == ".ppt" || ext == ".pptx") {
+
+          } else if (ext == ".ppt" || ext == ".pptx" || ext == ".dps") {
+            // attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
             attachUrl = '<a href=/officeview/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
           } else {
             attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
@@ -422,7 +574,7 @@
     function setPdf(value, row, index) {
       if (value) {
         if (value.length == 1) {
-          pdfUrl = '<a href="/pdf?id=' + value[0].Id + '" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+          pdfUrl = '<a href="/pdf?id=' + value[0].Id + '" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o fa-lg text-danger"></i></a>';
           return pdfUrl;
         } else if (value.length == 0) {
 
@@ -430,6 +582,12 @@
           pdfUrl = "<a class='pdf' href='javascript:void(0)' title='查看pdf列表'><i class='fa fa-list-ol'></i></a>";
           return pdfUrl;
         }
+      }
+    }
+
+    function setDocState(value, row, index) {
+      if (value.Name) {
+        return "<a href='/cms/#/flow/documentdetail2?docid=" + row.ProdDoc.DocumentId + "&dtid=" + row.ProdDoc.DocTypeId + "'target='_blank'>" + value.Name + "</a>";
       }
     }
 
@@ -489,8 +647,27 @@
     }
     //最后面弹出附件列表中用的<a href="'+value+
     function setAttachlink(value, row, index) {
-      attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
-      return attachUrl;
+      // attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+      // return attachUrl;
+          var filename = value;
+          var index = filename.lastIndexOf(".");
+          var ext = filename.substring(index);
+          if (ext == ".dwg") {
+            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
+          } else if (ext == ".JPG"||ext ==".jpg"||ext ==".png"||ext ==".PNG"||ext ==".bmp"||ext ==".BMP") {
+            attachUrl = '<a class = "view" href="javascript:void(0)"><img style="width:70;height:30px;" src="/downloadattachment?id=' + row.Id + '" title="预览" onclick="savepic(this)"/></a>'
+          } else if (ext == ".mp4"||ext ==".MP4") {
+            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-video-o fa-lg text-info"></i></a>'
+          } else if (ext == ".doc" || ext == ".docx") {
+            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+          } else if (ext == ".xls" || ext == ".xlsx") {
+            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+          } else if (ext == ".ppt" || ext == ".pptx") {
+            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+          } else {
+            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+          }
+          return attachUrl;
     }
     //最后面弹出pdf列表中用的'&file='+value+
     function setPdflink(value, row, index) {
@@ -499,12 +676,9 @@
     }
 
     // 批量上传
-    $("#addButton").click(function() {
-      // if ({{.role}}!=1){
-      //   alert("权限不够！"+{{.role}});
-      //   return;
-      // }
-      if ({ {.RoleAdd } } != "true") {
+    // $("#addButton").click(function() {
+    function addButton() {
+      if ({{.RoleAdd }} != "true") {
         alert("权限不够！");
         return;
       }
@@ -516,7 +690,7 @@
         show: true,
         backdrop: 'static'
       });
-    })
+    }
 
     $(document).ready(function() {
       $list1 = $('#thelist');
@@ -527,7 +701,7 @@
       var uploader = WebUploader.create({
         // 不压缩image
         resize: false,
-        fileSingleSizeLimit: 20 * 1024 * 1024, //限制大小20M，单文件
+        fileSingleSizeLimit: 50 * 1024 * 1024, //限制大小50M，单文件
         fileSizeLimit: allMaxSize * 1024 * 1024, //限制大小500M，所有被选文件，超出选择不上
         // swf文件路径fex-team-webuploader/dist
         swf: '/static/js/Uploader.swf',
@@ -554,7 +728,7 @@
         } else if (type == "Q_TYPE_DENIED") {
           alert("请上传图片、视频、文档、图纸、压缩等格式文件");
         } else if (type == "F_EXCEED_SIZE") {
-          alert("单个文件大小不能超过10M");
+          alert("单个文件大小不能超过50M");
         }
       });
 
@@ -642,7 +816,8 @@
     })
 
     // 多附件模式
-    $("#addButton1").click(function() {
+    // $("#addButton1").click(function() {
+    function addButton1() {
       // if ({{.role}}!=1){
       //   alert("权限不够！");
       //   return;
@@ -658,7 +833,7 @@
         show: true,
         backdrop: 'static'
       });
-    })
+    }
 
     $(document).ready(function() {
       $list = $('#thelist1');
@@ -692,6 +867,7 @@
           var prodname = $('#prodname').val();
           var prodlabel = $('#prodlabel1').val();
           var prodprincipal = $('#prodprincipal1').val();
+          var relevancy = $('#relevancy1').val();
           // var html = ue.getContent();
           // alert(html);
           uploader.option('formData', {
@@ -699,7 +875,8 @@
             "prodcode": prodcode,
             "prodname": prodname,
             "prodlabel": prodlabel,
-            "prodprincipal": prodprincipal
+            "prodprincipal": prodprincipal,
+            "relevancy": relevancy
             // 'content':html,
             // {'tnumber':a,'title':b,'categoryid':c,'category':d,'content':e}
           });
@@ -770,7 +947,8 @@
     })
 
     //****添加文章
-    $("#addButton2").click(function() {
+    // $("#addButton2").click(function() {
+    function addButton2() {
       // if ({{.role}}!=1){
       //   alert("权限不够！");
       //   return;
@@ -787,10 +965,11 @@
         show: true,
         backdrop: 'static'
       });
-    })
+    }
 
     // 编辑成果信息
-    $("#editorProdButton").click(function() {
+    // $("#editorProdButton").click(function() {
+    function editorProdButton() {
       var selectRow = $('#table0').bootstrapTable('getSelections');
       if (selectRow.length < 1) {
         alert("请先勾选成果！");
@@ -822,6 +1001,25 @@
         $("#prodname3").val(selectRow[0].Title);
         $("#prodlabel3").val(selectRow[0].Label);
         $("#prodprincipal3").val(selectRow[0].Principal);
+        var value = selectRow[0].Relevancy
+        var relevancy3
+        if (value) {
+          if (value.length == 1) { //'<a href="/project/product/article/'
+            var array = value[0].Relevancy.split(",")
+            var relevarray = new Array()
+            for (i = 0; i < array.length; i++) {
+              relevarray[i] = array[i];
+            }
+            relevancy3 = relevarray.join(",");
+          } else if (value.length > 1) {
+            var relevarray = new Array()
+            for (i = 0; i < value.length; i++) {
+              relevarray[i] = value[i].Relevancy;
+            }
+            relevancy3 = relevarray.join(",");
+          }
+        }
+        $("#relevancy3").val(relevancy3);
         $('#modalProdEditor').modal({
           show: true,
           backdrop: 'static'
@@ -830,11 +1028,12 @@
         alert("权限不够！" + selectRow[0].Uid);
         return;
       }
-    })
+    }
 
     // 编辑成果附件——删除附件、文章或追加附件
     var selectrowid;
-    $("#editorAttachButton").click(function() {
+    // $("#editorAttachButton").click(function() {
+    function editorAttachButton() {
       // if ({{.role}}!=1){
       //   alert("权限不够！");
       //   return;
@@ -883,7 +1082,7 @@
         alert("权限不够！" + selectRow[0].Uid);
         return;
       }
-    })
+    }
 
     $(document).ready(function() {
       var uploader;
@@ -1006,9 +1205,9 @@
           return;
         }
         if (confirm("确定删除成果吗？一旦删除将无法恢复！")) {
-          var title = $.map(selectRow, function(row) {
-            return row.Title;
-          })
+          // var title = $.map(selectRow, function(row) {
+          //   return row.Title;
+          // })
           var ids = "";
           for (var i = 0; i < selectRow.length; i++) {
             if (i == 0) {
@@ -1035,6 +1234,93 @@
             }
           });
         }
+      } else {
+        alert("权限不够！" + selectRow[0].Uid);
+        return;
+      }
+    })
+
+    // 成果流程
+    $("#flowButton").click(function() {
+      var selectRow = $('#table0').bootstrapTable('getSelections');
+      if (selectRow.length <= 0) {
+        alert("请先勾选成果！");
+        return false;
+      }
+      //问题：如果多选，而其中有自己的，也有自己不具备权限的********
+      if ({{.Uid }} == 0) {
+        alert("权限不足！");
+        return;
+      }
+
+      if (selectRow[0].Uid === {{.Uid }} || {{.RoleFlow }} == "true") {
+        if (selectRow[0].Attachmentlink[0]) { //||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+          var site = /http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link); //非贪婪模式 
+        }
+        if (selectRow[0].Articlecontent[0]) {
+          var site = /http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link); //非贪婪模式 
+        }
+        if (selectRow[0].Pdflink[0]) {
+          var site = /http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link); //非贪婪模式 
+        }
+        if (site) {
+          alert("同步成果不允许！");
+          return;
+        }
+
+        var title = $.map(selectRow, function(row) {
+          return row.Title;
+        })
+
+        var ids = "";
+        for (var i = 0; i < selectRow.length; i++) {
+          if (i == 0) {
+            ids = selectRow[i].Id;
+          } else {
+            ids = ids + "," + selectRow[i].Id;
+          }
+        }
+        $("div#flowattachment").remove();
+        $("div#flowdocname").remove();
+        // var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
+        var th1 = "<div id='flowattachment' class='form-group must'><label class='col-sm-3 control-label'>成果id</label><div class='col-sm-7'><input type='tel' class='form-control' id='flowdata_attachment' name='flowdata_attachment' value=" + ids + "></div></div>"
+        var th2 = "<div id='flowdocname' class='form-group must'><label class='col-sm-3 control-label'>成果名称</label><div class='col-sm-7'><input type='tel' class='form-control' id='flowdata_docname' name='flowdata_docname' value=" + title + "></div></div>"
+        $(".modal-body-content").append(th1);
+        $(".modal-body-content").append(th2);
+
+        // $("#doctype").append('<option value="a">项目模板</option>');
+        $.ajax({
+          type: "get",
+          url: "/v1/admin/flowtypelist?page=1&limit=10",
+          success: function(data, status) {
+            $.each(data.doctypes, function(i, d) {
+              $("#doctype").append('<option value="' + d.ID + '">' + d.Name + '</option>');
+            });
+          },
+        });
+        $.ajax({
+          type: "get",
+          url: "/v1/admin/flowaccesscontextlist?page=1&limit=10",
+          success: function(data, status) {
+            $.each(data.accesscontexts, function(i, d) {
+              $("#accesscontext").append('<option value="' + d.ID + '">' + d.Name + '</option>');
+            });
+          },
+        });
+        $.ajax({
+          type: "get",
+          url: "/v1/admin/flowgrouplist?page=1&limit=10",
+          success: function(data, status) {
+            $.each(data.groups, function(i, d) {
+              $("#group").append('<option value="' + d.ID + '">' + d.Name + '</option>');
+            });
+          },
+        });
+
+        $('#modalFlow').modal({
+          show: true,
+          backdrop: 'static'
+        });
 
       } else {
         alert("权限不够！" + selectRow[0].Uid);
@@ -1056,6 +1342,239 @@
         backdrop: 'static'
       });
     })
+
+    // 分享成果
+    $("#shareButton").click(function() {
+      var selectRow = $('#table0').bootstrapTable('getSelections');
+      if (selectRow.length < 1) {
+        alert("请先勾选成果！");
+        return;
+      }
+      if (selectRow[0].Uid === {{.Uid }} || {{.RoleGet }} == "true") {
+        $("div#flowattachment").remove();
+        $("div#flowdocname").remove();
+        $('#modalShareExpireTime').modal({
+          show: true,
+          backdrop: 'static'
+        });
+      } else {
+        alert("权限不够！" + selectRow[0].Uid);
+        return;
+      }
+    })
+
+    //分享生成
+    function createShare() {
+      var selectRow = $('#table0').bootstrapTable('getSelections');
+      var ids = "";
+      var expireInfinity = "";
+      var expireTime = "";
+      for (var i = 0; i < selectRow.length; i++) {
+        if (i == 0) {
+          ids = selectRow[i].Id;
+        } else {
+          ids = ids + "," + selectRow[i].Id;
+        }
+      }
+      // ?matterUuids=1&expireInfinity=true&expireTime=1
+      var expiretime = $('#expiretime').val();
+      console.log(expireTime)
+      if (expiretime == "INFINITY") {
+        expireInfinity = "true";
+        expireTime = moment().format('YYYY-MM-DD HH:mm:ss'); //getdate()
+      } else if (expiretime == "HOUR") {
+        expireInfinity = "false"
+        expireTime = moment().add(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
+      } else if (expiretime == "DAY") {
+        expireInfinity = "false"
+        expireTime = moment().add(1, 'days').format('YYYY-MM-DD HH:mm:ss');
+      } else if (expiretime == "WEEK") {
+        expireInfinity = "false"
+        expireTime = moment().add(1, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+      } else if (expiretime == "MONTH") {
+        expireInfinity = "false"
+        expireTime = moment().add(1, 'months').format('YYYY-MM-DD HH:mm:ss');
+      } else if (expiretime == "YEAR") {
+        expireInfinity = "false"
+        expireTime = moment().add(1, 'years').format('YYYY-MM-DD HH:mm:ss');
+      }
+      $.ajax({
+        type: "post",
+        url: "/v1/share/create",
+        data: { matterUuids: ids, expireInfinityStr: expireInfinity, expireTimeStr: expireTime },
+        success: function(data, status) {
+          $('#modalShareExpireTime').modal('hide');
+
+          $("input#cid").remove();
+          // var th1 = "<input id='cid' type='hidden' name='cid' value='" + selectRow[0].Id + "'/>"
+          // $(".modal-body").append(th1); //这里是否要换名字$("p").remove();
+          document.getElementById("sharetitle").innerText = data.data.name;
+          document.getElementById("username").innerText = data.data.username;
+          // document.getElementById("uuid").innerText='https://zsj.itdos.com/share/detail/'+data.data.uuid;
+          // document.getElementById("uuid").append('<a title="复制链接" class="mr15"><i class="fa fa-copy"></i></a>');
+          document.getElementById("uuid").innerHTML = '<span id="copyuuid">' + {{.Site }} + '/v1/share/detail/' + data.data.uuid + '</span><a title="复制链接" class="mr15" data-clipboard-target="#copyuuid"><i class="fa fa-copy"></i></a>'
+          document.getElementById("code").innerHTML = '<span id="copycode">' + data.data.code + '</span><a title="复制提取码" class="mr15" data-clipboard-target="#copycode"><i class="fa fa-copy"></i></a>';
+
+          document.getElementById("expireTime").innerText = moment(data.data.expireTime).format('YYYY-MM-DD HH:mm:ss')
+          $('#modalShare').modal({
+            show: true,
+            backdrop: 'static'
+          });
+        },
+      });
+    }
+
+    new ClipboardJS('.mr15', {
+      container: document.getElementById('copyuuid')
+    });
+    new ClipboardJS('.mr15', {
+      container: document.getElementById('copycode')
+    });
+
+    function copyuuid() {
+      var clipboard = new ClipboardJS("#btncopy", {
+        text: function() {
+          //寻找被激活的那个div pre元素,同时获取它下面的内容
+          return '链接:' + $("span#copyuuid").text() + ' 提取码:' + $("span#copycode").text();
+        }
+      });
+      clipboard.on('success', function(e) {
+        alert("复制成功，去粘贴试试吧！");
+        //可执行其他代码操作
+      });
+      clipboard.on('error', function(e) {
+        alert("复制失败！请手动复制")
+      });
+    }
+
+    // var clipboard = new ClipboardJS(".mr15",{
+    //     text : function(){
+    //         //寻找被激活的那个div pre元素,同时获取它下面的内容
+    //         return $("span#copyuuid").text();
+    //     }
+    // });
+
+    // clipboard.on('success',function(e){
+    //     alert("已复制到粘贴板！");
+    //     console.log(e);
+    // });
+
+    // clipboard.on('error',function(e){
+    //     console.log(e);
+    // });
+
+    // 没有用到
+    function getdate() {
+      var nowdate = new Date();
+      //用yyyy-MM-dd HH:mm:ss的格式输出
+      var year = nowdate.getFullYear(); //年
+      var month = nowdate.getMonth() > 9 ? nowdate.getMonth() : "0" + nowdate.getMonth(); //月
+      var day = nowdate.getDate() > 9 ? nowdate.getDate() : "0" + nowdate.getMonth(); //日
+      var hours = nowdate.getHours() > 9 ? nowdate.getHours() : "0" + nowdate.getHours(); //时
+      var minutes = nowdate.getMinutes() > 9 ? nowdate.getMinutes() : "0" + nowdate.getMinutes(); //分
+      var seconds = nowdate.getSeconds() > 9 ? nowdate.getSeconds() : "0" + nowdate.getSeconds(); //秒
+
+      var mydate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+
+      return mydate;
+    }
+    // const TYPES = ['info', 'warning', 'success', 'error'],
+    //   TITLES = {
+    //     'info': 'Notice!',
+    //     'success': 'Awesome!',
+    //     'warning': 'Watch Out!',
+    //     'error': 'Doh!'
+    //   },
+    //   CONTENT = {
+    //     'info': 'Hello, world! This is a toast message.',
+    //     'success': 'The action has been completed.',
+    //     'warning': 'It\'s all about to go wrong',
+    //     'error': 'It all went wrong.'
+    //   },
+    //   POSITION = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
+
+    // $.toastDefaults.position = 'top-center';
+    // $.toastDefaults.dismissible = true;
+    // $.toastDefaults.stackable = true;
+    // $.toastDefaults.pauseDelayOnHover = true;
+
+    // 成果添加到购物车
+    $("#cartButton").click(function() {
+      var selectRow = $('#table0').bootstrapTable('getSelections');
+      if (selectRow.length <= 0) {
+        alert("请先勾选成果！");
+        return false;
+      }
+      if (selectRow[0].Attachmentlink[0]) { //||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+        var site = /http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link); //非贪婪模式 
+      }
+      if (selectRow[0].Articlecontent[0]) {
+        var site = /http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link); //非贪婪模式 
+      }
+      if (selectRow[0].Pdflink[0]) {
+        var site = /http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link); //非贪婪模式 
+      }
+      if (site) {
+        alert("同步成果不允许！");
+        return;
+      }
+      var title = $.map(selectRow, function(row) {
+        return row.Title;
+      })
+      var ids = "";
+      for (var i = 0; i < selectRow.length; i++) {
+        if (i == 0) {
+          ids = selectRow[i].Id;
+        } else {
+          ids = ids + "," + selectRow[i].Id;
+        }
+      }
+      $.ajax({
+        type: "post",
+        url: "/v1/cart/createproductcart",
+        data: { ids: ids },
+        success: function(data, status) {
+          if (data.code=="ERROR"){
+            alert(data.msg);
+          }else{
+            alert("添加“" + data.data[0].Title + "”购物车成功！(status:" + status + "！)");
+          }
+          // $.toast({
+          //   type: TYPES[1],
+          //   title: TITLES['info'],
+          //   subtitle: '11 mins ago',
+          //   content: CONTENT['info'],
+          //   delay: 5000
+          // });
+        }
+      });
+    })
+
+    // $(function() {
+    //   $('.popup-gallery').magnificPopup({
+    //     delegate: 'a',
+    //     type: 'image',
+    //     removalDelay: 300,
+    //     mainClass: 'mfp-with-zoom',
+    //     titleSrc: 'title',
+    //     gallery: {
+    //       enabled: true
+    //     },
+    //     zoom: {
+    //       enabled: true, // By default it's false, so don't forget to enable it
+    //       duration: 300, // duration of the effect, in milliseconds
+    //       easing: 'ease-in-out', // CSS transition easing function
+    //       // The "opener" function should return the element from which popup will be zoomed in
+    //       // and to which popup will be scaled down
+    //       // By defailt it looks for an image tag:
+    //       opener: function(openerElement) {
+    //         // openerElement is the element on which popup was initialized, in this case its <a> tag
+    //         // you don't need to add "opener" option if this code matches your needs, it's defailt one.
+    //         return openerElement.is('img') ? openerElement : openerElement.find('img');
+    //       }
+    //     }
+    //   });
+    // });
     </script>
     <!-- 批量上传 -->
     <div class="form-horizontal">
@@ -1152,6 +1671,16 @@
                   <div class="col-sm-7">
                     <input type="tel" class="form-control" id="prodprincipal1" name="prodprincipal1"></div>
                 </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">关联文件</label>
+                  <div class="col-sm-1">
+                    <!-- <form name="myform">  -->
+                    <input type="checkbox" name="box1" id="box1" value="1" onclick="station_select1()">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="tel" class="form-control" id="relevancy1" name="relevancy1" disabled="true" placeholder="输入文件编号，以英文,号分割">
+                  </div>
+                </div>
                 <!--SWF在初始化的时候指定，在后面将展示-->
                 <div id="uploader1" style="position:relative;text-align: center;">
                   <!--用来存放文件信息-->
@@ -1170,49 +1699,6 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
               <!-- <button type="button" class="btn btn-primary" onclick="save1()">保存</button> -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 新建dwg文件 -->
-    <div class="form-horizontal">
-      <div class="modal fade" id="modalNewDwg">
-        <div class="modal-dialog" id="modalDialog1">
-          <div class="modal-content">
-            <div class="modal-header" style="background-color: #8bc34a">
-              <button type="button" class="close" data-dismiss="modal">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h3 class="modal-title">新建DWG文件</h3>
-            </div>
-            <div class="modal-body">
-              <div class="modal-body-content">
-                <div class="form-group must">
-                  <label class="col-sm-3 control-label">编号</label>
-                  <div class="col-sm-7">
-                    <input type="text" class="form-control" id="NewDwgcode" name="NewDwgcode"></div>
-                </div>
-                <div class="form-group must">
-                  <label class="col-sm-3 control-label">名称</label>
-                  <div class="col-sm-7">
-                    <input type="tel" class="form-control" id="NewDwgname" name="NewDwgname"></div>
-                </div>
-                <div class="form-group must">
-                  <label class="col-sm-3 control-label">关键字</label>
-                  <div class="col-sm-7">
-                    <input type="tel" class="form-control" id="NewDwglabel" name="NewDwglabel" placeholder="以英文,号分割"></div>
-                </div>
-                <div class="form-group must">
-                  <label class="col-sm-3 control-label">设计</label>
-                  <div class="col-sm-7">
-                    <input type="tel" class="form-control" id="NewDwgprincipal" name="NewDwgprincipal"></div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" class="btn btn-primary" onclick="saveNewDwg()">保存</button>
             </div>
           </div>
         </div>
@@ -1260,12 +1746,10 @@
                   <label class="col-sm-3 control-label" style="padding-left:10px;">关联文件</label>
                   <div class="col-sm-1">
                     <!-- <form name="myform">  -->
-                    <input type="checkbox" name="box" id="box" value="1" onclick="station_select()" style="width:30px ;height: 24px">
+                    <input type="checkbox" name="box2" id="box2" value="1" onclick="station_select2()" style="width:30px ;height: 24px">
                   </div>
                   <div class="col-sm-6">
-                    <input type="tel" class="form-control" id="relevancy" name="relevancy" disabled="true" placeholder="输入文件编号，以英文,号分割">
-                    <!-- <input type="text" name="aa" id="text">  -->
-                    <!-- </form> -->
+                    <input type="tel" class="form-control" id="relevancy2" name="relevancy2" disabled="true" placeholder="输入文件编号，以英文,号分割">
                   </div>
                 </div>
               </div>
@@ -1343,7 +1827,7 @@
                       <th data-formatter="index1">#</th>
                       <th data-field="Title" data-sortable="true">名称</th>
                       <th data-field="FileSize" data-sortable="true">大小</th>
-                      <th data-field="Link" data-formatter="setAttachlink">下载</th>
+                      <th data-field="Link" data-formatter="setAttachlink">附件</th>
                       <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
                       <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
                     </tr>
@@ -1430,6 +1914,12 @@
                   <div class="col-sm-7">
                     <input type="tel" class="form-control" id="prodprincipal3" name="prodprincipal3"></div>
                 </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">关联文件</label>
+                  <div class="col-sm-7">
+                    <input type="tel" class="form-control" id="relevancy3" name="relevancy3" placeholder="输入文件编号，以英文,号分割">
+                  </div>
+                </div>
               </div>
             </div>
             <div class="modal-footer">
@@ -1489,6 +1979,189 @@
         </div>
       </div>
     </div>
+    <!-- 新建dwg文件 -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="modalNewDwg">
+        <div class="modal-dialog" id="modalDialog8">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #8bc34a">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">新建DWG文件</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">编号</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" id="NewDwgcode" name="NewDwgcode"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">名称</label>
+                  <div class="col-sm-7">
+                    <input type="tel" class="form-control" id="NewDwgname" name="NewDwgname"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">关键字</label>
+                  <div class="col-sm-7">
+                    <input type="tel" class="form-control" id="NewDwglabel" name="NewDwglabel" placeholder="以英文,号分割"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">设计</label>
+                  <div class="col-sm-7">
+                    <input type="tel" class="form-control" id="NewDwgprincipal" name="NewDwgprincipal"></div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" onclick="saveNewDwg()">保存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 新建flow -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="modalFlow">
+        <div class="modal-dialog" id="modalDialog9">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #8bc34a">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">流程</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">流程类型</label>
+                  <div class="col-sm-7">
+                    <select name="doctype" id="doctype" class="form-control" required placeholder="选择flow类型：">
+                      <option>选择flow类型：</option>
+                      <!-- <option value="1">SL</option> -->
+                      <!-- <option value="2">DL</option> -->
+                      <!-- <option value="0">SZ</option> -->
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">AccessContext</label>
+                  <div class="col-sm-7">
+                    <select name="accesscontext" id="accesscontext" class="form-control" required>
+                      <option>选择ac：</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">group</label>
+                  <div class="col-sm-7">
+                    <select name="group" id="group" class="form-control" required>
+                      <option>选择用户组：</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div class="form-group must">
+                <label class="col-sm-3 control-label">文章</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="flowdata_article" name="flowdata_article" value="">
+                </div>
+              </div> -->
+                <!-- <div class="form-group must">
+                <label class="col-sm-3 control-label">附件</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="flowdata_attachment" name="flowdata_attachment" value=ids>
+                </div>
+              </div> -->
+                <!-- <div class="form-group must">
+                <label class="col-sm-3 control-label">pdf</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="flowdata_pdf" name="flowdata_pdf">
+                </div>
+              </div> -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" onclick="saveFlowDoc()">保存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 分享过期时间选择 -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="modalShareExpireTime">
+        <div class="modal-dialog" id="modalDialog10">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #8bc34a">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">分享</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">有效期</label>
+                  <div class="col-sm-7">
+                    <select name="expiretime" id="expiretime" class="form-control" required placeholder="选择有效期：">
+                      <option value="HOUR">1小时</option>
+                      <option value="DAY" selected>1天</option>
+                      <option value="WEEK">1周</option>
+                      <option value="MONTH">1个月</option>
+                      <option value="YEAR">1年</option>
+                      <option value="INFINITY">永远有效</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary btn-sm mr5" onclick="createShare()">分享</button>
+              <button type="button" class="btn btn-default  btn-sm mr5" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 分享结果信息 -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="modalShare">
+        <div class="modal-dialog" id="modalDialog11">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #8bc34a">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title"><img src="/static/eyeblue/img/archive.77d78eb7.svg" class="share-icon">分享成果信息</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <!-- <div class="container"> -->
+                <dl class="dl-horizontal">
+                  <dt><span class="italic"><i class="fa fa-check text-success"></i></span>分享成功：</dt>
+                  <dd id="sharetitle"></dd>
+                  <dt>分享者：</dt>
+                  <dd id="username" value=""></dd>
+                  <dt>失效时间：</dt>
+                  <dd id="expireTime"></dd>
+                  <dt>链接:</dt>
+                  <dd id="uuid"></dd>
+                  <dt>提取码：</dt>
+                  <dd id="code"></dd>
+                </dl>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary copy" id="btncopy" onclick="copyuuid()">复制链接+提取码</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- <script type="text/javascript" src="/static/froala/js/jquery.min.1.11.0.js"></script> -->
   <script type="text/javascript" src="/static/froala/js/codemirror.min.js"></script>
@@ -1536,9 +2209,9 @@
     //大屏幕
     var toolbarButtonsMD = ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'specialCharacters', 'insertHR', 'undo', 'redo', 'clearFormatting', '|', 'html', 'help'];
     //小屏幕'fullscreen',
-    var toolbarButtonsSM = ['bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'insertLink', 'insertImage', 'insertTable', 'undo', 'redo'];
+    var toolbarButtonsSM = ['bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'insertLink', 'insertImage', 'insertVideo', 'insertTable', 'undo', 'redo'];
     //手机
-    var toolbarButtonsXS = ['bold', 'italic', 'fontFamily', 'fontSize', 'undo', 'redo'];
+    var toolbarButtonsXS = ['insertImage', 'insertVideo', 'bold', 'italic', 'fontSize', 'undo', 'redo'];
     var pid = $('#pid').val();
     //编辑器初始化并赋值 
     $('#edit').froalaEditor({
@@ -1582,11 +2255,7 @@
       // toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'align','color','fontSize','insertImage','insertTable','undo', 'redo']
     });
   })
-  </script>
-  <!-- 初始化/销毁编辑器
-$('#edit').froalaEditor({});
-$('#edit').froalaEditor('destroy'); -->
-  <script type="text/javascript">
+
   //添加文章
   function save2() {
     // var radio =$("input[type='radio']:checked").val();
@@ -1596,7 +2265,7 @@ $('#edit').froalaEditor('destroy'); -->
     var subtext = $('#subtext1').val();
     var prodprincipal = $('#prodprincipal2').val();
     var prodlabel = $('#prodlabel2').val();
-    var relevancy = $('#relevancy').val();
+    var relevancy = $('#relevancy2').val();
     var html = $('div#edit').froalaEditor('html.get'); //$('#edit')[0].childNodes[1].innerHTML;
     // $('#myModal').on('hide.bs.modal', function () {  
     if (prodname && prodcode) {
@@ -1609,7 +2278,29 @@ $('#edit').froalaEditor('destroy'); -->
           $('#modalTable2').modal('hide');
           $('#table0').bootstrapTable('refresh', { url: '/project/products/' + { {.Id } } });
         },
+      });
+    } else {
+      alert("请填写编号和名称！");
+      return;
+    }
+  }
 
+  //添加流程flow
+  function saveFlowDoc() {
+    var doctype = $('#doctype').val();
+    var accesscontext = $('#accesscontext').val();
+    var group = $('#group').val();
+    var docdata = $('#flowdata_attachment').val();
+    var docname = $('#flowdata_docname').val();
+    if (doctype && group) {
+      $.ajax({
+        type: "post",
+        url: "/v1/admin/flowdoc",
+        data: { dtid: doctype, acid: accesscontext, gid: group, docname: docname, docdata: docdata },
+        success: function(data, status) {
+          alert("添加“" + data.err + "”成功！(status:" + status + ".)");
+          $('#modalFlow').modal('hide');
+        },
       });
     } else {
       alert("请填写编号和名称！");
@@ -1653,12 +2344,12 @@ $('#edit').froalaEditor('destroy'); -->
     var prodname = $('#prodname3').val();
     var prodlabel = $('#prodlabel3').val();
     var prodprincipal = $('#prodprincipal3').val();
-
+    var relevancy = $('#relevancy3').val();
     if (prodname && prodcode) {
       $.ajax({
         type: "post",
         url: "/project/product/updateproduct",
-        data: { pid: projectid, code: prodcode, title: prodname, label: prodlabel, principal: prodprincipal }, //父级id
+        data: { pid: projectid, code: prodcode, title: prodname, label: prodlabel, principal: prodprincipal, relevancy: relevancy }, //父级id
         success: function(data, status) {
           alert("添加“" + data + "”成功！(status:" + status + ".)");
           $('#modalProdEditor').modal('hide');
@@ -1765,15 +2456,24 @@ $('#edit').froalaEditor('destroy'); -->
   }
 
   //勾选后输入框可用
-  function station_select() {
-    if (box.checked) {
-      document.getElementById("relevancy").disabled = false;
+  function station_select1() {
+    if (box1.checked) {
+      document.getElementById("relevancy1").disabled = false;
     } else {
-      document.getElementById("relevancy").disabled = true;
+      document.getElementById("relevancy1").disabled = true;
+    }
+  }
+
+  function station_select2() {
+    if (box2.checked) {
+      document.getElementById("relevancy2").disabled = false;
+    } else {
+      document.getElementById("relevancy2").disabled = true;
     }
   }
 
   $(document).ready(function() {
+    $("#imgmodalDialog").draggable({ handle: ".modal-header" });
     $("#modalDialog").draggable({ handle: ".modal-header" }); //为模态对话框添加拖拽
     $("#modalDialog1").draggable({ handle: ".modal-header" });
     $("#modalDialog2").draggable({ handle: ".modal-header" });
@@ -1782,7 +2482,12 @@ $('#edit').froalaEditor('destroy'); -->
     $("#modalDialog5").draggable({ handle: ".modal-header" });
     $("#modalDialog6").draggable({ handle: ".modal-header" });
     $("#modalDialog7").draggable({ handle: ".modal-header" });
-    $("#modalNewDwg").draggable({ handle: ".modal-header" });
+    $("#modalDialog8").draggable({ handle: ".modal-header" });
+    $("#modalDialog9").draggable({ handle: ".modal-header" });
+    $("#modalDialog10").draggable({ handle: ".modal-header" });
+    $("#modalDialog11").draggable({ handle: ".modal-header" });
+    // $("#modalNewDwg").draggable({ handle: ".modal-header" });
+    // $("#modalFlow").draggable({ handle: ".modal-header" });
     $("#myModal").css("overflow", "hidden"); //禁止模态对话框的半透明背景滚动
   })
   </script>

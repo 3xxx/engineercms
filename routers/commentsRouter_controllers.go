@@ -297,6 +297,14 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:BusinessController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:BusinessController"],
 		beego.ControllerComments{
+			Method: "BusinessMonthCheck5",
+			Router: `/businessmonthcheck5/:id`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:BusinessController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:BusinessController"],
+		beego.ControllerComments{
 			Method: "BusinessMonthCheckSum",
 			Router: `/businessmonthchecksum`,
 			AllowHTTPMethods: []string{"get"},
@@ -323,6 +331,14 @@ func init() {
 		beego.ControllerComments{
 			Method: "BusinessMonthCheckSum4",
 			Router: `/businessmonthchecksum4`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:BusinessController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:BusinessController"],
+		beego.ControllerComments{
+			Method: "BusinessMonthCheckSum5",
+			Router: `/businessmonthchecksum5`,
 			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})
@@ -1135,6 +1151,38 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"],
+		beego.ControllerComments{
+			Method: "AddLocationNavigate",
+			Router: `/addlocationnavigate/:id`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"],
+		beego.ControllerComments{
+			Method: "AddLocationPart",
+			Router: `/addlocationpart/:id`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"],
+		beego.ControllerComments{
+			Method: "GetLocation",
+			Router: `/getlocation/:id`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LocationController"],
+		beego.ControllerComments{
+			Method: "GetLocationById",
+			Router: `/getlocationbyid/:id`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
 	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LoginController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:LoginController"],
 		beego.ControllerComments{
 			Method: "Islogin",
@@ -1188,14 +1236,6 @@ func init() {
 			Method: "PhotoSwipe",
 			Router: `/photoswipe`,
 			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:MainController"],
-		beego.ControllerComments{
-			Method: "Postdata",
-			Router: `/sendmessage`,
-			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
@@ -1332,6 +1372,14 @@ func init() {
 			Method: "ProjectUserRole",
 			Router: `/projectuserrole`,
 			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:ProjController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:ProjController"],
+		beego.ControllerComments{
+			Method: "QuickAddWxProjTemplet",
+			Router: `/quickaddwxproject`,
+			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 

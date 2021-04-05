@@ -231,7 +231,7 @@ func init() {
 
 	beego.Router("/role/test", &controllers.RoleController{}, "*:Test")
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
-	beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
+	// beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
 	//文档
 	beego.Router("/doc/ecms", &controllers.MainController{}, "get:Getecmsdoc")
 	beego.Router("/doc/meritms", &controllers.MainController{}, "get:Getmeritmsdoc")

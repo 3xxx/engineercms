@@ -101,7 +101,7 @@
         </div>
         <ul class="list-unstyled mt-3">
           <li class="media">
-            <a href="/v1/flv" target="-blank" title="直播" class="mr-3 w-25">
+            <a href="/v1/flv?filepath=/static/download/VID20190517113037.mp4" target="-blank" title="直播" class="mr-3 w-25">
               <img src="/static/images/1.jpg" class="rounded w-100" alt="直播">
             </a>
             <div class="media-body">

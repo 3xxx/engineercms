@@ -350,8 +350,9 @@
   }
 
   function StatusFormatter(value, row, index) {
-    // alert(row.Status);
-    if (row.status == "0") { //Status
+    // alert(row.status);
+    // if (row.status == "0") {
+    if (row.role == "0") {
       return '正常';
     } else {
       return '失效';
@@ -425,7 +426,8 @@
       $(".modal-body").append(th1); //这里是否要换名字$("p").remove();
       $("#Rolename1").val(selectRow[0].name);
       $("#Rolenumber1").val(selectRow[0].Rolenumber);
-      $("#Status1").val(selectRow[0].status);
+      $("#Status1").val(selectRow[0].role);
+      // $("#Status1").val(selectRow[0].status);
       // alert(JSON.stringify(selectRow));
       // alert(selectRow[0].Id);
       // var title = $('#'+id).attr("value");

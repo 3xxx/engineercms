@@ -1598,7 +1598,7 @@
               placeholder: '请选择权限',
             },
             pk: 1,
-            title: 'Enter Status'
+            title: 'Enter Permission'
           }
         }
       ]
@@ -1659,7 +1659,7 @@
             },
             pk: 1,
             // url: '/admin/user/updateuser',
-            title: 'Enter Status'
+            title: 'Enter Permission'
           }
         }, {
           field: 'action',

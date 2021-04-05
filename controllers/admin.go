@@ -1775,7 +1775,7 @@ func (c *AdminController) GetWxProjectConfig() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /putwxprojectconfig [post]
-//更新json文件
+// 更新json文件
 func (c *AdminController) PutWxProjectConfig() {
 	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
 	// beego.Info()

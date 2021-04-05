@@ -3337,6 +3337,15 @@
                 ],
                 "description": "get admin page",
                 "operationId": "FlvController.getFlv",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "filepath",
+                        "description": "The mp4 file path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "",
@@ -3768,6 +3777,58 @@
                     },
                     "404": {
                         "description": "project not found"
+                    }
+                }
+            }
+        },
+        "/project/quickaddwxproject": {
+            "post": {
+                "tags": [
+                    "project"
+                ],
+                "description": "post quickaddproject..",
+                "operationId": "ProjController.post wx quickaddproject...",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "projectcode",
+                        "description": "The projectcode of project",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "projecttitle",
+                        "description": "The projecttitle of project",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "tempprojid",
+                        "description": "The tempprojid of project",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "istemppermission",
+                        "description": "The permission of project",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
                     }
                 }
             }
@@ -4284,6 +4345,137 @@
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/models.CreateBusiness"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pas not found"
+                    }
+                }
+            }
+        },
+        "/wx/addlocationnavigate/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post locationnavigate by locationid",
+                "operationId": "LocationController.post locationnavigate by locationid",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "The title of location",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "label",
+                        "description": "The label of locationnavigate",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "location",
+                        "description": "The location of location",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "address",
+                        "description": "The address of location",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "lat",
+                        "description": "The lat of location",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "lng",
+                        "description": "The lng of location",
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The locationid of location",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateLocation"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pas not found"
+                    }
+                }
+            }
+        },
+        "/wx/addlocationpart/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post location by projectid",
+                "operationId": "LocationController.post location by projectid",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "The title of locationpart",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "describe",
+                        "description": "The describe of locationpart",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "sort",
+                        "description": "The sort of locationpart",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "userid",
+                        "description": "The userid of location",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The projectid of project",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateLocation"
                         }
                     },
                     "400": {
@@ -5144,6 +5336,122 @@
                 }
             }
         },
+        "/wx/businessmonthcheck4/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get businessmonthcheck",
+                "operationId": "BusinessController.get businessmothcheckin",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The projectid of business",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of check",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of check",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "year",
+                        "description": "The year of check",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "month",
+                        "description": "The month of check",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/businessmonthcheck5/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get businessmonthcheck",
+                "operationId": "BusinessController.get businessmothcheckin",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The projectid of business",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of check",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of check",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "year",
+                        "description": "The year of check",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "month",
+                        "description": "The month of check",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
         "/wx/businessmonthchecksum": {
             "get": {
                 "tags": [
@@ -5191,6 +5499,52 @@
             }
         },
         "/wx/businessmonthchecksum3": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get businessmonthcheck",
+                "operationId": "BusinessController.get businessmothcheckin",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/businessmonthchecksum4": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get businessmonthcheck",
+                "operationId": "BusinessController.get businessmothcheckin",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/businessmonthchecksum5": {
             "get": {
                 "tags": [
                     "wx"
@@ -5493,6 +5847,70 @@
                     },
                     "404": {
                         "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getlocation/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get location by userid",
+                "operationId": "LocationController.get location by userid",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The projectid of location",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetLocationPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "location not found"
+                    }
+                }
+            }
+        },
+        "/wx/getlocationbyid/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get location by locationid",
+                "operationId": "LocationController.get location by locationid",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of location",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetLocationPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "location not found"
                     }
                 }
             }
@@ -6522,13 +6940,13 @@
                 }
             }
         },
-        "/wx/searchprojectproduct": {
+        "/wx/searchproduct": {
             "get": {
                 "tags": [
                     "wx"
                 ],
-                "description": "get allproject's product search by page",
-                "operationId": "SearchController.get allproject's product search list",
+                "description": "get allprojects' products search by page",
+                "operationId": "SearchController.get allprojects' products search list",
                 "parameters": [
                     {
                         "in": "query",
@@ -6538,8 +6956,138 @@
                     },
                     {
                         "in": "query",
-                        "name": "searchpage",
-                        "description": "The page for drawings list",
+                        "name": "productid",
+                        "description": "The id of project",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "drawings not found"
+                    }
+                }
+            }
+        },
+        "/wx/searchproductdata": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get all projects' products search by page",
+                "operationId": "SearchController.get all projects' products search list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The keyword of products",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The limit of products list",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageNo",
+                        "description": "The page of products list",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "drawings not found"
+                    }
+                }
+            }
+        },
+        "/wx/searchprojectproduct": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get a project's products search by page",
+                "operationId": "SearchController.get a project's products search list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The keyword of products",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "productid",
+                        "description": "The id of project",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "drawings not found"
+                    }
+                }
+            }
+        },
+        "/wx/searchprojectproductdata": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get a project's products search by page",
+                "operationId": "SearchController.get a project's products search list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The keyword of products",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageNo",
+                        "description": "The pageNo of drawings list",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The limit of products list",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "productid",
+                        "description": "The id of project",
                         "required": true,
                         "type": "string"
                     }
@@ -6687,6 +7235,29 @@
                 }
             }
         },
+        "/wx/sendmessage": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post Data(file)",
+                "operationId": "MainController.post Data(file)",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
         "/wx/ssologin": {
             "get": {
                 "tags": [
@@ -6759,6 +7330,38 @@
                     },
                     "404": {
                         "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/standardpdf": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get standardpdf",
+                "operationId": "StandardController.get standardpdf",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "pdflink",
+                        "description": "The link of standardpdf",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Create"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "cart not found"
                     }
                 }
             }
@@ -7602,6 +8205,10 @@
             "title": "CreateBusiness",
             "type": "object"
         },
+        "models.CreateLocation": {
+            "title": "CreateLocation",
+            "type": "object"
+        },
         "models.DeleteTopicReply": {
             "title": "DeleteTopicReply",
             "type": "object"
@@ -7632,6 +8239,10 @@
         },
         "models.GetFinance": {
             "title": "GetFinance",
+            "type": "object"
+        },
+        "models.GetLocationPage": {
+            "title": "GetLocationPage",
             "type": "object"
         },
         "models.GetOnlyPdf": {
