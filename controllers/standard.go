@@ -300,7 +300,7 @@ func (c *StandardController) Search() { //search用的是post方法
 
 // @Title get standardpdf
 // @Description get standardpdf
-// @Param pdflink query string true "The link of standardpdf"
+// @Param file query string true "The link of standardpdf"
 // @Success 200 {object} models.Create
 // @Failure 400 Invalid page supplied
 // @Failure 404 cart not found
@@ -313,7 +313,7 @@ func (c *StandardController) StandardPdf() { //search用的是post方法
 		c.Data["Url"] = route
 		c.Redirect("/login?url="+route, 302)
 	}
-	pdflink := c.Input().Get("pdflink")
+	pdflink := c.Input().Get("file")
 	c.Data["PdfLink"] = pdflink
 	c.TplName = "web/viewer.html"
 }

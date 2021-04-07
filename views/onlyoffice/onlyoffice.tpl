@@ -59,7 +59,7 @@
     </button> -->
   <button type="button" class="floating-button2" id="getSignature">获取签名</button>
   <div id="placeholder" style="height: 100%"></div>
-  <script type="text/javascript" src="http://172.22.240.1:9000/web-apps/apps/api/documents/api.js"></script>
+  <script type="text/javascript" src="{{.Onlyofficeapi_url}}/web-apps/apps/api/documents/api.js"></script>
   <!-- http://111.230.181.182:8080/web-apps/apps/api/documents/api.js -->
   <script type="text/javascript">
   var onAppReady = function() {
@@ -111,7 +111,7 @@
     console.log("ONLYOFFICE Document Editor insertImage: " + event.data);
     docEditor.insertImage({
       "fileType": "png",
-      "url": "http://172.22.240.1:8081/attachment/20190728测试上传文件名修改/2020January/1580363537940306800_small.png"
+      "url": "{{.Engineercmsapi_url}}/attachment/20190728测试上传文件名修改/2020January/1580363537940306800_small.png"
     });
   })
 
@@ -119,7 +119,7 @@
     console.log("ONLYOFFICE Document Editor insertImage" + event.data);
     docEditor.insertImage({
       "fileType": "png",
-      "url": "http://172.22.240.1:8081/attachment/20190728测试上传文件名修改/2020January/1580363537940306800_small.png"
+      "url": "{{.Engineercmsapi_url}}/attachment/20190728测试上传文件名修改/2020January/1580363537940306800_small.png"
     });
   };
 
@@ -214,20 +214,20 @@
         break;
       }
     }
-    var changeUrl2 = "http://172.22.240.1:8081" + changeUrl.replace(/\u0026/, "&");
+    var changeUrl2 = "{{.Engineercmsapi_url}}" + changeUrl.replace(/\u0026/, "&");
     // alert(changeUrl2);
-    var previousurl = "http://172.22.240.1:8081" + previousUrl
+    var previousurl = "{{.Engineercmsapi_url}}" + previousUrl
     // alert(previousurl);
-    var fileurl = "http://172.22.240.1:8081" + fileUrl
+    var fileurl = "{{.Engineercmsapi_url}}" + fileUrl
     // alert(fileurl);
     docEditor.setHistoryData({
       //下面这里存变化的位置
-      // "changesUrl":"http://172.22.240.1:808100:9000/cache/files/1522475922103673500_7157/changes.zip/changes.zip?md5=syFUueSXdnCWe60Iym001g==&expires=1525068326&disposition=attachment&ooname=output.zip",//string1, //the changesUrl from the JSON object returned after saving the document
+      // "changesUrl":"{{.Engineercmsapi_url}}00:9000/cache/files/1522475922103673500_7157/changes.zip/changes.zip?md5=syFUueSXdnCWe60Iym001g==&expires=1525068326&disposition=attachment&ooname=output.zip",//string1, //the changesUrl from the JSON object returned after saving the document
       "changesUrl": changeUrl2,
       "key": key,
       "previous": {
         "key": previousKey, //这里不影响版本切换。与上个版本对比
-        "url": previousurl //previousUrl//http://172.22.240.1:808100:9000/cache/files/1521953170330601700_4540/output.docx/output.docx?md5=eSwnrSSumTeMuh59IoXhCQ==&expires=1524547423&disposition=attachment&ooname=output.docx这里影响版本
+        "url": previousurl //previousUrl//{{.Engineercmsapi_url}}00:9000/cache/files/1521953170330601700_4540/output.docx/output.docx?md5=eSwnrSSumTeMuh59IoXhCQ==&expires=1524547423&disposition=attachment&ooname=output.docx这里影响版本
       },
       "url": fileurl, //fileUrl,
       "version": version
@@ -254,7 +254,7 @@
       "fileType": "{{.fileType}}",
       "key": "{{.Key}}", //"Khirz6zTPdfd7"
       "title": "{{.Doc.FileName}}",
-      "url": "http://172.22.240.1:8081/attachment/onlyoffice/{{.Doc.FileName}}?hotqinsessionid={{.Sessionid}}",
+      "url": "{{.Engineercmsapi_url}}/attachment/onlyoffice/{{.Doc.FileName}}?hotqinsessionid={{.Sessionid}}",
       "info": {
         "author": "John Smith",
         "created": "2010-07-07 3:46 PM",
@@ -283,7 +283,7 @@
     },
     "documentType": "{{.documentType}}",
     "editorConfig": {
-      "callbackUrl": "http://172.22.240.1:8081/url-to-callback?id={{.Doc.Id}}",
+      "callbackUrl": "{{.Engineercmsapi_url}}/url-to-callback?id={{.Doc.Id}}",
       "createUrl": "https://example.com/url-to-create-document/",
       "user": {
         "id": {{.Uid }},
@@ -296,33 +296,45 @@
         "customer": {
           "address": "116# Tianshou Road,Guangzhou China",
           "info": "QQ504284",
-          "logo": "http://172.22.240.1:8081/static/img/user.jpg", //logo-big.png
+          "logo": "{{.Engineercmsapi_url}}/static/img/user.jpg", //logo-big.png
           "mail": "xc-qin@163.com",
           "name": "Qin Xiao Chuan",
           "www": "github.com/3xxx"
         },
         "feedback": {
-          "url": "http://172.22.240.1:8081/onlyoffice",
+          "url": "{{.Engineercmsapi_url}}/onlyoffice",
           "visible": true
         },
         "forcesave": false,
         "goback": {
           "text": "Go to Documents",
-          "url": "http://172.22.240.1:8081/onlyoffice"
+          "url": "{{.Engineercmsapi_url}}/onlyoffice"
         },
         "logo": {
-          "image": "http://172.22.240.1:8081/static/img/oo.png", //logo.png
-          "imageEmbedded": "http://172.22.240.1:8081/static/img/oo.png", //logo_em.png
-          "url": "http://172.22.240.1:8081/onlyoffice"
+          "image": "{{.Engineercmsapi_url}}/static/img/oo.png", //logo.png
+          "imageEmbedded": "{{.Engineercmsapi_url}}/static/img/oo.png", //logo_em.png
+          "url": "{{.Engineercmsapi_url}}/onlyoffice"
         },
         "showReviewChanges": false,
         "zoom": 100,
+        "macros": true,
+        "macrosMode": "warn",
+        "mentionShare": true,
+        "plugins": true,
+        "reviewDisplay": "original",
+        "showReviewChanges": false,
+        "spellcheck": false,
+        "toolbarHideFileName": false,
+        "toolbarNoTabs": false,
+        "trackChanges": false,
+        "unit": "cm",
+        "zoom": 100
       },
       "embedded": {
-        "embedUrl": "https://example.com/embedded?doc=exampledocument1.docx",
-        "fullscreenUrl": "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
-        "saveUrl": "https://example.com/download?doc=exampledocument1.docx",
-        "shareUrl": "https://example.com/view?doc=exampledocument1.docx",
+        "embedUrl": "{{.Onlyofficeapi_url}}/embedded?doc={{.Doc.FileName}}",
+        "fullscreenUrl": "{{.Onlyofficeapi_url}}/embedded?doc={{.Doc.FileName}}#fullscreen",
+        "saveUrl": "{{.Onlyofficeapi_url}}/download?doc={{.Doc.FileName}}",
+        "shareUrl": "{{.Onlyofficeapi_url}}/view?doc={{.Doc.FileName}}",
         "toolbarDocked": "top"
       },
       "lang": "zh-CN", //"en-US",
@@ -337,7 +349,15 @@
           "title": "exampledocument2.docx",
           "url": "https://example.com/exampledocument2.docx"
         }
-      ]
+      ],
+      "plugins": {
+        "autostart": [
+          "asc.{07FD8DFA-DFE0-4089-AL24-0730933CC80A}",
+        ],
+        "pluginsData": [
+          "{{.Onlyofficeapi_url}}/sdkjs-plugins/photoeditor/config.json"
+        ]
+      },
     },
     "height": "100%",
     // "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
@@ -356,7 +376,7 @@
             cache:false,   */
       // url: "http://127.0.0.1:28810/" + "'" + codeHandler.encode(JSON.stringify(json), 'base64') + "'" + "time=" + Date.parse(new Date()),
       async: false,
-      url: "http://172.22.240.1:8081/v1/pdfcpu/test/" + "'" + codeHandler.encode(JSON.stringify(json), 'base64') + "'" + "time=" + Date.parse(new Date()),
+      url: "{{.Engineercmsapi_url}}/v1/pdfcpu/test/" + "'" + codeHandler.encode(JSON.stringify(json), 'base64') + "'" + "time=" + Date.parse(new Date()),
       success: function(result) {
         // if (!result.ret.startWith("00")) {
         //   code = -1;
@@ -534,7 +554,7 @@
     alert(ret_data)
     // $.ajax({
     //   async: true,
-    //   url: "http://172.22.240.1:8081/v1/pdfcpu/test/" + "'" + codeHandler.encode(JSON.stringify(json), 'base64') + "'" + "time=" + Date.parse(new Date()),
+    //   url: "{{.Engineercmsapi_url}}/v1/pdfcpu/test/" + "'" + codeHandler.encode(JSON.stringify(json), 'base64') + "'" + "time=" + Date.parse(new Date()),
     //   success: function(result) {
     //       alert("解析图片数据！");
     //       ret_data = result.bmpdata;
@@ -549,7 +569,7 @@
     docEditor.insertImage({
       "fileType": "png",
       "url": "data:image/bmp;base64," + ret_data
-      // "url": "http://172.22.240.1:8081/attachment/onlyoffice/signature/2020March/1584852817365874800.png"
+      // "url": "{{.Engineercmsapi_url}}/attachment/onlyoffice/signature/2020March/1584852817365874800.png"
     });
     // pdf合并签名，成功后reload
     // $.ajax({
@@ -577,11 +597,11 @@
 "key":"1521953170330601700",
 "status":2,
 
-"url":"http://172.22.240.1:808100:9000/cache/files/1521953170330601700_4540/outpu
+"url":"{{.Engineercmsapi_url}}00:9000/cache/files/1521953170330601700_4540/outpu
 t.docx/output.docx?md5=eSwnrSSumTeMuh59IoXhCQ==&expires=1524547423&disposition=a
 ttachment&ooname=output.docx",
 
-"changesurl":"http://172.22.240.1:808100:9000/cache/fil
+"changesurl":"{{.Engineercmsapi_url}}00:9000/cache/fil
 es/1521953170330601700_4540/changes.zip/changes.zip?md5=w6DItkSwyBJkuHDl_CiZZQ==
 &expires=1524547423&disposition=attachment&ooname=output.zip",
 

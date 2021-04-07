@@ -966,54 +966,33 @@ func (c *BusinessController) BusinessMonthCheck2() {
 		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
-	//活动
-	for _, w := range business {
-		// beego.Info(len(w.BusinessCheckins))
-		// c.Data["json"] = w
-		// c.ServeJSON()
-		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
-			var checkmap = make(map[int]interface{}, dayssss+1)
-			// var checkmap3 = make(map[int]interface{}, dayssss+1)
-			// for i := 0; i <= dayssss; i++ {
-			// 	if i == 0 {
-			// 		checkmap3[0] = "项目名称：" + w.Projecttitle
-			// 	} else if i == 1 {
-			// 		checkmap3[1] = "出差地点：" + w.Location
-			// 	} else if i == 2 {
-			// 		checkmap3[2] = "司机/车牌号：" + w.Drivername
-			// 	} else if i == 3 {
-			// 		checkmap3[3] = "补贴标准：" + strconv.Itoa(w.Subsidy)
-			// 	} else if i == 4 {
-			// 		checkmap3[4] = "交通费：" + strconv.Itoa(w.Carfare)
-			// 	} else if i == 5 {
-			// 		checkmap3[5] = "住宿费：" + strconv.Itoa(w.Hotelfee)
-			// 	} else {
-			// 		checkmap3[i] = ""
-			// 	}
-			// }
-			// // 在s数组前面插入
-			// s = append(s, checkmap3)
 
-			// if len(w.BusinessCheckins) > 0 {
-			strMap := make(map[string]string)
+	// 将姓名过滤
+	strMap := make(map[string]string)
+	for _, w := range business {
+		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
 			for _, v := range w.BusinessCheckins {
 				strMap[v.Users.Nickname] = v.Users.Nickname
 			}
-			//strMap为：{"slice"："slice","int"："int","string"："string","boolean"：boolean"}
-			//如果想将map转换为slice，可利用数组的append函数
-			// var secondStr []string
-			// for _, value := range strMap {
-			// 	secondStr = append(secondStr, value)
-			// }
-			for _, value := range strMap { //循环人名
-				for i := 0; i <= dayssss; i++ {
-					if i == 0 {
-						checkmap[0] = value
-					} else {
-						checkmap[i] = ""
-					}
-				}
-
+		}
+	}
+	// beego.Info(strMap)
+	//活动
+	for _, value := range strMap { //循环人名
+		var checkmap = make(map[int]interface{}, dayssss+1)
+		for i := 0; i <= dayssss; i++ {
+			if i == 0 {
+				checkmap[0] = value
+			} else {
+				checkmap[i] = ""
+			}
+		}
+		for _, w := range business {
+			if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+				// strMap := make(map[string]string)
+				// for _, v := range w.BusinessCheckins {
+				// 	strMap[v.Users.Nickname] = v.Users.Nickname
+				// }
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
 					if value == vv.Users.Nickname {
 						day := vv.SelectDate.Format("02")
@@ -1022,9 +1001,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 							beego.Error(err)
 						}
 						provinceindex := UnicodeIndex(vv.Location, "省") // 查找空格这个字符的位置
-						// beego.Info(provinceindex)
 						province := SubString(vv.Location, 0, provinceindex+1)
-						// beego.Info(province)
 						if province == "广东省" {
 							province = ""
 						}
@@ -1042,34 +1019,19 @@ func (c *BusinessController) BusinessMonthCheck2() {
 						}
 					}
 				}
-				//查出一个用户这个月的打卡记录
-				// data, err := models.CheckGetCheck(ActivityId, v.Checkin.UserId, SelectMonth1, SelectMonth2)
-				// if err != nil {
-				// 	beego.Error(err)
-				// } else {
-				// 	for _, w := range data {
-				// 		day := w.SelectDate.Format("02")
-				// 		dayint, err := strconv.Atoi(day)
-				// 		if err != nil {
-				// 			beego.Error(err)
-				// 		}
-				// 		checkmap[dayint] = "1"
-				// 	}
-				// }
-
-				//排序map，按key
-				var keys []int
-				for k := range checkmap {
-					keys = append(keys, k)
-				}
-				sort.Ints(keys)
-				var checkmap2 = make(map[int]interface{}, dayssss+1)
-				for _, k := range keys {
-					checkmap2[k] = checkmap[k]
-				}
-				s = append(s, checkmap2)
 			}
 		}
+		//排序map，按key
+		var keys []int
+		for k := range checkmap {
+			keys = append(keys, k)
+		}
+		sort.Ints(keys)
+		var checkmap2 = make(map[int]interface{}, dayssss+1)
+		for _, k := range keys {
+			checkmap2[k] = checkmap[k]
+		}
+		s = append(s, checkmap2)
 	}
 	b, err := json.Marshal(s)
 	if err != nil {
@@ -1169,54 +1131,32 @@ func (c *BusinessController) BusinessMonthCheck3() {
 		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
-	//活动
-	for _, w := range business {
-		// beego.Info(len(w.BusinessCheckins))
-		// c.Data["json"] = w
-		// c.ServeJSON()
-		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
-			var checkmap = make(map[int]interface{}, dayssss+1)
-			var checkmap3 = make(map[int]interface{}, dayssss+1)
-			for i := 0; i <= dayssss; i++ {
-				if i == 0 {
-					checkmap3[0] = "项目名称：" + w.Projecttitle
-				} else if i == 1 {
-					checkmap3[1] = "出差地点：" + w.Location
-				} else if i == 2 {
-					checkmap3[2] = "司机/车牌号：" + w.Drivername
-				} else if i == 3 {
-					checkmap3[3] = "补贴标准：" + strconv.Itoa(w.Subsidy)
-				} else if i == 4 {
-					checkmap3[4] = "交通费：" + strconv.Itoa(w.Carfare)
-				} else if i == 5 {
-					checkmap3[5] = "住宿费：" + strconv.Itoa(w.Hotelfee)
-				} else {
-					checkmap3[i] = ""
-				}
-			}
-			// 在s数组前面插入
-			s = append(s, checkmap3)
 
-			// if len(w.BusinessCheckins) > 0 {
-			strMap := make(map[string]string)
+	// 将姓名过滤
+	strMap := make(map[string]string)
+	for _, w := range business {
+		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
 			for _, v := range w.BusinessCheckins {
 				strMap[v.Users.Nickname] = v.Users.Nickname
 			}
-			//strMap为：{"slice"："slice","int"："int","string"："string","boolean"：boolean"}
-			//如果想将map转换为slice，可利用数组的append函数
-			// var secondStr []string
-			// for _, value := range strMap {
-			// 	secondStr = append(secondStr, value)
-			// }
-			for _, value := range strMap { //循环人名
-				for i := 0; i <= dayssss; i++ {
-					if i == 0 {
-						checkmap[0] = value
-					} else {
-						checkmap[i] = ""
-					}
-				}
+		}
+	}
 
+	for _, value := range strMap { //循环人名
+		var checkmap = make(map[int]interface{}, dayssss+1)
+		for i := 0; i <= dayssss; i++ {
+			if i == 0 {
+				checkmap[0] = value
+			} else {
+				checkmap[i] = ""
+			}
+		}
+		for _, w := range business {
+			if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+				// strMap := make(map[string]string)
+				// for _, v := range w.BusinessCheckins {
+				// 	strMap[v.Users.Nickname] = v.Users.Nickname
+				// }
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
 					if value == vv.Users.Nickname {
 						day := vv.SelectDate.Format("02")
@@ -1224,40 +1164,41 @@ func (c *BusinessController) BusinessMonthCheck3() {
 						if err != nil {
 							beego.Error(err)
 						}
-						if w.Subsidy > 100 {
-							checkmap[dayint] = strconv.Itoa(w.Subsidy) //vv.CheckTime.Add(8 * h) //vv.Location
+						provinceindex := UnicodeIndex(vv.Location, "省") // 查找空格这个字符的位置
+						province := SubString(vv.Location, 0, provinceindex+1)
+						if province == "广东省" {
+							province = ""
 						}
+						cityindex := UnicodeIndex(vv.Location, "市")
+						// beego.Info(cityindex)
+						city := SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+						// beego.Info(city)
+						if province == "" && city == "" {
+							city = vv.Location
+						} else {
+							city = province + city
+						}
+						if w.Drivername == "" {
+							w.Drivername = "司机"
+						}
+						checkmap[dayint] = w.Projecttitle + "-" + city + "-" + w.Drivername + "-" + strconv.Itoa(w.Carfare) + "-" + strconv.Itoa(w.Hotelfee) + "-" + strconv.Itoa(w.Subsidy) //vv.CheckTime.Add(8 * h) //vv.Location
 					}
 				}
-				//查出一个用户这个月的打卡记录
-				// data, err := models.CheckGetCheck(ActivityId, v.Checkin.UserId, SelectMonth1, SelectMonth2)
-				// if err != nil {
-				// 	beego.Error(err)
-				// } else {
-				// 	for _, w := range data {
-				// 		day := w.SelectDate.Format("02")
-				// 		dayint, err := strconv.Atoi(day)
-				// 		if err != nil {
-				// 			beego.Error(err)
-				// 		}
-				// 		checkmap[dayint] = "1"
-				// 	}
-				// }
-
-				//排序map，按key
-				var keys []int
-				for k := range checkmap {
-					keys = append(keys, k)
-				}
-				sort.Ints(keys)
-				var checkmap2 = make(map[int]interface{}, dayssss+1)
-				for _, k := range keys {
-					checkmap2[k] = checkmap[k]
-				}
-				s = append(s, checkmap2)
 			}
 		}
+		//排序map，按key
+		var keys []int
+		for k := range checkmap {
+			keys = append(keys, k)
+		}
+		sort.Ints(keys)
+		var checkmap2 = make(map[int]interface{}, dayssss+1)
+		for _, k := range keys {
+			checkmap2[k] = checkmap[k]
+		}
+		s = append(s, checkmap2)
 	}
+
 	b, err := json.Marshal(s)
 	if err != nil {
 		beego.Error(err)
@@ -1432,6 +1373,155 @@ func (c *BusinessController) BusinessMonthCheck4() {
 			}
 		}
 	}
+	b, err := json.Marshal(s)
+	if err != nil {
+		beego.Error(err)
+		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
+		c.ServeJSON()
+	} else {
+		c.Ctx.WriteString(string(b))
+	}
+}
+
+// @Title get businessmothcheckin
+// @Description get businessmonthcheck
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /businessmonthchecksum5 [get]
+// 报销用
+func (c *BusinessController) BusinessMonthCheckSum5() {
+	c.TplName = "businesscheck/check5.tpl"
+	c.Data["IsMonthCheck"] = true
+}
+
+// @Title get businessmothcheckin
+// @Description get businessmonthcheck
+// @Param id path string true "The projectid of business"
+// @Param page query string false "The page of check"
+// @Param limit query string false "The size of check"
+// @Param year query string true "The year of check"
+// @Param month query string true "The month of check"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /businessmonthcheck5/:id [get]
+// 月度考勤统计-报销用
+func (c *BusinessController) BusinessMonthCheck5() {
+	// h, _ := time.ParseDuration("1h")
+	var offset, limit1, page1 int
+	var err error
+	limit := c.Input().Get("limit")
+	if limit == "" {
+		limit1 = 500
+	} else {
+		limit1, err = strconv.Atoi(limit)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	page := c.Input().Get("page")
+	if page == "" {
+		// limit1 = 10
+		page1 = 1
+	} else {
+		page1, err = strconv.Atoi(page)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
+	if page1 <= 1 {
+		offset = 0
+	} else {
+		offset = (page1 - 1) * limit1
+	}
+
+	//当月天数
+	const base_format = "2006-01-02"
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
+	if len(month) == 1 {
+		month = "0" + month
+	}
+	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
+	if err != nil {
+		beego.Error(err)
+	}
+	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
+	//建立一个动态月日数组
+	days := SelectMonth2.Sub(SelectMonth1) / 24
+	dayss := days.Hours()
+	daysss := strconv.FormatFloat(dayss, 'f', -1, 64) //float64转string
+	dayssss, err := strconv.Atoi(daysss)              //string转int
+
+	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(SelectMonth1)
+	// beego.Info(SelectMonth2)
+	// beego.Info(business)
+	// c.Data["json"] = business
+	// c.ServeJSON()
+	pid := c.Ctx.Input.Param(":id")
+	//id转成64为
+	projectid, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	s := []map[int]interface{}{}
+
+	// 将姓名过滤
+	strMap := make(map[string]string)
+	for _, w := range business {
+		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+			for _, v := range w.BusinessCheckins {
+				strMap[v.Users.Nickname] = v.Users.Nickname
+			}
+		}
+	}
+
+	for _, value := range strMap { //循环人名
+		var checkmap = make(map[int]interface{}, dayssss+1)
+		for i := 0; i <= dayssss; i++ {
+			if i == 0 {
+				checkmap[0] = value
+			} else {
+				checkmap[i] = ""
+			}
+		}
+		for _, w := range business {
+			if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+				// strMap := make(map[string]string)
+				// for _, v := range w.BusinessCheckins {
+				// 	strMap[v.Users.Nickname] = v.Users.Nickname
+				// }
+				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
+					if value == vv.Users.Nickname {
+						day := vv.SelectDate.Format("02")
+						dayint, err := strconv.Atoi(day)
+						if err != nil {
+							beego.Error(err)
+						}
+						checkmap[dayint] = "1"
+					}
+				}
+			}
+		}
+		//排序map，按key
+		var keys []int
+		for k := range checkmap {
+			keys = append(keys, k)
+		}
+		sort.Ints(keys)
+		var checkmap2 = make(map[int]interface{}, dayssss+1)
+		for _, k := range keys {
+			checkmap2[k] = checkmap[k]
+		}
+		s = append(s, checkmap2)
+	}
+
 	b, err := json.Marshal(s)
 	if err != nil {
 		beego.Error(err)
