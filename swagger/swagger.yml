@@ -2217,6 +2217,12 @@ paths:
       - flv
       description: get admin page
       operationId: FlvController.getFlv
+      parameters:
+      - in: query
+        name: filepath
+        description: The mp4 file path
+        required: true
+        type: string
       responses:
         "200":
           description: ""
@@ -3585,6 +3591,45 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/businessmonthcheck5/{id}:
+    get:
+      tags:
+      - wx
+      description: get businessmonthcheck
+      operationId: BusinessController.get businessmothcheckin
+      parameters:
+      - in: path
+        name: id
+        description: The projectid of business
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page of check
+        type: string
+      - in: query
+        name: limit
+        description: The size of check
+        type: string
+      - in: query
+        name: year
+        description: The year of check
+        required: true
+        type: string
+      - in: query
+        name: month
+        description: The month of check
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/businessmonthchecksum:
     get:
       tags:
@@ -3631,6 +3676,21 @@ paths:
         "404":
           description: articls not found
   /wx/businessmonthchecksum4:
+    get:
+      tags:
+      - wx
+      description: get businessmonthcheck
+      operationId: BusinessController.get businessmothcheckin
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/businessmonthchecksum5:
     get:
       tags:
       - wx
@@ -4753,21 +4813,6 @@ paths:
           description: Invalid page supplied
         "404":
           description: standards not found
-  /wx/sendmessage:
-    post:
-      tags:
-      - wx
-      description: post Data(file)
-      operationId: MainController.post Data(file)
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articls not found
   /wx/ssologin:
     get:
       tags:
@@ -4826,7 +4871,7 @@ paths:
       operationId: StandardController.get standardpdf
       parameters:
       - in: query
-        name: pdflink
+        name: file
         description: The link of standardpdf
         required: true
         type: string

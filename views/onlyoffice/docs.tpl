@@ -978,11 +978,8 @@
     function generate() {
       var a = $('input:radio:checked').val();
       alert(a)
-
       $("input[type='radio']:checked").val();
-
       $("input[name='rd']:checked").val();
-
     }
     </script>
     <!-- 批量上传 -->
@@ -1141,10 +1138,10 @@
             <div class="modal-body">
               <div class="modal-body-content">
                 <div id="" class="btn-group">
-                  <button type="button" id="addusers" class="btn btn-default"><i class="fa fa-plus">&nbsp;&nbsp;Add Users</i>
+                  <button type="button" id="addusers" class="btn btn-default">
+                    <i class="fa fa-plus">&nbsp;&nbsp;Add Users</i>
                   </button>
-
-                  <div class="btn-group">
+                  <!-- <div class="btn-group"> -->
                     <button class="btn btn-default dropdown-toggle" type="button" id="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                       <i id="dropdownMenu1" class="fa fa-eye">&nbsp;&nbsp;</i>
                       <span class="caret"></span>
@@ -1163,14 +1160,17 @@
                         <a href="#" onclick="shows($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
                       </li>
                     </ul>
-                  </div>
+                  <!-- </div> -->
                 </div>
                 <div id="" class="btn-group">
                   <div class="btn-group">
+                    <button type="button" id="addroles" data-name="" class="btn btn-default">
+                      <i class="fa fa-plus">&nbsp;&nbsp;Add Groups</i>
+                    </button>
                     <button type="button" id="addgroups" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
                       <span class="buttonText"><i id="dropdownMenu2" class="fa fa-eye">&nbsp;&nbsp;</i></span>
                       <span class="caret"></span>
-                    </button>
+                  </button>
                     <ul class="dropdown-menu" role="menu">
                       <li>
                         <a href="#" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
@@ -1186,9 +1186,6 @@
                       </li>
                     </ul>
                   </div>
-                  <button type="button" id="addroles" data-name="" class="btn btn-default">
-                    <i class="fa fa-plus">&nbsp;&nbsp;Add Groups</i>
-                  </button>
                 </div>
                 <table id="tableusers1" data-search="true" data-toolbar="" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="name" data-pagination="true" data-side-pagination="client" data-click-to-select="false">
                 </table>
@@ -1368,7 +1365,6 @@
           $('#modalProdEditor').modal('hide');
           $('#table0').bootstrapTable('refresh', { url: '/onlyoffice/data' });
         },
-
       });
     } else {
       alert("请填写编号和名称！");
@@ -1485,7 +1481,6 @@
   $(function() {
     $tableLeft = $('#tableusers20').bootstrapTable({
       idField: 'Id',
-
       columns: [{
           checkbox: 'true',
           width: '10'
@@ -1532,16 +1527,19 @@
           editable: {
             type: 'select2',
             source: [
-              { id: '1', text: '  Full Access', value: 1 },
-              { id: '2', text: '  Review', value: 2 },
-              { id: '3', text: '  Read Only', value: 3 },
-              { id: '4', text: '  Deny Access', value: 4 }
+              { id: '1', text: '  Full Access', value: '1' },
+              { id: '2', text: '  Review', value: '2' },
+              { id: '3', text: '  Read Only', value: '3' },
+              { id: '4', text: '  Deny Access', value: '4' }
             ],
 
             select2: {
               allowClear: true,
               width: '150px',
               placeholder: '请选择权限',
+              id: function (item) {
+                  return item.id;
+              },
               // multiple: true
             },
             pk: 1,
@@ -1598,7 +1596,7 @@
               placeholder: '请选择权限',
             },
             pk: 1,
-            title: 'Enter Status'
+            title: 'Enter Permission'
           }
         }
       ]
@@ -1659,7 +1657,7 @@
             },
             pk: 1,
             // url: '/admin/user/updateuser',
-            title: 'Enter Status'
+            title: 'Enter Permission'
           }
         }, {
           field: 'action',
@@ -1712,7 +1710,6 @@
   //用户选择到权限表中
   $('#btn2Right').click(function() {
     var selectContent = $tableLeft.bootstrapTable('getSelections');
-
     $tableRight.bootstrapTable("append", selectContent);
     username = $.map(selectContent, function(row) {
       return row.name;
@@ -1742,7 +1739,6 @@
     var now = new Date();
     myDate = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate();
     $("#Date").val(myDate);
-
     //弹出添加用户模态框
     $("#addusers").click(function() {
       if ($("#dropdownMenu1").hasClass("fa fa-pencil")) {
@@ -1754,7 +1750,6 @@
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye-slash")) {
         $tableLeft.bootstrapTable('refresh', { url: '/admin/user?role=4' });
       }
-
       $('#users').modal({
         show: true,
         backdrop: 'static'
@@ -1772,42 +1767,31 @@
       } else if ($("#dropdownMenu2").hasClass("fa fa-eye-slash")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=4' });
       }
-
       $('#roles').modal({
         show: true,
         backdrop: 'static'
       });
     })
-
   })
-
 
   function actionFormatter(value, row, index) {
     return '<a class="remove" href="javascript:void(0)" title="删除"><i class="glyphicon glyphicon-remove"></i></a>';
   }
 
-
-
   //添加用户/角色权限
   function saveusers() {
-
     var selectRow = $('#tableusers1').bootstrapTable('getData');
-
     var docid = $('#pid').val();
-
     $.ajax({
       type: "post",
       url: "/onlyoffice/addpermission",
       data: { ids: JSON.stringify(selectRow), docid: docid },
       success: function(data, status) {
         alert("保存“" + data + "”成功！(status:" + status + ".)");
-
       }
     });
-
   }
   </script>
 
 </body>
-
 </html>

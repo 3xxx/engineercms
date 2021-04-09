@@ -383,7 +383,7 @@
   function setAttachment(value, row, index) {
     if (value) {
       if (value.length == 1) {
-        attachUrl = '<a href="' + value[0].Link + '/' + value[0].Title + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        attachUrl = '<a href="/' + value[0].Link + '/' + value[0].Title + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
         return attachUrl;
       } else if (value.length == 0) {
 
@@ -397,7 +397,7 @@
   function setPdf(value, row, index) {
     if (value) {
       if (value.length == 1) {
-        pdfUrl = '<a href="' + value[0].Link + '/' + value[0].Title + '" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
+        pdfUrl = '<a href="/pdf?id=' + value[0].Id + '" title="打开pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
         return pdfUrl;
       } else if (value.length == 0) {
 

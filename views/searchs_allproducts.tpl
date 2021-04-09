@@ -377,7 +377,7 @@
   function setAttachment(value, row, index) {
     if (value) {
       if (value.length == 1) {
-        attachUrl = '<a href="' + value[0].Link + '/' + value[0].Title + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        attachUrl = '<a href="/downloadattachment?id='+ value[0].Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
         return attachUrl;
       } else if (value.length == 0) {
 

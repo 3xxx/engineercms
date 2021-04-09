@@ -3,16 +3,9 @@
 <!DOCTYPE html>
 
 <head>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
@@ -53,6 +46,7 @@
   #imgmodalDialog .modal-header {
     cursor: move;
   }
+
   #modalDialog .modal-header {
     cursor: move;
   }
@@ -232,12 +226,12 @@
       // var img = new Image();// 创建对象 
       // img.src =url;// 改变图片的src
       // alert(o.src)
-      $("#imgInModalID").attr("src",o.src);
+      $("#imgInModalID").attr("src", o.src);
       $('#imgModal').modal({
         show: true,
         backdrop: 'static'
       });
-      
+
       $('#modalattach').modal('hide')
       // var fatherBody = $(window.top.document.body);
       // //定义页面存放模态窗口的元素
@@ -529,16 +523,22 @@
           // alert(ext);
           if (ext == ".dwg") {
             attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
-          } else if (ext == ".JPG"||ext ==".jpg"||ext ==".png"||ext ==".PNG"||ext ==".bmp"||ext ==".BMP") {
+          } else if (ext == ".JPG" || ext == ".jpg" || ext == ".png" || ext == ".PNG" || ext == ".bmp" || ext == ".BMP") {
             attachUrl = '<a class = "view" href="javascript:void(0)"><img style="width:70;height:30px;" src="/downloadattachment?id=' + value[0].Id + '" title="预览" onclick="savepic(this)"/></a>'
-          } else if (ext == ".mp4"||ext ==".MP4") {
+          } else if (ext == ".mp4" || ext == ".MP4") {
             attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-video-o fa-lg text-info"></i></a>'
-          } else if (ext == ".doc" || ext == ".docx") {
-            attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
-          } else if (ext == ".xls" || ext == ".xlsx") {
-            attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
-          } else if (ext == ".ppt" || ext == ".pptx") {
-            attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+          } else if (ext == ".doc" || ext == ".docx" || ext == ".wps") {
+            // attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+            attachUrl = '<a href=/officeview/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+
+          } else if (ext == ".xls" || ext == ".xlsx" || ext == ".et") {
+            // attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+            attachUrl = '<a href=/officeview/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+
+          } else if (ext == ".ppt" || ext == ".pptx" || ext == ".dps") {
+            // attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+            attachUrl = '<a href=/officeview/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+
           } else {
             attachUrl = '<a href="/downloadattachment?id=' + value[0].Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
           }
@@ -651,25 +651,25 @@
     function setAttachlink(value, row, index) {
       // attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
       // return attachUrl;
-          var filename = value;
-          var index = filename.lastIndexOf(".");
-          var ext = filename.substring(index);
-          if (ext == ".dwg") {
-            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
-          } else if (ext == ".JPG"||ext ==".jpg"||ext ==".png"||ext ==".PNG"||ext ==".bmp"||ext ==".BMP") {
-            attachUrl = '<a class = "view" href="javascript:void(0)"><img style="width:70;height:30px;" src="/downloadattachment?id=' + row.Id + '" title="预览" onclick="savepic(this)"/></a>'
-          } else if (ext == ".mp4"||ext ==".MP4") {
-            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-video-o fa-lg text-info"></i></a>'
-          } else if (ext == ".doc" || ext == ".docx") {
-            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
-          } else if (ext == ".xls" || ext == ".xlsx") {
-            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
-          } else if (ext == ".ppt" || ext == ".pptx") {
-            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
-          } else {
-            attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
-          }
-          return attachUrl;
+      var filename = value;
+      var index = filename.lastIndexOf(".");
+      var ext = filename.substring(index);
+      if (ext == ".dwg") {
+        attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
+      } else if (ext == ".JPG" || ext == ".jpg" || ext == ".png" || ext == ".PNG" || ext == ".bmp" || ext == ".BMP") {
+        attachUrl = '<a class = "view" href="javascript:void(0)"><img style="width:70;height:30px;" src="/downloadattachment?id=' + row.Id + '" title="预览" onclick="savepic(this)"/></a>'
+      } else if (ext == ".mp4" || ext == ".MP4") {
+        attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-video-o fa-lg text-info"></i></a>'
+      } else if (ext == ".doc" || ext == ".docx") {
+        attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-word-o fa-lg"></i></a>';
+      } else if (ext == ".xls" || ext == ".xlsx") {
+        attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-excel-o fa-lg" style="color:LimeGreen;"></i></a>';
+      } else if (ext == ".ppt" || ext == ".pptx") {
+        attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-powerpoint-o fa-lg" style="color:Red;"></i></a>';
+      } else {
+        attachUrl = '<a href="/downloadattachment?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+      }
+      return attachUrl;
     }
     //最后面弹出pdf列表中用的'&file='+value+
     function setPdflink(value, row, index) {
@@ -1535,9 +1535,9 @@
         url: "/v1/cart/createproductcart",
         data: { ids: ids },
         success: function(data, status) {
-          if (data.code=="ERROR"){
+          if (data.code == "ERROR") {
             alert(data.msg);
-          }else{
+          } else {
             alert("添加“" + data.data[0].Title + "”购物车成功！(status:" + status + "！)");
           }
           // $.toast({
