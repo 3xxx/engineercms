@@ -422,6 +422,7 @@ func (c *ProjController) GetProject() {
 	} else {
 		topprojectid = category.Id
 	}
+	// 取出这个项目下所有成果！！
 	_, products, err := models.GetProjProducts(topprojectid, 2)
 	if err != nil {
 		beego.Error(err)

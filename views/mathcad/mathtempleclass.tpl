@@ -1,94 +1,49 @@
-<!-- 具体一个项目的侧栏，右侧为project_products.tpl,显示任意侧栏下的成果 -->
+<!-- 模板侧栏，右侧为模板列表 -->
 <!DOCTYPE html>
-{{template "header"}}
-<title>项目详细-EngiCMS</title>
-<script src="/static/js/bootstrap-treeview.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
-<meta charset="utf-8">
-<!-- <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css"> -->
-<link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.min.css">
-<link rel="stylesheet" href="/static/css/custom.css">
-<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
-<script src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/static/js/custom.js"></script>
-<!-- <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script> -->
-<!-- <style type="text/css">
-    #imgmodalDialog .modal-header {
-      cursor: move;
-    }
-  </style> -->
-<!-- <style type="text/css">
-    @import 'https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css';
-    
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      font-family: sans-serif;
-    }
-    
-    .sidebar {
-      float: left;
-      width: 100px;
-      height: 100%;
-      margin-left: -100px;
-      background: #2c3e50;
-      overflow: hidden;
-      transition: 0.8s all;
-    }
-    
-    .side {
-      margin-left: 0;
-    }
-    
-    .sidebar ul {
-      margin: 0;
-      padding: 0;
-    }
-    
-    .sidebar ul li {
-      list-style: none;
-    }
-    
-    .sidebar ul li a {
-      text-decoration: none;
-      color: white;
-      height: 80px;
-      width: 100%;
-      font-size: 40px;
-      line-height: 80px;
-      text-align: center;
-      display: block;
-      transition: 0.6s all;
-    }
-    
-    .sidebar ul li a:hover {
-      background: #34495e;
-    }
-    
-    .btn {
-      float: left;
-      padding: 0 10px;
-      font-size: 40px;
-      text-decoration: none;
-      color: #2c5e50;
-      font-family: ionicons;
-      cursor: pointer;
-    }
-    
-    .btn:before {
-      content: '\f32a';
-    }
-    
-    .btnc:before {
-      content: '\f2c0';
-    }
-  </style> -->
+<html>
+<head>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- 收藏用logo图标 -->
+  <link rel="bookmark"  type="image/x-icon"  href="/static/img/pss.ico"/>
+  <!-- 网站显示页logo图标 -->
+  <link rel="shortcut icon" href="/static/img/pss.ico">
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" /> -->
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=9" /> -->
+  <!-- <meta name="renderer" content="webkit">
+加上这句，360等浏览器就会默认使用google内核，而不是IE内核 。
+因为你没加，所以我打开你的那个地址，默认就使用IE内核了。
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+加上这一句，如果被用户强行使用IE浏览器，就会使用IE的最高版本渲染内核。
+这个也一定要加 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta name="author" content="Jophy" /> -->
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+  <!-- <link rel="stylesheet" href="/static/css/style.css"> -->
+  <!--[if lte IE 9]>兼容ie的方面：先引用bootstrapcss，再引用js
+  <script src="bootstrap/js/respond.min.js"></script>
+  <script src="bootstrap/js/html5.js"></script>
+  <![endif]-->
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+  <title>模板分类列表</title>
+  <script src="/static/js/bootstrap-treeview.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
+  <meta charset="utf-8">
+  <!-- <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css"> -->
+  <link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.min.css">
+  <link rel="stylesheet" href="/static/css/custom.css">
+  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+  <script src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="/static/js/custom.js"></script>
 </head>
 <div class="container-fill">{{template "navbar" .}}</div>
-
 <body>
   <div class="page-wrapper toggled">
     <nav id="sidebar" class="sidebar-wrapper">
@@ -118,7 +73,7 @@
         </ol>
       </div>
       <div class="container-fluid">
-        <iframe src="/project/{{.Id}}/{{.Id}}" name='iframepage' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onload="this.height=800"></iframe>
+        <iframe src="/v1/mathcad/getmath/templelist/{{.Id}}" name='iframepage' id="iframepage" frameborder="0" width="100%" scrolling="no" marginheight="0" marginwidth="0" onload="this.height=800"></iframe>
       </div>
     </main>
   </div>
@@ -137,7 +92,7 @@
       lazyLoad: loaddata,
     });
     $('#tree').on('nodeSelected', function(event, data) {
-      document.getElementById("iframepage").src = "/project/{{.Id}}/" + data.id;
+      document.getElementById("iframepage").src = "/v1/mathcad/getmath/templelist/" + data.id;
       $.ajax({
         type: "get",
         url: "/project/navbar/" + data.id,

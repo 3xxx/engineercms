@@ -2247,6 +2247,542 @@ paths:
           description: Invalid page
         "404":
           description: page not found
+  /mathcad/gethistoryinput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: templeid
+        description: The id of usertemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistorymath/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad history
+      operationId: MathcadController.get mathcad history
+      parameters:
+      - in: path
+        name: id
+        description: The id of temples
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistorymathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcal history
+      operationId: MathcadController.get mathcal history
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: path
+        name: templeid
+        description: The id of temples
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistoryoutput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: templeid
+        description: The id of usertemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistorytemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get history..
+      operationId: MathcadController.get history...
+      parameters:
+      - in: path
+        name: id
+        description: The id of temples
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of projproducts
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/getmath/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmath/gettemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get projproducts..
+      operationId: MathcadController.get projproducts...
+      parameters:
+      - in: path
+        name: id
+        description: The id of projproducts
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of projproducts
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/getmath/getwxtemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get projproducts..
+      operationId: MathcadController.get projproducts...
+      parameters:
+      - in: path
+        name: id
+        description: The id of projproducts
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of projproducts
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/getmath/templelist/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmathcalinput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmathcaloutput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getwxmathcalinput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getwxmathcaloutput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getwxmathclass/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.FileNode1'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/mathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postmath:
+    post:
+      tags:
+      - mathcad
+      description: post mathcad
+      operationId: MathcadController.post mathcad
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: templeid
+        description: The templeid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postmathback:
+    post:
+      tags:
+      - mathcad
+      description: post mathcad
+      operationId: MathcadController.post mathcad
+      parameters:
+      - in: query
+        name: firstInput
+        description: The firstInput
+        type: string
+      - in: query
+        name: secondInput
+        description: The secondInput
+        type: string
+      - in: query
+        name: thirdInput
+        description: The thirdInput
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postwxmath:
+    post:
+      tags:
+      - mathcad
+      description: post mathcad
+      operationId: MathcadController.post mathcad
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: templeid
+        description: The templeid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/putmathcalinput:
+    post:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      - in: query
+        name: comment
+        description: The comment
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/putmathcaloutput:
+    post:
+      tags:
+      - mathcad
+      description: put mathcad output comment
+      operationId: MathcadController.put mathcad outputcomment
+      parameters:
+      - in: path
+        name: id
+        description: The id of output
+        required: true
+        type: string
+      - in: query
+        name: comment
+        description: The comment
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/uploadmathtemple/{id}:
+    post:
+      tags:
+      - mathcad
+      description: post file by BootstrapFileInput
+      operationId: MathcadController.post bootstrapfileinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /mathcad/uploadtemple/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.upload mathcadtemple
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /onlyoffice/conversion:
     post:
       tags:
@@ -4343,6 +4879,27 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/getwxmathpdf:
+    get:
+      tags:
+      - wx
+      description: get wx pdf by id
+      operationId: AttachController.dowload wx pdf
+      parameters:
+      - in: query
+        name: pdflink
+        description: The url of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/getwxpay:
     get:
       tags:
@@ -4813,6 +5370,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: standards not found
+  /wx/sendmessage:
+    post:
+      tags:
+      - wx
+      description: post Data(file)
+      operationId: MainController.post Data(file)
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/ssologin:
     get:
       tags:
@@ -5416,6 +5988,8 @@ definitions:
     type: object
   .DeleteUserCart:
     type: object
+  .FileNode1:
+    type: object
   .GetAdminCategory:
     type: object
   .GetArticle:
@@ -5430,6 +6004,8 @@ definitions:
     type: object
   .GetLocationPage:
     type: object
+  .GetMathcadPage:
+    type: object
   .GetOnlyPdf:
     type: object
   .GetProductsPage:
@@ -5439,6 +6015,8 @@ definitions:
   .GetUserMoney:
     type: object
   .Gettest:
+    type: object
+  .Model:
     type: object
   .SUCCESS:
     type: object
@@ -5474,6 +6052,143 @@ definitions:
       Updated:
         type: string
         format: datetime
+  models.HistoryInputValue:
+    title: HistoryInputValue
+    type: object
+    properties:
+      inputvalue:
+        type: string
+      templeinputsid:
+        type: integer
+        format: int32
+      user_history_id:
+        type: integer
+        format: int32
+  models.HistoryOutputValue:
+    title: HistoryOutputValue
+    type: object
+    properties:
+      UserHistoryID:
+        type: integer
+        format: int32
+      outputvalue:
+        type: string
+      templeoutputsid:
+        type: integer
+        format: int32
+  models.TempleInputs:
+    title: TempleInputs
+    type: object
+    properties:
+      HistoryInputValue:
+        $ref: '#/definitions/models.HistoryInputValue'
+      UserTempleID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      inputalias:
+        type: string
+      inputvalue:
+        type: string
+      resulttype:
+        type: string
+      units:
+        type: string
+  models.TempleOutputs:
+    title: TempleOutputs
+    type: object
+    properties:
+      HistoryOutputValue:
+        $ref: '#/definitions/models.HistoryOutputValue'
+      UserTempleID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      outputalias:
+        type: string
+      outputvalue:
+        type: string
+      resulttype:
+        type: string
+      units:
+        type: string
+  models.User:
+    title: User
+    type: object
+    properties:
+      Createtime:
+        type: string
+        format: datetime
+      Department:
+        type: string
+      Email:
+        type: string
+      Id:
+        type: integer
+        format: int64
+      Ip:
+        type: string
+      Lastlogintime:
+        type: string
+        format: datetime
+      Nickname:
+        type: string
+      Password:
+        type: string
+      Port:
+        type: string
+      Remark:
+        type: string
+      Repassword:
+        type: string
+      Secoffice:
+        type: string
+      Status:
+        type: integer
+        format: int64
+      Updated:
+        type: string
+        format: datetime
+      name:
+        type: string
+      role:
+        type: string
+  models.UserHistory:
+    title: UserHistory
+    type: object
+    properties:
+      User:
+        $ref: '#/definitions/models.User'
+      UserTemple:
+        $ref: '#/definitions/models.UserTemple'
+      tempid:
+        type: integer
+        format: int32
+      userid:
+        type: integer
+        format: int64
+  models.UserTemple:
+    title: UserTemple
+    type: object
+    properties:
+      ClassID:
+        type: integer
+        format: int64
+      User:
+        $ref: '#/definitions/models.User'
+      UserID:
+        type: integer
+        format: int64
+      status:
+        type: boolean
+      temppath:
+        type: string
+      temptitle:
+        type: string
+      version:
+        type: string
 tags:
 - name: admin
   description: |
@@ -5499,3 +6214,6 @@ tags:
 - name: flv
   description: |
     CMSFLV API
+- name: mathcad
+  description: |
+    CMSMATHCAD API

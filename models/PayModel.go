@@ -74,7 +74,9 @@ func init() {
 
 	// _db.DB().SetMaxOpenConns(100) //设置数据库连接池最大连接数
 	// _db.DB().SetMaxIdleConns(20)  //连接池最大允许的空闲连接数，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭。
-	_db.CreateTable(&Pay{}, &Money{}, &Recharge{})
+	_db.CreateTable(&Pay{}, &Money{}, &Recharge{}) //当第一个存在时，后面的不再建立，bug！！！
+	_db.CreateTable(&Money{})
+	_db.CreateTable(&Recharge{})
 
 	// if !gdb.HasTable(&Pay1{}) {
 	// 	if err = gdb.CreateTable(&Pay1{}).Error; err != nil {

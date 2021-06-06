@@ -368,11 +368,11 @@
     window.actionEvents = {
       //大事记
       'click .memorabilia': function(e, value, row, index) {
-        window.open('/project/' + row.Id + '/gettimeline');
+        window.open('/project/gettimeline/' + row.Id );
       },
       //日志
       'click .log': function(e, value, row, index) {
-        window.open('/project/' + row.Id + '/getcalendar');
+        window.open('/project/getcalendar/' + row.Id);
       },
       //操作记录
       'click .operate': function(e, value, row, index) {

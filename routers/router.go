@@ -11,6 +11,8 @@ import (
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/plugins/cors"
 	// "github.com/3xxx/engineercms/controllers"
+	"github.com/3xxx/engineercms/controllers/utils"
+	"strconv"
 )
 
 // var FilterFunc = func(ctx *context.Context) {
@@ -66,10 +68,19 @@ func init() {
 	// });
 	var FilterUser = func(ctx *context.Context) {
 		// v := ctx.Input.CruSession.Get("uname")
-		v := ctx.Input.Session("uname")
+		// v := ctx.Input.Session("uname")
+		authString := ctx.GetCookie("token")
+		if authString == "" {
+			authString = ctx.Input.Query("token")
+			beego.Info(authString)
+		}
+		username, err := utils.CheckToken(authString)
+		beego.Info(username)
 		// uname = v.(string)//uid---v.(int)
-		if v == nil {
-			ctx.Redirect(302, "/login")
+		// if v == nil {
+		site := ctx.Input.Site() + ":" + strconv.Itoa(ctx.Input.Port())
+		if err != nil {
+			ctx.Redirect(302, "http://localhost:8080/v1/sso/ssologin?service="+site+ctx.Request.URL.String())
 		}
 	}
 
@@ -88,6 +99,7 @@ func init() {
 				),
 			),
 			beego.NSNamespace("/wx",
+				// beego.NSBefore(FilterUser), //20210501
 				beego.NSInclude(
 					&controllers.ArticleController{},
 					&controllers.FroalaController{},
@@ -155,7 +167,7 @@ func init() {
 				),
 			),
 			beego.NSNamespace("/flv",
-				// beego.NSBefore(FilterUser),
+				beego.NSBefore(FilterUser),
 				beego.NSInclude(
 					&controllers.FlvController{},
 				),
@@ -164,6 +176,12 @@ func init() {
 				// beego.NSBefore(FilterUser),
 				beego.NSInclude(
 					&controllers.CartController{},
+				),
+			),
+			beego.NSNamespace("/mathcad",
+				// beego.NSBefore(FilterUser),
+				beego.NSInclude(
+					&controllers.MathcadController{},
 				),
 			),
 			// beego.NSNamespace("/cms",
@@ -430,17 +448,17 @@ func init() {
 	//删除项目
 	beego.Router("/project/deleteproject", &controllers.ProjController{}, "*:DeleteProject")
 	//项目时间轴
-	beego.Router("/project/:id([0-9]+)/gettimeline", &controllers.ProjController{}, "get:ProjectTimeline")
-	beego.Router("/project/:id([0-9]+)/timeline", &controllers.ProjController{}, "get:Timeline")
+	beego.Router("/project/gettimeline/:id([0-9]+)", &controllers.ProjController{}, "get:ProjectTimeline")
+	beego.Router("/project/timeline/:id([0-9]+)", &controllers.ProjController{}, "get:Timeline")
 
 	//根据项目id进入一个具体项目的侧栏
 	beego.Router("/project/:id([0-9]+)", &controllers.ProjController{}, "*:GetProject")
 	//进入项目日历
-	beego.Router("/project/:id([0-9]+)/getcalendar", &controllers.ProjController{}, "*:GetCalendar")
+	beego.Router("/project/getcalendar/:id([0-9]+)", &controllers.ProjController{}, "*:GetCalendar")
 	//取得日历数据
-	beego.Router("/project/:id([0-9]+)/calendar", &controllers.ProjController{}, "*:Calendar")
+	beego.Router("/project/calendar/:id([0-9]+)", &controllers.ProjController{}, "*:Calendar")
 	//添加日历
-	beego.Router("/project/:id([0-9]+)/calendar/addcalendar", &controllers.ProjController{}, "*:AddCalendar")
+	beego.Router("/project/calendar/addcalendar/:id([0-9]+)", &controllers.ProjController{}, "*:AddCalendar")
 	//修改
 	beego.Router("/project/calendar/updatecalendar", &controllers.ProjController{}, "*:UpdateCalendar")
 	//删除

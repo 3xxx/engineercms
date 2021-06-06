@@ -77,7 +77,9 @@ type BusinessCheckin struct {
 // }
 
 func init() {
-	_db.CreateTable(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{})
+	_db.CreateTable(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}) //当第一个存在后，后面的不建立！！！bug
+	_db.CreateTable(&BusinessUser{})
+	_db.CreateTable(&NickName{})
 	_db.CreateTable(&BusinessCheckin{})
 }
 

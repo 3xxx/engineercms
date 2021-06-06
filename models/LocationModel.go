@@ -39,6 +39,7 @@ type LocationNavigate struct {
 
 func init() {
 	_db.CreateTable(&Location{}, &LocationNavigate{})
+	_db.CreateTable(&LocationNavigate{})
 }
 
 // 登记定位数据组

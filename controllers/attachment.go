@@ -1574,6 +1574,7 @@ func (c *AttachController) Attachment() {
 	// beego.Info(uid)
 	// beego.Info(islogin)
 	useridstring = strconv.FormatInt(uid, 10)
+
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(c.Ctx.Request.RequestURI)
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
@@ -1590,16 +1591,18 @@ func (c *AttachController) Attachment() {
 	filepath1 := path.Dir(filePath)
 	array := strings.Split(filepath1, "/")
 	// beego.Info(array[1])
-	if array[1] == "standard" {
+	// beego.Info(fileext)
+	if array[1] == "standard" || (array[1] == "mathcad" && fileext == ".pdf") {
 		if !islogin {
 			// beego.Info(!islogin)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
 			c.Redirect("/roleerr?url="+route, 302)
+			return
 		} else {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+			return
 		}
-		return
 	}
 	//查出所有项目
 	var pid int64
@@ -1676,6 +1679,7 @@ func (c *AttachController) Attachment() {
 	default:
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin || isme {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
+			// beego.Info(isadmin)
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		} else {
@@ -2057,6 +2061,22 @@ func (c *AttachController) GetWxPdf() {
 	}
 }
 
+// @Title dowload wx pdf
+// @Description get wx pdf by id
+// @Param pdflink query string  true "The url of pdf"
+// @Success 200 {object} models.GetAttachbyId
+// @Failure 400 Invalid page supplied
+// @Failure 404 pdf not found
+// @router /getwxmathpdf [get]
+// 下载mathcad pdf计算书，不用权限判断
+func (c *AttachController) GetWxMathPdf() {
+
+	pdflink := c.Input().Get("pdflink")
+	beego.Info(pdflink)
+	pdflink = strings.Replace(pdflink, "/attachment", "attachment", -1)
+	c.Ctx.Output.Download(pdflink)
+}
+
 //编码转换
 // l3, err3 := url.Parse(c.Ctx.Request.RequestURI[1:])
 // 	if err3 != nil {
@@ -2091,3 +2111,15 @@ func (c *AttachController) GetWxPdf() {
 // 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
 // 	beego.Info(path.Dir(filePath))
 // 	beego.Info(c.Ctx.Request.RequestURI[1:])
+
+// 运算符优先级
+
+// 由上至下代表优先级由高到低
+
+// 7	^ !
+// 6	* / % << >> & &^
+// 5	+ - | ^
+// 4	== != < <= >= >
+// 3	<-
+// 2	&&
+// 1	||

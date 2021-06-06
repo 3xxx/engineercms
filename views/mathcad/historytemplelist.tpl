@@ -1,8 +1,12 @@
 <!-- 具体一个项目侧栏id下所有成果，不含子目录下的成果 -->
 <!-- office下载模式，dwg下载模式 -->
 <!DOCTYPE html>
-
 <head>
+  <!-- 收藏用logo图标 -->
+  <link rel="bookmark" type="image/x-icon" href="/static/img/pss.ico" />
+  <!-- 网站显示页logo图标 -->
+  <link rel="shortcut icon" href="/static/img/pss.ico">
+  <title>计算历史</title>
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -128,9 +132,10 @@
   }
   </style>
 </head>
-
+<div class="container-fill">{{template "navbar" .}}</div>
 <body>
   <div class="col-lg-12">
+    <h3>History-计算历史记录表</h3>
     <div id="toolbar1" class="btn-toolbar" role="toolbar" aria-label="...">
       <div class="btn-group">
         <button {{if ne "true" .RoleAdd}} style="display:none" {{end}} type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="添加资料">
@@ -141,51 +146,18 @@
           <li>
             <a href="#" onclick="addButton()"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></a>
           </li>
-          <li>
+          <!-- <li>
             <a href="#" onclick="addButton1()"><i class="fa fa-plus-square-o">&nbsp;&nbsp;多附件模式</i></a>
           </li>
           <li>
             <a href="#" onclick="addButton2()"><i class="fa fa-plus-square">&nbsp;&nbsp;文章模式</i></a>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="btn-group">
-        <button {{if ne "true" .RoleUpdate}} style="display:none" {{end}} type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="编辑">
-          <i class="fa fa-edit">&nbsp;&nbsp;编辑</i>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="">
-          <li>
-            <a href="#" onclick="editorProdButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑成果信息</i></a>
-          </li>
-          <li>
-            <a href="#" onclick="editorAttachButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑成果附件</i></a>
-          </li>
-        </ul>
+        <a href="https://zsj.itdos.net/docs/pss" target="_blank" type="button"><i class="fa fa-question-circle-o">&nbsp;&nbsp;帮助</i></a>
       </div>
-      <div class="btn-group">
-        <!-- <button href="#" onclick="addButton()"  class="btn btn-default"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></button> -->
-        <button {{if ne "true" .RoleDelete}} style="display:none" {{end}} type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default" title="删除">
-          <i class="fa fa-trash">&nbsp;&nbsp;删除</i>
-        </button>
-        <button {{if ne "true" .RoleGet}} style="display:none" {{end}} type="button" data-name="shareButton" id="shareButton" class="btn btn-default" title="分享文件">
-          <i class="fa fa-share">&nbsp;&nbsp;分享</i>
-        </button>
-        <button {{if ne "true" .RoleFlow}} style="display:none" {{end}} type="button" data-name="flowButton" id="flowButton" class="btn btn-default" title="流程、状态">
-          <i class="fa fa-share-alt">&nbsp;&nbsp;Flow</i>
-        </button>
-      </div>
-      <div class="btn-group">
-        <button type="button" data-name="cartButton" id="cartButton" class="btn btn-default" title="购物车">
-          <i class="fa fa-shopping-cart">&nbsp;&nbsp;Cart</i>
-        </button>
-      </div>
-      <!-- 保留<button {{if ne "true" .RoleNewDwg}} style="display:none" {{end}} type="button" data-name="newdwgButton" id="newdwgButton" class="btn btn-default">
-        <i class="fa fa-trash">NEWdwg</i>
-        </button> -->
-      <!-- 保留<button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
-        <i class="fa fa-refresh">同步</i>
-        </button> -->
+      
     </div>
     <!--data-click-to-select="true" -->
     <table id="table0"></table>
@@ -252,7 +224,7 @@
     $(function() {
       // 初始化【未接受】工作流表格showToggle:'true',
       $("#table0").bootstrapTable({
-        url: '/project/products/{{.Id}}',
+        url: '/v1/mathcad/gethistorytemples/{{.TempleID}}',
         method: 'get',
         search: 'true',
         showRefresh: 'true',
@@ -306,20 +278,18 @@
             align: "center",
             valign: "middle"
           },
+          // {
+          //   field: 'Code',
+          //   title: '编号',
+          //   halign: "center",
+          //   align: "center",
+          //   valign: "middle"
+          // },
           {
-            field: 'Code',
-            title: '编号',
-            // formatter:setCode,
-            halign: "center",
-            align: "left",
-            valign: "middle"
-          },
-          {
-            field: 'Title',
+            field: 'UserTemple.temptitle',
             title: '名称',
-            // formatter:setTitle,
             halign: "center",
-            align: "left",
+            align: "center",
             valign: "middle"
           },
           {
@@ -330,68 +300,74 @@
             valign: "middle"
           },
           {
-            field: 'Principal',
+            field: 'User.Nickname',
             title: '设计',
             align: "center",
             valign: "middle"
           },
+          // {
+          //   field: 'Articlecontent',
+          //   title: '文章',
+          //   formatter: setArticle,
+          //   events: actionEvents,
+          //   align: "center",
+          //   valign: "middle"
+          // },
+          // {
+          //   field: 'Attachmentlink',
+          //   title: '附件',
+          //   formatter: setAttachment,
+          //   events: actionEvents,
+          //   align: "center",
+          //   valign: "middle"
+          // },
+          // {
+          //   field: 'Pdflink',
+          //   title: 'PDF',
+          //   formatter: setPdf,
+          //   events: actionEvents,
+          //   align: "center",
+          //   valign: "middle"
+          // },
           {
-            field: 'Articlecontent',
-            title: '文章',
-            formatter: setArticle,
-            events: actionEvents,
-            align: "center",
-            valign: "middle"
-          },
-          {
-            field: 'Attachmentlink',
-            title: '附件',
-            formatter: setAttachment,
-            events: actionEvents,
-            align: "center",
-            valign: "middle"
-          },
-          {
-            field: 'Pdflink',
-            title: 'PDF',
-            formatter: setPdf,
-            events: actionEvents,
-            align: "center",
-            valign: "middle"
-          },
-          {
-            field: 'Created',
+            field: 'CreatedAt',
             title: '建立时间',
             formatter: localDateFormatter,
             visible: "false",
             align: "center",
             valign: "middle"
           },
-          {
-            field: 'Updated',
-            title: '更新时间',
-            formatter: localDateFormatter,
-            visible: "false",
-            align: "center",
-            valign: "middle"
-          },
-          {
-            field: 'Relevancy',
-            title: '关联',
-            formatter: RelevFormatter,
-            // events:actionRelevancy,
-            // visible："false",
-            align: "center",
-            valign: "middle"
-          },
-          {
-            field: 'DocState',
-            title: '状态',
-            formatter: setDocState,
-            events: actionEvents,
-            align: "center",
-            valign: "middle"
-          }
+          // {
+          //   field: 'Updated',
+          //   title: '更新时间',
+          //   formatter: localDateFormatter,
+          //   visible: "false",
+          //   align: "center",
+          //   valign: "middle"
+          // },
+          // {
+          //   field: 'Relevancy',
+          //   title: '关联',
+          //   formatter: RelevFormatter,
+          //   align: "center",
+          //   valign: "middle"
+          // },
+          // {
+          //   field: 'version',
+          //   title: '版本',
+            // formatter: setDocState,
+            // events: actionEvents,
+          //   align: "center",
+          //   valign: "middle"
+          // },
+          // {
+          //   field: 'status',
+          //   title: '状态',
+            // formatter: setDocState,
+            // events: actionEvents,
+          //   align: "center",
+          //   valign: "middle"
+          // },
           // {
           //     field: 'dContMainEntity.createTime',
           //     title: '发起时间',
@@ -399,11 +375,14 @@
           //         return new Date(value).toLocaleString().substring(0,9);
           //     }
           // },
-          // {
-          //     field: 'dContMainEntity.operate',
-          //     title: '操作',
-          //     formatter: operateFormatter
-          // }
+          {
+            field: 'operate',
+            title: '操作',
+            formatter: operateFormatter,
+            events: operateEvents,
+            align: "center",
+            valign: "middle"
+          }
         ]
       });
     });
@@ -413,7 +392,7 @@
     }
 
     function localDateFormatter(value) {
-      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+      return moment(value, 'YYYY-MM-DD h:mm:ss a').add(8, 'hours').format('YYYY-MM-DD h:mm:ss a');
     }
 
     function RelevFormatter(value) {
@@ -443,6 +422,34 @@
       }
     }
 
+    function operateFormatter(value, row, index) {
+      return [
+        '<a class="cal btn btn-xs btn-danger" style="margin-left:10px" href="javascript:void(0)" title="计算">',
+        '<i class="fa fa-calculator"></i>',
+        '</a>',
+        '<a class="pdf btn btn-xs btn-success" style="margin-left:10px" href="javascript:void(0)" title="查看">',
+        '<i class="fa fa-file-pdf-o"></i>',
+        '</a>',
+        '<a class="edit btn btn-xs btn-info" style="margin-left:10px" href="javascript:void(0)" title="编辑">',
+        '<i class="fa fa-pencil"></i>',
+        '</a>'
+      ].join('');
+    }
+
+    window.operateEvents = {
+      'click .cal': function(e, value, row, index) {
+        var url = '/v1/mathcad/gethistorymathcal/'+row.ID+'?templeid='+{{.TempleID}}
+        window.open(url,"_blank","")
+      },
+      'click .pdf': function(e, value, row, index) {
+        var url = '/v1/mathcad/mathpdf'
+      },
+      'click .edit': function(e, value, row, index) {
+        alert(row.id);
+        var url = '/v1/mathcad/editor'
+      },
+    };
+
     // 关联成果跳转到对应的树状目录下
     function gototree(e) {
       // $(window.parent.document).find("input:radio").attr("checked","true");
@@ -455,9 +462,9 @@
       // window.parent.document.getElementById("iframepage").src="/project/{{.Id}}/"+e;
 
       // $("#iframepage", window.parent.document).val($val);//jQuery写法给父页面传值
-        // window.parent.document.getElementById("iframepage").setAttribute("src","/project/{{.Id}}/"+e);//原生javascript写法给父页面传值
-        // $(".clear", window.parent.document).hide();//jQuery写法控制父页面中的某个元素隐藏
-        //window.parent.document.getElementsByClassName("clear")[0].style.display = "none";//原生javascript写法控制父页面中的某个元素隐藏
+      // window.parent.document.getElementById("iframepage").setAttribute("src","/project/{{.Id}}/"+e);//原生javascript写法给父页面传值
+      // $(".clear", window.parent.document).hide();//jQuery写法控制父页面中的某个元素隐藏
+      //window.parent.document.getElementsByClassName("clear")[0].style.display = "none";//原生javascript写法控制父页面中的某个元素隐藏
 
       // var findCheckableNodess = function() {
       //   return $('#tree',parent.document).treeview('findNodes', [e, 'id']);
@@ -596,9 +603,10 @@
     }
 
     function setDocState(value, row, index) {
-      if (value.Name) {
-        return "<a href='/cms/#/flow/documentdetail2?docid=" + row.ProdDoc.DocumentId + "&dtid=" + row.ProdDoc.DocTypeId + "'target='_blank'>" + value.Name + "</a>";
-      }
+      console.log(row.temptitle)
+      // if (value.ID) {
+      //   return "<a href='/cms/#/flow/documentdetail2?docid=" + row.ProdDoc.DocumentId + "&dtid=" + row.ProdDoc.DocTypeId + "'target='_blank'>" + value.Name + "</a>";
+      // }
     }
 
     window.actionEvents = {
@@ -692,14 +700,9 @@
         alert("权限不够！");
         return;
       }
-      $("input#pid").remove();
-      var th1 = "<input id='pid' type='hidden' name='pid' value='" + {{.Id }} + "'/>"
-      $(".modal-body").append(th1);
+      var url = '/v1/mathcad/uploadtemple/'+{{.Id}}
+      window.open(url,"_blank","")
 
-      $('#modalTable').modal({
-        show: true,
-        backdrop: 'static'
-      });
     }
 
     $(document).ready(function() {

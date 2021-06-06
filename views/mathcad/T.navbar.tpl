@@ -220,7 +220,7 @@ a.navbar-brand {
         <a href="/v1/wx/photoswipe" title="相册" target="_blank">相册</a>
       </li>
       <li {{if .IsPhotoWipe}} class="active" {{end}}>
-        <a href="http://192.168.100.37:8080/merit" title="价值" target="_blank">价值</a>
+        <a href="http://112.74.42.44:8080/merit" title="价值" target="_blank">价值</a>
       </li>
       <li {{if .IsMath}} class="active" {{end}}>
         <a href="/v1/mathcad/getmath/26989" title="云计算" target="_blank">云计算</a>

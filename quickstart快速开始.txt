@@ -124,3 +124,13 @@
 	38.它的验证码不是很清晰，很难输入准确。所以用sqlite expert professional先打开sqlite数据库，将md_options表中的“是否启用验证码”的option_value填上false。
 
 
+	更换域名记录
+	购买域名，只要在.net那个域名里购买，填写hotqin即可，默认就是www.hotqin.net
+	上传身份证进行备案
+
+
+	更换域名：
+	engineercms的app里小程序的服务地址要修改成新的域名
+	申请SSL证书：打开远程桌面，打开beyond compare，再点击证书的文件验证，快速拷贝到本机engineercms的static里的download目录里的txt文件里，远程进行文件更新，回到云里，点击验证，3分钟内完成的话，马上就可以扫描到。
+
+
