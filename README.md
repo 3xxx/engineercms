@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](LICENSE) [![Build Status](https://travis-ci.org/3xxx/engineercms.svg?branch=master)](https://travis-ci.org/3xxx/engineercms) [![GoDoc](https://godoc.org/github.com/3xxx/engineercms?status.svg)](https://godoc.org/github.com/3xxx/engineercms)
 
-[Demo](https://zsj.itdos.com/)
+[Demo](https://zsj.itdos.net/)
 ——基于engineercms的设代资料管理平台（真实应用环境）
 
 1. 本系统采用go语言（基于[beego](https://github.com/astaxie/beego)框架）开发，运行文件为编译后的二进制可执行文件，所以无需像其他语言（php、nodejs、java等语言）编写的web应用那样，需要配置运行服务环境。
@@ -130,7 +130,7 @@ Linux系统下请替换掉执行文件engineercms(linux)
 [wiki](https://github.com/3xxx/EngineerCMS/wiki)。包括linux系统下的编译。linux系统下的部署参见网盘中的文档。
 
 技术开发过程详见[CSDN我的博客](https://blog.csdn.net/hotqin888)
-系统简单使用见[mindoc文档](https://zsj.itdos.com/docs/engineercms_008)
+系统简单使用见[mindoc文档](https://zsj.itdos.net/docs/engineercms_008)
 
 ## Quick Start
 
@@ -141,7 +141,7 @@ Linux系统下请替换掉执行文件engineercms(linux)
 ## Documentation
 
 * [中文文档]——请查阅document文件夹
-* 系统简单使用见[mindoc文档](https://zsj.itdos.com/docs/engineercms_008)
+* 系统简单使用见[mindoc文档](https://zsj.itdos.net/docs/engineercms_008)
 
 ## 免费开源和问题反馈
 
