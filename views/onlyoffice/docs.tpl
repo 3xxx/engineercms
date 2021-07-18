@@ -137,7 +137,7 @@
         </button> -->
     </div>
     <!--data-click-to-select="true" -->
-    <table id="table0" data-toggle="table" data-url="/onlyoffice/getdata" data-search="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar1" data-query-params="queryParams" data-sort-name="Code" data-sort-order="desc" data-page-size="15" data-page-list="[10,15, 50, 100, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-single-select="true" data-click-to-select="true" data-show-export="true">
+    <table id="table0" data-toggle="table" data-url="/onlyoffice/getdata" data-search="true" data-show-search-clear-button="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar1" data-query-params="queryParams" data-sort-name="Code" data-sort-order="desc" data-page-size="15" data-page-list="[10,15, 50, 100, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-single-select="true" data-click-to-select="true" data-show-export="true">
       <thead>
         <tr>
           <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
@@ -251,7 +251,7 @@
             if (value[0].Permission == "4") {
               pdfUrl = '<a href=# title="拒绝访问"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';
             } else {
-              pdfUrl = '<a href=/v1/pdfcpu/onlypdf/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';
+              pdfUrl = '<a href=/onlyoffice/' + value[0].Id + ' title="协作" target="_blank"><i class="fa fa-file-pdf-o fa-lg" style="color:Brown;"></i></a>';//或者用pdf.js打开：<a href=/v1/pdfcpu/onlypdf/
             }
             return pdfUrl;
           } else if (value[0].Suffix == "txt") {

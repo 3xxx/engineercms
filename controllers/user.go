@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego"
 	// "github.com/astaxie/beego/logs"
 	"github.com/tealeg/xlsx"
+	"html/template"
 	"os"
 	"strconv"
 	"strings"
@@ -370,6 +371,7 @@ func (c *UserController) UpdateUser() {
 	if isadmin || uid == id {
 		name := c.Input().Get("name")
 		value := c.Input().Get("value")
+		value = template.HTMLEscapeString(value) //过滤xss攻击
 		err = m.UpdateUser(id, name, value)
 		if err != nil {
 			beego.Error(err)

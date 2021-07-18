@@ -18,7 +18,7 @@
 <div class="col-md-8">
 <div class="content">
   <div>
-  <h3 class="pull-left">欢迎来到 珠三角项目 Wiki</h3>
+  <h3 class="pull-left">欢迎来到 PSS Wiki</h3>
   <ul class="nav nav-tabs pull-right">
     <li class="active"><a href="javascript:;">最近回复</a></li>
     <li><a href="/wikis/latest">最近发布</a></li>

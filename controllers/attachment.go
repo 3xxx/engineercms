@@ -1473,6 +1473,8 @@ func (c *AttachController) DownloadAttachment() {
 	}
 	fileext := path.Ext(attachment.FileName)
 	switch fileext {
+	case ".mcdx", ".mctx", ".xmcd", ".mcd":
+		return
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP":
 		// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, fileurl+"/"+attachment.FileName)
@@ -1581,7 +1583,7 @@ func (c *AttachController) Attachment() {
 	if err != nil {
 		beego.Error(err)
 	}
-	// beego.Info(filePath)
+	beego.Info(filePath)
 	//attachment/standard/SL/SLZ 5077-2016水工建筑物荷载设计规范.pdf
 	if strings.Contains(filePath, "?") { //hotqinsessionid=
 		filePathtemp := strings.Split(filePath, "?")
@@ -1592,6 +1594,9 @@ func (c *AttachController) Attachment() {
 	array := strings.Split(filepath1, "/")
 	// beego.Info(array[1])
 	// beego.Info(fileext)
+	if fileext == ".mcdx" || fileext == ".mctx" || fileext == ".xmcd" || fileext == ".mcd" {
+		return
+	}
 	if array[1] == "standard" || (array[1] == "mathcad" && fileext == ".pdf") {
 		if !islogin {
 			// beego.Info(!islogin)

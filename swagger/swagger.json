@@ -2604,6 +2604,84 @@
                 }
             }
         },
+        "/chat/avatar/{text}": {
+            "get": {
+                "tags": [
+                    "chat"
+                ],
+                "description": "get avatar",
+                "operationId": "ChatController.get avatar",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "text",
+                        "description": "The text",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.Avatar"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/chat/chat": {
+            "get": {
+                "tags": [
+                    "chat"
+                ],
+                "description": "get chat",
+                "operationId": "ChatController.get chat",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserTemple"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/chat/wschat": {
+            "get": {
+                "tags": [
+                    "chat"
+                ],
+                "description": "get wschat",
+                "operationId": "ChatController.get wschat",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetChat"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
         "/checkin/activity/actInfo": {
             "post": {
                 "tags": [
@@ -3385,6 +3463,84 @@
                 }
             }
         },
+        "/mathcad/addmatharticle/{id}": {
+            "post": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "post article by templeID",
+                "operationId": "MathcadController.post math artile by templeID",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of templeID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "The title of article",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "description": "The content of article",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.MathArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "article not found"
+                    }
+                }
+            }
+        },
+        "/mathcad/deletetemple/{id}": {
+            "post": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "delete temple by id",
+                "operationId": "MathcadController.delete temple",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of temple",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserTemple"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "temple not found"
+                    }
+                }
+            }
+        },
         "/mathcad/gethistoryinput/{id}": {
             "get": {
                 "tags": [
@@ -3908,6 +4064,38 @@
                 }
             }
         },
+        "/mathcad/matharticle/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get article by matharticleID",
+                "operationId": "MathcadController.get math artile by matharticleID",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of matharticleID",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.MathArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "article not found"
+                    }
+                }
+            }
+        },
         "/mathcad/mathcal/{id}": {
             "get": {
                 "tags": [
@@ -3940,6 +4128,38 @@
                 }
             }
         },
+        "/mathcad/mathpdf/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get mathpdf by usertempleID",
+                "operationId": "MathcadController.get mathpdf by usertempleID",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of usertempleID",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.MathPdf"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "mathpdf not found"
+                    }
+                }
+            }
+        },
         "/mathcad/postmath": {
             "post": {
                 "tags": [
@@ -3948,6 +4168,50 @@
                 "description": "post mathcad",
                 "operationId": "MathcadController.post mathcad",
                 "parameters": [
+                    {
+                        "in": "query",
+                        "name": "inputdata",
+                        "description": "The inputdata",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templeid",
+                        "description": "The templeid",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetMathcadPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/mathcad/postmath2/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get mathcad",
+                "operationId": "MathcadController.get mathcad",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of usertemple",
+                        "required": true,
+                        "type": "string"
+                    },
                     {
                         "in": "query",
                         "name": "inputdata",
@@ -5046,6 +5310,45 @@
                 }
             }
         },
+        "/wx/addapplyrecharge/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get user recharge",
+                "operationId": "PayController.post user recharge",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of user",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "amount",
+                        "description": "The amount of money",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Recharge"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "recharge not found"
+                    }
+                }
+            }
+        },
         "/wx/addbusiness/{id}": {
             "post": {
                 "tags": [
@@ -5297,6 +5600,84 @@
                     },
                     "404": {
                         "description": "pas not found"
+                    }
+                }
+            }
+        },
+        "/wx/adduserpays": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post userpay by mathtempid",
+                "operationId": "PayController.post userpay by mathtempleid",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "usertempleid",
+                        "description": "The id of mathtemple",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "amount",
+                        "description": "The amout of pays",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Pay"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pas not found"
+                    }
+                }
+            }
+        },
+        "/wx/adduserrecharge/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get users recharge",
+                "operationId": "PayController.post users recharge",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of recharge",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "amount",
+                        "description": "The amount of money",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Recharge"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "recharge not found"
                     }
                 }
             }
@@ -5884,6 +6265,29 @@
                     },
                     "404": {
                         "description": "pas not found"
+                    }
+                }
+            }
+        },
+        "/wx/applyrecharge": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get user recharge",
+                "operationId": "PayController.get user recharge",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Recharge"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "recharge not found"
                     }
                 }
             }
@@ -6509,6 +6913,66 @@
                 }
             }
         },
+        "/wx/getapplyrecharge": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get user recharge",
+                "operationId": "PayController.get user recharge",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Recharge"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getapplyrechargedata": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get user rechargedata",
+                "operationId": "PayController.get user rechargedata",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of recharges",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of recharges",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Recharge"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
         "/wx/getbusiness/{id}": {
             "get": {
                 "tags": [
@@ -6729,6 +7193,29 @@
                 }
             }
         },
+        "/wx/getpay": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get pay by page",
+                "operationId": "PayController.get pay list",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
         "/wx/getuserarticle": {
             "get": {
                 "tags": [
@@ -6748,6 +7235,160 @@
                     },
                     "404": {
                         "description": "articles not found"
+                    }
+                }
+            }
+        },
+        "/wx/getusergetappreciations": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get userappreciation by page",
+                "operationId": "PayController.get userappreciations list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for myappreciation list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getusermoney": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get user money",
+                "operationId": "PayController.get user money",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetUserMoney"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getuserpay": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get pay by page",
+                "operationId": "PayController.get pay list",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getuserpayappreciations": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get userappreciation by page",
+                "operationId": "PayController.get userappreciations list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for myappreciation list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getuserpaylist": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get userpay by page",
+                "operationId": "PayController.get userpays list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for mymoney list",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of projproducts",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
                     }
                 }
             }
@@ -8995,6 +9636,9 @@
         ".Addfinance": {
             "type": "object"
         },
+        ".Avatar": {
+            "type": "object"
+        },
         ".Create": {
             "type": "object"
         },
@@ -9025,6 +9669,9 @@
         ".GetBusinessPage": {
             "type": "object"
         },
+        ".GetChat": {
+            "type": "object"
+        },
         ".GetDiary": {
             "type": "object"
         },
@@ -9052,6 +9699,9 @@
         ".Gettest": {
             "type": "object"
         },
+        ".MathPdf": {
+            "type": "object"
+        },
         ".Model": {
             "type": "object"
         },
@@ -9069,6 +9719,38 @@
         },
         ".success": {
             "type": "object"
+        },
+        "models.Article": {
+            "title": "Article",
+            "type": "object",
+            "properties": {
+                "Created": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "ProductId": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Subtext": {
+                    "type": "string"
+                },
+                "Updated": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "Views": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "html": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
         },
         "models.Attachment": {
             "title": "Attachment",
@@ -9137,6 +9819,101 @@
                 }
             }
         },
+        "models.MathArticle": {
+            "title": "MathArticle",
+            "type": "object",
+            "properties": {
+                "UserTempleID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "html": {
+                    "type": "string"
+                },
+                "subtext": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Pay": {
+            "title": "Pay",
+            "type": "object",
+            "properties": {
+                "Amount": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Article": {
+                    "$ref": "#/definitions/models.Article"
+                },
+                "ArticleID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "User": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "User2ID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "UserID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "models.Recharge": {
+            "title": "Recharge",
+            "type": "object",
+            "properties": {
+                "Amount": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "User": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "UserID": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "models.Select2": {
+            "title": "Select2",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "models.TempleInputs": {
             "title": "TempleInputs",
             "type": "object",
@@ -9159,6 +9936,15 @@
                 },
                 "resulttype": {
                     "type": "string"
+                },
+                "selectvalue": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Select2"
+                    }
+                },
+                "textarealvalue": {
+                    "$ref": "#/definitions/models.TextAreal"
                 },
                 "units": {
                     "type": "string"
@@ -9189,6 +9975,15 @@
                     "type": "string"
                 },
                 "units": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TextAreal": {
+            "title": "TextAreal",
+            "type": "object",
+            "properties": {
+                "value": {
                     "type": "string"
                 }
             }
@@ -9262,6 +10057,9 @@
                 "UserTemple": {
                     "$ref": "#/definitions/models.UserTemple"
                 },
+                "pdfurl": {
+                    "type": "string"
+                },
                 "tempid": {
                     "type": "integer",
                     "format": "int32"
@@ -9279,6 +10077,9 @@
                 "ClassID": {
                     "type": "integer",
                     "format": "int64"
+                },
+                "MathArticle": {
+                    "$ref": "#/definitions/models.MathArticle"
                 },
                 "User": {
                     "$ref": "#/definitions/models.User"

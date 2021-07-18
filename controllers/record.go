@@ -510,7 +510,7 @@ func UnicodeIndex(str, substr string) int {
 		// 获得子串之前的字符串的长度，便是子串在字符串的字符位置
 		result = len(rs)
 	} else {
-		result = 0 //如果没有空格就返回0
+		result = 0 //如果没有就返回0
 	}
 	return result
 }

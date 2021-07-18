@@ -8,11 +8,11 @@ import (
 	"github.com/3xxx/engineercms/controllers"
 	// "githsub.com/3xxx/engineercms/controllers/checkin"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
+	// "github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/plugins/cors"
 	// "github.com/3xxx/engineercms/controllers"
-	"github.com/3xxx/engineercms/controllers/utils"
-	"strconv"
+	// "github.com/3xxx/engineercms/controllers/utils"
+	// "strconv"
 )
 
 // var FilterFunc = func(ctx *context.Context) {
@@ -66,23 +66,24 @@ func init() {
 	// 		console.log(“errr==”)
 	// 	}
 	// });
-	var FilterUser = func(ctx *context.Context) {
-		// v := ctx.Input.CruSession.Get("uname")
-		// v := ctx.Input.Session("uname")
-		authString := ctx.GetCookie("token")
-		if authString == "" {
-			authString = ctx.Input.Query("token")
-			beego.Info(authString)
-		}
-		username, err := utils.CheckToken(authString)
-		beego.Info(username)
-		// uname = v.(string)//uid---v.(int)
-		// if v == nil {
-		site := ctx.Input.Site() + ":" + strconv.Itoa(ctx.Input.Port())
-		if err != nil {
-			ctx.Redirect(302, "http://localhost:8080/v1/sso/ssologin?service="+site+ctx.Request.URL.String())
-		}
-	}
+
+	// var FilterUser = func(ctx *context.Context) {
+	// 	// v := ctx.Input.CruSession.Get("uname")
+	// 	// v := ctx.Input.Session("uname")
+	// 	authString := ctx.GetCookie("token")
+	// 	if authString == "" {
+	// 		authString = ctx.Input.Query("token")
+	// 		beego.Info(authString)
+	// 	}
+	// 	username, err := utils.CheckToken(authString)
+	// 	beego.Info(username)
+	// 	// uname = v.(string)//uid---v.(int)
+	// 	// if v == nil {
+	// 	site := ctx.Input.Site() + ":" + strconv.Itoa(ctx.Input.Port())
+	// 	if err != nil {
+	// 		ctx.Redirect(302, "http://localhost:8080/v1/sso/ssologin?service="+site+ctx.Request.URL.String())
+	// 	}
+	// }
 
 	//自动化文档
 	ns :=
@@ -161,13 +162,13 @@ func init() {
 				),
 			),
 			beego.NSNamespace("/pdfcpu",
-				beego.NSBefore(FilterUser),
+				// beego.NSBefore(FilterUser),
 				beego.NSInclude(
 					&controllers.PdfCpuController{},
 				),
 			),
 			beego.NSNamespace("/flv",
-				beego.NSBefore(FilterUser),
+				// beego.NSBefore(FilterUser),
 				beego.NSInclude(
 					&controllers.FlvController{},
 				),
@@ -184,11 +185,11 @@ func init() {
 					&controllers.MathcadController{},
 				),
 			),
-			// beego.NSNamespace("/cms",
-			// 	beego.NSInclude(
-			// 		&controllers.CMSController{},
-			// 	),
-			// ),
+			beego.NSNamespace("/chat",
+				beego.NSInclude(
+					&controllers.ChatController{},
+				),
+			),
 			// beego.NSNamespace("/suggest",
 			// 	beego.NSInclude(
 			// 		&controllers.SearchController{},

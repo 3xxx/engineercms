@@ -1,13 +1,13 @@
 package models
 
 import (
-	// "fmt"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/jinzhu/gorm"
 	"time"
 )
 
-//打赏文章表
+// 打赏文章表
 type Pay struct {
 	// gorm.Model
 	ID        uint `json:"id" gorm:"primary_key"`
@@ -22,7 +22,23 @@ type Pay struct {
 	Article   Article `gorm:"foreignkey:ArticleId"`
 }
 
-//余额表
+// 用户付费计算表
+type PayMath struct {
+	gorm.Model
+	// ID         uint `json:"id" gorm:"primary_key"`
+	// CreatedAt  time.Time
+	// UpdatedAt  time.Time
+	// DeletedAt  *time.Time
+	UserID       int64 `gorm:"column:user_id;foreignkey:UserId;"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	User2ID      int64 `gorm:"column:user2_id;foreignkey:User2Id;"`
+	UserTempleID uint  `gorm:"column:user_temple_id;foreignkey:UserTempleID;"`
+	Amount       int   `gorm:"column:amount"`
+	User         User  //`gorm:"foreignkey:UserId"` //对于preload来说，这个后面不影响
+	User2        User  //`gorm:"foreignkey:User2Id"`
+	UserTemple   UserTemple
+}
+
+// 余额表
 type Money struct {
 	gorm.Model
 	// ID     int    `gorm:"primary_key"`
@@ -31,7 +47,7 @@ type Money struct {
 	User   User  `gorm:"foreignkey:UserId"`
 }
 
-//用户充值记录
+// 用户充值记录
 type Recharge struct {
 	gorm.Model
 	// ID       int    `gorm:"primary_key"`
@@ -77,7 +93,7 @@ func init() {
 	_db.CreateTable(&Pay{}, &Money{}, &Recharge{}) //当第一个存在时，后面的不再建立，bug！！！
 	_db.CreateTable(&Money{})
 	_db.CreateTable(&Recharge{})
-
+	_db.CreateTable(&PayMath{})
 	// if !gdb.HasTable(&Pay1{}) {
 	// 	if err = gdb.CreateTable(&Pay1{}).Error; err != nil {
 	// 		panic(err)
@@ -199,7 +215,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	err = db.Where("user_id = ?", product.Uid).First(&moneyB).Error
 	if err != nil {
 		beego.Info(err)
-		if err = tx.Create(&Money{UserID: product.Uid, Amount: 10000}).Error; err != nil {
+		if err = tx.Create(&Money{UserID: product.Uid, Amount: 100}).Error; err != nil {
 			beego.Info(err)
 			tx.Rollback()
 			return err
@@ -212,8 +228,8 @@ func AddUserPay(articleid, uid int64, amount int) error {
 			beego.Info(err)
 			return err
 		}
-		//账户充值
-		err := tx.Create(&Recharge{UserID: product.Uid, Amount: 10000}).Error
+		//账户充值——这句重复？上面是账户余额表，这个是充值表
+		err := tx.Create(&Recharge{UserID: product.Uid, Amount: 100}).Error
 		if err != nil {
 			beego.Info(err)
 			tx.Rollback()
@@ -276,6 +292,115 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	// }
 }
 
+//添加某个math某个用户打赏记录
+func AddUserPayMath(templeid uint, uid int64, amount int) error {
+	//获取DB
+	db := GetDB()
+	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+	//保证模板id正确
+	var usertemple UserTemple
+	err := db.Where("id = ?", templeid).First(&usertemple).Error
+	if err != nil {
+		beego.Info(err)
+		tx.Rollback()
+		return err
+	}
+	//根据模板id查出作者userid
+	// var product Product
+	// err = db.Where("id = ?", article.ProductId).First(&product).Error
+	// if err != nil {
+	// 	beego.Info(err)
+	// 	tx.Rollback()
+	// 	return err
+	// }
+
+	newamount := 0 - amount
+	if err = tx.Create(&PayMath{UserID: uid, User2ID: usertemple.UserID, UserTempleID: templeid, Amount: newamount}).Error; err != nil {
+		beego.Info(err)
+		tx.Rollback()
+		return err
+	}
+
+	//赞赏者账户
+	var moneyA Money
+	err = db.Where("user_id = ?", uid).First(&moneyA).Error
+	if err != nil {
+		beego.Info(err)
+		tx.Rollback()
+		return err
+	}
+	//2.赞赏者账户余额保证大于0
+	newamount = moneyA.Amount - amount
+	if newamount < 0 {
+		tx.Rollback()
+		return err
+		beego.Info(err)
+	}
+	//3.赞赏者账户修改余额
+	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
+	if rowsAffected == 0 {
+		beego.Info(err)
+		tx.Rollback()
+		return err
+	}
+
+	// 模板作者账户充值记录
+	var moneyB Money
+	//没有查到则新增一条
+	err = db.Where("user_id = ?", usertemple.UserID).First(&moneyB).Error
+	if err != nil {
+		beego.Info(err)
+		if err = tx.Create(&Money{UserID: usertemple.UserID, Amount: 100}).Error; err != nil {
+			beego.Info(err)
+			tx.Rollback()
+			return err
+		}
+		//事务新增后要查出来moneyB，供下面的update用
+		// user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
+		// result := db.Create(&user) // 通过数据的指针来创建
+		// tx也能返回id啊result :=  result.Error
+		// user.ID             // 返回插入数据的主键
+		// result.Error        // 返回 error
+		// result.RowsAffected // 返回插入记录的条数
+
+		//记得下面这个查询用tx，不能用db，因为数据还没真正写入！！！
+		// 用money:=Money{}来创建，然后取到money.ID供后续使用
+		err = tx.Where("user_id = ?", usertemple.UserID).First(&moneyB).Error
+		if err != nil {
+			tx.Rollback()
+			beego.Info(err)
+			return err
+		}
+		//账户充值_这句干嘛？重复？——这个是充值数据表，上面是账户余额表，不重复
+		err := tx.Create(&Recharge{UserID: usertemple.UserID, Amount: 100}).Error
+		if err != nil {
+			beego.Info(err)
+			tx.Rollback()
+			return err
+		}
+	}
+
+	newamount = moneyB.Amount + amount
+	rowsAffected = tx.Model(&moneyB).Update("amount", newamount).RowsAffected
+	if rowsAffected == 0 {
+		beego.Info(err)
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
 //用户充值和提现
 func AddUserRecharge(uid int64, amount int) error {
 	//获取DB
@@ -292,39 +417,43 @@ func AddUserRecharge(uid int64, amount int) error {
 		return err
 	}
 
-	//账户修改余额
-	var recharge Recharge
+	//账户添加一条充值记录
+	// var recharge Recharge
 	//没有查到则新增一条
-	err := tx.FirstOrCreate(&recharge, Recharge{UserID: uid}).Error
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	rowsAffected := tx.Model(&recharge).Update("amount", amount).RowsAffected
-	if rowsAffected == 0 {
-		tx.Rollback()
-		return err
-	}
-	// if err := tx.Create(&Recharge{UserID: uid, Amount: amount}).Error; err != nil {
+	// err := tx.FirstOrCreate(&recharge, Recharge{UserID: uid}).Error
+	// if err != nil {
 	// 	tx.Rollback()
 	// 	return err
 	// }
+	// rowsAffected := tx.Model(&recharge).Update("amount", amount).RowsAffected
+	// if rowsAffected == 0 {
+	// 	tx.Rollback()
+	// 	return err
+	// }
+	if err := tx.Create(&Recharge{UserID: uid, Amount: amount}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
 
 	//账户修改余额
 	var money Money
 	//没有查到则新增一条
-	err = tx.FirstOrCreate(&money, Money{UserID: uid}).Error
+	err := tx.FirstOrCreate(&money, Money{UserID: uid}).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	newamount := money.Amount + amount
-	rowsAffected = tx.Model(&money).Update("amount", newamount).RowsAffected
+	rowsAffected := tx.Model(&money).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
 		tx.Rollback()
 		return err
 	}
+	// if err := tx.Create(&Money{UserID: uid, Amount: newamount}).Error; err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
 
 	return tx.Commit().Error
 	// 更新单个属性，如果它有变化
@@ -358,7 +487,99 @@ func AddUserRecharge(uid int64, amount int) error {
 	// }
 }
 
-//查询某个用户花费赞赏和获得赞赏记录
+// 用户添加充值申请——软删除db.Delete(&User{}, 10)，采用事务，如果软删除出错，则回滚
+func AddApplyRecharge(uid int64, amount int) error {
+	//获取DB
+	db := GetDB()
+	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	//账户添加一条充值记录
+	recharge := Recharge{UserID: uid, Amount: amount}
+	if err := tx.Create(&recharge).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 进行软删除
+	// db.Delete(&User{}, 10)
+	// db.Delete(&user)
+	if err := tx.Delete(&recharge).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+// 管理员查询到所有申请
+func GetApplyRecharge(limit, offset int) (recharge []Recharge, err error) {
+	//获取DB
+	db := GetDB()
+	if err := db.Unscoped().Preload("User").Where("deleted_at <> ?", "").Limit(limit).Offset(offset).Find(&recharge).Error; err != nil {
+		return recharge, err
+	}
+	return recharge, err
+}
+
+// 管理员查询软删除的充值申请，同意则取消软删除，修改申请数额db.Unscoped().Where("age = 20").Find(&users)
+// db.Model(&user).Select("Name", "Age").Updates(User{Name: "new_name", Age: 0})
+func UpdateRecharge(rid uint, amount int) error {
+	//获取DB
+	db := GetDB()
+	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	// 查询申请人id和数额
+	var recharge Recharge
+	if err := tx.Unscoped().Where("id = ?", rid).Find(&recharge).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	fmt.Println(&recharge)
+	// db.Model(&user).Update("name", "hello")
+	if err := tx.Unscoped().Model(&recharge).Update("deleted_at", nil).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//账户修改余额
+	var money Money
+	//没有查到则新增一条
+	err := tx.FirstOrCreate(&money, Money{UserID: recharge.UserID}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	// 修改余额记录
+	newamount := money.Amount + amount
+	rowsAffected := tx.Model(&money).Update("amount", newamount).RowsAffected
+	if rowsAffected == 0 {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+
+//查询某个用户花费赞赏 和 获得 文章 赞赏记录
 func GetUserPay(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
 	db := GetDB()
@@ -370,7 +591,19 @@ func GetUserPay(uid int64, limit, offset int) (pays []*Pay, err error) {
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户花费赞赏（赞赏别人）的记录
+//查询某个用户花费赞赏 和 获得 math 赞赏记录
+func GetUserPayMath(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
+	//获取DB
+	db := GetDB()
+	// err = db.Where("user_id", uid).Find(&pays).Error
+	err = db.Order("updated_at desc").Preload("User").Preload("User2").Preload("UserTemple").Where("user_id = ?", uid).Or("user2_id = ?", uid).Limit(limit).Offset(offset).Find(&paymaths).Error //查询所有device记录
+	// err = db.Model(&pays).Related(&pays.User, "Users").Error
+	return paymaths, err
+	// 多连接及参数
+	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
+}
+
+//查询某个用户 花费 赞赏（赞赏别人）文章 的记录
 func GetUserPayAppreciation(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
 	db := GetDB()
@@ -380,12 +613,32 @@ func GetUserPayAppreciation(uid int64, limit, offset int) (pays []*Pay, err erro
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户获得赞赏（别人赞赏自己）的记录
+//查询某个用户 花费 赞赏（赞赏别人）math 的记录
+func GetUserPayMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
+	//获取DB
+	db := GetDB()
+	err = db.Order("updated_at desc").Model(&paymaths).Preload("User").Preload("UserTemple").Where("user_id=?", uid).Limit(limit).Offset(offset).Find(&paymaths).Error //查询所有device记录
+	return paymaths, err
+	// 多连接及参数
+	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
+}
+
+//查询某个用户 获得 赞赏（别人赞赏自己）的记录
 func GetUserGetAppreciation(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
 	db := GetDB()
 	err = db.Order("updated_at desc").Model(&pays).Preload("User").Preload("Article").Where("user2_id=?", uid).Limit(limit).Offset(offset).Find(&pays).Error //查询所有device记录
 	return pays, err
+	// 多连接及参数
+	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
+}
+
+//查询某个用户 获得 赞赏（别人赞赏自己）amth 的记录
+func GetUserGetMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
+	//获取DB
+	db := GetDB()
+	err = db.Order("updated_at desc").Model(&paymaths).Preload("User").Preload("UserTemple").Where("user2_id=?", uid).Limit(limit).Offset(offset).Find(&paymaths).Error //查询所有device记录
+	return paymaths, err
 	// 多连接及参数
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }

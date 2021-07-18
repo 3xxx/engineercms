@@ -14,9 +14,13 @@ require (
 	github.com/casbin/beego-orm-adapter v1.0.0
 	github.com/casbin/casbin v1.9.1
 	github.com/casbin/xorm-adapter v1.0.0
+	github.com/dchest/lru v0.0.0-20151022103600-d8fd1e40a385 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/go-xorm/xorm v0.7.9 // indirect
+	github.com/gorilla/websocket v1.4.2
+	github.com/holys/initials-avatar v0.0.0-20180809162153-a82edcad3408 // indirect
 	github.com/howeyc/fsnotify v0.9.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/kardianos/service v1.2.0
@@ -34,5 +38,6 @@ require (
 	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
 	gopkg.in/ldap.v2 v2.5.1
 	gopkg.in/russross/blackfriday.v2 v2.0.0-00010101000000-000000000000
+	stathat.com/c/consistent v1.0.0 // indirect
 	xorm.io/xorm v1.0.7
 )

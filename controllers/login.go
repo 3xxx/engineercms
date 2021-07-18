@@ -246,7 +246,7 @@ func (c *LoginController) LoginPost() {
 	err := models.ValidateUser(user)
 	if err == nil {
 		c.SetSession("uname", user.Username)
-		c.SetSession("pwd", user.Password)
+		c.SetSession("pwd", user.Password) //这个没用
 		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
 		User, err := models.GetUserByUsername(user.Username)
 		if err != nil {
@@ -283,14 +283,13 @@ func (c *LoginController) LoginPost() {
 //退出登录
 func (c *LoginController) Logout() {
 	v := c.GetSession("uname")
-	islogin := false
 	if v != nil {
 		//删除指定的session
 		c.DelSession("uname")
 		//销毁全部的session
-		c.DestroySession()
-		islogin = true
+		// c.DestroySession()
 	}
+	islogin := false
 	c.Data["json"] = map[string]interface{}{"islogin": islogin}
 	c.ServeJSON()
 }
@@ -436,7 +435,7 @@ func (c *LoginController) WxLogin() {
 			//用户小程序register后，只是存入服务器数据库中的openid和用户名对应
 			//用户小程序login的时候，即这里，将openid存入session
 			//下次用户请求携带hotqinsessionid即可取到session-openid了。
-			sessionId := c.Ctx.Input.Cookie("hotqinsessionid") //这一步什么意思
+			sessionId := c.Ctx.Input.Cookie(beego.AppConfig.String("SessionName")) //这一步什么意思
 			c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "userId": uid, "isAdmin": isAdmin, "sessionId": sessionId, "photo": photo, "appreciationphoto": appreciationphoto}
 			c.ServeJSON()
 		}
@@ -550,7 +549,6 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
-
 	var userid, roleid, userrole string
 	var user models.User
 	var err error
@@ -691,6 +689,7 @@ func (c *LoginController) SsoLogin() {
 	c.Data["service"] = c.GetString("service")
 	// beego.Info(c.GetString("service"))
 	// token_head := c.Ctx.GetCookie("TOKEN")
+	//http://sso.dxy.cn/login?service=https://www.a.cn
 	authString := c.Ctx.GetCookie("TOKEN") //
 	// beego.Info(authString)
 	// authString = c.Ctx.Input.Header("Authorization")
@@ -706,6 +705,53 @@ func (c *LoginController) SsoLogin() {
 	// return
 	// }
 	// tokenString := kv[1]
+	// var authorizeAttributes = attributeList.OfType<TestAuthorizeAttribute>().ToList();
+	// var claims = context.HttpContext.User.Claims;
+	// // 从claims取出用户相关信息，到数据库中取得用户具备的权限码，与当前Controller或Action标识的权限码做比较
+	// var userPermissions = "User_Edit";
+	// if (!authorizeAttributes.Any(s => s.Permission.Equals(userPermissions)))
+	// {
+	//     context.Result = new JsonResult("没有权限");
+	// }
+	// return;
+
+	//校验用户名密码（对Session匹配，或数据库数据匹配）
+	//  private AuthorizeState ValidateTicket(string encryptToken,string role)
+	//  {
+	//    if (encryptToken == null)
+	//    {
+	//        return AuthorizeState.TokenErro;
+	//    }
+	//    //解密Ticket
+	//    var strTicket = FormsAuthentication.Decrypt(encryptToken).UserData;
+	//    //从Ticket里面获取用户名和密码
+	//    var index = strTicket.IndexOf("&");
+	//    string userName = strTicket.Substring(0, index);
+	//    string password = strTicket.Substring(index + 1);
+	//    ArrayList arrayList = new ArrayList(role.Split(','));
+	//    var roleName = HttpContext.Current.Session["Role"].ToString();
+	//    var name = HttpContext.Current.Session["UserName"].ToString();
+	//    //取得session，不通过说明用户退出，或者session已经过期
+	//    if (arrayList.Contains(roleName) && name == userName)  //获取对应控制器 对应方法的访问角色权限 如果包含说明符合访问 否则返回权限错误
+	//    {
+	//        return AuthorizeState.ValidateSuucss;
+	//    }
+	//    else
+	//    {
+	//        return AuthorizeState.UserValidateErro;
+	//    }
+	// }
+
+	//  当我们去访问这个方法时。他会先进行身份验证。进入MVCAuthorize中。
+	//  这里你可以扩展开来。 比如我临时需要对这个方法在多开放些角色 ，可以直接在action 带上
+	//    [MVCAuthorize(Roles = "VIP9,ActiveUser")]
+	//    public ActionResult Chat()
+	//    {
+	//      var account = HttpContext.User.Identity.Name;
+	//      ModelDBContext db = new ModelDBContext();
+	//      //ViewBag.UserName =db.User.Where(x=>x.Email == account).FirstOrDefault().FullName;
+	//      return View();
+	//    }
 
 	c.Data["service"] = c.GetString("service")
 	username, err := utils.CheckToken(authString)
@@ -775,6 +821,7 @@ func (c *LoginController) SsoLoginPost() {
 
 			//下面是写在response head中，没什么用处
 			c.Ctx.Output.Header("Authorization", tokenString)
+
 			// response := utils.Token{tokenString}
 			// json, err := json.Marshal(response)
 			// if err != nil {
@@ -783,6 +830,7 @@ func (c *LoginController) SsoLoginPost() {
 			// }
 			// c.Ctx.ResponseWriter.WriteHeader(http.StatusOK)
 			// c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json")
+			// c.Ctx.ResponseWriter.Header().Set("Authorization", tokenString)
 			// c.Ctx.ResponseWriter.Write(json)
 			// beego.Info(tokenString)
 			//设置cookie 名称,值,时间,路径

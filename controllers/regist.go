@@ -102,10 +102,12 @@ func (this *RegistController) Post() {
 	} else {
 		// beego.Info("电脑端！")
 		if err2 == nil {
-			this.TplName = "success.tpl"
+			// this.TplName = "success.tpl"
+			this.Redirect("/login", 301)
 		} else {
 			// fmt.Println(err)
-			this.TplName = "registerr.tpl"
+			// this.TplName = "registerr.tpl"
+			this.Redirect("/regist", 301)
 		}
 	}
 

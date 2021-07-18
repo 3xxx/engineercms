@@ -285,6 +285,9 @@ a.navbar-brand {
         </li>
         
         {{end}}
+        <li {{if .IsChat}} class="active" {{end}}>
+          <a href="/v1/chat/chat">Chat</a>
+        </li>
         <li {{if .IsWiki}} class="active" {{end}}>
           <a href="/wiki">Wiki</a>
         </li>

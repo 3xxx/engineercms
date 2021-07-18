@@ -11,8 +11,8 @@ import (
 
 type Article struct {
 	Id        int64     `json:"id",form:"-"`
-	Subtext   string    `orm:"sie(20)"`
-	Content   string    `json:"html",orm:"sie(5000)"`
+	Subtext   string    `orm:"size(20)"`
+	Content   string    `json:"html",orm:"size(5000)"`
 	ProductId int64     `orm:"null"`
 	Views     int64     `orm:"default(0)"`
 	Created   time.Time `orm:"auto_now_add;type(datetime)"`
