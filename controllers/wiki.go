@@ -170,8 +170,8 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
@@ -196,8 +196,8 @@ func (c *WikiController) AddWiki() {
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	id, err := models.AddWikiOne(title, content, username)
@@ -207,7 +207,7 @@ func (c *WikiController) AddWiki() {
 		c.Data["json"] = id
 		c.ServeJSON()
 	}
-	// c.Redirect("/wiki", 302)
+	// c.Redirect("/wiki", 301)
 }
 
 //这个是微信小程序添加wiki的方法
@@ -233,8 +233,8 @@ func (c *WikiController) AddPic() {
 	// 	// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 302)
-	// 	// c.Redirect("/roleerr", 302)
+	// 	c.Redirect("/roleerr?url="+route, 301)
+	// 	// c.Redirect("/roleerr", 301)
 	// 	return
 	// }
 	// <p><img src="/attachment/wiki/2018January/1515026559287477900.jpg" title="Snap2.jpg" alt="Snap2.jpg" class="fr-fic fr-dii"></p>
@@ -248,7 +248,7 @@ func (c *WikiController) AddPic() {
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "id": id}
 		c.ServeJSON()
 	}
-	// c.Redirect("/wiki", 302)
+	// c.Redirect("/wiki", 301)
 }
 
 func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
@@ -318,7 +318,7 @@ func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 		// }
 	}
 	c.TplName = "wiki_add.tpl" //不加这句上传出错，虽然可以成功上传
-	// c.Redirect("/wiki", 302)
+	// c.Redirect("/wiki", 301)
 }
 
 func (c *WikiController) View() {
@@ -356,7 +356,7 @@ func (c *WikiController) View() {
 	wiki, err := models.GetWiki(c.Ctx.Input.Param("0"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/", 302)
+		c.Redirect("/", 301)
 		return
 	}
 	c.Data["Wiki"] = wiki
@@ -407,7 +407,7 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	wiki, err := models.GetWiki(tid)
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/", 302)
+		c.Redirect("/", 301)
 		return
 	}
 	// var rolename int
@@ -423,7 +423,7 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	if roleint > 2 && username != wiki.Author { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/roleerr?url="+route, 301)
 		return
 	}
 
@@ -449,7 +449,7 @@ func (c *WikiController) Post() { //这个post属于wiki_modify.html提交修改
 		c.Data["json"] = tid
 		c.ServeJSON()
 	}
-	// c.Redirect("/wiki/view/"+tid, 302) //回到修改后的文章
+	// c.Redirect("/wiki/view/"+tid, 301) //回到修改后的文章
 }
 
 //删除文章
@@ -460,7 +460,7 @@ func (c *WikiController) Delete() { //应该显示警告
 	wiki, err := models.GetWiki(c.Input().Get("tid"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/", 302)
+		c.Redirect("/", 301)
 		return
 	}
 	// var rolename int
@@ -481,8 +481,8 @@ func (c *WikiController) Delete() { //应该显示警告
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	err = models.DeletWiki(c.Input().Get("tid")) //(c.Ctx.Input.Param("0"))
@@ -492,7 +492,7 @@ func (c *WikiController) Delete() { //应该显示警告
 		data := wiki.Title
 		c.Ctx.WriteString(data)
 	}
-	c.Redirect(url, 302) //这里增加wiki
+	c.Redirect(url, 301) //这里增加wiki
 }
 
 //删除文章中的附件，保持页面不跳转怎么办？
@@ -501,7 +501,7 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 	wiki, err := models.GetWiki(c.Input().Get("tid"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/", 302)
+		c.Redirect("/", 301)
 		return
 	}
 	// var rolename int
@@ -519,8 +519,8 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// Tid := c.Ctx.Input.Param("0")
@@ -533,9 +533,9 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 	op := c.Input().Get("op")
 	switch op {
 	case "modify":
-		c.Redirect("/wiki/modify?tid="+Tid, 302)
+		c.Redirect("/wiki/modify?tid="+Tid, 301)
 	default:
-		c.Redirect("/wiki/view/"+Tid, 302) //这里增加wiki
+		c.Redirect("/wiki/view/"+Tid, 301) //这里增加wiki
 	}
 }
 

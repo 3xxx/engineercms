@@ -73,7 +73,7 @@ func (c *AccountController) Login() {
 		if u == "" {
 			u = conf.URLFor("HomeController.Index")
 		}
-		c.Redirect(u, 302)
+		c.Redirect(u, 301)
 	}
 	var remember CookieRemember
 	// 如果 Cookie 中存在登录信息
@@ -138,7 +138,7 @@ func (c *AccountController) LoggedIn(isPost bool) interface{} {
 	turl := c.referer()
 
 	if !isPost {
-		c.Redirect(turl, 302)
+		c.Redirect(turl, 301)
 		return nil
 	} else {
 		var data struct {
@@ -155,7 +155,7 @@ func (c *AccountController) Register() {
 
 	//如果用户登录了，则跳转到网站首页
 	if member, ok := c.GetSession(conf.LoginSessionName).(models.Member); ok && member.MemberId > 0 {
-		c.Redirect(conf.URLFor("HomeController.Index"), 302)
+		c.Redirect(conf.URLFor("HomeController.Index"), 301)
 	}
 	// 如果没有开启用户注册
 	if v, ok := c.Option["ENABLED_REGISTER"]; ok && !strings.EqualFold(v, "true") {
@@ -431,7 +431,7 @@ func (c *AccountController) Logout() {
 
 	u := c.Ctx.Request.Header.Get("Referer")
 
-	c.Redirect(conf.URLFor("AccountController.Login", "url", u), 302)
+	c.Redirect(conf.URLFor("AccountController.Login", "url", u), 301)
 }
 
 // 验证码

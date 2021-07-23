@@ -321,7 +321,7 @@ func testmain() {
 
 	timeoutDuration := 10000000 * time.Second
 
-	err = cache_conn.Put("wilson1231111", "xu", timeoutDuration)
+	err = cache_conn.Put("wilson1231111", "xu", timeoutDuration*time.Second)
 	if err != nil {
 		fmt.Println("数据读取出错，错误为：", err)
 	} else {

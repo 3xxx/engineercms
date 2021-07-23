@@ -1543,7 +1543,7 @@
               // multiple: true
             },
             pk: 1,
-            // url: '/admin/user/updateuser',
+            // url: '/v1/wx/updateuser',
             title: 'Enter Status'
           }
 
@@ -1631,7 +1631,7 @@
           // editable: {
           // type: 'text',
           // pk: 1,
-          // url: '/admin/user/updateuser',
+          // url: '/v1/wx/updateuser',
           // title: 'Enter ProjectNumber' 
           // }
         }, {
@@ -1656,7 +1656,7 @@
               // multiple: true
             },
             pk: 1,
-            // url: '/admin/user/updateuser',
+            // url: '/v1/wx/updateuser',
             title: 'Enter Permission'
           }
         }, {
@@ -1742,13 +1742,13 @@
     //弹出添加用户模态框
     $("#addusers").click(function() {
       if ($("#dropdownMenu1").hasClass("fa fa-pencil")) {
-        $tableLeft.bootstrapTable('refresh', { url: '/admin/user?role=1' });
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=1' });
       } else if ($("#dropdownMenu1").hasClass("fa fa-commenting-o")) {
-        $tableLeft.bootstrapTable('refresh', { url: '/admin/user?role=2' });
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=2' });
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye")) {
-        $tableLeft.bootstrapTable('refresh', { url: '/admin/user?role=3' });
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=3' });
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye-slash")) {
-        $tableLeft.bootstrapTable('refresh', { url: '/admin/user?role=4' });
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=4' });
       }
       $('#users').modal({
         show: true,

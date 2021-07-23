@@ -8,35 +8,73 @@ import (
 	"github.com/3xxx/engineercms/controllers"
 	// "githsub.com/3xxx/engineercms/controllers/checkin"
 	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/plugins/cors"
 	// "github.com/3xxx/engineercms/controllers"
 	// "github.com/3xxx/engineercms/controllers/utils"
+	// "github.com/3xxx/engineercms/models"
 	// "strconv"
 )
 
 // var FilterFunc = func(ctx *context.Context) {
-// 	userName := ctx.Input.Session("userName")
-// 	if userName == nil {
-// 		ctx.Redirect()
-// 	}
+// 	// userName := ctx.Input.Session("userName")
+// 	// if userName == nil {
+// 	// 	ctx.Redirect()
+// 	// }
 // 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
 // 	// beego.Info(v)                          //qin.xc
 // 	var user models.User
+// 	var role string
+// 	var uid int64
 // 	var err error
 // 	if v != nil { //如果登录了
-// 		uname = v.(string)
+// 		uname := v.(string)
 // 		user, err = models.GetUserByUsername(uname)
 // 		if err != nil {
 // 			beego.Error(err)
 // 		} else {
-// 			uid = user.Id
+// 			uid := user.Id
 // 			role = user.Role
 // 		}
 // 	} else { //如果没登录
 // 		role = "anonymous"
 // 	}
 // }
+
+// var FilterAdmin = func(ctx *context.Context) {
+// 	// userName := ctx.Input.Session("userName")
+// 	// if userName == nil {
+// 	// 	ctx.Redirect()
+// 	// }
+// 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
+// 	// beego.Info(v)                          //qin.xc
+// 	var user models.User
+// 	var err error
+// 	if v != nil { //如果登录了
+// 		uname := v.(string)
+// 		user, err = models.GetUserByUsername(uname)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		} else {
+// 			role, err := models.GetRoleByRolename("admin")
+// 			if err != nil {
+// 				beego.Error(err)
+// 			}
+// 			userid := strconv.FormatInt(user.Id, 10)
+// 			roleid := strconv.FormatInt(role.Id, 10)
+// 			isadmin = e.HasRoleForUser(userid, "role_"+roleid)
+// 		}
+// 	} else { //如果没登录
+// 		role = "anonymous"
+// 	}
+// }
+
+var FilterAdmin = func(ctx *context.Context) {
+	_, _, _, isadmin, _ := controllers.CheckprodRole(ctx)
+	if !isadmin {
+		ctx.Redirect(301, "/login")
+	}
+}
 
 func init() {
 	//运行跨域请求
@@ -89,11 +127,12 @@ func init() {
 	ns :=
 		beego.NewNamespace("/v1",
 			// beego.NSBefore(FilterFunc),
-			// beego.NSBefore(auth),
+			beego.NSBefore(FilterAdmin),
 			beego.NSNamespace("/admin",
 				beego.NSInclude(
 					&controllers.AdminController{},
 					&controllers.FlowController{},
+					// &controllers.UserController{},
 					// &controllers.AttachController{},20200626调整
 					// &controllers.LoginController{},
 					// &controllers.CustomerCookieCheckerController{},
@@ -370,16 +409,16 @@ func init() {
 	beego.Router("/jsoneditor", &controllers.AdminController{}, "get:Jsoneditor")
 
 	//如果后面不带id，则显示所有用户
-	beego.Router("/admin/user/?:id:string", &controllers.UserController{}, "*:User")
-	//添加用户
-	beego.Router("/admin/user/adduser", &controllers.UserController{}, "*:AddUser")
-	//导入用户
-	beego.Router("/admin/user/importusers", &controllers.UserController{}, "*:ImportUsers")
+	// beego.Router("/admin/user/?:id:string", &controllers.UserController{}, "*:User")
+	// //添加用户
+	// beego.Router("/admin/user/adduser", &controllers.UserController{}, "*:AddUser")
+	// //导入用户
+	// beego.Router("/admin/user/importusers", &controllers.UserController{}, "*:ImportUsers")
 
-	//修改用户
-	beego.Router("/admin/user/updateuser", &controllers.UserController{}, "*:UpdateUser")
-	//删除用户
-	beego.Router("/admin/user/deleteuser", &controllers.UserController{}, "*:DeleteUser")
+	// //修改用户
+	// beego.Router("/admin/user/updateuser", &controllers.UserController{}, "*:UpdateUser")
+	// //删除用户
+	// beego.Router("/admin/user/deleteuser", &controllers.UserController{}, "*:DeleteUser")
 
 	//新建角色
 	beego.Router("/admin/role/post", &controllers.RoleController{}, "post:Post")

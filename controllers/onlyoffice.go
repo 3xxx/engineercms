@@ -813,7 +813,7 @@ func (c *OnlyController) OnlyOffice() {
 		c.Data["Print"] = false
 	} else if Permission == "4" {
 		// route := c.Ctx.Request.URL.String()
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.TplName = "onlyoffice/login.tpl"
 		return
 	}
@@ -998,7 +998,7 @@ func (c *OnlyController) OfficeView() {
 		// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
 		if e.Enforce(useridstring, projurl, "POST", fileext) || e.Enforce(useridstring, projurl, "PUT", fileext) || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
-			// c.Redirect(url+"/"+attachment.FileName, 302)
+			// c.Redirect(url+"/"+attachment.FileName, 301)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 			c.Data["Mode"] = "edit"
 			c.Data["Edit"] = true
@@ -1017,8 +1017,8 @@ func (c *OnlyController) OfficeView() {
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
+			c.Redirect("/roleerr?url="+route, 301)
+			// c.Redirect("/roleerr", 301)
 			return
 		}
 		c.Data["FilePath"] = fileurl + "/" + attachment.FileName
@@ -1093,8 +1093,8 @@ func (c *OnlyController) OfficeView() {
 	} else {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/login?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 }
@@ -1120,7 +1120,7 @@ func (c *OnlyController) UrltoCallback() {
 	var callback Callback
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
 	// beego.Info(string(c.Ctx.Input.RequestBody))
-	// beego.Info(callback.Status)
+	beego.Info(callback.Status)
 	// beego.Info(callback.Forcesavetype)
 	if callback.Status == 1 || callback.Status == 4 {
 		//•	1 - document is being edited,

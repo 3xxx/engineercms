@@ -85,7 +85,7 @@ func (c *AdminController) Get() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/roleerr?url="+route, 301)
 		return
 	}
 	c.TplName = "admin.tpl"
@@ -164,8 +164,8 @@ func (c *AdminController) AddIpsegment() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -194,8 +194,8 @@ func (c *AdminController) UpdateIpsegment() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -229,8 +229,8 @@ func (c *AdminController) DeleteIpsegment() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	ids := c.GetString("ids")
@@ -556,8 +556,8 @@ func (c *AdminController) AddCategory() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -596,8 +596,8 @@ func (c *AdminController) UpdateCategory() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -630,8 +630,8 @@ func (c *AdminController) DeleteCategory() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	ids := c.GetString("ids")
@@ -672,8 +672,8 @@ func (c *AdminController) AddCalendar() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	title := c.Input().Get("title")
@@ -770,8 +770,8 @@ func (c *AdminController) UpdateCalendar() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	cid := c.Input().Get("cid")
@@ -855,8 +855,8 @@ func (c *AdminController) DropCalendar() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	id := c.Input().Get("id")
@@ -891,8 +891,8 @@ func (c *AdminController) ResizeCalendar() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	id := c.Input().Get("id")
@@ -929,8 +929,8 @@ func (c *AdminController) DeleteCalendar() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	cid := c.Input().Get("cid")
@@ -1006,8 +1006,8 @@ func (c *AdminController) AddsynchIp() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -1045,8 +1045,8 @@ func (c *AdminController) UpdatesynchIp() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -1078,8 +1078,8 @@ func (c *AdminController) DeletesynchIp() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	ids := c.GetString("ids")
@@ -1149,8 +1149,8 @@ func (c *AdminController) AddDepartment() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -1184,8 +1184,8 @@ func (c *AdminController) UpdateDepartment() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
@@ -1213,8 +1213,8 @@ func (c *AdminController) DeleteDepartment() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	ids := c.GetString("ids")
@@ -1285,8 +1285,8 @@ func (c *AdminController) AddCarousel() {
 	} else {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 }
@@ -1344,8 +1344,8 @@ func (c *AdminController) UpdateMeritBasic() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	name := c.Input().Get("name")
@@ -1443,8 +1443,8 @@ func (c *AdminController) ModifyCatalog() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	name := c.Input().Get("name")
@@ -1564,8 +1564,8 @@ func (c *AdminController) ModifyLink() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	name := c.Input().Get("name")
@@ -1597,8 +1597,8 @@ func (c *AdminController) SendMeritlist() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// req1 := httplib.Post("http://beego.me/")
@@ -1662,8 +1662,8 @@ func (c *AdminController) DeleteMeritlist() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pk1 := c.Ctx.Input.RequestBody
@@ -1686,8 +1686,8 @@ func (c *AdminController) DownMeritlist() {
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 	// pk1 := c.Ctx.Input.RequestBody

@@ -36,7 +36,7 @@
         <i class="fa fa-trash">删除</i>
         </button> -->
   <!-- </div> -->
-  <!-- data-url="/admin/user"
+  <!-- data-url="/v1/wx/user"
    -->
   <table id="table0"
         data-search="true"
@@ -168,7 +168,7 @@
           <div class="modal-body">
             <div class="modal-body-content"> 
               <div class="form-group">
-                <form method="post" id="form1" action="/admin/user/importusers" enctype="multipart/form-data">
+                <form method="post" id="form1" action="/v1/wx/importusers" enctype="multipart/form-data">
                   <div class="form-inline" class="form-group">
                     <label>选择用户数据文件(Excel)：
                       <input type="file" class="form-control" name="usersexcel" id="usersexcel"/> </label>
@@ -207,7 +207,7 @@
         {  
             $.ajax({
                 type:"post",
-                url:"/admin/user/adduser",
+                url:"/v1/wx/adduser",
                 data: {username:Username,nickname:Nickname,password:Password,repassword:Repassword,email:Email,department:Department,secoffice:Secoffice,ip:Ip,port:Port,status:Status,role:Role},
                 success:function(data,status){
                   alert("添加“"+data+"”成功！(status:"+status+".)");
@@ -218,7 +218,7 @@
         }
         // $(function(){$('#myModal').modal('hide')}); 
           $('#modalTable').modal('hide');
-          $('#table0').bootstrapTable('refresh', {url:'/admin/user'});
+          $('#table0').bootstrapTable('refresh', {url:'/v1/wx/user/0'});
           // "/category/modifyfrm?cid="+cid
           // window.location.reload();//刷新页面
     }
@@ -228,7 +228,7 @@
         if(file!=""){  
             var form = $("form[id=form1]");
             var options  = {    
-                url:'/admin/user/importusers',    
+                url:'/v1/wx/importusers',    
                 type:'post', 
                 success:function(data)    
                 {    

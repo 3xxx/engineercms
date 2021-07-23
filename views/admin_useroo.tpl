@@ -93,7 +93,7 @@
       </div>
       <table id="table0"
         data-toggle="table"
-        data-url="/admin/user"
+        data-url="/v1/wx/user/0"
         data-search="true"
 
         data-striped="true"
@@ -132,7 +132,7 @@
       </div>
       <table id="table0"
         data-toggle="table"
-        data-url="/admin/user"
+        data-url="/v1/wx/user/0"
         data-search="true"
 
         data-toolbar="#toolbar3"
@@ -168,7 +168,7 @@
       </div>
       <table id="table0"
         data-toggle="table"
-        data-url="/admin/user"
+        data-url="/v1/wx/user/0"
         data-search="true"
 
         data-toolbar="#toolbar4"

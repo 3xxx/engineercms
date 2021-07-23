@@ -7,7 +7,7 @@ import (
 	// "io"
 	// "encoding/json"
 	// "net/http"
-	// "github.com/astaxie/beego/httplib"
+	"github.com/astaxie/beego/httplib"
 	// "bytes"
 	// "io/ioutil"
 	// "mime/multipart"
@@ -507,45 +507,45 @@ func (c *MainController) Slide() {
 // @router /sendmessage [post]
 // 检验signature v1/checkin/sendmessage
 // 上传文件、备份文件
-// func (c *MainController) Postdata() {
-// 	postdataurl := beego.AppConfig.String("postdataurl")
-// 	postdatausername := beego.AppConfig.String("postdatausername")
-// 	postdatapassword := beego.AppConfig.String("postdatapassword")
-// 	postdatafilepath := beego.AppConfig.String("postdatafilepath")
-// 	b := httplib.Post(postdataurl) //"./database/meritms.db"
-// 	b.Param("username", postdatausername)
-// 	b.Param("password", postdatapassword)
-// 	b.PostFile("uploadfile", postdatafilepath) //./static/
-// 	// b.PostFile("uploadfile2", "httplib.txt")PostFile 第一个参数是 form 表单的字段名,第二个是需要发送的文件名或者文件路径
-// 	str, err := b.String()
-// 	if err != nil {
-// 		beego.Error(str)
-// 	}
-// }
+func (c *MainController) Postdata() {
+	postdataurl := beego.AppConfig.String("postdataurl")
+	postdatausername := beego.AppConfig.String("postdatausername")
+	postdatapassword := beego.AppConfig.String("postdatapassword")
+	postdatafilepath := beego.AppConfig.String("postdatafilepath")
+	b := httplib.Post(postdataurl) //"./database/meritms.db"
+	b.Param("username", postdatausername)
+	b.Param("password", postdatapassword)
+	b.PostFile("uploadfile", postdatafilepath) //./static/
+	// b.PostFile("uploadfile2", "httplib.txt")PostFile 第一个参数是 form 表单的字段名,第二个是需要发送的文件名或者文件路径
+	str, err := b.String()
+	if err != nil {
+		beego.Error(str)
+	}
+}
 
 // 上传文件、备份文件
-// func Postdata() {
-// 	postdataurl := beego.AppConfig.String("postdataurl")
-// 	postdatausername := beego.AppConfig.String("postdatausername")
-// 	postdatapassword := beego.AppConfig.String("postdatapassword")
-// 	postdatafilepath := beego.AppConfig.String("postdatafilepath")
-// 	b := httplib.Post(postdataurl) //"./database/meritms.db"
-// 	b.Param("username", postdatausername)
-// 	b.Param("password", postdatapassword)
-// 	b.PostFile("uploadfile", postdatafilepath) //./static/
-// 	// b.PostFile("uploadfile2", "httplib.txt")PostFile 第一个参数是 form 表单的字段名,第二个是需要发送的文件名或者文件路径
-// 	str, err := b.String()
-// 	if err != nil {
-// 		beego.Error(str)
-// 	}
-// }
+func Postdata() {
+	postdataurl := beego.AppConfig.String("postdataurl")
+	postdatausername := beego.AppConfig.String("postdatausername")
+	postdatapassword := beego.AppConfig.String("postdatapassword")
+	postdatafilepath := beego.AppConfig.String("postdatafilepath")
+	b := httplib.Post(postdataurl) //"./database/meritms.db"
+	b.Param("username", postdatausername)
+	b.Param("password", postdatapassword)
+	b.PostFile("uploadfile", postdatafilepath) //./static/
+	// b.PostFile("uploadfile2", "httplib.txt")PostFile 第一个参数是 form 表单的字段名,第二个是需要发送的文件名或者文件路径
+	str, err := b.String()
+	if err != nil {
+		beego.Error(str)
+	}
+}
 
 func (c *MainController) Register() {
 	// flash := beego.NewFlash()
 	token := c.Input().Get("token")
 	//是否重复提交
 	if c.IsSubmitAgain(token) {
-		c.Redirect("/registerpage", 302)
+		c.Redirect("/registerpage", 301)
 		return
 	}
 }

@@ -207,7 +207,7 @@ func (c *LoginController) Post() {
 			}
 		}
 	} else {
-		c.Redirect("/loginerr?url="+url, 302)
+		c.Redirect("/loginerr?url="+url, 301)
 	}
 	return
 }
@@ -548,6 +548,75 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 //用户登录，则role是1则是admin，其余没有意义
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
+	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
+	var userid, roleid, userrole string
+	var user models.User
+	var err error
+	var iprole int
+	if v != nil { //如果登录了
+		islogin = true
+		uname = v.(string)
+		user, err = models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			//查询admin角色的id
+			//重新获取roleid
+			role, err := models.GetRoleByRolename("admin")
+			if err != nil {
+				beego.Error(err)
+			}
+			userid = strconv.FormatInt(user.Id, 10)
+			roleid = strconv.FormatInt(role.Id, 10)
+			isadmin = e.HasRoleForUser(userid, "role_"+roleid)
+
+			uid = user.Id
+			if user.Role == "0" {
+				// isadmin = false
+				userrole = "4"
+				// } else if user.Role == "1" {
+				// isadmin = true
+				// userrole = user.Role
+			} else {
+				// isadmin = false
+				userrole = user.Role
+			}
+		}
+	} else { //如果没登录,查询ip对应的用户
+		islogin = false
+		isadmin = false
+		uid = 0
+		uname = ctx.Input.IP()
+		// beego.Info(uname)
+		user, err = models.GetUserByIp(uname)
+		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
+			// beego.Error(err)
+			iprole = Getiprole(ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
+			userrole = strconv.Itoa(iprole)
+		} else { //如果查到，则role和用户名
+			//查询admin角色的id
+			//重新获取roleid
+			role, err := models.GetRoleByRolename("admin")
+			if err != nil {
+				beego.Error(err)
+			}
+			userid = strconv.FormatInt(user.Id, 10)
+			roleid = strconv.FormatInt(role.Id, 10)
+			isadmin = e.HasRoleForUser(userid, "role_"+roleid)
+
+			// if user.Role == "1" {
+			// 	isadmin = true
+			// }
+			uid = user.Id
+			userrole = user.Role
+			uname = user.Username
+			islogin = true
+		}
+	}
+	return uname, userrole, uid, isadmin, islogin
+}
+
+func CheckprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
 	var userid, roleid, userrole string
 	var user models.User
@@ -960,5 +1029,5 @@ func (c *ServiceValidateController) Get() {
 // 		this.Ctx.SetCookie("username", userName, -1)
 // 	}
 // 	this.SetSession("userName", userName)
-// 	this.Redirect("/", 302)
+// 	this.Redirect("/", 301)
 // }

@@ -574,7 +574,7 @@ $(document).ready(function() {
                 <div class="col-sm-7 checkbox">
                   <label>
                     <input type="checkbox" value="true" id="ismemorabilia"></label>
-                  <!-- <form method="post" id="form1" action="/admin/user/importusers" enctype="multipart/form-data">
+                  <!-- <form method="post" id="form1" action="/v1/wx/importusers" enctype="multipart/form-data">
                         <label>选择图片：
                         <input type="file" class="form-control" name="photo" id="photo"/> </label>
                     </form> -->

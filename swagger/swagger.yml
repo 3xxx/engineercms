@@ -3714,6 +3714,62 @@ paths:
           description: Invalid page supplied
         "404":
           description: pas not found
+  /wx/adduser:
+    post:
+      tags:
+      - wx
+      description: add user
+      operationId: UserController.add user
+      parameters:
+      - in: query
+        name: username
+        description: The name of user
+        type: string
+      - in: query
+        name: nickname
+        description: The nickname of user
+        type: string
+      - in: query
+        name: password
+        description: The password of user
+        type: string
+      - in: query
+        name: email
+        description: The email of user
+        type: string
+      - in: query
+        name: department
+        description: The department of user
+        type: string
+      - in: query
+        name: secoffice
+        description: The secoffice of user
+        type: string
+      - in: query
+        name: ip
+        description: The ip of user
+        type: string
+      - in: query
+        name: port
+        description: The port of user
+        type: string
+      - in: query
+        name: status
+        description: The status of user
+        type: string
+      - in: query
+        name: role
+        description: The role of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/adduserpays:
     post:
       tags:
@@ -4508,6 +4564,26 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/deleteuser:
+    post:
+      tags:
+      - wx
+      description: delete user
+      operationId: UserController.delete user
+      parameters:
+      - in: query
+        name: ids
+        description: The ids of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/deletewxarticle:
     post:
       tags:
@@ -4807,6 +4883,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articles not found
+  /wx/getuserbyusername:
+    get:
+      tags:
+      - wx
+      description: get user
+      operationId: UserController.get user
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/getusergetappreciations:
     get:
       tags:
@@ -5486,6 +5577,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/importusers:
+    post:
+      tags:
+      - wx
+      description: import users
+      operationId: UserController.import users
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/islogin:
     get:
       tags:
@@ -5961,6 +6067,34 @@ paths:
           description: Invalid page supplied
         "404":
           description: pas not found
+  /wx/updateuser:
+    post:
+      tags:
+      - wx
+      description: add user
+      operationId: UserController.update user
+      parameters:
+      - in: query
+        name: pk
+        description: The pk of user
+        type: string
+      - in: query
+        name: name
+        description: The name of user
+        type: string
+      - in: query
+        name: value
+        description: The value of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/updatewxdiary:
     post:
       tags:
@@ -6243,6 +6377,30 @@ paths:
           description: Invalid page supplied
         "404":
           description: article not found
+  /wx/user/{id}:
+    get:
+      tags:
+      - wx
+      description: get user by userid
+      operationId: UserController.get user
+      parameters:
+      - in: path
+        name: id
+        description: The id of user
+        type: string
+      - in: query
+        name: role
+        description: The role of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/usermanage:
     get:
       tags:
@@ -6258,6 +6416,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/usermyself:
+    get:
+      tags:
+      - wx
+      description: get usermyself
+      operationId: UserController.get usermyself
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/wxhassession:
     get:
       tags:

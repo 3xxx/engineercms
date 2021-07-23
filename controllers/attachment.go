@@ -394,7 +394,7 @@ func (c *AttachController) AddAttachment() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -642,12 +642,12 @@ func (c *AttachController) AddAttachment() {
 	// } else {
 	// route := c.Ctx.Request.URL.String()
 	// c.Data["Url"] = route
-	// c.Redirect("/roleerr?url="+route, 302)
-	// c.Redirect("/roleerr", 302)
+	// c.Redirect("/roleerr?url="+route, 301)
+	// c.Redirect("/roleerr", 301)
 	// return
 	// }
 	// c.TplName = "topic_one_add.tpl" //不加这句上传出错，虽然可以成功上传
-	// c.Redirect("/topic", 302)
+	// c.Redirect("/topic", 301)
 	// success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
 	//    message : "提示的信息，上传成功或上传失败及错误信息等。",
 	//    url     : "图片地址"        // 上传成功时才返回
@@ -946,7 +946,7 @@ func (c *AttachController) AddAttachment2() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -1226,8 +1226,8 @@ func (c *AttachController) UpdateAttachment() {
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 302)
-	// 	// c.Redirect("/roleerr", 302)
+	// 	c.Redirect("/roleerr?url="+route, 301)
+	// 	// c.Redirect("/roleerr", 301)
 	// 	return
 	// }
 }
@@ -1238,7 +1238,7 @@ func (c *AttachController) DeleteAttachment() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -1340,8 +1340,8 @@ func (c *AttachController) DeleteAttachment() {
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 302)
-	// 	// c.Redirect("/roleerr", 302)
+	// 	c.Redirect("/roleerr?url="+route, 301)
+	// 	// c.Redirect("/roleerr", 301)
 	// 	return
 	// }
 }
@@ -1392,7 +1392,7 @@ func (c *AttachController) DownloadAttachment() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -1493,7 +1493,7 @@ func (c *AttachController) DownloadAttachment() {
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
+			c.Redirect("/roleerr?url="+route, 301)
 			return
 		}
 	// case ".dwg", ".DWG": //保留，dwg在线阅览模式！！！！
@@ -1512,13 +1512,13 @@ func (c *AttachController) DownloadAttachment() {
 	// 	} else {
 	// 		route := c.Ctx.Request.URL.String()
 	// 		c.Data["Url"] = route
-	// 		c.Redirect("/roleerr?url="+route, 302)
+	// 		c.Redirect("/roleerr?url="+route, 301)
 	// 		return
 	// 	}
 	default:
 		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin || isme {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
-			// c.Redirect(url+"/"+attachment.FileName, 302)
+			// c.Redirect(url+"/"+attachment.FileName, 301)
 			c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 			// beego.Info("下载……" + fileurl + "/" + attachment.FileName)
 			utils.FileLogs.Info(username + " " + "download" + " " + fileurl + "/" + attachment.FileName)
@@ -1526,8 +1526,8 @@ func (c *AttachController) DownloadAttachment() {
 			utils.FileLogs.Info(c.Ctx.Input.IP() + "want " + "download" + " " + fileurl + "/" + attachment.FileName)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
+			c.Redirect("/roleerr?url="+route, 301)
+			// c.Redirect("/roleerr", 301)
 			return
 		}
 	}
@@ -1602,7 +1602,7 @@ func (c *AttachController) Attachment() {
 			// beego.Info(!islogin)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
+			c.Redirect("/roleerr?url="+route, 301)
 			return
 		} else {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
@@ -1685,14 +1685,14 @@ func (c *AttachController) Attachment() {
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin || isme {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
 			// beego.Info(isadmin)
-			// c.Redirect(url+"/"+attachment.FileName, 302)
+			// c.Redirect(url+"/"+attachment.FileName, 301)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		} else {
 			// beego.Info(useridstring)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
+			c.Redirect("/roleerr?url="+route, 301)
+			// c.Redirect("/roleerr", 301)
 			return
 		}
 	}
@@ -1703,7 +1703,7 @@ func (c *AttachController) Attachment() {
 	// 	} else {
 	// 		route := c.Ctx.Request.URL.String()
 	// 		c.Data["Url"] = route
-	// 		c.Redirect("/roleerr?url="+route, 302)
+	// 		c.Redirect("/roleerr?url="+route, 301)
 	// 		return
 	// 	}
 	// default:
@@ -1712,7 +1712,7 @@ func (c *AttachController) Attachment() {
 	// 	} else {
 	// 		route := c.Ctx.Request.URL.String()
 	// 		c.Data["Url"] = route
-	// 		c.Redirect("/roleerr?url="+route, 302)
+	// 		c.Redirect("/roleerr?url="+route, 301)
 	// 		return
 	// 	}
 	// }
@@ -1848,7 +1848,7 @@ func (c *AttachController) Pdf() {
 	if uid == 0 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/roleerr?url="+route, 301)
 		return
 	}
 
@@ -1935,7 +1935,7 @@ func (c *AttachController) Pdf() {
 				break
 			}
 		}
-		c.Redirect("/pdf?p="+p1+"&id="+strconv.FormatInt(projid, 10), 302)
+		c.Redirect("/pdf?p="+p1+"&id="+strconv.FormatInt(projid, 10), 301)
 	} else {
 		PdfLink := Url + "/" + Attachments[pNum-1].FileName
 		// beego.Info(PdfLink)

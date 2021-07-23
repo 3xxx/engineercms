@@ -173,7 +173,7 @@
             <div class="modal-body">
               <div class="modal-body-content">
                 <div class="form-group">
-                  <form method="post" id="form1" action="/admin/user/importusers" enctype="multipart/form-data">
+                  <form method="post" id="form1" action="/v1/wx/importusers" enctype="multipart/form-data">
                     <div class="form-inline" class="form-group">
                       <label>选择用户数据文件(Excel)：
                         <input type="file" class="form-control" name="usersexcel" id="usersexcel" /> </label>
@@ -212,10 +212,10 @@
       if (Username) {
         $.ajax({
           type: "post",
-          url: "/admin/user/adduser",
+          url: "/v1/wx/adduser",
           data: { username: Username, nickname: Nickname, password: Password, repassword: Repassword, email: Email, department: Department, secoffice: Secoffice, ip: Ip, port: Port, status: Status, role: Role },
           success: function(data, status) {
-            $('#table0').bootstrapTable('refresh', { url: '/admin/user' });
+            $('#table0').bootstrapTable('refresh', { url: '/v1/wx/user/0' });
             $('#modalTable').modal('hide');
             alert("添加“" + data + "”成功！(status:" + status + ".)");
           }
@@ -249,7 +249,7 @@
         }
         $.ajax({
           type: "post",
-          url: "/admin/user/deleteuser",
+          url: "/v1/wx/deleteuser",
           data: { ids: ids },
           success: function(data, status) {
             alert("删除“" + data + "”成功！(status:" + status + ".)");
@@ -269,7 +269,7 @@
       if (file != "") {
         var form = $("form[id=form1]");
         var options = {
-          url: '/admin/user/importusers',
+          url: '/v1/wx/importusers',
           type: 'post',
           success: function(data) {
             alert("导入数据：" + data + "！")
@@ -286,7 +286,7 @@
     $(function() {
       $('#table0').bootstrapTable({
         idField: 'Id',
-        url: '/admin/user',
+        url: '/v1/wx/user/0',
         // striped: "true",
         columns: [{
             radio: 'true',
@@ -305,7 +305,7 @@
             editable: {
               type: 'text',
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter ProjectNumber'
             }
           }, {
@@ -314,7 +314,7 @@
             editable: {
               type: 'text',
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter ProjectName'
             }
           }, {
@@ -326,7 +326,7 @@
               // type: 'select',
               // source: ["规划", "项目建议书", "可行性研究", "初步设计", "招标设计", "施工图"],
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Password'
             }
           }, {
@@ -337,7 +337,7 @@
             editable: {
               type: 'text',
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Email'
             }
           }, {
@@ -346,7 +346,7 @@
             editable: {
               type: 'text',
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Department'
             }
           }, {
@@ -357,7 +357,7 @@
               type: 'text',
               // source: {{.Select2}},//["$1", "$2", "$3"],
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Category'
             }
           }, {
@@ -366,7 +366,7 @@
             editable: {
               type: 'text',
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Count'
             }
           }, {
@@ -375,7 +375,7 @@
             editable: {
               type: 'text',
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Port'
             }
           }, {
@@ -397,7 +397,7 @@
                 // multiple: true
               }, //'/regist/getuname1',//这里用get方法，所以要换一个
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Status'
             }
           }, {
@@ -431,7 +431,7 @@
                 // multiple: true
               }, //'/regist/getuname1',//这里用get方法，所以要换一个
               pk: 1,
-              url: '/admin/user/updateuser',
+              url: '/v1/wx/updateuser',
               title: 'Enter Status'
             }
           }, {

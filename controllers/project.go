@@ -810,7 +810,7 @@ func (c *ProjController) UserpProjectEditorTree() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -847,7 +847,7 @@ func (c *ProjController) UserProjectPermission() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -1135,7 +1135,7 @@ func (c *ProjController) AddProject() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/roleerr?url="+route, 301)
 		return
 	}
 	// rows := c.Input().Get("rows2[0][0]")
@@ -1206,8 +1206,8 @@ func (c *ProjController) AddProjTemplet() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+		c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr", 301)
 		return
 	}
 
@@ -1529,7 +1529,7 @@ func (c *ProjController) UpdateProject() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/roleerr?url="+route, 301)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
