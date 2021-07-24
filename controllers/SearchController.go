@@ -22,7 +22,7 @@ func (c *MindocSearchController) Index() {
 
 	//如果没有开启你们访问则跳转到登录
 	if !c.EnableAnonymous && c.Member == nil {
-		c.Redirect(conf.URLFor("AccountController.Login"), 301)
+		c.Redirect(conf.URLFor("AccountController.Login"), 302)
 		return
 	}
 

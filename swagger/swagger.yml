@@ -6782,6 +6782,10 @@ definitions:
         type: string
       inputvalue:
         type: string
+      realmax:
+        type: string
+      realmin:
+        type: string
       resulttype:
         type: string
       selectvalue:
@@ -6846,6 +6850,8 @@ definitions:
         type: string
       Repassword:
         type: string
+      Salt:
+        type: string
       Secoffice:
         type: string
       Status:
@@ -6893,6 +6899,8 @@ definitions:
       temppath:
         type: string
       temptitle:
+        type: string
+      temptitleb:
         type: string
       version:
         type: string

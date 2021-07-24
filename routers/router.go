@@ -127,8 +127,8 @@ func init() {
 	ns :=
 		beego.NewNamespace("/v1",
 			// beego.NSBefore(FilterFunc),
-			beego.NSBefore(FilterAdmin),
 			beego.NSNamespace("/admin",
+				// beego.NSBefore(FilterAdmin),
 				beego.NSInclude(
 					&controllers.AdminController{},
 					&controllers.FlowController{},

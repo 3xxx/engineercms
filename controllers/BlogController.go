@@ -26,7 +26,7 @@ type BlogController struct {
 func (c *BlogController) Prepare() {
 	c.MindocBaseController.Prepare()
 	if !c.EnableAnonymous && c.Member == nil {
-		c.Redirect(conf.URLFor("AccountController.Login")+"?url="+url.PathEscape(conf.BaseUrl+c.Ctx.Request.URL.RequestURI()), 301)
+		c.Redirect(conf.URLFor("AccountController.Login")+"?url="+url.PathEscape(conf.BaseUrl+c.Ctx.Request.URL.RequestURI()), 302)
 	}
 }
 

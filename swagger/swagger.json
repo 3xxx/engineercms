@@ -10199,6 +10199,12 @@
                 "inputvalue": {
                     "type": "string"
                 },
+                "realmax": {
+                    "type": "string"
+                },
+                "realmin": {
+                    "type": "string"
+                },
                 "resulttype": {
                     "type": "string"
                 },
@@ -10293,6 +10299,9 @@
                 "Repassword": {
                     "type": "string"
                 },
+                "Salt": {
+                    "type": "string"
+                },
                 "Secoffice": {
                     "type": "string"
                 },
@@ -10360,6 +10369,9 @@
                     "type": "string"
                 },
                 "temptitle": {
+                    "type": "string"
+                },
+                "temptitleb": {
                     "type": "string"
                 },
                 "version": {

@@ -872,7 +872,7 @@ func (c *ProdController) UpdateProduct() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -990,8 +990,8 @@ func (c *ProdController) UpdateProduct() {
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 301)
-	// 	// c.Redirect("/roleerr", 301)
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
 }
@@ -1002,7 +1002,7 @@ func (c *ProdController) DeleteProduct() {
 	if !isLogin {
 		// route := c.Ctx.Request.URL.String()
 		// c.Data["Url"] = route
-		// c.Redirect("/roleerr?url="+route, 301)
+		// c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -1135,8 +1135,8 @@ func (c *ProdController) DeleteProduct() {
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 301)
-	// 	// c.Redirect("/roleerr", 301)
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
 }

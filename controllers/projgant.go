@@ -401,8 +401,8 @@ func (c *ProjGantController) AddProjGant() {
 	// if iprole != 1 {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 301)
-	// 	// c.Redirect("/roleerr", 301)
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
 	// rows := c.Input().Get("rows2[0][0]")
@@ -735,7 +735,7 @@ func (c *ProjGantController) UpdateProjGant() {
 	if iprole != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
 	var err error
@@ -772,8 +772,8 @@ func (c *ProjGantController) DeleteProjGant() {
 	if iprole != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
-		// c.Redirect("/roleerr", 301)
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
 		return
 	}
 	// var err error
@@ -879,8 +879,8 @@ func (c *ProjGantController) CloseProjGant() {
 	if iprole != 1 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
-		// c.Redirect("/roleerr", 301)
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
 		return
 	}
 	// var err error

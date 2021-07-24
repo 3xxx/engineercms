@@ -70,7 +70,7 @@ func (c *BusinessController) AddBusiness() {
 	// if !isLogin {
 	// route := c.Ctx.Request.URL.String()
 	// c.Data["Url"] = route
-	// c.Redirect("/roleerr?url="+route, 301)
+	// c.Redirect("/roleerr?url="+route, 302)
 	// c.Data["json"] = "未登陆"
 	// c.ServeJSON()
 	// return

@@ -37,50 +37,50 @@ func (c *MainController) Get() {
 	switch index {
 	case "IsNav1":
 		id = navid1
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav2":
 		id = navid2
 		// beego.Info(id)
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav3":
 		id = navid3
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav4":
 		id = navid4
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav5":
 		id = navid5
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav6":
 		id = navid6
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav7":
 		id = navid7
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav8":
 		id = navid8
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsNav9":
 		id = navid9
-		c.Redirect("/project/"+id, 301)
+		c.Redirect("/project/"+id, 302)
 	case "IsProject":
-		c.Redirect("/project", 301)
+		c.Redirect("/project", 302)
 	case "IsOnlyOffice":
-		c.Redirect("/onlyoffice", 301)
+		c.Redirect("/onlyoffice", 302)
 	case "IsDesignGant", "IsConstructGant":
-		c.Redirect("/projectgant", 301)
+		c.Redirect("/projectgant", 302)
 	case "IsLogin":
-		c.Redirect("/login", 301)
+		c.Redirect("/login", 302)
 		//登录后默认跳转……
 	case "IsIndex":
-		c.Redirect("/index", 301)
+		c.Redirect("/index", 302)
 	default:
-		c.Redirect("/index", 301)
-		// c.Redirect("/cms", 301)
+		c.Redirect("/index", 302)
+		// c.Redirect("/cms", 302)
 		// c.TplName = "index.tpl"
 		// c.TplName = "index.html"
 		// beego.Info("cmsdefault")
-		// c.Redirect("/cms", 301)
+		// c.Redirect("/cms", 302)
 	}
 	// c.TplName = "index.tpl"
 	// c.TplName = "engineercms.tpl"
@@ -100,7 +100,7 @@ func (c *MainController) Get() {
 	// }
 	// if matched == true {
 	// 	// beego.Info("移动端~")
-	// 	c.Redirect("/project/", 301)
+	// 	c.Redirect("/project/", 302)
 	// } else {
 	// 	// beego.Info("电脑端！")
 	// 	achemployee := make([]AchEmployee, 0)
@@ -449,7 +449,7 @@ func (c *MainController) Test() {
 
 	// }
 
-	//         Enumeration   typestr = request.getHeaderNames();
+	// Enumeration   typestr = request.getHeaderNames();
 	// String s1 = request.getHeader("user-agent");
 	// if(s1.contains("Android")) {
 	// System.out.println("Android移动客户端");
@@ -545,7 +545,7 @@ func (c *MainController) Register() {
 	token := c.Input().Get("token")
 	//是否重复提交
 	if c.IsSubmitAgain(token) {
-		c.Redirect("/registerpage", 301)
+		c.Redirect("/registerpage", 302)
 		return
 	}
 }
@@ -560,7 +560,12 @@ func (c *MainController) IsSubmitAgain(token string) bool {
 
 //升级数据库
 func (c *MainController) UpdateDatabase() {
-	beego.Info("ok")
+	// beego.Info("ok")
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	if !isadmin {
+		c.Redirect("/login", 302)
+	}
+
 	err1, err2, err3, err4, err5, err6, err7 := models.UpdateDatabase()
 	if err1 != nil {
 		beego.Error(err1)
@@ -589,6 +594,10 @@ func (c *MainController) UpdateDatabase() {
 
 //删除数据表和字段测试
 func (c *MainController) ModifyDatabase() {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	if !isadmin {
+		c.Redirect("/login", 302)
+	}
 	err := models.ModifyDatabase()
 	if err != nil {
 		beego.Error(err)

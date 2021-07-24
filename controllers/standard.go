@@ -57,7 +57,7 @@ func (c *StandardController) UpdateStandard() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -101,7 +101,7 @@ func (c *StandardController) DeleteStandard() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -311,7 +311,7 @@ func (c *StandardController) StandardPdf() { //search用的是post方法
 		// beego.Info(!islogin)
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 301)
+		c.Redirect("/login?url="+route, 302)
 	}
 	pdflink := c.Input().Get("file")
 	c.Data["PdfLink"] = pdflink
@@ -465,7 +465,7 @@ func (c *StandardController) DeleteValid() { //search用的是post方法
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -509,7 +509,7 @@ func (c *StandardController) ImportExcel() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -579,7 +579,7 @@ func (c *StandardController) ImportExcel() {
 		}
 	}
 	c.TplName = "standard.tpl"
-	c.Redirect("/standard", 301)
+	c.Redirect("/standard", 302)
 }
 
 //上传excel文件，导入到有效版本数据库
@@ -588,7 +588,7 @@ func (c *StandardController) ImportLibrary() {
 	if !isLogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		c.Data["json"] = "未登陆"
 		c.ServeJSON()
 		return
@@ -672,7 +672,7 @@ func (c *StandardController) ImportLibrary() {
 	}
 
 	// c.TplName = "standard.tpl"
-	// c.Redirect("/standard", 301)
+	// c.Redirect("/standard", 302)
 }
 
 func (c *StandardController) Standard_one_addbaidu() { //一对一模式

@@ -1744,8 +1744,8 @@ func (c *ArticleController) AddArticle() {
 	// } else {
 	// route := c.Ctx.Request.URL.String()
 	// c.Data["Url"] = route
-	// c.Redirect("/roleerr?url="+route, 301)
-	// c.Redirect("/roleerr", 301)
+	// c.Redirect("/roleerr?url="+route, 302)
+	// c.Redirect("/roleerr", 302)
 	// return
 	// }
 }
@@ -2367,8 +2367,8 @@ func (c *ArticleController) AddProdArticle() {
 	if !islogin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
-		// c.Redirect("/roleerr", 301)
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
 		return
 	}
 	pid := c.Input().Get("pid")
@@ -2390,8 +2390,8 @@ func (c *ArticleController) AddProdArticle() {
 	// } else {
 	// route := c.Ctx.Request.URL.String()
 	// c.Data["Url"] = route
-	// c.Redirect("/roleerr?url="+route, 301)
-	// // c.Redirect("/roleerr", 301)
+	// c.Redirect("/roleerr?url="+route, 302)
+	// // c.Redirect("/roleerr", 302)
 	// return
 	// }
 }
@@ -2402,8 +2402,8 @@ func (c *ArticleController) ModifyArticle() {
 	// if !isadmin {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 301)
-	// 	// c.Redirect("/roleerr", 301)
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
 	//这里再添加一次验证才行！！！
@@ -2453,13 +2453,13 @@ func (c *ArticleController) UpdateArticle() {
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
-		// c.Redirect("/project/product/article/"+pid, 301) //回到修改后的文章
+		// c.Redirect("/project/product/article/"+pid, 302) //回到修改后的文章
 	}
 	// } else {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 301)
-	// 	// c.Redirect("/roleerr", 301)
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
 }
@@ -2486,8 +2486,8 @@ func (c *ArticleController) DeleteArticle() {
 	} else {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
-		// c.Redirect("/roleerr", 301)
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
 		return
 	}
 }

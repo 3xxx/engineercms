@@ -20,9 +20,9 @@ import (
 //用户表
 type User struct {
 	Id            int64
-	Username      string `json:"name",orm:"unique"` //这个拼音的简写
+	Username      string `json:"name" orm:"unique"` //这个拼音的简写
 	Nickname      string //中文名，注意这里，很多都要查询中文名才行`orm:"unique;size(32)" form:"Nickname" valid:"Required;MaxSize(20);MinSize(2)"`
-	Password      string
+	Password      string `orm:"size(50)" valid:"Required" form:"-"`
 	Repassword    string `orm:"-" form:"Repassword" valid:"Required" form:"-"`
 	Email         string `orm:"size(32)" form:"Email" valid:"Email"`
 	Department    string //分院
@@ -30,11 +30,12 @@ type User struct {
 	Remark        string `orm:"null;size(200)" form:"Remark" valid:"MaxSize(200)"`
 	Ip            string //ip地址
 	Port          string
-	Status        int       `orm:"default(1)";form:"Status";valid:"Range(1,2)"`
+	Status        int       `orm:"default(1)" form:"Status" valid:"Range(1,2)"`
 	Lastlogintime time.Time `orm:"type(datetime);auto_now_add" form:"-"`
 	Createtime    time.Time `orm:"type(datetime);auto_now_add" `
 	Updated       time.Time `orm:"type(datetime);auto_now_add" `
-	Role          string    `json:"role";orm:"default('4')"` //这个不是角色，这个无意义
+	Role          string    `json:"role" orm:"default('4')"` //这个不是角色，这个无意义
+	Salt          string    `orm:"size(50)"`
 	// Roles         []*Role   `orm:"rel(m2m)"`
 }
 

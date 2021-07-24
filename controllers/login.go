@@ -16,7 +16,9 @@ import (
 	// "github.com/casbin/casbin"
 	"net/http"
 	// "strings"
+	"math/rand"
 	"regexp"
+	"time"
 )
 
 // CMSWX login API
@@ -63,7 +65,7 @@ type ServiceValidateController struct {
 // 			c.DestroySession()
 // 		}
 // 		// sess.Flush()//这个不灵
-// 		c.Redirect("/", 301)
+// 		c.Redirect("/", 302)
 // 		return
 // 	}
 // 	c.TplName = "login.tpl"
@@ -151,7 +153,7 @@ func (c *LoginController) Post() {
 			}
 		}
 		if url != "" {
-			c.Redirect(url, 301)
+			c.Redirect(url, 302)
 		} else {
 			var id string
 			index := beego.AppConfig.String("redirect")
@@ -167,49 +169,73 @@ func (c *LoginController) Post() {
 			// beego.Info(index)
 			switch index {
 			case "":
-				c.Redirect("/index", 301)
+				c.Redirect("/index", 302)
 			case "IsNav1":
 				id = navid1
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav2":
 				id = navid2
 				// beego.Info(id)
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav3":
 				id = navid3
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav4":
 				id = navid4
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav5":
 				id = navid5
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav6":
 				id = navid6
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav7":
 				id = navid7
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav8":
 				id = navid8
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsNav9":
 				id = navid9
-				c.Redirect("/project/"+id, 301)
+				c.Redirect("/project/"+id, 302)
 			case "IsProject":
-				c.Redirect("/project", 301)
+				c.Redirect("/project", 302)
 			case "IsOnlyOffice":
-				c.Redirect("/onlyoffice", 301)
+				c.Redirect("/onlyoffice", 302)
 			case "IsDesignGant", "IsConstructGant":
-				c.Redirect("/projectgant", 301)
+				c.Redirect("/projectgant", 302)
 			default:
-				c.Redirect("/index", 301)
+				c.Redirect("/index", 302)
 			}
 		}
 	} else {
-		c.Redirect("/loginerr?url="+url, 301)
+		c.Redirect("/loginerr?url="+url, 302)
 	}
 	return
+}
+
+// 生成32位MD5
+func MD5(text string) string {
+	ctx := md5.New()
+	ctx.Write([]byte(text))
+	return hex.EncodeToString(ctx.Sum(GetRandomSalt()))
+}
+
+// return len=8  salt
+func GetRandomSalt() []byte {
+	return GetRandomString(8)
+}
+
+//生成随机字符串
+func GetRandomString(length int) []byte {
+	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := []byte(str)
+	result := []byte{}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < length; i++ {
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	return result
 }
 
 // @Title post user login...
@@ -1029,5 +1055,5 @@ func (c *ServiceValidateController) Get() {
 // 		this.Ctx.SetCookie("username", userName, -1)
 // 	}
 // 	this.SetSession("userName", userName)
-// 	this.Redirect("/", 301)
+// 	this.Redirect("/", 302)
 // }

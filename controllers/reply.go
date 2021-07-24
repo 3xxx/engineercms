@@ -220,11 +220,11 @@ func (c *ReplyController) AddWiki() {
 	op := c.Input().Get("op")
 	switch op {
 	case "b":
-		c.Redirect("/topic/view_b/"+tid, 301)
+		c.Redirect("/topic/view_b/"+tid, 302)
 	case "c":
-		c.Redirect("/wiki/view/"+tid, 301)
+		c.Redirect("/wiki/view/"+tid, 302)
 	default:
-		c.Redirect("/topic/view/"+tid, 301)
+		c.Redirect("/topic/view/"+tid, 302)
 	}
 }
 
@@ -238,7 +238,7 @@ func (c *ReplyController) DeleteWiki() {
 	if err != nil {
 		beego.Error(err)
 	}
-	c.Redirect("/wiki/view/"+tid, 301)
+	c.Redirect("/wiki/view/"+tid, 302)
 }
 
 // get file modified time

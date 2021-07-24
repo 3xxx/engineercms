@@ -39,8 +39,8 @@ func (c *UserController) Index() {
 	// 	// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/login?url="+route, 301)
-	// 	// c.Redirect("/login", 301)
+	// 	c.Redirect("/login?url="+route, 302)
+	// 	// c.Redirect("/login", 302)
 	// 	return
 	// }
 	//2.取得客户端用户名
@@ -92,8 +92,8 @@ func (c *UserController) Index() {
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
-		// c.Redirect("/roleerr", 301)
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
 		return
 	}
 	// }
@@ -139,6 +139,10 @@ func (c *UserController) User() {
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	// var categories []*models.AdminCategory
 	if id == "0" { //如果id为空，则查询类别
+		_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
+		if !isadmin {
+			c.Redirect("/login", 301)
+		}
 		users, err := m.GetUsers()
 		if err != nil {
 			beego.Error(err)
@@ -449,7 +453,7 @@ func (c *UserController) UpdateUser() {
 // 	status, err := m.DelUserById(Id)
 // 	if err == nil && status > 0 {
 // 		// c.Rsp(true, "Success")
-// 		c.Redirect("/user/index", 301)
+// 		c.Redirect("/user/index", 302)
 // 		return
 // 	} else {
 // 		// c.Rsp(false, err.Error())
@@ -503,7 +507,7 @@ func (c *UserController) GetUserByUsername() {
 	if islogin != true {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 301)
+		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
 	c.TplName = "user_view.tpl"
@@ -552,8 +556,8 @@ func (c *UserController) Usermyself() {
 	// if uname == "" {
 	// 	route := c.Ctx.Request.URL.String()
 	// 	c.Data["Url"] = route
-	// 	c.Redirect("/roleerr?url="+route, 301)
-	// 	// c.Redirect("/roleerr", 301)
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
 	user, err := m.GetUserByUsername(username)
