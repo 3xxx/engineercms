@@ -20,8 +20,9 @@ import (
 	"io/ioutil"
 	// "net/url"
 	"os"
-	// "path"
+	"path"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -467,6 +468,18 @@ func (c *ShareController) Download() {
 	}
 	//这里只下载第一个文件哦！！
 	if len(attachments) > 0 {
+		fileext := path.Ext(attachments[0].FileName)
+		matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(matched)
+		if matched {
+			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
+			c.ServeJSON()
+			return
+		}
+
 		c.Ctx.Output.Download(fileurl + "/" + attachments[0].FileName)
 	} else {
 		c.Data["json"] = map[string]interface{}{"code": err, "msg": "", "data": product}
@@ -686,8 +699,19 @@ func (c *ShareController) DownloadZip() {
 			}
 			attachments, err := models.GetAttachments(bridge.ProductId)
 			for _, v := range attachments {
+				fileext := path.Ext(v.FileName)
+				matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
+				if err != nil {
+					beego.Error(err)
+				}
+				if matched {
+					c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
+					c.ServeJSON()
+					return
+				}
+
 				// pathLink = DiskDirectory + "/" + v.FileName
-				_, err := CopyFile("./temp/engineercms/"+v.FileName, DiskDirectory+"/"+v.FileName)
+				_, err = CopyFile("./temp/engineercms/"+v.FileName, DiskDirectory+"/"+v.FileName)
 				//targetfile,sourcefile
 				if err != nil {
 					// fmt.Println(err.Error())

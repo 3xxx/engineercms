@@ -2350,6 +2350,60 @@ paths:
           description: Invalid page supplied
         "404":
           description: temple not found
+  /mathcad/editormatharticle/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get editorarticle by matharticleID
+      operationId: MathcadController.get editormath article by matharticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of matharticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /mathcad/getWxhistorytemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathwxhistory..
+      operationId: MathcadController.get mathwxhistory...
+      parameters:
+      - in: path
+        name: id
+        description: The id of temples
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of mathhistory
+        type: string
+      - in: query
+        name: page
+        description: The page of mathhistory
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /mathcad/gethistoryinput/{id}:
     get:
       tags:
@@ -2463,11 +2517,11 @@ paths:
         type: string
       - in: query
         name: searchText
-        description: The searchText of projproducts
+        description: The searchText of temples
         type: string
       - in: query
         name: page
-        description: The page of projproducts
+        description: The page of temples
         type: string
       - in: query
         name: limit
@@ -2540,17 +2594,17 @@ paths:
     get:
       tags:
       - mathcad
-      description: get projproducts..
-      operationId: MathcadController.get projproducts...
+      description: get mathtemples..
+      operationId: MathcadController.get mathtemples...
       parameters:
       - in: path
         name: id
-        description: The id of projproducts
+        description: The class id of mathtemples
         required: true
         type: string
       - in: query
         name: searchText
-        description: The searchText of projproducts
+        description: The searchText of mathtemples
         type: string
       - in: query
         name: page
@@ -2867,17 +2921,22 @@ paths:
     post:
       tags:
       - mathcad
-      description: get mathcad
-      operationId: MathcadController.get mathcad
+      description: put mathinput
+      operationId: MathcadController.put mathinput
       parameters:
       - in: path
         name: id
-        description: The id of project
+        description: The id of mathinput
         required: true
         type: string
       - in: query
-        name: comment
-        description: The comment
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
         required: true
         type: string
       responses:
@@ -2902,8 +2961,13 @@ paths:
         required: true
         type: string
       - in: query
-        name: comment
-        description: The comment
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
         required: true
         type: string
       responses:
@@ -2915,6 +2979,68 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
+  /mathcad/putusertemple:
+    post:
+      tags:
+      - mathcad
+      description: put usertemple
+      operationId: MathcadController.put usertemple
+      parameters:
+      - in: path
+        name: id
+        description: The id of usertemple
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/updatearticle:
+    post:
+      tags:
+      - mathcad
+      description: post editorarticle
+      operationId: MathcadController.post editormath article
+      parameters:
+      - in: query
+        name: aid
+        description: The id of matharticle
+        required: true
+        type: string
+      - in: query
+        name: subtext
+        description: The subtext of matharticle
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of matharticle
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
   /mathcad/uploadmathtemple/{id}:
     post:
       tags:
@@ -2957,6 +3083,27 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
+  /mathcad/wxmatharticle/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get wxarticle by matharticleID
+      operationId: MathcadController.get wxmath artile by matharticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of matharticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
   /onlyoffice/conversion:
     post:
       tags:
@@ -5474,6 +5621,27 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/getwxtemppdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get wx math temp pdf by id
+      operationId: AttachController.dowload wx math temp pdf
+      parameters:
+      - in: path
+        name: id
+        description: The url of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":

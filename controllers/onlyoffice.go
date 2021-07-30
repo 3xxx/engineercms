@@ -1652,6 +1652,19 @@ func (c *OnlyController) DownloadDoc() {
 		beego.Info(filePath)
 	}
 	filename := filepath.Base(filePath)
+
+	fileext := path.Ext(filename)
+	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(matched)
+	if matched {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
+		c.ServeJSON()
+		return
+	}
+
 	downloadfile, err = models.GetOnlyAttachbyName(filename)
 	if err != nil {
 		beego.Error(err)
@@ -1659,7 +1672,7 @@ func (c *OnlyController) DownloadDoc() {
 
 	//1.管理员或者没有设置权限的文档直接可以下载。
 	police := e.GetFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
-	beego.Info(police)
+	// beego.Info(police)
 	if isadmin || len(police) == 0 {
 		// c.Ctx.Output.Download(filePath) //这个能保证下载文件名称正确
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
@@ -1668,7 +1681,7 @@ func (c *OnlyController) DownloadDoc() {
 
 	//2.取得用户权限
 	police = e.GetFilteredPolicy(0, strconv.FormatInt(uid, 10), "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
-	beego.Info(police)
+	// beego.Info(police)
 	for _, v2 := range police {
 		beego.Info(v2)
 		v2int, err := strconv.ParseInt(v2[2], 10, 64)
@@ -1685,14 +1698,14 @@ func (c *OnlyController) DownloadDoc() {
 
 	//3.取得用户角色——取得角色的权限
 	userroles := e.GetRolesForUser(strconv.FormatInt(uid, 10))
-	beego.Info(userroles)
+	// beego.Info(userroles)
 	// userrole := make([]Userrole, 0)
 	// var canidown bool
 	for _, v1 := range userroles {
 		police := e.GetFilteredPolicy(0, v1, "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
-		beego.Info(police)
+		// beego.Info(police)
 		for _, v2 := range police {
-			beego.Info(v2)
+			// beego.Info(v2)
 			v2int, err := strconv.ParseInt(v2[2], 10, 64)
 			if err != nil {
 				beego.Error(err)
@@ -1818,6 +1831,19 @@ func (c *OnlyController) Download() {
 		c.ServeJSON()
 		return
 	}
+
+	fileext := path.Ext(attachments[0].FileName)
+	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(matched)
+	if matched {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
+		c.ServeJSON()
+		return
+	}
+
 	filePath := "attachment/onlyoffice/" + attachments[0].FileName
 	//管理员或者没有设置权限的文档直接可以下载。
 	police := e.GetFilteredPolicy(1, "/onlyoffice/"+docid)

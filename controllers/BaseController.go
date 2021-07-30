@@ -89,6 +89,7 @@ func (c *MindocBaseController) isUserLoggedIn() bool {
 func (c *MindocBaseController) SetMember(member models.Member) {
 
 	if member.MemberId <= 0 {
+		beego.Info(member.MemberId)
 		c.DelSession(conf.LoginSessionName)
 		c.DelSession("uid")
 		c.DestroySession()

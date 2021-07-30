@@ -312,6 +312,7 @@ func (c *LoginController) Logout() {
 	if v != nil {
 		//删除指定的session
 		c.DelSession("uname")
+		c.DelSession("uid") //删除mindoc的用户登录信息
 		//销毁全部的session
 		// c.DestroySession()
 	}

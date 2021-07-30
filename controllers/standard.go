@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/tealeg/xlsx"
 	"os"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -432,6 +433,20 @@ func (c *StandardController) WxStandardPdf() {
 	// beego.Info(standard.Route)
 	fileurl := strings.Replace(standard.Route, "/attachment/", "attachment/", -1)
 	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, standard.Route)
+
+	filename := path.Base(fileurl)
+	fileext := path.Ext(filename)
+	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(matched)
+	if matched {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
+		c.ServeJSON()
+		return
+	}
+
 	c.Ctx.Output.Download(fileurl)
 }
 

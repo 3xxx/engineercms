@@ -425,7 +425,8 @@ func (c *AccountController) ValidEmail() {
 
 // Logout 退出登录
 func (c *AccountController) Logout() {
-	c.SetMember(models.Member{})
+	beego.Info("logout")
+	c.SetMember(models.Member{MemberId: 0})
 
 	c.SetSecureCookie(conf.GetAppKey(), "login", "", -3600)
 

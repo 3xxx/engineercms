@@ -360,6 +360,12 @@ func UploadImg(w http.ResponseWriter, r *http.Request) {
 
 //添加文章里的图片上传
 func (c *FroalaController) UploadImg() {
+	// 登录
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"state": "ERROR", "data": "用户未登录！"}
+		c.ServeJSON()
+	}
 	//解析表单
 	pid := c.Input().Get("pid")
 	// beego.Info(pid)

@@ -499,6 +499,78 @@ func SubStrings(filenameWithSuffix string) (substr1, substr2 string) {
 	return fulleFilename1, fulleFilename2
 }
 
+//取得usertemple名称，日期和版本
+func MathcadName(filenameWithSuffix string) (Suffix, FileNumber, FileName, Version string) {
+	beego.Info("文件名：", filenameWithSuffix)
+	FileSuffix := path.Ext(filenameWithSuffix) //只留下后缀名
+	LengthSuffix := len([]rune(FileSuffix))
+	Suffix = SubString(FileSuffix, 1, LengthSuffix-1)
+
+	var filenameOnly string
+	filenameOnly = strings.TrimSuffix(filenameWithSuffix, FileSuffix) //只留下文件名，无后缀
+
+	beego.Info("文件全名：", filenameOnly) //filenameOnly= mai
+	//这个测试一个字符串是否符合一个表达式。
+	//    match, _ := regexp.MatchString("p([a-z]+)ch", "peach")
+	//    fmt.Println(match)
+	//上面我们是直接使用字符串，但是对于一些其他的正则任务，你需要使用 Compile 一个优化的 Regexp 结构体。
+	// r, _ := regexp.Compile(`[[:upper:]]{2}[0-9]+[[:upper:]\.0-9]+[-][0-9]+[-][0-9]+[\p{Han} \(\)\/~]`)
+	//这个结构体有很多方法。这里是类似我们前面看到的一个匹配测试。
+	// fmt.Println(r.MatchString(filenameOnly))
+	lengthname := len([]rune(filenameOnly))
+	vindex := UnicodeIndex(filenameOnly, "_v") // 查找"_v"这个字符的位置
+	if vindex == 0 {
+		vindex = UnicodeIndex(filenameOnly, "_V")
+	}
+	// beego.Info(vindex)
+	beego.Info("文件名：", filenameOnly)
+	if vindex == 0 {
+		Version = "0.0.0"
+	} else {
+		Version = SubString(filenameOnly, vindex+2, lengthname-vindex-1)
+		filenameOnly = SubString(filenameOnly, 0, vindex)
+		beego.Info("文件名：", filenameOnly)
+		lengthname = len([]rune(filenameOnly))
+	}
+
+	// 查找连续2个的大写字母
+	// reg := regexp.MustCompile(`[[:upper:]]{2}`)
+	// fmt.Printf("大写字母%q\n", reg.FindAllString(filenameOnly, -1))
+	// ["H" "G"]
+	blankloc := UnicodeIndex(filenameOnly, " ") // 查找空格这个字符的位置
+	if blankloc == 0 {                          //如果没有空格,                                                   //如果没有空格，则用正则表达式获取编号
+		re, _ := regexp.Compile("[^a-zA-Z0-9-.~]")
+		loc := re.FindStringIndex(filenameOnly)
+		if loc != nil { //如果有编号——如果没文件名？？？？？
+			FileNumber = SubString(filenameOnly, 0, loc[0])
+			// beego.Info("文件编号：", FileNumber)
+			FileName = SubString(filenameOnly, loc[0], lengthname-loc[0])
+			// beego.Info("文件名：", FileName)
+		} else { //如果没有编号
+			FileNumber = filenameOnly
+			// fmt.Println("文件编号：", FileNumber)
+			FileName = filenameOnly
+			// fmt.Println("文件名：", filenameOnly)
+		}
+	} else { //如果有空格
+		re, _ := regexp.Compile("[^a-zA-Z0-9-.~]")
+		loc := re.FindStringIndex(filenameOnly)
+		if loc != nil { //如果有编号
+			FileNumber = SubString(filenameOnly, 0, loc[0])
+			// fmt.Println("文件编号：", FileNumber)
+			FileName = SubString(filenameOnly, loc[0], lengthname-loc[0])
+			// fmt.Println("文件名：", FileName)
+		} else { //如果没有编号
+			FileNumber = filenameOnly
+			// fmt.Println("文件编号：", FileNumber)
+			FileName = filenameOnly
+			// fmt.Println("文件名：", filenameOnly)
+		}
+	}
+
+	return Suffix, FileNumber, FileName, Version
+}
+
 func UnicodeIndex(str, substr string) int {
 	// 子串在字符串的字节位置
 	result := strings.Index(str, substr)
