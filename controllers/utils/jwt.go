@@ -9,7 +9,8 @@ import (
 	// "github.com/astaxie/beego/orm"
 	"encoding/base64"
 	"encoding/json"
-	"github.com/dgrijalva/jwt-go"
+	// "github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +19,7 @@ import (
 
 const (
 	KEY                    string = "JWT-ARY-STARK"
-	DEFAULT_EXPIRE_SECONDS int    = 600 // default 10 minutes
+	DEFAULT_EXPIRE_SECONDS int    = 3000 //600 // default 10 minutes
 	//SecretKey = "welcome to wangshubo's blog"
 	SecretKey = "I have login"
 	secret    = "I have login"

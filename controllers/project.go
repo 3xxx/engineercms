@@ -1523,7 +1523,8 @@ func (c *ProjController) ProjectUserRole() {
 	}
 }
 
-//管理员或本人修改项目名称、负责人等，
+// 管理员或本人修改项目名称、负责人等，
+// 没有修改硬盘目录，需要手动修改！！
 func (c *ProjController) UpdateProject() {
 	_, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1562,6 +1563,7 @@ func (c *ProjController) UpdateProject() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//没有修改硬盘目录，需要手动修改！！
 
 	if err != nil {
 		c.Data["json"] = "修改出错-写入数据库出错！"

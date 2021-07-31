@@ -15,7 +15,7 @@ require (
 	github.com/casbin/casbin v1.9.1
 	github.com/casbin/xorm-adapter v1.0.0
 	github.com/dchest/lru v0.0.0-20151022103600-d8fd1e40a385 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang-jwt/jwt@v3.2.1+incompatible
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/go-xorm/xorm v0.7.9 // indirect
