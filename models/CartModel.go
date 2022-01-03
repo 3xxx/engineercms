@@ -2,9 +2,7 @@ package models
 
 import (
 	"fmt"
-	// "github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	// "github.com/jinzhu/gorm"
+	"github.com/beego/beego/v2/client/orm"
 	"time"
 )
 
@@ -79,7 +77,7 @@ type UserCart struct {
 func GetApprovalCart(uid int64, limit, offset, status int, searchText string, isadmin bool) (usercarts []UserCart, err error) {
 	//获取DB Where("product.title LIKE ?", "%searchText%").不对
 	//用"%"+searchText+"%"
-	db := GetDB()
+	db := _db //GetDB()
 	if isadmin {
 		// 必须要写权select，坑爹啊
 		err = db.Order("cart.updated desc").Table("cart").Select("cart.id,cart.user_id,cart.product_id,cart.status,cart.updated,user.nickname as user_nickname, product.title as product_title, product.top_project_id as top_project_id,t1.title as project_title,t2.title as top_project_title").
@@ -117,7 +115,7 @@ func GetApprovalCart(uid int64, limit, offset, status int, searchText string, is
 func GetApplyCart(uid int64, limit, offset, status int, searchText string, isadmin bool) (usercarts []UserCart, err error) {
 	//获取DB Where("product.title LIKE ?", "%searchText%").不对
 	//用"%"+searchText+"%"
-	db := GetDB()
+	db := _db //GetDB()
 	if isadmin {
 		// 必须要写权select，坑爹啊
 		err = db.Order("cart.updated desc").Table("cart").
@@ -189,7 +187,7 @@ func GetApplyCart(uid int64, limit, offset, status int, searchText string, isadm
 //查询待自己审批的记录总数
 func GetApprovalCartCount(uid int64, status int, searchText string, isadmin bool) (count int64, err error) {
 	//获取DB
-	db := GetDB()
+	db := _db //GetDB()
 	if isadmin {
 		err = db.Table("cart").Where("cart.status=?", status).
 			Count(&count).Error
@@ -206,7 +204,7 @@ func GetApprovalCartCount(uid int64, status int, searchText string, isadmin bool
 //查询自己申请的记录总数
 func GetApplyCartCount(uid int64, status int, searchText string, isadmin bool) (count int64, err error) {
 	//获取DB
-	db := GetDB()
+	db := _db //GetDB()
 	if isadmin {
 		err = db.Table("cart").Where("cart.status=?", status).
 			Count(&count).Error
@@ -239,7 +237,7 @@ func GetApplyCartCount(uid int64, status int, searchText string, isadmin bool) (
 //查询一个cart
 func GetUserCartbyId(id int64) (cart Cart, err error) {
 	//获取DB
-	db := GetDB()
+	db := _db //GetDB()
 	err = db.Where("id = ?", id).Find(&cart).Error
 	return cart, err
 }
@@ -247,7 +245,7 @@ func GetUserCartbyId(id int64) (cart Cart, err error) {
 // 删除
 func DeleteUserCart(id int64) error {
 	//获取DB
-	db := GetDB()
+	db := _db //GetDB()
 	err := db.Where("id = ?", id).Delete(Cart{}).Error
 	return err
 }
@@ -255,7 +253,7 @@ func DeleteUserCart(id int64) error {
 // 更新Status
 func UpdateApprovalCart(id int64) error {
 	//获取DB
-	db := GetDB()
+	db := _db //GetDB()
 	err := db.Table("cart").Where("id = ?", id).Update("status", 1).Error
 	return err
 }

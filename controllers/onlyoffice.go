@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
+	// "github.com/beego/beego/v2/adapter/orm"
 	// "github.com/casbin/beego-orm-adapter"
 	// "baliance.com/gooxml/document"
 	// "github.com/unidoc/unioffice/common"
@@ -23,18 +25,18 @@ import (
 	"time"
 	// "mime/multipart"
 	"bytes"
-	"github.com/astaxie/beego/httplib"
-	// "github.com/astaxie/beego/utils/pagination"
+	"github.com/beego/beego/v2/adapter/httplib"
+	// "github.com/beego/beego/v2/adapter/utils/pagination"
 	// "crypto/aes"
 	// "crypto/cipher"
 	// "io"
-	// "github.com/astaxie/beego/session"
+	// "github.com/beego/beego/v2/adapter/session"
 )
 
 var OnlyUsers []string
 
 type OnlyController struct {
-	beego.Controller
+	web.Controller
 }
 
 type Callback struct {
@@ -186,7 +188,7 @@ func (c *OnlyController) Get() {
 	// 	uname := v.(string)
 	// 	user, err := models.GetUserByUsername(uname)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// 	c.Data["Uid"] = user.Id
 	// } else {
@@ -195,7 +197,7 @@ func (c *OnlyController) Get() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -223,7 +225,7 @@ func (c *OnlyController) Get() {
 	c.Data["IsOnlyOffice"] = true
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -302,23 +304,23 @@ func (c *OnlyController) Get() {
 // func (c *ArticleController) GetOnlyDocs() {
 // 	var offset, limit1, page1 int
 // 	var err error
-// 	limit := c.Input().Get("limit")
+// 	limit := c.GetString("limit")
 // 	if limit == "" {
 // 		limit1 = 0
 // 	} else {
 // 		limit1, err = strconv.Atoi(limit)
 // 		if err != nil {
-// 			beego.Error(err)
+// 			logs.Error(err)
 // 		}
 // 	}
-// 	page := c.Input().Get("page")
+// 	page := c.GetString("page")
 // 	if page == "" {
 // 		limit1 = 0
 // 		page1 = 1
 // 	} else {
 // 		page1, err = strconv.Atoi(page)
 // 		if err != nil {
-// 			beego.Error(err)
+// 			logs.Error(err)
 // 		}
 // 	}
 
@@ -333,7 +335,7 @@ func (c *OnlyController) Get() {
 // 	//这里用jion，取得uname和attachment和permission
 // 	docs, err := models.GetDocList(offset, limit1)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
 
 // 	//1.anonymous，首先查permission表，
@@ -385,11 +387,11 @@ func (c *OnlyController) Get() {
 // 							// docxarr[0].Permission = k[2]
 // 							int1, err := strconv.Atoi(k[2])
 // 							if err != nil {
-// 								beego.Error(err)
+// 								logs.Error(err)
 // 							}
 // 							int2, err := strconv.Atoi(docxarr[0].Permission)
 // 							if err != nil {
-// 								beego.Error(err)
+// 								logs.Error(err)
 // 							}
 // 							if int1 < int2 {
 // 								docxarr[0].Permission = k[2] //按最小值权限
@@ -472,7 +474,7 @@ func (c *OnlyController) GetData() {
 	// 	// c.Data["Uname"] = v.(string)
 	// 	user, err = models.GetUserByUsername(uname)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// 	c.Data["Uid"] = user.Id
 	// 	// userrole = user.Role
@@ -491,13 +493,13 @@ func (c *OnlyController) GetData() {
 	var myRes, roleRes [][]string
 	if useridstring != "0" {
 		myRes = e.GetPermissionsForUser(useridstring)
-		beego.Info(myRes)
+		// beego.Info(myRes)
 	}
 	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
 
 	docs, err := models.GetDocs()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	link := make([]OnlyLink, 0)
@@ -518,7 +520,7 @@ func (c *OnlyController) GetData() {
 
 		Attachments, err := models.GetOnlyAttachments(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//docid——me——1
 		for _, v := range Attachments {
@@ -549,7 +551,7 @@ func (c *OnlyController) GetData() {
 					}
 					roles, err := e.GetRolesForUser(useridstring) //取出用户的所有角色
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 					for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
 						roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
@@ -559,11 +561,11 @@ func (c *OnlyController) GetData() {
 								// docxarr[0].Permission = k[2]
 								int1, err := strconv.Atoi(k[2])
 								if err != nil {
-									beego.Error(err)
+									logs.Error(err)
 								}
 								int2, err := strconv.Atoi(docxarr[0].Permission)
 								if err != nil {
-									beego.Error(err)
+									logs.Error(err)
 								}
 								if int1 < int2 {
 									docxarr[0].Permission = k[2] //按最小值权限
@@ -639,20 +641,20 @@ func (c *OnlyController) GetData() {
 // WPS表格：et,ett,xls,xlt
 //取得changesurl
 // func (c *OnlyController) ChangesUrl() {
-// 	version := c.Input().Get("version")
+// 	version := c.GetString("version")
 
 // 	versionint, err := strconv.Atoi(version)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
-// 	attachmentid := c.Input().Get("attachmentid")
+// 	attachmentid := c.GetString("attachmentid")
 // 	idNum, err := strconv.ParseInt(attachmentid, 10, 64)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
 // 	changesurl, err := models.GetOnlyChangesUrl(idNum, versionint)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
 // 	beego.Info(changesurl.ChangesUrl)
 // 	c.Data["json"] = changesurl.ChangesUrl
@@ -667,18 +669,18 @@ func (c *OnlyController) OnlyOffice() {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据附件id取得附件的prodid，路径
 	onlyattachment, err := models.GetOnlyAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//docid——uid——me
 	doc, err := models.Getdocbyid(onlyattachment.DocId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var useridstring, Permission string
@@ -710,7 +712,7 @@ func (c *OnlyController) OnlyOffice() {
 		// c.Data["Uname"] = v.(string)
 		// user, err := models.GetUserByUsername(uname)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		// useridstring = strconv.FormatInt(user.Id, 10)
 		myRes = e.GetPermissionsForUser(useridstring)
@@ -732,7 +734,7 @@ func (c *OnlyController) OnlyOffice() {
 
 			roles, err := e.GetRolesForUser(useridstring) //取出用户的所有角色
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
 				roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
@@ -742,11 +744,11 @@ func (c *OnlyController) OnlyOffice() {
 						// docxarr[0].Permission = k[2]
 						int1, err := strconv.Atoi(k[2])
 						if err != nil {
-							beego.Error(err)
+							logs.Error(err)
 						}
 						int2, err := strconv.Atoi(Permission)
 						if err != nil {
-							beego.Error(err)
+							logs.Error(err)
 						}
 						if int1 < int2 {
 							Permission = k[2] //按最小值权限
@@ -834,7 +836,7 @@ func (c *OnlyController) OnlyOffice() {
 	//构造[]history
 	history, err := models.GetOnlyHistory(onlyattachment.Id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	onlyhistory := make([]history1, 0)
@@ -858,7 +860,7 @@ func (c *OnlyController) OnlyOffice() {
 		//取得changes
 		changes, err := models.GetOnlyChanges(v.HistoryKey)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, v1 := range changes {
 			bb := make([]change, 1)
@@ -883,7 +885,7 @@ func (c *OnlyController) OnlyOffice() {
 
 	historyversion, err := models.GetOnlyHistoryVersion(onlyattachment.Id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var first int
 	for _, v := range historyversion {
@@ -936,7 +938,7 @@ func (c *OnlyController) OnlyOffice() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -947,8 +949,16 @@ func (c *OnlyController) OnlyOffice() {
 		// c.TplName = "onlyoffice/onlyoffice.tpl"
 		c.Data["Type"] = "desktop"
 	}
-	c.Data["Onlyofficeapi_url"] = beego.AppConfig.String("onlyofficeapi_url")
-	c.Data["Engineercmsapi_url"] = beego.AppConfig.String("engineercmsapi_url")
+	onlyofficeapi_url, err := web.AppConfig.String("onlyofficeapi_url")
+	if err != nil {
+		logs.Error(err)
+	}
+	c.Data["Onlyofficeapi_url"] = onlyofficeapi_url
+	engineercmsapi_url, err := web.AppConfig.String("engineercmsapi_url")
+	if err != nil {
+		logs.Error(err)
+	}
+	c.Data["Engineercmsapi_url"] = engineercmsapi_url
 
 	c.TplName = "onlyoffice/onlyoffice.tpl"
 }
@@ -963,23 +973,23 @@ func (c *OnlyController) OfficeView() {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据附件id取得附件的prodid，路径
 	attachment, err := models.GetAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileext := path.Ext(attachment.FileName)
 	product, err := models.GetProd(attachment.ProductId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//根据projid取出路径
 	proj, err := models.GetProj(product.ProjectId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var projurl string
@@ -992,7 +1002,7 @@ func (c *OnlyController) OfficeView() {
 	//由proj id取得url
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(fileurl + "/" + attachment.FileName)
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
@@ -1004,7 +1014,15 @@ func (c *OnlyController) OfficeView() {
 		// v := c.GetSession("uname")
 		// beego.Info(v.(string))
 		// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
-		if e.Enforce(useridstring, projurl, "POST", fileext) || e.Enforce(useridstring, projurl, "PUT", fileext) || isadmin {
+		res, err := e.Enforce(useridstring, projurl, "POST", fileext)
+		if err != nil {
+			logs.Error(err)
+		}
+		res2, err := e.Enforce(useridstring, projurl, "PUT", fileext)
+		if err != nil {
+			logs.Error(err)
+		}
+		if res || res2 || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
@@ -1015,7 +1033,7 @@ func (c *OnlyController) OfficeView() {
 			c.Data["Download"] = true
 			c.Data["Print"] = true
 			c.Data["Print"] = true
-		} else if e.Enforce(useridstring, projurl, "GET", fileext) {
+		} else if res, _ := e.Enforce(useridstring, projurl, "GET", fileext); res {
 			c.Data["Mode"] = "view"
 			c.Data["Edit"] = false
 			c.Data["Review"] = false
@@ -1083,7 +1101,7 @@ func (c *OnlyController) OfficeView() {
 		u := c.Ctx.Input.UserAgent()
 		matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		if matched == true {
 			// beego.Info("移动端~")
@@ -1094,8 +1112,17 @@ func (c *OnlyController) OfficeView() {
 			// c.TplName = "onlyoffice/onlyoffice.tpl"
 			c.Data["Type"] = "desktop"
 		}
-		c.Data["Onlyofficeapi_url"] = beego.AppConfig.String("onlyofficeapi_url")
-		c.Data["Engineercmsapi_url"] = beego.AppConfig.String("engineercmsapi_url")
+		onlyofficeapi_url, err := web.AppConfig.String("onlyofficeapi_url")
+		if err != nil {
+			logs.Error(err)
+		}
+		c.Data["Onlyofficeapi_url"] = onlyofficeapi_url
+
+		engineercmsapi_url, err := web.AppConfig.String("engineercmsapi_url")
+		if err != nil {
+			logs.Error(err)
+		}
+		c.Data["Engineercmsapi_url"] = engineercmsapi_url
 
 		c.TplName = "onlyoffice/officeview.tpl"
 	} else {
@@ -1112,28 +1139,28 @@ func (c *OnlyController) OfficeView() {
 func (c *OnlyController) UrltoCallback() {
 	var actionuserid int64
 	// pk1 := c.Ctx.Input.RequestBody
-	id := c.Input().Get("id")
+	id := c.GetString("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//根据附件id取得附件的prodid，路径
 	onlyattachment, err := models.GetOnlyAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var callback Callback
 	json.Unmarshal(c.Ctx.Input.RequestBody, &callback)
 	// beego.Info(string(c.Ctx.Input.RequestBody))
-	beego.Info(callback.Status)
+	// beego.Info(callback.Status)
 	// beego.Info(callback.Forcesavetype)
 	if callback.Status == 1 || callback.Status == 4 {
 		//•	1 - document is being edited,
 		//•	4 - document is closed with no changes,
-		beego.Info(callback.Users)
+		// beego.Info(callback.Users)
 		OnlyUsers = callback.Users
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
@@ -1141,15 +1168,15 @@ func (c *OnlyController) UrltoCallback() {
 		//•	2 - document is ready for saving
 		resp, err := http.Get(callback.Url) //Changesurl
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer resp.Body.Close()
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//1.
 		//2.将document server中的文件下载下来存入，名称就是编号v1
@@ -1162,7 +1189,7 @@ func (c *OnlyController) UrltoCallback() {
 		//写入历史版本
 		historyversion, err := models.GetOnlyHistoryVersion(onlyattachment.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, v := range historyversion {
 			if first < v.Version {
@@ -1175,32 +1202,32 @@ func (c *OnlyController) UrltoCallback() {
 		// file := "./attachment/onlyoffice/" + onlyattachment.FileName                          //源文件路径
 		// err = os.Rename(file, "./attachment/onlyoffice/"+filenameOnly+"v"+vnumber+FileSuffix) //重命名 C:\\log\\2013.log 文件为install.txt
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 
 		// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
 		f, err := os.Create("./attachment/onlyoffice/" + filenameOnly + "v" + vnumber + FileSuffix)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer f.Close()
 		_, err = f.Write(body) //这里直接用resp.Body如何？
 		// _, err = f.WriteString(str)
 		// _, err = io.Copy(body, f)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			//更新文档更新时间
 			err = models.UpdateDocTime(onlyattachment.DocId)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 
 		//更新附件的时间和changesurl
 		err = models.UpdateOnlyAttachment(idNum, filenameOnly+"v"+vnumber+FileSuffix)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 
 		//写入历史版本数据
@@ -1209,7 +1236,7 @@ func (c *OnlyController) UrltoCallback() {
 		Expires := Expires1[1]
 		Expirestime, err := strconv.ParseInt(Expires, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//获取本地location
 		// toBeCharge := "2015-01-01 00:00:00"
@@ -1225,29 +1252,29 @@ func (c *OnlyController) UrltoCallback() {
 		//changes文档保存存下来
 		respchanges, err := http.Get(callback.Changesurl) //Changesurl
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		bodychanges, err := ioutil.ReadAll(respchanges.Body)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer respchanges.Body.Close()
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//建立目录，并返回作为父级目录
 		err = os.MkdirAll("./attachment/onlyoffice/changes/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		fchanges, err := os.Create("./attachment/onlyoffice/changes/" + filenameOnly + "v" + vnumber + "changes.zip")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer fchanges.Close()
 		_, err = fchanges.Write(bodychanges)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//写入历史数据库
 		nowdocurl := "/attachment/onlyoffice/" + filenameOnly + "v" + vnumber + FileSuffix
@@ -1265,19 +1292,19 @@ func (c *OnlyController) UrltoCallback() {
 		// _, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, actionuserid, callback.History.ServerVersion, first+1, callback.Key, callback.Url, callback.Changesurl, dataTimeStr, callback.Lastsave)
 		_, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, actionuserid, callback.History.ServerVersion, first+1, callback.Key, nowdocurl, changeszipurl, dataTimeStr, callback.Lastsave)
 		if err1 != nil {
-			beego.Error(err1)
+			logs.Error(err1)
 		}
 		if err2 != nil {
-			beego.Error(err2)
+			logs.Error(err2)
 		}
 		//写入changes数据库
 		for _, v := range callback.History.Changes {
 			_, err1, err2 = models.AddOnlyChanges(callback.Key, v.User.Id, v.User.Name, v.Created)
 			if err1 != nil {
-				beego.Error(err1)
+				logs.Error(err1)
 			}
 			if err2 != nil {
-				beego.Error(err2)
+				logs.Error(err2)
 			}
 		}
 
@@ -1290,32 +1317,32 @@ func (c *OnlyController) UrltoCallback() {
 		// 2 - the force saving request is performed by timer with the settings from the server config.
 		resp, err := http.Get(callback.Url)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer resp.Body.Close()
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
 		//强制保存——不好用，前端不要设置成强制保存！！
 		f, err := os.Create("./attachment/onlyoffice/" + onlyattachment.FileName)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer f.Close()
 		_, err = f.Write(body) //这里直接用resp.Body如何？
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// else {
 		//更新文档更新时间_不能更新时间，会造成key失效
 		// err = models.UpdateDocTime(onlyattachment.DocId)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		// }
 		c.Data["json"] = map[string]interface{}{"error": 0}
@@ -1328,7 +1355,7 @@ func (c *OnlyController) UrltoCallback() {
 		//用新的key在服务器上编辑文档了！！！
 		err = models.UpdateOnlyAttachment(idNum, onlyattachment.FileName)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
@@ -1341,26 +1368,26 @@ func (c *OnlyController) UrltoCallback() {
 //cms中返回值
 //没改历史版本问题
 func (c *OnlyController) OfficeViewCallback() {
-	id := c.Input().Get("id")
+	id := c.GetString("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据附件id取得附件的prodid，路径
 	attachment, err := models.GetAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	product, err := models.GetProd(attachment.ProductId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//由proj id取得文件路径
 	_, diskdirectory, err := GetUrlPath(product.ProjectId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var callback Callback
@@ -1376,32 +1403,32 @@ func (c *OnlyController) OfficeViewCallback() {
 		//•	2 - document is ready for saving
 		resp, err := http.Get(callback.Url)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer resp.Body.Close()
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
 		f, err := os.Create(diskdirectory + "/" + attachment.FileName)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer f.Close()
 		_, err = f.Write(body) //这里直接用resp.Body如何？
 		// _, err = f.WriteString(str)
 		// _, err = io.Copy(body, f)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			//更新附件的时间和changesurl
 			err = models.UpdateAttachmentTime(idNum)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//写入历史版本数据
 			// array := strings.Split(callback.Changesurl, "&")
@@ -1409,7 +1436,7 @@ func (c *OnlyController) OfficeViewCallback() {
 			// Expires := Expires1[1]
 			// Expirestime, err := strconv.ParseInt(Expires, 10, 64)
 			// if err != nil {
-			// 	beego.Error(err)
+			// 	logs.Error(err)
 			// }
 			//获取本地location
 			// toBeCharge := "2015-01-01 00:00:00"
@@ -1428,7 +1455,7 @@ func (c *OnlyController) OfficeViewCallback() {
 			// //写入历史版本
 			// historyversion, err := models.GetOnlyHistoryVersion(onlyattachment.Id)
 			// if err != nil {
-			// 	beego.Error(err)
+			// 	logs.Error(err)
 			// }
 			// var first int
 			// for _, v := range historyversion {
@@ -1444,25 +1471,25 @@ func (c *OnlyController) OfficeViewCallback() {
 			// }
 			// _, err1, err2 := models.AddOnlyHistory(onlyattachment.Id, actionuserid, callback.History.ServerVersion, first+1, callback.Key, callback.Url, callback.Changesurl, dataTimeStr, callback.Lastsave)
 			// if err1 != nil {
-			// 	beego.Error(err1)
+			// 	logs.Error(err1)
 			// }
 			// if err2 != nil {
-			// 	beego.Error(err2)
+			// 	logs.Error(err2)
 			// }
 			// //写入changes
 			// for _, v := range callback.History.Changes {
 			// 	_, err1, err2 = models.AddOnlyChanges(callback.Key, v.User.Id, v.User.Name, v.Created)
 			// 	if err1 != nil {
-			// 		beego.Error(err1)
+			// 		logs.Error(err1)
 			// 	}
 			// 	if err2 != nil {
-			// 		beego.Error(err2)
+			// 		logs.Error(err2)
 			// 	}
 			// }
 			//更新文档更新时间
 			err = models.UpdateProductTime(product.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 		c.Data["json"] = map[string]interface{}{"error": 0}
@@ -1473,12 +1500,12 @@ func (c *OnlyController) OfficeViewCallback() {
 		//更新附件的时间和changesurl
 		err = models.UpdateAttachmentTime(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//更新文档更新时间
 		// err = models.UpdateProductTime(product.Id)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		c.Data["json"] = map[string]interface{}{"error": 0}
 		c.ServeJSON()
@@ -1499,14 +1526,14 @@ func (c *OnlyController) AddOnlyAttachment() {
 	// 	uname := v.(string)
 	// 	user, err = models.GetUserByUsername(uname)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// }
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 	var filepath, DiskDirectory, Url string
 	err := os.MkdirAll("./attachment/onlyoffice/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	DiskDirectory = "./attachment/onlyoffice/"
 	Url = "/attachment/onlyoffice/"
@@ -1514,7 +1541,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if h != nil {
 		//保存附件
@@ -1528,8 +1555,8 @@ func (c *OnlyController) AddOnlyAttachment() {
 		//存入成果数据库
 		//如果编号重复，则不写入，只返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodlabel := c.Input().Get("prodlabel")
-		prodprincipal := c.Input().Get("prodprincipal")
+		prodlabel := c.GetString("prodlabel")
+		prodprincipal := c.GetString("prodprincipal")
 		// type Duration int64
 		// const (
 		// 	Nanosecond  Duration = 1
@@ -1540,7 +1567,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 		// 	Hour                 = 60 * Minute
 		// )
 		// hours := 8
-		inputdate := c.Input().Get("proddate")
+		inputdate := c.GetString("proddate")
 		// beego.Info(inputdate)
 		var t1, end time.Time
 		// var convdate1, convdate2 string
@@ -1548,7 +1575,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 		if len(inputdate) > 9 { //如果是datepick获取的时间，则不用加8小时
 			t1, err = time.Parse(lll, inputdate) //这里t1要是用t1:=就不是前面那个t1了
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			// convdate := t1.Format(lll)
 			// catalog.Datestring = convdate
@@ -1560,14 +1587,14 @@ func (c *OnlyController) AddOnlyAttachment() {
 			// catalog.Datestring = convdate
 			date, err = time.Parse(lll, convdate)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			end = date
 		}
 		// beego.Info(end)
 		prodId, err := models.AddDoc(code, title, prodlabel, prodprincipal, end, uid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//改名，替换文件名中的#和斜杠
 		title = strings.Replace(title, "#", "号", -1)
@@ -1583,7 +1610,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 
 		_, _, err2 := models.AddOnlyAttachment(attachmentname, 0, 0, prodId)
 		if err2 != nil {
-			beego.Error(err2)
+			logs.Error(err2)
 		} else {
 			//存入文件夹
 			//判断文件是否存在，如果不存在就写入
@@ -1594,7 +1621,7 @@ func (c *OnlyController) AddOnlyAttachment() {
 					//return false
 					err = c.SaveToFile("file", filepath) //存文件
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 					c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": h.Filename, "original": h.Filename, "url": Url + "/" + h.Filename}
 					c.ServeJSON()
@@ -1618,7 +1645,7 @@ func (c *OnlyController) DownloadDoc() {
 	// 	c.Data["Uname"] = v.(string)
 	// 	user, err := models.GetUserByUsername(uname)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// 	useridstring = strconv.FormatInt(user.Id, 10)
 	// }
@@ -1631,7 +1658,7 @@ func (c *OnlyController) DownloadDoc() {
 	// 	c.Data["Uname"] = v.(string)
 	// 	user, err := models.GetUserByUsername(uname)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// 	useridstring = strconv.FormatInt(user.Id, 10)
 	// }
@@ -1641,32 +1668,32 @@ func (c *OnlyController) DownloadDoc() {
 	//pid转成64为
 	// idNum, err := strconv.ParseInt(docid, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//根据成果id取得所有附件
 	// attachments, err := models.GetOnlyAttachments(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// filePath := "attachment/onlyoffice/" + attachments[0].FileName
 
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //attachment/onlyoffice/id
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//由附件名取得附件id
 	var downloadfile models.OnlyAttachment
 	if strings.Contains(filePath, "?hotqinsessionid=") {
 		filePathtemp := strings.Split(filePath, "?")
 		filePath = filePathtemp[0]
-		beego.Info(filePath)
+		// beego.Info(filePath)
 	}
 	filename := filepath.Base(filePath)
 
 	fileext := path.Ext(filename)
 	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(matched)
 	if matched {
@@ -1677,7 +1704,7 @@ func (c *OnlyController) DownloadDoc() {
 
 	downloadfile, err = models.GetOnlyAttachbyName(filename)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//1.管理员或者没有设置权限的文档直接可以下载。
@@ -1693,10 +1720,10 @@ func (c *OnlyController) DownloadDoc() {
 	police = e.GetFilteredPolicy(0, strconv.FormatInt(uid, 10), "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
 	// beego.Info(police)
 	for _, v2 := range police {
-		beego.Info(v2)
+		// beego.Info(v2)
 		v2int, err := strconv.ParseInt(v2[2], 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		if v2int <= 3 {
 			// canidown = true
@@ -1709,7 +1736,7 @@ func (c *OnlyController) DownloadDoc() {
 	//3.取得用户角色——取得角色的权限
 	userroles, err := e.GetRolesForUser(strconv.FormatInt(uid, 10))
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(userroles)
 	// userrole := make([]Userrole, 0)
@@ -1721,7 +1748,7 @@ func (c *OnlyController) DownloadDoc() {
 			// beego.Info(v2)
 			v2int, err := strconv.ParseInt(v2[2], 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			if v2int <= 3 {
 				// canidown = true
@@ -1748,16 +1775,16 @@ func (c *OnlyController) DownloadDoc() {
 // @router /downloadonlydoc [post]
 //文档管理页面下载最新的文档——先检查是否有人打开文档
 func (c *OnlyController) DownloadOnlyDoc() {
-	id := c.Input().Get("id")
-	// key := c.Input().Get("key")
+	id := c.GetString("id")
+	// key := c.GetString("key")
 	// beego.Info(id)
-	url := c.Input().Get("url")
+	url := c.GetString("url")
 	// array := strings.Split(ids, ",")
 	// for _, v := range array {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 0, "info": "ERR", "data": "字符转int64错误", "msg": "字符转int64错误"}
 		c.ServeJSON()
 		return
@@ -1765,7 +1792,7 @@ func (c *OnlyController) DownloadOnlyDoc() {
 	//根据附件id取得附件的prodid，路径
 	onlyattachment, err := models.GetOnlyAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 1, "info": "ERR", "data": "查询onlyattachment错误", "msg": "查询onlyattachment错误"}
 		c.ServeJSON()
 		return
@@ -1781,14 +1808,14 @@ func (c *OnlyController) DownloadOnlyDoc() {
 		"userdata": "sample userdata",
 	})
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 2, "info": "ERR", "data": "json转换错误", "msg": "json转换错误"}
 		c.ServeJSON()
 		return
 	}
 	resp, err := http.Post(requestUrl, "application/x-www-form-urlencoded", bytes.NewBuffer(b)) //注意，这里是post
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 3, "info": "ERR", "data": "post请求错误", "msg": "post请求错误"}
 		c.ServeJSON()
 		return
@@ -1797,7 +1824,7 @@ func (c *OnlyController) DownloadOnlyDoc() {
 	// beego.Info(resp.Body)
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 4, "info": "ERR", "data": "请求返回错误", "msg": "请求返回错误"}
 		c.ServeJSON()
 		return
@@ -1831,7 +1858,7 @@ func (c *OnlyController) Download() {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(docid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 0, "info": "ERR", "data": "字符转int64错误", "msg": "字符转int64错误"}
 		c.ServeJSON()
 		return
@@ -1839,7 +1866,7 @@ func (c *OnlyController) Download() {
 	//根据成果id取得所有附件
 	attachments, err := models.GetOnlyAttachments(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 1, "info": "ERR", "data": "查询onlyattachment错误", "msg": "查询onlyattachment错误"}
 		c.ServeJSON()
 		return
@@ -1848,7 +1875,7 @@ func (c *OnlyController) Download() {
 	fileext := path.Ext(attachments[0].FileName)
 	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(matched)
 	if matched {
@@ -1868,7 +1895,7 @@ func (c *OnlyController) Download() {
 
 	userroles, err := e.GetRolesForUser(strconv.FormatInt(uid, 10))
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(userroles)
 	// userrole := make([]Userrole, 0)
@@ -1881,7 +1908,7 @@ func (c *OnlyController) Download() {
 			// beego.Info(v2)
 			v2int, err := strconv.ParseInt(v2[2], 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				c.Data["json"] = map[string]interface{}{"errNo": 2, "info": "ERR", "data": "字符转int64错误", "msg": "字符转int64错误"}
 				c.ServeJSON()
 				return
@@ -1900,7 +1927,7 @@ func (c *OnlyController) Download() {
 	// qs := o.QueryTable("casbin_rule")
 	// _, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1", "/onlyoffice"+docid).All(&paths)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// beego.Info(paths)
 
@@ -1918,7 +1945,7 @@ func (c *OnlyController) Download() {
 	// filePath := path.Base(ctx.Request.RequestURI)
 	// filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// fileext := path.Ext(filePath)
 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
@@ -1969,30 +1996,30 @@ func (c *OnlyController) Download() {
 	// // defer f.Close()
 	// // _, err = io.Copy(f, bytes.NewReader(ciphertext))
 	// // if err != nil {
-	// // 	beego.Error(err)
+	// // 	logs.Error(err)
 	// // }
 	// io.Copy(c.Ctx.ResponseWriter, bytes.NewReader(ciphertext))
 }
 
 //编辑成果信息
 func (c *OnlyController) UpdateDoc() {
-	id := c.Input().Get("pid")
-	code := c.Input().Get("code")
-	title := c.Input().Get("title")
-	label := c.Input().Get("label")
-	principal := c.Input().Get("principal")
+	id := c.GetString("pid")
+	code := c.GetString("code")
+	title := c.GetString("title")
+	label := c.GetString("label")
+	principal := c.GetString("principal")
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	inputdate := c.Input().Get("proddate")
+	inputdate := c.GetString("proddate")
 	var t1, end time.Time
 	const lll = "2006-01-02"
 	if len(inputdate) > 9 { //如果是datepick获取的时间，则不用加8小时
 		t1, err = time.Parse(lll, inputdate) //这里t1要是用t1:=就不是前面那个t1了
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		end = t1
 		// t1 = printtime.Add(+time.Duration(hours) * time.Hour)
@@ -2001,14 +2028,14 @@ func (c *OnlyController) UpdateDoc() {
 		convdate := date.Format(lll)
 		date, err = time.Parse(lll, convdate)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		end = date
 	}
 	//根据id添加成果
 	err = models.UpdateDoc(idNum, code, title, label, principal, end)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = "ok"
 	c.ServeJSON()
@@ -2022,35 +2049,35 @@ func (c *OnlyController) DeleteDoc() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//循环删除成果
 		//根据成果id取得所有附件
 		attachments, err := models.GetOnlyAttachments(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, w := range attachments {
 			//取得附件的成果id
 			attach, err := models.GetOnlyAttachbyId(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			path := "./attachment/onlyoffice/" + attach.FileName
 			//删除附件
 			err = os.Remove(path)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//删除附件数据表
 			err = models.DeleteOnlyAttachment(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 		err = models.DeleteDoc(idNum) //删除成果数据表
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -2076,12 +2103,12 @@ func (c *OnlyController) Addpermission() {
 	//id转成64位
 	idNum, err := strconv.ParseInt(docid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据成果id取得所有附件——这里只取第一个
 	attachments, err := models.GetOnlyAttachments(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(docid)
 	// action := "get"
@@ -2094,7 +2121,7 @@ func (c *OnlyController) Addpermission() {
 	// qs := o.QueryTable("casbin_rule")
 	// _, err = qs.Filter("v1", "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10)).All(&paths)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// for _, v := range paths {
 	e.RemoveFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10))
@@ -2109,19 +2136,25 @@ func (c *OnlyController) Addpermission() {
 	// qs := o.QueryTable("casbin_rule")
 	// _, err = qs.Filter("v1", "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10)).Delete()
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// _, err = o.Delete(&paths)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//再添加permission
 	for _, v1 := range rolepermission {
 		// beego.Info(v1.Id)
 		if v1.Rolenumber != "" { //存储角色id
-			success = e.AddPolicy("role_"+strconv.FormatInt(v1.Id, 10), "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10), v1.Permission, suf)
+			success, err = e.AddPolicy("role_"+strconv.FormatInt(v1.Id, 10), "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10), v1.Permission, suf)
+			if err != nil {
+				logs.Error(err)
+			}
 		} else { //存储用户id
-			success = e.AddPolicy(strconv.FormatInt(v1.Id, 10), "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10), v1.Permission, suf)
+			success, err = e.AddPolicy(strconv.FormatInt(v1.Id, 10), "/onlyoffice/"+strconv.FormatInt(attachments[0].Id, 10), v1.Permission, suf)
+			if err != nil {
+				logs.Error(err)
+			}
 		}
 		//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
 	}
@@ -2140,12 +2173,12 @@ func (c *OnlyController) Getpermission() {
 	//id转成64位
 	idNum, err := strconv.ParseInt(docid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据成果id取得所有附件
 	attachments, err := models.GetOnlyAttachments(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// var users []beegoormadapter.CasbinRule
 	rolepermission := make([]Rolepermission, 0)
@@ -2154,7 +2187,7 @@ func (c *OnlyController) Getpermission() {
 		// qs := o.QueryTable("casbin_rule")
 		// _, err = qs.Filter("PType", "p").Filter("v1", "/onlyoffice/"+strconv.FormatInt(w.Id, 10)).All(&users)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		users := e.GetFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(w.Id, 10))
 		// beego.Info(users)
@@ -2166,7 +2199,7 @@ func (c *OnlyController) Getpermission() {
 				//id转成64位
 				roleidNum, err := strconv.ParseInt(roleid, 10, 64)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				// beego.Info(roleidNum)
 				role := models.GetRoleByRoleId(roleidNum)
@@ -2181,7 +2214,7 @@ func (c *OnlyController) Getpermission() {
 				//id转成64位
 				uidNum, err := strconv.ParseInt(v[0], 10, 64)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				user := models.GetUserByUserId(uidNum)
 				rolepermission1[0].Id = uidNum
@@ -2221,7 +2254,7 @@ func (c *OnlyController) GetTree() {
 	doc, err := document.Open("./attachment/toc.docx")
 	if err != nil {
 		// log.Fatalf("error opening document: %s", err)
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var docnode []DocNode
 	var id int
@@ -2238,7 +2271,7 @@ func (c *OnlyController) GetTree() {
 			aa[0].Heading = text1
 			level, err := strconv.Atoi(strings.Replace(para.Style(), "Heading", "", -1))
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			aa[0].Level = level
 			//循环赋给parentid
@@ -2377,48 +2410,48 @@ func (c *OnlyController) Conversion() {
 	// if err!=nil{
 	//     log.Fatal("read file err:",err)
 	// }
-	beego.Info(conversionsend)
+	// beego.Info(conversionsend)
 	b, err := json.Marshal(conversionsend)
 	req.Body(string(b))
-	beego.Info(string(b))
+	// beego.Info(string(b))
 	var conversionresponse Conversionresponse
 
 	jsonstring, err := req.String()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		//json字符串解析到结构体，以便进行追加
-		beego.Info(jsonstring)
+		// beego.Info(jsonstring)
 		// err = json.Unmarshal([]byte(jsonstring), &conversionresponse)
 		err = xml.Unmarshal([]byte(jsonstring), &conversionresponse)
 		// 	fmt.Println(s)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 
 		resp, err := http.Get(conversionresponse.FileUrl)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
-		beego.Info(resp)
+		// beego.Info(resp)
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer resp.Body.Close()
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		f, err := os.Create("./attachment/onlyoffice/" + "Example Document Title.pdf")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer f.Close()
 		_, err = f.Write(body) //这里直接用resp.Body如何？
 		// _, err = f.WriteString(str)
 		// _, err = io.Copy(body, f)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 
 		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, "//attachment/onlyoffice/Example Document Title.docx")
@@ -2483,14 +2516,14 @@ func (c *OnlyController) CommandInfo() {
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return
 	}
 
 	//根据附件id取得附件的prodid，路径
 	onlyattachment, err := models.GetOnlyAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var commandsend CommandSend
@@ -2498,7 +2531,11 @@ func (c *OnlyController) CommandInfo() {
 	// beego.Info(onlyattachment.Updated)
 	commandsend.Key = strconv.FormatInt(onlyattachment.Updated.UnixNano(), 10) //"1640401834797572400"
 	// beego.Info(commandsend.Key)
-	req := httplib.Post(beego.AppConfig.String("onlyofficeapi_url") + "/coauthoring/CommandService.ashx")
+	onlyofficeapi_url, err := web.AppConfig.String("onlyofficeapi_url")
+	if err != nil {
+		logs.Error(err)
+	}
+	req := httplib.Post(onlyofficeapi_url + "/coauthoring/CommandService.ashx")
 	req.Header("Content-Type", "application/json")
 	req.Header("accept", "*/*")
 	b, err := json.Marshal(commandsend)
@@ -2508,7 +2545,7 @@ func (c *OnlyController) CommandInfo() {
 
 	jsonstring, err := req.String()
 	if err != nil {
-		// beego.Error(err)
+		// logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 0, "info": "ERR", "data": "请求错误", "msg": "CommandService无返回"}
 		c.ServeJSON()
 	} else {
@@ -2517,7 +2554,7 @@ func (c *OnlyController) CommandInfo() {
 		err = json.Unmarshal([]byte(jsonstring), &commandresponse)
 		// err = xml.Unmarshal([]byte(jsonstring), &commandresponse)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// beego.Info(commandresponse)
 		onlyuserstableslice := make([]OnlyUsersTable, 0)
@@ -2527,7 +2564,7 @@ func (c *OnlyController) CommandInfo() {
 			// 根据id查询用户昵称
 			useridint64, err := strconv.ParseInt(v, 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				return
 			}
 			user := models.GetUserByUserId(useridint64)
@@ -2555,13 +2592,17 @@ func (c *OnlyController) CommandDrop() {
 	if id == "" {
 		return
 	}
-	key := c.Input().Get("key")
+	key := c.GetString("key")
 	var commandsend CommandSend
 	commandsend.C = "drop"
 	commandsend.Key = key
 	userid := []string{id}
 	commandsend.Users = userid
-	req := httplib.Post(beego.AppConfig.String("onlyofficeapi_url") + "/coauthoring/CommandService.ashx")
+	onlyofficeapi_url, err := web.AppConfig.String("onlyofficeapi_url")
+	if err != nil {
+		logs.Error(err)
+	}
+	req := httplib.Post(onlyofficeapi_url + "/coauthoring/CommandService.ashx")
 	req.Header("Content-Type", "application/json")
 	req.Header("accept", "*/*")
 	b, err := json.Marshal(commandsend)
@@ -2571,7 +2612,7 @@ func (c *OnlyController) CommandDrop() {
 
 	jsonstring, err := req.String()
 	if err != nil {
-		// beego.Error(err)
+		// logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 0, "info": "ERR", "data": "请求错误", "msg": "CommandService无返回"}
 		c.ServeJSON()
 	} else {
@@ -2580,7 +2621,7 @@ func (c *OnlyController) CommandDrop() {
 		err = json.Unmarshal([]byte(jsonstring), &commandresponse)
 		// err = xml.Unmarshal([]byte(jsonstring), &commandresponse)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// beego.Info(commandresponse)
 		c.Data["json"] = commandresponse
@@ -2600,7 +2641,7 @@ func (c *OnlyController) CommandBuilder() {
 	// if id == "" {
 	// 	return
 	// }
-	// key := c.Input().Get("key")
+	// key := c.GetString("key")
 	var commandsend CommandSend
 	commandsend.C = "drop"
 	// commandsend.Key = key
@@ -2616,7 +2657,7 @@ func (c *OnlyController) CommandBuilder() {
 
 	jsonstring, err := req.String()
 	if err != nil {
-		// beego.Error(err)
+		// logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"errNo": 0, "info": "ERR", "data": "请求错误", "msg": "CommandService无返回"}
 		c.ServeJSON()
 	} else {
@@ -2625,7 +2666,7 @@ func (c *OnlyController) CommandBuilder() {
 		err = json.Unmarshal([]byte(jsonstring), &commandresponse)
 		// err = xml.Unmarshal([]byte(jsonstring), &commandresponse)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// beego.Info(commandresponse)
 		c.Data["json"] = commandresponse
@@ -2740,19 +2781,19 @@ func (c *OnlyController) CommandBuilder() {
 //关键的一步操作
 // fileWriter, err := bodyWriter.CreateFormFile("uploadfile", onlyattachment.FileName)
 // if err != nil {
-// 	beego.Error(err)
+// 	logs.Error(err)
 // }
 //打开文件句柄操作
 // fh, err := os.Open("tt")
 // if err != nil {
-// 	beego.Error(err)
+// 	logs.Error(err)
 // }
 // defer fh.Close()
 
 //iocopy
 // _, err = io.Copy(fileWriter, fh)
 // if err != nil {
-// 	beego.Error(err)
+// 	logs.Error(err)
 // }
 
 // contentType := bodyWriter.FormDataContentType()
@@ -2760,18 +2801,18 @@ func (c *OnlyController) CommandBuilder() {
 
 // resp1, err := http.Post("http://192.168.99.1/onlyoffice/post?id="+id, contentType, bodyBuf)
 // if err != nil {
-// 	beego.Error(err)
+// 	logs.Error(err)
 // }
 // defer resp1.Body.Close()
 
 // err = c.SaveToFile("tt", "/attachment/wiki/2018February/1.doc")
 // if err != nil {
-// 	beego.Error(err)
+// 	logs.Error(err)
 // }
 
 // resp_body, err := ioutil.ReadAll(resp1.Body)
 // if err != nil {
-// 	beego.Error(err)
+// 	logs.Error(err)
 // }
 // beego.Info(resp1.Status)
 // beego.Info(string(resp_body))
@@ -2809,27 +2850,27 @@ func (c *OnlyController) CommandBuilder() {
 
 //——关闭浏览器最后一个标签，存储文件——取消这种方法
 // func (c *OnlyController) PostOnlyoffice() {
-// 	id := c.Input().Get("id")
+// 	id := c.GetString("id")
 // 	//pid转成64为
 // 	idNum, err := strconv.ParseInt(id, 10, 64)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
 
 // 	//获取上传的文件
 // 	_, h, err := c.GetFile("uploadfile")
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
 // 	if h != nil {
 // 		//存入文件夹
 // 		err = c.SaveToFile("uploadfile", "./attachment/onlyoffice/"+h.Filename)
 // 		if err != nil {
-// 			beego.Error(err)
+// 			logs.Error(err)
 // 		} else {
 // 			err = models.UpdateOnlyAttachment(idNum)
 // 			if err != nil {
-// 				beego.Error(err)
+// 				logs.Error(err)
 // 			}
 // 		}
 // 	}

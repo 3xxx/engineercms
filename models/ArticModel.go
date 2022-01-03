@@ -1,11 +1,7 @@
 package models
 
 import (
-	// "github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	// _ "github.com/mattn/go-sqlite3"
-	// "strconv"
-	// "strings"
+	"github.com/beego/beego/v2/client/orm"
 	"time"
 )
 
@@ -130,13 +126,13 @@ type Result struct {
 }
 
 func GetWxUserArticles(pid int64) (results []*Result, err error) {
-	db := GetDB()
+	// db := GetDB()
 	// 这个可行db.Table("article").Select("product_id as productid, count(*) as total").Group("product_id").Scan(&results)
 	// db.Table("article").Select("product_id as productid, count(*) as total,user.nickname as usernickname").Group("product_id").
 	// 	Joins("left JOIN product on product.id = article.product_id").
 	// 	Joins("left JOIN user on user.id = product.uid").
 	// 	Scan(&results)
-	err = db.Order("total desc").Table("article").Select("product_id as productid, count(*) as total,user.nickname as usernickname").
+	err = _db.Order("total desc").Table("article").Select("product_id as productid, count(*) as total,user.nickname as usernickname").
 		Joins("left JOIN product on product.id = article.product_id").
 		Joins("left JOIN user on user.id = product.uid").Group("product.uid").
 		Joins("left JOIN project on project.id = product.project_id").Where("project.id=?", pid).
@@ -157,8 +153,8 @@ func GetWxUserArticles(pid int64) (results []*Result, err error) {
 
 //由名字模糊搜索,productid——projectid
 // Select("product_id as product_id,article.id as id,article.subtext as subtext,article.content as content,article.created as created").
-func SearchArticles(pid, limit, offset int64, key string, isDesc bool) (articles []*Article, err error) {
-	db := GetDB()
+func SearchArticles(pid int64, limit, offset int, key string, isDesc bool) (articles []*Article, err error) {
+	db := _db //GetDB()
 	err = db.Order("created desc").Table("article").
 		Joins("left JOIN product on product.id = article.product_id").
 		Joins("left JOIN project on project.id = product.project_id").

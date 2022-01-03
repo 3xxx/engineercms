@@ -3,6 +3,8 @@ package models
 import (
 	"time"
 
+	"github.com/beego/i18n"
+
 	"fmt"
 	"strconv"
 
@@ -11,8 +13,10 @@ import (
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"os"
 	"path/filepath"
 	"strings"
@@ -23,10 +27,10 @@ type Document struct {
 	DocumentId   int    `orm:"pk;auto;unique;column(document_id)" json:"doc_id"`
 	DocumentName string `orm:"column(document_name);size(500)" json:"doc_name"`
 	// Identify 文档唯一标识
-	Identify  string `orm:"column(identify);size(100);null;default(null)" json:"identify"`
-	BookId    int    `orm:"column(book_id);type(int)" json:"book_id"`
-	ParentId  int    `orm:"column(parent_id);type(int);default(0)" json:"parent_id"`
-	OrderSort int    `orm:"column(order_sort);default(0);type(int)" json:"order_sort"`
+	Identify  string `orm:"column(identify);size(100);index;null;default(null)" json:"identify"`
+	BookId    int    `orm:"column(book_id);type(int);index" json:"book_id"`
+	ParentId  int    `orm:"column(parent_id);type(int);index;default(0)" json:"parent_id"`
+	OrderSort int    `orm:"column(order_sort);default(0);type(int);index" json:"order_sort"`
 	// Markdown markdown格式文档.
 	Markdown string `orm:"column(markdown);type(text);null" json:"markdown"`
 	// Release 发布后的Html格式内容.
@@ -39,8 +43,12 @@ type Document struct {
 	ModifyAt   int       `orm:"column(modify_at);type(int)" json:"-"`
 	Version    int64     `orm:"column(version);type(bigint);" json:"version"`
 	//是否展开子目录：0 否/1 是 /2 空间节点，单击时展开下一级
-	IsOpen     int                 `orm:"column(is_open);type(int);default(0)" json:"is_open"`
+	IsOpen    int `orm:"column(is_open);type(int);default(0)" json:"is_open"`
+	ViewCount int `orm:"column(view_count);type(int)" json:"view_count"`
+	// 这里加上mindoc
 	AttachList []*MindocAttachment `orm:"-" json:"attach"`
+	//i18n
+	Lang string `orm:"-"`
 }
 
 // 多字段唯一键
@@ -141,7 +149,7 @@ func (item *Document) RecursiveDocument(docId int) error {
 
 	_, err := o.Raw("SELECT document_id FROM " + item.TableNameWithPrefix() + " WHERE parent_id=" + strconv.Itoa(docId)).Values(&maps)
 	if err != nil {
-		beego.Error("RecursiveDocument => ", err)
+		logs.Error("RecursiveDocument => ", err)
 		return err
 	}
 
@@ -163,11 +171,11 @@ func (item *Document) PutToCache() {
 		if m.Identify == "" {
 
 			if err := cache.Put("Document.Id."+strconv.Itoa(m.DocumentId), m, time.Second*3600); err != nil {
-				beego.Info("文档缓存失败:", m.DocumentId)
+				logs.Info("文档缓存失败:", m.DocumentId)
 			}
 		} else {
 			if err := cache.Put(fmt.Sprintf("Document.BookId.%d.Identify.%s", m.BookId, m.Identify), m, time.Second*3600); err != nil {
-				beego.Info("文档缓存失败:", m.DocumentId)
+				logs.Info("文档缓存失败:", m.DocumentId)
 			}
 		}
 
@@ -189,7 +197,7 @@ func (item *Document) RemoveCache() {
 func (item *Document) FromCacheById(id int) (*Document, error) {
 
 	if err := cache.Get("Document.Id."+strconv.Itoa(id), &item); err == nil && item.DocumentId > 0 {
-		beego.Info("从缓存中获取文档信息成功 ->", item.DocumentId)
+		logs.Info("从缓存中获取文档信息成功 ->", item.DocumentId)
 		return item, nil
 	}
 
@@ -210,7 +218,7 @@ func (item *Document) FromCacheByIdentify(identify string, bookId int) (*Documen
 	key := fmt.Sprintf("Document.BookId.%d.Identify.%s", bookId, identify)
 
 	if err := cache.Get(key, item); err == nil && item.DocumentId > 0 {
-		beego.Info("从缓存中获取文档信息成功 ->", key)
+		logs.Info("从缓存中获取文档信息成功 ->", key)
 		return item, nil
 	}
 
@@ -246,14 +254,14 @@ func (item *Document) ReleaseContent() error {
 	err := item.Processor().InsertOrUpdate("release")
 
 	if err != nil {
-		beego.Error(fmt.Sprintf("发布失败 -> %+v", item), err)
+		logs.Error(fmt.Sprintf("发布失败 -> %+v", item), err)
 		return err
 	}
 	//当文档发布后，需要清除已缓存的转换文档和文档缓存
 	item.RemoveCache()
 
 	if err := os.RemoveAll(filepath.Join(conf.WorkingDirectory, "uploads", "books", strconv.Itoa(item.BookId))); err != nil {
-		beego.Error("删除已缓存的文档目录失败 -> ", filepath.Join(conf.WorkingDirectory, "uploads", "books", strconv.Itoa(item.BookId)))
+		logs.Error("删除已缓存的文档目录失败 -> ", filepath.Join(conf.WorkingDirectory, "uploads", "books", strconv.Itoa(item.BookId)))
 		return err
 	}
 
@@ -273,7 +281,7 @@ func (item *Document) Processor() *Document {
 				//处理附件
 				attachList, err := NewAttachment().FindListByDocumentId(item.DocumentId)
 				if err == nil && len(attachList) > 0 {
-					content := bytes.NewBufferString("<div class=\"attach-list\"><strong>附件</strong><ul>")
+					content := bytes.NewBufferString("<div class=\"attach-list\"><strong>" + i18n.Tr(item.Lang, "doc.attachment") + "</strong><ul>")
 					for _, attach := range attachList {
 						if strings.HasPrefix(attach.HttpPath, "/") {
 							attach.HttpPath = strings.TrimSuffix(conf.BaseUrl, "/") + attach.HttpPath
@@ -302,17 +310,8 @@ func (item *Document) Processor() *Document {
 				//处理文档结尾信息
 				docCreator, err := NewMember().Find(item.MemberId, "real_name", "account")
 				release := "<div class=\"wiki-bottom\">"
-				if item.ModifyAt > 0 {
-					docModify, err := NewMember().Find(item.ModifyAt, "real_name", "account")
-					if err == nil {
-						if docModify.RealName != "" {
-							release += "最后编辑: " + docModify.RealName + " &nbsp;"
-						} else {
-							release += "最后编辑: " + docModify.Account + " &nbsp;"
-						}
-					}
-				}
-				release += "文档更新时间: " + item.ModifyTime.Local().Format("2006-01-02 15:04") + " &nbsp;&nbsp;作者："
+
+				release += i18n.Tr(item.Lang, "doc.ft_author")
 				if err == nil && docCreator != nil {
 					if docCreator.RealName != "" {
 						release += docCreator.RealName
@@ -320,6 +319,19 @@ func (item *Document) Processor() *Document {
 						release += docCreator.Account
 					}
 				}
+				release += " &nbsp;" + i18n.Tr(item.Lang, "doc.ft_create_time") + item.CreateTime.Local().Format("2006-01-02 15:04") + "<br>"
+
+				if item.ModifyAt > 0 {
+					docModify, err := NewMember().Find(item.ModifyAt, "real_name", "account")
+					if err == nil {
+						if docModify.RealName != "" {
+							release += i18n.Tr(item.Lang, "doc.ft_last_editor") + docModify.RealName
+						} else {
+							release += i18n.Tr(item.Lang, "doc.ft_last_editor") + docModify.Account
+						}
+					}
+				}
+				release += " &nbsp;" + i18n.Tr(item.Lang, "doc.ft_update_time") + item.ModifyTime.Local().Format("2006-01-02 15:04") + "<br>"
 				release += "</div>"
 
 				if selector := docQuery.Find("div.markdown-article").First(); selector.Size() > 0 {
@@ -328,7 +340,7 @@ func (item *Document) Processor() *Document {
 					selector.First().AppendHtml(release)
 				}
 			}
-			cdnimg := beego.AppConfig.String("cdnimg")
+			cdnimg, _ := web.AppConfig.String("cdnimg")
 
 			docQuery.Find("img").Each(func(i int, selection *goquery.Selection) {
 
@@ -378,4 +390,12 @@ func (item *Document) Processor() *Document {
 		}
 	}
 	return item
+}
+
+// 增加阅读次数
+func (item *Document) IncrViewCount(id int) {
+	o := orm.NewOrm()
+	o.QueryTable(item.TableNameWithPrefix()).Filter("document_id", id).Update(orm.Params{
+		"view_count": orm.ColValue(orm.ColAdd, 1),
+	})
 }

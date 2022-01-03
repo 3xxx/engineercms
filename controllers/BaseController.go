@@ -2,27 +2,28 @@ package controllers
 
 import (
 	"bytes"
-
 	"encoding/json"
-	"io"
-	"strings"
-	"time"
-
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/i18n"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
+	"time"
 )
 
 type MindocBaseController struct {
-	beego.Controller
+	web.Controller
 	Member                *models.Member
 	Option                map[string]string
 	EnableAnonymous       bool
 	EnableDocumentHistory bool
+	Lang                  string
 }
 
 type CookieRemember struct {
@@ -44,7 +45,6 @@ func (c *MindocBaseController) Prepare() {
 	c.EnableDocumentHistory = false
 
 	if member, ok := c.GetSession(conf.LoginSessionName).(models.Member); ok && member.MemberId > 0 {
-
 		c.Member = &member
 		c.Data["Member"] = c.Member
 	} else {
@@ -72,12 +72,13 @@ func (c *MindocBaseController) Prepare() {
 		c.EnableAnonymous = strings.EqualFold(c.Option["ENABLE_ANONYMOUS"], "true")
 		c.EnableDocumentHistory = strings.EqualFold(c.Option["ENABLE_DOCUMENT_HISTORY"], "true")
 	}
-	c.Data["HighlightStyle"] = beego.AppConfig.DefaultString("highlight_style", "github")
+	c.Data["HighlightStyle"] = web.AppConfig.DefaultString("highlight_style", "github")
 
-	if b, err := ioutil.ReadFile(filepath.Join(beego.BConfig.WebConfig.ViewsPath, "widgets", "scripts.tpl")); err == nil {
+	if b, err := ioutil.ReadFile(filepath.Join(web.BConfig.WebConfig.ViewsPath, "widgets", "scripts.tpl")); err == nil {
 		c.Data["Scripts"] = template.HTML(string(b))
 	}
 
+	c.SetLang()
 }
 
 //判断用户是否登录.
@@ -89,7 +90,6 @@ func (c *MindocBaseController) isUserLoggedIn() bool {
 func (c *MindocBaseController) SetMember(member models.Member) {
 
 	if member.MemberId <= 0 {
-		beego.Info(member.MemberId)
 		c.DelSession(conf.LoginSessionName)
 		c.DelSession("uid")
 		c.DestroySession()
@@ -113,12 +113,15 @@ func (c *MindocBaseController) JsonResult(errCode int, errMsg string, data ...in
 	returnJSON, err := json.Marshal(jsonData)
 
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.Ctx.ResponseWriter.Header().Set("Cache-Control", "no-cache, no-store")
-	io.WriteString(c.Ctx.ResponseWriter, string(returnJSON))
+	_, err = io.WriteString(c.Ctx.ResponseWriter, string(returnJSON))
+	if err != nil {
+		logs.Error(err)
+	}
 
 	c.StopRun()
 }
@@ -137,12 +140,15 @@ func (c *MindocBaseController) CheckJsonError(code int, err error) {
 	returnJSON, err := json.Marshal(jsonData)
 
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.Ctx.ResponseWriter.Header().Set("Cache-Control", "no-cache, no-store")
-	io.WriteString(c.Ctx.ResponseWriter, string(returnJSON))
+	_, err = io.WriteString(c.Ctx.ResponseWriter, string(returnJSON))
+	if err != nil {
+		logs.Error(err)
+	}
 
 	c.StopRun()
 }
@@ -154,18 +160,18 @@ func (c *MindocBaseController) ExecuteViewPathTemplate(tplName string, data inte
 	viewPath := c.ViewPath
 
 	if c.ViewPath == "" {
-		viewPath = beego.BConfig.WebConfig.ViewsPath
+		viewPath = web.BConfig.WebConfig.ViewsPath
 
 	}
 
-	if err := beego.ExecuteViewPathTemplate(&buf, tplName, viewPath, data); err != nil {
+	if err := web.ExecuteViewPathTemplate(&buf, tplName, viewPath, data); err != nil {
 		return "", err
 	}
 	return buf.String(), nil
 }
 
 func (c *MindocBaseController) BaseUrl() string {
-	baseUrl := beego.AppConfig.DefaultString("baseurl", "")
+	baseUrl := web.AppConfig.DefaultString("baseurl", "")
 	if baseUrl != "" {
 		if strings.HasSuffix(baseUrl, "/") {
 			baseUrl = strings.TrimSuffix(baseUrl, "/")
@@ -185,7 +191,7 @@ func (c *MindocBaseController) ShowErrorPage(errCode int, errMsg string) {
 
 	var buf bytes.Buffer
 
-	if err := beego.ExecuteViewPathTemplate(&buf, "errors/error.tpl", beego.BConfig.WebConfig.ViewsPath, map[string]interface{}{"ErrorMessage": errMsg, "ErrorCode": errCode, "BaseUrl": conf.BaseUrl}); err != nil {
+	if err := web.ExecuteViewPathTemplate(&buf, "errors/error.tpl", web.BConfig.WebConfig.ViewsPath, map[string]interface{}{"ErrorMessage": errMsg, "ErrorCode": errCode, "BaseUrl": conf.BaseUrl}); err != nil {
 		c.Abort("500")
 	}
 	if errCode >= 200 && errCode <= 510 {
@@ -199,4 +205,22 @@ func (c *MindocBaseController) CheckErrorResult(code int, err error) {
 	if err != nil {
 		c.ShowErrorPage(code, err.Error())
 	}
+}
+
+func (c *MindocBaseController) SetLang() {
+	hasCookie := false
+	lang := c.GetString("lang")
+	if len(lang) == 0 {
+		lang = c.Ctx.GetCookie("lang")
+		hasCookie = true
+	}
+	if len(lang) == 0 ||
+		!i18n.IsExist(lang) {
+		lang, _ = web.AppConfig.String("default_lang")
+	}
+	if !hasCookie {
+		c.Ctx.SetCookie("lang", lang, 1<<31-1, "/")
+	}
+	c.Data["Lang"] = lang
+	c.Lang = lang
 }

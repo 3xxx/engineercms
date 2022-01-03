@@ -5,8 +5,9 @@ import (
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/controllers/utils/cryptil"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"strings"
 	"time"
 )
@@ -54,7 +55,7 @@ func (item *Itemsets) First(itemId int) (*Itemsets, error) {
 	}
 	err := item.QueryTable().Filter("item_id", itemId).One(item)
 	if err != nil {
-		beego.Error("查询项目空间失败 -> item_id=", itemId, err)
+		logs.Error("查询项目空间失败 -> item_id=", itemId, err)
 	} else {
 		item.Include()
 	}
@@ -64,7 +65,7 @@ func (item *Itemsets) First(itemId int) (*Itemsets, error) {
 func (item *Itemsets) FindFirst(itemKey string) (*Itemsets, error) {
 	err := item.QueryTable().Filter("item_key", itemKey).One(item)
 	if err != nil {
-		beego.Error("查询项目空间失败 -> itemKey=", itemKey, err)
+		logs.Error("查询项目空间失败 -> itemKey=", itemKey, err)
 	} else {
 		item.Include()
 	}
@@ -111,19 +112,20 @@ func (item *Itemsets) Delete(itemId int) (err error) {
 	if !item.Exist(itemId) {
 		return errors.New("项目空间不存在")
 	}
-	o := orm.NewOrm()
-	if err := o.Begin(); err != nil {
-		beego.Error("开启事物失败 ->", err)
+	ormer := orm.NewOrm()
+	o, err := ormer.Begin()
+	if err != nil {
+		logs.Error("开启事物失败 ->", err)
 		return err
 	}
 	_, err = o.QueryTable(item.TableNameWithPrefix()).Filter("item_id", itemId).Delete()
 	if err != nil {
-		beego.Error("删除项目空间失败 -> item_id=", itemId, err)
+		logs.Error("删除项目空间失败 -> item_id=", itemId, err)
 		o.Rollback()
 	}
 	_, err = o.Raw("update md_books set item_id=1 where item_id=?;", itemId).Exec()
 	if err != nil {
-		beego.Error("删除项目空间失败 -> item_id=", itemId, err)
+		logs.Error("删除项目空间失败 -> item_id=", itemId, err)
 		o.Rollback()
 	}
 
@@ -189,7 +191,7 @@ func (item *Itemsets) FindItemsetsByName(name string, limit int) (*SelectMemberR
 		_, err = item.QueryTable().Filter("item_name__icontains", name).Limit(limit).All(&itemsets)
 	}
 	if err != nil {
-		beego.Error("查询项目空间失败 ->", err)
+		logs.Error("查询项目空间失败 ->", err)
 		return &result, err
 	}
 
@@ -213,7 +215,7 @@ func (item *Itemsets) FindItemsetsByItemKey(key string, pageIndex, pageSize, mem
 	err = item.QueryTable().Filter("item_key", key).One(item)
 
 	if err != nil {
-		beego.Error("查询项目空间时出错 ->", key, err)
+		logs.Error("查询项目空间时出错 ->", key, err)
 		return nil, 0, err
 	}
 	offset := (pageIndex - 1) * pageSize
@@ -231,7 +233,7 @@ WHERE book.item_id = ? AND (book.privately_owned = 0 or rel.role_id >= 0 or team
 
 		err = o.Raw(sql1, memberId, memberId, item.ItemId).QueryRow(&totalCount)
 		if err != nil {
-			beego.Error("查询项目空间时出错 ->", key, err)
+			logs.Error("查询项目空间时出错 ->", key, err)
 			return
 		}
 		sql2 := `SELECT book.*,rel1.*,member.account AS create_name FROM md_books AS book
@@ -239,11 +241,11 @@ WHERE book.item_id = ? AND (book.privately_owned = 0 or rel.role_id >= 0 or team
 			left join (select book_id,min(role_id) as role_id from (select book_id,role_id
                    	from md_team_relationship as mtr
 					left join md_team_member as mtm on mtm.team_id=mtr.team_id and mtm.member_id=? order by role_id desc )
-as t group by book_id) as team 
+as t group by book_id) as team
 					on team.book_id = book.book_id
 			LEFT JOIN md_relationship AS rel1 ON rel1.book_id = book.book_id AND rel1.role_id = 0
 			LEFT JOIN md_members AS member ON rel1.member_id = member.member_id
-			WHERE book.item_id = ? AND (book.privately_owned = 0 or rel.role_id >= 0 or team.role_id >= 0) 
+			WHERE book.item_id = ? AND (book.privately_owned = 0 or rel.role_id >= 0 or team.role_id >= 0)
 			ORDER BY order_index desc,book.book_id DESC LIMIT ?,?`
 
 		_, err = o.Raw(sql2, memberId, memberId, item.ItemId, offset, pageSize).QueryRows(&books)

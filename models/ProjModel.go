@@ -1,10 +1,12 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/adapter/logs"
+	"github.com/beego/beego/v2/client/orm"
 	// _ "github.com/mattn/go-sqlite3"
 	"strconv"
 	// "strings"
+	"context"
 	"fmt"
 	"time"
 )
@@ -132,7 +134,8 @@ func AddProject(code, title, label, principal string, parentid int64, parentidpa
 }
 
 func AddProjectUser(pid, uid int64) (id int64, err error) {
-	db := GetDB()
+	db := _db
+	logs.Info(db)
 	projectuser := ProjectUser{ProjectId: pid, UserId: uid}
 
 	result := db.Create(&projectuser) // 通过数据的指针来创建
@@ -144,7 +147,7 @@ func AddProjectUser(pid, uid int64) (id int64, err error) {
 }
 
 func AddProjectLabel(pid int64, label string) (id int64, err error) {
-	db := GetDB()
+	db := _db //GetDB()
 	projectlabel := ProjectLabel{ProjectId: pid, Label: label}
 
 	result := db.Create(&projectlabel) // 通过数据的指针来创建
@@ -246,8 +249,8 @@ type UserProject struct {
 // Or("label LIKE ?", "%"+searchText+"%").
 // Or("principal LIKE ?", "%"+searchText+"%"))).
 
-func GetProjectsPage(limit, offset int64, searchText string) (project []*UserProject, err error) {
-	db := GetDB()
+func GetProjectsPage(limit, offset int, searchText string) (project []*UserProject, err error) {
+	db := _db //GetDB()
 	if searchText != "" {
 		err = db.Order("project.created desc").Table("project").
 			Select("project.id as id,project.code as code,project.title as title,project.created as created,user.nickname as principal,project_label.label as label").
@@ -272,7 +275,7 @@ func GetProjectsPage(limit, offset int64, searchText string) (project []*UserPro
 }
 
 func GetProjectUser(pid int64) (user User, err error) {
-	db := GetDB()
+	db := _db //GetDB()
 	err = db.Table("project").Select("project_user.user_id as id").
 		Where("project.id=?", pid).
 		Joins("left JOIN project_user on project.id = project_user.project_id").
@@ -479,15 +482,24 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 				date := time.Now().Format(lll)
 				sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
 					" values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
-				res, err := o.Raw(sql).Exec()
-				if err != nil {
-					o.Rollback()
-					// beego.Info("插入t_studentInfo表出错,事务回滚")
-				} else {
-					// o.Commit()
-					// beego.Info("插入t_studenInfo表成功,事务提交")
-					// num, _ = res.RowsAffected()
+				// res, err := o.Raw(sql).Exec()
+				// if err != nil {
+				// 	o.Rollback()
+				// 	// beego.Info("插入t_studentInfo表出错,事务回滚")
+				// } else {
+				// 	// o.Commit()
+				// 	// beego.Info("插入t_studenInfo表成功,事务提交")
+				// 	// num, _ = res.RowsAffected()
+				// 	Id, _ = res.LastInsertId()
+				// }
+
+				err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+					res, err2 := txOrm.Raw(sql).Exec() //这里应该是txOrm吧？？？
 					Id, _ = res.LastInsertId()
+					return err2
+				})
+				if err != nil {
+					logs.Error(err)
 				}
 				// Id, err := models.AddProject(code, title, "", "", parentid, parentidpath, parenttitlepath, grade)
 				// if err != nil {
@@ -531,19 +543,30 @@ func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []
 		date := time.Now().Format(lll)
 		sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
 			" values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
-		res, err := o.Raw(sql).Exec()
-		if err != nil {
-			o.Rollback()
-			// beego.Info("插入t_studentInfo表出错,事务回滚")
-		} else {
-			// o.Commit()
-			// beego.Info("插入t_studenInfo表成功,事务提交")
-			// num, _ = res.RowsAffected()
-			Id, _ = res.LastInsertId()
+		// res, err := o.Raw(sql).Exec()
+		// if err != nil {
+		// 	o.Rollback()
+		// 	// beego.Info("插入t_studentInfo表出错,事务回滚")
+		// } else {
+		// 	// o.Commit()
+		// 	// beego.Info("插入t_studenInfo表成功,事务提交")
+		// 	// num, _ = res.RowsAffected()
+		// 	Id, _ = res.LastInsertId()
+		// 	parentidpath1 = parentidpath + "$" + strconv.FormatInt(Id, 10) + "#"
+		// 	parenttitlepath1 = parenttitlepath + "-" + v1.Title
+		// }
 
+		err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+			res, err2 := txOrm.Raw(sql).Exec() //这里应该是txOrm吧？？？
+			Id, _ = res.LastInsertId()
 			parentidpath1 = parentidpath + "$" + strconv.FormatInt(Id, 10) + "#"
 			parenttitlepath1 = parenttitlepath + "-" + v1.Title
+			return err2
+		})
+		if err != nil {
+			logs.Error("出错", err)
 		}
+
 		if len(v1.FileNodes) > 0 {
 			nodes1 := v1.FileNodes
 			Insertprojtemplet(Id, parentidpath1, parenttitlepath1, nodes1)

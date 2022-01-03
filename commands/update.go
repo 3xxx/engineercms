@@ -3,28 +3,28 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/beego/beego/v2/core/logs"
 	"io/ioutil"
 	"net/http"
 	"os"
-
-	"github.com/3xxx/engineercms/conf"
-	"github.com/astaxie/beego"
 )
 
 //检查最新版本.
 func CheckUpdate() {
 
+	fmt.Println("MinDoc current version => ", conf.VERSION)
 	resp, err := http.Get("https://api.github.com/repos/3xxx/engineercms/tags")
 
 	if err != nil {
-		beego.Error("CheckUpdate => ", err)
+		logs.Error("CheckUpdate => ", err)
 		os.Exit(1)
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		beego.Error("CheckUpdate => ", err)
+		logs.Error("CheckUpdate => ", err)
 		os.Exit(1)
 	}
 
@@ -33,9 +33,8 @@ func CheckUpdate() {
 	}
 
 	err = json.Unmarshal(body, &result)
-	fmt.Println("MinDoc current version => ", conf.VERSION)
 	if err != nil {
-		beego.Error("CheckUpdate => ", err)
+		logs.Error("CheckUpdate => ", err)
 		os.Exit(0)
 	}
 

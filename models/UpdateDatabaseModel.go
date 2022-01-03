@@ -8,9 +8,9 @@ import (
 	// "fmt"
 	// "log"
 	// "time"
-	// "github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	// "github.com/astaxie/beego/validation"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
+	// "github.com/beego/beego/v2/adapter/validation"
 	// . "github.com/beego/admin/src/lib"
 	"strings"
 )

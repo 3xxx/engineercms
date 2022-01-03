@@ -1,8 +1,6 @@
 package models
 
 import (
-	// "github.com/astaxie/beego/orm"
-	// "github.com/jinzhu/gorm"
 	"github.com/3xxx/engineercms/controllers/tool/result"
 	"github.com/nu7hatch/gouuid"
 	"time"
@@ -131,7 +129,7 @@ type Pager struct {
 // }
 
 func CreateBridge(bridge *Bridge) (*Bridge, error) {
-	db := GetDB()
+	db := _db //GetDB()
 	timeUUID, _ := uuid.NewV4()
 	bridge.Uuid = string(timeUUID.String())
 	bridge.CreatedAt = time.Now()
@@ -174,7 +172,8 @@ func FindByShareUuid(shareUuid string) ([]*Bridge, error) {
 		panic(result.BadRequest("shareUuid cannot be nil"))
 	}
 	var bridges []*Bridge
-	db := GetDB().Table("share_bridge").
+	// db := GetDB()
+	db := _db.Table("share_bridge").
 		Where("share_uuid = ?", shareUuid).
 		Find(&bridges)
 	// this.PanicError(db.Error)

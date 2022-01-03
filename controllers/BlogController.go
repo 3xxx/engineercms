@@ -1,14 +1,17 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/i18n"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -37,27 +40,27 @@ func (c *BlogController) Index() {
 	blogId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
 
 	if blogId <= 0 {
-		c.ShowErrorPage(404, "页面不存在")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.page_not_existed"))
 	}
 	blogReadSession := fmt.Sprintf("blog:read:%d", blogId)
 
 	blog, err := models.NewBlog().FindFromCache(blogId)
 
 	if err != nil {
-		c.ShowErrorPage(404, "文章不存在")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.blog_not_existed"))
 	}
 
 	if c.Ctx.Input.IsPost() {
 		password := c.GetString("password")
 		if blog.BlogStatus == "password" && password != blog.Password {
-			c.JsonResult(6001, "文章密码不正确")
+			c.JsonResult(6001, i18n.Tr(c.Lang, "message.blog_pwd_incorrect"))
 		} else if blog.BlogStatus == "password" && password == blog.Password {
 			//如果密码输入正确，则存入session中
-			_ = c.CruSession.Set(blogReadSession, blogId)
+			_ = c.CruSession.Set(context.TODO(), blogReadSession, blogId)
 			c.JsonResult(0, "OK")
 		}
 		c.JsonResult(0, "OK")
-	} else if blog.BlogStatus == "password" && (c.CruSession.Get(blogReadSession) == nil || (c.Member != nil && blog.MemberId != c.Member.MemberId && !c.Member.IsAdministrator())) {
+	} else if blog.BlogStatus == "password" && (c.CruSession.Get(context.TODO(), blogReadSession) == nil || (c.Member != nil && blog.MemberId != c.Member.MemberId && !c.Member.IsAdministrator())) {
 		//如果不存在已输入密码的标记
 		c.TplName = "blog/index_password.tpl"
 	}
@@ -157,33 +160,33 @@ func (c *BlogController) ManageSetting() {
 		documentId := 0
 
 		if blogTitle == "" {
-			c.JsonResult(6001, "文章标题不能为空")
+			c.JsonResult(6001, i18n.Tr(c.Lang, "message.blog_title_empty"))
 		}
 		if strings.Count(blogExcerpt, "") > 500 {
-			c.JsonResult(6008, "文章摘要必须小于500字符")
+			c.JsonResult(6008, i18n.Tr(c.Lang, "message.blog_digest_tips"))
 		}
 		if blogStatus != "public" && blogStatus != "password" && blogStatus != "draft" {
 			blogStatus = "public"
 		}
 		if blogStatus == "password" && blogPassword == "" {
-			c.JsonResult(6010, "加密文章请设置密码")
+			c.JsonResult(6010, i18n.Tr(c.Lang, "message.set_pwd_pls"))
 		}
 		if blogType != 0 && blogType != 1 {
-			c.JsonResult(6005, "未知的文章类型")
+			c.JsonResult(6005, i18n.Tr(c.Lang, "message.unknown_blog_type"))
 		}
 		if strings.Count(blogTitle, "") > 200 {
-			c.JsonResult(6002, "文章标题不能大于200个字符")
+			c.JsonResult(6002, i18n.Tr(c.Lang, "message.blog_title_tips"))
 		}
 		//如果是关联文章，需要同步关联的文档
 		if blogType == 1 {
 			book, err := models.NewBook().FindByIdentify(bookIdentify)
 
 			if err != nil {
-				c.JsonResult(6011, "关联文档的项目不存在")
+				c.JsonResult(6011, i18n.Tr(c.Lang, "message.ref_doc_not_exist_or_no_permit"))
 			}
 			doc, err := models.NewDocument().FindByIdentityFirst(documentIdentify, book.BookId)
 			if err != nil {
-				c.JsonResult(6003, "查询关联项目文档时出错")
+				c.JsonResult(6003, i18n.Tr(c.Lang, "message.query_failed"))
 			}
 			documentId = doc.DocumentId
 
@@ -192,7 +195,7 @@ func (c *BlogController) ManageSetting() {
 				bookResult, err := models.NewBookResult().FindByIdentify(book.Identify, c.Member.MemberId)
 
 				if err != nil || bookResult.RoleId == conf.BookObserver {
-					c.JsonResult(6002, "关联文档不存在或权限不足")
+					c.JsonResult(6002, i18n.Tr(c.Lang, "message.ref_doc_not_exist_or_no_permit"))
 				}
 			}
 		}
@@ -208,13 +211,13 @@ func (c *BlogController) ManageSetting() {
 			}
 
 			if err != nil {
-				c.JsonResult(6003, "文章不存在")
+				c.JsonResult(6003, i18n.Tr(c.Lang, "message.blog_not_exist"))
 			}
 			//如果设置了文章标识
 			if blogIdentify != "" {
 				//如果查询到的文章标识存在并且不是当前文章的id
 				if b, err := models.NewBlog().FindByIdentify(blogIdentify); err == nil && b.BlogId != blogId {
-					c.JsonResult(6004, "文章标识已存在")
+					c.JsonResult(6004, i18n.Tr(c.Lang, "message.blog_id_existed"))
 				}
 			}
 			blog.Modified = time.Now()
@@ -223,7 +226,7 @@ func (c *BlogController) ManageSetting() {
 			//如果设置了文章标识
 			if blogIdentify != "" {
 				if models.NewBlog().IsExist(blogIdentify) {
-					c.JsonResult(6004, "文章标识已存在")
+					c.JsonResult(6004, i18n.Tr(c.Lang, "message.blog_id_existed"))
 				}
 			}
 
@@ -249,8 +252,8 @@ func (c *BlogController) ManageSetting() {
 		blog.Password = blogPassword
 
 		if err := blog.Save(); err != nil {
-			beego.Error("保存文章失败 -> ", err)
-			c.JsonResult(6011, "保存文章失败")
+			logs.Error("保存文章失败 -> ", err)
+			c.JsonResult(6011, i18n.Tr(c.Lang, "message.failed"))
 		} else {
 			c.JsonResult(0, "ok", blog)
 		}
@@ -284,7 +287,7 @@ func (c *BlogController) ManageEdit() {
 		blogId, _ := c.GetInt("blogId", 0)
 
 		if blogId <= 0 {
-			c.JsonResult(6001, "文章参数错误")
+			c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
 		}
 		blogContent := c.GetString("content", "")
 		blogHtml := c.GetString("htmlContent", "")
@@ -300,22 +303,22 @@ func (c *BlogController) ManageEdit() {
 			blog, err = models.NewBlog().FindByIdAndMemberId(blogId, c.Member.MemberId)
 		}
 		if err != nil {
-			beego.Error("查询文章失败 ->", err)
-			c.JsonResult(6002, "查询文章失败")
+			logs.Error("查询文章失败 ->", err)
+			c.JsonResult(6002, i18n.Tr(c.Lang, "message.query_failed"))
 		}
 		if version > 0 && blog.Version != version && cover != "yes" {
-			c.JsonResult(6005, "文章已被修改")
+			c.JsonResult(6005, i18n.Tr(c.Lang, "message.blog_has_modified"))
 		}
 		//如果是关联文章，需要同步关联的文档
 		if blog.BlogType == 1 {
 			doc, err := models.NewDocument().Find(blog.DocumentId)
 			if err != nil {
-				beego.Error("查询关联项目文档时出错 ->", err)
-				c.JsonResult(6003, "查询关联项目文档时出错")
+				logs.Error("查询关联项目文档时出错 ->", err)
+				c.JsonResult(6003, i18n.Tr(c.Lang, "message.query_failed"))
 			}
 			book, err := models.NewBook().Find(doc.BookId)
 			if err != nil {
-				c.JsonResult(6002, "项目不存在或权限不足")
+				c.JsonResult(6002, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
 			}
 
 			// 如果不是超级管理员，则校验权限
@@ -323,8 +326,8 @@ func (c *BlogController) ManageEdit() {
 				bookResult, err := models.NewBookResult().FindByIdentify(book.Identify, c.Member.MemberId)
 
 				if err != nil || bookResult.RoleId == conf.BookObserver {
-					beego.Error("FindByIdentify => ", err)
-					c.JsonResult(6002, "关联文档不存在或权限不足")
+					logs.Error("FindByIdentify => ", err)
+					c.JsonResult(6002, i18n.Tr(c.Lang, "message.ref_doc_not_exist_or_no_permit"))
 				}
 			}
 
@@ -334,8 +337,8 @@ func (c *BlogController) ManageEdit() {
 			doc.ModifyTime = time.Now()
 			doc.ModifyAt = c.Member.MemberId
 			if err := doc.InsertOrUpdate("markdown", "release", "content", "modify_time", "modify_at"); err != nil {
-				beego.Error("保存关联文档时出错 ->", err)
-				c.JsonResult(6004, "保存关联文档时出错")
+				logs.Error("保存关联文档时出错 ->", err)
+				c.JsonResult(6004, i18n.Tr(c.Lang, "message.failed"))
 			}
 		}
 
@@ -345,8 +348,8 @@ func (c *BlogController) ManageEdit() {
 		blog.Modified = time.Now()
 
 		if err := blog.Save("blog_content", "blog_release", "modify_at", "modify_time", "version"); err != nil {
-			beego.Error("保存文章失败 -> ", err)
-			c.JsonResult(6011, "保存文章失败")
+			logs.Error("保存文章失败 -> ", err)
+			c.JsonResult(6011, i18n.Tr(c.Lang, "message.failed"))
 		} else {
 			c.JsonResult(0, "ok", blog)
 		}
@@ -355,7 +358,7 @@ func (c *BlogController) ManageEdit() {
 	blogId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
 
 	if blogId <= 0 {
-		c.ShowErrorPage(500, "参数错误")
+		c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.param_error"))
 	}
 	var blog *models.Blog
 	var err error
@@ -366,14 +369,14 @@ func (c *BlogController) ManageEdit() {
 		blog, err = models.NewBlog().FindByIdAndMemberId(blogId, c.Member.MemberId)
 	}
 	if err != nil {
-		c.ShowErrorPage(404, "文章不存在或已删除")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.blog_not_exist"))
 	}
 	blog.LinkAttach()
 
 	if len(blog.AttachList) > 0 {
 		returnJSON, err := json.Marshal(blog.AttachList)
 		if err != nil {
-			beego.Error("序列化文章附件时出错 ->", err)
+			logs.Error("序列化文章附件时出错 ->", err)
 		} else {
 			c.Data["AttachList"] = template.JS(string(returnJSON))
 		}
@@ -394,7 +397,7 @@ func (c *BlogController) ManageDelete() {
 	blogId, _ := c.GetInt("blog_id", 0)
 
 	if blogId <= 0 {
-		c.JsonResult(6001, "参数错误")
+		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
 	}
 	var blog *models.Blog
 	var err error
@@ -405,13 +408,13 @@ func (c *BlogController) ManageDelete() {
 		blog, err = models.NewBlog().FindByIdAndMemberId(blogId, c.Member.MemberId)
 	}
 	if err != nil {
-		c.JsonResult(6002, "文章不存在或已删除")
+		c.JsonResult(6002, i18n.Tr(c.Lang, "message.blog_not_exist"))
 	}
 
 	if err := blog.Delete(blogId); err != nil {
-		c.JsonResult(6003, "删除失败")
+		c.JsonResult(6003, i18n.Tr(c.Lang, "message.failed"))
 	} else {
-		c.JsonResult(0, "删除成功")
+		c.JsonResult(0, i18n.Tr(c.Lang, "message.success"))
 	}
 
 }
@@ -422,16 +425,16 @@ func (c *BlogController) Upload() {
 	blogId, _ := c.GetInt("blogId")
 
 	if blogId <= 0 {
-		c.JsonResult(6001, "参数错误")
+		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
 	}
 
 	blog, err := models.NewBlog().Find(blogId)
 
 	if err != nil {
-		c.JsonResult(6010, "文章不存在")
+		c.JsonResult(6010, i18n.Tr(c.Lang, "message.blog_not_exist"))
 	}
 	if !c.Member.IsAdministrator() && blog.MemberId != c.Member.MemberId {
-		c.JsonResult(6011, "没有文章的访问权限")
+		c.JsonResult(6011, i18n.Tr(c.Lang, "message.no_permission"))
 	}
 
 	name := "editormd-file-file"
@@ -441,7 +444,7 @@ func (c *BlogController) Upload() {
 		name = "editormd-image-file"
 		file, moreFile, err = c.GetFile(name)
 		if err == http.ErrMissingFile {
-			c.JsonResult(6003, "没有发现需要上传的图片")
+			c.JsonResult(6003, i18n.Tr(c.Lang, "message.upload_file_empty"))
 		}
 	}
 
@@ -456,18 +459,18 @@ func (c *BlogController) Upload() {
 	}
 
 	if conf.GetUploadFileSize() > 0 && moreFile.Size > conf.GetUploadFileSize() {
-		c.JsonResult(6009, "查过文件允许的上传最大值")
+		c.JsonResult(6009, i18n.Tr(c.Lang, "message.upload_file_size_limit"))
 	}
 
 	ext := filepath.Ext(moreFile.Filename)
 
 	if ext == "" {
-		c.JsonResult(6003, "无法解析文件的格式")
+		c.JsonResult(6003, i18n.Tr(c.Lang, "message.upload_file_type_error"))
 	}
 	//如果文件类型设置为 * 标识不限制文件类型
-	if beego.AppConfig.DefaultString("upload_file_ext", "") != "*" {
+	if web.AppConfig.DefaultString("upload_file_ext", "") != "*" {
 		if !conf.IsAllowUploadFileExt(ext) {
-			c.JsonResult(6004, "不允许的文件类型")
+			c.JsonResult(6004, i18n.Tr(c.Lang, "message.upload_file_type_error"))
 		}
 	}
 
@@ -476,16 +479,16 @@ func (c *BlogController) Upload() {
 		_, err := models.NewBlog().Find(blogId)
 
 		if err != nil {
-			c.JsonResult(6006, "文档不存在或权限不足")
+			c.JsonResult(6006, i18n.Tr(c.Lang, "message.doc_not_exist_or_no_permit"))
 		}
 
 	} else {
 		_, err := models.NewBlog().FindByIdAndMemberId(blogId, c.Member.MemberId)
 
 		if err != nil {
-			beego.Error("查询文章时出错 -> ", err)
+			logs.Error("查询文章时出错 -> ", err)
 			if err == orm.ErrNoRows {
-				c.JsonResult(6006, "权限不足")
+				c.JsonResult(6006, i18n.Tr(c.Lang, "message.no_permission"))
 			}
 
 			c.JsonResult(6001, err.Error())
@@ -503,8 +506,8 @@ func (c *BlogController) Upload() {
 	err = c.SaveToFile(name, filePath)
 
 	if err != nil {
-		beego.Error("SaveToFile => ", err)
-		c.JsonResult(6005, "保存文件失败")
+		logs.Error("SaveToFile => ", err)
+		c.JsonResult(6005, i18n.Tr(c.Lang, "message.failed"))
 	}
 
 	var httpPath string
@@ -536,15 +539,15 @@ func (c *BlogController) Upload() {
 
 		if err := attachment.Insert(); err != nil {
 			os.Remove(filePath)
-			beego.Error("保存文件附件失败 -> ", err)
-			c.JsonResult(6006, "文件保存失败")
+			logs.Error("保存文件附件失败 -> ", err)
+			c.JsonResult(6006, i18n.Tr(c.Lang, "message.failed"))
 		}
 		if attachment.HttpPath == "" {
 			attachment.HttpPath = conf.URLForNotHost("BlogController.Download", ":id", blogId, ":attach_id", attachment.AttachmentId)
 
 			if err := attachment.Update(); err != nil {
-				beego.Error("保存文件失败 -> ", attachment.FilePath, err)
-				c.JsonResult(6005, "保存文件失败")
+				logs.Error("保存文件失败 -> ", attachment.FilePath, err)
+				c.JsonResult(6005, i18n.Tr(c.Lang, "message.failed"))
 			}
 		}
 		result["attach"] = attachment
@@ -567,41 +570,41 @@ func (c *BlogController) RemoveAttachment() {
 	blogId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
 
 	if attachId <= 0 {
-		c.JsonResult(6001, "参数错误")
+		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
 	}
 	blog, err := models.NewBlog().Find(blogId)
 	if err != nil {
 		if err == orm.ErrNoRows {
-			c.ShowErrorPage(500, "文档不存在")
+			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.doc_not_exist"))
 		} else {
-			c.ShowErrorPage(500, "查询文章时异常")
+			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.query_failed"))
 		}
 	}
 	attach, err := models.NewAttachment().Find(attachId)
 
 	if err != nil {
-		beego.Error(err)
-		c.JsonResult(6002, "附件不存在")
+		logs.Error(err)
+		c.JsonResult(6002, i18n.Tr(c.Lang, "message.attachment_not_exist"))
 	}
 
 	if !c.Member.IsAdministrator() {
 		_, err := models.NewBlog().FindByIdAndMemberId(attach.DocumentId, c.Member.MemberId)
 
 		if err != nil {
-			beego.Error(err)
-			c.JsonResult(6003, "文档不存在")
+			logs.Error(err)
+			c.JsonResult(6003, i18n.Tr(c.Lang, "message.doc_not_exist"))
 		}
 	}
 
 	if blog.BlogType == 1 && attach.BookId != blog.BookId && attach.DocumentId != blog.DocumentId {
-		c.ShowErrorPage(404, "附件不存在")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.attachment_not_exist"))
 	} else if attach.BookId != 0 || attach.DocumentId != blogId {
-		c.ShowErrorPage(404, "附件不存在")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.attachment_not_exist"))
 	}
 
 	if err := attach.Delete(); err != nil {
-		beego.Error(err)
-		c.JsonResult(6005, "删除失败")
+		logs.Error(err)
+		c.JsonResult(6005, i18n.Tr(c.Lang, "message.failed"))
 	}
 
 	os.Remove(filepath.Join(conf.WorkingDirectory, attach.FilePath))
@@ -620,15 +623,15 @@ func (c *BlogController) Download() {
 	blog, err := models.NewBlog().Find(blogId)
 	if err != nil {
 		if err == orm.ErrNoRows {
-			c.ShowErrorPage(500, "文档不存在")
+			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.doc_not_exist"))
 		} else {
-			c.ShowErrorPage(500, "查询文章时异常")
+			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.query_failed"))
 		}
 	}
 	blogReadSession := fmt.Sprintf("blog:read:%d", blogId)
 	//如果没有启动匿名访问，或者设置了访问密码
-	if (c.Member == nil && !c.EnableAnonymous) || (blog.BlogStatus == "password" && password != blog.Password && c.CruSession.Get(blogReadSession) == nil) {
-		c.ShowErrorPage(403, "没有下载权限")
+	if (c.Member == nil && !c.EnableAnonymous) || (blog.BlogStatus == "password" && password != blog.Password && c.CruSession.Get(context.TODO(), blogReadSession) == nil) {
+		c.ShowErrorPage(403, i18n.Tr(c.Lang, "message.no_permission"))
 	}
 
 	// 查找附件
@@ -636,18 +639,18 @@ func (c *BlogController) Download() {
 
 	if err != nil {
 		if err == orm.ErrNoRows {
-			c.ShowErrorPage(404, "附件不存在")
+			c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.attachment_not_exist"))
 		} else {
-			beego.Error("查询附件时出现异常 -> ", err)
-			c.ShowErrorPage(500, "查询附件时出现异常")
+			logs.Error("查询附件时出现异常 -> ", err)
+			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.query_failed"))
 		}
 	}
 
 	//如果是链接的文章，需要校验文档ID是否一致，如果不是，需要保证附件的项目ID为0且文档的ID等于博文ID
 	if blog.BlogType == 1 && attachment.DocumentId != blog.DocumentId {
-		c.ShowErrorPage(404, "附件不存在")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.attachment_not_exist"))
 	} else if blog.BlogType != 1 && (attachment.BookId != 0 || attachment.DocumentId != blogId) {
-		c.ShowErrorPage(404, "附件不存在")
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.attachment_not_exist"))
 	}
 
 	c.Ctx.Output.Download(filepath.Join(conf.WorkingDirectory, attachment.FilePath), attachment.FileName)

@@ -6,7 +6,7 @@ package controllers
 // 	"github.com/asofdate/hauth/core/groupcache"
 // 	"github.com/asofdate/hauth/core/hrpc"
 // 	"github.com/asofdate/hauth/core/models"
-// 	"github.com/astaxie/beego/context"
+// 	"github.com/beego/beego/v2/adapter/context"
 // 	"github.com/asofdate/hauth/utils/hret"
 // 	"github.com/asofdate/hauth/utils/i18n"
 // 	"github.com/asofdate/hauth/utils/jwt"

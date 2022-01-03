@@ -3,10 +3,12 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
 	// "github.com/bitly/go-simplejson"
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -19,14 +21,14 @@ import (
 // }
 
 type RegistController struct {
-	beego.Controller
+	web.Controller
 }
 
 func (this *RegistController) Get() {
 	u := this.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -43,9 +45,8 @@ func (this *RegistController) RegistErr() {
 
 func (this *RegistController) CheckUname() {
 	var user models.User //这里修改
-	inputs := this.Input()
 	//fmt.Println(inputs)
-	user.Username = inputs.Get("uname")
+	user.Username = this.GetString("uname")
 	err := models.CheckUname(user) //这里修改
 	if err == nil {
 		this.Ctx.WriteString("false")
@@ -62,10 +63,10 @@ func (this *RegistController) Post() {
 	var user models.User //这里修改
 	// inputs := this.Input()
 	// beego.Info(inputs)
-	user.Username = this.Input().Get("uname")
-	user.Email = this.Input().Get("email")
-	user.Nickname = this.Input().Get("nickname")
-	Pwd1 := this.Input().Get("pwd")
+	user.Username = this.GetString("uname")
+	user.Email = this.GetString("email")
+	user.Nickname = this.GetString("nickname")
+	Pwd1 := this.GetString("pwd")
 
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
@@ -83,7 +84,7 @@ func (this *RegistController) Post() {
 	u := this.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -130,9 +131,9 @@ func (c *RegistController) WxRegist() {
 	var user models.User
 	var uid string
 	var isAdmin bool
-	user.Username = c.Input().Get("uname")
-	Pwd1 := c.Input().Get("password") //注意这里用的是全称password，不是pwd
-	// autoLogin := c.Input().Get("autoLogin") == "on"
+	user.Username = c.GetString("uname")
+	Pwd1 := c.GetString("password") //注意这里用的是全称password，不是pwd
+	// autoLogin := c.GetString("autoLogin") == "on"
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
@@ -141,33 +142,45 @@ func (c *RegistController) WxRegist() {
 	// beego.Info(user.Username)
 	err := models.ValidateUser(user)
 	if err == nil {
-		JSCODE := c.Input().Get("code")
+		JSCODE := c.GetString("code")
 		// beego.Info(JSCODE)
 		var APPID, SECRET string
-		app_version := c.Input().Get("app_version")
+		app_version := c.GetString("app_version")
 		if app_version == "1" {
-			APPID = beego.AppConfig.String("wxAPPID")
-			SECRET = beego.AppConfig.String("wxSECRET")
+			APPID, err = web.AppConfig.String("wxAPPID")
+			if err != nil {
+				logs.Error(err)
+			}
+			SECRET, err = web.AppConfig.String("wxSECRET")
+			if err != nil {
+				logs.Error(err)
+			}
 		} else {
 			appstring := "wxAPPID" + app_version
-			APPID = beego.AppConfig.String(appstring)
+			APPID, err = web.AppConfig.String(appstring)
+			if err != nil {
+				logs.Error(err)
+			}
 			secretstring := "wxSECRET" + app_version
-			SECRET = beego.AppConfig.String(secretstring)
+			SECRET, err = web.AppConfig.String(secretstring)
+			if err != nil {
+				logs.Error(err)
+			}
 		}
 		requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
 		resp, err := http.Get(requestUrl)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			// return
 		}
 		defer resp.Body.Close()
 		if resp.StatusCode != 200 {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		var data map[string]interface{}
 		err = json.NewDecoder(resp.Body).Decode(&data)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// beego.Info(data)
 		var openID string
@@ -184,21 +197,24 @@ func (c *RegistController) WxRegist() {
 			//将openid写入数据库
 			user, err = models.GetUserByUsername(user.Username)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			} else {
 				uid = strconv.FormatInt(user.Id, 10)
 			}
 			_, err = models.AddUserOpenID(user.Id, openID)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//根据userid取出user和avatorUrl
 			useravatar, err := models.GetUserAvatorUrl(user.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var photo string
-			wxsite := beego.AppConfig.String("wxreqeustsite")
+			wxsite, err := web.AppConfig.String("wxreqeustsite")
+			if err != nil {
+				logs.Error(err)
+			}
 			if len(useravatar) != 0 {
 				photo = wxsite + useravatar[0].UserAvatar.AvatarUrl
 				// beego.Info(photo)
@@ -206,7 +222,7 @@ func (c *RegistController) WxRegist() {
 			//根据userid取出appreciation赞赏码
 			userappreciation, err := models.GetUserAppreciationUrl(user.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var appreciationphoto string
 			if len(userappreciation) != 0 {
@@ -214,7 +230,7 @@ func (c *RegistController) WxRegist() {
 			}
 			// roles, err := models.GetRolenameByUserId(user.Id)
 			// if err != nil {
-			// 	beego.Error(err)
+			// 	logs.Error(err)
 			// }
 			// var isAdmin bool
 			// for _, v := range roles {
@@ -226,12 +242,12 @@ func (c *RegistController) WxRegist() {
 			//因此，必须有系统默认设置admin角色才行。
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			} else {
 				roleid := strconv.FormatInt(role.Id, 10)
 				isAdmin, err = e.HasRoleForUser(uid, "role_"+roleid)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 
@@ -247,7 +263,7 @@ func (c *RegistController) WxRegist() {
 			sessionId := c.Ctx.Input.Cookie("hotqinsessionid") //这一步什么意思
 
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				c.Data["json"] = map[string]interface{}{"info": "已经注册", "data": "已经注册"}
 				c.ServeJSON()
 			} else {
@@ -277,18 +293,18 @@ func (c *RegistController) WxRegion() {
 	// var uid string
 	// var isAdmin bool
 	isAdmin := false
-	user.Username = c.Input().Get("uname")
-	Pwd1 := c.Input().Get("password") //注意这里用的是全称password，不是pwd
-	// autoLogin := c.Input().Get("autoLogin") == "on"
+	user.Username = c.GetString("uname")
+	Pwd1 := c.GetString("password") //注意这里用的是全称password，不是pwd
+	// autoLogin := c.GetString("autoLogin") == "on"
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
-	beego.Info(user.Password)
-	beego.Info(user.Username)
+	// beego.Info(user.Password)
+	// beego.Info(user.Username)
 	err := models.CheckUname(user)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else { //用户存在
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户名已存在！"}
 		c.ServeJSON()
@@ -296,35 +312,35 @@ func (c *RegistController) WxRegion() {
 	}
 	uid, err := models.SaveUser(user)
 	if err == nil {
-		// JSCODE := c.Input().Get("code")
-		openID := c.Input().Get("openID")
+		// JSCODE := c.GetString("code")
+		openID := c.GetString("openID")
 		// beego.Info(JSCODE)
 		// var APPID, SECRET string
-		// app_version := c.Input().Get("app_version")
+		// app_version := c.GetString("app_version")
 		// if app_version == "1" {
-		// 	APPID = beego.AppConfig.String("wxAPPID")
-		// 	SECRET = beego.AppConfig.String("wxSECRET")
+		// 	APPID = web.AppConfig.String("wxAPPID")
+		// 	SECRET = web.AppConfig.String("wxSECRET")
 		// } else {
 		// 	appstring := "wxAPPID" + app_version
-		// 	APPID = beego.AppConfig.String(appstring)
+		// 	APPID = web.AppConfig.String(appstring)
 		// 	secretstring := "wxSECRET" + app_version
-		// 	SECRET = beego.AppConfig.String(secretstring)
+		// 	SECRET = web.AppConfig.String(secretstring)
 		// }
 		// requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
 		// resp, err := http.Get(requestUrl)
 		// beego.Info(resp)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// 	// return
 		// }
 		// defer resp.Body.Close()
 		// if resp.StatusCode != 200 {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		// var data map[string]interface{}
 		// err = json.NewDecoder(resp.Body).Decode(&data)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		// beego.Info(data)
 		// // var sessionKey string
@@ -336,25 +352,28 @@ func (c *RegistController) WxRegion() {
 		// 	c.ServeJSON()
 		// } else {
 		// openID = data["openid"].(string)
-		beego.Info(openID)
+		// beego.Info(openID)
 		//将openid写入数据库
 		// user, err = models.GetUserByUsername(user.Username)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// } else {
 		// 	uid = strconv.FormatInt(user.Id, 10)
 		// }
 		_, err = models.AddUserOpenID(uid, openID)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//根据userid取出user和avatorUrl
 		useravatar, err := models.GetUserAvatorUrl(user.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		var photo string
-		wxsite := beego.AppConfig.String("wxreqeustsite")
+		wxsite, err := web.AppConfig.String("wxreqeustsite")
+		if err != nil {
+			logs.Error(err)
+		}
 		if len(useravatar) != 0 {
 			photo = wxsite + useravatar[0].UserAvatar.AvatarUrl
 			// beego.Info(photo)
@@ -362,7 +381,7 @@ func (c *RegistController) WxRegion() {
 		//根据userid取出appreciation赞赏码
 		userappreciation, err := models.GetUserAppreciationUrl(user.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		var appreciationphoto string
 		if len(userappreciation) != 0 {
@@ -370,7 +389,7 @@ func (c *RegistController) WxRegion() {
 		}
 		// roles, err := models.GetRolenameByUserId(user.Id)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		// var isAdmin bool
 		// for _, v := range roles {
@@ -382,7 +401,7 @@ func (c *RegistController) WxRegion() {
 		//因此，必须有系统默认设置admin角色才行。
 		// role, err := models.GetRoleByRolename("admin")
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// } else {
 		// 	roleid := strconv.FormatInt(role.Id, 10)
 		// 	isAdmin = e.HasRoleForUser(uid, "role_"+roleid)
@@ -401,7 +420,7 @@ func (c *RegistController) WxRegion() {
 		sessionId := c.Ctx.Input.Cookie("hotqinsessionid")
 
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "已经注册", "data": "已经注册"}
 			c.ServeJSON()
 		} else {
@@ -410,7 +429,7 @@ func (c *RegistController) WxRegion() {
 		}
 		// }
 	} else {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "保存用户出错！"}
 		c.ServeJSON()
 	}
@@ -419,9 +438,8 @@ func (c *RegistController) WxRegion() {
 //post方法
 func (this *RegistController) GetUname() {
 	var user models.User //这里修改[]*models.User(uname string)
-	inputs := this.Input()
 	//fmt.Println(inputs)
-	user.Username = inputs.Get("uname")
+	user.Username = this.GetString("uname")
 	// beego.Info(user.Username)
 	uname1, err := models.GetUname(user) //这里修改
 	//转换成json数据？
@@ -441,16 +459,15 @@ func (this *RegistController) GetUname() {
 //get方法，用于x-editable的select2方法
 func (this *RegistController) GetUname1() {
 	var user models.User //这里修改[]*models.User(uname string)
-	inputs := this.Input()
 	//fmt.Println(inputs)
-	user.Username = inputs.Get("uname")
+	user.Username = this.GetString("uname")
 	// beego.Info(user.Username)
 	uname1, err := models.GetUname(user) //这里修改
 	//转换成json数据？
 	// beego.Info(uname1[0].Username)
 	// b, err := json.Marshal(uname1)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	slice1 := make([]Userselect, 0)
 	for _, v := range uname1 {
@@ -464,7 +481,7 @@ func (this *RegistController) GetUname1() {
 	// beego.Info(string(b))
 	// fmt.Println(string(b))
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(uname1) //[0xc08214b880 0xc08214b960 0xc08214ba40
 	// beego.Info(slice1) //[{1471  admin} {1475  cai.wc} {1476  zeng.cw}

@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"sync/atomic"
 	"time"
 )

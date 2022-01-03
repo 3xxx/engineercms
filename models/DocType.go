@@ -15,8 +15,10 @@
 package models
 
 import (
+	"context"
 	"fmt"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
+	// "github.com/beego/beego/v2/core/logs"
 	"time"
 )
 
@@ -412,39 +414,83 @@ func InitFlow() {
 	sql5 := fmt.Sprintf("CREATE VIEW wf_users_master AS SELECT id, first_name, last_name, email, active FROM users_master;")
 
 	o := orm.NewOrm()
-	res, err := o.Raw(sql).Exec()
-	if err == nil {
+	// res, err := o.Raw(sql).Exec()
+	// if err == nil {
+	// 	num, _ := res.RowsAffected()
+	// 	fmt.Println("mysql row affected nums: ", num)
+	// } else {
+	// o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
+	err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+		res, err2 := txOrm.Raw(sql).Exec()
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-	} else {
-		o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
-	}
-	res, err = o.Raw(sql2).Exec()
-	if err == nil {
+		return err2
+	})
+	// }
+
+	err = o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+		res, err2 := txOrm.Raw(sql2).Exec()
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-	} else {
-		o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
-	}
-	res, err = o.Raw(sql3).Exec()
-	if err == nil {
+		return err2
+	})
+
+	err = o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+		res, err2 := txOrm.Raw(sql3).Exec()
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-	} else {
-		o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
-	}
-	res, err = o.Raw(sql4).Exec()
-	if err == nil {
+		return err2
+	})
+
+	err = o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+		res, err2 := txOrm.Raw(sql4).Exec()
+		if err != nil {
+			return err
+		}
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-	} else {
-		o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
-	}
-	res, err = o.Raw(sql5).Exec()
-	if err == nil {
+		return err2
+	})
+
+	err = o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+		res, err2 := txOrm.Raw(sql5).Exec()
+		if err != nil {
+			return err
+		}
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
-	} else {
-		o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
-	}
+		return err2
+	})
+
+	// res, err = o.Raw(sql2).Exec()
+	// if err == nil {
+	// 	num, _ := res.RowsAffected()
+	// 	fmt.Println("mysql row affected nums: ", num)
+	// } else {
+	// 	o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
+	// }
+
+	// res, err = o.Raw(sql3).Exec()
+	// if err == nil {
+	// 	num, _ := res.RowsAffected()
+	// 	fmt.Println("mysql row affected nums: ", num)
+	// } else {
+	// 	o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
+	// }
+
+	// res, err = o.Raw(sql4).Exec()
+	// if err == nil {
+	// 	num, _ := res.RowsAffected()
+	// 	fmt.Println("mysql row affected nums: ", num)
+	// } else {
+	// 	o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
+	// }
+
+	// res, err = o.Raw(sql5).Exec()
+	// if err == nil {
+	// 	num, _ := res.RowsAffected()
+	// 	fmt.Println("mysql row affected nums: ", num)
+	// } else {
+	// 	o.Rollback() // beego.Info("插入t_studentInfo表出错,事务回滚")
+	// }
 }

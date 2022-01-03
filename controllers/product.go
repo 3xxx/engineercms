@@ -5,11 +5,13 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/context"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
+	// "github.com/beego/beego/v2/adapter/context"
 	"database/sql"
 	"github.com/3xxx/flow"
-	"github.com/astaxie/beego/httplib"
+	"github.com/beego/beego/v2/adapter/httplib"
 	// "log"
 	"os"
 	"path"
@@ -20,7 +22,7 @@ import (
 )
 
 type ProdController struct {
-	beego.Controller
+	web.Controller
 }
 
 type ProductLink struct {
@@ -116,12 +118,12 @@ func (c *ProdController) GetProjProd() {
 	//id转成64位
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//取项目本身
 	category, err := models.GetProj(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var topprojectid int64
@@ -131,7 +133,7 @@ func (c *ProdController) GetProjProd() {
 		patharray := strings.Split(parentidpath1, "-")
 		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		topprojectid = category.Id
@@ -139,7 +141,7 @@ func (c *ProdController) GetProjProd() {
 
 	projectuser, err := models.GetProjectUser(topprojectid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(projectuser.Id)
 	// beego.Info(uid)
@@ -156,7 +158,7 @@ func (c *ProdController) GetProjProd() {
 		var projurls string
 		proj, err := models.GetProj(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		if proj.ParentId == 0 { //如果是项目根目录
 			projurls = "/" + strconv.FormatInt(proj.Id, 10)
@@ -165,7 +167,7 @@ func (c *ProdController) GetProjProd() {
 			projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 		}
 
-		if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
+		if res, _ := e.Enforce(useridstring, projurls+"/", "POST", ".1"); res {
 			// beego.Info("posttrue")
 			c.Data["RoleAdd"] = "true"
 			c.Data["RoleNewDwg"] = "true"
@@ -175,17 +177,17 @@ func (c *ProdController) GetProjProd() {
 			c.Data["RoleNewDwg"] = "false"
 			c.Data["RoleFlow"] = "false"
 		}
-		if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+		if res2, _ := e.Enforce(useridstring, projurls+"/", "PUT", ".1"); res2 {
 			c.Data["RoleUpdate"] = "true"
 		} else {
 			c.Data["RoleUpdate"] = "false"
 		}
-		if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+		if res3, _ := e.Enforce(useridstring, projurls+"/", "DELETE", ".1"); res3 {
 			c.Data["RoleDelete"] = "true"
 		} else {
 			c.Data["RoleDelete"] = "false"
 		}
-		if e.Enforce(useridstring, projurls+"/", "GET", ".1") {
+		if res4, _ := e.Enforce(useridstring, projurls+"/", "GET", ".1"); res4 {
 			c.Data["RoleGet"] = "true"
 		} else {
 			c.Data["RoleGet"] = "false"
@@ -210,17 +212,17 @@ func (c *ProdController) GetProjProd() {
 	//id转成64为
 	// idNum, err := strconv.ParseInt(id, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//取项目本身
 	// category, err := models.GetProj(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//取项目所有子孙
 	// categories, err := models.GetProjectsbyPid(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//算出最大级数
 	// grade := make([]int, 0)
@@ -234,7 +236,7 @@ func (c *ProdController) GetProjProd() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// elapsed := time.Since(start)
 	// beego.Info(elapsed)
@@ -279,19 +281,19 @@ func (c *ProdController) GetProducts() {
 		//id转成64为
 		idNum, err = strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
-	searchText := c.Input().Get("searchText")
-	limit := c.Input().Get("limit")
+	searchText := c.GetString("searchText")
+	limit := c.GetString("limit")
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("pageNo")
+	page := c.GetString("pageNo")
 	page1, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int64
 	if page1 <= 1 {
@@ -307,12 +309,12 @@ func (c *ProdController) GetProducts() {
 	//***           **
 	products, err := models.GetProductsPage(idNum, limit1, offset, 0, searchText)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	// products, err := models.GetProductAttachment(idNum, limit1, offset)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 
 	link := make([]ProductLink, 0)
@@ -329,7 +331,7 @@ func (c *ProdController) GetProducts() {
 		//一个附件则直接打开/下载；2个以上则打开模态框
 		Attachments, err := models.GetAttachments(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//对成果进行循环
 		//赋予url
@@ -373,7 +375,7 @@ func (c *ProdController) GetProducts() {
 		//取得文章
 		Articles, err := models.GetArticles(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, x := range Articles {
 			articlearr := make([]ArticleContent, 1)
@@ -388,7 +390,7 @@ func (c *ProdController) GetProducts() {
 		//取得关联
 		relevancies, err := models.GetRelevancy(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		relevancies1 := make([]RelevancyProj, 0)
 		if len(relevancies) > 0 {
@@ -404,7 +406,7 @@ func (c *ProdController) GetProducts() {
 		//取出和本成果编号相同的关联
 		relevancyproduct, err := models.GetRelevancybyName(w.Code)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, vv := range relevancyproduct {
 			relevancies2 := make([]RelevancyProj, 1)
@@ -416,7 +418,7 @@ func (c *ProdController) GetProducts() {
 		// 	//循环所有relevancies,以,号分割，如果相等prodcode,则返回
 		// 	relevancies3, err := models.GetAllRelevancies()
 		// 	if err != nil {
-		// 		beego.Error(err)
+		// 		logs.Error(err)
 		// 	}
 		// if len(relevancies)>0{}
 		// for _, vv := range relevancies3 {
@@ -428,7 +430,7 @@ func (c *ProdController) GetProducts() {
 		// 			// v.ProductId查出prodcode
 		// 			prod, err := models.GetProd(vv.ProductId)
 		// 			if err != nil {
-		// 				beego.Error(err)
+		// 				logs.Error(err)
 		// 			} else {
 		// 				// beego.Info(ww)        //20171228
 		// 				// beego.Info(prod.Code) //20171231
@@ -444,15 +446,18 @@ func (c *ProdController) GetProducts() {
 
 		//这里去查flow表格里文档状态
 		//默认关闭flow流程，不查询成果状态
-		openflow := beego.AppConfig.String("openflow")
+		openflow, err := web.AppConfig.String("openflow")
+		if err != nil {
+			logs.Error(err)
+		}
 		if openflow == "true" {
 			proddoc, err := models.GetProductDocument(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			} else {
 				document, err := flow.Documents.Get(tx, flow.DocTypeID(proddoc.DocTypeId), flow.DocumentID(proddoc.DocumentId))
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				} else {
 					linkarr[0].DocState = document.State
 				}
@@ -464,7 +469,7 @@ func (c *ProdController) GetProducts() {
 
 	count, err := models.GetProductsCount(idNum, searchText)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	table := prodTableserver{link, page1, count}
 	// table := prodTableserver2{products, 1, 20}
@@ -486,7 +491,7 @@ func (c *ProdController) GetProjProducts() {
 		//id转成64为
 		idNum, err = strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 
@@ -494,18 +499,18 @@ func (c *ProdController) GetProjProducts() {
 	//根据项目id取得项目下所有成果
 	_, products, err := models.GetProjProducts(idNum, 1)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据项目侧栏id取得项目下所有成果
 	// products, err := models.GetProducts(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 
 	//由proj id取得url
 	// Url, _, err := GetUrlPath(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 
 	link := make([]ProductLink, 0)
@@ -516,7 +521,7 @@ func (c *ProdController) GetProjProducts() {
 		//根据product的projid取得url
 		Url, _, err := GetUrlPath(w.ProjectId)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
 		//循环成果
@@ -524,7 +529,7 @@ func (c *ProdController) GetProjProducts() {
 		//一个附件则直接打开/下载；2个以上则打开模态框
 		Attachments, err := models.GetAttachments(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//对成果进行循环
 		//赋予url
@@ -566,7 +571,7 @@ func (c *ProdController) GetProjProducts() {
 		//取得文章
 		Articles, err := models.GetArticles(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, x := range Articles {
 			articlearr := make([]ArticleContent, 1)
@@ -581,7 +586,7 @@ func (c *ProdController) GetProjProducts() {
 		//取得关联
 		relevancies, err := models.GetRelevancy(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		relevancies1 := make([]RelevancyProj, 0)
 		if len(relevancies) > 0 {
@@ -596,7 +601,7 @@ func (c *ProdController) GetProjProducts() {
 			//循环所有relevancies,以,号分割，如果相等prodcode,则返回
 			relevancies3, err := models.GetAllRelevancies()
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			// if len(relevancies)>0{}
 			for _, vv := range relevancies3 {
@@ -608,7 +613,7 @@ func (c *ProdController) GetProjProducts() {
 						// v.ProductId查出prodcode
 						prod, err := models.GetProd(vv.ProductId)
 						if err != nil {
-							beego.Error(err)
+							logs.Error(err)
 						} else {
 							// beego.Info(ww)        //20171228
 							// beego.Info(prod.Code) //20171231
@@ -643,7 +648,7 @@ func (c *ProdController) GetsynchProducts() {
 		//id转成64为
 		idNum, err = strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 
@@ -651,7 +656,7 @@ func (c *ProdController) GetsynchProducts() {
 	//取目录本身
 	proj, err := models.GetProj(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var projid int64
 	//根据目录id取出项目id，以便得到同步ip
@@ -664,23 +669,23 @@ func (c *ProdController) GetsynchProducts() {
 		patharray := strings.Split(parentidpath1, "-")
 		//pid转成64位
 		projid, err = strconv.ParseInt(patharray[0], 10, 64)
-		beego.Info(projid)
+		// beego.Info(projid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		projid = proj.Id
-		beego.Info(projid)
+		// beego.Info(projid)
 	}
 	// projid, err := strconv.ParseInt(array[0], 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 
 	//取得项目同步ip——进行循环ip——根据parenttitlepath和自身title查询ip上分级id——获取这个id下成果
 	projsynchip, err := models.GetAdminSynchIp(projid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(projsynchip)
 	link := make([]ProductLink, 0)
@@ -689,12 +694,12 @@ func (c *ProdController) GetsynchProducts() {
 		//	通过如下接口可以设置请求的超时时间和数据读取时间
 		jsonstring, err := httplib.Get("http://"+v.SynchIp+":"+v.Port+"/project/providesynchproducts?parenttitlepath="+proj.ParentTitlePath+"&title="+proj.Title).SetTimeout(100*time.Second, 30*time.Second).String() //.ToJSON(&productlink)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//json字符串解析到结构体，以便进行追加
 		err = json.Unmarshal([]byte(jsonstring), &productlink)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// beego.Info(productlink)
 		link = append(link, productlink...)
@@ -706,12 +711,12 @@ func (c *ProdController) GetsynchProducts() {
 
 //对外提供成果数据接口
 func (c *ProdController) ProvidesynchProducts() {
-	parenttitlepath := c.Input().Get("parenttitlepath")
-	title := c.Input().Get("title")
+	parenttitlepath := c.GetString("parenttitlepath")
+	title := c.GetString("title")
 	//由上面2个条件查询到目录id
 	proj, err := models.GetProjbyParenttitlepath(parenttitlepath, title)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//用户请求的地址和端口
 	site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
@@ -722,7 +727,7 @@ func (c *ProdController) ProvidesynchProducts() {
 	// 	//id转成64为
 	// 	idNum, err := strconv.ParseInt(id, 10, 64)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// } else {
 
@@ -730,12 +735,12 @@ func (c *ProdController) ProvidesynchProducts() {
 	//根据项目id取得所有成果
 	products, err := models.GetProducts(proj.Id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//由proj id取得url
 	Url, _, err := GetUrlPath(proj.Id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	link := make([]ProductLink, 0)
@@ -749,7 +754,7 @@ func (c *ProdController) ProvidesynchProducts() {
 		//一个附件则直接打开/下载；2个以上则打开模态框
 		Attachments, err := models.GetAttachments(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//对成果进行循环
 		//赋予url
@@ -791,7 +796,7 @@ func (c *ProdController) ProvidesynchProducts() {
 		//取得文章
 		Articles, err := models.GetArticles(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, x := range Articles {
 			articlearr := make([]ArticleContent, 1)
@@ -819,29 +824,29 @@ func (c *ProdController) AddProduct() {
 	// 	uname := v.(string)
 	// 	user, err = models.GetUserByUsername(uname)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
 	// }
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
 	id := c.Ctx.Input.Param(":id")
-	pid := c.Input().Get("pid")
-	code := c.Input().Get("code")
-	title := c.Input().Get("title")
-	label := c.Input().Get("label")
-	principal := c.Input().Get("principal")
-	// content := c.Input().Get("content")
+	pid := c.GetString("pid")
+	code := c.GetString("code")
+	title := c.GetString("title")
+	label := c.GetString("label")
+	principal := c.GetString("principal")
+	// content := c.GetString("content")
 	// beego.Info(id)
 	c.Data["Id"] = id
 	//id转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据pid查出项目id
 	proj, err := models.GetProj(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var topprojectid int64
 	if proj.ParentIdPath != "" {
@@ -850,7 +855,7 @@ func (c *ProdController) AddProduct() {
 		patharray := strings.Split(parentidpath1, "-")
 		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		topprojectid = proj.Id
@@ -858,7 +863,7 @@ func (c *ProdController) AddProduct() {
 	//根据id添加成果code, title, label, principal, content string, projectid int64
 	_, err = models.AddProduct(code, title, label, principal, uid, pidNum, topprojectid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = "ok"
 	c.ServeJSON()
@@ -878,21 +883,21 @@ func (c *ProdController) UpdateProduct() {
 		return
 	}
 	useridstring := strconv.FormatInt(uid, 10)
-	id := c.Input().Get("pid")
+	id := c.GetString("pid")
 	//id转成64位
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// 根据成果id取得项目id
 	product, err := models.GetProd(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//取项目本身
 	category, err := models.GetProj(product.ProjectId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据项目顶级id取得项目下所有成果
 	var topprojectid int64
@@ -902,7 +907,7 @@ func (c *ProdController) UpdateProduct() {
 		patharray := strings.Split(parentidpath1, "-")
 		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		topprojectid = category.Id
@@ -910,7 +915,7 @@ func (c *ProdController) UpdateProduct() {
 
 	projectuser, err := models.GetProjectUser(topprojectid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var UpdatePermission bool
@@ -922,7 +927,7 @@ func (c *ProdController) UpdateProduct() {
 		var projurls string
 		// proj, err := models.GetProj(idNum)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		if category.ParentId == 0 { //如果是项目根目录
 			projurls = "/" + strconv.FormatInt(category.Id, 10)
@@ -931,29 +936,29 @@ func (c *ProdController) UpdateProduct() {
 			projurls = "/" + strings.Replace(strings.Replace(category.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(category.Id, 10)
 		}
 		// beego.Info(useridstring)
-		if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+		if res, _ := e.Enforce(useridstring, projurls+"/", "PUT", ".1"); res {
 			UpdatePermission = true
 			// beego.Info(UpdatePermission)
 		}
 	}
 	if UpdatePermission {
-		code := c.Input().Get("code")
-		title := c.Input().Get("title")
-		label := c.Input().Get("label")
-		principal := c.Input().Get("principal")
-		relevancy := c.Input().Get("relevancy")
+		code := c.GetString("code")
+		title := c.GetString("title")
+		label := c.GetString("label")
+		principal := c.GetString("principal")
+		relevancy := c.GetString("relevancy")
 
 		//根据id添加成果code, title, label, principal, content string, projectid int64
 		err = models.UpdateProduct(idNum, code, title, label, principal)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//*****更新关联信息
 		//如果和数据库的不一致，则先删除数据库，然后再存储
 		//取得关联
 		relevancies, err := models.GetRelevancy(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		var relevancy1 string
 		if len(relevancies) != 0 {
@@ -970,13 +975,13 @@ func (c *ProdController) UpdateProduct() {
 			// 删除关联信息
 			err = models.DeleteRelevancy(idNum)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			array := strings.Split(relevancy, ",")
 			for _, v := range array {
 				_, err = models.AddRelevancy(idNum, v)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 		}
@@ -1008,18 +1013,18 @@ func (c *ProdController) DeleteProduct() {
 		return
 	}
 	useridstring := strconv.FormatInt(uid, 10)
-	ids := c.Input().Get("ids")
+	ids := c.GetString("ids")
 	// beego.Info(ids)
 	array := strings.Split(ids, ",")
 	//id转成64位
 	idNum, err := strconv.ParseInt(array[0], 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//取项目本身
 	category, err := models.GetProj(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据项目顶级id取得项目下所有成果
 	var topprojectid int64
@@ -1029,7 +1034,7 @@ func (c *ProdController) DeleteProduct() {
 		patharray := strings.Split(parentidpath1, "-")
 		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		topprojectid = category.Id
@@ -1037,7 +1042,7 @@ func (c *ProdController) DeleteProduct() {
 
 	projectuser, err := models.GetProjectUser(topprojectid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var DeletePermission bool
@@ -1049,7 +1054,7 @@ func (c *ProdController) DeleteProduct() {
 		var projurls string
 		proj, err := models.GetProj(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		if proj.ParentId == 0 { //如果是项目根目录
 			projurls = "/" + strconv.FormatInt(proj.Id, 10)
@@ -1058,7 +1063,7 @@ func (c *ProdController) DeleteProduct() {
 			projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 		}
 
-		if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+		if res, _ := e.Enforce(useridstring, projurls+"/", "DELETE", ".1"); res {
 			DeletePermission = true
 		}
 	}
@@ -1070,39 +1075,39 @@ func (c *ProdController) DeleteProduct() {
 			//id转成64位
 			idNum, err := strconv.ParseInt(v, 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//循环删除成果
 			//根据成果id取得所有附件
 			attachments, err := models.GetAttachments(idNum)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			for _, w := range attachments {
 				//取得附件的成果id——再取得成果的项目目录id——再取得路径
 				attach, err := models.GetAttachbyId(w.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				prod, err := models.GetProd(attach.ProductId)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				//根据proj的id
 				_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				} else if DiskDirectory != "" {
 					path := DiskDirectory + "/" + attach.FileName
 					//删除附件
 					err = os.Remove(path)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 					//删除附件数据表
 					err = models.DeleteAttachment(w.Id)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 				}
 			}
@@ -1110,19 +1115,19 @@ func (c *ProdController) DeleteProduct() {
 			//取得成果id下所有文章
 			articles, err := models.GetArticles(idNum)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//删除文章表
 			for _, z := range articles {
 				//删除文章数据表
 				err = models.DeleteArticle(z.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 			err = models.DeleteProduct(idNum) //删除成果数据表
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			} else {
 				c.Data["json"] = "ok"
 				c.ServeJSON()

@@ -1,13 +1,11 @@
 package controllers
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/httplib"
-	"github.com/astaxie/beego/logs"
+	"github.com/beego/beego/v2/adapter/httplib"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"github.com/bitly/go-simplejson"
 	"io/ioutil"
 	"net"
@@ -22,7 +20,7 @@ import (
 
 // CMSADMIN API
 type AdminController struct {
-	beego.Controller
+	web.Controller
 }
 
 //Catalog添加附件链接和设计说明、校审意见
@@ -169,17 +167,17 @@ func (c *AdminController) AddIpsegment() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	title := c.Input().Get("title")
-	startip := c.Input().Get("startip")
-	endip := c.Input().Get("endip")
-	iprole := c.Input().Get("iprole")
+	title := c.GetString("title")
+	startip := c.GetString("startip")
+	endip := c.GetString("endip")
+	iprole := c.GetString("iprole")
 	iproleNum, err := strconv.Atoi(iprole)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	_, err = models.AddAdminIpsegment(title, startip, endip, iproleNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -199,23 +197,23 @@ func (c *AdminController) UpdateIpsegment() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	cid := c.Input().Get("cid")
-	title := c.Input().Get("title")
-	startip := c.Input().Get("startip")
-	endip := c.Input().Get("endip")
-	iprole := c.Input().Get("iprole")
+	cid := c.GetString("cid")
+	title := c.GetString("title")
+	startip := c.GetString("startip")
+	endip := c.GetString("endip")
+	iprole := c.GetString("iprole")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	iproleNum, err := strconv.Atoi(iprole)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = models.UpdateAdminIpsegment(cidNum, title, startip, endip, iproleNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -240,11 +238,11 @@ func (c *AdminController) DeleteIpsegment() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		err = models.DeleteAdminIpsegment(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -257,7 +255,7 @@ func (c *AdminController) DeleteIpsegment() {
 func (c *AdminController) Ipsegment() {
 	ipsegments, err := models.GetAdminIpsegment()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = ipsegments
 	c.ServeJSON()
@@ -285,7 +283,7 @@ func init() {
 	//从IP地址段数据表读取数据
 	ipsegments, err := models.GetAdminIpsegment()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// for scanner.Scan() {
 	//循环行
@@ -322,7 +320,7 @@ func Createip() {
 	//从IP地址段数据表读取数据
 	ipsegments, err := models.GetAdminIpsegment()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// for scanner.Scan() {
 	//循环行
@@ -420,7 +418,7 @@ func processFlag(arg []string) (maps map[string]int) {
 	if si == nil {
 		//开始IP不合法
 		// fmt.Println("'startIp' Setting error")
-		beego.Error("开始IP不合法")
+		logs.Error("开始IP不合法")
 		return nil
 	}
 	index++
@@ -450,7 +448,7 @@ func processFlag(arg []string) (maps map[string]int) {
 			if err != nil || endPort < 1 || endPort > 65535 || endPort < startPort {
 				//结束端口不合法
 				// fmt.Println("'endPort' Setting error")
-				beego.Error("'endPort' Setting error")
+				logs.Error("'endPort' Setting error")
 				return nil
 			}
 		} else {
@@ -468,7 +466,7 @@ func processFlag(arg []string) (maps map[string]int) {
 			if err != nil {
 				//端口不合法
 				// fmt.Println("'port' Setting error")
-				beego.Error("'port' Setting error")
+				logs.Error("'port' Setting error")
 				return nil
 			}
 			ports = append(ports, p)
@@ -510,11 +508,11 @@ func (c *AdminController) Category() {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	categories, err := models.GetAdminCategory(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	c.Data["json"] = categories
@@ -530,12 +528,12 @@ func (c *AdminController) Category() {
 //根据名称title查询分级表
 func (c *AdminController) CategoryTitle() {
 	// title := c.Ctx.Input.Param(":id")
-	title := c.Input().Get("title")
+	title := c.GetString("title")
 	// beego.Info(title)
 	categories, err := models.GetAdminCategoryTitle(title)
 	// beego.Info(categories)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = categories
 	c.ServeJSON()
@@ -561,28 +559,28 @@ func (c *AdminController) AddCategory() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	pid := c.Input().Get("pid")
-	title := c.Input().Get("title")
-	code := c.Input().Get("code")
-	grade := c.Input().Get("grade")
+	pid := c.GetString("pid")
+	title := c.GetString("title")
+	code := c.GetString("code")
+	grade := c.GetString("grade")
 	//pid转成64为
 	var pidNum int64
 	var err error
 	if pid != "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		pidNum = 0
 	}
 	gradeNum, err := strconv.Atoi(grade)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	_, err = models.AddAdminCategory(pidNum, title, code, gradeNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -601,22 +599,22 @@ func (c *AdminController) UpdateCategory() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	cid := c.Input().Get("cid")
-	title := c.Input().Get("title")
-	code := c.Input().Get("code")
-	grade := c.Input().Get("grade")
+	cid := c.GetString("cid")
+	title := c.GetString("title")
+	code := c.GetString("code")
+	grade := c.GetString("grade")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	gradeNum, err := strconv.Atoi(grade)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -641,23 +639,23 @@ func (c *AdminController) DeleteCategory() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//查询下级，即分级
 		categories, err := models.GetAdminCategory(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			for _, v1 := range categories {
 				err = models.DeleteAdminCategory(v1.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 		}
 		err = models.DeleteAdminCategory(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -676,19 +674,19 @@ func (c *AdminController) AddCalendar() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	title := c.Input().Get("title")
-	content := c.Input().Get("content")
-	start := c.Input().Get("start")
-	end := c.Input().Get("end")
-	color := c.Input().Get("color")
-	allday1 := c.Input().Get("allday")
+	title := c.GetString("title")
+	content := c.GetString("content")
+	start := c.GetString("start")
+	end := c.GetString("end")
+	color := c.GetString("color")
+	allday1 := c.GetString("allday")
 	var allday bool
 	if allday1 == "true" {
 		allday = true
 	} else {
 		allday = false
 	}
-	public1 := c.Input().Get("public")
+	public1 := c.GetString("public")
 	var public bool
 	if public1 == "true" {
 		public = true
@@ -703,7 +701,7 @@ func (c *AdminController) AddCalendar() {
 		// beego.Info(start)
 		// beego.Info(starttime)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		starttime = time.Now()
@@ -711,14 +709,14 @@ func (c *AdminController) AddCalendar() {
 	if end != "" {
 		endtime, err = time.Parse(lll, end)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		endtime = starttime
 	}
 	_, err = models.AddAdminCalendar(title, content, color, allday, public, starttime, endtime)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = title
 		c.ServeJSON()
@@ -728,16 +726,16 @@ func (c *AdminController) AddCalendar() {
 //返回日历json数据
 //如果是管理员，则显示全部，非管理员，显示公开
 func (c *AdminController) Calendar() {
-	start := c.Input().Get("start")
-	end := c.Input().Get("end")
+	start := c.GetString("start")
+	end := c.GetString("end")
 	const lll = "2006-01-02"
 	startdate, err := time.Parse(lll, start)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	enddate, err := time.Parse(lll, end)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var calendars []*models.AdminCalendar
 	// _, role := checkprodRole(c.Ctx)
@@ -751,12 +749,12 @@ func (c *AdminController) Calendar() {
 	if role == "1" {
 		calendars, err = models.GetAdminCalendar(startdate, enddate, false)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		calendars, err = models.GetAdminCalendar(startdate, enddate, true)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	c.Data["json"] = calendars
@@ -774,25 +772,25 @@ func (c *AdminController) UpdateCalendar() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	cid := c.Input().Get("cid")
+	cid := c.GetString("cid")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	title := c.Input().Get("title")
-	content := c.Input().Get("content")
-	start := c.Input().Get("start")
-	end := c.Input().Get("end")
-	color := c.Input().Get("color")
-	allday1 := c.Input().Get("allday")
+	title := c.GetString("title")
+	content := c.GetString("content")
+	start := c.GetString("start")
+	end := c.GetString("end")
+	color := c.GetString("color")
+	allday1 := c.GetString("allday")
 	var allday bool
 	if allday1 == "true" {
 		allday = true
 	} else {
 		allday = false
 	}
-	public1 := c.Input().Get("public")
+	public1 := c.GetString("public")
 	var public bool
 	if public1 == "true" {
 		public = true
@@ -806,7 +804,7 @@ func (c *AdminController) UpdateCalendar() {
 		// beego.Info(start)
 		// beego.Info(starttime)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		starttime = time.Now()
@@ -814,35 +812,35 @@ func (c *AdminController) UpdateCalendar() {
 	if end != "" {
 		endtime, err = time.Parse(lll, end)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		endtime = starttime
 	}
 	err = models.UpdateAdminCalendar(cidNum, title, content, color, allday, public, starttime, endtime)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = title
 		c.ServeJSON()
 	}
 	// pid := c.Ctx.Input.Param(":id")
 	//
-	// title := c.Input().Get("title")
-	// code := c.Input().Get("code")
-	// grade := c.Input().Get("grade")
+	// title := c.GetString("title")
+	// code := c.GetString("code")
+	// grade := c.GetString("grade")
 	// //pid转成64为
 	// cidNum, err := strconv.ParseInt(cid, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// gradeNum, err := strconv.Atoi(grade)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// } else {
 	// 	c.Data["json"] = "ok"
 	// 	c.ServeJSON()
@@ -859,26 +857,26 @@ func (c *AdminController) DropCalendar() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	id := c.Input().Get("id")
+	id := c.GetString("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	delta := c.Input().Get("delta")
+	delta := c.GetString("delta")
 	daltaint, err := strconv.Atoi(delta)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	calendar, err := models.GetAdminCalendarbyid(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	t1 := calendar.Starttime.AddDate(0, 0, daltaint)
 	t2 := calendar.Endtime.AddDate(0, 0, daltaint)
 	err = models.DropAdminCalendar(idNum, t1, t2)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = calendar.Title
 		c.ServeJSON()
@@ -895,28 +893,28 @@ func (c *AdminController) ResizeCalendar() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	id := c.Input().Get("id")
+	id := c.GetString("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	delta := c.Input().Get("delta")
+	delta := c.GetString("delta")
 	delta = delta + "h"
 	deltahour, err := time.ParseDuration(delta)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// starttime.Add(-time.Duration(hours) * time.Hour)
 	calendar, err := models.GetAdminCalendarbyid(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// t1 := calendar.Starttime.Add(deltahour)
 	t2 := calendar.Endtime.Add(deltahour)
 	err = models.ResizeAdminCalendar(idNum, t2)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = calendar.Title
 		c.ServeJSON()
@@ -933,16 +931,16 @@ func (c *AdminController) DeleteCalendar() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	cid := c.Input().Get("cid")
+	cid := c.GetString("cid")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	err = models.DeleteAdminCalendar(cidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -950,7 +948,7 @@ func (c *AdminController) DeleteCalendar() {
 }
 
 func (c *AdminController) SearchCalendar() {
-	title := c.Input().Get("title")
+	title := c.GetString("title")
 	const lll = "2006-01-02"
 
 	var calendars []*models.AdminCalendar
@@ -966,12 +964,12 @@ func (c *AdminController) SearchCalendar() {
 	if role == "1" {
 		calendars, err = models.SearchAdminCalendar(title, false)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		calendars, err = models.SearchAdminCalendar(title, true)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	c.Data["json"] = calendars
@@ -989,11 +987,11 @@ func (c *AdminController) SynchIp() {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	synchips, err := models.GetAdminSynchIp(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	c.Data["json"] = synchips
@@ -1011,28 +1009,28 @@ func (c *AdminController) AddsynchIp() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	pid := c.Input().Get("pid")
-	username := c.Input().Get("username")
-	ip := c.Input().Get("ip")
-	port := c.Input().Get("port")
+	pid := c.GetString("pid")
+	username := c.GetString("username")
+	ip := c.GetString("ip")
+	port := c.GetString("port")
 	//pid转成64为
 	var pidNum int64
 	var err error
 	// if pid != "" {
 	pidNum, err = strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// } else {
 	// 	pidNum = 0
 	// }
 	// gradeNum, err := strconv.Atoi(grade)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	_, err = models.AddAdminSynchIp(pidNum, username, ip, port)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -1050,22 +1048,22 @@ func (c *AdminController) UpdatesynchIp() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	cid := c.Input().Get("cid")
-	username := c.Input().Get("username")
-	ip := c.Input().Get("ip")
-	port := c.Input().Get("port")
+	cid := c.GetString("cid")
+	username := c.GetString("username")
+	ip := c.GetString("ip")
+	port := c.GetString("port")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// gradeNum, err := strconv.Atoi(grade)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	err = models.UpdateAdminSynchIp(cidNum, username, ip, port)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -1089,12 +1087,12 @@ func (c *AdminController) DeletesynchIp() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 
 		err = models.DeleteAdminSynchIp(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -1116,11 +1114,11 @@ func (c *AdminController) Department() {
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	categories, err := models.GetAdminDepart(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	c.Data["json"] = categories
@@ -1131,12 +1129,12 @@ func (c *AdminController) Department() {
 //根据名称title查询分级表
 func (c *AdminController) DepartmentTitle() {
 	// title := c.Ctx.Input.Param(":id")
-	title := c.Input().Get("title")
+	title := c.GetString("title")
 	// beego.Info(title)
 	categories, err := models.GetAdminDepartTitle(title)
 	// beego.Info(categories)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = categories
 	c.ServeJSON()
@@ -1154,16 +1152,16 @@ func (c *AdminController) AddDepartment() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	pid := c.Input().Get("pid")
-	title := c.Input().Get("title")
-	code := c.Input().Get("code")
+	pid := c.GetString("pid")
+	title := c.GetString("title")
+	code := c.GetString("code")
 	//pid转成64为
 	var pidNum int64
 	var err error
 	if pid != "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		pidNum = 0
@@ -1171,7 +1169,7 @@ func (c *AdminController) AddDepartment() {
 
 	_, err = models.AddAdminDepart(pidNum, title, code)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -1189,18 +1187,18 @@ func (c *AdminController) UpdateDepartment() {
 		return
 	}
 	// pid := c.Ctx.Input.Param(":id")
-	cid := c.Input().Get("cid")
-	title := c.Input().Get("title")
-	code := c.Input().Get("code")
+	cid := c.GetString("cid")
+	title := c.GetString("title")
+	code := c.GetString("code")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	err = models.UpdateAdminDepart(cidNum, title, code)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -1224,23 +1222,23 @@ func (c *AdminController) DeleteDepartment() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//查询下级，即分级
 		categories, err := models.GetAdminDepart(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			for _, v1 := range categories {
 				err = models.DeleteAdminDepart(v1.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 		}
 		err = models.DeleteAdminDepart(idNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -1256,7 +1254,7 @@ func (c *AdminController) AddCarousel() {
 		//获取上传的文件
 		_, h, err := c.GetFile("file")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// var attachment string
 		// var filesize int64
@@ -1271,12 +1269,12 @@ func (c *AdminController) AddCarousel() {
 			//根据id添加成果code, title, label, principal, content string, projectid int64
 			_, err := models.AddAdminCarousel(h.Filename, url)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			} else {
 				//存入文件夹
 				err = c.SaveToFile("file", path+h.Filename) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": h.Filename, "original": h.Filename, "url": url + "/" + h.Filename}
 				c.ServeJSON()
@@ -1295,7 +1293,7 @@ func (c *AdminController) AddCarousel() {
 func (c *AdminController) Carousel() {
 	carousels, err := models.GetAdminCarousel()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = carousels
 	c.ServeJSON()
@@ -1309,14 +1307,14 @@ func (c *AdminController) DeleteCarousel() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		status, err := models.DelAdminCarouselById(idNum)
 		if err == nil && status > 0 {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
 		} else if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = "出错"
 			c.ServeJSON()
 		}
@@ -1328,7 +1326,7 @@ func (c *AdminController) DeleteCarousel() {
 func (c *AdminController) MeritBasic() {
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//取到一个数据，不是数组，所以table无法显示
 	//如果数据为空，则构造一个空数据给table，方便修改
@@ -1348,16 +1346,16 @@ func (c *AdminController) UpdateMeritBasic() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	name := c.Input().Get("name")
-	value := c.Input().Get("value")
-	pk := c.Input().Get("pk")
+	name := c.GetString("name")
+	value := c.GetString("value")
+	pk := c.GetString("pk")
 	id, err := strconv.ParseInt(pk, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = models.UpdateMeritBasic(id, name, value)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		data := "ok!"
 		c.Ctx.WriteString(data)
@@ -1371,19 +1369,19 @@ func (c *AdminController) GetPostMerit() {
 	id := c.Ctx.Input.Param(":id")
 	idint, err := strconv.Atoi(id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var postmerits []*models.PostMerit
 	if idint == 0 {
 		//取得这个id下的所有merittopic
 		postmerits, err = models.GetPostMerits(0)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else if idint == 1 {
 		postmerits, err = models.GetPostMerits(1)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	link := make([]CatalogLinkCont, 0)
@@ -1422,7 +1420,7 @@ func (c *AdminController) GetPostMerit() {
 		linkarr[0].State = w.State
 		links, err := models.GetCatalogLinks(w.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, v := range links {
 			attacharr[0].Url = v.Url
@@ -1447,9 +1445,9 @@ func (c *AdminController) ModifyCatalog() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	name := c.Input().Get("name")
-	value := c.Input().Get("value")
-	pk := c.Input().Get("pk")
+	name := c.GetString("name")
+	value := c.GetString("value")
+	pk := c.GetString("pk")
 
 	ids := c.GetString("ids")
 	if ids != "" { //修改选中。问题，选中的是其他几个，修改当前这个没有选中，则不修改，会不会很奇怪？
@@ -1460,11 +1458,11 @@ func (c *AdminController) ModifyCatalog() {
 				//id转成64位
 				idNum, err := strconv.ParseInt(v, 10, 64)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				err = models.ModifyCatalog(idNum, name, value)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				} else {
 					// data := value
 					// c.Ctx.WriteString(data)
@@ -1475,12 +1473,12 @@ func (c *AdminController) ModifyCatalog() {
 
 	id, err := strconv.ParseInt(pk, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//无论如何都修改当前，重复修改了
 	err = models.ModifyCatalog(id, name, value)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		data := value
 		c.Ctx.WriteString(data)
@@ -1505,18 +1503,18 @@ func (c *AdminController) CatalogAttachment() {
 		//id转成64为
 		idNum, err = strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	//由id取得成果状态
 	catalog, err := models.GetPostMerit(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据成果id取得所有附件
 	links, err := models.GetCatalogLinks(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	Attachslice := make([]CatalogLinkEditable, 0)
@@ -1568,23 +1566,23 @@ func (c *AdminController) ModifyLink() {
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	name := c.Input().Get("name")
-	value := c.Input().Get("value")
-	pk := c.Input().Get("pk")
+	name := c.GetString("name")
+	value := c.GetString("value")
+	pk := c.GetString("pk")
 
 	id, err := strconv.ParseInt(pk, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	cid := c.Input().Get("cid") //成果id
+	cid := c.GetString("cid") //成果id
 	cidnum, err := strconv.ParseInt(cid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//无论如何都修改当前，重复修改了
 	err = models.ModifyCatalogLink(id, cidnum, name, value)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		data := value
 		c.Ctx.WriteString(data)
@@ -1611,16 +1609,16 @@ func (c *AdminController) SendMeritlist() {
 	var ob []models.PostMerit
 	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
 	// beego.Info(c.Ctx.Input.RequestBody	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
-	// pk := c.Input().Get("id")
+	// pk := c.GetString("id")
 	// beego.Info(ob.Id)
 	// cid, err := strconv.ParseInt(pk, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	for _, v := range ob {
 		err := models.UpdatePostMerit(v.Id, "State", "1")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			data := "ok!"
 			c.Ctx.WriteString(data)
@@ -1629,17 +1627,17 @@ func (c *AdminController) SendMeritlist() {
 	//2——将meritlist提交给merit服务器
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// postmerit, err := models.GetPostMerit(ob.Id)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// postmerit.Author = meritbasic.Username
 	//编码JSON
 	// body, err := json.Marshal(postmerit)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	req := httplib.Post("http://" + meritbasic.Ip + ":" + meritbasic.Port + "/getecmspost?ecmsip=" + meritbasic.EcmsIp + "&ecmsport=" + meritbasic.EcmsPort)
 	// req.Param("username", meritbasic.Username)
@@ -1651,7 +1649,7 @@ func (c *AdminController) SendMeritlist() {
 	req.Body(pk1) //传body不能带param，太奇怪了。
 	_, err = req.String()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(str)
 }
@@ -1672,7 +1670,7 @@ func (c *AdminController) DeleteMeritlist() {
 	for _, v := range ob {
 		err := models.DeletePostMerit(v.Id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			data := "ok!"
 			c.Ctx.WriteString(data)
@@ -1696,7 +1694,7 @@ func (c *AdminController) DownMeritlist() {
 	for _, v := range ob {
 		err := models.UpdatePostMerit(v.Id, "State", "0")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			data := "ok!"
 			c.Ctx.WriteString(data)
@@ -1707,7 +1705,7 @@ func (c *AdminController) DownMeritlist() {
 func (c *AdminController) Testdown() {
 	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	filename := path.Base(filePath)
 	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, "static/download/"+filename)
@@ -1722,7 +1720,7 @@ func (c *AdminController) Testdown() {
 // @router /jsoneditor [get]
 //给jsoneditor返回json数据
 func (c *AdminController) Jsoneditor() {
-	id := c.Input().Get("projectid")
+	id := c.GetString("projectid")
 	c.TplName = "jsoneditor.tpl"
 	c.Data["ProjectId"] = id
 }
@@ -1736,7 +1734,7 @@ func (c *AdminController) Jsoneditor() {
 // @router /getwxprojectconfig [get]
 //给jsoneditor返回json数据
 func (c *AdminController) GetWxProjectConfig() {
-	id := c.Input().Get("projectid")
+	id := c.GetString("projectid")
 	contents, _ := ioutil.ReadFile("./conf/" + id + ".json")
 	js, err := simplejson.NewJson([]byte(contents))
 	if err != nil {
@@ -1779,7 +1777,7 @@ func (c *AdminController) GetWxProjectConfig() {
 func (c *AdminController) PutWxProjectConfig() {
 	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
 	// beego.Info()
-	// beego.Info(c.Input().Get("projectconfig"))
+	// beego.Info(c.GetString("projectconfig"))
 	// projectconfig := c.Ctx.Input.RequestBody
 	// beego.Info(projectconfig)
 	// var ob Projectconfig
@@ -1788,18 +1786,18 @@ func (c *AdminController) PutWxProjectConfig() {
 
 	// body, err := ioutil.ReadAll(resp.Body)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// defer resp.Body.Close()
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// f, err := os.OpenFile("./attachment/onlyoffice/"+onlyattachment.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
 	if isadmin {
-		id := c.Input().Get("projectid")
+		id := c.GetString("projectid")
 		f, err := os.Create("./conf/" + id + ".json")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer f.Close()
 		// _, err = f.Write(body) //这里直接用resp.Body如何？
@@ -1807,7 +1805,7 @@ func (c *AdminController) PutWxProjectConfig() {
 		// _, err = f.WriteString(str)
 		// _, err = io.Copy(body, f)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "json": id + ".json"}
 		c.ServeJSON()
@@ -1822,7 +1820,7 @@ func (c *AdminController) ImportJson() {
 	//获取上传的文件
 	_, h, err := c.GetFile("json")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	if h != nil {
@@ -1831,7 +1829,7 @@ func (c *AdminController) ImportJson() {
 		// f.Close()                                             // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		err = c.SaveToFile("json", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	contents, _ := ioutil.ReadFile(path)
@@ -1861,7 +1859,7 @@ func (c *AdminController) InitJson() {
 	// text, err := js.Get("text").String()
 	// Id, err := models.AddCategory(0, text, "", "", "")
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 }
 

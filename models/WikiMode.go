@@ -8,14 +8,14 @@ import (
 	// "fmt"
 	// "os"
 	// "path"
-	// "github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
 	"strconv"
 	// "strings"
 	"time"
 	//"github.com/Unknwon/com
 	// "errors"
-	"github.com/astaxie/beego/orm"
-	// "github.com/astaxie/beego/validation"
+	"github.com/beego/beego/v2/client/orm"
+	// "github.com/beego/beego/v2/adapter/validation"
 	// _ "github.com/mattn/go-sqlite3"
 )
 

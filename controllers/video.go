@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
 	// "io/ioutil"
 	// "net"
 	// "net/http"
@@ -16,7 +18,7 @@ import (
 
 // CMSVideo API
 type VideoController struct {
-	beego.Controller
+	web.Controller
 }
 
 // @Title get uservideolist
@@ -33,11 +35,11 @@ type VideoController struct {
 func (c *VideoController) GetUserVideo() {
 	//解析表单
 	pid := c.Ctx.Input.Param(":id")
-	// pid := beego.AppConfig.String("wxcatalogid") //"26159" //c.Input().Get("pid")
+	// pid := web.AppConfig.String("wxcatalogid") //"26159" //c.GetString("pid")
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	// v := c.GetSession("uname")
@@ -47,16 +49,16 @@ func (c *VideoController) GetUserVideo() {
 	// if v != nil { //如果登录了
 	// 	user, err = models.GetUserByUsername(v.(string))
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	}
-		//查询admin角色的id
-		//重新获取roleid
-		// role, err := models.GetRoleByRolename("admin")
-		// if err != nil {
-		// 	beego.Error(err)
-		// }
-		// userid = strconv.FormatInt(user.Id, 10)
-		// roleid = strconv.FormatInt(role.Id, 10)
+	//查询admin角色的id
+	//重新获取roleid
+	// role, err := models.GetRoleByRolename("admin")
+	// if err != nil {
+	// 	logs.Error(err)
+	// }
+	// userid = strconv.FormatInt(user.Id, 10)
+	// roleid = strconv.FormatInt(role.Id, 10)
 
 	// } else {
 	// 	c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -64,20 +66,20 @@ func (c *VideoController) GetUserVideo() {
 	// 	return
 	// }
 
-	searchText := c.Input().Get("searchText")
+	searchText := c.GetString("searchText")
 
-	limit := c.Input().Get("limit")
+	limit := c.GetString("limit")
 	if limit == "" {
 		limit = "15"
 	}
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("pageNo")
+	page := c.GetString("pageNo")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -86,19 +88,19 @@ func (c *VideoController) GetUserVideo() {
 		offset = (page1 - 1) * limit1
 	}
 
-				//根据pid查出项目id
+	//根据pid查出项目id
 	proj, err := models.GetProj(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	videos, err := models.GetUserVideo(proj.Id, limit1, offset, searchText)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	count, err := models.GetUserVideoCount(proj.Id, searchText)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// c.Data["json"] = carts
 	c.Data["json"] = map[string]interface{}{"page": page1, "total": count, "rows": videos}

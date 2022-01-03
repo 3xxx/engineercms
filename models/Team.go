@@ -3,8 +3,9 @@ package models
 import (
 	"errors"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"time"
 )
 
@@ -47,7 +48,7 @@ func (t *Team) First(id int, cols ...string) (*Team, error) {
 	err := o.QueryTable(t.TableNameWithPrefix()).Filter("team_id", id).One(t, cols...)
 
 	if err != nil {
-		beego.Error("查询团队失败 ->", id, err)
+		logs.Error("查询团队失败 ->", id, err)
 		return nil, err
 	}
 	t.Include()
@@ -58,18 +59,18 @@ func (t *Team) Delete(id int) (err error) {
 	if id <= 0 {
 		return ErrInvalidParameter
 	}
-	o := orm.NewOrm()
+	ormer := orm.NewOrm()
 
-	err = o.Begin()
+	o, err := ormer.Begin()
 
 	if err != nil {
-		beego.Error("开启事物时出错 ->", err)
+		logs.Error("开启事物时出错 ->", err)
 		return
 	}
 	_, err = o.QueryTable(t.TableNameWithPrefix()).Filter("team_id", id).Delete()
 
 	if err != nil {
-		beego.Error("删除团队时出错 ->", err)
+		logs.Error("删除团队时出错 ->", err)
 		o.Rollback()
 		return
 	}
@@ -77,7 +78,7 @@ func (t *Team) Delete(id int) (err error) {
 	_, err = o.Raw("delete from md_team_member where team_id=?;", id).Exec()
 
 	if err != nil {
-		beego.Error("删除团队成员时出错 ->", err)
+		logs.Error("删除团队成员时出错 ->", err)
 		o.Rollback()
 		return
 	}
@@ -85,7 +86,7 @@ func (t *Team) Delete(id int) (err error) {
 	_, err = o.Raw("delete from md_team_relationship where team_id=?;", id).Exec()
 
 	if err != nil {
-		beego.Error("删除团队项目时出错 ->", err)
+		logs.Error("删除团队项目时出错 ->", err)
 		o.Rollback()
 		return err
 	}
@@ -154,7 +155,7 @@ func (t *Team) Save(cols ...string) (err error) {
 		_, err = o.Update(t, cols...)
 	}
 	if err != nil {
-		beego.Error("在保存团队时出错 ->", err)
+		logs.Error("在保存团队时出错 ->", err)
 	}
 	return
 }

@@ -2,10 +2,11 @@ package models
 
 import (
 	// "fmt"
-	// "github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
 	// "gorm.io/gorm"
 	"errors"
-	"github.com/jinzhu/gorm"
+	// "github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -38,13 +39,14 @@ type LocationNavigate struct {
 }
 
 func init() {
-	_db.CreateTable(&Location{}, &LocationNavigate{})
-	_db.CreateTable(&LocationNavigate{})
+	// _db.AutoMigrate(&Location{}, &LocationNavigate{})
+	// _db.CreateTable(&Location{}, &LocationNavigate{})
+	// _db.CreateTable(&LocationNavigate{})
 }
 
 // 登记定位数据组
 func CreateLocation(location Location) (id uint, err error) {
-	db := GetDB()
+	db := _db //GetDB()
 	// projectuser := ProjectUser{ProjectId: pid, UserId: uid}
 	// 查询项目名称和时间段
 	//判断是否有重名
@@ -62,7 +64,7 @@ func CreateLocation(location Location) (id uint, err error) {
 
 //定位导航写入数据库
 func CreateLocationNavigate(locationnavigate LocationNavigate) (id uint, err error) {
-	db := GetDB()
+	db := _db //GetDB()
 	//判断是否有重名
 	err = db.Where("location_id = ? AND location = ?", locationnavigate.LocationID, locationnavigate.Location).FirstOrCreate(&locationnavigate).Error
 	// err = o.QueryTable("location_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
@@ -73,7 +75,7 @@ func CreateLocationNavigate(locationnavigate LocationNavigate) (id uint, err err
 
 // 更新出差活动
 func UpdateLocation(location Location) (err error) {
-	db := GetDB()
+	db := _db //GetDB()
 	// projectuser := ProjectUser{ProjectId: pid, UserId: uid}
 	// db.First(&location, id)
 	result := db.Model(&location).Updates(location)
@@ -89,7 +91,7 @@ func GetAllLocation(projectid int64) (location []Location, err error) {
 	//join一定要select,其他不用select的话默认查询全部。
 	// Preload("LocationUsers.NickNames")——嵌套预加载！！
 	// 加8个小时
-	db := GetDB()
+	db := _db //GetDB()
 	err = db.Order("location.sort desc").
 		Preload("LocationNavigates").
 		Where("location.project_id = ?", projectid).
@@ -103,7 +105,7 @@ func GetLocationById(locationid int64) (location Location, err error) {
 	//join一定要select,其他不用select的话默认查询全部。
 	// Preload("LocationUsers.NickNames")——嵌套预加载！！
 	// 加8个小时
-	db := GetDB()
+	db := _db //GetDB()
 	err = db.
 		Preload("LocationUsers").
 		// Preload("LocationUsers.NickNames", "id = ?", uid).//只预加载匹配的！
@@ -119,7 +121,7 @@ func GetAllLocation2(projectid int64) (location []Location, err error) {
 	// 坑：preload里不是对应的表的名字，而是主表中字段名字！！！
 	//join一定要select,其他不用select的话默认查询全部。
 	// Preload("LocationUsers.NickNames")——嵌套预加载！！
-	db := GetDB()
+	db := _db //GetDB()
 	err = db.Order("location.updated_at desc").
 		Preload("LocationUsers").
 		// Preload("LocationUsers.NickNames", "id = ?", uid).//只预加载匹配的！
@@ -132,7 +134,7 @@ func GetAllLocation2(projectid int64) (location []Location, err error) {
 
 //按月统计**************
 func GetLocationCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset int) (location []Location, err error) {
-	db := GetDB()
+	db := _db //GetDB()
 	err = db.Order("location.updated_at desc").
 		Preload("LocationCheckins", "select_date >= ? AND select_date <= ? ", selectmonth1, selectmonth2).
 		Preload("LocationCheckins.Users").

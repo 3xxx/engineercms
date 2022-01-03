@@ -4,14 +4,16 @@ import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
 	"net/http"
 	"os"
 	"strconv"
 )
 
 type ReplyController struct {
-	beego.Controller
+	web.Controller
 }
 
 // @Title post wx release by articleId
@@ -34,24 +36,24 @@ func (c *ReplyController) AddWxRelease() {
 		return
 	}
 	//content去验证
-	app_version := c.Input().Get("app_version")
+	app_version := c.GetString("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	}
 	// beego.Info(accessToken)
-	content := c.Input().Get("content")
+	content := c.GetString("content")
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
-	beego.Info(accessToken)
-	beego.Info(openID.(string))
-	beego.Info(content)
-	beego.Info(errcode)
-	beego.Info(errmsg)
+	// beego.Info(accessToken)
+	// beego.Info(openID.(string))
+	// beego.Info(content)
+	// beego.Info(errcode)
+	// beego.Info(errmsg)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
@@ -59,12 +61,12 @@ func (c *ReplyController) AddWxRelease() {
 		//id转成64为
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
-		// content := c.Input().Get("content")
-		avatar := c.Input().Get("avatar")
-		username := c.Input().Get("username")
-		created := c.Input().Get("publish_time")
+		// content := c.GetString("content")
+		avatar := c.GetString("avatar")
+		username := c.GetString("username")
+		created := c.GetString("publish_time")
 		var openID string
 		openid := c.GetSession("openID")
 		if openid == nil {
@@ -75,7 +77,7 @@ func (c *ReplyController) AddWxRelease() {
 
 		releaseid, err := models.AddTopicReply(idNum, openID, content, avatar, username, created)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		} else {
 			c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "releaseid": releaseid}
@@ -101,11 +103,11 @@ func (c *ReplyController) DeleteWxRelease() {
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = models.DeleteTopicReply(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "releaseid": id}
 		c.ServeJSON()
@@ -121,41 +123,53 @@ func (c *ReplyController) DeleteWxRelease() {
 // @router /addwxlike/:id [post]
 //添加文章点赞
 func (c *ReplyController) AddWxLike() {
-	// tid := c.Input().Get("tid") //tid是文章id
+	// tid := c.GetString("tid") //tid是文章id
 	id := c.Ctx.Input.Param(":id")
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	liked := c.Input().Get("liked")
+	liked := c.GetString("liked")
 	//根据用户openid，获取用户名，如果没有openid，则用用户昵称
-	JSCODE := c.Input().Get("code")
+	JSCODE := c.GetString("code")
 	// beego.Info(JSCODE)
-	APPID := beego.AppConfig.String("wxAPPID2")
-	SECRET := beego.AppConfig.String("wxSECRET2")
-	app_version := c.Input().Get("app_version")
+	APPID, err := web.AppConfig.String("wxAPPID2")
+	if err != nil {
+		logs.Error(err)
+	}
+	SECRET, err := web.AppConfig.String("wxSECRET2")
+	if err != nil {
+		logs.Error(err)
+	}
+	app_version := c.GetString("app_version")
 	if app_version == "3" {
-		APPID = beego.AppConfig.String("wxAPPID3")
-		SECRET = beego.AppConfig.String("wxSECRET3")
+		APPID, err = web.AppConfig.String("wxAPPID3")
+		if err != nil {
+			logs.Error(err)
+		}
+		SECRET, err = web.AppConfig.String("wxSECRET3")
+		if err != nil {
+			logs.Error(err)
+		}
 	}
 	// APPID := "wx05b480781ac8f4c8"                //这里一定要修改啊
 	// SECRET := "0ddfd84afc74f3bc5b5db373a4090dc5" //这里一定要修改啊
 	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
 	resp, err := http.Get(requestUrl)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		beego.Error(err)
+		logs.Error(err)
 		// return
 	}
 	var data map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		// return
 	}
 	// beego.Info(data)
@@ -178,7 +192,7 @@ func (c *ReplyController) AddWxLike() {
 	if liked == "true" { //如果已经点赞了，则取消
 		err = models.DeleteTopicLike(openID)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = map[string]interface{}{"info": "SUCCESS"}
 			c.ServeJSON()
@@ -186,7 +200,7 @@ func (c *ReplyController) AddWxLike() {
 	} else if liked == "false" {
 		likeid, err := models.AddTopicLike(idNum, openID)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "likeid": likeid}
 			c.ServeJSON()
@@ -207,11 +221,11 @@ func (c *ReplyController) AddWxLike() {
 // 	//id转成64为
 // 	idNum, err := strconv.ParseInt(id, 10, 64)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	}
 // 	err = models.DeleteTopicLike(idNum)
 // 	if err != nil {
-// 		beego.Error(err)
+// 		logs.Error(err)
 // 	} else {
 // 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "likeid": id}
 // 		c.ServeJSON()
@@ -220,16 +234,16 @@ func (c *ReplyController) AddWxLike() {
 
 //添加wiki评论
 func (c *ReplyController) AddWiki() {
-	tid := c.Input().Get("tid") //tid是文章id
+	tid := c.GetString("tid") //tid是文章id
 	username, _, _, _, _ := checkprodRole(c.Ctx)
-	err := models.AddWikiReply(tid, username, c.Input().Get("content"))
+	err := models.AddWikiReply(tid, username, c.GetString("content"))
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		c.Data["json"] = tid
 		c.ServeJSON()
 	}
-	op := c.Input().Get("op")
+	op := c.GetString("op")
 	switch op {
 	case "b":
 		c.Redirect("/topic/view_b/"+tid, 302)
@@ -245,10 +259,10 @@ func (c *ReplyController) DeleteWiki() {
 	if !checkAccount(c.Ctx) {
 		return
 	}
-	tid := c.Input().Get("tid")
-	err := models.DeleteWikiReply(c.Input().Get("rid"))
+	tid := c.GetString("tid")
+	err := models.DeleteWikiReply(c.GetString("rid"))
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Redirect("/wiki/view/"+tid, 302)
 }

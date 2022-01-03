@@ -6,9 +6,11 @@ import (
 	// "encoding/hex"
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/httplib"
-	// "github.com/astaxie/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
+	// "github.com/beego/beego/v2/adapter/httplib"
+	// "github.com/beego/beego/v2/adapter/logs"
 	// "net"
 	// "net/http"
 	// "net/url"
@@ -23,7 +25,7 @@ import (
 
 // CMSTODO API
 type TodoController struct {
-	beego.Controller
+	web.Controller
 }
 
 // @Title post todo
@@ -40,7 +42,7 @@ func (c *TodoController) Create() {
 	if openID != nil {
 		user, err := models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		userid = user.Id
 	} else {
@@ -50,17 +52,17 @@ func (c *TodoController) Create() {
 		// user.Id = 9
 	}
 
-	name := c.Input().Get("name")
-	projectid := c.Input().Get("projectid")
+	name := c.GetString("name")
+	projectid := c.GetString("projectid")
 	ProjectId, err := strconv.ParseInt(projectid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// 进行敏感字符验证
-	app_version := c.Input().Get("app_version")
+	app_version := c.GetString("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 		return
@@ -68,13 +70,13 @@ func (c *TodoController) Create() {
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, name)
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), name)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
 		todoid, err := models.TodoCreate(ProjectId, name, userid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"message": "写入数据库出错"}
 			c.ServeJSON()
 		} else {
@@ -100,23 +102,23 @@ func (c *TodoController) Create() {
 func (c *TodoController) GetTodo() {
 	var offset, limit1, page1 int
 	var err error
-	limit := c.Input().Get("limit")
+	limit := c.GetString("limit")
 	if limit == "" {
 		limit1 = 20
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	if page == "" {
 		// limit1 = 10
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 
@@ -125,14 +127,14 @@ func (c *TodoController) GetTodo() {
 	} else {
 		offset = (page1 - 1) * limit1
 	}
-	projectid := c.Input().Get("projectid")
+	projectid := c.GetString("projectid")
 	ProjectId, err := strconv.ParseInt(projectid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	todos, err := models.GetTodoUser(ProjectId, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = todos //map[string]interface{}{"userId": 1, "avatorUrl": "Filename"}
 	c.ServeJSON()
@@ -155,16 +157,16 @@ func (c *TodoController) UpdateTodo() {
 		return
 		// user.Id = 9
 	}
-	id := c.Input().Get("todoid")
+	id := c.GetString("todoid")
 	//pid转成64为
 	todoid, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	err = models.UpdateTodo(todoid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"message": "更新数据库错误"}
 		c.ServeJSON()
 	} else {
@@ -182,15 +184,15 @@ func (c *TodoController) UpdateTodo() {
 // @router /deletetodo [post]
 // 删除待办
 func (c *TodoController) DeleteTodo() {
-	id := c.Input().Get("todoid")
+	id := c.GetString("todoid")
 	//pid转成64为
 	todoid, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = models.DeleteTodo(todoid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"message": "删除数据错误"}
 		c.ServeJSON()
 	} else {

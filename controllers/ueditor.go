@@ -4,7 +4,9 @@ import (
 	// "bytes"
 	"encoding/json"
 	// "fmt"
-	"github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"github.com/pborman/uuid"
 	// "image/png"
 	"io"
@@ -23,7 +25,7 @@ import (
 )
 
 type UeditorController struct {
-	beego.Controller
+	web.Controller
 }
 
 type UploadimageUE struct {
@@ -53,8 +55,8 @@ type UploadimageUE struct {
 // }
 
 func (c *UeditorController) ControllerUE() {
-	op := c.Input().Get("action")
-	key := c.Input().Get("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
+	op := c.GetString("action")
+	key := c.GetString("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
 	switch op {
 	case "config": //这里还是要优化成conf/config.json
 		// $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
@@ -114,7 +116,7 @@ func (c *UeditorController) ControllerUE() {
 			//保存上传的图片
 			_, h, err := c.GetFile("upfile")
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var filesize int64
 			fileSuffix := path.Ext(h.Filename)
@@ -122,13 +124,13 @@ func (c *UeditorController) ControllerUE() {
 			year, month, _ := time.Now().Date()
 			err = os.MkdirAll("./attachment/wiki/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			path1 := "./attachment/wiki/" + strconv.Itoa(year) + month.String() + "/" + newname //h.Filename
 			Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
 			err = c.SaveToFile("upfile", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			filesize, _ = FileSize(path1)
 			filesize = filesize / 1000.0
@@ -136,35 +138,35 @@ func (c *UeditorController) ControllerUE() {
 			c.ServeJSON()
 		default:
 			//解析表单
-			pid := c.Input().Get("pid")
+			pid := c.GetString("pid")
 			// beego.Info(pid)
 			//pid转成64为
 			pidNum, err := strconv.ParseInt(pid, 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//根据proj的parentIdpath
 			Url, DiskDirectory, err := GetUrlPath(pidNum)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			// beego.Info(DiskDirectory)
 			//获取上传的文件
 			_, h, err := c.GetFile("upfile")
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			fileSuffix := path.Ext(h.Filename)
 			// random_name
 			newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 			// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 			// if err != nil {
-			// 	beego.Error(err)
+			// 	logs.Error(err)
 			// }
 			year, month, _ := time.Now().Date()
 			err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var path string
 			var filesize int64
@@ -174,7 +176,7 @@ func (c *UeditorController) ControllerUE() {
 				Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 				err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				filesize, _ = FileSize(path)
 				filesize = filesize / 1000.0
@@ -186,22 +188,22 @@ func (c *UeditorController) ControllerUE() {
 			}
 		}
 	case "uploadscrawl":
-		number := c.Input().Get("number")
+		number := c.GetString("number")
 
-		name := c.Input().Get("name")
+		name := c.GetString("name")
 		err := os.MkdirAll("./attachment/"+number+name, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		path1 := "./attachment/" + number + name + "/"
 		//保存上传的图片
 		//upfile为base64格式文件，转成图片保存
-		ww := c.Input().Get("upfile")
+		ww := c.GetString("upfile")
 		ddd, _ := base64.StdEncoding.DecodeString(ww)           //成图片文件并把文件写入到buffer
 		newname := strconv.FormatInt(time.Now().Unix(), 10)     // + "_" + filename
 		err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// var filesize int64
 		// filesize, _ = FileSize(path1)

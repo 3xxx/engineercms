@@ -2,8 +2,8 @@ package models
 
 import (
 	// "database/sql"
-	// "github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	// _ "github.com/go-sql-driver/mysql"
 	// "github.com/go-xorm/xorm"
 	// _ "github.com/lib/pq"

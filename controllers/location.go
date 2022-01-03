@@ -5,7 +5,9 @@ import (
 	// "encoding/json"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
 	// "sort"
 	"strconv"
 	// "strings"
@@ -13,7 +15,7 @@ import (
 )
 
 type LocationController struct {
-	beego.Controller
+	web.Controller
 }
 
 // type wxuser struct {
@@ -34,10 +36,10 @@ type LocationController struct {
 // 添加一个定位组
 func (c *LocationController) AddLocationPart() {
 	//content去验证
-	app_version := c.Input().Get("app_version")
+	app_version := c.GetString("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	}
@@ -47,7 +49,7 @@ func (c *LocationController) AddLocationPart() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -60,22 +62,22 @@ func (c *LocationController) AddLocationPart() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
-	title := c.Input().Get("title")
-	describe := c.Input().Get("describe")
-	sort := c.Input().Get("sort")
+	title := c.GetString("title")
+	describe := c.GetString("describe")
+	sort := c.GetString("sort")
 	sortint, err := strconv.Atoi(sort)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// 进行敏感字符验证
 	content := title + describe
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
@@ -92,7 +94,7 @@ func (c *LocationController) AddLocationPart() {
 		Id, err := models.CreateLocation(location)
 
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加定位组数据错误"}
 			c.ServeJSON()
 		} else if Id != 0 {
@@ -124,10 +126,10 @@ func (c *LocationController) AddLocationPart() {
 // 添加一个定位
 func (c *LocationController) AddLocationNavigate() {
 	//content去验证
-	app_version := c.Input().Get("app_version")
+	app_version := c.GetString("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	}
@@ -136,7 +138,7 @@ func (c *LocationController) AddLocationNavigate() {
 	if openID != nil {
 		_, err := models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -149,31 +151,31 @@ func (c *LocationController) AddLocationNavigate() {
 	//id转成uint
 	locidint, err := strconv.Atoi(locid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	locationid := uint(locidint)
 
-	title := c.Input().Get("title")
-	label := c.Input().Get("label")
-	location := c.Input().Get("location")
-	address := c.Input().Get("address")
-	sort := c.Input().Get("sort")
+	title := c.GetString("title")
+	label := c.GetString("label")
+	location := c.GetString("location")
+	address := c.GetString("address")
+	sort := c.GetString("sort")
 	var sortint int
 	if sort != "" {
 		sortint, err = strconv.Atoi(sort)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
-	lat := c.Input().Get("lat")
+	lat := c.GetString("lat")
 	latfloat, err := strconv.ParseFloat(lat, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	lng := c.Input().Get("lng")
+	lng := c.GetString("lng")
 	lngfloat, err := strconv.ParseFloat(lng, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	// 进行敏感字符验证
@@ -181,7 +183,7 @@ func (c *LocationController) AddLocationNavigate() {
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
@@ -202,7 +204,7 @@ func (c *LocationController) AddLocationNavigate() {
 		// beego.Info(Id)
 		// beego.Info(err)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加出差数据错误"}
 			c.ServeJSON()
 		} else if Id != 0 {
@@ -231,14 +233,14 @@ func (c *LocationController) GetLocation() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(projectid)
 	// projectid = 25001
 	//查出未过期的与本人有关的出差活动
 	location, err := models.GetAllLocation(projectid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = location //map[string]interface{}{"userId": 1, "avatorUrl": "Filename"}
 	c.ServeJSON()
@@ -266,12 +268,12 @@ func (c *LocationController) GetLocationById() {
 	//id转成64为
 	locationid, err := strconv.ParseInt(bid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//查出出差活动
 	location, err := models.GetLocationById(locationid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	c.Data["json"] = location //map[string]interface{}{"userId": 1, "avatorUrl": "Filename"}

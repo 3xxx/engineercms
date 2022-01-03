@@ -2,8 +2,9 @@ package models
 
 import (
 	"github.com/3xxx/engineercms/conf"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"strings"
 )
 
@@ -101,7 +102,7 @@ func (m *Label) FindToPager(pageIndex, pageSize int) (labels []*Label, totalCoun
 	_, err = o.QueryTable(m.TableNameWithPrefix()).OrderBy("-book_number").Offset(offset).Limit(pageSize).All(&labels)
 
 	if err == orm.ErrNoRows {
-		beego.Info("没有查询到标签 ->", err)
+		logs.Info("没有查询到标签 ->", err)
 		err = nil
 		return
 	}

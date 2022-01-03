@@ -5,9 +5,11 @@ import (
 	// "encoding/hex"
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/httplib"
-	// "github.com/astaxie/beego/logs"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// "github.com/beego/beego/v2/adapter/httplib"
+	// "github.com/beego/beego/v2/adapter/logs"
 	// "net"
 	// "net/http"
 	// "net/url"
@@ -28,7 +30,7 @@ import (
 
 // CMSWXDIARY API
 type DiaryController struct {
-	beego.Controller
+	web.Controller
 }
 
 //日志列表页
@@ -42,17 +44,20 @@ func (c *DiaryController) GetWxDiary2() {
 	var err error
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
-	wxsite := beego.AppConfig.String("wxreqeustsite")
+	wxsite, err := web.AppConfig.String("wxreqeustsite")
+	if err != nil {
+		logs.Error(err)
+	}
 
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(idNum)
 	Diary, err := models.GetDiary(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	content := strings.Replace(Diary.Content, "/attachment/", wxsite+"/attachment/", -1)
@@ -103,13 +108,13 @@ func (c *DiaryController) AddWxDiary() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			// beego.Info(user)
-			// pid := beego.AppConfig.String("wxdiaryprojectid") //"26159"
-			pid := c.Input().Get("projectid")
-			title := c.Input().Get("title")
-			diarydate := c.Input().Get("diarydate")
+			// pid := web.AppConfig.String("wxdiaryprojectid") //"26159"
+			pid := c.GetString("projectid")
+			title := c.GetString("title")
+			diarydate := c.GetString("diarydate")
 
 			array := strings.Split(diarydate, "-")
 			//当月天数
@@ -125,25 +130,25 @@ func (c *DiaryController) AddWxDiary() {
 			}
 			// diarydate2, err := time.Parse(base_format, year+"-"+month+"-"+day)
 			// if err != nil {
-			// 	beego.Error(err)
+			// 	logs.Error(err)
 			// }
 			diarydate2 := year + "-" + month + "-" + day
 			// beego.Info(diarydate2)
-			diaryactivity := c.Input().Get("diaryactivity")
-			diaryweather := c.Input().Get("diaryweather")
+			diaryactivity := c.GetString("diaryactivity")
+			diaryweather := c.GetString("diaryweather")
 
-			content := c.Input().Get("content")
+			content := c.GetString("content")
 			content = "<p style='font-size: 16px;'>分部：" + diaryactivity + "；</p><p style='font-size: 16px;'>天气：" + diaryweather + "；</p><p style='font-size: 16px;'>记录：" + user.Nickname + "；</p>" + content //<span style="font-size: 18px;">这个字体到底是多大才好看</span>
 
 			//id转成64为
 			pidNum, err := strconv.ParseInt(pid, 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//添加日志
 			aid, err := models.AddDiary(title, content, diarydate2, pidNum, user.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 				c.Data["json"] = map[string]interface{}{"status": 0, "info": "ERR", "id": aid}
 				c.ServeJSON()
 			} else {
@@ -157,14 +162,14 @@ func (c *DiaryController) AddWxDiary() {
 	// //根据pid查出项目id
 	// proj, err := models.GetProj(pidNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// parentidpath := strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
 	// parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
 	// patharray := strings.Split(parentidpath1, "-")
 	// topprojectid, err := strconv.ParseInt(patharray[0], 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// code := time.Now().Format("2006-01-02 15:04")
 	// code = strings.Replace(code, "-", "", -1)
@@ -173,7 +178,7 @@ func (c *DiaryController) AddWxDiary() {
 	// //根据项目id添加成果code, title, label, principal, content string, projectid int64
 	// Id, err := models.AddProduct(code, title, "wx", user.Nickname, user.Id, pidNum, topprojectid)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 }
 
@@ -190,38 +195,38 @@ func (c *DiaryController) AddWxDiary() {
 //小程序取得日志列表，分页_珠三角设代用
 func (c *DiaryController) GetWxdiaries() {
 	// id := c.Ctx.Input.Param(":id")
-	// id := beego.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
-	// wxsite := beego.AppConfig.String("wxreqeustsite")
+	// id := web.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
+	// wxsite := web.AppConfig.String("wxreqeustsite")
 	var ProjectId int64
 	var err error
-	projectid := c.Input().Get("projectid")
+	projectid := c.GetString("projectid")
 	if projectid != "" {
 		ProjectId, err = strconv.ParseInt(projectid, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
-	limit := c.Input().Get("limit")
+	limit := c.GetString("limit")
 	if limit == "" {
 		limit = "12"
 	}
 	// limit1, err := strconv.ParseInt(limit, 10, 64)
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	// page1, err := strconv.ParseInt(page, 10, 64)
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	// var idNum int64
 	// //id转成64为
 	// idNum, err = strconv.ParseInt(id, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// var offset int64
 	var offset int
@@ -234,7 +239,7 @@ func (c *DiaryController) GetWxdiaries() {
 	// diaries, err := models.GetWxDiaries(idNum, limit1, offset)
 	diaries, err := models.GetWxDiaries2(ProjectId, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(diaries)
 
@@ -255,27 +260,27 @@ func (c *DiaryController) GetWxdiaries() {
 //网页页面取得日志列表，返回page rows total
 func (c *DiaryController) GetWxdiaries2() {
 	id := c.Ctx.Input.Param(":id")
-	// id := beego.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
-	// wxsite := beego.AppConfig.String("wxreqeustsite")
+	// id := web.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
+	// wxsite := web.AppConfig.String("wxreqeustsite")
 	// limit := "10"
-	limit := c.Input().Get("limit")
+	limit := c.GetString("limit")
 
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	// page1, err := strconv.ParseInt(page, 10, 64)
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var idNum int64
 	//id转成64为
 	idNum, err = strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// var offset int64
 	var offset int
@@ -288,11 +293,11 @@ func (c *DiaryController) GetWxdiaries2() {
 	// diaries, err := models.GetWxDiaries(idNum, limit1, offset)
 	diaries, err := models.GetWxDiaries2(idNum, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	count, err := models.GetWxDiaryCount(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(diaries)
 	c.Data["json"] = map[string]interface{}{"page": page, "rows": diaries, "total": count}
@@ -312,17 +317,20 @@ func (c *DiaryController) GetWxDiary() {
 	var err error
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
-	wxsite := beego.AppConfig.String("wxreqeustsite")
+	wxsite, err := web.AppConfig.String("wxreqeustsite")
+	if err != nil {
+		logs.Error(err)
+	}
 
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(idNum)
 	Diary, err := models.GetDiary(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	content := strings.Replace(Diary.Content, "/attachment/", wxsite+"/attachment/", -1)
@@ -363,34 +371,37 @@ func (c *DiaryController) GetWxDiary() {
 // @router /updatewxdiary [post]
 // 编辑设代日记id下微信小程序文章_珠三角设代plus用_editor方式
 func (c *DiaryController) UpdateWxDiary() {
-	// pid := beego.AppConfig.String("wxcatalogid") //"26159"
+	// pid := web.AppConfig.String("wxcatalogid") //"26159"
 	//hotqinsessionid携带过来后，用下面的方法获取用户登录存储在服务端的session
 	openid := c.GetSession("openID")
 	if openid == nil {
 		return
 	}
 
-	id := c.Input().Get("id")
-	title := c.Input().Get("title")
-	content := c.Input().Get("content")
+	id := c.GetString("id")
+	title := c.GetString("title")
+	content := c.GetString("content")
 	//将content中的http://ip/去掉
-	wxsite := beego.AppConfig.String("wxreqeustsite")
+	wxsite, err := web.AppConfig.String("wxreqeustsite")
+	if err != nil {
+		logs.Error(err)
+	}
 	content = strings.Replace(content, wxsite, "", -1)
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//取得文章
 	_, err = models.GetDiary(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else {
 		//更新文章
 		err = models.UpdateDiary(idNum, title, content)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERR", "id": id}
 			c.ServeJSON()
 		} else {
@@ -411,7 +422,7 @@ func (c *DiaryController) UpdateWxDiary() {
 func (c *DiaryController) DeleteWxDiary() {
 	var openID string
 	openid := c.GetSession("openID")
-	beego.Info(openid.(string))
+	// beego.Info(openid.(string))
 	if openid == nil {
 		c.Data["json"] = "没有注册，未查到openid"
 		c.ServeJSON()
@@ -419,31 +430,31 @@ func (c *DiaryController) DeleteWxDiary() {
 		openID = openid.(string)
 		user, err := models.GetUserByOpenID(openID)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = "未查到openid对应的用户"
 			c.ServeJSON()
 		} else {
 			//判断是否具备admin角色
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			uid := strconv.FormatInt(user.Id, 10)
 			roleid := strconv.FormatInt(role.Id, 10)
 			hasrole, err := e.HasRoleForUser(uid, "role_"+roleid)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			if hasrole {
-				id := c.Input().Get("id")
+				id := c.GetString("id")
 				//id转成64为
 				idNum, err := strconv.ParseInt(id, 10, 64)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				err = models.DeleteDiary(idNum)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 					c.Data["json"] = "delete wrong"
 					c.ServeJSON()
 				} else {
@@ -474,27 +485,27 @@ type DiaryContent struct {
 // @router /getwxdiaries [get]
 // 将日志导出到word
 func (c *DiaryController) HtmlToDoc() {
-	// id := beego.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
+	// id := web.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
 	var ProjectId int64
 	var err error
-	projectid := c.Input().Get("projectid")
+	projectid := c.GetString("projectid")
 	if projectid != "" {
 		ProjectId, err = strconv.ParseInt(projectid, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	// limit := "10"
-	limit := c.Input().Get("limit")
+	limit := c.GetString("limit")
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	var offset int
@@ -507,18 +518,18 @@ func (c *DiaryController) HtmlToDoc() {
 	// diaries, err := models.GetWxDiaries(idNum, limit1, offset)
 	diaries, err := models.GetWxDiaries2(ProjectId, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	doc := document.New()
 
 	for _, v := range diaries {
 		did := v.Diary.Id
-		// wxsite := beego.AppConfig.String("wxreqeustsite")
+		// wxsite := web.AppConfig.String("wxreqeustsite")
 
 		Diary, err := models.GetDiary(did)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		para := doc.AddParagraph()
 		run := para.AddRun()
@@ -536,7 +547,7 @@ func (c *DiaryController) HtmlToDoc() {
 		var r io.Reader = strings.NewReader(string(Diary.Content))
 		goquerydoc, err := goquery.NewDocumentFromReader(r)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 
 		goquerydoc.Find("p").Each(func(i int, s *goquery.Selection) {
@@ -554,7 +565,7 @@ func (c *DiaryController) HtmlToDoc() {
 			var r2 io.Reader = strings.NewReader(w.Html)
 			goquerydoc2, err := goquery.NewDocumentFromReader(r2)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			slice2 := make([]Img, 0)
 			goquerydoc2.Find("img").Each(func(i int, s2 *goquery.Selection) {

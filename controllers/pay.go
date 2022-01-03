@@ -2,13 +2,15 @@ package controllers
 
 import (
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
 	"regexp"
 	"strconv"
 )
 
 type PayController struct {
-	beego.Controller
+	web.Controller
 }
 
 // @Title get wx pay list
@@ -25,7 +27,7 @@ func (c *PayController) GetWxPay() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -35,7 +37,7 @@ func (c *PayController) GetWxPay() {
 	}
 	pay, err := models.GetPay(user.Id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = pay
 	c.ServeJSON()
@@ -56,7 +58,7 @@ func (c *PayController) GetWxUserPays() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -68,12 +70,12 @@ func (c *PayController) GetWxUserPays() {
 	limit := "8"
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -84,7 +86,7 @@ func (c *PayController) GetWxUserPays() {
 
 	pays, err := models.GetUserPay(user.Id, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// c.Data["json"] = pays
 	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "mymoney": pays}
@@ -106,7 +108,7 @@ func (c *PayController) GetWxUserPayAppreciations() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -118,12 +120,12 @@ func (c *PayController) GetWxUserPayAppreciations() {
 	limit := "8"
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -134,7 +136,7 @@ func (c *PayController) GetWxUserPayAppreciations() {
 
 	appreciations, err := models.GetUserPayAppreciation(user.Id, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// c.Data["json"] = pays
 	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "mymoney": appreciations}
@@ -156,7 +158,7 @@ func (c *PayController) GetWxUserGetAppreciations() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -168,12 +170,12 @@ func (c *PayController) GetWxUserGetAppreciations() {
 	limit := "8"
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -184,7 +186,7 @@ func (c *PayController) GetWxUserGetAppreciations() {
 
 	appreciations, err := models.GetUserGetAppreciation(user.Id, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// c.Data["json"] = pays
 	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "mymoney": appreciations}
@@ -205,7 +207,7 @@ func (c *PayController) GetWxUserMoney() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -216,11 +218,11 @@ func (c *PayController) GetWxUserMoney() {
 	var money models.Money
 	money, err = models.GetUserMoney(user.Id)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		//如果用户账户为空，则默认充值10000金币
 		err := models.AddUserRecharge(user.Id, 10000)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			money.Amount = 10000
 			money.UserID = user.Id
@@ -249,7 +251,7 @@ func (c *PayController) AddWxUserPays() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -257,26 +259,26 @@ func (c *PayController) AddWxUserPays() {
 		return
 		// user.Id = 9
 	}
-	articleid := c.Input().Get("articleid")
+	articleid := c.GetString("articleid")
 	//id转成64为
 	aidNum, err := strconv.ParseInt(articleid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	amount := c.Input().Get("amount")
+	amount := c.GetString("amount")
 	amountint, err := strconv.Atoi(amount)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//如果作者账户里没有记录，则充值
 	// var money models.Money
 	// money, err = models.GetUserMoney(product.Uid)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// 	//如果用户账户为空，则默认充值10000金币
 	// 	err := models.AddUserRecharge(product.Uid, 10000)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	} else {
 	// 		money.Amount = 10000
 	// 		money.UserID = user.Id
@@ -285,7 +287,7 @@ func (c *PayController) AddWxUserPays() {
 	// }
 	err = models.AddUserPay(aidNum, user.Id, amountint)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "写入数据错误", "id": 1}
 		c.ServeJSON()
 	} else {
@@ -307,7 +309,7 @@ func (c *PayController) GetPay() {
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 	pay, err := models.GetPay(uid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	c.Data["json"] = pay
 	c.ServeJSON()
@@ -332,7 +334,7 @@ func (c *PayController) GetUserPay() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		c.TplName = "pay/pay.tpl"
@@ -368,13 +370,13 @@ func (c *PayController) GetUserPaylist() {
 	limit := "8"
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -385,7 +387,7 @@ func (c *PayController) GetUserPaylist() {
 
 	pays, err := models.GetUserPayMath(uid, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// 要做成分页的！！！
 	table := MathPayTable{pays, 1, 10}
@@ -407,12 +409,12 @@ func (c *PayController) GetUserPayAppreciations() {
 	limit := "8"
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -423,7 +425,7 @@ func (c *PayController) GetUserPayAppreciations() {
 
 	appreciations, err := models.GetUserPayMathAppreciation(uid, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// c.Data["json"] = pays
 	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "mymoney": appreciations}
@@ -444,12 +446,12 @@ func (c *PayController) GetUserGetAppreciations() {
 	limit := "8"
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("page")
+	page := c.GetString("page")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -460,7 +462,7 @@ func (c *PayController) GetUserGetAppreciations() {
 
 	appreciations, err := models.GetUserGetMathAppreciation(uid, limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// c.Data["json"] = pays
 	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "mymoney": appreciations}
@@ -484,11 +486,11 @@ func (c *PayController) GetUserMoney() {
 	var money models.Money
 	money, err := models.GetUserMoney(uid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		//如果用户账户为空，则默认充值10000金币
 		err := models.AddUserRecharge(uid, 100)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			money.Amount = 100
 			money.UserID = uid
@@ -518,28 +520,28 @@ func (c *PayController) AddUserPays() {
 		return
 	}
 	var templeid uint
-	usertempleid := c.Input().Get("usertempleid")
+	usertempleid := c.GetString("usertempleid")
 	//id转成uint为
 	usertempleidint, err := strconv.Atoi(usertempleid)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	templeid = uint(usertempleidint)
 
-	amount := c.Input().Get("amount")
+	amount := c.GetString("amount")
 	amountint, err := strconv.Atoi(amount)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//如果作者账户里没有记录，则充值
 	// var money models.Money
 	// money, err = models.GetUserMoney(product.Uid)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// 	//如果用户账户为空，则默认充值10000金币
 	// 	err := models.AddUserRecharge(product.Uid, 10000)
 	// 	if err != nil {
-	// 		beego.Error(err)
+	// 		logs.Error(err)
 	// 	} else {
 	// 		money.Amount = 10000
 	// 		money.UserID = user.Id
@@ -548,7 +550,7 @@ func (c *PayController) AddUserPays() {
 	// }
 	err = models.AddUserPayMath(templeid, uid, amountint)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "info": "ERROR", "data": "写入数据错误!", "id": 1}
 		c.ServeJSON()
 	} else {
@@ -576,7 +578,7 @@ func (c *PayController) ApplyRecharge() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		c.TplName = "pay/applyrecharge.tpl"
@@ -599,12 +601,12 @@ func (c *PayController) AddApplyRecharge() {
 	//id转成64为
 	useridNum, err := strconv.ParseInt(userid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	amount := c.Input().Get("amount")
+	amount := c.GetString("amount")
 	amountint, err := strconv.Atoi(amount)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	// 身份证
@@ -612,7 +614,7 @@ func (c *PayController) AddApplyRecharge() {
 
 	err = models.AddApplyRecharge(useridNum, amountint)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "info": "ERROR", "data": "写入数据库出错！"}
 	} else {
 		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "info": "SUCCESS", "data": "发送申请成功~"}
@@ -644,7 +646,7 @@ func (c *PayController) GetApplyRecharge() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if matched == true {
 		c.TplName = "pay/recharge.tpl"
@@ -677,16 +679,16 @@ func (c *PayController) GetApplyRechargeData() {
 		c.ServeJSON()
 		return
 	}
-	limit := c.Input().Get("limit")
+	limit := c.GetString("limit")
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
-	page := c.Input().Get("pageNo")
+	page := c.GetString("pageNo")
 
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -697,7 +699,7 @@ func (c *PayController) GetApplyRechargeData() {
 
 	recharges, err := models.GetApplyRecharge(limit1, offset)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// 要做成分页的！！！
 	table := ApplyRechargeTable{recharges, page1, 100}
@@ -722,21 +724,21 @@ func (c *PayController) AddUserRecharge() {
 		//id转成uint为
 		idint, err := strconv.Atoi(id)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		rechargeid = uint(idint)
 	}
-	amount := c.Input().Get("amount")
+	amount := c.GetString("amount")
 	amountint, err := strconv.Atoi(amount)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// var money models.Money
 	//如果用户账户为空，则默认充值100金币
 
 	err = models.UpdateRecharge(rechargeid, amountint)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "info": "ERROR", "data": "写入数据库失败！"}
 	} else {
 		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "info": "SUCCESS", "data": "成功~"}

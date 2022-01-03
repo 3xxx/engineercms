@@ -2,13 +2,6 @@ package models
 
 import (
 	"bytes"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"time"
-
 	"encoding/json"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils/cryptil"
@@ -18,13 +11,19 @@ import (
 	"github.com/3xxx/engineercms/controllers/utils/ziptil"
 	"github.com/3xxx/engineercms/converter"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego/orm"
-	// "gopkg.in/russross/blackfriday.v2"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/i18n"
 	"github.com/russross/blackfriday/v2"
+	"io/ioutil"
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var (
@@ -70,6 +69,7 @@ type BookResult struct {
 	IsDisplayComment bool   `json:"is_display_comment"`
 	IsDownload       bool   `json:"is_download"`
 	AutoSave         bool   `json:"auto_save"`
+	Lang             string
 }
 
 func NewBookResult() *BookResult {
@@ -85,6 +85,11 @@ func (m *BookResult) String() string {
 	return string(ret)
 }
 
+func (m *BookResult) SetLang(lang string) *BookResult {
+	m.Lang = lang
+	return m
+}
+
 // 根据项目标识查询项目以及指定用户权限的信息.
 func (m *BookResult) FindByIdentify(identify string, memberId int) (*BookResult, error) {
 	if identify == "" || memberId <= 0 {
@@ -97,7 +102,7 @@ func (m *BookResult) FindByIdentify(identify string, memberId int) (*BookResult,
 	err := NewBook().QueryTable().Filter("identify", identify).One(&book)
 
 	if err != nil {
-		beego.Error("获取项目失败 ->", err)
+		logs.Error("获取项目失败 ->", err)
 		return m, err
 	}
 
@@ -131,13 +136,13 @@ func (m *BookResult) FindByIdentify(identify string, memberId int) (*BookResult,
 	}
 
 	if m.RoleId == conf.BookFounder {
-		m.RoleName = "创始人"
+		m.RoleName = i18n.Tr(m.Lang, "common.creator")
 	} else if m.RoleId == conf.BookAdmin {
-		m.RoleName = "管理员"
+		m.RoleName = i18n.Tr(m.Lang, "common.administrator")
 	} else if m.RoleId == conf.BookEditor {
-		m.RoleName = "编辑者"
+		m.RoleName = i18n.Tr(m.Lang, "common.editor")
 	} else if m.RoleId == conf.BookObserver {
-		m.RoleName = "观察者"
+		m.RoleName = i18n.Tr(m.Lang, "common.observer")
 	}
 
 	doc := NewDocument()
@@ -240,7 +245,7 @@ func (m *BookResult) ToBookResult(book Book) *BookResult {
 func BackgroundConvert(sessionId string, bookResult *BookResult) error {
 
 	if err := converter.CheckConvertCommand(); err != nil {
-		beego.Error("检查转换程序失败 -> ", err)
+		logs.Error("检查转换程序失败 -> ", err)
 		return err
 	}
 	err := exportLimitWorkerChannel.LoadOrStore(bookResult.Identify, func() {
@@ -249,7 +254,7 @@ func BackgroundConvert(sessionId string, bookResult *BookResult) error {
 
 	if err != nil {
 
-		beego.Error("将导出任务加入任务队列失败 -> ", err)
+		logs.Error("将导出任务加入任务队列失败 -> ", err)
 		return err
 	}
 	exportLimitWorkerChannel.Start()
@@ -262,7 +267,7 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 	convertBookResult := ConvertBookResult{}
 
 	outputPath := filepath.Join(conf.GetExportOutputPath(), strconv.Itoa(m.BookId))
-	viewPath := beego.BConfig.WebConfig.ViewsPath
+	viewPath := web.BConfig.WebConfig.ViewsPath
 
 	pdfpath := filepath.Join(outputPath, "book.pdf")
 	epubpath := filepath.Join(outputPath, "book.epub")
@@ -275,15 +280,15 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 	sourceDir := strings.TrimSuffix(tempOutputPath, "source")
 	if filetil.FileExists(sourceDir) {
 		if err := os.RemoveAll(sourceDir); err != nil {
-			beego.Error("删除临时目录失败 ->", sourceDir, err)
+			logs.Error("删除临时目录失败 ->", sourceDir, err)
 		}
 	}
 
 	if err := os.MkdirAll(outputPath, 0766); err != nil {
-		beego.Error("创建目录失败 -> ", outputPath, err)
+		logs.Error("创建目录失败 -> ", outputPath, err)
 	}
 	if err := os.MkdirAll(tempOutputPath, 0766); err != nil {
-		beego.Error("创建目录失败 -> ", tempOutputPath, err)
+		logs.Error("创建目录失败 -> ", tempOutputPath, err)
 	}
 	os.MkdirAll(filepath.Join(tempOutputPath, "Images"), 0755)
 
@@ -359,7 +364,7 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 	}
 
 	if tempOutputPath, err = filepath.Abs(tempOutputPath); err != nil {
-		beego.Error("导出目录配置错误：" + err.Error())
+		logs.Error("导出目录配置错误：" + err.Error())
 		return convertBookResult, err
 	}
 
@@ -373,7 +378,7 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 		}
 		var buf bytes.Buffer
 
-		if err := beego.ExecuteViewPathTemplate(&buf, "document/export.tpl", viewPath, map[string]interface{}{"Model": m, "Lists": item, "BaseUrl": conf.BaseUrl}); err != nil {
+		if err := web.ExecuteViewPathTemplate(&buf, "document/export.tpl", viewPath, map[string]interface{}{"Model": m, "Lists": item, "BaseUrl": conf.BaseUrl}); err != nil {
 			return convertBookResult, err
 		}
 		html := buf.String()
@@ -396,7 +401,7 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 				if strings.HasPrefix(src, "/") {
 					spath := filepath.Join(conf.WorkingDirectory, src)
 					if filetil.CopyFile(spath, filepath.Join(tempOutputPath, dstSrcString)); err != nil {
-						beego.Error("复制图片失败 -> ", err, src)
+						logs.Error("复制图片失败 -> ", err, src)
 						return
 					}
 
@@ -415,15 +420,15 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 							if body, err := ioutil.ReadAll(resp.Body); err == nil {
 								//encodeString = base64.StdEncoding.EncodeToString(body)
 								if err := ioutil.WriteFile(filepath.Join(tempOutputPath, dstSrcString), body, 0755); err != nil {
-									beego.Error("下载图片失败 -> ", err, src)
+									logs.Error("下载图片失败 -> ", err, src)
 									return
 								}
 							} else {
-								beego.Error("下载图片失败 -> ", err, src)
+								logs.Error("下载图片失败 -> ", err, src)
 								return
 							}
 						} else {
-							beego.Error("下载图片失败 -> ", err, src)
+							logs.Error("下载图片失败 -> ", err, src)
 							return
 						}
 					}
@@ -446,27 +451,27 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 	}
 
 	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "css", "kancloud.css"), filepath.Join(tempOutputPath, "styles", "css", "kancloud.css")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/css/kancloud.css", err)
+		logs.Error("复制CSS样式出错 -> static/css/kancloud.css", err)
 	}
 	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "css", "export.css"), filepath.Join(tempOutputPath, "styles", "css", "export.css")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/css/export.css", err)
+		logs.Error("复制CSS样式出错 -> static/css/export.css", err)
 	}
 	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "editor.md", "css", "editormd.preview.css"), filepath.Join(tempOutputPath, "styles", "editor.md", "css", "editormd.preview.css")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/editor.md/css/editormd.preview.css", err)
+		logs.Error("复制CSS样式出错 -> static/editor.md/css/editormd.preview.css", err)
 	}
 
 	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "css", "markdown.preview.css"), filepath.Join(tempOutputPath, "styles", "css", "markdown.preview.css")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/css/markdown.preview.css", err)
+		logs.Error("复制CSS样式出错 -> static/css/markdown.preview.css", err)
 	}
 	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "editor.md", "lib", "highlight", "styles", "github.css"), filepath.Join(tempOutputPath, "styles", "css", "github.css")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/editor.md/lib/highlight/styles/github.css", err)
+		logs.Error("复制CSS样式出错 -> static/editor.md/lib/highlight/styles/github.css", err)
 	}
 
 	if err := filetil.CopyDir(filepath.Join(conf.WorkingDirectory, "static", "font-awesome"), filepath.Join(tempOutputPath, "styles", "font-awesome")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/font-awesome", err)
+		logs.Error("复制CSS样式出错 -> static/font-awesome", err)
 	}
 	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "editor.md", "lib", "mermaid", "mermaid.css"), filepath.Join(tempOutputPath, "styles", "css", "mermaid.css")); err != nil {
-		beego.Error("复制CSS样式出错 -> static/editor.md/lib/mermaid/mermaid.css", err)
+		logs.Error("复制CSS样式出错 -> static/editor.md/lib/mermaid/mermaid.css", err)
 	}
 
 	eBookConverter := &converter.Converter{
@@ -480,22 +485,22 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 	os.MkdirAll(eBookConverter.OutputPath, 0766)
 
 	if err := eBookConverter.Convert(); err != nil {
-		beego.Error("转换文件错误：" + m.BookName + " -> " + err.Error())
+		logs.Error("转换文件错误：" + m.BookName + " -> " + err.Error())
 		return convertBookResult, err
 	}
-	beego.Info("文档转换完成：" + m.BookName)
+	logs.Info("文档转换完成：" + m.BookName)
 
 	if err := filetil.CopyFile(filepath.Join(eBookConverter.OutputPath, "output", "book.mobi"), mobipath); err != nil {
-		beego.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.mobi"), err)
+		logs.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.mobi"), err)
 	}
 	if err := filetil.CopyFile(filepath.Join(eBookConverter.OutputPath, "output", "book.pdf"), pdfpath); err != nil {
-		beego.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.pdf"), err)
+		logs.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.pdf"), err)
 	}
 	if err := filetil.CopyFile(filepath.Join(eBookConverter.OutputPath, "output", "book.epub"), epubpath); err != nil {
-		beego.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.epub"), err)
+		logs.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.epub"), err)
 	}
 	if err := filetil.CopyFile(filepath.Join(eBookConverter.OutputPath, "output", "book.docx"), docxpath); err != nil {
-		beego.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.docx"), err)
+		logs.Error("复制文档失败 -> ", filepath.Join(eBookConverter.OutputPath, "output", "book.docx"), err)
 	}
 
 	convertBookResult.MobiPath = mobipath
@@ -525,7 +530,7 @@ func (m *BookResult) ExportMarkdown(sessionId string) (string, error) {
 	}
 
 	if err := ziptil.Compress(outputPath, tempOutputPath); err != nil {
-		beego.Error("导出Markdown失败->", err)
+		logs.Error("导出Markdown失败->", err)
 		return "", err
 	}
 	return outputPath, nil
@@ -540,7 +545,7 @@ func exportMarkdown(p string, parentId int, bookId int, baseDir string, bookUrl 
 	_, err := o.QueryTable(NewDocument().TableNameWithPrefix()).Filter("book_id", bookId).Filter("parent_id", parentId).All(&docs)
 
 	if err != nil {
-		beego.Error("导出Markdown失败->", err)
+		logs.Error("导出Markdown失败->", err)
 		return err
 	}
 	for _, doc := range docs {
@@ -548,7 +553,7 @@ func exportMarkdown(p string, parentId int, bookId int, baseDir string, bookUrl 
 		subDocCount, err := o.QueryTable(NewDocument().TableNameWithPrefix()).Filter("parent_id", doc.DocumentId).Count()
 
 		if err != nil {
-			beego.Error("导出Markdown失败->", err)
+			logs.Error("导出Markdown失败->", err)
 			return err
 		}
 
@@ -623,13 +628,13 @@ func exportMarkdown(p string, parentId int, bookId int, baseDir string, bookUrl 
 						if id, err := strconv.Atoi(docIdentify); err == nil && id > 0 {
 							err := o.QueryTable(NewDocument().TableNameWithPrefix()).Filter("document_id", id).One(tempDoc, "identify", "parent_id", "document_id")
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 								return link
 							}
 						} else {
 							err := o.QueryTable(NewDocument().TableNameWithPrefix()).Filter("identify", docIdentify).One(tempDoc, "identify", "parent_id", "document_id")
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 								return link
 							}
 						}
@@ -644,7 +649,7 @@ func exportMarkdown(p string, parentId int, bookId int, baseDir string, bookUrl 
 							relative = strings.TrimSuffix(strings.TrimPrefix(relative, "/"), "/")
 							repeat = strings.Count(relative, "/") + 1
 						}
-						beego.Info(repeat, "|", relative, "|", p, "|", baseDir)
+						logs.Info(repeat, "|", relative, "|", p, "|", baseDir)
 						tempLink = strings.Repeat("../", repeat) + tempLink
 
 						link = strings.TrimSuffix(link, originalLink+")") + tempLink + ")"
@@ -658,7 +663,7 @@ func exportMarkdown(p string, parentId int, bookId int, baseDir string, bookUrl 
 			markdown = "# " + doc.DocumentName + "\n"
 		}
 		if err := ioutil.WriteFile(docPath, []byte(markdown), 0644); err != nil {
-			beego.Error("导出Markdown失败->", err)
+			logs.Error("导出Markdown失败->", err)
 			return err
 		}
 
@@ -679,7 +684,7 @@ func recursiveJoinDocumentIdentify(parentDocId int, identify string) string {
 	err := o.QueryTable(NewDocument().TableNameWithPrefix()).Filter("document_id", parentDocId).One(doc, "identify", "parent_id", "document_id")
 
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return identify
 	}
 

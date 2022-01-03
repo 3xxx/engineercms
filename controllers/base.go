@@ -1,38 +1,26 @@
 package controllers
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
-	// "encoding/json"
-	// "github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/httplib"
-	// "github.com/astaxie/beego/logs"
-	// "net"
-	// "net/http"
-	// "net/url"
-	// "path"
-	// "strconv"
-	"strings"
-	// "time"
 	"fmt"
-	// jwt "github.com/dgrijalva/jwt-go"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	jwt "github.com/golang-jwt/jwt"
+	"strings"
 )
 
 // CMSToken API
 type BaseController struct {
-	beego.Controller
+	web.Controller
 }
 
 // ParseToken parse JWT token in http header.
 func (base *BaseController) ParseToken() (t *jwt.Token, err error) {
 	authString := base.Ctx.Input.Header("Authorization")
-	beego.Debug("AuthString:", authString)
+	// web.Debug("AuthString:", authString)
 
 	kv := strings.Split(authString, " ")
 	if len(kv) != 2 || kv[0] != "Bearer" {
-		beego.Error("AuthString invalid:", authString)
+		logs.Error("AuthString invalid:", authString)
 		return nil, err
 	}
 	tokenString := kv[1]
@@ -66,7 +54,7 @@ func (base *BaseController) ParseToken() (t *jwt.Token, err error) {
 		return result, nil
 	})
 	if err != nil {
-		beego.Error("Parse token:", err)
+		logs.Error("Parse token:", err)
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 				// That's not even a token
@@ -84,10 +72,10 @@ func (base *BaseController) ParseToken() (t *jwt.Token, err error) {
 		}
 	}
 	if !token.Valid {
-		beego.Error("Token invalid:", tokenString)
+		logs.Error("Token invalid:", tokenString)
 		return nil, err
 	}
-	beego.Debug("Token:", token)
+	// beego.Debug("Token:", token)
 
 	return token, nil
 }
@@ -139,7 +127,7 @@ func (base *BaseController) ParseToken() (t *jwt.Token, err error) {
 //             // 使用自定义字符串加密 and get the complete encoded token as a string
 //             tokenString, err := token.SignedString([]byte("mykey"))
 //             if err != nil {
-//                 beego.Error("jwt.SignedString:", err)
+//                 logs.Error("jwt.SignedString:", err)
 //                 this.RetError(errSystem)
 //                 return
 //             }

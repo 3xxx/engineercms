@@ -5,9 +5,11 @@ import (
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/httplib"
-	// "github.com/astaxie/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	// beego "github.com/beego/beego/v2/adapter"
+	// "github.com/beego/beego/v2/adapter/httplib"
+	// "github.com/beego/beego/v2/adapter/logs"
 	// "github.com/bitly/go-simplejson"
 	"io/ioutil"
 	// "net"
@@ -23,7 +25,7 @@ import (
 
 // CMSADMIN API
 type PdfCpuController struct {
-	beego.Controller
+	web.Controller
 }
 
 // func AddWatermarksFile(inFile, outFile string, selectedPages []string, wm *pdf.Watermark, conf *pdf.Configuration) (err error)
@@ -47,30 +49,29 @@ func (c *PdfCpuController) AddWatermarks() {
 	// if openID != nil {
 	// user, err := models.GetUserByOpenID(openID.(string))
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// } else {
 	// 	useridstring := strconv.FormatInt(user.Id, 10)
 	// 判断用户是否具有权限。
 	id := c.Ctx.Input.Param(":id")
-	beego.Info(id)
+	// beego.Info(id)
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
-
+		logs.Error(err)
 		return
 	}
 
 	//根据附件id取得附件的prodid，路径
 	onlyattachment, err := models.GetOnlyAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//docid——uid——me
 	// doc, err := models.Getdocbyid(onlyattachment.DocId)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 
 	// fileext := path.Ext(doc.FileName)
@@ -79,16 +80,16 @@ func (c *PdfCpuController) AddWatermarks() {
 	//根据附件id取得附件的prodid，路径
 	// attachment, err := models.GetAttachbyId(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// product, err := models.GetProd(attachment.ProductId)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// //根据projid取出路径
 	// proj, err := models.GetProj(product.ProjectId)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// 	utils.FileLogs.Error(err.Error())
 	// }
 	// var projurl string
@@ -100,7 +101,7 @@ func (c *PdfCpuController) AddWatermarks() {
 	//由proj id取得url
 	// fileurl, _, err := GetUrlPath(product.ProjectId)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// fileext := path.Ext(attachment.FileName)
 	// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) {
@@ -111,31 +112,31 @@ func (c *PdfCpuController) AddWatermarks() {
 	// 	c.Data["json"] = "未查到openID"
 	// 	c.ServeJSON()
 	// }
-	pageNumber := c.Input().Get("pageNumber")
+	pageNumber := c.GetString("pageNumber")
 	selectedPages := make([]string, 1)
 	selectedPages[0] = pageNumber
-	imagebase64 := c.Input().Get("image")
+	imagebase64 := c.GetString("image")
 	image, err := base64.StdEncoding.DecodeString(imagebase64) //成图片文件并把文件写入到buffer
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// fileSuffix := path.Ext(h.Filename)
 	// random_name
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) //+ fileSuffix // + "_" + filename
 	// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll("./attachment/onlyoffice/signature/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	imagefilenamepath := "./attachment/onlyoffice/signature/" + strconv.Itoa(year) + month.String() + "/" + newname + ".png"
 
 	err = ioutil.WriteFile(imagefilenamepath, image, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	conf := pdfcpu.NewDefaultConfiguration()
@@ -144,34 +145,34 @@ func (c *PdfCpuController) AddWatermarks() {
 	// onTop := false
 	// wm, err := pdfcpu.ParseTextWatermarkDetails("Demo", "", onTop)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// err = api.AddWatermarksFile(filepathname, "", nil, wm, nil)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// Stamp all odd pages of in.pdf in red "Confidential" in 48 point Courier using a rotation angle of 45 degrees.
 	// onTop = true
 	// wm, err = pdfcpu.ParseTextWatermarkDetails("Confidential", "font:Courier, c: 1 0 0, rot:45, s:1 abs, points:48", onTop)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// err = api.AddWatermarksFile(filepathname, "", []string{"odd"}, wm, nil)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// Add image stamps to in.pdf using absolute scaling and a negative rotation of 90 degrees.
 	// func ParseImageWatermarkDetails(fileName, desc string, onTop bool) (*Watermark, error)"pos: br, off: -30 40, s:1.0 a, rot:0"
 	var desc string
-	scale := c.Input().Get("scale")
+	scale := c.GetString("scale")
 	if scale == "" {
 		scale = "1.0"
 	}
-	offsetdx := c.Input().Get("offsetdx")
+	offsetdx := c.GetString("offsetdx")
 	if offsetdx == "" {
 		offsetdx = "-30"
 	}
-	offsetdy := c.Input().Get("offsetdy")
+	offsetdy := c.GetString("offsetdy")
 	if offsetdy == "" {
 		offsetdy = "40"
 	}
@@ -179,11 +180,11 @@ func (c *PdfCpuController) AddWatermarks() {
 	onTop := true
 	wm, err := pdfcpu.ParseImageWatermarkDetails(imagefilenamepath, desc, onTop, 1)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = api.AddWatermarksFile(filepathname, "", selectedPages, wm, conf)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	// Add a PDF stamp to all pages of in.pdf using the 2nd page of stamp.pdf, use absolute scaling of 0.5
@@ -192,7 +193,7 @@ func (c *PdfCpuController) AddWatermarks() {
 	// wm, _ = pdfcpu.ParsePDFWatermarkDetails("stamp.pdf:2", "s:.5 a, d:2", onTop)
 	// err = AddWatermarksFile(filepathname, "", nil, wm, nil)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERR"}
 		c.ServeJSON()
 	} else {
@@ -212,23 +213,23 @@ func (c *PdfCpuController) AddWatermarks() {
 func (c *PdfCpuController) OnlyPdf() {
 
 	id := c.Ctx.Input.Param(":id")
-	beego.Info(id)
-	// id := c.Input().Get("id")
+	// beego.Info(id)
+	// id := c.GetString("id")
 	// beego.Info(id)
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	//根据附件id取得附件的prodid，路径
 	onlyattachment, err := models.GetOnlyAttachbyId(idNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// fileext := path.Ext(doc.FileName)
 	filepathname := "/attachment/onlyoffice/" + onlyattachment.FileName
-	beego.Info(filepathname)
+	// beego.Info(filepathname)
 	// PdfLink := Url + "/" + Attachments[pNum-1].FileName
 	// beego.Info(PdfLink)
 	c.Data["DocId"] = id
@@ -281,7 +282,7 @@ type Signature struct {
 // @router /test/:id [get]
 func (c *PdfCpuController) Test() {
 	id := c.Ctx.Input.Param(":id")
-	beego.Info(id)
+	logs.Info(id)
 	// ret1 := Ret1{
 	// 	StartWith: "00",
 	// }

@@ -6,7 +6,9 @@ import (
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/controllers/utils/sqltil"
 	"github.com/3xxx/engineercms/models"
-	"github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/i18n"
 	"strconv"
 	"strings"
 )
@@ -40,7 +42,7 @@ func (c *MindocSearchController) Index() {
 		searchResult, totalCount, err := models.NewDocumentSearchResult().FindToPager(sqltil.EscapeLike(keyword), pageIndex, conf.PageSize, memberId)
 
 		if err != nil {
-			beego.Error("搜索失败 ->", err)
+			logs.Error("搜索失败 ->", err)
 			return
 		}
 		if totalCount > 0 {
@@ -86,22 +88,22 @@ func (c *MindocSearchController) User() {
 	key := c.Ctx.Input.Param(":key")
 	keyword := strings.TrimSpace(c.GetString("q"))
 	if key == "" || keyword == "" {
-		c.JsonResult(404, "参数错误")
+		c.JsonResult(404, i18n.Tr(c.Lang, "message.param_error"))
 	}
 	keyword = sqltil.EscapeLike(keyword)
 
 	book, err := models.NewBookResult().FindByIdentify(key, c.Member.MemberId)
 	if err != nil {
 		if err == models.ErrPermissionDenied {
-			c.JsonResult(403, "没有权限")
+			c.JsonResult(403, i18n.Tr(c.Lang, "message.no_permission"))
 		}
-		c.JsonResult(500, "项目不存在")
+		c.JsonResult(500, i18n.Tr(c.Lang, "message.item_not_exist"))
 	}
 
 	//members, err := models.NewMemberRelationshipResult().FindNotJoinUsersByAccount(book.BookId, 10, "%"+keyword+"%")
 	members, err := models.NewMemberRelationshipResult().FindNotJoinUsersByAccountOrRealName(book.BookId, 10, "%"+keyword+"%")
 	if err != nil {
-		beego.Error("查询用户列表出错：" + err.Error())
+		logs.Error("查询用户列表出错：" + err.Error())
 		c.JsonResult(500, err.Error())
 	}
 	result := models.SelectMemberResult{}

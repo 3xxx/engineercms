@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"html/template"
 	"math"
 )

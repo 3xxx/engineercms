@@ -3,10 +3,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/tealeg/xlsx"
-	// "github.com/astaxie/beego/utils/pagination"
+	// "github.com/beego/beego/v2/adapter/utils/pagination"
 	"github.com/3xxx/engineercms/models"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"os"
 	// "path"
 	// "path/filepath"
@@ -16,7 +18,7 @@ import (
 )
 
 type ProjGantController struct {
-	beego.Controller
+	web.Controller
 }
 
 type Gantt struct {
@@ -96,7 +98,7 @@ func (c *ProjGantController) Get() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -121,7 +123,7 @@ func (c *ProjGantController) Get() {
 
 	projgants, err := models.GetProjGants()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//一次性取出所有没有关闭的项目
 	//A将leve=0级项目结束时间与当前时间对比，在当前时间前的，放到后面A2；
@@ -327,17 +329,17 @@ func (c *ProjGantController) GetProjectGant() {
 	// //id转成64为
 	// idNum, err := strconv.ParseInt(id, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// //取项目本身
 	// category, err := models.GetProj(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// //取项目所有子孙
 	// categories, err := models.GetProjectsbyPid(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	// //根据id取出下级
 	// cates := getsons(idNum, categories)
@@ -371,17 +373,17 @@ func (c *ProjGantController) GetProjGant() {
 	//id转成64为
 	// idNum, err := strconv.ParseInt(id, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//取项目本身
 	// category, err := models.GetProj(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//取项目所有子孙
 	// categories, err := models.GetProjectsbyPid(idNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//算出最大级数
 	// grade := make([]int, 0)
@@ -405,24 +407,24 @@ func (c *ProjGantController) AddProjGant() {
 	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
-	// rows := c.Input().Get("rows2[0][0]")
+	// rows := c.GetString("rows2[0][0]")
 
-	// status						:= c.Input().Get("status					")
-	// level						:= c.Input().Get("level						")
-	// code 						:= c.Input().Get("code 						")
-	// name							:= c.Input().Get("name						")
-	// startismilestone:= c.Input().Get("startismilestone")
-	// start 						:= c.Input().Get("start 					")
-	// endismilestone		:= c.Input().Get("endismilestone	")
-	// end							:= c.Input().Get("end							")
-	// duration					:= c.Input().Get("duration				")
-	// progress					:= c.Input().Get("progress				")
-	// depends					:= c.Input().Get("depends					")
-	// haschild					:= c.Input().Get("haschild				")
-	// description			:= c.Input().Get("description			")
+	// status						:= c.GetString("status					")
+	// level						:= c.GetString("level						")
+	// code 						:= c.GetString("code 						")
+	// name							:= c.GetString("name						")
+	// startismilestone:= c.GetString("startismilestone")
+	// start 						:= c.GetString("start 					")
+	// endismilestone		:= c.GetString("endismilestone	")
+	// end							:= c.GetString("end							")
+	// duration					:= c.GetString("duration				")
+	// progress					:= c.GetString("progress				")
+	// depends					:= c.GetString("depends					")
+	// haschild					:= c.GetString("haschild				")
+	// description			:= c.GetString("description			")
 
 	var Ganttstruct Gantt
-	tt := []byte(c.Input().Get("prj"))
+	tt := []byte(c.GetString("prj"))
 	json.Unmarshal(tt, &Ganttstruct)
 	// beego.Info(Ganttstruct.Tasks[0].Id)
 	var parentid int64
@@ -446,7 +448,7 @@ func (c *ProjGantController) AddProjGant() {
 		level := v.Level
 		// levelint, err := strconv.Atoi(level)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		code := v.Code
 		name := v.Name
@@ -469,12 +471,12 @@ func (c *ProjGantController) AddProjGant() {
 		duration := v.Duration
 		// durationint, err := strconv.Atoi(duration)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		progress := v.Progress
 		// progressint, err := strconv.Atoi(progress)
 		// if err != nil {
-		// 	beego.Error(err)
+		// 	logs.Error(err)
 		// }
 		depends := v.Depends
 		haschild := v.HasChild
@@ -505,7 +507,7 @@ func (c *ProjGantController) AddProjGant() {
 		// beego.Info(t2)
 		_, err := models.AddProjGant(id, parentid, status, code, name, depends, description, level, duration, progress, start, end, startismilestone, endismilestone, haschild)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 
 	}
@@ -519,7 +521,7 @@ func (c *ProjGantController) ImportProjGant() {
 	// 获取上传的文件
 	_, h, err := c.GetFile("gantsexcel")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(h.path)
 	// var attachment string
@@ -536,14 +538,14 @@ func (c *ProjGantController) ImportProjGant() {
 		path = "./attachment/" + h.Filename    // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		err = c.SaveToFile("gantsexcel", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = "err保存文件失败！"
 			c.ServeJSON()
 		} else {
 			//读出excel内容写入数据库
 			xlFile, err := xlsx.OpenFile(path) //
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			for _, sheet := range xlFile.Sheets {
 				for i, row := range sheet.Rows {
@@ -554,7 +556,7 @@ func (c *ProjGantController) ImportProjGant() {
 						if len(row.Cells) >= 2 { //总列数，从1开始
 							code = row.Cells[j].String()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 						}
 						//读取开始时间
@@ -562,7 +564,7 @@ func (c *ProjGantController) ImportProjGant() {
 							if row.Cells[j+5].Value != "" {
 								Starttime, err := row.Cells[j+5].Float()
 								if err != nil {
-									beego.Error(err)
+									logs.Error(err)
 								} else {
 									date = xlsx.TimeFromExcelTime(Starttime, false)
 								}
@@ -573,7 +575,7 @@ func (c *ProjGantController) ImportProjGant() {
 
 							date, err = time.Parse(lll, convdate)
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 							t1 = date
 						}
@@ -581,36 +583,36 @@ func (c *ProjGantController) ImportProjGant() {
 						if len(row.Cells) >= 8 {
 							duration, err = row.Cells[j+6].Int()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 						}
 						//读取进度
 						if len(row.Cells) >= 9 {
 							progress, err = row.Cells[j+7].Int()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 						}
 						//读取描述
 						if len(row.Cells) >= 10 {
 							description = row.Cells[j+8].String()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 						}
 						//读取项目名称
 						if len(row.Cells) >= 3 {
 							name = row.Cells[j+1].String()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 							//查询编号和名称，如果存在，则返回id作为parentid
 							gantname, err := models.GetProjGantName(code, name)
 							if err != nil {
-								beego.Error(err) //没找到记录，新建
+								logs.Error(err) //没找到记录，新建
 								id, err = models.AddProjGant(0, 0, "STATUS_ACTIVE", code, name, "", "", 0, duration, progress, t1, t1, false, false, true)
 								if err != nil {
-									beego.Error(err)
+									logs.Error(err)
 								}
 							} else { //找到，则作为parentid
 								id = gantname.Id
@@ -620,15 +622,15 @@ func (c *ProjGantController) ImportProjGant() {
 						if len(row.Cells) >= 4 {
 							designstage := row.Cells[j+2].String()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 							//查询名称和parentid，如果存在，则返回id作为parentid
 							gantparent, err := models.GetProjGantParent(designstage, id)
 							if err != nil {
-								beego.Error(err) //没找到记录，新建
+								logs.Error(err) //没找到记录，新建
 								secid, err = models.AddProjGant(0, id, "STATUS_ACTIVE", "", designstage, "", "", 1, duration, progress, t1, t1, false, false, true)
 								if err != nil {
-									beego.Error(err)
+									logs.Error(err)
 								}
 							} else { //找到，则作为parentid
 								secid = gantparent.Id
@@ -639,15 +641,15 @@ func (c *ProjGantController) ImportProjGant() {
 						if len(row.Cells) >= 5 {
 							section := row.Cells[j+3].String()
 							if err != nil {
-								beego.Error(err)
+								logs.Error(err)
 							}
 							//查询名称和parentid，如果存在，则返回id作为parentid
 							_, err = models.GetProjGantParent(section, secid)
 							if err != nil {
-								beego.Error(err) //没找到记录，新建
+								logs.Error(err) //没找到记录，新建
 								_, err := models.AddProjGant(0, secid, "STATUS_ACTIVE", "", section, "", description, 2, duration, progress, t1, t1, false, false, false)
 								if err != nil {
-									beego.Error(err)
+									logs.Error(err)
 								}
 							}
 						}
@@ -655,15 +657,15 @@ func (c *ProjGantController) ImportProjGant() {
 						// if len(row.Cells) >= 6 {
 						// 	task, err = row.Cells[j+4].String()
 						// 	if err != nil {
-						// 		beego.Error(err)
+						// 		logs.Error(err)
 						// 	}
 						// 	//查询名称和parentid，如果存在，则返回id作为parentid
 						// 	gantparent, err := models.GetProjGantParent(task, id3)
 						// 	if err != nil {
-						// 		beego.Error(err) //没找到记录，新建
+						// 		logs.Error(err) //没找到记录，新建
 						// 		_, err := models.AddProjGant2(id3, "", task, start, duration, progress)
 						// 		if err != nil {
-						// 			beego.Error(err)
+						// 			logs.Error(err)
 						// 		}
 						// 	} else { //找到，则作为parentid
 						// 		id = gantparent.Id
@@ -674,7 +676,7 @@ func (c *ProjGantController) ImportProjGant() {
 						// 	if row.Cells[j+8].Value != "" {
 						// 		endtime2, err := row.Cells[j+8].Float()
 						// 		if err != nil {
-						// 			beego.Error(err)
+						// 			logs.Error(err)
 						// 		} else {
 						// 			date = xlsx.TimeFromExcelTime(endtime2, false)
 						// 		}
@@ -685,7 +687,7 @@ func (c *ProjGantController) ImportProjGant() {
 
 						// 	date, err = time.Parse(lll, convdate)
 						// 	if err != nil {
-						// 		beego.Error(err)
+						// 		logs.Error(err)
 						// 	}
 						// 	t1 = date
 						// }
@@ -693,7 +695,7 @@ func (c *ProjGantController) ImportProjGant() {
 						// 	if row.Cells[j+9].Value != "" {
 						// 		endtime2, err := row.Cells[j+9].Float()
 						// 		if err != nil {
-						// 			beego.Error(err)
+						// 			logs.Error(err)
 						// 		} else {
 						// 			date = xlsx.TimeFromExcelTime(endtime2, false)
 						// 		}
@@ -704,13 +706,13 @@ func (c *ProjGantController) ImportProjGant() {
 
 						// 	date, err = time.Parse(lll, convdate)
 						// 	if err != nil {
-						// 		beego.Error(err)
+						// 		logs.Error(err)
 						// 	}
 						// 	t2 = date
 						// }
 						// _, err := models.AddProjGant(code, title, designstage, section, label, desc, customclass, dataobj, t1, t2)
 						// if err != nil {
-						// 	beego.Error(err)
+						// 	logs.Error(err)
 						// }
 					}
 				}
@@ -718,7 +720,7 @@ func (c *ProjGantController) ImportProjGant() {
 			//删除附件
 			err = os.Remove(path)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -739,19 +741,19 @@ func (c *ProjGantController) UpdateProjGant() {
 		return
 	}
 	var err error
-	projcode := c.Input().Get("code")
-	projname := c.Input().Get("name")
-	projlabe := c.Input().Get("label")
-	principal := c.Input().Get("principal")
+	projcode := c.GetString("code")
+	projname := c.GetString("name")
+	projlabe := c.GetString("label")
+	principal := c.GetString("principal")
 	pid := c.GetString("pid")
 	//id转成64位
 	idNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	err = models.UpdateProject(idNum, projcode, projname, projlabe, principal)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	if err != nil {
@@ -786,12 +788,12 @@ func (c *ProjGantController) DeleteProjGant() {
 		//id转成64位
 		projid, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//根据项目id取得所有子孙id
 		projs, err := models.GetProjectsbyPid(projid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//循环子孙项目
 		for _, w := range projs {
@@ -799,7 +801,7 @@ func (c *ProjGantController) DeleteProjGant() {
 			//根据项目id取得所有成果
 			products, err := models.GetProducts(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			for _, x := range products {
 				//删除子孙成果表
@@ -807,14 +809,14 @@ func (c *ProjGantController) DeleteProjGant() {
 				//根据成果id取得所有附件
 				attachments, err := models.GetAttachments(x.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				//删除附件表
 				for _, y := range attachments {
 					//删除附件数据表
 					err = models.DeleteAttachment(y.Id)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 				}
 
@@ -822,45 +824,45 @@ func (c *ProjGantController) DeleteProjGant() {
 				//取得成果id下所有文章
 				articles, err := models.GetArticles(x.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				//删除文章表
 				for _, z := range articles {
 					//删除文章数据表
 					err = models.DeleteArticle(z.Id)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 				}
 				//删除成果表自身
 				err = models.DeleteProduct(x.Id) //删除成果数据表
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 			//删除子孙proj数据表
 			err = models.DeleteProject(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//删除子孙文章图片文件夹（下面已经全部删除了）
 		}
 		//根据proj的id——这个放deleteproject前面，否则项目数据表删除了就取不到路径了
 		_, DiskDirectory, err := GetUrlPath(projid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			// beego.Info(DiskDirectory)
 			path := DiskDirectory
 			//直接删除这个文件夹，remove删除文件
 			err = os.RemoveAll(path)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//删除项目自身数据表
 			err = models.DeleteProject(projid)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 	}
@@ -893,12 +895,12 @@ func (c *ProjGantController) CloseProjGant() {
 		//id转成64位
 		projid, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//根据项目id取得所有子孙id
 		projs, err := models.GetProjectsbyPid(projid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//循环子孙项目
 		for _, w := range projs {
@@ -906,7 +908,7 @@ func (c *ProjGantController) CloseProjGant() {
 			//根据项目id取得所有成果
 			products, err := models.GetProducts(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			for _, x := range products {
 				//删除子孙成果表
@@ -914,14 +916,14 @@ func (c *ProjGantController) CloseProjGant() {
 				//根据成果id取得所有附件
 				attachments, err := models.GetAttachments(x.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				//删除附件表
 				for _, y := range attachments {
 					//删除附件数据表
 					err = models.DeleteAttachment(y.Id)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 				}
 
@@ -929,45 +931,45 @@ func (c *ProjGantController) CloseProjGant() {
 				//取得成果id下所有文章
 				articles, err := models.GetArticles(x.Id)
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				//删除文章表
 				for _, z := range articles {
 					//删除文章数据表
 					err = models.DeleteArticle(z.Id)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 				}
 				//删除成果表自身
 				err = models.DeleteProduct(x.Id) //删除成果数据表
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 			}
 			//删除子孙proj数据表
 			err = models.DeleteProject(w.Id)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//删除子孙文章图片文件夹（下面已经全部删除了）
 		}
 		//根据proj的id——这个放deleteproject前面，否则项目数据表删除了就取不到路径了
 		_, DiskDirectory, err := GetUrlPath(projid)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			// beego.Info(DiskDirectory)
 			path := DiskDirectory
 			//直接删除这个文件夹，remove删除文件
 			err = os.RemoveAll(path)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//删除项目自身数据表
 			err = models.DeleteProject(projid)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 	}

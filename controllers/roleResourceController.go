@@ -3,7 +3,7 @@ package controllers
 // import (
 // 	"html/template"
 
-// 	"github.com/astaxie/beego/context"
+// 	"github.com/beego/beego/v2/adapter/context"
 // 	"github.com/asofdate/hauth/core/hrpc"
 // 	"github.com/asofdate/hauth/core/models"
 // 	"github.com/asofdate/hauth/utils/hret"

@@ -1,7 +1,9 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"github.com/gorilla/websocket"
 	"github.com/holys/initials-avatar"
 	// "io"
@@ -29,7 +31,7 @@ type ChatMessage struct {
 }
 
 type ChatController struct {
-	beego.Controller
+	web.Controller
 }
 
 func init() {
@@ -130,12 +132,12 @@ func (c *ChatController) Avatar() {
 	// beego.Info(text)
 	strData, err := url.QueryUnescape(text) //
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(strData)
 	b, err := a.DrawToBytes(strData, 32) //背景的大小
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(b)
 	// w http.ResponseWriter, r *http.Request

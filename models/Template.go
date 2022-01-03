@@ -3,17 +3,17 @@ package models
 import (
 	"errors"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego/orm"
+	//beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/client/orm"
 	"time"
 )
 
 type Template struct {
 	TemplateId   int    `orm:"column(template_id);pk;auto;unique;" json:"template_id"`
 	TemplateName string `orm:"column(template_name);size(500);" json:"template_name"`
-	MemberId     int    `orm:"column(member_id);" json:"member_id"`
-	BookId       int    `orm:"column(book_id);" json:"book_id"`
+	MemberId     int    `orm:"column(member_id);index" json:"member_id"`
+	BookId       int    `orm:"column(book_id);index" json:"book_id"`
 	BookName     string `orm:"-" json:"book_name"`
 	//是否是全局模板：0 否/1 是; 全局模板在所有项目中都可以使用；否则只能在创建模板的项目中使用
 	IsGlobal        int       `orm:"column(is_global);default(0)" json:"is_global"`
@@ -72,7 +72,7 @@ func (t *Template) FindByBookId(bookId int) ([]*Template, error) {
 	_, err := o.QueryTable(t.TableNameWithPrefix()).Filter("book_id", bookId).OrderBy("-template_id").All(&templateList)
 
 	if err != nil {
-		beego.Error("查询模板列表失败 ->", err)
+		logs.Error("查询模板列表失败 ->", err)
 	}
 	return templateList, err
 }
@@ -95,7 +95,7 @@ func (t *Template) FindAllByBookId(bookId int) ([]*Template, error) {
 	_, err := qs.SetCond(cond1).OrderBy("-template_id").All(&templateList)
 
 	if err != nil {
-		beego.Error("查询模板列表失败 ->", err)
+		logs.Error("查询模板列表失败 ->", err)
 	}
 	return templateList, err
 }
@@ -116,7 +116,7 @@ func (t *Template) Delete(templateId int, memberId int) error {
 	_, err := qs.Delete()
 
 	if err != nil {
-		beego.Error("删除模板失败 ->", err)
+		logs.Error("删除模板失败 ->", err)
 	}
 	return err
 }
@@ -160,7 +160,7 @@ func (t *Template) Preload() *Template {
 					t.CreateName = m.Account
 				}
 			} else {
-				beego.Error("加载模板所有者失败 ->", err)
+				logs.Error("加载模板所有者失败 ->", err)
 			}
 		}
 		if t.ModifyAt > 0 {

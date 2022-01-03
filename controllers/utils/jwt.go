@@ -5,11 +5,13 @@ import (
 	"errors"
 	"fmt"
 	// "github.com/3xxx/go-sso/models"
-	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/orm"
+	// beego "github.com/beego/beego/v2/adapter"
+	// "github.com/beego/beego/v2/adapter/orm"
 	"encoding/base64"
 	"encoding/json"
 	// "github.com/dgrijalva/jwt-go"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"github.com/golang-jwt/jwt"
 	"net/http"
 	"strconv"
@@ -57,7 +59,11 @@ func CreateToken(userName string) (tokenString string, err error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
 	//添加令牌关键信息
-	Tokenexp, err := strconv.Atoi(beego.AppConfig.String("Tokenexp"))
+	tokenexp, err := web.AppConfig.String("Tokenexp")
+	if err != nil {
+		logs.Error(err)
+	}
+	Tokenexp, err := strconv.Atoi(tokenexp)
 	if err != nil {
 		return tokenString, err
 	}
@@ -66,7 +72,11 @@ func CreateToken(userName string) (tokenString string, err error) {
 	claims["iat"] = time.Now().Unix()
 	claims["userName"] = userName
 	token.Claims = claims
-	tokenString, err = token.SignedString([]byte(beego.AppConfig.String("TokenSecrets")))
+	tokenSecrets, err := web.AppConfig.String("TokenSecrets")
+	if err != nil {
+		logs.Error(err)
+	}
+	tokenString, err = token.SignedString([]byte(tokenSecrets))
 	if err != nil {
 		fmt.Println("generate json web token failed !! error :", err)
 		return tokenString, err
@@ -77,7 +87,10 @@ func CreateToken(userName string) (tokenString string, err error) {
 // 校验token是否有效 返回参数
 func CheckToken(tokenString string) (userName string, err error) {
 	// tokenString = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJleHAiOjE1MDAwLCJpc3MiOiJ0ZXN0In0.HE7fK0xOQwFEr4WDgRWj4teRPZ6i3GLwD5YCm6Pwu_c"
-	secret := beego.AppConfig.String("TokenSecrets")
+	secret, err := web.AppConfig.String("TokenSecrets")
+	if err != nil {
+		logs.Error(err)
+	}
 	// secret = "AllYourBase"
 	// userName := ""
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -89,7 +102,7 @@ func CheckToken(tokenString string) (userName string, err error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return "", err
 	}
 	// token.Valid里已经包含了过期判断
@@ -123,7 +136,10 @@ func CheckToken(tokenString string) (userName string, err error) {
 // 校验token是否有效 返回参数
 func LubanCheckToken(tokenString string) (userId, userName, userNickname string, err error) {
 	// tokenString = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJleHAiOjE1MDAwLCJpc3MiOiJ0ZXN0In0.HE7fK0xOQwFEr4WDgRWj4teRPZ6i3GLwD5YCm6Pwu_c"
-	mySignKey := beego.AppConfig.String("LubanTokenSecrets") //坑：密钥必须要长，要达到这个位数，26个英文字母是不行的。！！！！
+	mySignKey, err := web.AppConfig.String("LubanTokenSecrets") //坑：密钥必须要长，要达到这个位数，26个英文字母是不行的。！！！！
+	if err != nil {
+		logs.Error(err)
+	}
 	// beego.Info(secret)
 	// mySignKey := "whatthefuck123weishenmebuneng123" //密钥，同java代码，
 	// mySignKeyBytes, err := base64.URLEncoding.DecodeString(mySignKey) //需要用和加密时同样的方式转化成对应的字节数组
@@ -140,7 +156,7 @@ func LubanCheckToken(tokenString string) (userId, userName, userNickname string,
 	// tokenString = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb3VibGVzIn0.cBDFVLuQZV2B7J76kk17LE2hmni_3RbzTBzIH_OsriE"
 	// tokenString = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4OCIsInN1YiI6IuWwj-eZvSIsImlhdCI6MTYzMzAxNjU0OSwiY29tcGFueUlkIjoiOTk5OTk5OSIsImNvbXBhbnlOYW1lIjoi6bKB54-tIn0.W9p52lAzo9EcNSb_Uwf7MK9Lw-vNvG_8HHI-piMkNpY"
 	tokenString = SubString(tokenString, 4, len(tokenString))
-	beego.Info(tokenString)
+	// beego.Info(tokenString)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -151,13 +167,13 @@ func LubanCheckToken(tokenString string) (userId, userName, userNickname string,
 		return mySignKeyBytes, nil
 	})
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 		return "", "", "", err
 	}
-	beego.Info(token)
+	// beego.Info(token)
 	// token.Valid里已经包含了过期判断
 	if token != nil { //&& token.Valid
-		beego.Info("You look nice today")
+		// beego.Info("You look nice today")
 		claims, _ := token.Claims.(jwt.MapClaims)
 		userId = claims["userId"].(string)
 		userName = claims["userName"].(string)
@@ -266,7 +282,7 @@ func VerifyToken(tokenString string) bool {
 		return false
 	}
 	userId := mapResult["user_id"]
-	beego.Debug(userId)
+	logs.Debug(userId)
 	// model, err := m.FindLastByUserId(userId)
 	// if err != nil {
 	// 	return false
@@ -323,7 +339,7 @@ func GenerateToken(expiredSeconds int) (tokenString string) {
 // 使用自定义字符串加密 and get the complete encoded token as a string
 // 	tokenString, err := token.SignedString([]byte(secret))
 // 	if err != nil {
-// 		beego.Error("token生成失败", err)
+// 		logs.Error("token生成失败", err)
 // 		return "", "", errors.New("token生成失败")
 // 	}
 // 	return tokenString, secret, nil
@@ -340,11 +356,11 @@ func GenerateToken(expiredSeconds int) (tokenString string) {
 // ParseToken parse JWT token in http header.
 func ParseToken(authString string) (t *jwt.Token, err error) {
 	// authString := base.Ctx.Input.Header("Authorization")
-	beego.Debug("AuthString:", authString)
+	logs.Debug("AuthString:", authString)
 
 	kv := strings.Split(authString, " ")
 	if len(kv) != 2 || kv[0] != "Bearer" {
-		beego.Error("AuthString invalid:", authString)
+		logs.Error("AuthString invalid:", authString)
 		return nil, err
 	}
 	tokenString := kv[1]
@@ -375,7 +391,7 @@ func ParseToken(authString string) (t *jwt.Token, err error) {
 		return result, nil
 	})
 	if err != nil {
-		beego.Error("Parse token:", err)
+		logs.Error("Parse token:", err)
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 				// That's not even a token
@@ -393,7 +409,7 @@ func ParseToken(authString string) (t *jwt.Token, err error) {
 		}
 	}
 	if !token.Valid {
-		beego.Error("Token invalid:", tokenString)
+		logs.Error("Token invalid:", tokenString)
 		return token, err
 		// beego.Debug("Token:", token)
 		// return token, nil
@@ -403,10 +419,10 @@ func ParseToken(authString string) (t *jwt.Token, err error) {
 
 func CheckAuth(authString string) bool {
 	// authString := this.Ctx.Input.Header("Authorization")
-	beego.Debug("AuthString:", authString)
+	logs.Debug("AuthString:", authString)
 	kv := strings.Split(authString, " ")
 	if authString == "" || len(kv) != 2 || kv[0] != "Bearer" {
-		beego.Debug("no auth")
+		logs.Debug("no auth")
 		return false
 	}
 	// us := new(services.UserSecretService)

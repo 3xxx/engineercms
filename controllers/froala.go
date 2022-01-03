@@ -4,7 +4,7 @@ import (
 	// "bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego"
+	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/pborman/uuid"
 	"image"
 	"io"
@@ -15,6 +15,8 @@ import (
 	// "hydrocms/models"
 	"encoding/base64"
 	"github.com/3xxx/engineercms/models"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 	"github.com/nfnt/resize"
 	"image/gif"
 	"image/jpeg"
@@ -31,7 +33,7 @@ import (
 
 // CMSWX froala API
 type FroalaController struct {
-	beego.Controller
+	web.Controller
 }
 
 type UploadimgFroala struct {
@@ -47,8 +49,8 @@ type UploadimgFroala struct {
 
 //下面这个没用
 func (c *FroalaController) ControllerFroala() {
-	op := c.Input().Get("action")
-	key := c.Input().Get("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
+	op := c.GetString("action")
+	key := c.GetString("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
 	switch op {
 	case "config": //这里还是要优化成conf/config.json
 		// $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
@@ -108,7 +110,7 @@ func (c *FroalaController) ControllerFroala() {
 			//保存上传的图片
 			_, h, err := c.GetFile("upfile")
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var filesize int64
 			fileSuffix := path.Ext(h.Filename)
@@ -116,13 +118,13 @@ func (c *FroalaController) ControllerFroala() {
 			year, month, _ := time.Now().Date()
 			err = os.MkdirAll("./attachment/wiki/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			path1 := "./attachment/wiki/" + strconv.Itoa(year) + month.String() + "/" + newname //h.Filename
 			Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
 			err = c.SaveToFile("upfile", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			filesize, _ = FileSize(path1)
 			filesize = filesize / 1000.0
@@ -130,36 +132,36 @@ func (c *FroalaController) ControllerFroala() {
 			c.ServeJSON()
 		default:
 			//解析表单
-			pid := c.Input().Get("pid")
+			pid := c.GetString("pid")
 			// beego.Info(pid)
 			//pid转成64为
 			pidNum, err := strconv.ParseInt(pid, 10, 64)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			//根据proj的parentIdpath
 			Url, DiskDirectory, err := GetUrlPath(pidNum)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			// beego.Info(DiskDirectory)
 			//获取上传的文件
 			_, h, err := c.GetFile("upfile")
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
-			beego.Info(h.Filename)
+			// beego.Info(h.Filename)
 			fileSuffix := path.Ext(h.Filename)
 			// random_name
 			newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 			// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 			// if err != nil {
-			// 	beego.Error(err)
+			// 	logs.Error(err)
 			// }
 			year, month, _ := time.Now().Date()
 			err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var path string
 			var filesize int64
@@ -169,7 +171,7 @@ func (c *FroalaController) ControllerFroala() {
 				Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 				err = c.SaveToFile("upfile", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 				if err != nil {
-					beego.Error(err)
+					logs.Error(err)
 				}
 				filesize, _ = FileSize(path)
 				filesize = filesize / 1000.0
@@ -181,22 +183,22 @@ func (c *FroalaController) ControllerFroala() {
 			}
 		}
 	case "uploadscrawl":
-		number := c.Input().Get("number")
+		number := c.GetString("number")
 
-		name := c.Input().Get("name")
+		name := c.GetString("name")
 		err := os.MkdirAll("./attachment/"+number+name, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		path1 := "./attachment/" + number + name + "/"
 		//保存上传的图片
 		//upfile为base64格式文件，转成图片保存
-		ww := c.Input().Get("upfile")
+		ww := c.GetString("upfile")
 		ddd, _ := base64.StdEncoding.DecodeString(ww)           //成图片文件并把文件写入到buffer
 		newname := strconv.FormatInt(time.Now().Unix(), 10)     // + "_" + filename
 		err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		// var filesize int64
 		// filesize, _ = FileSize(path1)
@@ -369,23 +371,23 @@ func (c *FroalaController) UploadImg() {
 		c.ServeJSON()
 	}
 	//解析表单
-	pid := c.Input().Get("pid")
+	pid := c.GetString("pid")
 	// beego.Info(pid)
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据proj的parentIdpath
 	Url, DiskDirectory, err := GetUrlPath(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(DiskDirectory)
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(h.Filename)
 	fileSuffix := path.Ext(h.Filename)
@@ -393,12 +395,12 @@ func (c *FroalaController) UploadImg() {
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 	// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	var filesize int64
@@ -408,7 +410,7 @@ func (c *FroalaController) UploadImg() {
 		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		filesize, _ = FileSize(path)
 		filesize = filesize / 1000.0
@@ -429,21 +431,24 @@ func (c *FroalaController) UploadImg() {
 //微信wx添加文章里的图片上传_独立上传图片模式
 func (c *FroalaController) UploadWxImg() {
 	//解析表单
-	pid := beego.AppConfig.String("wxcatalogid") //"26159" //c.Input().Get("pid")
+	pid, err := web.AppConfig.String("wxcatalogid") //"26159" //c.GetString("pid")
+	if err != nil {
+		logs.Error(err)
+	}
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据proj的parentIdpath
 	Url, DiskDirectory, err := GetUrlPath(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
@@ -451,7 +456,7 @@ func (c *FroalaController) UploadWxImg() {
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	var filesize int64
@@ -461,7 +466,7 @@ func (c *FroalaController) UploadWxImg() {
 		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		filesize, _ = FileSize(path)
 		filesize = filesize / 1000.0
@@ -484,29 +489,29 @@ func (c *FroalaController) UploadWxImg() {
 func (c *FroalaController) UploadWxEditorImg() {
 	var ProjectId int64
 	var err error
-	projectid := c.Input().Get("projectid")
+	projectid := c.GetString("projectid")
 	if projectid != "" {
 		ProjectId, err = strconv.ParseInt(projectid, 10, 64)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	//解析表单
-	// pid := beego.AppConfig.String("wxcatalogid") //"26159" //c.Input().Get("pid")
+	// pid := web.AppConfig.String("wxcatalogid") //"26159" //c.GetString("pid")
 	// //pid转成64为
 	// pidNum, err := strconv.ParseInt(pid, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//根据proj的parentIdpath
 	Url, DiskDirectory, err := GetUrlPath(ProjectId)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
@@ -516,7 +521,7 @@ func (c *FroalaController) UploadWxEditorImg() {
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var imagepath, new_imagepath string
 	var filesize int64
@@ -527,7 +532,7 @@ func (c *FroalaController) UploadWxEditorImg() {
 		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", imagepath) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		filesize, _ = FileSize(imagepath)
 		filesize = filesize / 1000.0
@@ -536,7 +541,7 @@ func (c *FroalaController) UploadWxEditorImg() {
 		file, err := os.Open(imagepath)
 		if err != nil {
 			// log.Fatal(err)
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer file.Close()
 		var img image.Image
@@ -546,7 +551,7 @@ func (c *FroalaController) UploadWxEditorImg() {
 			img, err = jpeg.Decode(file)
 			if err != nil {
 				// log.Fatal(err)
-				beego.Error(err)
+				logs.Error(err)
 			}
 			typeImage = 0
 		} else if strings.EqualFold(fileSuffix, ".png") {
@@ -554,14 +559,14 @@ func (c *FroalaController) UploadWxEditorImg() {
 			img, err = png.Decode(file)
 			if err != nil {
 				// log.Fatal(err)
-				beego.Error(err)
+				logs.Error(err)
 			}
 			typeImage = 1
 		} else if strings.EqualFold(fileSuffix, ".gif") {
 			img, err = gif.Decode(file)
 			if err != nil {
 				// log.Fatal(err)
-				beego.Error(err)
+				logs.Error(err)
 			}
 			typeImage = 2
 		}
@@ -576,17 +581,17 @@ func (c *FroalaController) UploadWxEditorImg() {
 		out, err := os.Create(new_imagepath)
 		defer out.Close()
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		if typeImage == 0 {
 			err = jpeg.Encode(out, m, &jpeg.Options{Quality: 80})
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		} else {
 			err = png.Encode(out, m)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 
@@ -609,21 +614,21 @@ func (c *FroalaController) UploadWxEditorImg() {
 func (c *FroalaController) UploadWxImgs() {
 	//解析表单
 	pid := c.Ctx.Input.Param(":id")
-	// pid := beego.AppConfig.String("wxcatalogid") //"26159" //c.Input().Get("pid")
+	// pid := web.AppConfig.String("wxcatalogid") //"26159" //c.GetString("pid")
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据proj的parentIdpath
 	Url, DiskDirectory, err := GetUrlPath(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
@@ -633,7 +638,7 @@ func (c *FroalaController) UploadWxImgs() {
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var imagepath, new_imagepath string
 	var filesize int64
@@ -644,7 +649,7 @@ func (c *FroalaController) UploadWxImgs() {
 		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", imagepath) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		filesize, _ = FileSize(imagepath)
 		filesize = filesize / 1000.0
@@ -653,7 +658,7 @@ func (c *FroalaController) UploadWxImgs() {
 		file, err := os.Open(imagepath)
 		if err != nil {
 			// log.Fatal(err)
-			beego.Error(err)
+			logs.Error(err)
 		}
 		defer file.Close()
 		var img image.Image
@@ -663,7 +668,7 @@ func (c *FroalaController) UploadWxImgs() {
 			img, err = jpeg.Decode(file)
 			if err != nil {
 				// log.Fatal(err)
-				beego.Error(err)
+				logs.Error(err)
 			}
 			typeImage = 0
 		} else if strings.EqualFold(fileSuffix, ".png") {
@@ -671,14 +676,14 @@ func (c *FroalaController) UploadWxImgs() {
 			img, err = png.Decode(file)
 			if err != nil {
 				// log.Fatal(err)
-				beego.Error(err)
+				logs.Error(err)
 			}
 			typeImage = 1
 		} else if strings.EqualFold(fileSuffix, ".gif") {
 			img, err = gif.Decode(file)
 			if err != nil {
 				// log.Fatal(err)
-				beego.Error(err)
+				logs.Error(err)
 			}
 			typeImage = 2
 		}
@@ -694,24 +699,24 @@ func (c *FroalaController) UploadWxImgs() {
 		out, err := os.Create(new_imagepath)
 		defer out.Close()
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		if typeImage == 0 {
 			err = jpeg.Encode(out, m, &jpeg.Options{Quality: 80})
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		} else {
 			err = png.Encode(out, m)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 		}
 		// 开始图片鉴别
-		app_version := c.Input().Get("app_version")
+		app_version := c.GetString("app_version")
 		accessToken, _, _, err := utils.GetAccessToken(app_version)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 			c.ServeJSON()
 			return
@@ -736,10 +741,10 @@ func (c *FroalaController) UploadWxImgs() {
 		// asString := string(buf.Bytes())
 
 		errcode, errmsg, err := utils.ImgSecCheck(buf.Bytes(), accessToken)
-		beego.Info(errcode)
-		beego.Info(errmsg)
+		// beego.Info(errcode)
+		// beego.Info(errmsg)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": err, "state": "ERROR", "data": errmsg}
 			c.ServeJSON()
 		} else if errcode != 87014 {
@@ -766,20 +771,20 @@ func (c *FroalaController) UploadWxAvatar() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 	err = os.MkdirAll("./static/avatar/", 0777)                          //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	var filesize int64
@@ -789,7 +794,7 @@ func (c *FroalaController) UploadWxAvatar() {
 		Url := "/static/avatar/"
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"state": "ERROR", "photo": "", "title": "", "original": ""}
 			c.ServeJSON()
 		} else {
@@ -797,9 +802,12 @@ func (c *FroalaController) UploadWxAvatar() {
 			filesize = filesize / 1000.0
 			_, err = models.AddUserAvator(user.Id, Url+newname)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
-			wxsite := beego.AppConfig.String("wxreqeustsite")
+			wxsite, err := web.AppConfig.String("wxreqeustsite")
+			if err != nil {
+				logs.Error(err)
+			}
 			// c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "photo": wxsite + Url + newname, "title": newname, "original": newname}
 			// c.ServeJSON()
 			c.Ctx.WriteString(wxsite + Url + newname)
@@ -824,20 +832,20 @@ func (c *FroalaController) UploadAppreciationPhoto() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 	err = os.MkdirAll("./static/appreciation/", 0777)                    //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	var filesize int64
@@ -847,7 +855,7 @@ func (c *FroalaController) UploadAppreciationPhoto() {
 		Url := "/static/appreciation/"
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"state": "ERROR", "photo": "", "title": "", "original": ""}
 			c.ServeJSON()
 		} else {
@@ -855,9 +863,12 @@ func (c *FroalaController) UploadAppreciationPhoto() {
 			filesize = filesize / 1000.0
 			_, err = models.AddUserAppreciation(user.Id, Url+newname)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
-			wxsite := beego.AppConfig.String("wxreqeustsite")
+			wxsite, err := web.AppConfig.String("wxreqeustsite")
+			if err != nil {
+				logs.Error(err)
+			}
 			// c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "photo": wxsite + Url + newname, "title": newname, "original": newname}
 			// c.ServeJSON()
 			c.Ctx.WriteString(wxsite + Url + newname)
@@ -884,7 +895,7 @@ func (c *FroalaController) UploadWxVideo() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 	} else {
 		// c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -897,24 +908,24 @@ func (c *FroalaController) UploadWxVideo() {
 		return
 	}
 	//解析表单
-	content := c.Input().Get("desc")
+	content := c.GetString("desc")
 
 	pid := c.Ctx.Input.Param(":id")
-	// pid := beego.AppConfig.String("wxcatalogid") //"26159" //c.Input().Get("pid")
+	// pid := web.AppConfig.String("wxcatalogid") //"26159" //c.GetString("pid")
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据proj的parentIdpath
 	Url, DiskDirectory, err := GetUrlPath(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
@@ -922,7 +933,7 @@ func (c *FroalaController) UploadWxVideo() {
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	// var filesize int64
@@ -932,18 +943,18 @@ func (c *FroalaController) UploadWxVideo() {
 		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			return
 		}
 		//根据pid查出项目id
 		proj, err := models.GetProj(pidNum)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		//写入数据表
 		vid, err := models.CreateVideo(proj.Id, user.Id, content, newname, Url+newname)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"state": "ERROR", "info": "ERR", "id": vid}
 			c.ServeJSON()
 		} else {
@@ -969,24 +980,24 @@ func (c *FroalaController) UploadWxVideoCover() {
 	vid := c.Ctx.Input.Param(":id")
 	// pidNum, err := strconv.ParseInt(id, 10, 64)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	//根据proj的parentIdpath
 	// Url, DiskDirectory, err := GetUrlPath(pidNum)
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 
-	// vid := c.Input().Get("id")
+	// vid := c.GetString("id")
 	//pid转成64为
 	vidNum, err := strconv.ParseInt(vid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	video, err := models.GetVideobyId(vidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 
 	fileSuffix := path.Ext(video.Name)
@@ -997,7 +1008,7 @@ func (c *FroalaController) UploadWxVideoCover() {
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	if h != nil {
 		//保存附件
@@ -1005,13 +1016,13 @@ func (c *FroalaController) UploadWxVideoCover() {
 		// Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", viedeocoverpath+filenameOnly+".jpg") //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			return
 		}
 		//更新数据表
 		err := models.UpdateVideo(video.Id, path.Dir(video.Url)+"/"+filenameOnly+".jpg")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"state": "ERROR", "info": "ERR", "id": vid}
 			c.ServeJSON()
 		} else {
@@ -1027,7 +1038,7 @@ func (c *FroalaController) UploadWikiImg() {
 	//保存上传的图片
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// var filesize int64
 	fileSuffix := path.Ext(h.Filename)
@@ -1035,13 +1046,13 @@ func (c *FroalaController) UploadWikiImg() {
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll("./attachment/wiki/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	path1 := "./attachment/wiki/" + strconv.Itoa(year) + month.String() + "/" + newname //h.Filename
 	Url := "/attachment/wiki/" + strconv.Itoa(year) + month.String() + "/"
 	err = c.SaveToFile("file", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// filesize, _ = FileSize(path1)
 	// filesize = filesize / 1000.0
@@ -1052,23 +1063,23 @@ func (c *FroalaController) UploadWikiImg() {
 //添加文章里的视频上传
 func (c *FroalaController) UploadVideo() {
 	//解析表单
-	pid := c.Input().Get("pid")
+	pid := c.GetString("pid")
 	// beego.Info(pid)
 	//pid转成64为
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	//根据proj的parentIdpath
 	Url, DiskDirectory, err := GetUrlPath(pidNum)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(DiskDirectory)
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// beego.Info(h.Filename)
 	fileSuffix := path.Ext(h.Filename)
@@ -1076,12 +1087,12 @@ func (c *FroalaController) UploadVideo() {
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix // + "_" + filename
 	// err = ioutil.WriteFile(path1+newname+".jpg", ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 	// if err != nil {
-	// 	beego.Error(err)
+	// 	logs.Error(err)
 	// }
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var path string
 	var filesize int64
@@ -1091,7 +1102,7 @@ func (c *FroalaController) UploadVideo() {
 		Url = "/" + Url + "/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		filesize, _ = FileSize(path)
 		filesize = filesize / 1000.0
