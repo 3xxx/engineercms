@@ -7,11 +7,9 @@ import (
 	//"fmt"
 	//"log"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/astaxie/beego"
 	// "github.com/elastic/go-elasticsearch/esapi"
-	//"github.com/beego/beego/v2/adapter/logs"
+	//"github.com/astaxie/beego/logs"
 	"regexp"
 
 	// "bytes"
@@ -98,12 +96,9 @@ func init() {
 	//flag.IntVar(&numItems, "count", 10, "Number of documents to generate")
 	flag.Parse()
 	//setupIndex(indexName)
-	openElasticsearch, err := web.AppConfig.String("openElasticsearch")
-	if err != nil {
-		logs.Error(err)
-	}
+	openElasticsearch := beego.AppConfig.String("openElasticsearch")
 	if openElasticsearch == "true" {
-		// beego.Info("建立index")
+		beego.Info("建立index")
 		if err = setupIndex(indexName); err != nil { //这里建立索引（相当于表）
 			log.Fatalf("Error creating the client: %s", err)
 		}
@@ -178,7 +173,7 @@ type Author struct {
 
 // CMSELASTIC API
 type ElasticController struct {
-	web.Controller
+	beego.Controller
 }
 
 // @Title get elasticsearch web
@@ -192,7 +187,7 @@ func (c *ElasticController) Get() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		c.TplName = "elastic/index.html"
@@ -224,7 +219,7 @@ func (c *ElasticController) UploadElastic() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		c.TplName = "elastic/upload_elastic.tpl"
@@ -258,7 +253,7 @@ func (c *ElasticController) Upload() {
 	_, h, err := c.GetFile("input-ke-2[]")
 	// beego.Info(h.Filename)自动将英文括号改成了_下划线
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	if fileSuffix != ".DOC" && fileSuffix != ".doc" && fileSuffix != ".DOCX" && fileSuffix != ".docx" && fileSuffix != ".pdf" && fileSuffix != ".PDF" {
@@ -266,13 +261,13 @@ func (c *ElasticController) Upload() {
 		c.ServeJSON()
 		return
 	}
-	prodlabel := c.GetString("prodlabel")
-	prodprincipal := c.GetString("prodprincipal")
+	prodlabel := c.Input().Get("prodlabel")
+	prodprincipal := c.Input().Get("prodprincipal")
 
 	id := c.Ctx.Input.Param(":id")
 	id_int64, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	var filepath, DiskDirectory, Url, attachmentname, article_body, filename1, filename2 string
@@ -280,13 +275,13 @@ func (c *ElasticController) Upload() {
 	//由proj id取得url
 	Url, DiskDirectory, err = GetUrlPath(id_int64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	//取项目本身
 	category, err := models.GetProj(id_int64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var topprojectid int64
 	if category.ParentId != 0 { //如果不是根目录
@@ -295,7 +290,7 @@ func (c *ElasticController) Upload() {
 		patharray := strings.Split(parentidpath1, "-")
 		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	} else {
 		topprojectid = category.Id
@@ -326,14 +321,14 @@ func (c *ElasticController) Upload() {
 		//根据id添加成果code, title, label, principal, content string, projectid int64
 		prodId, err := models.AddProduct(filename1, filename2, prodlabel, prodprincipal, uid, id_int64, topprojectid)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 
 		filepath = DiskDirectory + "/" + attachmentname
 		//如果附件名称相同，则覆盖上传，但数据库不追加
 		attachmentid, err = models.AddAttachment(attachmentname, filesize, 0, prodId)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"state": "写入附件数据库错误"}
 			c.ServeJSON()
 		} else {
@@ -345,7 +340,7 @@ func (c *ElasticController) Upload() {
 			}
 			err = c.SaveToFile("input-ke-2[]", filepath) //.Join("attachment", attachment)) //存文件
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "文件保存错误！"}
 				c.ServeJSON()
 				return
@@ -356,7 +351,7 @@ func (c *ElasticController) Upload() {
 			//存入文件夹
 			// err = c.SaveToFile("file", filepath) //.Join("attachment", attachment)) //存文件    WaterMark(filepath)    //给文件加水印
 			// if err != nil {
-			// 	logs.Error(err)
+			// 	beego.Error(err)
 			// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "存入文件夹错误"}
 			// 	c.ServeJSON()
 			// }
@@ -478,9 +473,9 @@ func CreateIndex(mapping string) error {
 		return err
 	}
 	//s, _ := ioutil.ReadAll(res.Body)
-	logs.Error(err)
-	// beego.Info(res.Body)
-	// beego.Info(res.Status()) //1.存在：200 OK 2.不存在：404 Not Found 3.未启动：
+	beego.Error(err)
+	beego.Info(res.Body)
+	beego.Info(res.Status()) //1.存在：200 OK 2.不存在：404 Not Found 3.未启动：
 	res.Body.Close()
 	if res.Status() == "404 Not Found" {
 		//beego.Info(err)
@@ -501,7 +496,7 @@ func CreateIndex(mapping string) error {
 func Createitem(indexName string, item *Document) error {
 	//es, err := elasticsearch.NewDefaultClient()
 	//if err != nil {
-	//	// logs.Error(err)
+	//	// beego.Error(err)
 	//	return err
 	//	// log.Fatalf("Error creating the client: %s", err)
 	//}
@@ -566,7 +561,7 @@ func (c *ElasticController) Exists(id string) (bool, error) {
 func (c *ElasticController) Search() {
 	// 3. Search for the indexed documents
 	// Build the request body.
-	query := c.GetString("q")
+	query := c.Input().Get("q")
 	after := c.GetStrings("a")
 	//beego.Info(after)
 	//if query == "" {
@@ -688,7 +683,7 @@ func (c *ElasticController) Search() {
 
 		if err := json.Unmarshal(hit.Source, &h); err != nil {
 			//return //&results, err
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"status": 5, "info": "ERR"}
 			c.ServeJSON()
 		}

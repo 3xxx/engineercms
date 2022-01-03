@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
 	"sort"
 	"strconv"
 	"strings"
@@ -14,7 +13,7 @@ import (
 )
 
 type BusinessController struct {
-	web.Controller
+	beego.Controller
 }
 
 type wxuser struct {
@@ -46,10 +45,10 @@ type wxuser struct {
 // 添加一个活动
 func (c *BusinessController) AddBusiness() {
 	//content去验证
-	app_version := c.GetString("app_version")
+	app_version := c.Input().Get("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	}
@@ -59,7 +58,7 @@ func (c *BusinessController) AddBusiness() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
@@ -78,7 +77,7 @@ func (c *BusinessController) AddBusiness() {
 	// }
 	// user, err := models.GetUserByUsername(uname)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// beego.Info("ok")
 
@@ -98,21 +97,21 @@ func (c *BusinessController) AddBusiness() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	location := c.GetString("location")
-	lat := c.GetString("lat")
+	location := c.Input().Get("location")
+	lat := c.Input().Get("lat")
 	latfloat, err := strconv.ParseFloat(lat, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	lng := c.GetString("lng")
+	lng := c.Input().Get("lng")
 	lngfloat, err := strconv.ParseFloat(lng, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	startdate := c.GetString("startDate")
+	startdate := c.Input().Get("startDate")
 	datearray := strings.Split(startdate, "/")
 	year := datearray[0]
 	month := datearray[1]
@@ -127,10 +126,10 @@ func (c *BusinessController) AddBusiness() {
 	const base_format = "2006-01-02"
 	StartDate, err := time.Parse(base_format, startdate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	enddate := c.GetString("endDate")
+	enddate := c.Input().Get("endDate")
 	datearray = strings.Split(enddate, "/")
 	year = datearray[0]
 	month = datearray[1]
@@ -144,35 +143,35 @@ func (c *BusinessController) AddBusiness() {
 	enddate = year + "-" + month + "-" + day
 	EndDate, err := time.Parse(base_format, enddate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	EndDate = EndDate.AddDate(0, 0, 1)
 
-	projecttitle := c.GetString("projecttitle")
-	drivername := c.GetString("drivername")
-	subsidy := c.GetString("subsidy")
+	projecttitle := c.Input().Get("projecttitle")
+	drivername := c.Input().Get("drivername")
+	subsidy := c.Input().Get("subsidy")
 	subsidyint, err := strconv.Atoi(subsidy)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	carfare := c.GetString("carfare")
+	carfare := c.Input().Get("carfare")
 	carfareint, err := strconv.Atoi(carfare)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	hotelfee := c.GetString("hotelfee")
+	hotelfee := c.Input().Get("hotelfee")
 	hotelfeeint, err := strconv.Atoi(hotelfee)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	users := c.GetString("users")
+	users := c.Input().Get("users")
 	m := []wxuser{}
 	err = json.Unmarshal([]byte(users), &m)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	articleshow := c.GetString("articleshow")
+	articleshow := c.Input().Get("articleshow")
 	// 2020/11/15 17:08:02.488 [I] [business_trip.go:60] [{"index":1,"name":"6","showta
 	// g":true},{"index":2,"name":"61","showtag":true}]
 	// 进行敏感字符验证
@@ -181,7 +180,7 @@ func (c *BusinessController) AddBusiness() {
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
@@ -209,7 +208,7 @@ func (c *BusinessController) AddBusiness() {
 		// beego.Info(Id)
 		// beego.Info(err)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加出差数据错误"}
 			c.ServeJSON()
 		} else if Id != 0 {
@@ -219,7 +218,7 @@ func (c *BusinessController) AddBusiness() {
 			businessuser.BusinessID = Id
 			_, err = models.CreateUserBusiness(businessuser)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加同行人错误"}
 				c.ServeJSON()
 			}
@@ -234,7 +233,7 @@ func (c *BusinessController) AddBusiness() {
 					businessuser.BusinessID = Id
 					_, err = models.CreateUserBusiness(businessuser)
 					if err != nil {
-						logs.Error(err)
+						beego.Error(err)
 						c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加同行人错误"}
 						c.ServeJSON()
 					}
@@ -244,7 +243,7 @@ func (c *BusinessController) AddBusiness() {
 			if articleshow == "true" {
 				_, err := models.AddArticle("title", "content", int64(Id))
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 					c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加文章错误"}
 					c.ServeJSON()
 				}
@@ -286,10 +285,10 @@ func (c *BusinessController) AddBusiness() {
 // 用户修改business
 func (c *BusinessController) UpdateBusiness() {
 	//content去验证
-	app_version := c.GetString("app_version")
+	app_version := c.Input().Get("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	}
@@ -308,22 +307,22 @@ func (c *BusinessController) UpdateBusiness() {
 	//id转成uint为
 	businessidint, err := strconv.Atoi(bid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	businessid := uint(businessidint)
 
-	location := c.GetString("location")
-	lat := c.GetString("lat")
+	location := c.Input().Get("location")
+	lat := c.Input().Get("lat")
 	latfloat, err := strconv.ParseFloat(lat, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	lng := c.GetString("lng")
+	lng := c.Input().Get("lng")
 	lngfloat, err := strconv.ParseFloat(lng, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	startdate := c.GetString("startDate")
+	startdate := c.Input().Get("startDate")
 	datearray := strings.Split(startdate, "/")
 	year := datearray[0]
 	month := datearray[1]
@@ -338,10 +337,10 @@ func (c *BusinessController) UpdateBusiness() {
 	const base_format = "2006-01-02"
 	StartDate, err := time.Parse(base_format, startdate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	enddate := c.GetString("endDate")
+	enddate := c.Input().Get("endDate")
 	datearray = strings.Split(enddate, "/")
 	year = datearray[0]
 	month = datearray[1]
@@ -355,35 +354,35 @@ func (c *BusinessController) UpdateBusiness() {
 	enddate = year + "-" + month + "-" + day
 	EndDate, err := time.Parse(base_format, enddate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	EndDate = EndDate.AddDate(0, 0, 1) //在编辑活动的显示那里，将enddate减少一天。
 
-	projecttitle := c.GetString("projecttitle")
-	drivername := c.GetString("drivername")
-	subsidy := c.GetString("subsidy")
+	projecttitle := c.Input().Get("projecttitle")
+	drivername := c.Input().Get("drivername")
+	subsidy := c.Input().Get("subsidy")
 	subsidyint, err := strconv.Atoi(subsidy)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	carfare := c.GetString("carfare")
+	carfare := c.Input().Get("carfare")
 	carfareint, err := strconv.Atoi(carfare)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	hotelfee := c.GetString("hotelfee")
+	hotelfee := c.Input().Get("hotelfee")
 	hotelfeeint, err := strconv.Atoi(hotelfee)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	users := c.GetString("users")
+	users := c.Input().Get("users")
 	m := []wxuser{}
 	err = json.Unmarshal([]byte(users), &m)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	// articleshow := c.GetString("articleshow")
+	// articleshow := c.Input().Get("articleshow")
 	// 2020/11/15 17:08:02.488 [I] [business_trip.go:60] [{"index":1,"name":"6","showta
 	// g":true},{"index":2,"name":"61","showtag":true}]
 	// 进行敏感字符验证
@@ -391,7 +390,7 @@ func (c *BusinessController) UpdateBusiness() {
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
@@ -416,7 +415,7 @@ func (c *BusinessController) UpdateBusiness() {
 		}
 		err := models.UpdateBusiness(business)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "更新出差数据错误"}
 			c.ServeJSON()
 		} else {
@@ -425,7 +424,7 @@ func (c *BusinessController) UpdateBusiness() {
 				// 查出数据库中关联的users
 				businessusers, err := models.GetBusinessUsers(businessid)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 
 				for _, v := range m {
@@ -445,7 +444,7 @@ func (c *BusinessController) UpdateBusiness() {
 						businessuser.BusinessID = businessid
 						_, err = models.CreateUserBusiness(businessuser)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 							c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "添加同行人错误"}
 							c.ServeJSON()
 						}
@@ -464,7 +463,7 @@ func (c *BusinessController) UpdateBusiness() {
 					if databasehasname == false {
 						err = models.DeleteUserBusiness(w.NickNames.Id, businessid)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 							c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "删除同行人错误"}
 							c.ServeJSON()
 						}
@@ -498,7 +497,7 @@ func (c *BusinessController) GetBysiness() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	} else if isadmin || islogin {
 		user.Id = uid
@@ -513,14 +512,14 @@ func (c *BusinessController) GetBysiness() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(projectid)
 	// projectid = 25001
 	//查出未过期的与本人有关的出差活动
 	business, err := models.GetAllBusiness(projectid, user.Id)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(business)
 	// local, _ := time.LoadLocation("Local")
@@ -556,12 +555,12 @@ func (c *BusinessController) GetBysinessById() {
 	//id转成64为
 	businessid, err := strconv.ParseInt(bid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//查出出差活动
 	business, err := models.GetBusinessById(businessid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// enddate要减一天
 	business.EndDate = business.EndDate.AddDate(0, 0, -1)
@@ -586,63 +585,60 @@ func (c *BusinessController) GetBysinessById() {
 // @router /businesscheck [post]
 // 打卡记录写入数据库
 func (c *BusinessController) BusinessCheck() {
-	userid := c.GetString("userid")
+	userid := c.Input().Get("userid")
 	//pid转成64为
 	UserId, err := strconv.ParseInt(userid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	businessid := c.GetString("businessid")
+	businessid := c.Input().Get("businessid")
 	businessidint, err := strconv.Atoi(businessid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	BusinessId := uint(businessidint)
 
-	lat := c.GetString("lat")
+	lat := c.Input().Get("lat")
 	//string到float64
 	Lat, err := strconv.ParseFloat(lat, 64)
-	lng := c.GetString("lng")
+	lng := c.Input().Get("lng")
 	Lng, err := strconv.ParseFloat(lng, 64)
 
-	// startdate := c.GetString("startDate")
+	// startdate := c.Input().Get("startDate")
 	// beego.Info(startdate)
 	const base_format = "2006-01-02"
 	// StartDate, err := time.Parse(base_format, startdate)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
-	PhotoUrl := c.GetString("photoUrl")
-	location := c.GetString("location")
+	PhotoUrl := c.Input().Get("photoUrl")
+	location := c.Input().Get("location")
 	//根据userid取出user和avatorUrl
 	useravatar, err := models.GetUserAvatorUrl(UserId)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var photo string
 	if len(useravatar) != 0 {
-		wxsite, err := web.AppConfig.String("wxreqeustsite")
-		if err != nil {
-			logs.Error(err)
-		}
+		wxsite := beego.AppConfig.String("wxreqeustsite")
 		photo = wxsite + useravatar[0].UserAvatar.AvatarUrl
 	}
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
-	day := c.GetString("day")
+	day := c.Input().Get("day")
 	if len(day) == 1 {
 		day = "0" + day
 	}
 	SelectDate, err := time.Parse(base_format, year+"-"+month+"-"+day)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	_, err = models.BusinessCheck(BusinessId, UserId, Lat, Lng, PhotoUrl, location, SelectDate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "message": PhotoUrl}
 		c.ServeJSON()
 	} else {
@@ -669,32 +665,32 @@ type BusinessCheckDate struct {
 // @router /getbusinesscheck [get]
 // 取得当月的打卡记录
 func (c *BusinessController) GetBusinessCheck() {
-	userid := c.GetString("userid")
+	userid := c.Input().Get("userid")
 	//pid转成64为
 	UserId, err := strconv.ParseInt(userid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	businessid := c.GetString("businessid")
+	businessid := c.Input().Get("businessid")
 	BusinessId, err := strconv.ParseInt(businessid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 
 	data, err := models.GetBusinessCheck(BusinessId, UserId, SelectMonth1, SelectMonth2)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -739,22 +735,22 @@ func (c *BusinessController) BusinessMonthCheckSum() {
 func (c *BusinessController) BusinessMonthCheck() {
 	var offset, limit1, page1 int
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 500
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -766,14 +762,14 @@ func (c *BusinessController) BusinessMonthCheck() {
 
 	//当月天数
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 	//建立一个动态月日数组
@@ -784,12 +780,12 @@ func (c *BusinessController) BusinessMonthCheck() {
 
 	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	pid := c.Ctx.Input.Param(":id")
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
 	for _, w := range business {
@@ -842,7 +838,7 @@ func (c *BusinessController) BusinessMonthCheck() {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						checkmap[dayint] = "1" //vv.CheckTime.Add(8 * h) //vv.Location
 					}
@@ -850,13 +846,13 @@ func (c *BusinessController) BusinessMonthCheck() {
 				//查出一个用户这个月的打卡记录
 				// data, err := models.CheckGetCheck(ActivityId, v.Checkin.UserId, SelectMonth1, SelectMonth2)
 				// if err != nil {
-				// 	logs.Error(err)
+				// 	beego.Error(err)
 				// } else {
 				// 	for _, w := range data {
 				// 		day := w.SelectDate.Format("02")
 				// 		dayint, err := strconv.Atoi(day)
 				// 		if err != nil {
-				// 			logs.Error(err)
+				// 			beego.Error(err)
 				// 		}
 				// 		checkmap[dayint] = "1"
 				// 	}
@@ -878,7 +874,7 @@ func (c *BusinessController) BusinessMonthCheck() {
 	}
 	b, err := json.Marshal(s)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -914,23 +910,23 @@ func (c *BusinessController) BusinessMonthCheck2() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 500
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		// limit1 = 10
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -942,14 +938,14 @@ func (c *BusinessController) BusinessMonthCheck2() {
 
 	//当月天数
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 	//建立一个动态月日数组
@@ -960,7 +956,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 
 	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(SelectMonth1)
 	// beego.Info(SelectMonth2)
@@ -971,7 +967,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
 
@@ -1006,7 +1002,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						provinceindex := UnicodeIndex(vv.Location, "省") // 查找空格这个字符的位置
 						province := SubString(vv.Location, 0, provinceindex+1)
@@ -1043,7 +1039,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 	}
 	b, err := json.Marshal(s)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -1079,23 +1075,23 @@ func (c *BusinessController) BusinessMonthCheck3() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 500
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		// limit1 = 10
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1107,14 +1103,14 @@ func (c *BusinessController) BusinessMonthCheck3() {
 
 	//当月天数
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 	//建立一个动态月日数组
@@ -1125,7 +1121,7 @@ func (c *BusinessController) BusinessMonthCheck3() {
 
 	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(SelectMonth1)
 	// beego.Info(SelectMonth2)
@@ -1136,7 +1132,7 @@ func (c *BusinessController) BusinessMonthCheck3() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
 
@@ -1170,7 +1166,7 @@ func (c *BusinessController) BusinessMonthCheck3() {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						provinceindex := UnicodeIndex(vv.Location, "省") // 查找空格这个字符的位置
 						province := SubString(vv.Location, 0, provinceindex+1)
@@ -1209,7 +1205,7 @@ func (c *BusinessController) BusinessMonthCheck3() {
 
 	b, err := json.Marshal(s)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -1243,22 +1239,22 @@ func (c *BusinessController) BusinessMonthCheckSum4() {
 func (c *BusinessController) BusinessMonthCheck4() {
 	var offset, limit1, page1 int
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 500
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1270,14 +1266,14 @@ func (c *BusinessController) BusinessMonthCheck4() {
 
 	//当月天数
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 	//建立一个动态月日数组
@@ -1288,12 +1284,12 @@ func (c *BusinessController) BusinessMonthCheck4() {
 
 	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	pid := c.Ctx.Input.Param(":id")
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
 	for _, w := range business {
@@ -1347,7 +1343,7 @@ func (c *BusinessController) BusinessMonthCheck4() {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						checkmap[dayint] = "1" //vv.CheckTime.Add(8 * h) //vv.Location
 					}
@@ -1355,13 +1351,13 @@ func (c *BusinessController) BusinessMonthCheck4() {
 				//查出一个用户这个月的打卡记录
 				// data, err := models.CheckGetCheck(ActivityId, v.Checkin.UserId, SelectMonth1, SelectMonth2)
 				// if err != nil {
-				// 	logs.Error(err)
+				// 	beego.Error(err)
 				// } else {
 				// 	for _, w := range data {
 				// 		day := w.SelectDate.Format("02")
 				// 		dayint, err := strconv.Atoi(day)
 				// 		if err != nil {
-				// 			logs.Error(err)
+				// 			beego.Error(err)
 				// 		}
 				// 		checkmap[dayint] = "1"
 				// 	}
@@ -1383,7 +1379,7 @@ func (c *BusinessController) BusinessMonthCheck4() {
 	}
 	b, err := json.Marshal(s)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -1419,23 +1415,23 @@ func (c *BusinessController) BusinessMonthCheck5() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 500
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		// limit1 = 10
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1447,14 +1443,14 @@ func (c *BusinessController) BusinessMonthCheck5() {
 
 	//当月天数
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 	//建立一个动态月日数组
@@ -1465,7 +1461,7 @@ func (c *BusinessController) BusinessMonthCheck5() {
 
 	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(SelectMonth1)
 	// beego.Info(SelectMonth2)
@@ -1476,7 +1472,7 @@ func (c *BusinessController) BusinessMonthCheck5() {
 	//id转成64为
 	projectid, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	s := []map[int]interface{}{}
 
@@ -1510,7 +1506,7 @@ func (c *BusinessController) BusinessMonthCheck5() {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						checkmap[dayint] = "1"
 					}
@@ -1532,7 +1528,7 @@ func (c *BusinessController) BusinessMonthCheck5() {
 
 	b, err := json.Marshal(s)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {

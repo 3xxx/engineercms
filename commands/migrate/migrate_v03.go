@@ -4,8 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/3xxx/engineercms/models"
-	// "github.com/beego/beego/v2/adapter/orm"
-	"github.com/beego/beego/v2/client/orm"
+	"github.com/astaxie/beego/orm"
 	"strings"
 	"time"
 )

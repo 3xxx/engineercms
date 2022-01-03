@@ -3,15 +3,11 @@ package controllers
 import (
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-
+	"github.com/astaxie/beego"
 	// "io"
 	// "encoding/json"
 	// "net/http"
-	"github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego/httplib"
 	// "bytes"
 	// "io/ioutil"
 	// "mime/multipart"
@@ -22,21 +18,21 @@ import (
 )
 
 type MainController struct {
-	web.Controller
+	beego.Controller
 }
 
 func (c *MainController) Get() {
 	var id string
-	navid1, _ := web.AppConfig.String("navigationid1")
-	navid2, _ := web.AppConfig.String("navigationid2")
-	navid3, _ := web.AppConfig.String("navigationid3")
-	navid4, _ := web.AppConfig.String("navigationid4")
-	navid5, _ := web.AppConfig.String("navigationid5")
-	navid6, _ := web.AppConfig.String("navigationid6")
-	navid7, _ := web.AppConfig.String("navigationid7")
-	navid8, _ := web.AppConfig.String("navigationid8")
-	navid9, _ := web.AppConfig.String("navigationid9")
-	index, _ := web.AppConfig.String("defaultindex")
+	navid1 := beego.AppConfig.String("navigationid1")
+	navid2 := beego.AppConfig.String("navigationid2")
+	navid3 := beego.AppConfig.String("navigationid3")
+	navid4 := beego.AppConfig.String("navigationid4")
+	navid5 := beego.AppConfig.String("navigationid5")
+	navid6 := beego.AppConfig.String("navigationid6")
+	navid7 := beego.AppConfig.String("navigationid7")
+	navid8 := beego.AppConfig.String("navigationid8")
+	navid9 := beego.AppConfig.String("navigationid9")
+	index := beego.AppConfig.String("defaultindex")
 	// beego.Info(index)
 	switch index {
 	case "IsNav1":
@@ -102,7 +98,7 @@ func (c *MainController) Get() {
 	// u := c.Ctx.Input.UserAgent()
 	// matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// if matched == true {
 	// 	// beego.Info("移动端~")
@@ -116,7 +112,7 @@ func (c *MainController) Get() {
 	// 	var depcount int                           //部门人员数
 	// 	category1, err := models.GetAdminDepart(0) //得到所有分院（部门）
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// 	for i1, _ := range category1 {
 	// 		aa := make([]AchDepart, 1)
@@ -127,7 +123,7 @@ func (c *MainController) Get() {
 	// 		// beego.Info(category1[i1].Title)
 	// 		category2, err := models.GetAdminDepart(category1[i1].Id) //得到所有科室
 	// 		if err != nil {
-	// 			logs.Error(err)
+	// 			beego.Error(err)
 	// 		}
 	// 		// beego.Info(category2)
 	// 		//如果返回科室为空，则直接取得员工
@@ -147,7 +143,7 @@ func (c *MainController) Get() {
 	// 				//根据分院和科室查所有员工
 	// 				users, count, err := models.GetUsersbySec(category1[i1].Title, category2[i2].Title) //得到员工姓名
 	// 				if err != nil {
-	// 					logs.Error(err)
+	// 					beego.Error(err)
 	// 				}
 	// 				// beego.Info(count)
 	// 				for i3, _ := range users {
@@ -178,7 +174,7 @@ func (c *MainController) Get() {
 	// 		//根据分院查所有员工
 	// 		users, count, err := models.GetUsersbySecOnly(category1[i1].Title) //得到员工姓名
 	// 		if err != nil {
-	// 			logs.Error(err)
+	// 			beego.Error(err)
 	// 		}
 	// 		for i3, _ := range users {
 	// 			dd := make([]AchSecoffice, 1)
@@ -206,7 +202,7 @@ func (c *MainController) Getecmsdoc() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// // beego.Info(username)
 	// // beego.Info(role)
@@ -236,7 +232,7 @@ func (c *MainController) Getmeritmsdoc() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// // beego.Info(username)
 	// // beego.Info(role)
@@ -266,7 +262,7 @@ func (c *MainController) Gethydrowsdoc() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// // beego.Info(username)
 	// // beego.Info(role)
@@ -297,7 +293,7 @@ func (c *MainController) Getecmsapi() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// // beego.Info(username)
 	// // beego.Info(role)
@@ -327,7 +323,7 @@ func (c *MainController) Getmeritmsapi() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// // beego.Info(username)
 	// // beego.Info(role)
@@ -367,7 +363,7 @@ func (c *MainController) UserManage() {
 	// loc[0] > 1
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -392,7 +388,7 @@ func (c *MainController) PhotoSwipe() {
 	// loc[0] > 1
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -411,7 +407,7 @@ func (c *MainController) Test() {
 	// loc[0] > 1
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -487,7 +483,7 @@ func (c *MainController) Slide() {
 // 	// convdate := time.Now().Format(lll)
 // 	// t1, err := time.Parse(lll, convdate) //这里t1要是用t1:=就不是前面那个t1了
 // 	// if err != nil {
-// 	// 		logs.Error(err)
+// 	// 		beego.Error(err)
 // 	// 	}
 // 	date := time.Now()
 // 	convdate := string(date.Format(lll))
@@ -495,10 +491,10 @@ func (c *MainController) Slide() {
 // 	f, _, err := c.GetFile("uploadfile")
 // 	// beego.Info(h) //这里 filename 是路径，所以不能以filename作为保存的文件名。坑！！
 // 	defer f.Close()
-// 	getpostdatafilepath := web.AppConfig.String("getpostdatafilepath") //"./static/upload/"
-// 	getpostdatafilename := web.AppConfig.String("getpostdatafilename")
+// 	getpostdatafilepath := beego.AppConfig.String("getpostdatafilepath") //"./static/upload/"
+// 	getpostdatafilename := beego.AppConfig.String("getpostdatafilename")
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	} else {
 // 		c.SaveToFile("uploadfile", getpostdatafilepath+convdate+getpostdatafilename) // ".data"保存位置在 static/upload, 没有文件夹要先创建
 // 		c.Ctx.WriteString("ok")
@@ -514,22 +510,10 @@ func (c *MainController) Slide() {
 // 检验signature v1/checkin/sendmessage
 // 上传文件、备份文件
 func (c *MainController) Postdata() {
-	postdataurl, err := web.AppConfig.String("postdataurl")
-	if err != nil {
-		logs.Error(err)
-	}
-	postdatausername, err := web.AppConfig.String("postdatausername")
-	if err != nil {
-		logs.Error(err)
-	}
-	postdatapassword, err := web.AppConfig.String("postdatapassword")
-	if err != nil {
-		logs.Error(err)
-	}
-	postdatafilepath, err := web.AppConfig.String("postdatafilepath")
-	if err != nil {
-		logs.Error(err)
-	}
+	postdataurl := beego.AppConfig.String("postdataurl")
+	postdatausername := beego.AppConfig.String("postdatausername")
+	postdatapassword := beego.AppConfig.String("postdatapassword")
+	postdatafilepath := beego.AppConfig.String("postdatafilepath")
 	b := httplib.Post(postdataurl) //"./database/meritms.db"
 	b.Param("username", postdatausername)
 	b.Param("password", postdatapassword)
@@ -537,28 +521,16 @@ func (c *MainController) Postdata() {
 	// b.PostFile("uploadfile2", "httplib.txt")PostFile 第一个参数是 form 表单的字段名,第二个是需要发送的文件名或者文件路径
 	str, err := b.String()
 	if err != nil {
-		logs.Error(str)
+		beego.Error(str)
 	}
 }
 
 // 上传文件、备份文件
 func Postdata() {
-	postdataurl, err := web.AppConfig.String("postdataurl")
-	if err != nil {
-		logs.Error(err)
-	}
-	postdatausername, err := web.AppConfig.String("postdatausername")
-	if err != nil {
-		logs.Error(err)
-	}
-	postdatapassword, err := web.AppConfig.String("postdatapassword")
-	if err != nil {
-		logs.Error(err)
-	}
-	postdatafilepath, err := web.AppConfig.String("postdatafilepath")
-	if err != nil {
-		logs.Error(err)
-	}
+	postdataurl := beego.AppConfig.String("postdataurl")
+	postdatausername := beego.AppConfig.String("postdatausername")
+	postdatapassword := beego.AppConfig.String("postdatapassword")
+	postdatafilepath := beego.AppConfig.String("postdatafilepath")
 	b := httplib.Post(postdataurl) //"./database/meritms.db"
 	b.Param("username", postdatausername)
 	b.Param("password", postdatapassword)
@@ -566,13 +538,13 @@ func Postdata() {
 	// b.PostFile("uploadfile2", "httplib.txt")PostFile 第一个参数是 form 表单的字段名,第二个是需要发送的文件名或者文件路径
 	str, err := b.String()
 	if err != nil {
-		logs.Error(str)
+		beego.Error(str)
 	}
 }
 
 func (c *MainController) Register() {
 	// flash := beego.NewFlash()
-	token := c.GetString("token")
+	token := c.Input().Get("token")
 	//是否重复提交
 	if c.IsSubmitAgain(token) {
 		c.Redirect("/registerpage", 302)
@@ -598,25 +570,25 @@ func (c *MainController) UpdateDatabase() {
 
 	err1, err2, err3, err4, err5, err6, err7 := models.UpdateDatabase()
 	if err1 != nil {
-		logs.Error(err1)
+		beego.Error(err1)
 	}
 	if err2 != nil {
-		logs.Error(err2)
+		beego.Error(err2)
 	}
 	if err3 != nil {
-		logs.Error(err3)
+		beego.Error(err3)
 	}
 	if err4 != nil {
-		logs.Error(err4)
+		beego.Error(err4)
 	}
 	if err5 != nil {
-		logs.Error(err5)
+		beego.Error(err5)
 	}
 	if err6 != nil {
-		logs.Error(err6)
+		beego.Error(err6)
 	}
 	if err7 != nil {
-		logs.Error(err7)
+		beego.Error(err7)
 	}
 	c.Data["json"] = "ok"
 	c.ServeJSON()
@@ -630,7 +602,7 @@ func (c *MainController) ModifyDatabase() {
 	}
 	err := models.ModifyDatabase()
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	c.Data["json"] = err
 	c.ServeJSON()

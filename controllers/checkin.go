@@ -6,11 +6,9 @@ import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/logs"
+	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/httplib"
+	// "github.com/astaxie/beego/logs"
 	// "net"
 	// "net/http"
 	// "net/url"
@@ -32,7 +30,7 @@ import (
 
 // CMSCHECKIN API
 type CheckController struct {
-	web.Controller
+	beego.Controller
 }
 
 // @Title post checkin person
@@ -160,32 +158,32 @@ func (c *CheckController) Create() {
 	// lng:113.36148
 	// location:"东璟花园"
 	// startDate:"2019-05-01"
-	createrid := c.GetString("createrId")
+	createrid := c.Input().Get("createrId")
 	// beego.Info(createrid)
 	//pid转成64为
 	CreaterId, err := strconv.ParseInt(createrid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	projectid := c.GetString("projectid")
+	projectid := c.Input().Get("projectid")
 	var ProjectId int64
 	if projectid != "" {
 		ProjectId, err = strconv.ParseInt(projectid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	Caption := c.GetString("activity_name")
-	Desc := c.GetString("activity_desc")
-	Location := c.GetString("location")
-	lat := c.GetString("lat")
+	Caption := c.Input().Get("activity_name")
+	Desc := c.Input().Get("activity_desc")
+	Location := c.Input().Get("location")
+	lat := c.Input().Get("lat")
 	//string到float64
 	Lat, err := strconv.ParseFloat(lat, 64)
 
-	lng := c.GetString("lng")
+	lng := c.Input().Get("lng")
 	Lng, err := strconv.ParseFloat(lng, 64)
 
-	startdate := c.GetString("startDate")
+	startdate := c.Input().Get("startDate")
 	datearray := strings.Split(startdate, "-")
 	year := datearray[0]
 	month := datearray[1]
@@ -200,9 +198,9 @@ func (c *CheckController) Create() {
 	const base_format = "2006-01-02"
 	StartDate, err := time.Parse(base_format, startdate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	enddate := c.GetString("endDate")
+	enddate := c.Input().Get("endDate")
 	datearray = strings.Split(enddate, "-")
 	year = datearray[0]
 	month = datearray[1]
@@ -217,17 +215,17 @@ func (c *CheckController) Create() {
 	// beego.Info(enddate)
 	EndDate, err := time.Parse(base_format, enddate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	ifface := c.GetString("ifFace")
+	ifface := c.Input().Get("ifFace")
 	IfFace, err := strconv.ParseBool(ifface) // string 转bool
-	ifphoto := c.GetString("ifPhoto")
+	ifphoto := c.Input().Get("ifPhoto")
 	IfPhoto, err := strconv.ParseBool(ifphoto) // string 转bool
-	iflocation := c.GetString("ifLocation")
+	iflocation := c.Input().Get("ifLocation")
 	IfLocation, err := strconv.ParseBool(iflocation) // string 转bool
 	_, err = models.CheckCreate(CreaterId, ProjectId, Caption, Desc, Location, Lat, Lng, StartDate, EndDate, IfFace, IfPhoto, IfLocation)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
@@ -291,18 +289,18 @@ func (c *CheckController) Getall() {
 	//   },
 	var ProjectId int64
 	var err error
-	projectid := c.GetString("projectid")
+	projectid := c.Input().Get("projectid")
 	if projectid != "" {
 		ProjectId, err = strconv.ParseInt(projectid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
 	//查出未过期的
 	activities, err := models.GetAll(ProjectId)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var getall GetAll
 	// local, _ := time.LoadLocation("Local")
@@ -317,7 +315,7 @@ func (c *CheckController) Getall() {
 	for _, v := range activities {
 		// endtime, err := time.ParseInLocation("2006-01-02 15:04:05", v.EndDate, time.Local)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		detail2 := make([]models.Activity, 1)
 		detail2[0].Id = v.Id
@@ -390,10 +388,10 @@ func (c *CheckController) Like() {
 	//             callback(res);
 	//         })
 	//     },
-	Caption := c.GetString("str")
+	Caption := c.Input().Get("str")
 	activities, err := models.CheckLike(Caption)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var getall GetAll
 	activityslice := make([]models.Activity, 0)
@@ -566,61 +564,58 @@ func (c *CheckController) Check() {
 	//        });
 	//    },
 
-	userid := c.GetString("userId")
+	userid := c.Input().Get("userId")
 	//pid转成64为
 	UserId, err := strconv.ParseInt(userid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	activityid := c.GetString("activityId")
+	activityid := c.Input().Get("activityId")
 	ActivityId, err := strconv.ParseInt(activityid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	lat := c.GetString("lat")
+	lat := c.Input().Get("lat")
 	//string到float64
 	Lat, err := strconv.ParseFloat(lat, 64)
-	lng := c.GetString("lng")
+	lng := c.Input().Get("lng")
 	Lng, err := strconv.ParseFloat(lng, 64)
 
-	// startdate := c.GetString("startDate")
+	// startdate := c.Input().Get("startDate")
 	// beego.Info(startdate)
 	const base_format = "2006-01-02"
 	// StartDate, err := time.Parse(base_format, startdate)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
-	PhotoUrl := c.GetString("photoUrl")
+	PhotoUrl := c.Input().Get("photoUrl")
 	//根据userid取出user和avatorUrl
 	useravatar, err := models.GetUserAvatorUrl(UserId)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var photo string
 	if len(useravatar) != 0 {
-		wxsite, err := web.AppConfig.String("wxreqeustsite")
-		if err != nil {
-			logs.Error(err)
-		}
+		wxsite := beego.AppConfig.String("wxreqeustsite")
 		photo = wxsite + useravatar[0].UserAvatar.AvatarUrl
 	}
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
-	day := c.GetString("day")
+	day := c.Input().Get("day")
 	if len(day) == 1 {
 		day = "0" + day
 	}
 	SelectDate, err := time.Parse(base_format, year+"-"+month+"-"+day)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	_, err = models.CheckCheck(ActivityId, UserId, Lat, Lng, PhotoUrl, SelectDate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "message": PhotoUrl}
 		c.ServeJSON()
 	} else {
@@ -647,32 +642,32 @@ type CheckDate struct {
 // @router /checkgetcheck [get]
 // 取得当月的打卡记录
 func (c *CheckController) CheckGetCheck() {
-	userid := c.GetString("userId")
+	userid := c.Input().Get("userId")
 	//pid转成64为
 	UserId, err := strconv.ParseInt(userid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	activityid := c.GetString("activityId")
+	activityid := c.Input().Get("activityId")
 	ActivityId, err := strconv.ParseInt(activityid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 
 	data, err := models.CheckGetCheck(ActivityId, UserId, SelectMonth1, SelectMonth2)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -883,7 +878,7 @@ func (c *CheckController) Apply() {
 func (c *CheckController) MonthCheckSum() {
 	c.TplName = "check/check.tpl"
 	c.Data["IsMonthCheck"] = true
-	c.Data["ProjectId"] = c.GetString("projectid")
+	c.Data["ProjectId"] = c.Input().Get("projectid")
 }
 
 //后端分页的数据结构
@@ -908,23 +903,23 @@ type monthCheckTable struct {
 func (c *CheckController) MonthCheck() {
 	var offset, limit1, page1 int
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 10
 	} else {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		// limit1 = 10
 		page1 = 1
 	} else {
 		page1, err = strconv.Atoi(page)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -936,14 +931,14 @@ func (c *CheckController) MonthCheck() {
 
 	//当月天数
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
 	//建立一个动态月日数组
@@ -954,15 +949,15 @@ func (c *CheckController) MonthCheck() {
 	dayssss, err := strconv.Atoi(daysss)              //string转int
 	// beego.Info(reflect.TypeOf(dayss)) //float64
 	// beego.Info(dayssss)
-	activityid := c.GetString("activityId")
+	activityid := c.Input().Get("activityId")
 	ActivityId, err := strconv.ParseInt(activityid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//查出check里所有用户
 	// users, err := models.GetCheckUser(SelectMonth1, SelectMonth2, ActivityId)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// for _, v := range users {
 	// beego.Info(v.UserId)
@@ -970,7 +965,7 @@ func (c *CheckController) MonthCheck() {
 	// }
 	users2, err := models.GetCheckUser2(SelectMonth1, SelectMonth2, ActivityId, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// for _, v := range users2 {
 	// beego.Info(v.User.Nickname)
@@ -1005,14 +1000,14 @@ func (c *CheckController) MonthCheck() {
 		data, err := models.CheckGetCheck(ActivityId, v.Checkin.UserId, SelectMonth1, SelectMonth2)
 		// beego.Info(data)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			for _, w := range data {
 				day := w.SelectDate.Format("02")
 				// beego.Info(day)
 				dayint, err := strconv.Atoi(day)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 				checkmap[dayint] = "1"
 			}
@@ -1022,7 +1017,7 @@ func (c *CheckController) MonthCheck() {
 		for k := range checkmap {
 			// kint, err := strconv.Atoi(k)
 			// if err != nil {
-			// 	logs.Error(err)
+			// 	beego.Error(err)
 			// }
 			keys = append(keys, k)
 		}
@@ -1049,7 +1044,7 @@ func (c *CheckController) MonthCheck() {
 	}
 	b, err := json.Marshal(s)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -1080,12 +1075,12 @@ func (c *CheckController) CheckSignature() {
 	// var timestamp string = strings.Join(r.Form["timestamp"], "")
 	// var nonce string = strings.Join(r.Form["nonce"], "")
 	// var echostr string = strings.Join(r.Form["echostr"], "")
-	signature := c.GetString("signature")
-	timestamp := c.GetString("timestamp")
+	signature := c.Input().Get("signature")
+	timestamp := c.Input().Get("timestamp")
 	// beego.Info(timestamp)
-	nonce := c.GetString("nonce")
+	nonce := c.Input().Get("nonce")
 	// beego.Info(nonce)
-	echostr := c.GetString("echostr")
+	echostr := c.Input().Get("echostr")
 	// beego.Info(echostr)
 
 	tmps := []string{token, timestamp, nonce}
@@ -1119,15 +1114,15 @@ func (c *CheckController) CheckSignature() {
 func (c *CheckController) SubscribeMessage() {
 	openID := c.GetSession("openID")
 	if openID == nil {
-		// beego.Info("openid为空")
+		beego.Info("openid为空")
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "openid为空"}
 		c.ServeJSON()
 	} else {
-		tmplIds := c.GetString("tmplIds")
+		tmplIds := c.Input().Get("tmplIds")
 		//存储openid对应订阅消息模板id
 		id, err := models.AddWxSubscribeMessage(openID.(string), tmplIds)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": 0}
 			c.ServeJSON()
 		} else {
@@ -1149,28 +1144,28 @@ func (c *CheckController) SubscribeMessage() {
 // 点击发送订阅消息
 func (c *CheckController) SendMessage() {
 	// POST https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=ACCESS_TOKEN
-	app_version := c.GetString("app_version")
+	app_version := c.Input().Get("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	}
-	// template_id := c.GetString("template_id")
+	// template_id := c.Input().Get("template_id")
 	template_id := "c8Dped7TztDiMJ2bzHMu4G3nikn-mSOHmQEh_7aTlLo"
 	// openid := "opl4B5YvCVXaatKF6VGUSbohMlWQ" //"opl4B5auOWiSxXo5-RB3NTitcHxk"
 	//查出所有openid
 	openids, err := models.GetOpenIDs()
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "openid为空！"}
 		c.ServeJSON()
 	} else {
 		for _, i := range openids {
 			errcode, errmsg, err := utils.SendMessage(accessToken, i.OpenID, template_id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 				c.ServeJSON()
 			} else if errcode == 40003 {
@@ -1211,35 +1206,35 @@ func SendMessage() {
 	app_version := "4"
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(accessToken)
-	// template_id := c.GetString("template_id")
+	// template_id := c.Input().Get("template_id")
 	template_id := "c8Dped7TztDiMJ2bzHMu4G3nikn-mSOHmQEh_7aTlLo"
 	// openid := "opl4B5YvCVXaatKF6VGUSbohMlWQ" //"opl4B5auOWiSxXo5-RB3NTitcHxk"
 	//查出所有openid
 	openids, err := models.GetOpenIDs()
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		for _, i := range openids {
 			errcode, errmsg, err := utils.SendMessage(accessToken, i.OpenID, template_id)
 			// beego.Info(errcode)
 			// beego.Info(errmsg)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			} else if errcode == 40003 {
-				logs.Error("touser字段openid为空或者不正确" + errmsg)
+				beego.Error("touser字段openid为空或者不正确" + errmsg)
 			} else if errcode == 40037 {
-				logs.Error("订阅模板id为空不正确" + errmsg)
+				beego.Error("订阅模板id为空不正确" + errmsg)
 			} else if errcode == 43101 {
-				logs.Error("用户拒绝接受消息，如果用户之前曾经订阅过，则表示用户取消了订阅关系" + errmsg)
+				beego.Error("用户拒绝接受消息，如果用户之前曾经订阅过，则表示用户取消了订阅关系" + errmsg)
 			} else if errcode == 47003 {
-				logs.Error("模板参数不准确，可能为空或者不满足规则，errmsg会提示具体是哪个字段出错" + errmsg)
+				beego.Error("模板参数不准确，可能为空或者不满足规则，errmsg会提示具体是哪个字段出错" + errmsg)
 			} else if errcode == 41030 {
-				logs.Error("page路径不正确，需要保证在现网版本小程序中存在，与app" + errmsg)
+				beego.Error("page路径不正确，需要保证在现网版本小程序中存在，与app" + errmsg)
 			} else {
-				logs.Error("发送成功" + errmsg)
+				beego.Error("发送成功" + errmsg)
 				// beego.Info(errmsg)
 			}
 		}

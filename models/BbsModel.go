@@ -1,7 +1,8 @@
 package models
 
 import (
-	"github.com/beego/beego/v2/client/orm"
+	"github.com/astaxie/beego/orm"
+
 	"time"
 )
 

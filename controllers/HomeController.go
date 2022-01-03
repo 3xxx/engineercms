@@ -4,8 +4,7 @@ import (
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/models"
-	//beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/core/logs"
+	"github.com/astaxie/beego"
 	"math"
 	"net/url"
 )
@@ -37,7 +36,7 @@ func (c *HomeController) Index() {
 	books, totalCount, err := models.NewBook().FindForHomeToPager(pageIndex, pageSize, memberId)
 
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Abort("500")
 	}
 	if totalCount > 0 {

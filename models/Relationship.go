@@ -1,11 +1,10 @@
 package models
 
 import (
-	//"context"
 	"errors"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/client/orm"
+	"github.com/astaxie/beego/logs"
+	"github.com/astaxie/beego/orm"
 )
 
 type Relationship struct {
@@ -122,11 +121,11 @@ func (m *Relationship) Insert() error {
 	return err
 }
 
-func (m *Relationship) Update(txOrm orm.TxOrmer) error {
-	_, err := txOrm.Update(m)
-	if err != nil {
-		txOrm.Rollback()
-	}
+func (m *Relationship) Update() error {
+	o := orm.NewOrm()
+
+	_, err := o.Update(m)
+
 	return err
 }
 
@@ -152,11 +151,11 @@ func (m *Relationship) DeleteByBookIdAndMemberId(book_id, member_id int) error {
 }
 
 func (m *Relationship) Transfer(book_id, founder_id, receive_id int) error {
-	ormer := orm.NewOrm()
+	o := orm.NewOrm()
 
 	founder := NewRelationship()
 
-	err := ormer.QueryTable(m.TableNameWithPrefix()).Filter("book_id", book_id).Filter("member_id", founder_id).One(founder)
+	err := o.QueryTable(m.TableNameWithPrefix()).Filter("book_id", book_id).Filter("member_id", founder_id).One(founder)
 
 	if err != nil {
 		return err
@@ -166,12 +165,12 @@ func (m *Relationship) Transfer(book_id, founder_id, receive_id int) error {
 	}
 	receive := NewRelationship()
 
-	err = ormer.QueryTable(m.TableNameWithPrefix()).Filter("book_id", book_id).Filter("member_id", receive_id).One(receive)
+	err = o.QueryTable(m.TableNameWithPrefix()).Filter("book_id", book_id).Filter("member_id", receive_id).One(receive)
 
 	if err != orm.ErrNoRows && err != nil {
 		return err
 	}
-	o, _ := ormer.Begin()
+	o.Begin()
 
 	founder.RoleId = conf.BookAdmin
 
@@ -179,7 +178,8 @@ func (m *Relationship) Transfer(book_id, founder_id, receive_id int) error {
 	receive.RoleId = conf.BookFounder
 	receive.BookId = book_id
 
-	if err := founder.Update(o); err != nil {
+	if err := founder.Update(); err != nil {
+		o.Rollback()
 		return err
 	}
 	if receive.RelationshipId > 0 {

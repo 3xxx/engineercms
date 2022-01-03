@@ -2,14 +2,14 @@ package models
 
 import (
 	"github.com/3xxx/engineercms/conf"
-	"github.com/beego/beego/v2/client/orm"
+	"github.com/astaxie/beego/orm"
 	"time"
 )
 
 type MemberToken struct {
 	TokenId   int       `orm:"column(token_id);pk;auto;unique" json:"token_id"`
 	MemberId  int       `orm:"column(member_id);type(int)" json:"member_id"`
-	Token     string    `orm:"column(token);size(150);index" json:"token"`
+	Token     string    `orm:"column(token);size(150)" json:"token"`
 	Email     string    `orm:"column(email);size(255)" json:"email"`
 	IsValid   bool      `orm:"column(is_valid)" json:"is_valid"`
 	ValidTime time.Time `orm:"column(valid_time);null" json:"valid_time"`

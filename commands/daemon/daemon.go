@@ -7,9 +7,7 @@ import (
 	"github.com/3xxx/engineercms/commands"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
 	"github.com/kardianos/service"
 	"path/filepath"
 )
@@ -54,7 +52,7 @@ func (d *Daemon) Run() {
 
 	commands.RegisterError()
 
-	web.ErrorController(&controllers.ErrorController{})
+	beego.ErrorController(&controllers.ErrorController{})
 
 	f, err := filepath.Abs(os.Args[0])
 
@@ -64,7 +62,7 @@ func (d *Daemon) Run() {
 
 	fmt.Printf("MinDoc version => %s\nbuild time => %s\nstart directory => %s\n%s\n", conf.VERSION, conf.BUILD_TIME, f, conf.GO_VERSION)
 
-	web.Run()
+	beego.Run()
 }
 
 func (d *Daemon) Stop(s service.Service) error {
@@ -81,15 +79,15 @@ func Install() {
 	s, err := service.New(d, d.config)
 
 	if err != nil {
-		logs.Error("Create service error => ", err)
+		beego.Error("Create service error => ", err)
 		os.Exit(1)
 	}
 	err = s.Install()
 	if err != nil {
-		logs.Error("Install service error:", err)
+		beego.Error("Install service error:", err)
 		os.Exit(1)
 	} else {
-		logs.Info("Service installed!")
+		beego.Info("Service installed!")
 	}
 
 	os.Exit(0)
@@ -100,15 +98,15 @@ func Uninstall() {
 	s, err := service.New(d, d.config)
 
 	if err != nil {
-		logs.Error("Create service error => ", err)
+		beego.Error("Create service error => ", err)
 		os.Exit(1)
 	}
 	err = s.Uninstall()
 	if err != nil {
-		logs.Error("Install service error:", err)
+		beego.Error("Install service error:", err)
 		os.Exit(1)
 	} else {
-		logs.Info("Service uninstalled!")
+		beego.Info("Service uninstalled!")
 	}
 	os.Exit(0)
 }
@@ -118,15 +116,15 @@ func Restart() {
 	s, err := service.New(d, d.config)
 
 	if err != nil {
-		logs.Error("Create service error => ", err)
+		beego.Error("Create service error => ", err)
 		os.Exit(1)
 	}
 	err = s.Restart()
 	if err != nil {
-		logs.Error("Install service error:", err)
+		beego.Error("Install service error:", err)
 		os.Exit(1)
 	} else {
-		logs.Info("Service Restart!")
+		beego.Info("Service Restart!")
 	}
 	os.Exit(0)
 }

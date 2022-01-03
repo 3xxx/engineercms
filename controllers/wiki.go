@@ -2,11 +2,9 @@ package controllers
 
 import (
 	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/logs"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/beego/v2/server/web/pagination"
+	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/logs"
+	"github.com/astaxie/beego/utils/pagination"
 	// "github.com/tealeg/xlsx"
 	// "os"
 	// "path"
@@ -18,14 +16,14 @@ import (
 )
 
 type WikiController struct {
-	web.Controller
+	beego.Controller
 }
 
 func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate，用后面的listall()
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -52,19 +50,19 @@ func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate�
 
 	wikis, err := models.GetAllWikis(false) //这里传入空字符串
 	if err != nil {
-		logs.Error(err.Error)
+		beego.Error(err.Error)
 	} else {
 		count := len(wikis)
 		count1 := strconv.Itoa(count)
 		count2, err := strconv.ParseInt(count1, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		postsPerPage := 20
 		paginator := pagination.SetPaginator(c.Ctx, postsPerPage, count2)
 		wikis, err = models.ListWikisByOffsetAndLimit(paginator.Offset(), postsPerPage)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		c.Data["paginator"] = paginator
 		c.Data["Wikis"] = wikis
@@ -95,7 +93,7 @@ func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate�
 	//var err error
 	//	c.Data["Wiki"], err = models.GetAllWikis()
 	//	if err != nil {
-	//		logs.Error(err)
+	//		beego.Error(err)
 	//	}
 }
 
@@ -104,7 +102,7 @@ func (c *WikiController) Viewbyuname() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -130,7 +128,7 @@ func (c *WikiController) Viewbyuname() {
 
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
-	uname := c.GetString("uname")
+	uname := c.Input().Get("uname")
 	wiki, _ := models.Getwikisbyuname(uname) //由uname取出项目
 	c.Data["Wikis"] = wiki
 }
@@ -139,7 +137,7 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -192,8 +190,8 @@ func (c *WikiController) AddWiki() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 
-	title := c.GetString("title")
-	content := c.GetString("content")
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
 	if !islogin { //&& uname != category.Author
 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
@@ -204,7 +202,7 @@ func (c *WikiController) AddWiki() {
 	}
 	id, err := models.AddWikiOne(title, content, username)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		c.Data["json"] = id
 		c.ServeJSON()
@@ -223,10 +221,10 @@ func (c *WikiController) AddPic() {
 	// c.Data["IsLogin"] = islogin
 	// c.Data["Uid"] = uid
 
-	title := c.GetString("title")
-	content := c.GetString("content")
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
 	content = "<p>" + content + "</p>"
-	imagesurl := c.GetString("images")
+	imagesurl := c.Input().Get("images")
 	array := strings.Split(imagesurl, ",")
 	for _, v := range array {
 		content = content + "<p><img src='" + v + "'></p>"
@@ -242,7 +240,7 @@ func (c *WikiController) AddPic() {
 	// <p><img src="/attachment/wiki/2018January/1515026559287477900.jpg" title="Snap2.jpg" alt="Snap2.jpg" class="fr-fic fr-dii"></p>
 	id, err := models.AddWikiOne(title, content, "test")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERR", "id": id}
 		c.ServeJSON()
 	} else {
@@ -256,13 +254,13 @@ func (c *WikiController) AddPic() {
 func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 	// var uname string
 	//解析表单
-	tid := c.GetString("tid") //这句没用。教程里漏了这句，导致修改总是变成添加文章
-	title := c.GetString("title")
-	content := c.GetString("content")
+	tid := c.Input().Get("tid") //这句没用。教程里漏了这句，导致修改总是变成添加文章
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// var attachment string
 	var path string
@@ -273,13 +271,13 @@ func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 		// beego.Info(attachment)
 		// path =  + categoryproj.Number + categoryproj.Title + "/" + categoryphase.Title + "/" + categoryspec.Title + "/" + category + "/" + h.Filename
 		path = "./attachment/wiki/" + h.Filename
-		// path := c.GetString("url")  //存文件的路径
+		// path := c.Input().Get("url")  //存文件的路径
 		// path = path[3:]
 		// path = "./attachment" + "/" + h.Filename
 		// f.Close()                                             // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		err = c.SaveToFile("file", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		filesize, _ = FileSize(path)
 		filesize = filesize / 1000.0
@@ -294,29 +292,29 @@ func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 
 	// route := "/attachment/" + categoryproj.Number + categoryproj.Title + "/" + categoryphase.Title + "/" + categoryspec.Title + "/" + category + "/" + h.Filename
 	// route := "/attachment/wiki/" + h.Filename
-	//wikiid := c.GetString("wikiid")
+	//wikiid := c.Input().Get("wikiid")
 	// var wikiid int64
 	if len(tid) == 0 {
 		// wikiid, err := models.AddWikiMany(title, uname, content, attachment)
 		//这里返回wikiid，并存入attachment表中
 		// if err != nil { //如果发生错误，返回错误，并获取该文章的wikiid
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		// cid := strconv.FormatInt(wikiid, 10)
 		// filesize := strconv.FormatInt(filesize, 10)
 		// err = models.AddAttachment(attachment, filesize, path, route, cid, uname)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 	} else { //用这种结合的方式不好，因为uploader先上传附件
 		err = models.ModifyWiki(tid, title, content)
 		if err != nil {
-			logs.Error(err) //return multi rows
+			beego.Error(err) //return multi rows
 		}
 		// filesize := strconv.FormatInt(filesize, 10)
 		// err = models.AddAttachment(attachment, filesize, path, route, tid, uname)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 	}
 	c.TplName = "wiki_add.tpl" //不加这句上传出错，虽然可以成功上传
@@ -327,7 +325,7 @@ func (c *WikiController) View() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -357,7 +355,7 @@ func (c *WikiController) View() {
 	c.TplName = "wiki_view.tpl"
 	wiki, err := models.GetWiki(c.Ctx.Input.Param("0"))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Redirect("/", 302)
 		return
 	}
@@ -371,7 +369,7 @@ func (c *WikiController) View() {
 	widNum, err := strconv.ParseInt(wid, 10, 64)
 	replies, err := models.GetAllWikiReplies(widNum)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return
 	}
 	c.Data["Replies"] = replies
@@ -382,7 +380,7 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// if role == "1" {
 	// 	c.Data["IsAdmin"] = true
@@ -403,12 +401,12 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	tid := c.GetString("tid")
+	tid := c.Input().Get("tid")
 	// beego.Info(tid)
 	//2.取得文章的作者
 	wiki, err := models.GetWiki(tid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Redirect("/", 302)
 		return
 	}
@@ -420,7 +418,7 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	// c.Data["Uname"] = uname
 	roleint, err := strconv.Atoi(role)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if roleint > 2 && username != wiki.Author { //
 		route := c.Ctx.Request.URL.String()
@@ -439,14 +437,14 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 
 func (c *WikiController) Post() { //这个post属于wiki_modify.html提交修改。
 	//解析表单
-	tid := c.GetString("tid") //教程里漏了这句，导致修改总是变成添加文章
-	title := c.GetString("title")
+	tid := c.Input().Get("tid") //教程里漏了这句，导致修改总是变成添加文章
+	title := c.Input().Get("title")
 	//其实这里只修改title, tnumber,和content
-	content := c.GetString("content")
+	content := c.Input().Get("content")
 	err := models.ModifyWiki(tid, title, content)
 	// }
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		c.Data["json"] = tid
 		c.ServeJSON()
@@ -456,12 +454,12 @@ func (c *WikiController) Post() { //这个post属于wiki_modify.html提交修改
 
 //删除文章
 func (c *WikiController) Delete() { //应该显示警告
-	url := c.GetString("url")
+	url := c.Input().Get("url")
 	c.Data["IsWiki"] = true
 	//2.取得文章的作者
-	wiki, err := models.GetWiki(c.GetString("tid"))
+	wiki, err := models.GetWiki(c.Input().Get("tid"))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Redirect("/", 302)
 		return
 	}
@@ -473,7 +471,7 @@ func (c *WikiController) Delete() { //应该显示警告
 	c.Data["role"] = role
 	roleint, err := strconv.Atoi(role)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// rolename, _ = strconv.Atoi(role)
 	// beego.Info(rolename)=5
@@ -487,9 +485,9 @@ func (c *WikiController) Delete() { //应该显示警告
 		// c.Redirect("/roleerr", 302)
 		return
 	}
-	err = models.DeletWiki(c.GetString("tid")) //(c.Ctx.Input.Param("0"))
+	err = models.DeletWiki(c.Input().Get("tid")) //(c.Ctx.Input.Param("0"))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else { //没有这个返回值，会出现错误提示。wsasend: An established connection was aborted by the software in your host machine
 		data := wiki.Title
 		c.Ctx.WriteString(data)
@@ -500,9 +498,9 @@ func (c *WikiController) Delete() { //应该显示警告
 //删除文章中的附件，保持页面不跳转怎么办？
 func (c *WikiController) DeleteAttachment() { //应该显示警告
 	//2.取得文章的作者
-	wiki, err := models.GetWiki(c.GetString("tid"))
+	wiki, err := models.GetWiki(c.Input().Get("tid"))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Redirect("/", 302)
 		return
 	}
@@ -513,7 +511,7 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 	username, role, _, _, _ := checkprodRole(c.Ctx)
 	roleint, err := strconv.Atoi(role)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
@@ -526,13 +524,13 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 		return
 	}
 	// Tid := c.Ctx.Input.Param("0")
-	Tid := c.GetString("tid")
+	Tid := c.Input().Get("tid")
 	// beego.Info(Tid)
-	err = models.DeletAttachment(c.GetString("aid")) //(c.Ctx.Input.Param("0"))
+	err = models.DeletAttachment(c.Input().Get("aid")) //(c.Ctx.Input.Param("0"))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	op := c.GetString("op")
+	op := c.Input().Get("op")
 	switch op {
 	case "modify":
 		c.Redirect("/wiki/modify?tid="+Tid, 302)
@@ -561,19 +559,19 @@ func (c *WikiController) DeleteAttachment() { //应该显示警告
 // 	}
 // 	wikis, err := models.GetAllWikis(false)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	count := len(wikis)
 // 	count1 := strconv.Itoa(count)
 // 	count2, err := strconv.ParseInt(count1, 10, 64)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	postsPerPage := 20
 // 	paginator := pagination.SetPaginator(c.Ctx, postsPerPage, count2)
 // 	wikis, err = models.ListPostsByOffsetAndLimit(paginator.Offset(), postsPerPage)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	c.Data["Wikis"] = wikis
 // 	c.Data["paginator"] = paginator

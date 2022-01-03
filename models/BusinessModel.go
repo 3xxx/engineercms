@@ -1,9 +1,11 @@
 package models
 
 import (
+	// "fmt"
+	// "github.com/astaxie/beego"
+	// "gorm.io/gorm"
 	"errors"
-	"github.com/beego/beego/v2/core/logs"
-	"gorm.io/gorm"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -29,7 +31,7 @@ type Business struct {
 	BusinessUsers    []BusinessUser
 	BusinessCheckins []BusinessCheckin
 	// ArticleID     int64   `gorm:"column:article_id;foreignkey:ArticleId;"`
-	// Article  Article `gorm:"foreignkey:ArticleId"`
+	Article  Article `gorm:"foreignkey:ArticleId"`
 	Worktime float64
 	Overtime int
 }
@@ -75,17 +77,15 @@ type BusinessCheckin struct {
 // }
 
 func init() {
-	logs.Info("businessmod")
-	// _db.AutoMigrate(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{})
-	// _db.CreateTable(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}) //当第一个存在后，后面的不建立！！！bug
-	// _db.CreateTable(&BusinessUser{})
-	// _db.CreateTable(&NickName{})
-	// _db.CreateTable(&BusinessCheckin{})
+	_db.CreateTable(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}) //当第一个存在后，后面的不建立！！！bug
+	_db.CreateTable(&BusinessUser{})
+	_db.CreateTable(&NickName{})
+	_db.CreateTable(&BusinessCheckin{})
 }
 
 // 登记出差活动
 func CreateBusiness(business Business) (id uint, err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	// projectuser := ProjectUser{ProjectId: pid, UserId: uid}
 	// 查询项目名称和时间段
 	//判断是否有重名
@@ -103,7 +103,7 @@ func CreateBusiness(business Business) (id uint, err error) {
 
 // 更新出差活动
 func UpdateBusiness(business Business) (err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	// projectuser := ProjectUser{ProjectId: pid, UserId: uid}
 	// db.First(&business, id)
 	result := db.Model(&business).Updates(business)
@@ -115,7 +115,7 @@ func UpdateBusiness(business Business) (err error) {
 
 // 添加用户~出差关联表格
 func CreateUserBusiness(businessuser BusinessUser) (id uint, err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	// projectuser := ProjectUser{ProjectId: pid, UserId: uid}
 	result := db.Create(&businessuser) // 通过数据的指针来创建
 	// user.ID             // 返回插入数据的主键
@@ -126,7 +126,7 @@ func CreateUserBusiness(businessuser BusinessUser) (id uint, err error) {
 
 // 删除用户~出差关联表格
 func DeleteUserBusiness(userid int64, businessid uint) (err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	result := db.Where("user_id = ? AND business_id = ? ", userid, businessid).Delete(&BusinessUser{})
 	// user.ID             // 返回插入数据的主键
 	// result.Error        // 返回 error
@@ -143,7 +143,7 @@ func GetAllBusiness(projectid, uid int64) (business []Business, err error) {
 	now := time.Now()
 	h, _ := time.ParseDuration("1h")
 	h1 := now.Add(8 * h)
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.Order("business.updated_at desc").
 		Preload("BusinessUsers").
 		// Preload("BusinessUsers.NickNames", "id = ?", uid).//只预加载匹配的！
@@ -162,7 +162,7 @@ func GetBusinessById(businessid int64) (business Business, err error) {
 	//join一定要select,其他不用select的话默认查询全部。
 	// Preload("BusinessUsers.NickNames")——嵌套预加载！！
 	// 加8个小时
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.
 		Preload("BusinessUsers").
 		// Preload("BusinessUsers.NickNames", "id = ?", uid).//只预加载匹配的！
@@ -178,7 +178,7 @@ func GetAllBusiness2(projectid int64) (business []Business, err error) {
 	// 坑：preload里不是对应的表的名字，而是主表中字段名字！！！
 	//join一定要select,其他不用select的话默认查询全部。
 	// Preload("BusinessUsers.NickNames")——嵌套预加载！！
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.Order("business.updated_at desc").
 		Preload("BusinessUsers").
 		// Preload("BusinessUsers.NickNames", "id = ?", uid).//只预加载匹配的！
@@ -191,7 +191,7 @@ func GetAllBusiness2(projectid int64) (business []Business, err error) {
 
 //打卡记录写入数据库
 func BusinessCheck(businessid uint, userid int64, Lat, Lng float64, PhotoUrl, location string, SelectDate time.Time) (id uint, err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	//查询数据库中有无打卡
 	// var businesscheckin BusinessCheckin
 	businesscheckin := &BusinessCheckin{
@@ -215,7 +215,7 @@ func BusinessCheck(businessid uint, userid int64, Lat, Lng float64, PhotoUrl, lo
 
 // 按月查询打卡记录-businessid是unint，换成int64也行？
 func GetBusinessCheck(businessid, UserId int64, SelectMonth1, SelectMonth2 time.Time) (check []*BusinessCheckin, err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.
 		Where("business_id = ? AND user_id = ? AND select_date >= ? AND select_date <= ?", businessid, UserId, SelectMonth1, SelectMonth2).
 		Find(&check).Error
@@ -224,7 +224,7 @@ func GetBusinessCheck(businessid, UserId int64, SelectMonth1, SelectMonth2 time.
 
 //按月统计**************
 func GetBusinessCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset int) (business []Business, err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.Order("business.updated_at desc").
 		Preload("BusinessCheckins", "select_date >= ? AND select_date <= ? ", selectmonth1, selectmonth2).
 		Preload("BusinessCheckins.Users").
@@ -237,7 +237,7 @@ func GetBusinessCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset in
 
 // 根据businessid查询关联的users
 func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.
 		Preload("NickNames").
 		Where("business_id = ? ", businessid).

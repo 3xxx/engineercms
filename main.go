@@ -1,28 +1,37 @@
 package main
 
 import (
-	"errors"
-	"fmt"
+	// "github.com/3xxx/engineercms/commands"
 	"github.com/3xxx/engineercms/commands/daemon"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers"
+	_ "github.com/3xxx/engineercms/controllers/version"
 	"github.com/3xxx/engineercms/models"
-	_ "github.com/3xxx/engineercms/routers" //这个最大的坑！！！！！
-	"github.com/beego/beego/v2/adapter/toolbox"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/i18n"
+	_ "github.com/3xxx/engineercms/routers"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	_ "github.com/astaxie/beego/session/memcache"
+	_ "github.com/astaxie/beego/session/mysql"
+	_ "github.com/astaxie/beego/session/redis"
+	"github.com/astaxie/beego/toolbox"
 	"github.com/kardianos/service"
 	_ "github.com/mattn/go-sqlite3"
+	// "github.com/go-xorm/xorm"
+	// "github.com/astaxie/beego/plugins/cors"
+
+	// _ "github.com/mattn/go-sqlite3"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	// _ "net/http/pprof"
+	// "github.com/casbin/casbin"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
 	"time"
+	//"html/template"
 )
 
 // 2021-8-30发现建表有问题：
@@ -38,13 +47,10 @@ func main() {
 	//beego.TemplateRight = ">>>"
 	//web.TemplateLeft = "<<<"
 	//web.TemplateRight = ">>>"
-	web.AddFuncMap("loadtimes", loadtimes)
-	web.AddFuncMap("subsuffix", subsuffix)
+	beego.AddFuncMap("loadtimes", loadtimes)
+	beego.AddFuncMap("subsuffix", subsuffix)
 	//默认关闭orm调试模式
-	ormDebug, err := web.AppConfig.String("ormDebug")
-	if err != nil {
-		logs.Error("获取ormDebug ->", err.Error())
-	}
+	ormDebug := beego.AppConfig.String("ormDebug")
 	if ormDebug == "true" {
 		orm.Debug = true
 	} else {
@@ -63,10 +69,7 @@ func main() {
 	// time1 := "0/" + time + " * * * * *"
 
 	// time1 := "* 30 8 * * 1-5"
-	time1, err := web.AppConfig.String("tasktime")
-	if err != nil {
-		logs.Error("获取tasktime ->", err.Error())
-	}
+	time1 := beego.AppConfig.String("tasktime")
 	if time1 != "" {
 		tk1 := toolbox.NewTask("tk1", time1, func() error { controllers.SendMessage(); return nil }) //func() error { fmt.Println("tk1"); return nil }
 		toolbox.AddTask("tk1", tk1)
@@ -115,7 +118,7 @@ func main() {
 		log.Fatal("启动程序失败 ->", err)
 	}
 	// ********mindoc*********
-	web.Run()
+	beego.Run()
 	// 开启pprof，监听请求,无效
 	// go func() {
 	// 	log.Println(http.ListenAndServe("127.0.0.1:6060", nil))
@@ -157,39 +160,31 @@ func initialization() {
 
 	if err != nil {
 		panic(err.Error())
-	}
-
-	lang, _ := web.AppConfig.String("default_lang")
-	err = i18n.SetMessage(lang, "conf/lang/"+lang+".ini")
-	if err != nil {
-		panic(fmt.Errorf("initialize locale error: %s", err))
+		os.Exit(1)
 	}
 
 	member, err := models.NewMember().FindByFieldFirst("account", "admin")
-	if errors.Is(err, orm.ErrNoRows) {
+	if err == orm.ErrNoRows {
 
-		// create admin user
-		logs.Info("creating admin user")
 		member.Account = "admin"
 		member.Avatar = conf.URLForWithCdnImage("/static/mindoc/images/headimgurl.jpg")
 		member.Password = "123456"
 		member.AuthMethod = "local"
-		member.Role = conf.MemberSuperRole
+		member.Role = 0
 		member.Email = "admin@iminho.me"
 
 		if err := member.Add(); err != nil {
 			panic("Member.Add => " + err.Error())
+			os.Exit(0)
 		}
 
-		// create demo book
-		logs.Info("creating demo book")
 		book := models.NewBook()
 
 		book.MemberId = member.MemberId
-		book.BookName = i18n.Tr(lang, "init.default_proj_name") //"MinDoc演示项目"
+		book.BookName = "MinDoc演示项目"
 		book.Status = 0
 		book.ItemId = 1
-		book.Description = i18n.Tr(lang, "init.default_proj_desc") //"这是一个MinDoc演示项目，该项目是由系统初始化时自动创建。"
+		book.Description = "这是一个MinDoc演示项目，该项目是由系统初始化时自动创建。"
 		book.CommentCount = 0
 		book.PrivatelyOwned = 0
 		book.CommentStatus = "closed"
@@ -201,19 +196,19 @@ func initialization() {
 		book.Editor = "markdown"
 		book.Theme = "default"
 
-		if err := book.Insert(lang); err != nil {
+		if err := book.Insert(); err != nil {
 			panic("初始化项目失败 -> " + err.Error())
+			os.Exit(1)
 		}
-	} else if err != nil {
-		panic(fmt.Errorf("occur errors when initialize: %s", err))
 	}
 
 	if !models.NewItemsets().Exist(1) {
 		item := models.NewItemsets()
-		item.ItemName = i18n.Tr(lang, "init.default_proj_space") //"默认项目空间"
+		item.ItemName = "默认项目空间"
 		item.MemberId = 1
 		if err := item.Save(); err != nil {
 			panic("初始化项目空间失败 -> " + err.Error())
+			os.Exit(1)
 		}
 	}
 }

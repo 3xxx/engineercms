@@ -1,17 +1,29 @@
 package controllers
 
 import (
-	"bufio"
+	// "crypto/md5"
+	// "encoding/hex"
+	// "encoding/json"
+	// "github.com/3xxx/engineercms/models"
 	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/httplib"
+	// "github.com/astaxie/beego/logs"
+	// "net"
+	// "net/http"
+	// "net/url"
+	// "strconv"
+	"strings"
+	// "time"
+	"bufio"
+	// "fmt"
 	"io"
 	"os"
-	"strings"
 )
 
 // CMSADMIN API
 type AdminLogController struct {
-	web.Controller
+	beego.Controller
 }
 
 type Logstruct struct {

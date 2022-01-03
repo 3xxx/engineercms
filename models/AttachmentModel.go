@@ -2,13 +2,16 @@
 package models
 
 import (
+	"time"
+
+	"os"
+
+	"strings"
+
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils/filetil"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"os"
-	"strings"
-	"time"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
 // Attachment struct .
@@ -62,7 +65,7 @@ func (m *MindocAttachment) Delete() error {
 
 	if err == nil {
 		if err1 := os.Remove(m.FilePath); err1 != nil {
-			logs.Error(err1)
+			beego.Error(err1)
 		}
 	}
 
@@ -107,7 +110,7 @@ func (m *MindocAttachment) FindToPager(pageIndex, pageSize int) (attachList []*A
 
 	if err != nil {
 		if err == orm.ErrNoRows {
-			logs.Info("没有查到附件 ->", err)
+			beego.Info("没有查到附件 ->", err)
 			err = nil
 		}
 		return

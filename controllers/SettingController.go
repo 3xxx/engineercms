@@ -12,8 +12,7 @@ import (
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/graphics"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/i18n"
+	"github.com/astaxie/beego/logs"
 )
 
 type SettingController struct {
@@ -29,7 +28,7 @@ func (c *SettingController) Index() {
 		description := strings.TrimSpace(c.GetString("description"))
 
 		if email == "" {
-			c.JsonResult(601, i18n.Tr(c.Lang, "message.email_empty"))
+			c.JsonResult(601, "邮箱不能为空")
 		}
 		member := c.Member
 		member.Email = email
@@ -49,34 +48,34 @@ func (c *SettingController) Password() {
 
 	if c.Ctx.Input.IsPost() {
 		if c.Member.AuthMethod == conf.AuthMethodLDAP {
-			c.JsonResult(6009, i18n.Tr(c.Lang, "message.cur_user_cannot_change_pwd"))
+			c.JsonResult(6009, "当前用户不支持修改密码")
 		}
 		password1 := c.GetString("password1")
 		password2 := c.GetString("password2")
 		password3 := c.GetString("password3")
 
 		if password1 == "" {
-			c.JsonResult(6003, i18n.Tr(c.Lang, "message.origin_pwd_empty"))
+			c.JsonResult(6003, "原密码不能为空")
 		}
 
 		if password2 == "" {
-			c.JsonResult(6004, i18n.Tr(c.Lang, "message.new_pwd_empty"))
+			c.JsonResult(6004, "新密码不能为空")
 		}
 		if count := strings.Count(password2, ""); count < 6 || count > 18 {
-			c.JsonResult(6009, i18n.Tr(c.Lang, "message.pwd_length"))
+			c.JsonResult(6009, "密码必须在6-18字之间")
 		}
 		if password2 != password3 {
 			c.JsonResult(6003, "确认密码不正确")
 		}
 		if ok, _ := utils.PasswordVerify(c.Member.Password, password1); !ok {
-			c.JsonResult(6005, i18n.Tr(c.Lang, "message.wrong_origin_pwd"))
+			c.JsonResult(6005, "原始密码不正确")
 		}
 		if password1 == password2 {
-			c.JsonResult(6006, i18n.Tr(c.Lang, "message.same_pwd"))
+			c.JsonResult(6006, "新密码不能和原始密码相同")
 		}
 		pwd, err := utils.PasswordHash(password2)
 		if err != nil {
-			c.JsonResult(6007, i18n.Tr(c.Lang, "message.pwd_encrypt_failed"))
+			c.JsonResult(6007, "密码加密失败")
 		}
 		c.Member.Password = pwd
 		if err := c.Member.Update(); err != nil {

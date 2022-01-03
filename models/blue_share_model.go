@@ -1,8 +1,17 @@
 package models
 
 import (
+	// "github.com/astaxie/beego"
+	// "github.com/astaxie/beego/orm"
+	// "github.com/jinzhu/gorm"
 	"github.com/nu7hatch/gouuid"
 	"time"
+	// _ "github.com/mattn/go-sqlite3"
+	// "strconv"
+	// "strings"
+	// "github.com/eyebluecn/tank/code/core"
+	// "github.com/3xxx/engineercms/controllers/tool/builder"
+	// "github.com/3xxx/engineercms/controllers/tool/result"
 )
 
 // type Article struct {
@@ -81,7 +90,7 @@ func CreateShare(share *Share) (*Share, error) {
 	// this.PanicError(db.Error)
 	// o := orm.NewOrm()
 	// id, err = o.Insert(share)
-	db := _db //GetDB()
+	db := GetDB()
 	db = db.Table("share_share").Create(&share)
 
 	return share, db.Error
@@ -93,7 +102,7 @@ func FindByUuidShare(uuid string) (*Share, error) {
 	// err = db.Where("user_id = ?", uid).First(&money).Error
 	// return money, err
 	var entity = &Share{}
-	db := _db //GetDB()
+	db := GetDB()
 	// db := core.CONTEXT.GetDB().Where("uuid = ?", uuid).First(entity)
 	db = db.Table("share_share").Where("uuid = ?", uuid).First(entity)
 	// db.Where("name = ?", "jinzhu").First(&user)
@@ -181,8 +190,7 @@ func FindByUuids(uuids []int64) ([]*Product, error) {
 	// 	}
 	// }
 	// return str
-	// GetDB()
-	db := _db.Where(uuids).Find(&products)
+	db := GetDB().Where(uuids).Find(&products)
 	// this.PanicError(db.Error)
 	return products, db.Error
 }

@@ -3,9 +3,15 @@ package controllers
 
 import (
 	"github.com/3xxx/engineercms/controllers/utils"
+	// json "encoding/json"
+	// "fmt"
+	"github.com/astaxie/beego"
+	// "github.com/tealeg/xlsx"
+	// "github.com/bitly/go-simplejson"
+	// "io/ioutil"
+	// "github.com/astaxie/beego/logs"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	// "sort"
 	"strconv"
 	"strings"
 	"time"
@@ -13,7 +19,7 @@ import (
 
 // CMSBBS API
 type BbsController struct {
-	web.Controller
+	beego.Controller
 }
 
 // @Title post bbs
@@ -38,34 +44,34 @@ func (c *BbsController) Bbs() {
 		return
 	}
 
-	userid := c.GetString("userId")
-	desc1 := c.GetString("desc1")
-	desc2 := c.GetString("desc2")
-	desc3 := c.GetString("desc3")
-	desc4 := c.GetString("desc4")
+	userid := c.Input().Get("userId")
+	desc1 := c.Input().Get("desc1")
+	desc2 := c.Input().Get("desc2")
+	desc3 := c.Input().Get("desc3")
+	desc4 := c.Input().Get("desc4")
 	//pid转成64为
 	UserId, err := strconv.ParseInt(userid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
-	day := c.GetString("day")
+	day := c.Input().Get("day")
 	if len(day) == 1 {
 		day = "0" + day
 	}
 	const base_format = "2006-01-02"
 	SelectDate, err := time.Parse(base_format, year+"-"+month+"-"+day)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// var array []string
 	// data, err := models.GetBbs(SelectDate)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// 	// arrayold := [4]string{"", "", "", ""}
 	// } else {
 	// 	array = strings.Split(data.Desc, "&#")
@@ -87,23 +93,23 @@ func (c *BbsController) Bbs() {
 
 	desc := desc1 + "&#" + desc2 + "&#" + desc3 + "&#" + desc4
 	// 进行敏感字符验证
-	app_version := c.GetString("app_version")
+	app_version := c.Input().Get("app_version")
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 		return
 	}
 	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), desc)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
 	} else if errcode != 87014 {
 		_, err = models.BbsBbs(UserId, desc, SelectDate)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"code": 2, "message": err}
 			c.ServeJSON()
 		} else {
@@ -133,20 +139,20 @@ type BbsDate struct {
 // 取得当月的打卡记录
 func (c *BbsController) BbsGetBbs() {
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
 	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	SelectMonth2 := SelectMonth1.AddDate(0, 1, -1)
 
 	data, err := models.BbsGetBbs(SelectMonth1, SelectMonth2)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
 		c.ServeJSON()
 	} else {
@@ -176,23 +182,23 @@ func (c *BbsController) BbsGetBbs() {
 // 取得选定日期的记录
 func (c *BbsController) GetBbs() {
 	const base_format = "2006-01-02"
-	year := c.GetString("year")
-	month := c.GetString("month")
+	year := c.Input().Get("year")
+	month := c.Input().Get("month")
 	if len(month) == 1 {
 		month = "0" + month
 	}
-	day := c.GetString("day")
+	day := c.Input().Get("day")
 	if len(day) == 1 {
 		day = "0" + day
 	}
 	SelectDate, err := time.Parse(base_format, year+"-"+month+"-"+day)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	data, err := models.GetBbs(SelectDate)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		array := [4]string{"", "", "", ""}
 		c.Data["json"] = map[string]interface{}{"code": 2, "data": array}
 		c.ServeJSON()

@@ -1,19 +1,32 @@
 package controllers
 
 import (
-	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	// "bytes"
+	// "encoding/json"
+	// "fmt"
+	// "github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/astaxie/beego"
 	"github.com/tealeg/xlsx"
+	// "github.com/pborman/uuid"
+	// "image/png"
+	// "io"
+	// "log"
+	// "net/http"
 	"os"
 	"path"
+	// "hydrocms/models"
+	// "encoding/base64"
+	"github.com/3xxx/engineercms/models"
+	// "io/ioutil"
+	// "regexp"
 	"strconv"
+	// "strings"
 	"time"
 )
 
 // CMSWX froala API
 type FileinputController struct {
-	web.Controller
+	beego.Controller
 }
 
 type Fileinput struct {
@@ -45,7 +58,7 @@ func (c *FileinputController) BootstrapFileInput() {
 	//获取上传的文件
 	_, h, err := c.GetFile("input-ke-2[]")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	fileSuffix := path.Ext(h.Filename)
 	// random_name
@@ -53,7 +66,7 @@ func (c *FileinputController) BootstrapFileInput() {
 	year, month, _ := time.Now().Date()
 	err = os.MkdirAll("./attachment/legislation/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var filesize int64
 
@@ -63,7 +76,7 @@ func (c *FileinputController) BootstrapFileInput() {
 		Url := "/attachment/legislation/" + strconv.Itoa(year) + month.String() + "/"
 		err = c.SaveToFile("input-ke-2[]", filepath) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		filesize, _ = FileSize(filepath)
 		filesize = filesize / 1000.0
@@ -73,7 +86,7 @@ func (c *FileinputController) BootstrapFileInput() {
 			// xlsx, err := excelize.OpenFile(filepath)
 			xlsx, err := xlsx.OpenFile(filepath)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				return
 			}
 			for _, sheet := range xlsx.Sheets {
@@ -83,13 +96,13 @@ func (c *FileinputController) BootstrapFileInput() {
 						j := 1
 						standardtitle := row.Cells[j].String()
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						//2、根据名称搜索标准版本库，取得名称和版本号
 						library, err := models.SearchLiabraryName(standardtitle)
 						// beego.Info(library)
 						if err != nil {
-							logs.Error(err)
+							beego.Error(err)
 						}
 						var LibraryNumber string
 						if len(library) != 0 { //library != nil这样不行，空数组不是nil
@@ -112,7 +125,7 @@ func (c *FileinputController) BootstrapFileInput() {
 			}
 			err = xlsx.Save(filepath)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			// for index, name := range xlsx.GetSheetMap() {
 			// 	fmt.Println(index, name)

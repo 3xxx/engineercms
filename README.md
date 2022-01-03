@@ -10,8 +10,6 @@
 ```bash
 # 克隆源码
 git clone https://github.com/3xxx/engineercms.git
-
-# go mod init
 # go包自动安装
 # 设置go代理
 # go env -w GOPROXY=https://goproxy.cn,direct
@@ -25,44 +23,6 @@ go build -ldflags "-w"
 # ./engineercms install
 # 执行
 ./engineercms
-```
-```bash
-# beego 2.0.0 升级指南
-# 获取最新版本的 bee 工具 go get -u github.com/beego/bee/v2
-# 更新 beego 框架 go get -u github.com/beego/beego/v2
-# 然后进入项目，执行: bee fix -t 2
-# 需要注意的是，如果你是 windows 用户，那么你需要在 WSL 内部运行该命令。
-# 在项目文件夹下鼠标右键——Git Bash Here
-这里需要导入的包是
-github.com/beego/beego/v2/server/web/context
-而不是
-~ github.com/beego/beego/v2/adapter/context ~
-
-目前来说因为你所有的包都切换过去了beego/beego/v2，所以你对应的context要使用beego/beego/v2/server/web/context下的这个。
-
-我教你一个小技巧。当你发现依赖找不到的时候，你把import里面对应的东西删掉，IDE会帮你补全，或者给你提示。如果你用的GOLANG IDE，那么会自动帮你把对应依赖引入。
-
-记住一个核心原则：如果你用的是adapter的包，那么所有的包都应该是adapter的；如果你用的是beego/beego/v2（非adapter)，那么所有的都应该是beego/beego/v2下的。
-```
-
-```bash
-https://www.cnblogs.com/cqlb/p/13396107.html
-一、创建标签
-在Git中打标签非常简单，首先，切换到需要打标签的分支上：
-
-1 $ git branch
-# 2 * dev
-# 3   master
-4 $ git checkout master
-5 Switched to branch 'master'
-git add .
-git commit -m "update"
-然后，敲命令git tag <name>就可以打一个新标签：
-
-$ git tag v1.0.0
-因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
-如果要推送某个标签到远程，使用命令
-$ git push origin <tagname>
 ```
 
 1. 本系统采用go语言（基于[beego](https://github.com/astaxie/beego)框架）开发，运行文件为编译后的二进制可执行文件，所以无需像其他语言（php、nodejs、java等语言）编写的web应用那样，需要配置运行服务环境。

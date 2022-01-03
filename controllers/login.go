@@ -1,19 +1,16 @@
 package controllers
 
 import (
-	// "context"
 	"crypto/md5"
 	"encoding/hex"
 	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web/context" //用这个context，不是adapter
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	// "net/url"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/server/web"
 	"strconv"
-	// "github.com/beego/beego/v2/adapter/session"
+	// "github.com/astaxie/beego/session"
 	"encoding/json"
 	// "github.com/casbin/beego-orm-adapter"
 	// "github.com/casbin/casbin"
@@ -26,23 +23,23 @@ import (
 
 // CMSWX login API
 type LoginController struct {
-	web.Controller
+	beego.Controller
 }
 
 type SuccessController struct {
-	web.Controller
+	beego.Controller
 }
 
 type ServiceValidateController struct {
-	web.Controller
+	beego.Controller
 }
 
 // func (c *LoginController) Get() {
-// 	isExit := c.GetString("exit") == "true"
+// 	isExit := c.Input().Get("exit") == "true"
 // 	// secofficeshow?secid=1643&level=3&key=modify
-// 	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
-// 	url2 := c.GetString("level")
-// 	url3 := c.GetString("key")
+// 	url1 := c.Input().Get("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
+// 	url2 := c.Input().Get("level")
+// 	url3 := c.Input().Get("key")
 // 	var url string
 // 	if url2 == "" {
 // 		url = url1
@@ -75,9 +72,9 @@ type ServiceValidateController struct {
 // }
 
 // func (c *LoginController) Loginerr() {
-// 	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
-// 	url2 := c.GetString("level")
-// 	url3 := c.GetString("key")
+// 	url1 := c.Input().Get("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
+// 	url2 := c.Input().Get("level")
+// 	url3 := c.Input().Get("key")
 // 	var url string
 // 	if url2 == "" {
 // 		url = url1
@@ -94,13 +91,13 @@ type ServiceValidateController struct {
 //登录页面
 func (c *LoginController) Login() {
 
-	url := c.GetString("url")
-	// beego.Info(url)
+	url := c.Input().Get("url")
+	beego.Info(url)
 	c.Data["Url"] = url
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -113,23 +110,23 @@ func (c *LoginController) Login() {
 
 //login页面输入用户名和密码后登陆提交
 func (c *LoginController) Post() {
-	// uname := c.GetString("uname")
-	// url := c.GetString("returnUrl")
-	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
-	url2 := c.GetString("level")
-	url3 := c.GetString("key")
+	// uname := c.Input().Get("uname")
+	// url := c.Input().Get("returnUrl")
+	url1 := c.Input().Get("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
+	url2 := c.Input().Get("level")
+	url3 := c.Input().Get("key")
 	var url string
 	if url2 == "" && url1 != "" {
 		url = url1
 	} else if url2 != "" {
 		url = url1 + "&level=" + url2 + "&key=" + url3
 	} else {
-		url = c.GetString("referrer")
+		url = c.Input().Get("referrer")
 	}
 	var user models.User
-	user.Username = c.GetString("uname")
-	Pwd1 := c.GetString("pwd")
-	// autoLogin := c.GetString("autoLogin") == "on"
+	user.Username = c.Input().Get("uname")
+	Pwd1 := c.Input().Get("pwd")
+	// autoLogin := c.Input().Get("autoLogin") == "on"
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
@@ -143,20 +140,20 @@ func (c *LoginController) Post() {
 		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
 		User, err := models.GetUserByUsername(user.Username)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			utils.FileLogs.Error(user.Username + " 查询用户 " + err.Error())
 		}
 		if User.Ip == "" {
 			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				utils.FileLogs.Error(user.Username + " 添加用户ip " + err.Error())
 			}
 		} else {
 			//更新user表的lastlogintime
 			err = models.UpdateUserlastlogintime(user.Username)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				utils.FileLogs.Error(user.Username + " 更新用户登录时间 " + err.Error())
 			}
 		}
@@ -164,20 +161,17 @@ func (c *LoginController) Post() {
 			c.Redirect(url, 302)
 		} else {
 			var id string
-			index, err := web.AppConfig.String("redirect")
-			navid1, err := web.AppConfig.String("navigationid1")
-			navid2, err := web.AppConfig.String("navigationid2")
-			navid3, err := web.AppConfig.String("navigationid3")
-			navid4, err := web.AppConfig.String("navigationid4")
-			navid5, err := web.AppConfig.String("navigationid5")
-			navid6, err := web.AppConfig.String("navigationid6")
-			navid7, err := web.AppConfig.String("navigationid7")
-			navid8, err := web.AppConfig.String("navigationid8")
-			navid9, err := web.AppConfig.String("navigationid9")
-			if err != nil {
-				logs.Error(err)
-			}
-			// web.Info(index)
+			index := beego.AppConfig.String("redirect")
+			navid1 := beego.AppConfig.String("navigationid1")
+			navid2 := beego.AppConfig.String("navigationid2")
+			navid3 := beego.AppConfig.String("navigationid3")
+			navid4 := beego.AppConfig.String("navigationid4")
+			navid5 := beego.AppConfig.String("navigationid5")
+			navid6 := beego.AppConfig.String("navigationid6")
+			navid7 := beego.AppConfig.String("navigationid7")
+			navid8 := beego.AppConfig.String("navigationid8")
+			navid9 := beego.AppConfig.String("navigationid9")
+			// beego.Info(index)
 			switch index {
 			case "":
 				c.Redirect("/index", 302)
@@ -260,13 +254,13 @@ func GetRandomString(length int) []byte {
 //login弹框输入用户名和密码后登陆提交//微信用户注册登录用register
 func (c *LoginController) LoginPost() {
 	var user models.User
-	user.Username = c.GetString("uname")
+	user.Username = c.Input().Get("uname")
 	// beego.Info(user.Username)
 	// uname := c.GetString("uname")
 	// Pwd1 := c.GetString("pwd")
-	Pwd1 := c.GetString("pwd")
+	Pwd1 := c.Input().Get("pwd")
 	// beego.Info(Pwd1)
-	// autoLogin := c.GetString("autoLogin") == "on"
+	// autoLogin := c.Input().Get("autoLogin") == "on"
 	islogin := 0
 	// maxAge := 0
 	// if autoLogin {
@@ -287,20 +281,20 @@ func (c *LoginController) LoginPost() {
 		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
 		User, err := models.GetUserByUsername(user.Username)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			utils.FileLogs.Error(user.Username + " 查询用户 " + err.Error())
 		}
 		if User.Ip == "" {
 			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				utils.FileLogs.Error(user.Username + " 添加用户ip " + err.Error())
 			}
 		} else {
 			//更新user表的lastlogintime
 			err = models.UpdateUserlastlogintime(user.Username)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				utils.FileLogs.Error(user.Username + " 更新用户登录时间 " + err.Error())
 			}
 		}
@@ -338,9 +332,9 @@ func (c *LoginController) Logout() {
 
 //作废20180915
 func (c *LoginController) Loginerr() {
-	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
-	url2 := c.GetString("level")
-	url3 := c.GetString("key")
+	url1 := c.Input().Get("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
+	url2 := c.Input().Get("level")
+	url3 := c.Input().Get("key")
 	var url string
 	if url2 == "" {
 		url = url1
@@ -353,7 +347,7 @@ func (c *LoginController) Loginerr() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -377,44 +371,35 @@ func (c *LoginController) Loginerr() {
 // 如果 用户不存在，则提供openid给注册界面——wxregion
 func (c *LoginController) WxLogin() {
 	id := c.Ctx.Input.Param(":id")
-	JSCODE := c.GetString("code")
+	JSCODE := c.Input().Get("code")
 	// beego.Info(JSCODE)
 	var APPID, SECRET string
-	var err error
 	if id == "1" {
 		APPID = "wx7f77b90a1a891d93"
 		SECRET = "f58ca4f28cbb52ccd805d66118060449"
 	} else {
 		appstring := "wxAPPID" + id
-		APPID, err = web.AppConfig.String(appstring)
-		if err != nil {
-			logs.Error(err)
-			// return
-		}
+		APPID = beego.AppConfig.String(appstring)
 		secretstring := "wxSECRET" + id
-		SECRET, err = web.AppConfig.String(secretstring)
-		if err != nil {
-			logs.Error(err)
-			// return
-		}
+		SECRET = beego.AppConfig.String(secretstring)
 		// beego.Info(APPID)
 	}
 	//这里用security.go里的方法
 	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
 	resp, err := http.Get(requestUrl)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		// return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		logs.Error(err)
+		beego.Error(err)
 		// return
 	}
 	var data map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		// return
 	}
 	// beego.Info(data)
@@ -437,20 +422,16 @@ func (c *LoginController) WxLogin() {
 
 		user, err := models.GetUserByOpenID(openID)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"errNo": 0, "msg": "未查到用户", "data": "这个openID的用户不存在", "openID": openID}
 			c.ServeJSON()
 		} else {
 			//根据userid取出user和avatorUrl
 			useravatar, err := models.GetUserAvatorUrl(user.Id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
-			wxsite, err := web.AppConfig.String("wxreqeustsite")
-			if err != nil {
-				logs.Error(err)
-				// return
-			}
+			wxsite := beego.AppConfig.String("wxreqeustsite")
 			var photo string
 			if len(useravatar) != 0 {
 				photo = wxsite + useravatar[0].UserAvatar.AvatarUrl
@@ -458,7 +439,7 @@ func (c *LoginController) WxLogin() {
 			//根据userid取出appreciation赞赏码
 			userappreciation, err := models.GetUserAppreciationUrl(user.Id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			var appreciationphoto string
 			if len(userappreciation) != 0 {
@@ -476,13 +457,13 @@ func (c *LoginController) WxLogin() {
 			//判断是否具备admin角色
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			uid := strconv.FormatInt(user.Id, 10)
 			roleid := strconv.FormatInt(role.Id, 10)
 			isAdmin, err = e.HasRoleForUser(uid, "role_"+roleid)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			// useridstring := strconv.FormatInt(user.Id, 10)
 			//用户登录后，存储openid在服务端的session里，下次用户通过hotqinsessionid来取得openID、sessionKey等。
@@ -495,12 +476,7 @@ func (c *LoginController) WxLogin() {
 			//用户小程序register后，只是存入服务器数据库中的openid和用户名对应
 			//用户小程序login的时候，即这里，将openid存入session
 			//下次用户请求携带hotqinsessionid即可取到session-openid了。
-			sessionname, err := web.AppConfig.String("SessionName")
-			if err != nil {
-				logs.Error(err)
-				// return
-			}
-			sessionId := c.Ctx.Input.Cookie(sessionname) //这一步什么意思
+			sessionId := c.Ctx.Input.Cookie(beego.AppConfig.String("SessionName")) //这一步什么意思
 			// beego.Info(sessionId)                                                  //32f6966c2ba2a1144d453fe8969c822e
 			c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "userId": uid, "userNickname": user.Nickname, "userName": user.Username, "isAdmin": isAdmin, "sessionId": sessionId, "openID": openID, "photo": photo, "appreciationphoto": appreciationphoto}
 			c.ServeJSON()
@@ -551,7 +527,7 @@ func checkAccount(ctx *context.Context) bool {
 	//但是我还是建议大家采用 SetSession、GetSession、DelSession 三个方法来操作，避免自己在操作的过程中资源没释放的问题
 	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
 	// defer sess.SessionRelease(ctx.ResponseWriter)
-	v := ctx.Input.Session("uname")
+	v := ctx.Input.CruSession.Get("uname")
 	if v == nil {
 		return false
 		//     this.SetSession("asta", int(1))
@@ -560,8 +536,7 @@ func checkAccount(ctx *context.Context) bool {
 		//     this.SetSession("asta", v.(int)+1)
 		//     this.Data["num"] = v.(int)
 		user.Username = v.(string)
-		// v = ctx.Input.CruSession.Get("pwd")
-		v = ctx.Input.Session("pwd")
+		v = ctx.Input.CruSession.Get("pwd")
 		user.Password = v.(string) //ck.Value
 		err := models.ValidateUser(user)
 		if err == nil {
@@ -573,12 +548,12 @@ func checkAccount(ctx *context.Context) bool {
 }
 
 func checkRole(ctx *context.Context) (role string, err error) { //这里返回用户的role
-	v := ctx.Input.Session("uname")
+	v := ctx.Input.CruSession.Get("uname")
 	var user models.User
 	user.Username = v.(string) //ck.Value
 	user, err = models.GetUserByUsername(user.Username)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	return user.Role, err
 }
@@ -592,7 +567,7 @@ func checkRole(ctx *context.Context) (role string, err error) { //这里返回�
 // }
 
 func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
-	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的数据??。
+	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
 	// beego.Info(v)                          //qin.xc
 	var user models.User
 	var err error
@@ -600,7 +575,7 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 		uname = v.(string)
 		user, err = models.GetUserByUsername(uname)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			uid = user.Id
 			//获取用户角色，用户角色也要存入token么？
@@ -615,7 +590,7 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 //用户登录，则role是1则是admin，其余没有意义
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
-	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的session数据。
+	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的session数据。
 	var userid, roleid, userrole string
 	var user models.User
 	var err error
@@ -625,19 +600,19 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 		uname = v.(string)
 		user, err = models.GetUserByUsername(uname)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			//查询admin角色的id
 			//重新获取roleid
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			userid = strconv.FormatInt(user.Id, 10)
 			roleid = strconv.FormatInt(role.Id, 10)
 			isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			uid = user.Id
 			if user.Role == "0" {
@@ -667,13 +642,13 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 			//重新获取roleid
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			userid = strconv.FormatInt(user.Id, 10)
 			roleid = strconv.FormatInt(role.Id, 10)
 			isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			// if user.Role == "1" {
 			// 	isadmin = true
@@ -688,7 +663,7 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 }
 
 func CheckprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
-	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的数据??。
+	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
 	var userid, roleid, userrole string
 	var user models.User
 	var err error
@@ -698,19 +673,19 @@ func CheckprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 		uname = v.(string)
 		user, err = models.GetUserByUsername(uname)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			//查询admin角色的id
 			//重新获取roleid
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			userid = strconv.FormatInt(user.Id, 10)
 			roleid = strconv.FormatInt(role.Id, 10)
 			isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			uid = user.Id
 			if user.Role == "0" {
@@ -740,13 +715,13 @@ func CheckprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 			//重新获取roleid
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			userid = strconv.FormatInt(user.Id, 10)
 			roleid = strconv.FormatInt(role.Id, 10)
 			isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			// if user.Role == "1" {
 			// 	isadmin = true
@@ -782,7 +757,7 @@ func (c *LoginController) Islogin() {
 		uname = v.(string)
 		user, err = models.GetUserByUsername(uname)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			uid = user.Id
 			if user.Role == "0" {
@@ -900,7 +875,7 @@ func (c *LoginController) SsoLogin() {
 	c.Data["service"] = c.GetString("service")
 	username, err := utils.CheckToken(authString)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.TplName = "sso/index.tpl"
 	} else if username != "" {
 		c.TplName = "sso/success.tpl"
@@ -932,9 +907,9 @@ func (c *LoginController) SsoLoginPost() {
 	}
 	//密码md5加密
 	var user models.User
-	// user.Username = c.GetString("uname")
-	// Pwd1 := c.GetString("pwd")
-	// autoLogin := c.GetString("autoLogin") == "on"
+	// user.Username = c.Input().Get("uname")
+	// Pwd1 := c.Input().Get("pwd")
+	// autoLogin := c.Input().Get("autoLogin") == "on"
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(password))
 	cipherStr := md5Ctx.Sum(nil)
@@ -951,12 +926,12 @@ func (c *LoginController) SsoLoginPost() {
 		//更新user表的lastlogintime
 		err = models.UpdateUserlastlogintime(user.Username)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			utils.FileLogs.Error(user.Username + " 更新用户登录时间 " + err.Error())
 		} else {
 			tokenString, err := utils.CreateToken(login_name)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			//请求中head中设置token
 
@@ -994,7 +969,7 @@ func (c *ServiceValidateController) Get() {
 	ticket := c.GetString("ticket")
 	userName, err := utils.CheckToken(ticket)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if userName != "" {
 		c.Data["json"] = map[string]interface{}{"success": 0, "msg": "登录成功", "user": userName}

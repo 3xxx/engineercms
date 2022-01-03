@@ -6,9 +6,8 @@ import (
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
 type LabelController struct {
@@ -41,7 +40,7 @@ func (c *LabelController) Index() {
 		if err == orm.ErrNoRows {
 			c.Abort("404")
 		} else {
-			logs.Error(err)
+			beego.Error(err)
 			c.Abort("500")
 		}
 	}
@@ -52,7 +51,7 @@ func (c *LabelController) Index() {
 	searchResult, totalCount, err := models.NewBook().FindForLabelToPager(labelName, pageIndex, conf.PageSize, memberId)
 
 	if err != nil && err != orm.ErrNoRows {
-		logs.Error("查询标签时出错 ->", err)
+		beego.Error("查询标签时出错 ->", err)
 		c.ShowErrorPage(500, "查询文档列表时出错")
 	}
 	if totalCount > 0 {

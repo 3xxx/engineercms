@@ -2,15 +2,12 @@ package pagination
 
 import (
 	"fmt"
-	"html/template"
 	"math"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
-
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/i18n"
+	"html/template"
 )
 
 //Pagination 分页器
@@ -52,8 +49,6 @@ func (p *Pagination) Pages() string {
 	//计算总页数
 	var totalPageNum = int(math.Ceil(float64(p.Total) / float64(p.Pernum)))
 
-	lang := p.getLang()
-
 	//首页链接
 	var firstLink string
 	//上一页链接
@@ -67,20 +62,20 @@ func (p *Pagination) Pages() string {
 
 	//首页和上一页链接
 	if pagenum > 1 {
-		firstLink = fmt.Sprintf(`<li><a href="%s">%s</a></li>`, p.pageURL("1"), i18n.Tr(lang, "page.first"))
-		prevLink = fmt.Sprintf(`<li><a href="%s">%s</a></li>`, p.pageURL(strconv.Itoa(pagenum-1)), i18n.Tr(lang, "page.prev"))
+		firstLink = fmt.Sprintf(`<li><a href="%s">首页</a></li>`, p.pageURL("1"))
+		prevLink = fmt.Sprintf(`<li><a href="%s">上一页</a></li>`, p.pageURL(strconv.Itoa(pagenum-1)))
 	} else {
-		firstLink = fmt.Sprintf(`<li class="disabled"><a href="#">%s</a></li>`, i18n.Tr(lang, "page.first"))
-		prevLink = fmt.Sprintf(`<li class="disabled"><a href="#">%s</a></li>`, i18n.Tr(lang, "page.prev"))
+		firstLink = `<li class="disabled"><a href="#">首页</a></li>`
+		prevLink = `<li class="disabled"><a href="#">上一页</a></li>`
 	}
 
 	//末页和下一页
 	if pagenum < totalPageNum {
-		lastLink = fmt.Sprintf(`<li><a href="%s">%s</a></li>`, p.pageURL(strconv.Itoa(totalPageNum)), i18n.Tr(lang, "page.last"))
-		nextLink = fmt.Sprintf(`<li><a href="%s">%s</a></li>`, p.pageURL(strconv.Itoa(pagenum+1)), i18n.Tr(lang, "page.next"))
+		lastLink = fmt.Sprintf(`<li><a href="%s">末页</a></li>`, p.pageURL(strconv.Itoa(totalPageNum)))
+		nextLink = fmt.Sprintf(`<li><a href="%s">下一页</a></li>`, p.pageURL(strconv.Itoa(pagenum+1)))
 	} else {
-		lastLink = fmt.Sprintf(`<li class="disabled"><a href="#">%s</a></li>`, i18n.Tr(lang, "page.last"))
-		nextLink = fmt.Sprintf(`<li class="disabled"><a href="#">%s</a></li>`, i18n.Tr(lang, "page.next"))
+		lastLink = `<li class="disabled"><a href="#">末页</a></li>`
+		nextLink = `<li class="disabled"><a href="#">下一页</a></li>`
 	}
 
 	//生成中间页码链接
@@ -117,18 +112,3 @@ func (p *Pagination) pageURL(page string) string {
 	return u.String()
 }
 
-func (p *Pagination) getLang() string {
-	lang, _ := web.AppConfig.String("default_lang")
-	ulang := p.Request.FormValue("lang")
-	if len(ulang) == 0 {
-		clang, err := p.Request.Cookie("lang")
-		if err != nil {
-			return lang
-		}
-		ulang = clang.Value
-	}
-	if !i18n.IsExist(ulang) {
-		return lang
-	}
-	return ulang
-}

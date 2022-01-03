@@ -15,11 +15,9 @@ import (
 	"github.com/3xxx/engineercms/controllers/utils/filetil"
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/i18n"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"github.com/astaxie/beego/orm"
 	"github.com/russross/blackfriday/v2"
 	// "gopkg.in/russross/blackfriday.v2"
 	"io/ioutil"
@@ -42,17 +40,17 @@ func (c *ManagerController) Index() {
 	c.TplName = "manager/index.tpl"
 
 	c.Data["Model"] = models.NewDashboard().Query()
-	c.Data["Action"] = "index"
 }
 
 // 用户列表.
 func (c *ManagerController) Users() {
 	c.Prepare()
 	c.TplName = "manager/users.tpl"
-	c.Data["Action"] = "users"
+
 	pageIndex, _ := c.GetInt("page", 0)
 
 	members, totalCount, err := models.NewMember().FindToPager(pageIndex, conf.PageSize)
+
 	if err != nil {
 		c.Data["ErrorMessage"] = err.Error()
 		return
@@ -70,6 +68,7 @@ func (c *ManagerController) Users() {
 	}
 
 	b, err := json.Marshal(members)
+
 	if err != nil {
 		c.Data["Result"] = template.JS("[]")
 	} else {
@@ -90,16 +89,16 @@ func (c *ManagerController) CreateMember() {
 	status, _ := c.GetInt("status", 0)
 
 	if ok, err := regexp.MatchString(conf.RegexpAccount, account); account == "" || !ok || err != nil {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.username_invalid_format"))
+		c.JsonResult(6001, "账号只能由英文字母数字组成，且在3-50个字符")
 	}
 	if l := strings.Count(password1, ""); password1 == "" || l > 50 || l < 6 {
-		c.JsonResult(6002, i18n.Tr(c.Lang, "message.pwd_length_tips"))
+		c.JsonResult(6002, "密码必须在6-50个字符之间")
 	}
 	if password1 != password2 {
-		c.JsonResult(6003, i18n.Tr(c.Lang, "message.wrong_confirm_pwd"))
+		c.JsonResult(6003, "确认密码不正确")
 	}
 	if ok, err := regexp.MatchString(conf.RegexpEmail, email); !ok || err != nil || email == "" {
-		c.JsonResult(6004, i18n.Tr(c.Lang, "message.email_invalid_format"))
+		c.JsonResult(6004, "邮箱格式不正确")
 	}
 	if role != 0 && role != 1 && role != 2 {
 		role = 1
@@ -111,7 +110,7 @@ func (c *ManagerController) CreateMember() {
 	member := models.NewMember()
 
 	if _, err := member.FindByAccount(account); err == nil && member.MemberId > 0 {
-		c.JsonResult(6005, i18n.Tr(c.Lang, "message.account_existed"))
+		c.JsonResult(6005, "账号已存在")
 	}
 
 	member.Account = account
@@ -140,7 +139,7 @@ func (c *ManagerController) UpdateMemberStatus() {
 	status, _ := c.GetInt("status", 0)
 
 	if member_id <= 0 {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(6001, "参数错误")
 	}
 	if status != 0 && status != 1 {
 		status = 0
@@ -148,19 +147,19 @@ func (c *ManagerController) UpdateMemberStatus() {
 	member := models.NewMember()
 
 	if _, err := member.Find(member_id); err != nil {
-		c.JsonResult(6002, i18n.Tr(c.Lang, "message.user_not_existed"))
+		c.JsonResult(6002, "用户不存在")
 	}
 	if member.MemberId == c.Member.MemberId {
-		c.JsonResult(6004, i18n.Tr(c.Lang, "message.cannot_change_own_status"))
+		c.JsonResult(6004, "不能变更自己的状态")
 	}
 	if member.Role == conf.MemberSuperRole {
-		c.JsonResult(6005, i18n.Tr(c.Lang, "message.cannot_change_super_status"))
+		c.JsonResult(6005, "不能变更超级管理员的状态")
 	}
 	member.Status = status
 
 	if err := member.Update(); err != nil {
 		logs.Error("", err)
-		c.JsonResult(6003, i18n.Tr(c.Lang, "message.failed"))
+		c.JsonResult(6003, "用户状态设置失败")
 	}
 	c.JsonResult(0, "ok", member)
 }
@@ -172,28 +171,27 @@ func (c *ManagerController) ChangeMemberRole() {
 	memberId, _ := c.GetInt("member_id", 0)
 	role, _ := c.GetInt("role", 0)
 	if memberId <= 0 {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(6001, "参数错误")
 	}
 	if role != int(conf.MemberAdminRole) && role != int(conf.MemberGeneralRole) {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.no_permission"))
+		c.JsonResult(6001, "用户权限不正确")
 	}
 	member := models.NewMember()
 
 	if _, err := member.Find(memberId); err != nil {
-		c.JsonResult(6002, i18n.Tr(c.Lang, "message.user_not_existed"))
+		c.JsonResult(6002, "用户不存在")
 	}
 	if member.MemberId == c.Member.MemberId {
-		c.JsonResult(6004, i18n.Tr(c.Lang, "message.cannot_change_own_priv"))
+		c.JsonResult(6004, "不能变更自己的权限")
 	}
 	if member.Role == conf.MemberSuperRole {
-		c.JsonResult(6005, i18n.Tr(c.Lang, "message.cannot_change_super_priv"))
+		c.JsonResult(6005, "不能变更超级管理员的权限")
 	}
 	member.Role = conf.SystemRole(role)
 
 	if err := member.Update(); err != nil {
-		c.JsonResult(6003, i18n.Tr(c.Lang, "message.failed"))
+		c.JsonResult(6003, "用户权限设置失败")
 	}
-	member.Lang = c.Lang
 	member.ResolveRoleName()
 	c.JsonResult(0, "ok", member)
 }
@@ -202,7 +200,7 @@ func (c *ManagerController) ChangeMemberRole() {
 func (c *ManagerController) EditMember() {
 	c.Prepare()
 	c.TplName = "manager/edit_users.tpl"
-	c.Data["Action"] = "users"
+
 	member_id, _ := c.GetInt(":id", 0)
 
 	if member_id <= 0 {
@@ -210,8 +208,9 @@ func (c *ManagerController) EditMember() {
 	}
 
 	member, err := models.NewMember().Find(member_id)
+
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Abort("404")
 	}
 	if c.Ctx.Input.IsPost() {
@@ -225,7 +224,7 @@ func (c *ManagerController) EditMember() {
 		member.Description = description
 		member.RealName = c.GetString("real_name")
 		if password1 != "" && password2 != password1 {
-			c.JsonResult(6001, i18n.Tr(c.Lang, "message.wrong_confirm_pwd"))
+			c.JsonResult(6001, "确认密码不正确")
 		}
 		if password1 != "" && member.AuthMethod != conf.AuthMethodLDAP {
 			member.Password = password1
@@ -236,8 +235,8 @@ func (c *ManagerController) EditMember() {
 		if password1 != "" {
 			password, err := utils.PasswordHash(password1)
 			if err != nil {
-				logs.Error(err)
-				c.JsonResult(6003, i18n.Tr(c.Lang, "message.pwd_encrypt_failed"))
+				beego.Error(err)
+				c.JsonResult(6003, "对用户密码加密时出错")
 			}
 			member.Password = password
 		}
@@ -256,28 +255,30 @@ func (c *ManagerController) DeleteMember() {
 	member_id, _ := c.GetInt("id", 0)
 
 	if member_id <= 0 {
-		c.JsonResult(404, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(404, "参数错误")
 	}
 
 	member, err := models.NewMember().Find(member_id)
+
 	if err != nil {
-		logs.Error(err)
-		c.JsonResult(500, i18n.Tr(c.Lang, "message.user_not_existed"))
+		beego.Error(err)
+		c.JsonResult(500, "用户不存在")
 	}
 	if member.Role == conf.MemberSuperRole {
 		c.JsonResult(500, "不能删除超级管理员")
 	}
-
 	superMember, err := models.NewMember().FindByFieldFirst("role", 0)
+
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.JsonResult(5001, "未能找到超级管理员")
 	}
 
 	err = models.NewMember().Delete(member_id, superMember.MemberId)
+
 	if err != nil {
-		logs.Error(err)
-		c.JsonResult(5002, i18n.Tr(c.Lang, "message.failed"))
+		beego.Error(err)
+		c.JsonResult(5002, "删除失败")
 	}
 	c.JsonResult(0, "ok")
 }
@@ -286,7 +287,7 @@ func (c *ManagerController) DeleteMember() {
 func (c *ManagerController) Books() {
 	c.Prepare()
 	c.TplName = "manager/books.tpl"
-	c.Data["Action"] = "books"
+
 	pageIndex, _ := c.GetInt("page", 1)
 
 	books, totalCount, err := models.NewBookResult().FindToPager(pageIndex, conf.PageSize)
@@ -317,7 +318,7 @@ func (c *ManagerController) EditBook() {
 	c.Prepare()
 
 	c.TplName = "manager/edit_book.tpl"
-	c.Data["Action"] = "books"
+
 	identify := c.GetString(":key")
 
 	if identify == "" {
@@ -327,8 +328,8 @@ func (c *ManagerController) EditBook() {
 	if err != nil {
 		c.Abort("500")
 	}
-
 	if c.Ctx.Input.IsPost() {
+
 		bookName := strings.TrimSpace(c.GetString("book_name"))
 		description := strings.TrimSpace(c.GetString("description", ""))
 		commentStatus := c.GetString("comment_status")
@@ -343,7 +344,7 @@ func (c *ManagerController) EditBook() {
 		itemId, _ := c.GetInt("itemId")
 
 		if strings.Count(description, "") > 500 {
-			c.JsonResult(6004, i18n.Tr(c.Lang, "message.project_desc_tips"))
+			c.JsonResult(6004, "项目描述不能大于500字")
 		}
 		if commentStatus != "open" && commentStatus != "closed" && commentStatus != "group_only" && commentStatus != "registered_only" {
 			commentStatus = "closed"
@@ -355,7 +356,7 @@ func (c *ManagerController) EditBook() {
 			}
 		}
 		if !models.NewItemsets().Exist(itemId) {
-			c.JsonResult(6006, i18n.Tr(c.Lang, "message.project_space_not_exist"))
+			c.JsonResult(6006, "项目空间不存在")
 		}
 		book.Publisher = publisher
 		book.HistoryCount = historyCount
@@ -389,7 +390,7 @@ func (c *ManagerController) EditBook() {
 		}
 
 		if err := book.Update(); err != nil {
-			c.JsonResult(6006, i18n.Tr(c.Lang, "message.failed"))
+			c.JsonResult(6006, "保存失败")
 		}
 		c.JsonResult(0, "ok")
 	}
@@ -409,18 +410,18 @@ func (c *ManagerController) DeleteBook() {
 	bookId, _ := c.GetInt("book_id", 0)
 
 	if bookId <= 0 {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(6001, "参数错误")
 	}
 	book := models.NewBook()
 
 	err := book.ThoroughDeleteBook(bookId)
 
 	if err == orm.ErrNoRows {
-		c.JsonResult(6002, i18n.Tr(c.Lang, "message.item_not_exist"))
+		c.JsonResult(6002, "项目不存在")
 	}
 	if err != nil {
 		logs.Error("删除失败 -> ", err)
-		c.JsonResult(6003, i18n.Tr(c.Lang, "message.failed"))
+		c.JsonResult(6003, "删除失败")
 	}
 	c.JsonResult(0, "ok")
 }
@@ -435,7 +436,7 @@ func (c *ManagerController) CreateToken() {
 	book, err := models.NewBook().FindByFieldFirst("identify", identify)
 
 	if err != nil {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.item_not_exist"))
+		c.JsonResult(6001, "项目不存在")
 	}
 	if action == "create" {
 
@@ -446,14 +447,14 @@ func (c *ManagerController) CreateToken() {
 		book.PrivateToken = string(utils.Krand(conf.GetTokenSize(), utils.KC_RAND_KIND_ALL))
 		if err := book.Update(); err != nil {
 			logs.Error("生成阅读令牌失败 => ", err)
-			c.JsonResult(6003, i18n.Tr(c.Lang, "message.failed"))
+			c.JsonResult(6003, "生成阅读令牌失败")
 		}
 		c.JsonResult(0, "ok", conf.URLFor("DocumentController.Index", ":key", book.Identify, "token", book.PrivateToken))
 	} else {
 		book.PrivateToken = ""
 		if err := book.Update(); err != nil {
 			logs.Error("CreateToken => ", err)
-			c.JsonResult(6004, i18n.Tr(c.Lang, "message.failed"))
+			c.JsonResult(6004, "删除令牌失败")
 		}
 		c.JsonResult(0, "ok", "")
 	}
@@ -463,7 +464,7 @@ func (c *ManagerController) CreateToken() {
 func (c *ManagerController) Setting() {
 	c.Prepare()
 	c.TplName = "manager/setting.tpl"
-	c.Data["Action"] = "setting"
+
 	options, err := models.NewOption().All()
 
 	if c.Ctx.Input.IsPost() {
@@ -482,6 +483,7 @@ func (c *ManagerController) Setting() {
 	for _, item := range options {
 		c.Data[item.OptionName] = item.OptionValue
 	}
+
 }
 
 // Transfer 转让项目.
@@ -490,16 +492,16 @@ func (c *ManagerController) Transfer() {
 	account := c.GetString("account")
 
 	if account == "" {
-		c.JsonResult(6004, i18n.Tr(c.Lang, "message.receive_account_empty"))
+		c.JsonResult(6004, "接受者账号不能为空")
 	}
 	member, err := models.NewMember().FindByAccount(account)
 
 	if err != nil {
 		logs.Error("FindByAccount => ", err)
-		c.JsonResult(6005, i18n.Tr(c.Lang, "message.receive_account_not_exist"))
+		c.JsonResult(6005, "接受用户不存在")
 	}
 	if member.Status != 0 {
-		c.JsonResult(6006, i18n.Tr(c.Lang, "message.receive_account_disabled"))
+		c.JsonResult(6006, "接受用户已被禁用")
 	}
 
 	if !c.Member.IsAdministrator() {
@@ -515,7 +517,7 @@ func (c *ManagerController) Transfer() {
 	rel, err := models.NewRelationship().FindFounder(book.BookId)
 
 	if err != nil {
-		logs.Error("FindFounder => ", err)
+		beego.Error("FindFounder => ", err)
 		c.JsonResult(6009, "查询项目创始人失败")
 	}
 	if member.MemberId == rel.MemberId {
@@ -547,7 +549,7 @@ func (c *ManagerController) DeleteComment() {
 	comment_id, _ := c.GetInt("comment_id", 0)
 
 	if comment_id <= 0 {
-		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(6001, "参数错误")
 	}
 
 	comment := models.NewComment()
@@ -571,7 +573,7 @@ func (c *ManagerController) PrivatelyOwned() {
 	identify := c.GetString("identify")
 
 	if status != "open" && status != "close" {
-		c.JsonResult(6003, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(6003, "参数错误")
 	}
 	state := 0
 	if status == "open" {
@@ -597,7 +599,7 @@ func (c *ManagerController) PrivatelyOwned() {
 
 	if err != nil {
 		logs.Error("PrivatelyOwned => ", err)
-		c.JsonResult(6004, i18n.Tr(c.Lang, "message.failed"))
+		c.JsonResult(6004, "保存失败")
 	}
 	c.JsonResult(0, "ok")
 }
@@ -606,7 +608,6 @@ func (c *ManagerController) PrivatelyOwned() {
 func (c *ManagerController) AttachList() {
 	c.Prepare()
 	c.TplName = "manager/attach_list.tpl"
-	c.Data["Action"] = "attach"
 
 	pageIndex, _ := c.GetInt("page", 1)
 
@@ -637,16 +638,16 @@ func (c *ManagerController) AttachList() {
 func (c *ManagerController) AttachDetailed() {
 	c.Prepare()
 	c.TplName = "manager/attach_detailed.tpl"
-	c.Data["Action"] = "attach"
-
 	attach_id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+
 	if attach_id <= 0 {
 		c.Abort("404")
 	}
 
 	attach, err := models.NewAttachmentResult().Find(attach_id)
+
 	if err != nil {
-		logs.Error("AttachDetailed => ", err)
+		beego.Error("AttachDetailed => ", err)
 		if err == orm.ErrNoRows {
 			c.Abort("404")
 		} else {
@@ -673,13 +674,13 @@ func (c *ManagerController) AttachDelete() {
 	attach, err := models.NewAttachment().Find(attachId)
 
 	if err != nil {
-		logs.Error("AttachDelete => ", err)
+		beego.Error("AttachDelete => ", err)
 		c.JsonResult(6001, err.Error())
 	}
 	attach.FilePath = filepath.Join(conf.WorkingDirectory, attach.FilePath)
 
 	if err := attach.Delete(); err != nil {
-		logs.Error("AttachDelete => ", err)
+		beego.Error("AttachDelete => ", err)
 		c.JsonResult(6002, err.Error())
 	}
 	c.JsonResult(0, "ok")
@@ -689,10 +690,11 @@ func (c *ManagerController) AttachDelete() {
 func (c *ManagerController) LabelList() {
 	c.Prepare()
 	c.TplName = "manager/label_list.tpl"
-	c.Data["Action"] = "label"
+
 	pageIndex, _ := c.GetInt("page", 1)
 
 	labels, totalCount, err := models.NewLabel().FindToPager(pageIndex, conf.PageSize)
+
 	if err != nil {
 		c.ShowErrorPage(50001, err.Error())
 	}
@@ -710,17 +712,18 @@ func (c *ManagerController) LabelList() {
 //删除标签
 func (c *ManagerController) LabelDelete() {
 	labelId, err := strconv.Atoi(c.Ctx.Input.Param(":id"))
+
 	if err != nil {
-		logs.Error("获取删除标签参数时出错:", err)
-		c.JsonResult(50001, i18n.Tr(c.Lang, "message.param_error"))
+		beego.Error("获取删除标签参数时出错:", err)
+		c.JsonResult(50001, "参数错误")
 	}
 	if labelId <= 0 {
-		c.JsonResult(50001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(50001, "参数错误")
 	}
 
 	label, err := models.NewLabel().FindFirst("label_id", labelId)
 	if err != nil {
-		logs.Error("查询标签时出错:", err)
+		beego.Error("查询标签时出错:", err)
 		c.JsonResult(50001, "查询标签时出错:"+err.Error())
 	}
 	if err := label.Delete(); err != nil {
@@ -733,7 +736,6 @@ func (c *ManagerController) LabelDelete() {
 func (c *ManagerController) Config() {
 	c.Prepare()
 	c.TplName = "manager/config.tpl"
-	c.Data["Action"] = "config"
 	if c.Ctx.Input.IsPost() {
 		content := strings.TrimSpace(c.GetString("configFileTextArea"))
 		if content == "" {
@@ -742,22 +744,22 @@ func (c *ManagerController) Config() {
 		tf, err := ioutil.TempFile(os.TempDir(), "mindoc")
 
 		if err != nil {
-			logs.Error("创建临时文件失败 ->", err)
+			beego.Error("创建临时文件失败 ->", err)
 			c.JsonResult(5001, "创建临时文件失败")
 		}
 		defer tf.Close()
 
 		tf.WriteString(content)
 
-		err = web.LoadAppConfig("ini", tf.Name())
+		err = beego.LoadAppConfig("ini", tf.Name())
 
 		if err != nil {
-			logs.Error("加载配置文件失败 ->", err)
+			beego.Error("加载配置文件失败 ->", err)
 			c.JsonResult(5002, "加载配置文件失败")
 		}
 		err = filetil.CopyFile(tf.Name(), conf.ConfigurationFile)
 		if err != nil {
-			logs.Error("保存配置文件失败 ->", err)
+			beego.Error("保存配置文件失败 ->", err)
 			c.JsonResult(5003, "保存配置文件失败")
 		}
 		c.JsonResult(0, "保存成功")
@@ -771,10 +773,11 @@ func (c *ManagerController) Config() {
 func (c *ManagerController) Team() {
 	c.Prepare()
 	c.TplName = "manager/team.tpl"
-	c.Data["Action"] = "team"
+
 	pageIndex, _ := c.GetInt("page", 0)
 
 	teams, totalCount, err := models.NewTeam().FindToPager(pageIndex, conf.PageSize)
+
 	if err != nil && err != orm.ErrNoRows {
 		c.ShowErrorPage(500, err.Error())
 	}
@@ -806,7 +809,7 @@ func (c *ManagerController) TeamCreate() {
 	teamName := c.GetString("teamName")
 
 	if teamName == "" {
-		c.JsonResult(5001, i18n.Tr(c.Lang, "message.team_name_empty"))
+		c.JsonResult(5001, "团队名称不能为空")
 	}
 	team := models.NewTeam()
 
@@ -827,10 +830,10 @@ func (c *ManagerController) TeamEdit() {
 	teamId, _ := c.GetInt("teamId")
 
 	if teamName == "" {
-		c.JsonResult(5001, i18n.Tr(c.Lang, "message.team_name_empty"))
+		c.JsonResult(5001, "团队名称不能为空")
 	}
 	if teamId <= 0 {
-		c.JsonResult(5002, i18n.Tr(c.Lang, "message.team_id_empty"))
+		c.JsonResult(5002, "团队标识不能为空")
 	}
 	team, err := models.NewTeam().First(teamId)
 
@@ -843,16 +846,19 @@ func (c *ManagerController) TeamEdit() {
 	c.CheckJsonError(5004, err)
 
 	c.JsonResult(0, "OK", team)
+
 }
 
 func (c *ManagerController) TeamDelete() {
 	c.Prepare()
 
 	teamId, _ := c.GetInt("teamId")
+
 	if teamId <= 0 {
-		c.JsonResult(5002, i18n.Tr(c.Lang, "message.team_id_empty"))
+		c.JsonResult(5002, "团队标识不能为空")
 	}
 	err := models.NewTeam().Delete(teamId)
+
 	c.CheckJsonError(5001, err)
 
 	c.JsonResult(0, "OK")
@@ -861,21 +867,23 @@ func (c *ManagerController) TeamDelete() {
 func (c *ManagerController) TeamMemberList() {
 	c.Prepare()
 	c.TplName = "manager/team_member_list.tpl"
-	c.Data["Action"] = "team"
 	teamId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
-	if teamId <= 0 {
-		c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.param_error"))
-	}
 	pageIndex, _ := c.GetInt("page", 0)
 
+	if teamId <= 0 {
+		c.ShowErrorPage(500, "参数错误")
+	}
+
 	team, err := models.NewTeam().First(teamId)
+
 	if err == orm.ErrNoRows {
 		c.ShowErrorPage(404, "团队不存在")
 	}
 	c.CheckErrorResult(500, err)
 	c.Data["Model"] = team
 
-	teams, totalCount, err := models.NewTeamMember().SetLang(c.Lang).FindToPager(teamId, pageIndex, conf.PageSize)
+	teams, totalCount, err := models.NewTeamMember().FindToPager(teamId, pageIndex, conf.PageSize)
+
 	if err != nil && err != orm.ErrNoRows {
 		c.ShowErrorPage(500, err.Error())
 	}
@@ -893,8 +901,9 @@ func (c *ManagerController) TeamMemberList() {
 	}
 
 	b, err := json.Marshal(teams)
+
 	if err != nil {
-		logs.Error("编码 JSON 结果失败 ->", err)
+		beego.Error("编码 JSON 结果失败 ->", err)
 		c.Data["Result"] = template.JS("[]")
 	} else {
 		c.Data["Result"] = template.JS(string(b))
@@ -909,7 +918,7 @@ func (c *ManagerController) TeamSearchMember() {
 	keyword := strings.TrimSpace(c.GetString("q"))
 
 	if teamId <= 0 {
-		c.JsonResult(500, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(500, "参数错误")
 	}
 
 	searchResult, err := models.NewTeamMember().FindNotJoinMemberByAccount(teamId, keyword, 10)
@@ -927,7 +936,7 @@ func (c *ManagerController) TeamMemberAdd() {
 	roleId, _ := c.GetInt("roleId")
 
 	if teamId <= 0 || memberId <= 0 || roleId <= 0 || roleId > int(conf.BookObserver) {
-		c.JsonResult(5001, i18n.Tr(c.Lang, "message.system_error"))
+		c.JsonResult(5001, "参数不正确")
 	}
 
 	teamMember := models.NewTeamMember()
@@ -956,7 +965,7 @@ func (c *ManagerController) TeamMemberDelete() {
 	}
 	err = teamMember.Delete(teamMember.TeamMemberId)
 	if err != nil {
-		c.JsonResult(5002, i18n.Tr(c.Lang, "message.failed"))
+		c.JsonResult(5002, "删除失败")
 	}
 	c.JsonResult(0, "ok")
 }
@@ -967,7 +976,7 @@ func (c *ManagerController) TeamChangeMemberRole() {
 	roleId, _ := c.GetInt("roleId")
 	teamId, _ := c.GetInt("teamId")
 	if memberId <= 0 || roleId <= 0 || teamId <= 0 || roleId > int(conf.BookObserver) {
-		c.JsonResult(5001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(5001, "参数错误")
 	}
 
 	teamMember, err := models.NewTeamMember().ChangeRoleId(teamId, memberId, conf.BookRole(roleId))
@@ -984,12 +993,12 @@ func (c *ManagerController) TeamChangeMemberRole() {
 func (c *ManagerController) TeamBookList() {
 	c.Prepare()
 	c.TplName = "manager/team_book_list.tpl"
-	c.Data["Action"] = "team"
+
 	teamId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
 	pageIndex, _ := c.GetInt("page", 0)
 
 	if teamId <= 0 {
-		c.JsonResult(5002, i18n.Tr(c.Lang, "message.team_id_empty"))
+		c.JsonResult(5002, "团队标识不能为空")
 	}
 
 	team, err := models.NewTeam().First(teamId)
@@ -1019,8 +1028,9 @@ func (c *ManagerController) TeamBookList() {
 	}
 
 	b, err := json.Marshal(teams)
+
 	if err != nil {
-		logs.Error("编码 JSON 结果失败 ->", err)
+		beego.Error("编码 JSON 结果失败 ->", err)
 		c.Data["Result"] = template.JS("[]")
 	} else {
 		c.Data["Result"] = template.JS(string(b))
@@ -1035,7 +1045,7 @@ func (c *ManagerController) TeamBookAdd() {
 	bookId, _ := c.GetInt("bookId")
 
 	if teamId <= 0 || bookId <= 0 {
-		c.JsonResult(500, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(500, "参数错误")
 	}
 	teamRel := models.NewTeamRelationship()
 	teamRel.BookId = bookId
@@ -1059,7 +1069,7 @@ func (c *ManagerController) TeamSearchBook() {
 	keyword := strings.TrimSpace(c.GetString("q"))
 
 	if teamId <= 0 {
-		c.JsonResult(500, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(500, "参数错误")
 	}
 
 	searchResult, err := models.NewTeamRelationship().FindNotJoinBookByName(teamId, keyword, 10)
@@ -1077,13 +1087,13 @@ func (c *ManagerController) TeamBookDelete() {
 	teamRelationshipId, _ := c.GetInt("teamRelId")
 
 	if teamRelationshipId <= 0 {
-		c.JsonResult(500, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(500, "参数错误")
 	}
 
 	err := models.NewTeamRelationship().Delete(teamRelationshipId)
 
 	if err != nil {
-		c.JsonResult(5001, i18n.Tr(c.Lang, "message.failed"))
+		c.JsonResult(5001, "删除失败")
 	}
 	c.JsonResult(0, "OK")
 }
@@ -1092,7 +1102,6 @@ func (c *ManagerController) TeamBookDelete() {
 func (c *ManagerController) Itemsets() {
 	c.Prepare()
 	c.TplName = "manager/itemsets.tpl"
-	c.Data["Action"] = "itemsets"
 	pageIndex, _ := c.GetInt("page", 0)
 
 	items, totalCount, err := models.NewItemsets().FindToPager(pageIndex, conf.PageSize)
@@ -1114,6 +1123,7 @@ func (c *ManagerController) Itemsets() {
 	}
 
 	c.Data["Lists"] = items
+
 }
 
 //编辑或添加项目空间.
@@ -1123,14 +1133,14 @@ func (c *ManagerController) ItemsetsEdit() {
 	itemName := strings.TrimSpace(c.GetString("itemName"))
 	itemKey := strings.TrimSpace(c.GetString("itemKey"))
 	if itemName == "" || itemKey == "" {
-		c.JsonResult(5001, i18n.Tr(c.Lang, "message.param_error"))
+		c.JsonResult(5001, "参数错误")
 	}
 	var item *models.Itemsets
 	var err error
 	if itemId > 0 {
 		if item, err = models.NewItemsets().First(itemId); err != nil {
 			if err == orm.ErrNoRows {
-				c.JsonResult(5002, i18n.Tr(c.Lang, "message.project_space_not_exist"))
+				c.JsonResult(5002, "项目空间不存在")
 			} else {
 				c.JsonResult(5003, "查询项目空间出错")
 			}

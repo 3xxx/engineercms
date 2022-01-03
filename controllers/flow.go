@@ -6,9 +6,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/3xxx/flow"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
 	"io"
 	"log"
@@ -19,7 +17,7 @@ import (
 
 // VueFlow API
 type FlowController struct {
-	web.Controller
+	beego.Controller
 }
 
 func (c *FlowController) Get() {
@@ -85,8 +83,8 @@ func (c *FlowController) FlowType() {
 	// db.Close()
 	var tx *sql.Tx
 
-	name := c.GetString("name")
-	// beego.Info(name)
+	name := c.Input().Get("name")
+	beego.Info(name)
 	// jsoninfo := c.GetString("name1") //获取formdata
 	// beego.Info(jsoninfo)
 	//定义流程类型
@@ -124,23 +122,23 @@ func (c *FlowController) FlowTypeList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -151,12 +149,12 @@ func (c *FlowController) FlowTypeList() {
 
 	doctype, err := flow.DocTypes.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	arr, err := flow.DocTypes.List(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := doctypelist{doctype, page1, len(arr)}
 	// tx.Commit()
@@ -177,12 +175,12 @@ func (c *FlowController) FlowTypeUpdate() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型
 	err = flow.DocTypes.Rename(tx, flow.DocTypeID(dtID), name) //"图纸设计流程"
@@ -207,7 +205,7 @@ func (c *FlowController) FlowTypeDelete() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
+	name := c.Input().Get("name")
 	//定义流程类型
 	_, err := flow.DocTypes.New(tx, name) //"图纸设计流程"
 	if err != nil {
@@ -230,7 +228,7 @@ func (c *FlowController) FlowState() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
+	name := c.Input().Get("name")
 	//定义流程状态
 	_, err := flow.DocStates.New(tx, name) //"设计中..."
 	if err != nil {
@@ -271,12 +269,12 @@ func (c *FlowController) FlowStateUpdate() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型
 	err = flow.DocStates.Rename(tx, flow.DocStateID(dtID), name) //"图纸设计流程"
@@ -300,7 +298,7 @@ func (c *FlowController) FlowStateDelete() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
+	name := c.Input().Get("name")
 	//定义流程类型
 	_, err := flow.DocStates.New(tx, name) //"图纸设计流程"
 	if err != nil {
@@ -332,23 +330,23 @@ func (c *FlowController) FlowStateList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -359,11 +357,11 @@ func (c *FlowController) FlowStateList() {
 	}
 	docstate, err := flow.DocStates.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.DocStates.List(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := docstatelist{docstate, page1, len(arr)}
 	// tx.Commit()
@@ -384,9 +382,9 @@ func (c *FlowController) FlowAction() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	reconfirm := c.GetString("reconfirm")
-	// beego.Info(reconfirm)
+	name := c.Input().Get("name")
+	reconfirm := c.Input().Get("reconfirm")
+	beego.Info(reconfirm)
 	var reconfirm1 bool
 	if reconfirm == "true" {
 		reconfirm1 = true
@@ -418,12 +416,12 @@ func (c *FlowController) FlowActionUpdate() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型
 	err = flow.DocActions.Rename(tx, flow.DocActionID(dtID), name) //"图纸设计流程"
@@ -468,23 +466,23 @@ func (c *FlowController) FlowActionList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -495,11 +493,11 @@ func (c *FlowController) FlowActionList() {
 	}
 	docaction, err := flow.DocActions.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.DocActions.List(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := docactionlist{docaction, page1, len(arr)}
 	c.Data["json"] = list
@@ -519,33 +517,33 @@ func (c *FlowController) FlowTransition() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	// dtid := c.GetString("dtid")
+	// dtid := c.Input().Get("dtid")
 	dtid := c.GetString("dtid")
 	// beego.Info(dtid)
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid1 := c.GetString("dsid1")
+	dsid1 := c.Input().Get("dsid1")
 	dsID1, err := strconv.ParseInt(dsid1, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	daid := c.GetString("daid")
+	daid := c.Input().Get("daid")
 	daID, err := strconv.ParseInt(daid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid2 := c.GetString("dsid2")
+	dsid2 := c.Input().Get("dsid2")
 	dsID2, err := strconv.ParseInt(dsid2, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//添加流程规则1:oldstate1 action1 newstate2
 	err = flow.DocTypes.AddTransition(tx, flow.DocTypeID(dtID), flow.DocStateID(dsID1), flow.DocActionID(daID), flow.DocStateID(dsID2))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -556,7 +554,7 @@ func (c *FlowController) FlowTransition() {
 	//添加流程规则2:oldstate2 action2 newstate3
 	// err = flow.DocTypes.AddTransition(tx, flow.DocTypeID(dtID1), flow.DocStateID(dsID2), flow.DocActionID(daID2), flow.DocStateID(dsID3))
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 }
 
@@ -573,12 +571,12 @@ func (c *FlowController) FlowTransitionUpdate() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型
 	err = flow.DocTypes.RenameTransition(tx, flow.DocTransitionID(dtID), name) //"图纸设计流程"
@@ -603,23 +601,23 @@ func (c *FlowController) FlowTransitionDelete() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid := c.GetString("dsid")
+	dsid := c.Input().Get("dsid")
 	//pid转成64为
 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	daid := c.GetString("daid")
+	daid := c.Input().Get("daid")
 	//pid转成64为
 	daID, err := strconv.ParseInt(daid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	err = flow.DocTypes.RemoveTransition(tx, flow.DocTypeID(dtID), flow.DocStateID(dsID), flow.DocActionID(daID))
 	if err != nil {
@@ -649,23 +647,23 @@ func (c *FlowController) FlowTransitionList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -676,11 +674,11 @@ func (c *FlowController) FlowTransitionList() {
 	}
 	transisions, err := flow.DocTypes.TransitionsList(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.DocTypes.TransitionsList(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := transitionlist{transisions, page1, len(arr)}
 	c.Data["json"] = list
@@ -702,27 +700,27 @@ func (c *FlowController) FlowWorkflow() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name") //图纸设计-三级校审流程
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name") //图纸设计-三级校审流程
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid := c.GetString("dsid")
+	dsid := c.Input().Get("dsid")
 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型doctype下的唯一流程workflow
 	workflowID, err := flow.Workflows.New(tx, name, flow.DocTypeID(dtID), flow.DocStateID(dsID)) //初始状态是“设计中...”——校核——审查——完成
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
 		// tx.Commit()
-		logs.Info(workflowID)
+		beego.Info(workflowID)
 		c.Data["json"] = map[string]interface{}{"err": nil, "data": "写入成功!"}
 		c.ServeJSON()
 	}
@@ -756,23 +754,23 @@ func (c *FlowController) FlowWorkflowList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -783,11 +781,11 @@ func (c *FlowController) FlowWorkflowList() {
 	}
 	workflows, err := flow.Workflows.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.Workflows.List(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := workflowlist{workflows, page1, len(arr)}
 	c.Data["json"] = list
@@ -807,11 +805,11 @@ func (c *FlowController) FlowAccessContext() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
+	name := c.Input().Get("name")
 	//定义用户、组、角色、权限集合
 	_, err := flow.AccessContexts.New(tx, name) //"Context"
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -834,12 +832,12 @@ func (c *FlowController) FlowAccessContextUpdate() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型
 	err = flow.AccessContexts.Rename(tx, flow.AccessContextID(dtID), name) //"图纸设计流程"
@@ -869,26 +867,26 @@ type accesscontextlist struct {
 func (c *FlowController) FlowAccessContextList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
-	prefix := c.GetString("prefix")
+	prefix := c.Input().Get("prefix")
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -899,11 +897,11 @@ func (c *FlowController) FlowAccessContextList() {
 	}
 	accesscontexts, err := flow.AccessContexts.List(prefix, offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.AccessContexts.List(prefix, 0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := accesscontextlist{accesscontexts, page1, len(arr)}
 	c.Data["json"] = list
@@ -930,25 +928,25 @@ func (c *FlowController) FlowNode() {
 	// c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	dtid := c.GetString("dtid")
+	name := c.Input().Get("name")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid := c.GetString("dsid")
+	dsid := c.Input().Get("dsid")
 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var flownodetype flow.NodeType
-	nodetype := c.GetString("nodetype") // flow.NodeTypeBegin
+	nodetype := c.Input().Get("nodetype") // flow.NodeTypeBegin
 	switch nodetype {
 	case "begin":
 		flownodetype = flow.NodeTypeBegin
@@ -975,7 +973,7 @@ func (c *FlowController) FlowNode() {
 	//根据doctypeid获得workflow
 	workflow, err := flow.Workflows.GetByDocType(flow.DocTypeID(dtID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//定义流程类型workflow下的具体每个节点node，用户对文件执行某个动作（event里的action）后，会沿着这些节点走
 	// AddNode maps the given document state to the specified node.  This
@@ -983,7 +981,7 @@ func (c *FlowController) FlowNode() {
 	// of the system.nodeID1
 	_, err = flow.Workflows.AddNode(tx, flow.DocTypeID(dtID), flow.DocStateID(dsID), flow.AccessContextID(acID), workflow.ID, name, flownodetype)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1019,26 +1017,26 @@ func (c *FlowController) FlowNode() {
 func (c *FlowController) FlowNodeList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
-	// prefix := c.GetString("prefix")
+	// prefix := c.Input().Get("prefix")
 	// var offset, limit1, page1 int64
 	// var err error
-	// limit := c.GetString("limit")
+	// limit := c.Input().Get("limit")
 	// if limit == "" {
 	// 	limit1 = 0
 	// } else {
 	// 	limit1, err = strconv.ParseInt(limit, 10, 64)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// }
-	// page := c.GetString("page")
+	// page := c.Input().Get("page")
 	// if page == "" {
 	// 	limit1 = 0
 	// 	page1 = 1
 	// } else {
 	// 	page1, err = strconv.ParseInt(page, 10, 64)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// }
 	// if page1 <= 1 {
@@ -1046,10 +1044,10 @@ func (c *FlowController) FlowNodeList() {
 	// } else {
 	// 	offset = (page1 - 1) * limit1
 	// }
-	workflowid := c.GetString("workflowid")
+	workflowid := c.Input().Get("workflowid")
 	workflowID, err := strconv.ParseInt(workflowid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// if page1 <= 1 {
 	// 	offset = 0
@@ -1078,10 +1076,10 @@ func (c *FlowController) FlowUser() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	first_name := c.GetString("firstname")
-	last_name := c.GetString("lastname")
-	email := c.GetString("email")
-	active := c.GetString("active")
+	first_name := c.Input().Get("firstname")
+	last_name := c.Input().Get("lastname")
+	email := c.Input().Get("email")
+	active := c.Input().Get("active")
 	var err error
 	var uid flow.UserID
 	// var res sql.Result
@@ -1097,7 +1095,7 @@ func (c *FlowController) FlowUser() {
 	// 		VALUES(` + first_name + `, ` + last_name + `, ` + email + `, ` + active1 + `)`)
 	if err != nil {
 		log.Fatalf("%v\n", err)
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1156,26 +1154,26 @@ type userlist struct {
 func (c *FlowController) FlowUserList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
-	prefix := c.GetString("prefix")
+	prefix := c.Input().Get("prefix")
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1186,11 +1184,11 @@ func (c *FlowController) FlowUserList() {
 	}
 	nodes, err := flow.Users.List(prefix, offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.Users.List(prefix, 0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := userlist{nodes, page1, len(arr)}
 	c.Data["json"] = list
@@ -1211,13 +1209,13 @@ func (c *FlowController) FlowGroup() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
-	grouptype := c.GetString("grouptype")
-	// beego.Info(grouptype)
+	name := c.Input().Get("name")
+	grouptype := c.Input().Get("grouptype")
+	beego.Info(grouptype)
 	//注意：单人组自动建立！！！
 	_, err := flow.Groups.New(tx, name, grouptype) //).(flow.GroupID)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1248,23 +1246,23 @@ func (c *FlowController) FlowGroupList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1275,11 +1273,11 @@ func (c *FlowController) FlowGroupList() {
 	}
 	groups, err := flow.Groups.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.Groups.List(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := grouplist{groups, page1, len(arr)}
 	c.Data["json"] = list
@@ -1299,30 +1297,30 @@ func (c *FlowController) FlowUserGroup() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	// uid := c.GetString("uid")
+	// uid := c.Input().Get("uid")
 	// beego.Info(uid)
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	//pid转成64为
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	uid := make([]string, 0, 10)
 	c.Ctx.Input.Bind(&uid, "uid") //ul ==[str array]
 	// uid := c.GetStrings("uid")
-	// beego.Info(uid)
+	beego.Info(uid)
 
 	for i, v := range uid {
 		if v != "" {
 			uID, err := strconv.ParseInt(uid[i], 10, 64)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			err = flow.Groups.AddUser(tx, flow.GroupID(gID), flow.UserID(uID))
 		}
 	}
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1351,23 +1349,23 @@ func (c *FlowController) FlowGroupUsersList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1380,13 +1378,13 @@ func (c *FlowController) FlowGroupUsersList() {
 	groupusers := make([]GroupUsers, 0)
 	groups, err := flow.Groups.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		for _, v := range groups {
 			groupusersarr := make([]GroupUsers, 1)
 			users, err := flow.Groups.Users(flow.GroupID(v.ID))
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			groupusersarr[0].Id = v.ID
 			groupusersarr[0].Group = v
@@ -1411,10 +1409,10 @@ func (c *FlowController) FlowRole() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	name := c.GetString("name")
+	name := c.Input().Get("name")
 	_, err := flow.Roles.New(tx, name)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1444,23 +1442,23 @@ func (c *FlowController) FlowRoleList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1471,11 +1469,11 @@ func (c *FlowController) FlowRoleList() {
 	}
 	roles, err := flow.Roles.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.Roles.List(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := rolelist{roles, page1, len(arr)}
 	c.Data["json"] = list
@@ -1495,30 +1493,30 @@ func (c *FlowController) FlowPermission() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	roleid := c.GetString("roleid")
+	roleid := c.Input().Get("roleid")
 	//pid转成64为
 	roleID, err := strconv.ParseInt(roleid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	//pid转成64为
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//根据用户选择的动作
-	daid := c.GetString("daid")
+	daid := c.Input().Get("daid")
 	daID, err := strconv.ParseInt(daid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	actions := []flow.DocActionID{flow.DocActionID(daID)} //[]flow.DocActionID{daID1, daID2, daID3, daID4}
 
 	//给角色role赋予action权限
 	err = flow.Roles.AddPermissions(tx, flow.RoleID(roleID), flow.DocTypeID(dtID), actions)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1553,23 +1551,23 @@ func (c *FlowController) FlowRolePermissionList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -1582,14 +1580,14 @@ func (c *FlowController) FlowRolePermissionList() {
 	rolepermission := make([]flow.RolePermission, 0)
 	roles, err := flow.Roles.List(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		for _, v := range roles {
 			rolepermissionarr := make([]flow.RolePermission, 1)
 			// rolepermissions, err := flow.Roles.Permissions(flow.RoleID(v.ID))
 			rolepermissions, err := flow.Roles.PermissionsList(flow.RoleID(v.ID))
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			rolepermissionarr[0] = rolepermissions
 			if rolepermissions.TypeAction.DocTypeID == 0 {
@@ -1620,28 +1618,28 @@ func (c *FlowController) FlowGroupRole() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	//pid转成64为
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	//pid转成64为
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	roleid := c.GetString("roleid")
+	roleid := c.Input().Get("roleid")
 	//pid转成64为
 	roleID, err := strconv.ParseInt(roleid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//给用户组group赋予角色role
 	err = flow.AccessContexts.AddGroupRole(tx, flow.AccessContextID(acID), flow.GroupID(gID), flow.RoleID(roleID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1651,7 +1649,7 @@ func (c *FlowController) FlowGroupRole() {
 	//将group和role加到accesscontext里——暂时不理解
 	// err = flow.AccessContexts.AddGroupRole(tx, accessContextID1, gID2, roleID2)
 	// if err != nil {
-	// 	logs.Error(err) //UNIQUE constraint failed: wf_ac_group_roles.ac_id已修补
+	// 	beego.Error(err) //UNIQUE constraint failed: wf_ac_group_roles.ac_id已修补
 	// }
 }
 
@@ -1675,23 +1673,23 @@ func (c *FlowController) FlowGroupRoleList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1712,11 +1710,11 @@ func (c *FlowController) FlowGroupRoleList() {
 	// grouproles, err := flow.AccessContexts.GroupRoles(flow.AccessContextID(1), gids, offset, limit)
 	grouproles, err := flow.AccessContexts.GroupRolesList(offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	arr, err := flow.AccessContexts.GroupRolesList(0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := grouprolelist{grouproles, page1, len(arr)}
 	c.Data["json"] = list
@@ -1741,27 +1739,27 @@ func (c *FlowController) FlowDoc() {
 	var tx *sql.Tx
 
 	//查询预先定义的doctype流程类型
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	name := c.GetString("docname")
-	data := c.GetString("docdata")
+	name := c.Input().Get("docname")
+	data := c.Input().Get("docdata")
 	//docdata是成果productid,可以是数组
 	productid, err := strconv.ParseInt(data, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//可以传另外一个参数productid过来，然后在这里写入productdocument表格
 
@@ -1792,7 +1790,7 @@ func (c *FlowController) FlowDoc() {
 	// flow.Documents.New(tx, &docNewInput)
 	documentid, err := flow.Documents.New(tx, &docNewInput)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERR", "err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1800,7 +1798,7 @@ func (c *FlowController) FlowDoc() {
 		//DocTypeID
 		_, err = models.AddProductDocument(dtID, int64(documentid), productid)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "err": "ok", "data": "写入成功!"}
@@ -1826,32 +1824,32 @@ func (c *FlowController) WxFlowDoc() {
 	var tx *sql.Tx
 
 	//查询预先定义的doctype流程类型
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	name := c.GetString("docname")
+	name := c.Input().Get("docname")
 	//与flowdoc接口的区别就是由文章id取得prodid
-	data := c.GetString("docdata")
+	data := c.Input().Get("docdata")
 	//docid是文章id，要取得成果productid,可以是数组
 	articleid, err := strconv.ParseInt(data, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	article, err := models.GetArticle(articleid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	docNewInput := flow.DocumentsNewInput{
 		DocTypeID:       flow.DocTypeID(dtID),       //属于图纸设计类型的流程
@@ -1863,7 +1861,7 @@ func (c *FlowController) WxFlowDoc() {
 	// flow.Documents.New(tx, &docNewInput)
 	documentid, err := flow.Documents.New(tx, &docNewInput)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERR", "err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -1871,7 +1869,7 @@ func (c *FlowController) WxFlowDoc() {
 		//DocTypeID
 		_, err = models.AddProductDocument(dtID, int64(documentid), article.ProductId)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 
 		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "err": "ok", "data": "写入成功!"}
@@ -1904,23 +1902,23 @@ func (c *FlowController) FlowDocumentList() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -1931,31 +1929,31 @@ func (c *FlowController) FlowDocumentList() {
 	}
 
 	//查询预先定义的doctype流程类型
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//查出登录用户所在group
 	// uses.GroupsOf(uid)
 	// SingletonGroupOf(uid)
-	// gid := c.GetString("gid")
+	// gid := c.Input().Get("gid")
 	// if gid != "" {
 	// 	gID, err := strconv.ParseInt(gid, 10, 64)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// }
-	// dsid := c.GetString("dsid")
+	// dsid := c.Input().Get("dsid")
 	// if gid != "" {
 	// 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// }
 	documentslistinput := flow.DocumentsListInput{
@@ -1971,13 +1969,13 @@ func (c *FlowController) FlowDocumentList() {
 	documents, err := flow.Documents.List(&documentslistinput, offset, limit1)
 
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	}
 	arr, err := flow.Documents.List(&documentslistinput, 0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := Documentlist{documents, page1, len(arr)}
 	c.Data["json"] = list
@@ -2002,23 +2000,23 @@ func (c *FlowController) FlowDocumentList2() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -2028,30 +2026,30 @@ func (c *FlowController) FlowDocumentList2() {
 	}
 
 	//查询预先定义的doctype流程类型
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid := c.GetString("dsid")
+	dsid := c.Input().Get("dsid")
 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//查出登录用户所在group
 	var uID int64
 	username, _, _, _, _ := checkprodRole(c.Ctx)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	flowuser, err := flow.Users.GetByName(username)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		uID = int64(flowuser.ID)
 	}
@@ -2059,7 +2057,7 @@ func (c *FlowController) FlowDocumentList2() {
 	//当前用户所在的用户组
 	singletongroup, err := flow.Users.SingletonGroupOf(flow.UserID(uID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	documentslistinput := flow.DocumentsListInput{
@@ -2075,13 +2073,13 @@ func (c *FlowController) FlowDocumentList2() {
 	documents, err := flow.Documents.List(&documentslistinput, offset, limit1)
 
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	}
 	arr, err := flow.Documents.List(&documentslistinput, 0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := Documentlist{documents, page1, len(arr)}
 	c.Data["json"] = list
@@ -2108,25 +2106,25 @@ func (c *FlowController) FlowDocList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	//查询预先定义的doctype流程类型
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	// acid := c.GetString("acid")
+	// acid := c.Input().Get("acid")
 	// acID, err := strconv.ParseInt(acid, 10, 64)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
-	// gid := c.GetString("gid")
+	// gid := c.Input().Get("gid")
 	// gID, err := strconv.ParseInt(gid, 10, 64)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
-	// dsid := c.GetString("dsid")
+	// dsid := c.Input().Get("dsid")
 	// dsID, err := strconv.ParseInt(dsid, 10, 64)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// documentslistinput := flow.DocumentsListInput{
 	// 	DocTypeID:       flow.DocTypeID(dtID),       // Documents of this type are listed; required
@@ -2152,27 +2150,27 @@ func (c *FlowController) FlowDocList() {
 	// }
 	// DocEvents, err := flow.DocEvents.List(DocEventsListInput)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 
 	var offset, limit1, page1 int64
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -2184,13 +2182,13 @@ func (c *FlowController) FlowDocList() {
 
 	documents, err := flow.Documents.DocumentList(flow.DocTypeID(dtID), offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	}
 	arr, err := flow.Documents.DocumentList(flow.DocTypeID(dtID), 0, 0)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := Doclist{documents, page1, len(arr)}
 	c.Data["json"] = list
@@ -2210,23 +2208,23 @@ func (c *FlowController) FlowDocList() {
 // 	// var tx *sql.Tx
 // 	var err error
 // 	var offset, limit1, page1 int64
-// 	limit := c.GetString("limit")
+// 	limit := c.Input().Get("limit")
 // 	if limit == "" {
 // 		limit1 = 0
 // 	} else {
 // 		limit1, err = strconv.ParseInt(limit, 10, 64)
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 	}
-// 	page := c.GetString("page")
+// 	page := c.Input().Get("page")
 // 	if page == "" {
 // 		limit1 = 0
 // 		page1 = 1
 // 	} else {
 // 		page1, err = strconv.ParseInt(page, 10, 64)
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 	}
 // 	if page1 <= 1 {
@@ -2236,28 +2234,28 @@ func (c *FlowController) FlowDocList() {
 // 	}
 // 	//查询预先定义的doctype流程类型
 // 	//文件所在目录的doctype
-// 	dtid := c.GetString("dtid")
+// 	dtid := c.Input().Get("dtid")
 // 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	//文件所在的目录的accesscontext
-// 	acid := c.GetString("acid")
+// 	acid := c.Input().Get("acid")
 // 	acID, err := strconv.ParseInt(acid, 10, 64)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	//登录用户所处的用户组
-// 	gid := c.GetString("gid")
+// 	gid := c.Input().Get("gid")
 // 	gID, err := strconv.ParseInt(gid, 10, 64)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	//文件所处某个状态的目录，如果不填，列出所有状态的？
-// 	dsid := c.GetString("dsid")
+// 	dsid := c.Input().Get("dsid")
 // 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	documentslistinput := flow.DocumentsListInput{
 // 		DocTypeID:       flow.DocTypeID(dtID),       // Documents of this type are listed; required
@@ -2271,18 +2269,18 @@ func (c *FlowController) FlowDocList() {
 // 	}
 // 	documents, err := flow.Documents.List(&documentslistinput, offset, limit1)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	//列出每个文档下一个transition——没这个针对具体一个文档的方式
 // 	for _, v := range documents {
 // 		TransitionMap, err := flow.DocTypes.Transitions(flow.DocTypeID(dtID), v.State.ID)
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 	}
 
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 // 		c.ServeJSON()
 // 	} else {
@@ -2317,33 +2315,33 @@ func (c *FlowController) FlowEvent() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	var tx *sql.Tx
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	docid := c.GetString("docid")
+	docid := c.Input().Get("docid")
 	docID, err := strconv.ParseInt(docid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	dsid := c.GetString("dsid")
+	dsid := c.Input().Get("dsid")
 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	daid := c.GetString("daid")
+	daid := c.Input().Get("daid")
 	daID, err := strconv.ParseInt(daid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	text := c.GetString("text")
+	text := c.Input().Get("text")
 	// beego.Info(text)
 	//建立好document，循环建立events，根据哪个来建立？
 	//根据document的Doctypes.Transitions获取state和action
@@ -2357,10 +2355,10 @@ func (c *FlowController) FlowEvent() {
 		GroupID:     flow.GroupID(gID),      //Group (user) who performed the action that raised this event; required，执行引发此事件的操作的组(用户)
 		Text:        text,                   //Any comments or notes; required，
 	}
-	// beego.Info(docEventInput)
+	beego.Info(docEventInput)
 	_, err = flow.DocEvents.New(tx, &docEventInput)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -2381,25 +2379,25 @@ func (c *FlowController) FlowEventList() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
 
 	// var tx *sql.Tx
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	acid := c.GetString("acid")
+	acid := c.Input().Get("acid")
 	acID, err := strconv.ParseInt(acid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	dsid := c.GetString("dsid")
+	dsid := c.Input().Get("dsid")
 	dsID, err := strconv.ParseInt(dsid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//用户点开这个文件，根据文件的状态，list出所有这个状态的events，比如前进，后退等
 	//doctypeid从哪来？所有操作都带doctype吧，因为当前走的流程都属于这个doctype下的
@@ -2414,23 +2412,23 @@ func (c *FlowController) FlowEventList() {
 	}
 
 	var offset, limit1, page1 int64
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -2441,7 +2439,7 @@ func (c *FlowController) FlowEventList() {
 	}
 	myDocEvent, err := flow.DocEvents.List(&docEventListInput, offset, limit1)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	} else {
@@ -2474,25 +2472,25 @@ func (c *FlowController) FlowDocumentDetail() {
 
 	var tx *sql.Tx
 	//查询预先定义的doctype流程类型
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	docid := c.GetString("docid")
+	docid := c.Input().Get("docid")
 	docID, err := strconv.ParseInt(docid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	document, err := flow.Documents.Get(tx, flow.DocTypeID(dtID), flow.DocumentID(docID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//列出actions
 	//列出符合条件的actions
 	TransitionMap, err := flow.DocTypes.Transitions(flow.DocTypeID(dtID), document.State.ID)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//列出符合要求（有权限）的接受groups
 	// beegon.Info(TransitionMap[document.State.ID].Transitions[].Upon.ID)
@@ -2566,13 +2564,13 @@ func (c *FlowController) FlowDocumentDetail() {
 	// myDocEvent, err := flow.DocEvents.List(&docEventListInput, offset, limit1)
 	doceventshistory, err := flow.DocEvents.DocEventsHistory(flow.DocTypeID(dtID), flow.DocumentID(docID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	documentdetail[0].History = doceventshistory
 	//这里根据flow.DocTypeID(dtID), flow.DocumentID(docID)查询product
 
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	} else {
@@ -2618,49 +2616,49 @@ func (c *FlowController) FlowNext() {
 	// 		]
 	// 	}
 	// }
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	daid := c.GetString("daid")
+	daid := c.Input().Get("daid")
 	daID, err := strconv.ParseInt(daid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	docid := c.GetString("docid")
+	docid := c.Input().Get("docid")
 	docID, err := strconv.ParseInt(docid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//下面这个messageid没有
-	messageid := c.GetString("messageid")
+	messageid := c.Input().Get("messageid")
 	messageID, err := strconv.ParseInt(messageid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	//根据docid取得document
 	document, err := flow.Documents.Get(tx, flow.DocTypeID(dtID), flow.DocumentID(docID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//根据document取得workflow
 	myWorkflow, err := flow.Workflows.GetByDocType(document.DocType.ID)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	var uID int64
 	username, _, _, _, _ := checkprodRole(c.Ctx)
-	// beego.Info(username)
+	beego.Info(username)
 	// beego.Info(uid)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	flowuser, err := flow.Users.GetByName(username)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		uID = int64(flowuser.ID)
 	}
@@ -2668,7 +2666,7 @@ func (c *FlowController) FlowNext() {
 	//当前用户所在的用户组
 	singletongroup, err := flow.Users.SingletonGroupOf(flow.UserID(uID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(singletongroup)
 	//接受用户组
@@ -2679,12 +2677,12 @@ func (c *FlowController) FlowNext() {
 	for _, v := range gid {
 		gID, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		groupIds = append(groupIds, flow.GroupID(gID))
 	}
 	// beego.Info(groupIds)
-	text := c.GetString("text")
+	text := c.Input().Get("text")
 	if text == "" {
 		text = "no comments"
 	}
@@ -2700,19 +2698,19 @@ func (c *FlowController) FlowNext() {
 	// beego.Info(docEventInput)
 	deID, err := flow.DocEvents.New(tx, &docEventInput)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	myDocEvent, err := flow.DocEvents.Get(flow.DocEventID(deID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
-		// beego.Info(myDocEvent)
+		beego.Info(myDocEvent)
 	}
 	//这里要将邮箱对应的信息改为已读unread改为false
 	newDocStateId, err := myWorkflow.ApplyEvent(tx1, myDocEvent, groupIds)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -2720,7 +2718,7 @@ func (c *FlowController) FlowNext() {
 		//根据messageid查出所有mailbox，都修改成已读。
 		err = flow.Mailboxes.SetStatusByUser(tx, flowuser.ID, flow.MessageID(messageID), false)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		fmt.Println("newDocStateId=", newDocStateId, err)
 		c.Data["json"] = map[string]interface{}{"err": nil, "data": "写入成功!"}
@@ -2753,11 +2751,11 @@ func (c *FlowController) WxFlowNext() {
 	if openid != nil {
 		user, err = models.GetUserByOpenID(openid.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			flowuser, err := flow.Users.GetByName(user.Username) //user.Username
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				uID = 5
 			} else {
 				uID = int64(flowuser.ID)
@@ -2768,34 +2766,34 @@ func (c *FlowController) WxFlowNext() {
 		// c.Data["json"] = map[string]interface{}{"info": "ERR", "err": err, "data": "用户未登录!"}
 		// c.ServeJSON()
 	}
-	dtid := c.GetString("dtid")
+	dtid := c.Input().Get("dtid")
 	dtID, err := strconv.ParseInt(dtid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	daid := c.GetString("daid")
+	daid := c.Input().Get("daid")
 	daID, err := strconv.ParseInt(daid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	articleid := c.GetString("articleid")
+	articleid := c.Input().Get("articleid")
 	articleID, err := strconv.ParseInt(articleid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	article, err := models.GetArticle(articleID)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//根据article.productid查询documentid
 	proddocument, err := models.GetProductDocument(article.ProductId)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	messageid := c.GetString("messageid")
+	messageid := c.Input().Get("messageid")
 	messageID, err := strconv.ParseInt(messageid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//根据mailboxexid查询mailbox，获得messageid
 	// notification,err:=flow.Mailboxes.GetMessage(flow.mmailboxesID)
@@ -2803,33 +2801,33 @@ func (c *FlowController) WxFlowNext() {
 	// beego.Info(article.ProductId)
 	document, err := flow.Documents.Get(tx, flow.DocTypeID(dtID), flow.DocumentID(proddocument.DocumentId))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//根据document取得workflow
 	myWorkflow, err := flow.Workflows.GetByDocType(document.DocType.ID)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	//当前用户所在的用户组
 	singletongroup, err := flow.Users.SingletonGroupOf(flow.UserID(uID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//接受用户组
 	// gid := make([]string, 0, 2)
 	// c.Ctx.Input.Bind(&gid, "gid")
 	gid := make([]string, 1, 2)
-	gid[0] = c.GetString("gid")
+	gid[0] = c.Input().Get("gid")
 	var groupIds []flow.GroupID
 	for _, v := range gid {
 		gID, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		groupIds = append(groupIds, flow.GroupID(gID))
 	}
-	text := c.GetString("text")
+	text := c.Input().Get("text")
 	if text == "" {
 		text = "no comments"
 	}
@@ -2844,19 +2842,19 @@ func (c *FlowController) WxFlowNext() {
 	}
 	deID, err := flow.DocEvents.New(tx, &docEventInput)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	myDocEvent, err := flow.DocEvents.Get(flow.DocEventID(deID))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
-		// beego.Info(myDocEvent)
+		beego.Info(myDocEvent)
 	}
 	//这里要将邮箱对应的信息改为已读unread改为false
 	newDocStateId, err := myWorkflow.ApplyEvent(tx1, myDocEvent, groupIds)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERR", "err": err, "data": "写入失败!"}
 		c.ServeJSON()
 	} else {
@@ -2865,12 +2863,12 @@ func (c *FlowController) WxFlowNext() {
 		//根据messageid查出所有mailbox，都修改成已读(已处理)。
 		notification, err := flow.Mailboxes.GetMessageList(flow.MessageID(messageID), 0, 0, false)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		for _, v := range notification {
 			err = flow.Mailboxes.SetStatusByUser(tx, flow.UserID(uID), flow.MessageID(v.Message.ID), false)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 		}
 		fmt.Println("newDocStateId=", newDocStateId, err)
@@ -2902,23 +2900,23 @@ func (c *FlowController) FlowUserMailbox() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -2928,13 +2926,13 @@ func (c *FlowController) FlowUserMailbox() {
 	}
 
 	//查询预先定义的doctype流程类型
-	uid := c.GetString("uid")
+	uid := c.Input().Get("uid")
 	uID, err := strconv.ParseInt(uid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var unreadbool bool
-	unread := c.GetString("unread")
+	unread := c.Input().Get("unread")
 	if unread != "" {
 		if unread == "true" {
 			unreadbool = true
@@ -2947,13 +2945,13 @@ func (c *FlowController) FlowUserMailbox() {
 
 	notification, err := flow.Mailboxes.ListByUser(flow.UserID(uID), offset, limit1, unreadbool)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	}
 	arr, err := flow.Mailboxes.ListByUser(flow.UserID(uID), 0, 0, unreadbool)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := mailboxlist{notification, page1, len(arr)}
 	c.Data["json"] = list
@@ -2976,23 +2974,23 @@ func (c *FlowController) FlowUserMailbox2() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -3003,7 +3001,7 @@ func (c *FlowController) FlowUserMailbox2() {
 
 	// var uID int64
 	var unreadbool bool
-	unread := c.GetString("unread")
+	unread := c.Input().Get("unread")
 	if unread == "true" {
 		unreadbool = true
 	} else {
@@ -3013,13 +3011,13 @@ func (c *FlowController) FlowUserMailbox2() {
 	// beego.Info(username)
 	// beego.Info(uid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "用户未登陆!"}
 		c.ServeJSON()
 	} else {
 		flowuser, err := flow.Users.GetByName(username)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"err": err, "data": "flow中该用户不存在!"}
 			c.ServeJSON()
 		} else {
@@ -3027,14 +3025,14 @@ func (c *FlowController) FlowUserMailbox2() {
 			notification, err := flow.Mailboxes.ListByUser(flowuser.ID, offset, limit1, unreadbool)
 			// notification, err := flow.Mailboxes.ListByUser(flow.UserID(uID), offset, limit1, unreadbool)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 				c.ServeJSON()
 			}
 			arr, err := flow.Mailboxes.ListByUser(flowuser.ID, 0, 0, unreadbool)
 			// arr, err := flow.Mailboxes.ListByUser(flow.UserID(uID), 0, 0, unreadbool)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			list := mailboxlist{notification, page1, len(arr)}
 			c.Data["json"] = list
@@ -3056,29 +3054,26 @@ func (c *FlowController) FlowUserMailbox2() {
 // 用户点击邮件，进入文章详细，携带messageid——wxflownext里对邮件进行已读处理
 func (c *FlowController) WxFlowUserMailbox2() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", c.Ctx.Request.Header.Get("Origin"))
-	wxsite, err := web.AppConfig.String("wxreqeustsite")
-	if err != nil {
-		logs.Error(err)
-	}
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 	var offset, limit1, page1 int64
-	// var err error
-	limit := c.GetString("limit")
+	var err error
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -3089,7 +3084,7 @@ func (c *FlowController) WxFlowUserMailbox2() {
 
 	// var uID int64
 	var unreadbool bool
-	unread := c.GetString("unread")
+	unread := c.Input().Get("unread")
 	if unread == "true" {
 		unreadbool = true
 	} else {
@@ -3102,11 +3097,11 @@ func (c *FlowController) WxFlowUserMailbox2() {
 	if openid != nil {
 		user, err = models.GetUserByOpenID(openid.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			flowuser, err := flow.Users.GetByName(user.Username) //user.Username
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				uID = 6
 			} else {
 				uID = int64(flowuser.ID)
@@ -3118,13 +3113,13 @@ func (c *FlowController) WxFlowUserMailbox2() {
 		// c.ServeJSON()
 	}
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// 	c.Data["json"] = map[string]interface{}{"err": err, "data": "用户未登陆!"}
 	// 	c.ServeJSON()
 	// } else {
 	// 	flowuser, err := flow.Users.GetByName(username)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 		c.Data["json"] = map[string]interface{}{"err": err, "data": "flow中该用户不存在!"}
 	// 		c.ServeJSON()
 	// 	} else {
@@ -3135,7 +3130,7 @@ func (c *FlowController) WxFlowUserMailbox2() {
 	//这里由用户id，flow里根据uid查询groupid（single）
 	notification, err := flow.Mailboxes.ListByUser(flow.UserID(uID), offset, limit1, unreadbool)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERR", "err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	}
@@ -3143,27 +3138,27 @@ func (c *FlowController) WxFlowUserMailbox2() {
 		// beego.Info(v.ID)
 		productdoc, err := models.GetDocumentProduct(int64(v.Message.DocID))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			// for _, w := range products {
 			product, err := models.GetProd(productdoc.ProductId)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			//取得文章
 			Articles, err := models.GetWxArticles(productdoc.ProductId)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 
 			//这里去查flow表格里文档状态
 			// proddoc, err := models.GetProductDocument(v.Message.DocID)
 			// if err != nil {
-			// 	logs.Error(err)
+			// 	beego.Error(err)
 			// } else {
 			document, err := flow.Documents.Get(tx, v.Message.DocType.ID, v.Message.DocID)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			} else {
 				// linkarr[0].DocState = document.State
 				// linkarr[0].ProdDoc = proddoc
@@ -3179,7 +3174,7 @@ func (c *FlowController) WxFlowUserMailbox2() {
 				var r io.Reader = strings.NewReader(string(x.Content))
 				doc, err := goquery.NewDocumentFromReader(r)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 				doc.Find("img").Each(func(i int, s *goquery.Selection) {
 					sel, _ := s.Attr("src")
@@ -3192,13 +3187,13 @@ func (c *FlowController) WxFlowUserMailbox2() {
 				//取得文章所有点赞
 				likes, err := models.GetAllTopicLikes(x.Id)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 
 				//取得文章所有评论
 				comments, err := models.GetAllTopicReplies(x.Id)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 
 				articlearr[0].Id = x.Id
@@ -3222,7 +3217,7 @@ func (c *FlowController) WxFlowUserMailbox2() {
 	}
 	// arr, err := flow.Mailboxes.ListByUser(flow.UserID(uID), 0, 0, unreadbool)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// list := mailboxlist{notification, page1, len(arr)}
 	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "err": nil, "articles": Articleslice} //list
@@ -3247,23 +3242,23 @@ func (c *FlowController) FlowGroupMailbox() {
 
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 0
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	if page == "" {
 		limit1 = 0
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if page1 <= 1 {
@@ -3273,12 +3268,12 @@ func (c *FlowController) FlowGroupMailbox() {
 	}
 
 	//查询预先定义的doctype流程类型
-	gid := c.GetString("gid")
+	gid := c.Input().Get("gid")
 	gID, err := strconv.ParseInt(gid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	unread := c.GetString("unread")
+	unread := c.Input().Get("unread")
 	var unreadbool bool
 	// if unread != "" {
 	if unread == "true" {
@@ -3292,13 +3287,13 @@ func (c *FlowController) FlowGroupMailbox() {
 
 	notification, err := flow.Mailboxes.ListByGroup(flow.GroupID(gID), offset, limit1, unreadbool)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"err": err, "data": "查询失败!"}
 		c.ServeJSON()
 	}
 	arr, err := flow.Mailboxes.ListByGroup(flow.GroupID(gID), 0, 0, unreadbool)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	list := mailboxlist{notification, page1, len(arr)}
 	c.Data["json"] = list
@@ -3323,7 +3318,7 @@ func (c *FlowController) LiuCheng() {
 	code18 = "auditcond(no,right)->print\n"
 	code19 = "approvalcond(no,right)->print\n"
 	code20 = "approvalcond(yes)->approval->print->e\n"
-	docstate := c.GetString("docstate")
+	docstate := c.Input().Get("docstate")
 	switch docstate {
 	case "设计中...":
 		code1 = "st=>start: 开始|past\n"
@@ -3622,7 +3617,7 @@ func fatal0(err error) {
 // 	// contextId, _ := flow.AccessContexts.New(tx, "Context")
 // 	// groupId, err := flow.Groups.New(tx, "Examination", "G")
 // 	// if err != nil {
-// 	// 	logs.Error(err)
+// 	// 	beego.Error(err)
 // 	// }
 // 	// resUser, _ := tx.Exec(`INSERT INTO users_master(first_name, last_name, email, active)
 // 	// 	VALUES('admin', 'dashoo', 'admin@dashoo.com', 1)`)
@@ -3645,13 +3640,13 @@ func fatal0(err error) {
 
 // 	_, err = flow.Documents.New(tx, &docNewInput)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	// Documents.setState(tx, docType1, documentID1, docState2, contextId)
 // 	tx.Commit()
 // 	// wflist, err = flow.DocStates.List(0, 0)
 // 	// if err != nil {
-// 	// 	logs.Error(err)
+// 	// 	beego.Error(err)
 // 	// }
 // 	// return wflist
 // }
@@ -3700,29 +3695,29 @@ func fatal0(err error) {
 
 // 	tx, err := db.Begin()
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	// db.Close()
 // 	//查询doctype
 // 	dtID1, err := flow.DocTypes.GetByName("图纸设计")
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	beego.Info(dtID1)
 // 	// err = flow.DocTypes.AddTransition(tx, dtID1.ID, 7, 10, 8)
 // 	// if err != nil {
-// 	// 	logs.Error(err)
+// 	// 	beego.Error(err)
 // 	// }
 
 // 	myWorkflow, err := flow.Workflows.GetByName("图纸设计流程")
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	beego.Info(myWorkflow)
 // 	//查询context
 // 	accessContextID1, err := flow.AccessContexts.List("Context", 0, 0)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	beego.Info(accessContextID1[0].ID)
 // 	beego.Info(flow.GroupID(1))
@@ -3736,7 +3731,7 @@ func fatal0(err error) {
 // 	// flow.Documents.New(tx, &docNewInput)
 // 	DocumentID1, err := flow.Documents.New(tx, &docNewInput)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	// tx.Commit() //new后面一定要跟commit啊
 // 	beego.Info(DocumentID1)
@@ -3773,18 +3768,18 @@ func fatal0(err error) {
 
 // 	// docEventID1, err := flow.DocEvents.New(tx, &docEventInput)
 // 	// if err != nil {
-// 	// 	logs.Error(err)
+// 	// 	beego.Error(err)
 // 	// }
 // 	// // tx.Commit() //一个函数里只能有一个commit！！！！
 // 	// beego.Info(docEventID1)
 // 	myDocEvent, err := flow.DocEvents.Get(16)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	beego.Info(myDocEvent)
 // 	// myWorkflow, err := flow.Workflows.Get(workflowId.ID)
 // 	// if err != nil {
-// 	// 	logs.Error(err)
+// 	// 	beego.Error(err)
 // 	// }
 
 // 	//给出接受的组groupids
@@ -3792,14 +3787,14 @@ func fatal0(err error) {
 // 	beego.Info(groupIds)
 // 	newDocStateId, err := myWorkflow.ApplyEvent(tx, myDocEvent, groupIds)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	tx.Commit() //一个函数里只能有一个commit！！！！
 // 	fmt.Println("newDocStateId=", newDocStateId, err)
 
 // 	// wflist, err := flow.DocTypes.GetByName("Compute Request")
 // 	// if err != nil {
-// 	// 	logs.Error(err)
+// 	// 	beego.Error(err)
 // 	// }
 
 // 	c.Data["json"] = "OK" //wflist
@@ -3834,12 +3829,12 @@ func fatal0(err error) {
 // //添加流程规则1:oldstate1 action1 newstate2
 // err = flow.DocTypes.AddTransition(tx, dtID1, dsID1, daID1, dsID2)
 // if err != nil {
-// 	logs.Error(err)
+// 	beego.Error(err)
 // }
 // //添加流程规则2:oldstate2 action2 newstate3
 // err = flow.DocTypes.AddTransition(tx, dtID1, dsID2, daID2, dsID3)
 // if err != nil {
-// 	logs.Error(err)
+// 	beego.Error(err)
 // }
 
 // //定义流程类型doctype下的唯一流程workflow
@@ -3859,7 +3854,7 @@ func fatal0(err error) {
 // //定义用户、组、角色、权限集合
 // accessContextID1, err := flow.AccessContexts.New(tx, "Context")
 // if err != nil {
-// 	logs.Error(err)
+// 	beego.Error(err)
 // }
 
 // //定义流程类型workflow下的具体每个节点node，用户对文件执行某个动作（event里的action）后，会沿着这些节点走
@@ -3932,10 +3927,10 @@ func fatal0(err error) {
 // //给用户组group赋予角色role
 // err = flow.AccessContexts.AddGroupRole(tx, accessContextID1, gID1, roleID1)
 // if err != nil {
-// 	logs.Error(err)
+// 	beego.Error(err)
 // }
 // //将group和role加到accesscontext里——暂时不理解
 // err = flow.AccessContexts.AddGroupRole(tx, accessContextID1, gID2, roleID2)
 // if err != nil {
-// 	logs.Error(err) //UNIQUE constraint failed: wf_ac_group_roles.ac_id已修补
+// 	beego.Error(err) //UNIQUE constraint failed: wf_ac_group_roles.ac_id已修补
 // }

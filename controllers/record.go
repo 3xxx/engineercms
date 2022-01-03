@@ -11,9 +11,7 @@ import (
 	// "log"
 	// "math/rand"
 	// "os"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/core/logs"
-	// "github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
 	"path"
 	"regexp"
 	// "strconv"
@@ -486,7 +484,7 @@ func SubStrings(filenameWithSuffix string) (substr1, substr2 string) {
 		if loc != nil {
 			end = loc[0]
 			fulleFilename1 = SubString(filenameOnly, 0, end)
-			// beego.Info(fulleFilename1)
+			beego.Info(fulleFilename1)
 			end = end - 1
 		} else {
 			fulleFilename1 = filenameOnly

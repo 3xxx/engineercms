@@ -2,9 +2,9 @@
 package models
 
 // import (
-// 	// "github.com/beego/beego/v2/adapter/orm"
+// 	// "github.com/astaxie/beego/orm"
 // 	"fmt"
-// 	beego "github.com/beego/beego/v2/adapter"
+// 	"github.com/astaxie/beego"
 // 	"github.com/jinzhu/gorm"
 // 	// _ "github.com/jinzhu/gorm/dialects/sqlite"
 // )

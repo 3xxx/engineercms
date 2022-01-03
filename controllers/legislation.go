@@ -2,9 +2,8 @@ package controllers
 
 import (
 	// "bufio"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	// "io"
 	"github.com/3xxx/engineercms/models"
 	"regexp"
@@ -13,7 +12,7 @@ import (
 )
 
 type LegislationController struct {
-	web.Controller
+	beego.Controller
 }
 
 type Legislationmore struct {
@@ -41,11 +40,11 @@ func (c *LegislationController) Index() {
 
 //搜索规范或者图集的名称或编号
 func (c *LegislationController) Checklist() { //checklist用的是post方法
-	logs2 := logs.NewLogger(1000)
+	logs := logs.NewLogger(1000)
 	logs.SetLogger("file", `{"filename":"log/test.log"}`)
 	logs.EnableFuncCallDepth(true)
 
-	name := c.GetString("name")
+	name := c.Input().Get("name")
 	// beego.Info(name)
 	array := strings.Split(name, "\n")
 	aa := make([]Legislationmore, len(array))
@@ -62,12 +61,12 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 				library, err := models.SearchLiabraryName(text3)
 				// beego.Info(library)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err.Error)
 				}
 				text4 := strconv.Itoa(i + 1)
 				Id1, err := strconv.ParseInt(text4, 10, 64)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err.Error)
 				}
 				aa[i].Id = Id1
 
@@ -149,7 +148,7 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 	// 	//由分类和编号查有效版本库中的编号
 	// 	library, err := models.SearchLiabraryNumber(name, "Number")
 	// 	if err != nil {
-	// 		logs.Error(err.Error)
+	// 		beego.Error(err.Error)
 	// 	}
 	// 	aa[i].Id = v.Id
 	// 	aa[i].Number = v.Number //`orm:"unique"`
@@ -173,7 +172,7 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 	c.ServeJSON()
 
 	logs.Info(c.Ctx.Input.IP() + " " + "SearchLegislationsName:" + name)
-	logs2.Close()
+	logs.Close()
 }
 
 //上传文档供解析-替换（增加）标准号
@@ -181,9 +180,9 @@ func (c *LegislationController) FileInput() { //
 	c.Data["IsLegislation_upfile"] = true //
 	c.TplName = "legislation_upfile.tpl"
 
-	logs2 := logs.NewLogger(1000)
+	logs := logs.NewLogger(1000)
 	logs.SetLogger("file", `{"filename":"log/test.log"}`)
 	logs.EnableFuncCallDepth(true)
 	logs.Info(c.Ctx.Input.IP())
-	logs2.Close()
+	logs.Close()
 }

@@ -1,30 +1,33 @@
 package models
 
 import (
-	// "context"
 	"database/sql"
 	"encoding/gob"
-	"fmt"
+	// "github.com/3xxx/engineercms/commands"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	// "gorm.io/driver/sqlite"
+	// "gorm.io/gorm"
+	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
+	"xorm.io/xorm"
+	// "strconv"
+	// "strings"
+	"fmt"
 	"log"
 	"os"
 	"time"
-	"xorm.io/xorm"
 )
 
 var engine *xorm.Engine
 
 //定义全局的db对象，我们执行数据库操作主要通过他实现。
 var _db *gorm.DB
+
+// var gdb *gorm.DB
 
 type AdminCategory struct {
 	Id       int64     `form:"-"`
@@ -97,86 +100,6 @@ type AdminCarousel struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	logs.Info("adminmode")
-
-	var dns string
-	var err error
-	db_type, err := web.AppConfig.String("db_type")
-	db_host, err := web.AppConfig.String("db_host")
-	db_port, err := web.AppConfig.String("db_port")
-	db_user, err := web.AppConfig.String("db_user")
-	db_pass, err := web.AppConfig.String("db_pass")
-	db_name, err := web.AppConfig.String("db_name")
-	db_path, err := web.AppConfig.String("db_path")
-	db_sslmode, err := web.AppConfig.String("db_sslmode")
-	if err != nil {
-		logs.Error(err)
-	}
-	switch db_type {
-	// 1.注册驱动
-	case "mysql":
-		orm.RegisterDriver("mysql", orm.DRMySQL)
-		dns = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", db_user, db_pass, db_host, db_port, db_name)
-		// 注册xorm
-		// var err error
-		// engine, err = xorm.NewEngine(db_type, dns)
-		// if err != nil {
-		// 	log.Println(err)
-		// }
-		break
-	case "postgres":
-		orm.RegisterDriver("postgres", orm.DRPostgres)
-		dns = fmt.Sprintf("dbname=%s host=%s  user=%s  password=%s  port=%s  sslmode=%s", db_name, db_host, db_user, db_pass, db_port, db_sslmode)
-	case "sqlite3":
-		orm.RegisterDriver("sqlite", orm.DRSqlite)
-		if db_path == "" {
-			db_path = "./"
-		}
-		dns = fmt.Sprintf("%s%s.db", db_path, db_name)
-		break
-	default:
-		logs.Critical("Database driver is not allowed:", db_type)
-	}
-
-	// 2.beego注册默认数据库
-	orm.RegisterDataBase("default", db_type, dns)
-
-	// 2.注册xorm
-	// var err error
-	engine, err = xorm.NewEngine(db_type, dns)
-	if err != nil {
-		log.Println(err)
-	}
-
-	// 2.注册gorm
-	// _db, err = gorm.Open(db_type, dns)
-	// 20220102下面这里用了:=导致全局变量一致无法用！！
-	_db, err = gorm.Open(sqlite.Open(dns), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true, // 使用单数表名，启用该选项后，`User` 表将是`user`
-			// NameReplacer:  strings.NewReplacer("CID", "Cid"), // 在转为数据库名称之前，使用NameReplacer更改结构/字段名称。
-			// TablePrefix:   "t_",                              // 表名前缀，`User`表为`t_users`
-		},
-	})
-
-	// defer _db.Close()//20200803这个不能打开。
-	// _db.LogMode(true)
-	if err != nil {
-		panic("连接数据库失败, error=" + err.Error())
-	}
-
-	// 开发的时候需要打开调试日志
-	// _db.LogMode(true)
-
-	sqlDB, err := _db.DB()
-	// SetMaxIdleConns 设置空闲连接池中连接的最大数量，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭。
-	sqlDB.SetMaxIdleConns(10)
-	// SetMaxOpenConns 设置打开数据库连接的最大数量。
-	sqlDB.SetMaxOpenConns(100)
-	// SetConnMaxLifetime 设置了连接可复用的最大时间。
-	sqlDB.SetConnMaxLifetime(24 * time.Hour)
-
-	// 3.注册模型
 	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminCalendar), new(AdminSynchIp), new(AdminDepartment), new(AdminCarousel)) //, new(Article)
 	orm.RegisterModelWithPrefix(conf.GetDatabasePrefix(),
 		new(Member),
@@ -198,17 +121,89 @@ func init() {
 		new(Itemsets),
 	)
 	orm.RegisterModelWithPrefix("share_", new(Bridge), new(Share))
-
+	//gorm设置默认表名前缀
+	// gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+	// 	return "prefix_" + defaultTableName
+	// }
+	// //gorm自动生成表
+	// db.AutoMigrate(&Product{}, &Email{})
+	// db.CreateTable(&User{})
 	gob.Register(Blog{})
 	gob.Register(Document{})
 	gob.Register(Template{})
 
-	//gorm
-	_db.AutoMigrate(&Article{}, &Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}, &Location{}, &LocationNavigate{})
-	_db.AutoMigrate(&AnsysApdl{}, &AnsysInputs{}, &AnsysOutputs{}, &AnsysHistory{}, &AnsysHistoryInputValue{}, &AnsysHistoryOutputValue{}, &AnsysArticle{})
-	_db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
-	_db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
-	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
+	var dns string
+	var err error
+	db_type := beego.AppConfig.String("db_type")
+	db_host := beego.AppConfig.String("db_host")
+	db_port := beego.AppConfig.String("db_port")
+	db_user := beego.AppConfig.String("db_user")
+	db_pass := beego.AppConfig.String("db_pass")
+	db_name := beego.AppConfig.String("db_name")
+	db_path := beego.AppConfig.String("db_path")
+	db_sslmode := beego.AppConfig.String("db_sslmode")
+	switch db_type {
+	case "mysql":
+		orm.RegisterDriver("mysql", orm.DRMySQL)
+		dns = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", db_user, db_pass, db_host, db_port, db_name)
+		// 注册xorm
+		// var err error
+		// engine, err = xorm.NewEngine(db_type, dns)
+		// if err != nil {
+		// 	log.Println(err)
+		// }
+		break
+	case "postgres":
+		orm.RegisterDriver("postgres", orm.DRPostgres)
+		dns = fmt.Sprintf("dbname=%s host=%s  user=%s  password=%s  port=%s  sslmode=%s", db_name, db_host, db_user, db_pass, db_port, db_sslmode)
+	case "sqlite3":
+		orm.RegisterDriver("sqlite", orm.DRSqlite)
+		if db_path == "" {
+			db_path = "./"
+		}
+		dns = fmt.Sprintf("%s%s.db", db_path, db_name)
+		break
+	default:
+		beego.Critical("Database driver is not allowed:", db_type)
+	}
+	orm.RegisterDataBase("default", db_type, dns, 10)
+
+	// 注册xorm
+	// var err error
+	engine, err = xorm.NewEngine(db_type, dns)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// 注册gorm
+	_db, err = gorm.Open(db_type, dns)
+	// _db, err := gorm.Open(sqlite.Open(dns), &gorm.Config{})
+	// defer _db.Close()//20200803这个不能打开。
+	// _db.LogMode(true)
+	if err != nil {
+		panic("连接数据库失败, error=" + err.Error())
+	}
+	// orm.RegisterDriver("sqlite", orm.DRSqlite)
+	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
+
+	// 初始化gorm-20201008
+	// 	var err error
+	// var dns string
+	// db_type := beego.AppConfig.String("db_type")
+	// db_name := beego.AppConfig.String("db_name")
+	// db_path := beego.AppConfig.String("db_path")
+	// if db_path == "" {
+	// 	db_path = "./"
+	// }
+
+	// defer gdb.Close()
+	//禁止表名复数形式
+	_db.SingularTable(true)
+	// 开发的时候需要打开调试日志
+	// _db.LogMode(true)
+	//设置数据库连接池参数
+	_db.DB().SetMaxOpenConns(100) //设置数据库连接池最大连接数
+	_db.DB().SetMaxIdleConns(20)  //连接池最大允许的空闲连接数，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭。
 }
 
 //获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。
@@ -216,27 +211,21 @@ func init() {
 // db对象在调用他的方法的时候会从数据库连接池中获取新的连接
 // 注意：使用连接池技术后，千万不要使用完db后调用db.Close关闭数据库连接，
 // 这样会导致整个数据库连接池关闭，导致连接池没有可用的连接
-// 不需要getdb，只要全局变量_db即可。但是每次使用，是否要给_db重新赋一个新的变量？？？比如db:=_db???会互相影响吗
-// func GetDB() *gorm.DB {
-// 	return _db
-// }
-// func GetDB(ctx context.Context) *gorm.DB {
-// 	return _db.WithContext(ctx)
-// }
+func GetDB() *gorm.DB {
+	return _db
+}
 
 //创建数据库_来自github.com/beego/admin——这个仅作为参考用，没有使用
 func createdb() {
-	db_type, err := web.AppConfig.String("db_type")
-	db_host, err := web.AppConfig.String("db_host")
-	db_port, err := web.AppConfig.String("db_port")
-	db_user, err := web.AppConfig.String("db_user")
-	db_pass, err := web.AppConfig.String("db_pass")
-	db_name, err := web.AppConfig.String("db_name")
-	db_path, err := web.AppConfig.String("db_path")
-	db_sslmode, err := web.AppConfig.String("db_sslmode")
-	if err != nil {
-		logs.Error(err)
-	}
+	db_type := beego.AppConfig.String("db_type")
+	db_host := beego.AppConfig.String("db_host")
+	db_port := beego.AppConfig.String("db_port")
+	db_user := beego.AppConfig.String("db_user")
+	db_pass := beego.AppConfig.String("db_pass")
+	db_name := beego.AppConfig.String("db_name")
+	db_path := beego.AppConfig.String("db_path")
+	db_sslmode := beego.AppConfig.String("db_sslmode")
+
 	var dns string
 	var sqlstring string
 	switch db_type {
@@ -257,7 +246,7 @@ func createdb() {
 		sqlstring = "create table init (n varchar(32));drop table init;"
 		break
 	default:
-		logs.Critical("Database driver is not allowed:", db_type)
+		beego.Critical("Database driver is not allowed:", db_type)
 	}
 
 	// gdb, err := gorm.Open(db_type, dns)
@@ -284,17 +273,14 @@ func createdb() {
 //数据库连接_这个仅作为参考，和上面重复
 func Connect() {
 	var dns string
-	db_type, err := web.AppConfig.String("db_type")
-	db_host, err := web.AppConfig.String("db_host")
-	db_port, err := web.AppConfig.String("db_port")
-	db_user, err := web.AppConfig.String("db_user")
-	db_pass, err := web.AppConfig.String("db_pass")
-	db_name, err := web.AppConfig.String("db_name")
-	db_path, err := web.AppConfig.String("db_path")
-	db_sslmode, err := web.AppConfig.String("db_sslmode")
-	if err != nil {
-		logs.Error(err)
-	}
+	db_type := beego.AppConfig.String("db_type")
+	db_host := beego.AppConfig.String("db_host")
+	db_port := beego.AppConfig.String("db_port")
+	db_user := beego.AppConfig.String("db_user")
+	db_pass := beego.AppConfig.String("db_pass")
+	db_name := beego.AppConfig.String("db_name")
+	db_path := beego.AppConfig.String("db_path")
+	db_sslmode := beego.AppConfig.String("db_sslmode")
 	switch db_type {
 	case "mysql":
 		orm.RegisterDriver("mysql", orm.DRMySQL)
@@ -313,7 +299,7 @@ func Connect() {
 		dns = fmt.Sprintf("%s%s.db", db_path, db_name)
 		break
 	default:
-		logs.Critical("Database driver is not allowed:", db_type)
+		beego.Critical("Database driver is not allowed:", db_type)
 	}
 	orm.RegisterDataBase("default", db_type, dns)
 }

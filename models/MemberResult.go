@@ -2,8 +2,7 @@ package models
 
 import (
 	"github.com/3xxx/engineercms/conf"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/i18n"
+	"github.com/astaxie/beego/orm"
 	"time"
 )
 
@@ -54,19 +53,19 @@ func (m *MemberRelationshipResult) FromMember(member *Member) *MemberRelationshi
 	return m
 }
 
-func (m *MemberRelationshipResult) ResolveRoleName(lang string) *MemberRelationshipResult {
+func (m *MemberRelationshipResult) ResolveRoleName() *MemberRelationshipResult {
 	if m.RoleId == conf.BookAdmin {
-		m.RoleName = i18n.Tr(lang, "common.administrator")
+		m.RoleName = "管理者"
 	} else if m.RoleId == conf.BookEditor {
-		m.RoleName = i18n.Tr(lang, "common.editor")
+		m.RoleName = "编辑者"
 	} else if m.RoleId == conf.BookObserver {
-		m.RoleName = i18n.Tr(lang, "common.obverser")
+		m.RoleName = "观察者"
 	}
 	return m
 }
 
 // 根据项目ID查询用户
-func (m *MemberRelationshipResult) FindForUsersByBookId(lang string, bookId, pageIndex, pageSize int) ([]*MemberRelationshipResult, int, error) {
+func (m *MemberRelationshipResult) FindForUsersByBookId(bookId, pageIndex, pageSize int) ([]*MemberRelationshipResult, int, error) {
 	o := orm.NewOrm()
 
 	var members []*MemberRelationshipResult
@@ -92,7 +91,7 @@ func (m *MemberRelationshipResult) FindForUsersByBookId(lang string, bookId, pag
 	}
 
 	for _, item := range members {
-		item.ResolveRoleName(lang)
+		item.ResolveRoleName()
 	}
 	return members, total_count, nil
 }

@@ -2,16 +2,14 @@ package controllers
 
 import (
 	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/astaxie/beego"
 	"strconv"
 	"strings"
 )
 
 // CMSFLV API
 type FlvController struct {
-	web.Controller
+	beego.Controller
 }
 
 // @Title getFlv
@@ -36,7 +34,7 @@ func (c *FlvController) GetFlvList() {
 		} else {
 			userid, username, usernickname, err := utils.LubanCheckToken(token)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			c.Ctx.SetCookie("token", token, "3600", "/")
 			c.SetSession("uname", username)
@@ -44,13 +42,13 @@ func (c *FlvController) GetFlvList() {
 			c.SetSession("usernickname", usernickname)
 		}
 	} else {
-		token = c.GetString("xxl_sso_token")
+		token = c.Input().Get("xxl_sso_token")
 		if token == "" {
 			c.Redirect("https://www.54lby.com/sso/login?redirect_url="+site+c.Ctx.Request.URL.String(), 302)
 		} else {
 			userid, username, usernickname, err := utils.LubanCheckToken(token)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			c.Ctx.SetCookie("token", token, "3600", "/")
 			c.SetSession("uname", username)
@@ -74,7 +72,7 @@ func (c *FlvController) GetFlvList() {
 // @Failure 404 page not found
 // @router / [get]
 func (c *FlvController) Get() {
-	mp4link := c.GetString("filepath")
+	mp4link := c.Input().Get("filepath")
 	c.Data["Mp4Link"] = mp4link
 	c.TplName = "flv.tpl"
 }

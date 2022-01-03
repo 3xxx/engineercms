@@ -8,10 +8,10 @@ import (
 	"log"
 	"strconv"
 	"time"
-	// beego "github.com/beego/beego/v2/adapter"
+	// "github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/validation"
 	. "github.com/beego/admin/src/lib"
-	"github.com/beego/beego/v2/adapter/validation"
-	"github.com/beego/beego/v2/client/orm"
 	// "github.com/casbin/casbin"
 )
 

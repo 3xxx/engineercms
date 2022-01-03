@@ -18,7 +18,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page
         "404":
@@ -38,7 +38,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAdminCategory'
+            $ref: '#/definitions/.GetAdminCategory'
   /admin/category/addcategory:
     post:
       tags:
@@ -66,7 +66,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddAdminCategory'
+            $ref: '#/definitions/.AddAdminCategory'
   /admin/categorytitle:
     get:
       tags:
@@ -82,7 +82,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAdminCategory'
+            $ref: '#/definitions/.GetAdminCategory'
   /admin/flowaccesscontext:
     post:
       tags:
@@ -99,7 +99,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -120,7 +120,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -140,7 +140,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -161,7 +161,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -182,7 +182,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -203,7 +203,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -223,7 +223,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -263,7 +263,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -284,7 +284,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -305,7 +305,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -331,7 +331,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -357,7 +357,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -400,7 +400,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -443,7 +443,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -469,7 +469,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -490,7 +490,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -524,7 +524,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -545,7 +545,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -566,7 +566,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -587,7 +587,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -627,7 +627,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -668,7 +668,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -689,7 +689,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -710,7 +710,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -731,7 +731,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -752,7 +752,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -773,7 +773,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -794,7 +794,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -815,7 +815,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -839,7 +839,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -859,7 +859,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -880,7 +880,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -901,7 +901,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -922,7 +922,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -942,7 +942,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -963,7 +963,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -984,7 +984,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1008,7 +1008,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1028,7 +1028,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1064,7 +1064,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1085,7 +1085,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1106,7 +1106,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1140,7 +1140,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1174,7 +1174,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1205,7 +1205,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1226,7 +1226,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1247,7 +1247,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -1268,7 +1268,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -1289,7 +1289,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1315,7 +1315,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -1330,7 +1330,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1371,7 +1371,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1416,7 +1416,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1445,7 +1445,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1460,7 +1460,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page
         "404":
@@ -1475,7 +1475,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page
         "404":
@@ -1506,7 +1506,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.ansysArticle'
+            $ref: '#/definitions/.ansysArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -1527,7 +1527,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.ansysArticle'
+            $ref: '#/definitions/.ansysArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -1548,7 +1548,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetansysPage'
+            $ref: '#/definitions/.GetansysPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1590,7 +1590,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.ansysArticle'
+            $ref: '#/definitions/.ansysArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -1665,7 +1665,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetansysPage'
+            $ref: '#/definitions/.GetansysPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1832,7 +1832,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetansysPage'
+            $ref: '#/definitions/.GetansysPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -1905,7 +1905,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.ansysPdf'
+            $ref: '#/definitions/.ansysPdf'
         "400":
           description: Invalid page supplied
         "404":
@@ -1989,7 +1989,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/FileNode1'
+            $ref: '#/definitions/.FileNode1'
         "400":
           description: Invalid page supplied
         "404":
@@ -2013,7 +2013,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetansysPage'
+            $ref: '#/definitions/.GetansysPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2037,7 +2037,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetansysPage'
+            $ref: '#/definitions/.GetansysPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2161,7 +2161,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.ansysArticle'
+            $ref: '#/definitions/.ansysArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -2182,7 +2182,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetansysPage'
+            $ref: '#/definitions/.GetansysPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2203,7 +2203,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -2224,7 +2224,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.ansysArticle'
+            $ref: '#/definitions/.ansysArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -2265,7 +2265,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2291,7 +2291,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2322,7 +2322,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2343,7 +2343,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -2364,7 +2364,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.DeleteUserCart'
+            $ref: '#/definitions/.DeleteUserCart'
         "400":
           description: Invalid page supplied
         "404":
@@ -2399,7 +2399,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Create'
+            $ref: '#/definitions/.Create'
         "400":
           description: Invalid page supplied
         "404":
@@ -2434,7 +2434,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Create'
+            $ref: '#/definitions/.Create'
         "400":
           description: Invalid page supplied
         "404":
@@ -2449,7 +2449,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Create'
+            $ref: '#/definitions/.Create'
         "400":
           description: Invalid page supplied
         "404":
@@ -2470,7 +2470,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Update'
+            $ref: '#/definitions/.Update'
         "400":
           description: Invalid page supplied
         "404":
@@ -2491,7 +2491,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Avatar'
+            $ref: '#/definitions/.Avatar'
         "400":
           description: Invalid page supplied
         "404":
@@ -2521,7 +2521,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetChat'
+            $ref: '#/definitions/.GetChat'
         "400":
           description: Invalid page supplied
         "404":
@@ -2542,7 +2542,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2563,7 +2563,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2639,7 +2639,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2660,7 +2660,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2681,7 +2681,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2702,7 +2702,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2728,7 +2728,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2749,7 +2749,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2770,7 +2770,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2806,7 +2806,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2842,7 +2842,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2863,7 +2863,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2902,7 +2902,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2923,7 +2923,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2944,7 +2944,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2970,7 +2970,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -2991,7 +2991,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3006,7 +3006,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetElastic'
+            $ref: '#/definitions/.GetElastic'
         "400":
           description: Invalid page supplied
         "404":
@@ -3030,7 +3030,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetSearch'
+            $ref: '#/definitions/.GetSearch'
         "400":
           description: Invalid page supplied
         "404":
@@ -3045,7 +3045,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.PostTika'
+            $ref: '#/definitions/.PostTika'
         "400":
           description: Invalid page supplied
         "404":
@@ -3074,7 +3074,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -3095,7 +3095,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Elastic'
+            $ref: '#/definitions/.Elastic'
         "400":
           description: Invalid page supplied
         "404":
@@ -3126,7 +3126,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.excelArticle'
+            $ref: '#/definitions/.excelArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -3168,7 +3168,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.excelArticle'
+            $ref: '#/definitions/.excelArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -3189,7 +3189,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.excelArticle'
+            $ref: '#/definitions/.excelArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -3210,7 +3210,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetexcelPage'
+            $ref: '#/definitions/.GetexcelPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3285,7 +3285,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetexcelPage'
+            $ref: '#/definitions/.GetexcelPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3452,7 +3452,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetexcelPage'
+            $ref: '#/definitions/.GetexcelPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3525,7 +3525,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.excelPdf'
+            $ref: '#/definitions/.excelPdf'
         "400":
           description: Invalid page supplied
         "404":
@@ -3609,7 +3609,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/FileNode1'
+            $ref: '#/definitions/.FileNode1'
         "400":
           description: Invalid page supplied
         "404":
@@ -3633,7 +3633,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetexcelPage'
+            $ref: '#/definitions/.GetexcelPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3657,7 +3657,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetexcelPage'
+            $ref: '#/definitions/.GetexcelPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3781,7 +3781,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.excelArticle'
+            $ref: '#/definitions/.excelArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -3802,7 +3802,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetexcelPage'
+            $ref: '#/definitions/.GetexcelPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -3823,7 +3823,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -3844,7 +3844,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.excelArticle'
+            $ref: '#/definitions/.excelArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -3859,7 +3859,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -3880,7 +3880,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page
         "404":
@@ -3900,7 +3900,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page
         "404":
@@ -4079,7 +4079,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4246,7 +4246,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4309,7 +4309,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.MathPdf'
+            $ref: '#/definitions/.MathPdf'
         "400":
           description: Invalid page supplied
         "404":
@@ -4372,7 +4372,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/FileNode1'
+            $ref: '#/definitions/.FileNode1'
         "400":
           description: Invalid page supplied
         "404":
@@ -4414,7 +4414,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4438,7 +4438,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4467,7 +4467,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4495,7 +4495,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4519,7 +4519,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4548,7 +4548,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4693,7 +4693,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -4714,7 +4714,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetMathcadPage'
+            $ref: '#/definitions/.GetMathcadPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4750,7 +4750,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -4776,7 +4776,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -4797,7 +4797,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -4812,7 +4812,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -4838,7 +4838,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4885,7 +4885,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddSignature'
+            $ref: '#/definitions/.AddSignature'
         "400":
           description: Invalid page supplied
         "404":
@@ -4906,7 +4906,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetOnlyPdf'
+            $ref: '#/definitions/.GetOnlyPdf'
         "400":
           description: Invalid page supplied
         "404":
@@ -4927,7 +4927,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Gettest'
+            $ref: '#/definitions/.Gettest'
         "400":
           description: Invalid page supplied
         "404":
@@ -4955,7 +4955,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -4976,7 +4976,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5004,7 +5004,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5037,7 +5037,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5058,7 +5058,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProjectPage'
+            $ref: '#/definitions/.GetProjectPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5093,7 +5093,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5114,7 +5114,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProjectPage'
+            $ref: '#/definitions/.GetProjectPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5135,7 +5135,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProjectPage'
+            $ref: '#/definitions/.GetProjectPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5160,7 +5160,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5191,7 +5191,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5206,7 +5206,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5287,7 +5287,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5307,7 +5307,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5336,7 +5336,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5356,7 +5356,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -5465,7 +5465,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.CreateBusiness'
+            $ref: '#/definitions/.CreateBusiness'
         "400":
           description: Invalid page supplied
         "404":
@@ -5513,7 +5513,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.CreateLocation'
+            $ref: '#/definitions/.CreateLocation'
         "400":
           description: Invalid page supplied
         "404":
@@ -5554,7 +5554,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.CreateLocation'
+            $ref: '#/definitions/.CreateLocation'
         "400":
           description: Invalid page supplied
         "404":
@@ -5692,7 +5692,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5743,7 +5743,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5774,7 +5774,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5795,7 +5795,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5846,7 +5846,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddDiary'
+            $ref: '#/definitions/.AddDiary'
         "400":
           description: Invalid page supplied
         "404":
@@ -5876,7 +5876,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -5931,7 +5931,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddFinance'
+            $ref: '#/definitions/.AddFinance'
         "400":
           description: Invalid page supplied
         "404":
@@ -5952,7 +5952,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddTopicLike'
+            $ref: '#/definitions/.AddTopicLike'
         "400":
           description: Invalid page supplied
         "404":
@@ -5989,7 +5989,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddTopicReply'
+            $ref: '#/definitions/.AddTopicReply'
         "400":
           description: Invalid page supplied
         "404":
@@ -6032,7 +6032,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddUser'
+            $ref: '#/definitions/.AddUser'
         "400":
           description: Invalid page supplied
         "404":
@@ -6058,7 +6058,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddUserPays'
+            $ref: '#/definitions/.AddUserPays'
         "400":
           description: Invalid page supplied
         "404":
@@ -6134,7 +6134,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6173,7 +6173,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6212,7 +6212,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6251,7 +6251,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6290,7 +6290,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6329,7 +6329,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6344,7 +6344,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6359,7 +6359,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6374,7 +6374,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6389,7 +6389,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6404,7 +6404,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6445,7 +6445,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -6466,7 +6466,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Adddiary'
+            $ref: '#/definitions/.Adddiary'
         "400":
           description: Invalid page supplied
         "404":
@@ -6487,7 +6487,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Addfinance'
+            $ref: '#/definitions/.Addfinance'
         "400":
           description: Invalid page supplied
         "404":
@@ -6508,7 +6508,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.DeleteTopicReply'
+            $ref: '#/definitions/.DeleteTopicReply'
         "400":
           description: Invalid page supplied
         "404":
@@ -6529,7 +6529,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -6553,7 +6553,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetSearch'
+            $ref: '#/definitions/.GetSearch'
         "400":
           description: Invalid page supplied
         "404":
@@ -6613,7 +6613,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetBusinessPage'
+            $ref: '#/definitions/.GetBusinessPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6634,7 +6634,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetBusinessPage'
+            $ref: '#/definitions/.GetBusinessPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6670,7 +6670,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6685,7 +6685,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetElastic'
+            $ref: '#/definitions/.GetElastic'
         "400":
           description: Invalid page supplied
         "404":
@@ -6706,7 +6706,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -6732,7 +6732,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6753,7 +6753,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetLocationPage'
+            $ref: '#/definitions/.GetLocationPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6774,7 +6774,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetLocationPage'
+            $ref: '#/definitions/.GetLocationPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6795,7 +6795,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -6810,7 +6810,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6825,7 +6825,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6861,7 +6861,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6876,7 +6876,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetUserMoney'
+            $ref: '#/definitions/.GetUserMoney'
         "400":
           description: Invalid page supplied
         "404":
@@ -6891,7 +6891,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6912,7 +6912,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6941,7 +6941,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -6976,7 +6976,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Create'
+            $ref: '#/definitions/.Create'
         "400":
           description: Invalid page supplied
         "404":
@@ -7002,7 +7002,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetArticle'
+            $ref: '#/definitions/.GetArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -7043,7 +7043,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetArticle'
+            $ref: '#/definitions/.GetArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -7074,7 +7074,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7105,7 +7105,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7146,7 +7146,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7177,7 +7177,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7212,7 +7212,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7238,7 +7238,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetDiary'
+            $ref: '#/definitions/.GetDiary'
         "400":
           description: Invalid page supplied
         "404":
@@ -7259,7 +7259,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -7280,7 +7280,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -7306,7 +7306,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetFinance'
+            $ref: '#/definitions/.GetFinance'
         "400":
           description: Invalid page supplied
         "404":
@@ -7341,7 +7341,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7376,7 +7376,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7397,7 +7397,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -7412,7 +7412,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7433,7 +7433,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -7462,7 +7462,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7483,7 +7483,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -7504,7 +7504,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7525,7 +7525,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7540,7 +7540,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetUserMoney'
+            $ref: '#/definitions/.GetUserMoney'
         "400":
           description: Invalid page supplied
         "404":
@@ -7561,7 +7561,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7582,7 +7582,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7612,7 +7612,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7638,7 +7638,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7653,7 +7653,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -7679,7 +7679,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7709,7 +7709,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Create'
+            $ref: '#/definitions/.Create'
         "400":
           description: Invalid page supplied
         "404":
@@ -7733,7 +7733,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7761,7 +7761,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7785,7 +7785,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7819,7 +7819,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7855,7 +7855,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetArticles'
+            $ref: '#/definitions/.GetArticles'
         "400":
           description: Invalid page supplied
         "404":
@@ -7884,7 +7884,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7913,7 +7913,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7939,7 +7939,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7954,7 +7954,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetProductsPage'
+            $ref: '#/definitions/.GetProductsPage'
         "400":
           description: Invalid page supplied
         "404":
@@ -7974,7 +7974,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page supplied
         "404":
@@ -8004,7 +8004,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page supplied
         "404":
@@ -8019,7 +8019,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8034,7 +8034,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Create'
+            $ref: '#/definitions/.Create'
         "400":
           description: Invalid page supplied
         "404":
@@ -8117,7 +8117,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.UpdateBusiness'
+            $ref: '#/definitions/.UpdateBusiness'
         "400":
           description: Invalid page supplied
         "404":
@@ -8176,7 +8176,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddDiary'
+            $ref: '#/definitions/.AddDiary'
         "400":
           description: Invalid page supplied
         "404":
@@ -8211,7 +8211,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -8257,7 +8257,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddFinance'
+            $ref: '#/definitions/.AddFinance'
         "400":
           description: Invalid page supplied
         "404":
@@ -8293,7 +8293,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.AddArticle'
+            $ref: '#/definitions/.AddArticle'
         "400":
           description: Invalid page supplied
         "404":
@@ -8308,7 +8308,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8323,7 +8323,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Elastic'
+            $ref: '#/definitions/.Elastic'
         "400":
           description: Invalid page supplied
         "404":
@@ -8338,7 +8338,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8359,7 +8359,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8374,7 +8374,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8395,7 +8395,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8421,7 +8421,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8442,7 +8442,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/SUCCESS'
+            $ref: '#/definitions/.SUCCESS'
         "400":
           description: Invalid page supplied
         "404":
@@ -8481,7 +8481,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -8511,7 +8511,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page supplied
         "404":
@@ -8537,7 +8537,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/success'
+            $ref: '#/definitions/.success'
         "400":
           description: Invalid page supplied
         "404":
@@ -8558,7 +8558,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -8594,7 +8594,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.SaveUser'
+            $ref: '#/definitions/.SaveUser'
         "400":
           description: Invalid page supplied
         "404":
@@ -8630,7 +8630,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.SaveUser'
+            $ref: '#/definitions/.SaveUser'
         "400":
           description: Invalid page supplied
         "404":
@@ -8651,53 +8651,111 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.GetAttachbyId'
+            $ref: '#/definitions/.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
           description: pdf not found
 definitions:
-  FileNode1:
-    title: FileNode1
+  .AddAdminCategory:
     type: object
-  SUCCESS:
-    title: SUCCESS
+  .AddArticle:
     type: object
-  gorm.Model:
-    title: Model
+  .AddDiary:
     type: object
-  models.AddAdminCategory:
-    title: AddAdminCategory
+  .AddFinance:
     type: object
-  models.AddArticle:
-    title: AddArticle
+  .AddSignature:
     type: object
-  models.AddDiary:
-    title: AddDiary
+  .AddTopicLike:
     type: object
-  models.AddFinance:
-    title: AddFinance
+  .AddTopicReply:
     type: object
-  models.AddSignature:
-    title: AddSignature
+  .AddUser:
     type: object
-  models.AddTopicLike:
-    title: AddTopicLike
+  .AddUserPays:
     type: object
-  models.AddTopicReply:
-    title: AddTopicReply
+  .Adddiary:
     type: object
-  models.AddUser:
-    title: AddUser
+  .Addfinance:
     type: object
-  models.AddUserPays:
-    title: AddUserPays
+  .Avatar:
     type: object
-  models.Adddiary:
-    title: Adddiary
+  .Create:
     type: object
-  models.Addfinance:
-    title: Addfinance
+  .CreateBusiness:
+    type: object
+  .CreateLocation:
+    type: object
+  .DeleteTopicReply:
+    type: object
+  .DeleteUserCart:
+    type: object
+  .Elastic:
+    type: object
+  .FileNode1:
+    type: object
+  .GetAdminCategory:
+    type: object
+  .GetArticle:
+    type: object
+  .GetArticles:
+    type: object
+  .GetAttachbyId:
+    type: object
+  .GetBusinessPage:
+    type: object
+  .GetChat:
+    type: object
+  .GetDiary:
+    type: object
+  .GetElastic:
+    type: object
+  .GetFinance:
+    type: object
+  .GetLocationPage:
+    type: object
+  .GetMathcadPage:
+    type: object
+  .GetOnlyPdf:
+    type: object
+  .GetProductsPage:
+    type: object
+  .GetProjectPage:
+    type: object
+  .GetSearch:
+    type: object
+  .GetUserMoney:
+    type: object
+  .GetansysPage:
+    type: object
+  .GetexcelPage:
+    type: object
+  .Gettest:
+    type: object
+  .MathPdf:
+    type: object
+  .Model:
+    type: object
+  .PostTika:
+    type: object
+  .SUCCESS:
+    type: object
+  .SaveUser:
+    type: object
+  .Update:
+    type: object
+  .UpdateBusiness:
+    type: object
+  .ansysArticle:
+    type: object
+  .ansysPdf:
+    type: object
+  .excelArticle:
+    type: object
+  .excelPdf:
+    type: object
+  .success:
     type: object
   models.AnsysApdl:
     title: AnsysApdl
@@ -8857,27 +8915,6 @@ definitions:
       Updated:
         type: string
         format: datetime
-  models.Avatar:
-    title: Avatar
-    type: object
-  models.Create:
-    title: Create
-    type: object
-  models.CreateBusiness:
-    title: CreateBusiness
-    type: object
-  models.CreateLocation:
-    title: CreateLocation
-    type: object
-  models.DeleteTopicReply:
-    title: DeleteTopicReply
-    type: object
-  models.DeleteUserCart:
-    title: DeleteUserCart
-    type: object
-  models.Elastic:
-    title: Elastic
-    type: object
   models.ExcelArticle:
     title: ExcelArticle
     type: object
@@ -9013,63 +9050,6 @@ definitions:
         type: string
       version:
         type: string
-  models.GetAdminCategory:
-    title: GetAdminCategory
-    type: object
-  models.GetArticle:
-    title: GetArticle
-    type: object
-  models.GetArticles:
-    title: GetArticles
-    type: object
-  models.GetAttachbyId:
-    title: GetAttachbyId
-    type: object
-  models.GetBusinessPage:
-    title: GetBusinessPage
-    type: object
-  models.GetChat:
-    title: GetChat
-    type: object
-  models.GetDiary:
-    title: GetDiary
-    type: object
-  models.GetElastic:
-    title: GetElastic
-    type: object
-  models.GetFinance:
-    title: GetFinance
-    type: object
-  models.GetLocationPage:
-    title: GetLocationPage
-    type: object
-  models.GetMathcadPage:
-    title: GetMathcadPage
-    type: object
-  models.GetOnlyPdf:
-    title: GetOnlyPdf
-    type: object
-  models.GetProductsPage:
-    title: GetProductsPage
-    type: object
-  models.GetProjectPage:
-    title: GetProjectPage
-    type: object
-  models.GetSearch:
-    title: GetSearch
-    type: object
-  models.GetUserMoney:
-    title: GetUserMoney
-    type: object
-  models.GetansysPage:
-    title: GetansysPage
-    type: object
-  models.GetexcelPage:
-    title: GetexcelPage
-    type: object
-  models.Gettest:
-    title: Gettest
-    type: object
   models.HistoryInputValue:
     title: HistoryInputValue
     type: object
@@ -9107,9 +9087,6 @@ definitions:
         type: string
       title:
         type: string
-  models.MathPdf:
-    title: MathPdf
-    type: object
   models.Pay:
     title: Pay
     type: object
@@ -9142,9 +9119,6 @@ definitions:
       id:
         type: integer
         format: int32
-  models.PostTika:
-    title: PostTika
-    type: object
   models.Recharge:
     title: Recharge
     type: object
@@ -9157,9 +9131,6 @@ definitions:
       UserID:
         type: integer
         format: int64
-  models.SaveUser:
-    title: SaveUser
-    type: object
   models.Select2:
     title: Select2
     type: object
@@ -9224,12 +9195,6 @@ definitions:
     properties:
       value:
         type: string
-  models.Update:
-    title: Update
-    type: object
-  models.UpdateBusiness:
-    title: UpdateBusiness
-    type: object
   models.User:
     title: User
     type: object
@@ -9311,21 +9276,6 @@ definitions:
         type: string
       version:
         type: string
-  models.ansysArticle:
-    title: ansysArticle
-    type: object
-  models.ansysPdf:
-    title: ansysPdf
-    type: object
-  models.excelArticle:
-    title: excelArticle
-    type: object
-  models.excelPdf:
-    title: excelPdf
-    type: object
-  success:
-    title: success
-    type: object
 tags:
 - name: admin
   description: |

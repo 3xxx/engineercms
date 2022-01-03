@@ -1,18 +1,16 @@
 package commands
 
 import (
-	// "errors"
-	"flag"
 	"fmt"
+	"os"
+	"time"
+
+	"flag"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	// "github.com/beego/beego/v2/server/web"
-	// "github.com/beego/i18n"
-	"os"
-	// "time"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
 //系统安装.
@@ -22,9 +20,10 @@ func Install() {
 
 	err := orm.RunSyncdb("default", false, true)
 	if err == nil {
-		// initialization()
+		initialization()
 	} else {
 		panic(err.Error())
+		os.Exit(1)
 	}
 	fmt.Println("Install Successfully!")
 	os.Exit(0)
@@ -50,7 +49,7 @@ func ModifyPassword() {
 		flagSet.StringVar(&password, "password", "", "用户密码.")
 
 		if err := flagSet.Parse(os.Args[2:]); err != nil {
-			logs.Error("解析参数失败 -> ", err)
+			beego.Error("解析参数失败 -> ", err)
 			os.Exit(1)
 		}
 
@@ -92,69 +91,62 @@ func ModifyPassword() {
 
 }
 
-//初始化数据——放到main.go中了
-// func initialization() {
+//初始化数据
+func initialization() {
 
-// 	err := models.NewOption().Init()
-// 	if err != nil {
-// 		panic(err.Error())
-// 	}
+	err := models.NewOption().Init()
 
-// 	lang, _ := web.AppConfig.String("default_lang")
-// 	err = i18n.SetMessage(lang, "conf/lang/"+lang+".ini")
-// 	if err != nil {
-// 		panic(fmt.Errorf("initialize locale error: %s", err))
-// 	}
+	if err != nil {
+		panic(err.Error())
+		os.Exit(1)
+	}
 
-// 	member, err := models.NewMember().FindByFieldFirst("account", "admin")
-// 	if errors.Is(err, orm.ErrNoRows) {
+	member, err := models.NewMember().FindByFieldFirst("account", "admin")
+	if err == orm.ErrNoRows {
 
-// 		// create admin user
-// 		logs.Info("creating admin user")
-// 		member.Account = "admin"
-// 		member.Avatar = conf.URLForWithCdnImage("/static/mindoc/images/headimgurl.jpg")
-// 		member.Password = "123456"
-// 		member.AuthMethod = "local"
-// 		member.Role = conf.MemberSuperRole
-// 		member.Email = "admin@iminho.me"
+		member.Account = "admin"
+		member.Avatar = conf.URLForWithCdnImage("/static/mindoc/images/headimgurl.jpg")
+		member.Password = "123456"
+		member.AuthMethod = "local"
+		member.Role = 0
+		member.Email = "admin@iminho.me"
 
-// 		if err := member.Add(); err != nil {
-// 			panic("Member.Add => " + err.Error())
-// 		}
+		if err := member.Add(); err != nil {
+			panic("Member.Add => " + err.Error())
+			os.Exit(0)
+		}
 
-// 		// create demo book
-// 		logs.Info("creating demo book")
-// 		book := models.NewBook()
+		book := models.NewBook()
 
-// 		book.MemberId = member.MemberId
-// 		book.BookName = i18n.Tr(lang, "init.default_proj_name") //"MinDoc演示项目"
-// 		book.Status = 0
-// 		book.ItemId = 1
-// 		book.Description = i18n.Tr(lang, "init.default_proj_desc") //"这是一个MinDoc演示项目，该项目是由系统初始化时自动创建。"
-// 		book.CommentCount = 0
-// 		book.PrivatelyOwned = 0
-// 		book.CommentStatus = "closed"
-// 		book.Identify = "mindoc"
-// 		book.DocCount = 0
-// 		book.CommentCount = 0
-// 		book.Version = time.Now().Unix()
-// 		book.Cover = conf.GetDefaultCover()
-// 		book.Editor = "markdown"
-// 		book.Theme = "default"
+		book.MemberId = member.MemberId
+		book.BookName = "MinDoc演示项目"
+		book.Status = 0
+		book.ItemId = 1
+		book.Description = "这是一个MinDoc演示项目，该项目是由系统初始化时自动创建。"
+		book.CommentCount = 0
+		book.PrivatelyOwned = 0
+		book.CommentStatus = "closed"
+		book.Identify = "mindoc"
+		book.DocCount = 0
+		book.CommentCount = 0
+		book.Version = time.Now().Unix()
+		book.Cover = conf.GetDefaultCover()
+		book.Editor = "markdown"
+		book.Theme = "default"
 
-// 		if err := book.Insert(lang); err != nil {
-// 			panic("初始化项目失败 -> " + err.Error())
-// 		}
-// 	} else if err != nil {
-// 		panic(fmt.Errorf("occur errors when initialize: %s", err))
-// 	}
+		if err := book.Insert(); err != nil {
+			panic("初始化项目失败 -> " + err.Error())
+			os.Exit(1)
+		}
+	}
 
-// 	if !models.NewItemsets().Exist(1) {
-// 		item := models.NewItemsets()
-// 		item.ItemName = i18n.Tr(lang, "init.default_proj_space") //"默认项目空间"
-// 		item.MemberId = 1
-// 		if err := item.Save(); err != nil {
-// 			panic("初始化项目空间失败 -> " + err.Error())
-// 		}
-// 	}
-// }
+	if !models.NewItemsets().Exist(1) {
+		item := models.NewItemsets()
+		item.ItemName = "默认项目空间"
+		item.MemberId = 1
+		if err := item.Save(); err != nil {
+			panic("初始化项目空间失败 -> " + err.Error())
+			os.Exit(1)
+		}
+	}
+}

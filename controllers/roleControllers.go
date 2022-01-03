@@ -6,25 +6,18 @@ import (
 	// "encoding/hex"
 	"fmt"
 	m "github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// "github.com/casbin/beego-orm-adapter"
-	// "github.com/casbin/casbin"
-	beegoormadapter "github.com/casbin/beego-orm-adapter/v3"
-	"github.com/casbin/casbin/v2"
-	// _ "github.com/go-sql-driver/mysql"
-	// "github.com/casbin/xorm-adapter"
-	"github.com/casbin/xorm-adapter/v2"
-	// "github.com/casbin/gorm-adapter/v3"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	"github.com/casbin/beego-orm-adapter"
+	"github.com/casbin/casbin"
+	"github.com/casbin/xorm-adapter"
 	_ "github.com/mattn/go-sqlite3"
 	"path"
 	"regexp"
 	"strconv"
 	"strings"
 	// "engineercms/controllers/validator"
-	// "github.com/beego/beego/v2/adapter/context"
+	// "github.com/astaxie/beego/context"
 	// "github.com/asofdate/hauth/core/groupcache"
 	// "github.com/asofdate/hauth/core/hrpc"
 	// "github.com/asofdate/hauth/core/models"
@@ -37,7 +30,7 @@ import (
 )
 
 type RoleController struct {
-	web.Controller
+	beego.Controller
 }
 
 type Userrole struct {
@@ -79,18 +72,15 @@ var e *casbin.Enforcer
 
 func init() {
 	var dns string
-	db_type, err := web.AppConfig.String("db_type")
-	db_host, err := web.AppConfig.String("db_host")
-	db_port, err := web.AppConfig.String("db_port")
-	db_user, err := web.AppConfig.String("db_user")
-	db_pass, err := web.AppConfig.String("db_pass")
+	db_type := beego.AppConfig.String("db_type")
+	db_host := beego.AppConfig.String("db_host")
+	db_port := beego.AppConfig.String("db_port")
+	db_user := beego.AppConfig.String("db_user")
+	db_pass := beego.AppConfig.String("db_pass")
 	// 数据库名称
-	db_name, err := web.AppConfig.String("db_name")
-	db_path, err := web.AppConfig.String("db_path")
-	db_sslmode, err := web.AppConfig.String("db_sslmode")
-	if err != nil {
-		logs.Error(err)
-	}
+	db_name := beego.AppConfig.String("db_name")
+	db_path := beego.AppConfig.String("db_path")
+	db_sslmode := beego.AppConfig.String("db_sslmode")
 	switch db_type {
 	case "mysql":
 		// dns = fmt.Sprintf("%s:%s@tcp(%s:%s)/", db_user, db_pass, db_host, db_port, db_name)
@@ -101,35 +91,26 @@ func init() {
 		// The adapter will use the MySQL database named "casbin".
 		// If it doesn't exist, the adapter will create it automatically.
 		// a := xormadapter.NewAdapter("mysql", "mysql_username:mysql_password@tcp(127.0.0.1:3306)/") // Your driver and data source.
-		a, err := xormadapter.NewAdapter("mysql", dns)
-		if err != nil {
-			logs.Error(err)
-		}
-		e, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
+		a := xormadapter.NewAdapter("mysql", dns)
+		e = casbin.NewEnforcer("conf/rbac_model.conf", a)
 		break
 	case "postgres":
 		// orm.RegisterDriver("postgres", orm.DRPostgres)
 		dns = fmt.Sprintf("dbname=%s host=%s  user=%s  password=%s  port=%s  sslmode=%s", db_name, db_host, db_user, db_pass, db_port, db_sslmode)
-		a, err := beegoormadapter.NewAdapter("casbin", "postgres", dns)
-		if err != nil {
-			logs.Error(err)
-		}
-		e, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
+		a := beegoormadapter.NewAdapter("postgres", dns)
+		e = casbin.NewEnforcer("conf/rbac_model.conf", a)
 		break
 	case "sqlite3":
 		if db_path == "" {
 			db_path = "./"
 		}
 		dns = fmt.Sprintf("%s%s.db", db_path, db_name)
-		// 注册casbin。官方是newadapter("default"……)
-		a, err := beegoormadapter.NewAdapter("casbin", "sqlite3", dns)
-		if err != nil {
-			logs.Error(err)
-		}
-		e, _ = casbin.NewEnforcer("conf/rbac_model.conf", a)
+		// 注册casbin
+		a := beegoormadapter.NewAdapter("sqlite3", dns, true)
+		e = casbin.NewEnforcer("conf/rbac_model.conf", a)
 		break
 	default:
-		logs.Critical("Database driver is not allowed:", db_type)
+		beego.Critical("Database driver is not allowed:", db_type)
 	}
 
 	// Initialize a Beego ORM adapter and use it in a Casbin enforcer:
@@ -144,10 +125,7 @@ func init() {
 	// e := casbin.NewEnforcer("examples/rbac_model.conf", a)
 	// e = casbin.NewEnforcer("conf/rbac_model.conf", a)
 	// Load the policy from DB.
-
-	// 注释掉这个可以吗
-	// e.LoadPolicy()
-
+	e.LoadPolicy()
 	// p, admin, /*, *
 	// p, anonymous, /login, *
 	// p, member, /logout, *
@@ -190,18 +168,18 @@ func init() {
 	// if err == nil && id > 0 {
 	// 	beego.Info("insert role end")
 	// } else {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// 	//重新获取roleid
 	// 	role, err := m.GetRoleByRolename("admin")
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	} else {
 	// 		id = role.Id
 	// 	}
 	// }
 	// user_admin, err := m.GetUserByUsername("admin")
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	// //将用户admin加入到角色admin里
 	// e.AddGroupingPolicy(strconv.FormatInt(user_admin.Id, 10), "role_"+strconv.FormatInt(id, 10))
@@ -216,11 +194,11 @@ func init() {
 	// if err == nil && id > 0 {
 	// 	beego.Info("insert role end")
 	// } else {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// 	//重新获取roleid
 	// 	role, err := m.GetRoleByRolename("anonymous")
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	} else {
 	// 		id = role.Id
 	// 	}
@@ -235,7 +213,7 @@ func init() {
 	// if err == nil && id > 0 {
 	// 	beego.Info("insert role end")
 	// } else {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 
 	// r.Rolename = "isme"
@@ -245,16 +223,16 @@ func init() {
 	// if err == nil && id > 0 {
 	// 	beego.Info("insert role end")
 	// } else {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	role, err := m.GetRoleByRolename("admin")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return
 	}
 	user, err := m.GetUserByUsername("admin")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return
 	}
 
@@ -266,13 +244,13 @@ func (c *RoleController) Test() {
 	// Check the permission.
 	//请求的资源v1/v2/aaa.jpg
 	//得到资源的扩展名Suffix-jpg，输入enforce中间那个(?i:pdf)不分大小写
-	// beego.Info(e.Enforce("alice", "/v1/v2/aaa.jpg", "write", "jpg"))
-	// beego.Info(e.Enforce("bob", "/v1/v2/aaa.PDF", "delete", "PDF"))
-	// beego.Info(e.Enforce("bob", "/v1/v2/aaa.jpg", "write", "jpg"))
+	beego.Info(e.Enforce("alice", "/v1/v2/aaa.jpg", "write", "jpg"))
+	beego.Info(e.Enforce("bob", "/v1/v2/aaa.PDF", "delete", "PDF"))
+	beego.Info(e.Enforce("bob", "/v1/v2/aaa.jpg", "write", "jpg"))
 	// beego.Info(e.Enforce("bob", "/v1/aaa.pdf", "read", "pdf"))
 	// beego.Info(e.Enforce("bob", "/v1/v2/aaa.dwg", "read", "dwg"))
 	// beego.Info(e.Enforce("bob", "/v1/v2/aaa.pdf", "write", "pdf"))
-	logs.Info(e.Enforce("bob", "/v1/v2/aaa.ttt", "read", "ttt")) //任意扩展名
+	beego.Info(e.Enforce("bob", "/v1/v2/aaa.ttt", "read", "ttt")) //任意扩展名
 	// Modify the policy.
 	// e.AddPolicy(...)
 	// e.RemovePolicy(...)
@@ -347,19 +325,19 @@ func (c *RoleController) Test() {
 // 	// if id == "" { //如果id为空，则查询
 // 	roles, err := m.GetRoles()
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 
 // 	if id != "" {
 // 		//pid转成64为
 // 		idNum, err := strconv.ParseInt(id, 10, 64)
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 		//查出用户的角色，处于勾选状态
 // 		userroles, err := m.GetRoleByUserId(idNum)
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 		userrole := make([]Userrole, 0)
 // 		var level string
@@ -394,14 +372,14 @@ func (c *RoleController) Get() {
 	// if id == "" { //如果id为空，则查询
 	roles, err := m.GetRoles()
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//如果设置了role,用于onlyoffice的权限设置
-	role := c.GetString("role")
+	role := c.Input().Get("role")
 	if role != "" {
 		// roleint, err := strconv.Atoi(role)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		for _, v := range roles {
 			v.Status = role
@@ -412,12 +390,12 @@ func (c *RoleController) Get() {
 		//pid转成64为
 		// idNum, err := strconv.ParseInt(id, 10, 64)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		//查出用户的角色，处于勾选状态，来自casbin\rbac_api.go
 		userroles, err := e.GetRolesForUser(id)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		userrole := make([]Userrole, 0)
 		var level string
@@ -426,7 +404,7 @@ func (c *RoleController) Get() {
 			for _, v2 := range userroles {
 				ridNum, err := strconv.ParseInt(strings.Replace(v2, "role_", "", -1), 10, 64)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 				if ridNum == v1.Id {
 					level = "1" //if (row.Level === "1") checked: true
@@ -477,18 +455,18 @@ func (c *RoleController) Get() {
 func (c *RoleController) Post() {
 	// u := m.Role{}
 	// if err := c.ParseForm(&u); err != nil {
-	// 	logs.Error(err.Error)
+	// 	beego.Error(err.Error)
 	// 	return
 	// }
 	var role m.Role
-	role.Rolename = c.GetString("rolename")
-	role.Rolenumber = c.GetString("rolenumber")
+	role.Rolename = c.Input().Get("rolename")
+	role.Rolenumber = c.Input().Get("rolenumber")
 
-	// statusint, err := strconv.Atoi(c.GetString("status"))
+	// statusint, err := strconv.Atoi(c.Input().Get("status"))
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
-	role.Status = c.GetString("status")
+	role.Status = c.Input().Get("status")
 
 	id, err := m.SaveRole(role)
 	if err == nil && id > 0 {
@@ -498,7 +476,7 @@ func (c *RoleController) Post() {
 		c.ServeJSON()
 	} else {
 		// c.Rsp(false, err.Error())
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = "wrong"
 		c.ServeJSON()
 		// return
@@ -511,12 +489,12 @@ func (c *RoleController) Post() {
 // 	//id转成64位
 // 	uidNum, err := strconv.ParseInt(uid, 10, 64)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	//取出所有uidnum的role
 // 	userroles, err := m.GetRoleByUserId(uidNum)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 
 // 	ids := c.GetString("ids") //roleid
@@ -529,7 +507,7 @@ func (c *RoleController) Post() {
 // 		//id转成64位
 // 		idNum, err := strconv.ParseInt(v1, 10, 64)
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 		for _, v2 := range userroles {
 // 			//没有找到则插入
@@ -541,7 +519,7 @@ func (c *RoleController) Post() {
 // 			//存入数据库
 // 			err = m.AddUserRole(uidNum, idNum)
 // 			if err != nil {
-// 				logs.Error(err)
+// 				beego.Error(err)
 // 			}
 // 			// beego.Info(uidNum)
 // 			// beego.Info(idNum)
@@ -554,7 +532,7 @@ func (c *RoleController) Post() {
 // 			//id转成64位
 // 			idNum, err := strconv.ParseInt(v4, 10, 64)
 // 			if err != nil {
-// 				logs.Error(err)
+// 				beego.Error(err)
 // 			}
 // 			//没有找到则删除
 // 			if v3.RoleId == idNum {
@@ -566,13 +544,13 @@ func (c *RoleController) Post() {
 // 			//删除数据库
 // 			err = m.DeleteUserRole(uidNum, v3.RoleId)
 // 			if err != nil {
-// 				logs.Error(err)
+// 				beego.Error(err)
 // 			}
 // 		}
 // 		bool = false
 // 	}
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	} else {
 // 		c.Data["json"] = "ok"
 // 		c.ServeJSON()
@@ -592,7 +570,7 @@ func (c *RoleController) UserRole() {
 	// qs := o.QueryTable("casbin_rule")
 	// _, err := qs.Filter("PType", "g").Filter("v0", uid).Delete()
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	//再添加，如果没有选择，相当于删除了全部角色
 	ids := c.GetString("ids") //roleid
@@ -662,7 +640,7 @@ func (c *RoleController) RolePermission() {
 	// var tree []Tree
 	// err := json.Unmarshal([]byte(treeids), &tree)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 
 	//取出项目目录的顶级
@@ -671,7 +649,7 @@ func (c *RoleController) RolePermission() {
 	if len(treenodearray) > 1 {
 		nodesids, err = highest(treenodearray, nodesid, 0)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	} else {
 		nodesids = []string{"0"} //append(nodesids, "0")
@@ -686,12 +664,12 @@ func (c *RoleController) RolePermission() {
 		if action == "GET" {
 			_, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).Filter("v3", suf).Delete()
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 		} else {
 			_, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).Delete()
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 		}
 	}
@@ -735,18 +713,18 @@ func (c *RoleController) RolePermission() {
 				for _, v3 := range nodesids {
 					nodeidint, err = strconv.Atoi(v3)
 					if err != nil {
-						logs.Error(err)
+						beego.Error(err)
 					}
 					//id转成64位
 					pidNum, err := strconv.ParseInt(treearray[nodeidint], 10, 64)
 					if err != nil {
-						logs.Error(err)
+						beego.Error(err)
 					}
 
 					//根据projid取出路径
 					proj, err := m.GetProj(pidNum)
 					if err != nil {
-						logs.Error(err)
+						beego.Error(err)
 					}
 					if proj.ParentIdPath == "" || proj.ParentIdPath == "$#" {
 						projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
@@ -760,10 +738,7 @@ func (c *RoleController) RolePermission() {
 					// beego.Info(suf)
 					sufarray := strings.Split(suf, ",")
 					for _, v5 := range sufarray {
-						success, err = e.AddPolicy("role_"+v1, projurl, action, v5) //来自casbin\management_api.go
-						if err != nil {
-							logs.Error(err)
-						}
+						success = e.AddPolicy("role_"+v1, projurl, action, v5) //来自casbin\management_api.go
 						//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
 					}
 				}
@@ -794,7 +769,7 @@ func highest(nodeid, nodesid []string, i int) (nodesid1 []string, err error) {
 		matched, err := regexp.MatchString("(?i:"+nodeid[i]+")", nodeid[i1+1])
 		// fmt.Println(matched)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		if !matched {
 			i = i1 + 1
@@ -843,7 +818,7 @@ func (c *RoleController) GetRolePermission() {
 	// 4/* POST .*]]
 	// Permissions, err := models.GetPermissions(roleid,projectid,action)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
 	var paths []beegoormadapter.CasbinRule
 	o := orm.NewOrm()
@@ -851,13 +826,13 @@ func (c *RoleController) GetRolePermission() {
 	if action == "GET" || action == "" {
 		_, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", "GET").Filter("v3", suf).All(&paths)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		// beego.Info(paths)
 	} else {
 		_, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "/"+projectid+"/").Filter("v2", action).All(&paths)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	// beego.Info(paths)
@@ -901,11 +876,11 @@ func (c *RoleController) Delete() {
 		//id转成64位
 		idNum, err := strconv.ParseInt(v1, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		_, err = m.DeleteRole(idNum)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
@@ -937,19 +912,19 @@ func (c *RoleController) Delete() {
 //     description: success
 func (c *RoleController) Update() {
 	var role m.Role
-	roleid := c.GetString("roleid")
+	roleid := c.Input().Get("roleid")
 	idNum, err := strconv.ParseInt(roleid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	role.Id = idNum
-	role.Rolename = c.GetString("rolename")
-	role.Rolenumber = c.GetString("rolenumber")
-	// statusint, err := strconv.Atoi(c.GetString("status"))
+	role.Rolename = c.Input().Get("rolename")
+	role.Rolenumber = c.Input().Get("rolenumber")
+	// statusint, err := strconv.Atoi(c.Input().Get("status"))
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// }
-	role.Status = c.GetString("status")
+	role.Status = c.Input().Get("status")
 	err = m.UpdateRole(role)
 	if err == nil {
 		// c.Rsp(true, "Success")
@@ -958,7 +933,7 @@ func (c *RoleController) Update() {
 		c.ServeJSON()
 	} else {
 		// c.Rsp(false, err.Error())
-		logs.Error(err)
+		beego.Error(err)
 		// return
 	}
 }

@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/beego/beego/v2/core/logs"
+import "github.com/astaxie/beego/logs"
 
 // var ConsoleLogs *logs.BeeLogger
 var FileLogs *logs.BeeLogger

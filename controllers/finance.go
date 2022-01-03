@@ -5,11 +5,9 @@ import (
 	// "encoding/hex"
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/logs"
+	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/httplib"
+	// "github.com/astaxie/beego/logs"
 	// "net"
 	// "net/http"
 	// "net/url"
@@ -30,7 +28,7 @@ import (
 
 // CMSWXDIARY API
 type FinanceController struct {
-	web.Controller
+	beego.Controller
 }
 
 //日志列表页
@@ -44,20 +42,17 @@ func (c *FinanceController) GetWxFinance2() {
 	var err error
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
-	wxsite, err := web.AppConfig.String("wxreqeustsite")
-	if err != nil {
-		logs.Error(err)
-	}
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(idNum)
 	Finance, err := models.GetFinance(idNum)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	content := strings.Replace(Finance.Content, "/attachment/", wxsite+"/attachment/", -1)
@@ -109,28 +104,28 @@ func (c *FinanceController) AddWxFinance() {
 	if openID != nil {
 		user, err = models.GetUserByOpenID(openID.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		} else {
 			pid := c.Ctx.Input.Param(":id")
 			pidNum, err := strconv.ParseInt(pid, 10, 64)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
-			amount := c.GetString("amount")
+			amount := c.Input().Get("amount")
 			amountint, err := strconv.Atoi(amount)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
-			radio := c.GetString("radio")
+			radio := c.Input().Get("radio")
 			if radio == "1" {
 				amountint = 0 - amountint
 			}
 			var consider bool
-			radio2 := c.GetString("radio2")
+			radio2 := c.Input().Get("radio2")
 			if radio2 == "1" {
 				consider = true
 			}
-			financedate := c.GetString("financedate")
+			financedate := c.Input().Get("financedate")
 			array := strings.Split(financedate, "-")
 			//当月天数
 			const base_format = "2006-01-02"
@@ -144,13 +139,13 @@ func (c *FinanceController) AddWxFinance() {
 				day = "0" + day
 			}
 			financedate2 := year + "-" + month + "-" + day
-			financeactivity := c.GetString("financeactivity")
-			content := c.GetString("content")
+			financeactivity := c.Input().Get("financeactivity")
+			content := c.Input().Get("content")
 			content = "<p style='font-size: 16px;'>分部：" + financeactivity + "；</p><p style='font-size: 16px;'>记录：" + user.Nickname + "；</p>" + content //<span style="font-size: 18px;">这个字体到底是多大才好看</span>
 
 			aid, err := models.AddFinance(amountint, content, financedate2, pidNum, user.Id, consider)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 				c.Data["json"] = map[string]interface{}{"status": 0, "info": "ERR", "id": aid}
 				c.ServeJSON()
 			} else {
@@ -178,29 +173,29 @@ func (c *FinanceController) AddWxFinance() {
 //小程序取得日志列表，分页,通用
 func (c *FinanceController) GetWxFinanceList() {
 	id := c.Ctx.Input.Param(":id")
-	// id := web.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
-	// wxsite := web.AppConfig.String("wxreqeustsite")
-	limit := c.GetString("limit")
+	// id := beego.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
+	// wxsite := beego.AppConfig.String("wxreqeustsite")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit = "12"
 	}
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	// page1, err := strconv.ParseInt(page, 10, 64)
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	var idNum int64
 	//id转成64为
 	idNum, err = strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// var offset int64
 	var offset int
@@ -213,7 +208,7 @@ func (c *FinanceController) GetWxFinanceList() {
 	// finance, err := models.GetWxFinance(idNum, limit1, offset)
 	finance, err := models.GetWxFinance2(idNum, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR"}
 		c.ServeJSON()
 	} else {
@@ -235,27 +230,27 @@ func (c *FinanceController) GetWxFinanceList() {
 //网页页面取得日志列表，返回page rows total
 func (c *FinanceController) GetWxfinance2() {
 	id := c.Ctx.Input.Param(":id")
-	// id := web.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
-	// wxsite := web.AppConfig.String("wxreqeustsite")
+	// id := beego.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
+	// wxsite := beego.AppConfig.String("wxreqeustsite")
 	// limit := "10"
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 	// page1, err := strconv.ParseInt(page, 10, 64)
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	var idNum int64
 	//id转成64为
 	idNum, err = strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// var offset int64
 	var offset int
@@ -268,11 +263,11 @@ func (c *FinanceController) GetWxfinance2() {
 	// finance, err := models.GetWxFinance(idNum, limit1, offset)
 	finance, err := models.GetWxFinance2(idNum, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	count, err := models.GetWxFinanceCount(idNum)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"page": 1, "rows": finance, "total": 0}
 		c.ServeJSON()
 	} else {
@@ -309,20 +304,17 @@ func (c *FinanceController) GetWxFinance() {
 	var err error
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
-	wxsite, err := web.AppConfig.String("wxreqeustsite")
-	if err != nil {
-		logs.Error(err)
-	}
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(idNum)
 	Finance, err := models.GetFinance(idNum)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	content := strings.Replace(Finance.Content, "/attachment/", wxsite+"/attachment/", -1)
@@ -347,7 +339,7 @@ func (c *FinanceController) GetWxFinance() {
 		// openID = openid.(string)
 		user, err = models.GetUserByOpenID(openid.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	if Finance.UserId == user.Id { //20191122修改
@@ -383,7 +375,7 @@ func (c *FinanceController) GetWxFinance() {
 // @router /updatewxfinance [post]
 //编辑设代日记id下微信小程序文章_珠三角设代plus用_editor方式
 func (c *FinanceController) UpdateWxFinance() {
-	// pid := web.AppConfig.String("wxcatalogid") //"26159"
+	// pid := beego.AppConfig.String("wxcatalogid") //"26159"
 	//hotqinsessionid携带过来后，用下面的方法获取用户登录存储在服务端的session
 	openid := c.GetSession("openID")
 	if openid == nil {
@@ -392,24 +384,24 @@ func (c *FinanceController) UpdateWxFinance() {
 		// return
 	}
 
-	id := c.GetString("id")
-	amount := c.GetString("amount")
+	id := c.Input().Get("id")
+	amount := c.Input().Get("amount")
 	amountint, err := strconv.Atoi(amount)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	radio := c.GetString("radio")
+	radio := c.Input().Get("radio")
 	if radio == "1" {
 		amountint = 0 - amountint
 	}
 	var consider bool
-	radio2 := c.GetString("radio2")
+	radio2 := c.Input().Get("radio2")
 	if radio2 == "1" {
 		consider = true
 	}
-	content := c.GetString("content")
+	content := c.Input().Get("content")
 
-	financedate := c.GetString("financedate")
+	financedate := c.Input().Get("financedate")
 	array := strings.Split(financedate, "-")
 	//当月天数
 	const base_format = "2006-01-02"
@@ -425,26 +417,23 @@ func (c *FinanceController) UpdateWxFinance() {
 	financedate2 := year + "-" + month + "-" + day
 
 	//将content中的http://ip/去掉
-	wxsite, err := web.AppConfig.String("wxreqeustsite")
-	if err != nil {
-		logs.Error(err)
-	}
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 	content = strings.Replace(content, wxsite, "", -1)
 	//id转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	//取得文章
 	_, err = models.GetFinance(idNum)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	} else {
 		//更新文章
 		err = models.UpdateFinance(idNum, amountint, content, financedate2, consider)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERR", "id": id}
 			c.ServeJSON()
 		} else {
@@ -465,7 +454,7 @@ func (c *FinanceController) UpdateWxFinance() {
 func (c *FinanceController) DeleteWxFinance() {
 	var openID string
 	openid := c.GetSession("openID")
-	// beego.Info(openid.(string))
+	beego.Info(openid.(string))
 	if openid == nil {
 		c.Data["json"] = "没有注册，未查到openid"
 		c.ServeJSON()
@@ -473,31 +462,31 @@ func (c *FinanceController) DeleteWxFinance() {
 		openID = openid.(string)
 		user, err := models.GetUserByOpenID(openID)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 			c.Data["json"] = "未查到openid对应的用户"
 			c.ServeJSON()
 		} else {
 			//判断是否具备admin角色
 			role, err := models.GetRoleByRolename("admin")
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			uid := strconv.FormatInt(user.Id, 10)
 			roleid := strconv.FormatInt(role.Id, 10)
 			hasrole, err := e.HasRoleForUser(uid, "role_"+roleid)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			if hasrole {
-				id := c.GetString("id")
+				id := c.Input().Get("id")
 				//id转成64为
 				idNum, err := strconv.ParseInt(id, 10, 64)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 				err = models.DeleteFinance(idNum)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 					c.Data["json"] = "delete wrong"
 					c.ServeJSON()
 				} else {
@@ -519,29 +508,26 @@ type FinanceContent struct {
 
 // 下面这个没更改
 func (c *FinanceController) HtmlToDoc() {
-	id, err := web.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
-	if err != nil {
-		logs.Error(err)
-	}
+	id := beego.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
 
 	// limit := "10"
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("page")
+	page := c.Input().Get("page")
 
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	var idNum int64
 	//id转成64为
 	idNum, err = strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	var offset int
@@ -554,18 +540,18 @@ func (c *FinanceController) HtmlToDoc() {
 	// finance, err := models.GetWxFinance(idNum, limit1, offset)
 	finance, err := models.GetWxFinance2(idNum, limit1, offset)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	doc := document.New()
 
 	for _, v := range finance {
 		did := v.Finance.Id
-		// wxsite := web.AppConfig.String("wxreqeustsite")
+		// wxsite := beego.AppConfig.String("wxreqeustsite")
 
 		Finance, err := models.GetFinance(did)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		para := doc.AddParagraph()
 		run := para.AddRun()
@@ -583,7 +569,7 @@ func (c *FinanceController) HtmlToDoc() {
 		var r io.Reader = strings.NewReader(string(Finance.Content))
 		goquerydoc, err := goquery.NewDocumentFromReader(r)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 
 		goquerydoc.Find("p").Each(func(i int, s *goquery.Selection) {
@@ -601,7 +587,7 @@ func (c *FinanceController) HtmlToDoc() {
 			var r2 io.Reader = strings.NewReader(w.Html)
 			goquerydoc2, err := goquery.NewDocumentFromReader(r2)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			slice2 := make([]Img, 0)
 			goquerydoc2.Find("img").Each(func(i int, s2 *goquery.Selection) {

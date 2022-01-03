@@ -2,10 +2,8 @@ package models
 
 import (
 	"fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/jinzhu/gorm"
-	"github.com/beego/beego/v2/core/logs"
-	"gorm.io/gorm"
+	"github.com/astaxie/beego"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -16,12 +14,12 @@ type Pay struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
-	UserID    int64   `gorm:"column:user_id;"` // One-To-One (属于 - 本表的BillingAddressID作外键
-	User2ID   int64   `gorm:"column:user2_id;"`
-	ArticleID int64   `gorm:"column:article_id;"`
+	UserID    int64   `gorm:"column:user_id;foreignkey:UserId;"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	User2ID   int64   `gorm:"column:user2_id;foreignkey:User2Id;"`
+	ArticleID int64   `gorm:"column:article_id;foreignkey:ArticleId;"`
 	Amount    int     `gorm:"column:amount"`
-	User      User    `gorm:"foreignkey:Id;references:UserID;"` //这个外键难道不是错的么？应该是UserID?没错，因为column:user_id
-	Article   Article `gorm:"foreignkey:Id;references:ArticleID;"`
+	User      User    `gorm:"foreignkey:UserId"` //这个外键难道不是错的么？应该是UserID?没错，因为column:user_id
+	Article   Article `gorm:"foreignkey:ArticleId"`
 }
 
 // 用户付费计算表
@@ -31,9 +29,9 @@ type PayMath struct {
 	// CreatedAt  time.Time
 	// UpdatedAt  time.Time
 	// DeletedAt  *time.Time
-	UserID       int64 `gorm:"column:user_id;"` // One-To-One (属于 - 本表的BillingAddressID作外键
-	User2ID      int64 `gorm:"column:user2_id;"`
-	UserTempleID uint  `gorm:"column:user_temple_id;"`
+	UserID       int64 `gorm:"column:user_id;foreignkey:UserId;"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	User2ID      int64 `gorm:"column:user2_id;foreignkey:User2Id;"`
+	UserTempleID uint  `gorm:"column:user_temple_id;foreignkey:UserTempleID;"`
 	Amount       int   `gorm:"column:amount"`
 	User         User  //`gorm:"foreignkey:UserId"` //对于preload来说，这个后面不影响
 	User2        User  //`gorm:"foreignkey:User2Id"`
@@ -47,11 +45,11 @@ type PayMathPdf struct {
 	// CreatedAt  time.Time
 	// UpdatedAt  time.Time
 	// DeletedAt  *time.Time
-	UserID int64 `gorm:"column:user_id;"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	UserID int64 `gorm:"column:user_id;foreignkey:UserId;"` // One-To-One (属于 - 本表的BillingAddressID作外键
 	// User2ID int64 `gorm:"column:user2_id;foreignkey:User2Id;"`
 	// UserTempleID uint  `gorm:"column:user_temple_id;foreignkey:UserTempleID;"`
 	Amount int  `gorm:"column:amount"`
-	User   User `gorm:"foreignkey:Id;references:UserID;"` //对于preload来说，这个后面不影响
+	User   User //`gorm:"foreignkey:UserId"` //对于preload来说，这个后面不影响
 	// User2    User //`gorm:"foreignkey:User2Id"`
 	PdfTitle string
 	PdfLink  string
@@ -65,11 +63,11 @@ type PayExcel struct {
 	// CreatedAt  time.Time
 	// UpdatedAt  time.Time
 	// DeletedAt  *time.Time
-	UserID        int64 `gorm:"column:user_id;"` // One-To-One (属于 - 本表的BillingAddressID作外键
-	User2ID       int64 `gorm:"column:user2_id;"`
-	ExcelTempleID uint  `gorm:"column:excel_temple_id;"`
+	UserID        int64 `gorm:"column:user_id;foreignkey:UserId;"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	User2ID       int64 `gorm:"column:user2_id;foreignkey:User2Id;"`
+	ExcelTempleID uint  `gorm:"column:excel_temple_id;foreignkey:ExcelTempleID;"`
 	Amount        int   `gorm:"column:amount"`
-	User          User  `gorm:"foreignkey:Id;references:UserID;"` //对于preload来说，这个后面不影响
+	User          User  //`gorm:"foreignkey:UserId"` //对于preload来说，这个后面不影响
 	User2         User  //`gorm:"foreignkey:User2Id"`
 	ExcelTemple   ExcelTemple
 }
@@ -81,11 +79,11 @@ type PayExcelPdf struct {
 	// CreatedAt  time.Time
 	// UpdatedAt  time.Time
 	// DeletedAt  *time.Time
-	UserID int64 `gorm:"column:user_id;"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	UserID int64 `gorm:"column:user_id;foreignkey:UserId;"` // One-To-One (属于 - 本表的BillingAddressID作外键
 	// User2ID int64 `gorm:"column:user2_id;foreignkey:User2Id;"`
 	// UserTempleID uint  `gorm:"column:user_temple_id;foreignkey:UserTempleID;"`
 	Amount int  `gorm:"column:amount"`
-	User   User `gorm:"foreignkey:Id;references:UserID;"` //对于preload来说，这个后面不影响
+	User   User //`gorm:"foreignkey:UserId"` //对于preload来说，这个后面不影响
 	// User2    User //`gorm:"foreignkey:User2Id"`
 	PdfTitle string
 	PdfLink  string
@@ -96,18 +94,18 @@ type PayExcelPdf struct {
 type Money struct {
 	gorm.Model
 	// ID     int    `gorm:"primary_key"`
-	UserID int64 `gorm:"column:user_id;"` // 外键 (属于), tag `index`是为该列创建索引
+	UserID int64 `gorm:"column:user_id;foreignkey:UserId;"` // 外键 (属于), tag `index`是为该列创建索引
 	Amount int   `json:"amount" gorm:"column:amount"`
-	User   User  `gorm:"foreignkey:Id;references:UserID;"`
+	User   User  `gorm:"foreignkey:UserId"`
 }
 
 // 用户充值记录
 type Recharge struct {
 	gorm.Model
 	// ID       int    `gorm:"primary_key"`
-	UserID int64 `gorm:"column:user_id;"` // 外键 (属于), tag `index`是为该列创建索引
+	UserID int64 `gorm:"column:user_id;foreignkey:UserId;"` // 外键 (属于), tag `index`是为该列创建索引
 	Amount int   `gorm:"column:amount"`
-	User   User  `gorm:"foreignkey:Id;references:UserID;"`
+	User   User  `gorm:"foreignkey:UserId"`
 }
 
 /*20201008这些都应该放到models文件夹里第一个文件里，这样，程序初始化的时候先定义这些全局变量……*/
@@ -144,14 +142,13 @@ func init() {
 
 	// _db.DB().SetMaxOpenConns(100) //设置数据库连接池最大连接数
 	// _db.DB().SetMaxIdleConns(20)  //连接池最大允许的空闲连接数，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭。
-	// _db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
-	// _db.CreateTable(&Pay{}, &Money{}, &Recharge{}) //当第一个存在时，后面的不再建立，bug！！！
-	// _db.CreateTable(&Money{})
-	// _db.CreateTable(&Recharge{})
-	// _db.CreateTable(&PayMath{})
-	// _db.CreateTable(&PayMathPdf{})
-	// _db.CreateTable(&PayExcel{})
-	// _db.CreateTable(&PayExcelPdf{})
+	_db.CreateTable(&Pay{}, &Money{}, &Recharge{}) //当第一个存在时，后面的不再建立，bug！！！
+	_db.CreateTable(&Money{})
+	_db.CreateTable(&Recharge{})
+	_db.CreateTable(&PayMath{})
+	_db.CreateTable(&PayMathPdf{})
+	_db.CreateTable(&PayExcel{})
+	_db.CreateTable(&PayExcelPdf{})
 	// if !gdb.HasTable(&Pay1{}) {
 	// 	if err = gdb.CreateTable(&Pay1{}).Error; err != nil {
 	// 		panic(err)
@@ -159,23 +156,22 @@ func init() {
 	// }
 }
 
-//获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools._db//GetDB()获取db对象即可。
+//获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。
 //不用担心协程并发使用同样的db对象会共用同一个连接，
 // db对象在调用他的方法的时候会从数据库连接池中获取新的连接
 // 注意：使用连接池技术后，千万不要使用完db后调用db.Close关闭数据库连接，
 // 这样会导致整个数据库连接池关闭，导致连接池没有可用的连接
-// func _db//GetDB() *gorm.DB {
+// func GetDB() *gorm.DB {
 // 	return _db
 // }
 
 //查询某个打赏记录
 func GetPay(id int64) (pay Pay, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	db.Find(&pay, 1)
 	db.Model(&pay).Find(&pay)
-	// err = db.Model(&pay).Related(&pay.User, "User").Error
-	err = db.Model(&pay).Association("User").Error
+	err = db.Model(&pay).Related(&pay.User, "User").Error
 	return pay, err
 	// db.Find(&pays, 1)
 	// var user []User
@@ -189,7 +185,7 @@ func GetPay(id int64) (pay Pay, err error) {
 //查询某个用户账户余额
 func GetUserMoney(uid int64) (money Money, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.Where("user_id = ?", uid).First(&money).Error
 	return money, err
 }
@@ -197,7 +193,7 @@ func GetUserMoney(uid int64) (money Money, err error) {
 //添加某个文章某个用户打赏记录
 func AddUserPay(articleid, uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -213,7 +209,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	var article Article
 	err := db.Where("id = ?", articleid).First(&article).Error
 	if err != nil {
-		logs.Info(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -221,7 +217,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	var product Product
 	err = db.Where("id = ?", article.ProductId).First(&product).Error
 	if err != nil {
-		logs.Info(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -229,14 +225,14 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	// db.Create(&user)
 	newamount := 0 - amount
 	if err = tx.Create(&Pay{UserID: uid, User2ID: product.Uid, ArticleID: articleid, Amount: newamount}).Error; err != nil {
-		logs.Info(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
 
 	//给作者账户增加赞赏
 	// if err := tx.Create(&Pay{UserID: product.Uid, ArticleID: articleid, Amount: amount}).Error; err != nil {
-	// 	logs.Error(err)
+	// 	beego.Info(err)
 	// 	tx.Rollback()
 	// 	return err
 	// }
@@ -249,7 +245,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	var moneyA Money
 	err = db.Where("user_id = ?", uid).First(&moneyA).Error
 	if err != nil {
-		logs.Info(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -258,12 +254,12 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	if newamount < 0 {
 		tx.Rollback()
 		return err
-		logs.Info(err)
+		beego.Info(err)
 	}
 	//3.赞赏者账户修改余额
 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Info(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -273,9 +269,9 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	//没有查到则新增一条
 	err = db.Where("user_id = ?", product.Uid).First(&moneyB).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		if err = tx.Create(&Money{UserID: product.Uid, Amount: 100}).Error; err != nil {
-			logs.Error(err)
+			beego.Info(err)
 			tx.Rollback()
 			return err
 		}
@@ -284,13 +280,13 @@ func AddUserPay(articleid, uid int64, amount int) error {
 		err = tx.Where("user_id = ?", product.Uid).First(&moneyB).Error
 		if err != nil {
 			tx.Rollback()
-			logs.Error(err)
+			beego.Info(err)
 			return err
 		}
 		//账户充值——这句重复？上面是账户余额表，这个是充值表
 		err := tx.Create(&Recharge{UserID: product.Uid, Amount: 100}).Error
 		if err != nil {
-			logs.Error(err)
+			beego.Info(err)
 			tx.Rollback()
 			return err
 		}
@@ -299,13 +295,13 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	// if err != nil {
 	// 	tx.Rollback()
 	// 	return err
-	// 	logs.Error(err)
+	// 	beego.Info(err)
 	// }
 
 	newamount = moneyB.Amount + amount
 	rowsAffected = tx.Model(&moneyB).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -315,7 +311,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	// if rowsAffected == 0 {
 	// 	tx.Rollback()
 	// 	return err
-	// 	logs.Error(err)
+	// 	beego.Info(err)
 	// }
 	//6.不能自己给自己赞赏
 
@@ -354,7 +350,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 //添加某个math某个用户计算扣费记录
 func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -370,7 +366,7 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	var usertemple UserTemple
 	err := db.Where("id = ?", templeid).First(&usertemple).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -378,14 +374,14 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	// var product Product
 	// err = db.Where("id = ?", article.ProductId).First(&product).Error
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Info(err)
 	// 	tx.Rollback()
 	// 	return err
 	// }
 
 	newamount := 0 - amount
 	if err = tx.Create(&PayMath{UserID: uid, User2ID: usertemple.UserID, UserTempleID: templeid, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -394,7 +390,7 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	var moneyA Money
 	err = db.Where("user_id = ?", uid).First(&moneyA).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -403,12 +399,12 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	if newamount < 0 {
 		tx.Rollback()
 		return err
-		logs.Error(err)
+		beego.Info(err)
 	}
 	//3.赞赏者账户修改余额
 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -418,9 +414,9 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	//没有查到则新增一条
 	err = db.Where("user_id = ?", usertemple.UserID).First(&moneyB).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		if err = tx.Create(&Money{UserID: usertemple.UserID, Amount: 100}).Error; err != nil {
-			logs.Error(err)
+			beego.Info(err)
 			tx.Rollback()
 			return err
 		}
@@ -437,13 +433,13 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 		err = tx.Where("user_id = ?", usertemple.UserID).First(&moneyB).Error
 		if err != nil {
 			tx.Rollback()
-			logs.Error(err)
+			beego.Info(err)
 			return err
 		}
 		//账户充值_这句干嘛？重复？——这个是充值数据表，上面是账户余额表，不重复
 		err := tx.Create(&Recharge{UserID: usertemple.UserID, Amount: 100}).Error
 		if err != nil {
-			logs.Error(err)
+			beego.Info(err)
 			tx.Rollback()
 			return err
 		}
@@ -452,7 +448,7 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	newamount = moneyB.Amount + amount
 	rowsAffected = tx.Model(&moneyB).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -463,7 +459,7 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 //添加某个mathpdf某个用户计算扣费记录,归平台所有
 func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -479,7 +475,7 @@ func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
 
 	newamount := 0 - amount
 	if err := tx.Create(&PayMathPdf{UserID: uid, PdfTitle: pdftitle, PdfLink: pdflink, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -488,7 +484,7 @@ func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
 	var moneyA Money
 	err := db.Where("user_id = ?", uid).First(&moneyA).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -497,12 +493,12 @@ func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
 	if newamount < 0 {
 		tx.Rollback()
 		return err
-		logs.Error(err)
+		beego.Info(err)
 	}
 	//3.赞赏者账户修改余额
 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -513,7 +509,7 @@ func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
 //查询某个用户下载过的pdf记录
 func GetUserPayMathPdf(uid int64, pdftitle string) (paymathpdf PayMathPdf, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.Where("user_id = ? AND pdf_title=?", uid, pdftitle).First(&paymathpdf).Error
 	return paymathpdf, err
 }
@@ -521,7 +517,7 @@ func GetUserPayMathPdf(uid int64, pdftitle string) (paymathpdf PayMathPdf, err e
 //添加某个math某个用户计算扣费记录
 func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -537,7 +533,7 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	var exceltemple ExcelTemple
 	err := db.Where("id = ?", templeid).First(&exceltemple).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -545,14 +541,14 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	// var product Product
 	// err = db.Where("id = ?", article.ProductId).First(&product).Error
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Info(err)
 	// 	tx.Rollback()
 	// 	return err
 	// }
 
 	newamount := 0 - amount
 	if err = tx.Create(&PayExcel{UserID: uid, User2ID: exceltemple.UserID, ExcelTempleID: templeid, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -561,7 +557,7 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	var moneyA Money
 	err = db.Where("user_id = ?", uid).First(&moneyA).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -570,12 +566,12 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	if newamount < 0 {
 		tx.Rollback()
 		return err
-		logs.Error(err)
+		beego.Info(err)
 	}
 	//3.赞赏者账户修改余额
 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -585,9 +581,9 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	//没有查到则新增一条
 	err = db.Where("user_id = ?", exceltemple.UserID).First(&moneyB).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		if err = tx.Create(&Money{UserID: exceltemple.UserID, Amount: 100}).Error; err != nil {
-			logs.Error(err)
+			beego.Info(err)
 			tx.Rollback()
 			return err
 		}
@@ -604,13 +600,13 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 		err = tx.Where("user_id = ?", exceltemple.UserID).First(&moneyB).Error
 		if err != nil {
 			tx.Rollback()
-			logs.Error(err)
+			beego.Info(err)
 			return err
 		}
 		//账户充值_这句干嘛？重复？——这个是充值数据表，上面是账户余额表，不重复
 		err := tx.Create(&Recharge{UserID: exceltemple.UserID, Amount: 100}).Error
 		if err != nil {
-			logs.Error(err)
+			beego.Info(err)
 			tx.Rollback()
 			return err
 		}
@@ -619,7 +615,7 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 	newamount = moneyB.Amount + amount
 	rowsAffected = tx.Model(&moneyB).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -630,7 +626,7 @@ func AddUserPayExcel(templeid uint, uid int64, amount int) error {
 //添加某个mathpdf某个用户计算扣费记录,归平台所有
 func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -646,7 +642,7 @@ func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
 
 	newamount := 0 - amount
 	if err := tx.Create(&PayExcelPdf{UserID: uid, PdfTitle: pdftitle, PdfLink: pdflink, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -655,7 +651,7 @@ func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
 	var moneyA Money
 	err := db.Where("user_id = ?", uid).First(&moneyA).Error
 	if err != nil {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -664,12 +660,12 @@ func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
 	if newamount < 0 {
 		tx.Rollback()
 		return err
-		logs.Error(err)
+		beego.Info(err)
 	}
 	//3.赞赏者账户修改余额
 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
 	if rowsAffected == 0 {
-		logs.Error(err)
+		beego.Info(err)
 		tx.Rollback()
 		return err
 	}
@@ -680,7 +676,7 @@ func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
 //查询某个用户下载过的pdf记录
 func GetUserPayExcelPdf(uid int64, pdftitle string) (payexcelpdf PayExcelPdf, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	err = db.Where("user_id = ? AND pdf_title=?", uid, pdftitle).First(&payexcelpdf).Error
 	return payexcelpdf, err
 }
@@ -688,7 +684,7 @@ func GetUserPayExcelPdf(uid int64, pdftitle string) (payexcelpdf PayExcelPdf, er
 //用户充值和提现
 func AddUserRecharge(uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -774,7 +770,7 @@ func AddUserRecharge(uid int64, amount int) error {
 // 用户添加充值申请——软删除db.Delete(&User{}, 10)，采用事务，如果软删除出错，则回滚
 func AddApplyRecharge(uid int64, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -808,7 +804,7 @@ func AddApplyRecharge(uid int64, amount int) error {
 // 管理员查询到所有申请
 func GetApplyRecharge(limit, offset int) (recharge []Recharge, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	if err := db.Unscoped().Preload("User").Where("deleted_at <> ?", "").Limit(limit).Offset(offset).Find(&recharge).Error; err != nil {
 		return recharge, err
 	}
@@ -819,7 +815,7 @@ func GetApplyRecharge(limit, offset int) (recharge []Recharge, err error) {
 // db.Model(&user).Select("Name", "Age").Updates(User{Name: "new_name", Age: 0})
 func UpdateRecharge(rid uint, amount int) error {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := db.Begin()
 	defer func() {
@@ -866,7 +862,7 @@ func UpdateRecharge(rid uint, amount int) error {
 //查询某个用户花费赞赏 和 获得 文章 赞赏记录
 func GetUserPay(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// err = db.Where("user_id", uid).Find(&pays).Error
 	err = db.Order("updated_at desc").Model(&pays).Preload("User").Preload("Article").Where("user_id = ?", uid).Or("user2_id = ?", uid).Limit(limit).Offset(offset).Find(&pays).Error //查询所有device记录
 	// err = db.Model(&pays).Related(&pays.User, "Users").Error
@@ -878,7 +874,7 @@ func GetUserPay(uid int64, limit, offset int) (pays []*Pay, err error) {
 //查询某个用户花费赞赏 和 获得 math 赞赏记录
 func GetUserPayMath(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
 	//获取DB
-	db := _db //GetDB()
+	db := GetDB()
 	// err = db.Where("user_id", uid).Find(&pays).Error
 	err = db.Order("updated_at desc").Preload("User").Preload("User2").Preload("UserTemple").Where("user_id = ?", uid).Or("user2_id = ?", uid).Limit(limit).Offset(offset).Find(&paymaths).Error //查询所有device记录
 	// err = db.Model(&pays).Related(&pays.User, "Users").Error
@@ -890,7 +886,7 @@ func GetUserPayMath(uid int64, limit, offset int) (paymaths []*PayMath, err erro
 //查询某个用户 花费 赞赏（赞赏别人）文章 的记录
 func GetUserPayAppreciation(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
-	db := _db                                                                                                                                               //GetDB()
+	db := GetDB()
 	err = db.Order("updated_at desc").Model(&pays).Preload("User").Preload("Article").Where("user_id=?", uid).Limit(limit).Offset(offset).Find(&pays).Error //查询所有device记录
 	return pays, err
 	// 多连接及参数
@@ -900,7 +896,7 @@ func GetUserPayAppreciation(uid int64, limit, offset int) (pays []*Pay, err erro
 //查询某个用户 花费 赞赏（赞赏别人）math 的记录
 func GetUserPayMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
 	//获取DB
-	db := _db                                                                                                                                                          //GetDB()
+	db := GetDB()
 	err = db.Order("updated_at desc").Model(&paymaths).Preload("User").Preload("UserTemple").Where("user_id=?", uid).Limit(limit).Offset(offset).Find(&paymaths).Error //查询所有device记录
 	return paymaths, err
 	// 多连接及参数
@@ -910,7 +906,7 @@ func GetUserPayMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMa
 //查询某个用户 获得 赞赏（别人赞赏自己）的记录
 func GetUserGetAppreciation(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
-	db := _db                                                                                                                                                //GetDB()
+	db := GetDB()
 	err = db.Order("updated_at desc").Model(&pays).Preload("User").Preload("Article").Where("user2_id=?", uid).Limit(limit).Offset(offset).Find(&pays).Error //查询所有device记录
 	return pays, err
 	// 多连接及参数
@@ -920,7 +916,7 @@ func GetUserGetAppreciation(uid int64, limit, offset int) (pays []*Pay, err erro
 //查询某个用户 获得 赞赏（别人赞赏自己）math 的记录
 func GetUserGetMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
 	//获取DB
-	db := _db                                                                                                                                                           //GetDB()
+	db := GetDB()
 	err = db.Order("updated_at desc").Model(&paymaths).Preload("User").Preload("UserTemple").Where("user2_id=?", uid).Limit(limit).Offset(offset).Find(&paymaths).Error //查询所有device记录
 	return paymaths, err
 	// 多连接及参数

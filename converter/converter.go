@@ -201,7 +201,7 @@ func (convert *Converter) Convert() (err error) {
 			for {
 				action, isClosed := <-convert.process
 				if action == nil && !isClosed {
-					break;
+					break
 				}
 				group.Add(1)
 				<-convert.limitChan

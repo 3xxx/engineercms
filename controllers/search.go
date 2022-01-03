@@ -3,9 +3,7 @@ package controllers
 import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/astaxie/beego"
 	"io"
 	"path"
 	"regexp"
@@ -15,16 +13,16 @@ import (
 )
 
 type SearchController struct {
-	web.Controller
+	beego.Controller
 }
 
 //搜索项目
 func (c *SearchController) SearchProject() { //search用的是get方法
-	key := c.GetString("keyword")
+	key := c.Input().Get("keyword")
 	if key != "" {
 		searchs, err := models.SearchProject(key)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		} else {
 			c.Data["json"] = searchs
 			c.ServeJSON()
@@ -58,8 +56,8 @@ func (c *SearchController) SearchProjectProduct() { //search用的是get方法
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 
-	pid := c.GetString("productid")
-	key := c.GetString("keyword")
+	pid := c.Input().Get("productid")
+	key := c.Input().Get("keyword")
 	if pid != "" {
 		c.Data["IsProduct"] = true
 	} else {
@@ -70,7 +68,7 @@ func (c *SearchController) SearchProjectProduct() { //search用的是get方法
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -95,17 +93,17 @@ func (c *SearchController) SearchProjectProduct() { //search用的是get方法
 // 在某个项目里搜索成果：全文搜索，article全文，编号，名称，关键字，作者……
 func (c *SearchController) SearchProjectProductData() {
 	// limit := "15"
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	// beego.Info(limit)
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("pageNo")
+	page := c.Input().Get("pageNo")
 	// beego.Info(page)
 	page1, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int64
 	if page1 <= 1 {
@@ -114,21 +112,21 @@ func (c *SearchController) SearchProjectProductData() {
 		offset = (page1 - 1) * limit1
 	}
 
-	pid := c.GetString("productid")
+	pid := c.Input().Get("productid")
 	var pidNum int64
 	// var err error
 	if pid != "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	key := c.GetString("keyword")
-	searchText := c.GetString("searchText")
+	key := c.Input().Get("keyword")
+	searchText := c.Input().Get("searchText")
 	// if searchText != "" {
 	count, products, err := models.SearchProjProduct(pidNum, limit1, offset, key, searchText) //这里要将侧栏所有id进行循环
 	if err != nil {
-		logs.Error(err.Error)
+		beego.Error(err.Error)
 	} else {
 		link := make([]ProductLink, 0)
 		Attachslice := make([]AttachmentLink, 0)
@@ -137,7 +135,7 @@ func (c *SearchController) SearchProjectProductData() {
 		for _, w := range products {
 			Url, _, err := GetUrlPath(w.ProjectId)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
 			//循环成果
@@ -145,7 +143,7 @@ func (c *SearchController) SearchProjectProductData() {
 			//一个附件则直接打开/下载；2个以上则打开模态框
 			Attachments, err := models.GetAttachments(w.Id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			//对成果进行循环
 			//赋予url
@@ -187,7 +185,7 @@ func (c *SearchController) SearchProjectProductData() {
 			//取得文章
 			Articles, err := models.GetArticles(w.Id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			for _, x := range Articles {
 				articlearr := make([]ArticleContent, 1)
@@ -231,8 +229,8 @@ func (c *SearchController) SearchProduct() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 
-	pid := c.GetString("productid")
-	key := c.GetString("keyword")
+	pid := c.Input().Get("productid")
+	key := c.Input().Get("keyword")
 	if pid != "" {
 		c.Data["IsProduct"] = true
 	} else {
@@ -243,7 +241,7 @@ func (c *SearchController) SearchProduct() {
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if matched == true {
 		// beego.Info("移动端~")
@@ -267,22 +265,22 @@ func (c *SearchController) SearchProduct() {
 func (c *SearchController) SearchProductData() {
 	var offset, limit1, page1 int64
 	var err error
-	limit := c.GetString("limit")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit1 = 15
 	} else {
 		limit1, err = strconv.ParseInt(limit, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
-	page := c.GetString("pageNo")
+	page := c.Input().Get("pageNo")
 	if page == "" {
 		page1 = 1
 	} else {
 		page1, err = strconv.ParseInt(page, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -292,24 +290,24 @@ func (c *SearchController) SearchProductData() {
 		offset = (page1 - 1) * limit1
 	}
 
-	key := c.GetString("keyword")
+	key := c.Input().Get("keyword")
 	if key != "" {
 		// products, err := models.SearchProduct(key)
 		products, err := models.SearchProductPage(limit1, offset, key)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		}
 		//由product取得proj
 		//取目录本身
 		// proj, err := models.GetProj(products.ProjectId)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		//根据目录id取出项目id，以便得到同步ip
 		// array := strings.Split(proj.ParentIdPath, "-")
 		// projid, err := strconv.ParseInt(array[0], 10, 64)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		//由proj id取得url
 
@@ -321,7 +319,7 @@ func (c *SearchController) SearchProductData() {
 		for _, w := range products {
 			// Url, _, err := GetUrlPath(w.ProjectId)
 			// if err != nil {
-			// 	logs.Error(err)
+			// 	beego.Error(err)
 			// }
 			//取到每个成果的附件（模态框打开）；pdf、文章——新窗口打开
 			//循环成果
@@ -329,7 +327,7 @@ func (c *SearchController) SearchProductData() {
 			//一个附件则直接打开/下载；2个以上则打开模态框
 			Attachments, err := models.GetAttachments(w.Id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			//对成果进行循环
 			//赋予url
@@ -371,7 +369,7 @@ func (c *SearchController) SearchProductData() {
 			//取得文章
 			Articles, err := models.GetArticles(w.Id)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			for _, x := range Articles {
 				articlearr := make([]ArticleContent, 1)
@@ -386,7 +384,7 @@ func (c *SearchController) SearchProductData() {
 		}
 		count, err := models.SearchProductCount(key)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		}
 		table := prodTableserver{link, page1, count}
 		c.Data["json"] = table
@@ -408,16 +406,16 @@ func (c *SearchController) SearchProductData() {
 // @router /searchwxdrawings [get]
 // 小程序取得所有图纸列表，分页_plus
 func (c *SearchController) SearchWxDrawings() {
-	// wxsite := web.AppConfig.String("wxreqeustsite")
+	// wxsite := beego.AppConfig.String("wxreqeustsite")
 	limit := "8"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("searchpage")
+	page := c.Input().Get("searchpage")
 	page1, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int64
 	if page1 <= 1 {
@@ -426,33 +424,33 @@ func (c *SearchController) SearchWxDrawings() {
 		offset = (page1 - 1) * limit1
 	}
 
-	pid := c.GetString("projectid")
+	pid := c.Input().Get("projectid")
 	var pidNum int64
 	if pid != "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
-	key := c.GetString("keyword")
+	key := c.Input().Get("keyword")
 	var products []*models.Product
 	if key != "" {
 		if pidNum == 0 { //搜索所有成果
 			products, err = models.SearchProductPage(limit1, offset, key)
 			if err != nil {
-				logs.Error(err.Error)
+				beego.Error(err.Error)
 			}
 		} else {
 			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
 			if err != nil {
-				logs.Error(err.Error)
+				beego.Error(err.Error)
 			}
 		}
 	} else {
 		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		}
 		// c.Data["json"] = map[string]interface{}{"info": "关键字为空"}
 		// c.ServeJSON()
@@ -465,7 +463,7 @@ func (c *SearchController) SearchWxDrawings() {
 		//一个附件则直接打开/下载；2个以上则打开模态框
 		Attachments, err := models.GetAttachments(w.Id)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//对成果进行循环
 		//赋予url
@@ -492,7 +490,7 @@ func (c *SearchController) SearchWxDrawings() {
 		//取得文章
 		// Articles, err := models.GetArticles(w.Id)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		// for _, x := range Articles {
 		// 	articlearr := make([]ArticleContent, 1)
@@ -507,31 +505,31 @@ func (c *SearchController) SearchWxDrawings() {
 	c.ServeJSON()
 	// var user models.User
 	// //取出用户openid
-	// JSCODE := c.GetString("code")
+	// JSCODE := c.Input().Get("code")
 	// if JSCODE != "" {
-	// 	APPID := web.AppConfig.String("wxAPPID2")
-	// 	SECRET := web.AppConfig.String("wxSECRET2")
-	// 	app_version := c.GetString("app_version")
+	// 	APPID := beego.AppConfig.String("wxAPPID2")
+	// 	SECRET := beego.AppConfig.String("wxSECRET2")
+	// 	app_version := c.Input().Get("app_version")
 	// 	if app_version == "3" {
-	// 		APPID = web.AppConfig.String("wxAPPID3")
-	// 		SECRET = web.AppConfig.String("wxSECRET3")
+	// 		APPID = beego.AppConfig.String("wxAPPID3")
+	// 		SECRET = beego.AppConfig.String("wxSECRET3")
 	// 	}
 	// 	// APPID := "wx7f77b90a1a891d93"
 	// 	// SECRET := "f58ca4f28cbb52ccd805d66118060449"
 	// 	requestUrl := "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + SECRET + "&js_code=" + JSCODE + "&grant_type=authorization_code"
 	// 	resp, err := http.Get(requestUrl)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 		return
 	// 	}
 	// 	defer resp.Body.Close()
 	// 	if resp.StatusCode != 200 {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// 	var data map[string]interface{}
 	// 	err = json.NewDecoder(resp.Body).Decode(&data)
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// 	var openID string
 	// 	if _, ok := data["session_key"]; !ok {
@@ -542,7 +540,7 @@ func (c *SearchController) SearchWxDrawings() {
 	// 		openID = data["openid"].(string)
 	// 		user, err = models.GetUserByOpenID(openID)
 	// 		if err != nil {
-	// 			logs.Error(err)
+	// 			beego.Error(err)
 	// 		}
 	// 	}
 	// }
@@ -566,16 +564,16 @@ func (c *SearchController) SearchWxDrawings() {
 // 小程序取得某个项目目录下的所有pdf，分页
 // 结合搜索来用
 func (c *SearchController) GetWxPdfList() {
-	// wxsite := web.AppConfig.String("wxreqeustsite")
+	// wxsite := beego.AppConfig.String("wxreqeustsite")
 	limit := "6"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("searchpage")
+	page := c.Input().Get("searchpage")
 	page1, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int64
 	if page1 <= 1 {
@@ -584,29 +582,29 @@ func (c *SearchController) GetWxPdfList() {
 		offset = (page1 - 1) * limit1
 	}
 
-	key := c.GetString("keyword")
+	key := c.Input().Get("keyword")
 	var products []*models.Product
 
-	pid := c.GetString("projectid")
+	pid := c.Input().Get("projectid")
 	// beego.Info(pid)
 	var pidNum int64
 	if pid != "" && key == "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		products, err = models.SearchProjProductPage(pidNum, limit1, offset, "")
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		}
 	} else if pid != "" && key != "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "关键字或项目为空"}
@@ -617,7 +615,7 @@ func (c *SearchController) GetWxPdfList() {
 	for _, w := range products {
 		Attachments, err := models.GetAttachments(w.Id)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//对成果进行循环
 		//赋予url
@@ -667,19 +665,16 @@ type WxProduct struct {
 // @router /searchwxproducts [get]
 // 小程序取得所有图纸列表，分页_plus
 func (c *SearchController) SearchWxProducts() {
-	wxsite, err := web.AppConfig.String("wxreqeustsite")
-	if err != nil {
-		logs.Error(err)
-	}
+	wxsite := beego.AppConfig.String("wxreqeustsite")
 	limit := "8"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("searchpage")
+	page := c.Input().Get("searchpage")
 	page1, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int64
 	if page1 <= 1 {
@@ -688,33 +683,33 @@ func (c *SearchController) SearchWxProducts() {
 		offset = (page1 - 1) * limit1
 	}
 
-	pid := c.GetString("projectid")
+	pid := c.Input().Get("projectid")
 	var pidNum int64
 	if pid != "" {
 		pidNum, err = strconv.ParseInt(pid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
-	key := c.GetString("keyword")
+	key := c.Input().Get("keyword")
 	var products []*models.Product
 	if key != "" {
 		if pidNum == 0 { //搜索所有成果
 			products, err = models.SearchProductPage(limit1, offset, key)
 			if err != nil {
-				logs.Error(err.Error)
+				beego.Error(err.Error)
 			}
 		} else {
 			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
 			if err != nil {
-				logs.Error(err.Error)
+				beego.Error(err.Error)
 			}
 		}
 	} else {
 		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		}
 		// c.Data["json"] = map[string]interface{}{"info": "关键字为空"}
 		// c.ServeJSON()
@@ -727,7 +722,7 @@ func (c *SearchController) SearchWxProducts() {
 		//一个附件则直接打开/下载；2个以上则打开模态框
 		Attachments, err := models.GetAttachments(w.Id)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//对成果进行循环
 		//赋予url
@@ -772,11 +767,11 @@ func (c *SearchController) SearchWxProducts() {
 		//取得文章
 		// Articles, err := models.GetArticles(w.Id)
 		// if err != nil {
-		// 	logs.Error(err)
+		// 	beego.Error(err)
 		// }
 		Articles, err := models.GetWxArticles(w.Id)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		for _, x := range Articles {
 			wxproductarr := make([]WxProduct, 1)
@@ -792,7 +787,7 @@ func (c *SearchController) SearchWxProducts() {
 			var r io.Reader = strings.NewReader(string(x.Content))
 			doc, err := goquery.NewDocumentFromReader(r)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			doc.Find("img").Each(func(i int, s *goquery.Selection) {
 				sel, _ := s.Attr("src")
@@ -819,12 +814,12 @@ func (c *SearchController) SearchProjects() {
 	limit := "15"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("searchpage")
+	page := c.Input().Get("searchpage")
 	page1, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int64
 	if page1 <= 1 {
@@ -832,16 +827,16 @@ func (c *SearchController) SearchProjects() {
 	} else {
 		offset = (page1 - 1) * limit1
 	}
-	pid := c.GetString("productid")
+	pid := c.Input().Get("productid")
 	pidNum, err := strconv.ParseInt(pid, 10, 64)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	key := c.GetString("keyword")
+	key := c.Input().Get("keyword")
 	if key != "" {
 		_, products, err := models.SearchProjProduct(pidNum, limit1, offset, key, "") //这里要将侧栏所有id进行循环
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		} else {
 			c.Data["json"] = products
 			c.ServeJSON()
@@ -851,7 +846,7 @@ func (c *SearchController) SearchProjects() {
 
 //搜索wiki
 func (c *SearchController) SearchWiki() { //search用的是get方法
-	tid := c.GetString("wikiname")
+	tid := c.Input().Get("wikiname")
 	if tid != "" {
 		c.Data["IsWiki"] = true
 		// c.Data["IsSearch"] = true
@@ -859,7 +854,7 @@ func (c *SearchController) SearchWiki() { //search用的是get方法
 		c.TplName = "searchwiki.tpl"
 		Searchs, err := models.SearchWikis(tid, false)
 		if err != nil {
-			logs.Error(err.Error)
+			beego.Error(err.Error)
 		} else {
 			c.Data["Searchs"] = Searchs
 		}

@@ -4,8 +4,7 @@ import (
 	"errors"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/i18n"
+	"github.com/astaxie/beego/orm"
 	"strings"
 )
 
@@ -20,7 +19,7 @@ func (c *TemplateController) isPermission() error {
 	bookIdentify := c.GetString("identify", "")
 
 	if bookIdentify == "" {
-		return errors.New(i18n.Tr(c.Lang, "message.param_error"))
+		return errors.New("参数错误")
 	}
 
 	if !c.Member.IsAdministrator() {

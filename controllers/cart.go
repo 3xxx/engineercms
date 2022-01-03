@@ -1,11 +1,24 @@
 package controllers
 
 import (
+	// "net/http"
+	// "archive/tar"
+	// "compress/gzip"
+	// "encoding/json"
+	// "errors"
+	// "github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/context"
+	// "io"
+	// "io/ioutil"
+	// "net/url"
+	// "os"
+	// "path"
+	// "path/filepath"
 	"strconv"
 	"strings"
+	// "time"
 )
 
 type CartResult struct {
@@ -15,7 +28,7 @@ type CartResult struct {
 }
 
 type CartController struct {
-	web.Controller
+	beego.Controller
 }
 
 // @Title post create a new cart
@@ -26,9 +39,9 @@ type CartController struct {
 // @Failure 404 articl not found
 // @router /createproductcart [post]
 func (c *CartController) CreateProductCart() {
-	ids := c.GetString("ids")
+	ids := c.Input().Get("ids")
 	if ids == "" {
-		logs.Error("matterUuids cannot be null")
+		beego.Error("matterUuids cannot be null")
 		c.Data["json"] = map[string]interface{}{"code": "ERROR", "msg": "matterUuids cannot be null"}
 		c.ServeJSON()
 		return
@@ -37,12 +50,12 @@ func (c *CartController) CreateProductCart() {
 	Array := strings.Split(ids, ",")
 
 	if len(Array) == 0 {
-		logs.Error("share at least one file")
+		beego.Error("share at least one file")
 		c.Data["json"] = map[string]interface{}{"code": "ERROR", "msg": "share at least one file"}
 		c.ServeJSON()
 		return
 	} else if len(Array) > SHARE_MAX_NUM {
-		logs.Error("ShareNumExceedLimit")
+		beego.Error("ShareNumExceedLimit")
 		c.Data["json"] = map[string]interface{}{"code": "ERROR", "msg": "ShareNumExceedLimit"}
 		c.ServeJSON()
 		return
@@ -54,7 +67,7 @@ func (c *CartController) CreateProductCart() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	} else {
 		c.Data["json"] = map[string]interface{}{"code": "ERROR", "msg": "用户未登录"}
@@ -68,7 +81,7 @@ func (c *CartController) CreateProductCart() {
 	for _, id := range Array {
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		product, err := models.GetProd(idNum)
 		// beego.Info(product.Id)
@@ -78,7 +91,7 @@ func (c *CartController) CreateProductCart() {
 		// cart.UserId = user.Id
 		_, err = models.CreateCart(product.Id, user.Id)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	// share := &models.Share{
@@ -106,13 +119,13 @@ func (c *CartController) GetCart() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//查询admin角色的id
 		//重新获取roleid
 		role, err := models.GetRoleByRolename("admin")
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		userid = strconv.FormatInt(user.Id, 10)
 		roleid = strconv.FormatInt(role.Id, 10)
@@ -125,7 +138,7 @@ func (c *CartController) GetCart() {
 	}
 	isadmin, err := e.HasRoleForUser(userid, "role_"+roleid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
@@ -158,13 +171,13 @@ func (c *CartController) GetApprovalCart() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//查询admin角色的id
 		//重新获取roleid
 		role, err := models.GetRoleByRolename("admin")
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		userid = strconv.FormatInt(user.Id, 10)
 		roleid = strconv.FormatInt(role.Id, 10)
@@ -174,24 +187,24 @@ func (c *CartController) GetApprovalCart() {
 		c.ServeJSON()
 		return
 	}
-	status := c.GetString("status")
+	status := c.Input().Get("status")
 	status1, err := strconv.Atoi(status)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	searchText := c.GetString("searchText")
-	limit := c.GetString("limit")
+	searchText := c.Input().Get("searchText")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit = "15"
 	}
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("pageNo")
+	page := c.Input().Get("pageNo")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -201,16 +214,16 @@ func (c *CartController) GetApprovalCart() {
 	}
 	isadmin, err := e.HasRoleForUser(userid, "role_"+roleid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(isadmin)
 	carts, err := models.GetApprovalCart(user.Id, limit1, offset, status1, searchText, isadmin)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	count, err := models.GetApprovalCartCount(user.Id, status1, searchText, isadmin)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// c.Data["json"] = carts
 	c.Data["json"] = map[string]interface{}{"page": page1, "total": count, "rows": carts}
@@ -238,13 +251,13 @@ func (c *CartController) GetApplyCart() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//查询admin角色的id
 		//重新获取roleid
 		role, err := models.GetRoleByRolename("admin")
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		userid = strconv.FormatInt(user.Id, 10)
 		roleid = strconv.FormatInt(role.Id, 10)
@@ -254,24 +267,24 @@ func (c *CartController) GetApplyCart() {
 		c.ServeJSON()
 		return
 	}
-	status := c.GetString("status")
+	status := c.Input().Get("status")
 	status1, err := strconv.Atoi(status)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	searchText := c.GetString("searchText")
-	limit := c.GetString("limit")
+	searchText := c.Input().Get("searchText")
+	limit := c.Input().Get("limit")
 	if limit == "" {
 		limit = "15"
 	}
 	limit1, err := strconv.Atoi(limit)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
-	page := c.GetString("pageNo")
+	page := c.Input().Get("pageNo")
 	page1, err := strconv.Atoi(page)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	var offset int
 	if page1 <= 1 {
@@ -281,16 +294,16 @@ func (c *CartController) GetApplyCart() {
 	}
 	isadmin, err := e.HasRoleForUser(userid, "role_"+roleid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(isadmin)
 	carts, err := models.GetApplyCart(user.Id, limit1, offset, status1, searchText, isadmin)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	count, err := models.GetApplyCartCount(user.Id, status1, searchText, isadmin)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// c.Data["json"] = carts
 	c.Data["json"] = map[string]interface{}{"page": page1, "total": count, "rows": carts}
@@ -318,11 +331,11 @@ func (c *CartController) GetApplyCart() {
 // 	if v != nil {
 // 		user, err = models.GetUserByUsername(v.(string))
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 		role, err := models.GetRoleByRolename("admin")
 // 		if err != nil {
-// 			logs.Error(err)
+// 			beego.Error(err)
 // 		}
 // 		userid = strconv.FormatInt(user.Id, 10)
 // 		roleid = strconv.FormatInt(role.Id, 10)
@@ -332,24 +345,24 @@ func (c *CartController) GetApplyCart() {
 // 		c.ServeJSON()
 // 		return
 // 	}
-// 	status := c.GetString("status")
+// 	status := c.Input().Get("status")
 // 	status1, err := strconv.Atoi(status)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
-// 	searchText := c.GetString("searchText")
-// 	limit := c.GetString("limit")
+// 	searchText := c.Input().Get("searchText")
+// 	limit := c.Input().Get("limit")
 // 	if limit == "" {
 // 		limit = "15"
 // 	}
 // 	limit1, err := strconv.Atoi(limit)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
-// 	page := c.GetString("pageNo")
+// 	page := c.Input().Get("pageNo")
 // 	page1, err := strconv.Atoi(page)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	var offset int
 // 	if page1 <= 1 {
@@ -361,11 +374,11 @@ func (c *CartController) GetApplyCart() {
 // 	beego.Info(isadmin)
 // 	carts, err := models.GetHistoryCart(user.Id, limit1, offset, status1, searchText, isadmin)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	count, err := models.GetHistoryCartCount(user.Id, status1, searchText, isadmin)
 // 	if err != nil {
-// 		logs.Error(err)
+// 		beego.Error(err)
 // 	}
 // 	c.Data["json"] = map[string]interface{}{"page": page1, "total": count, "rows": carts}
 // 	c.ServeJSON()
@@ -379,9 +392,9 @@ func (c *CartController) GetApplyCart() {
 // @Failure 404 articl not found
 // @router /deleteusercart [post]
 func (c *CartController) DeleteUserCart() {
-	ids := c.GetString("ids")
+	ids := c.Input().Get("ids")
 	if ids == "" {
-		logs.Error("matterUuids cannot be null")
+		beego.Error("matterUuids cannot be null")
 	}
 
 	Array := strings.Split(ids, ",")
@@ -389,9 +402,9 @@ func (c *CartController) DeleteUserCart() {
 	// json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
 
 	if len(Array) == 0 {
-		logs.Error("share at least one file")
+		beego.Error("share at least one file")
 	} else if len(Array) > SHARE_MAX_NUM {
-		logs.Error("ShareNumExceedLimit")
+		beego.Error("ShareNumExceedLimit")
 	}
 
 	v := c.GetSession("uname")
@@ -401,13 +414,13 @@ func (c *CartController) DeleteUserCart() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		//查询admin角色的id
 		//重新获取roleid
 		role, err := models.GetRoleByRolename("admin")
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		userid = strconv.FormatInt(user.Id, 10)
 		roleid = strconv.FormatInt(role.Id, 10)
@@ -417,21 +430,21 @@ func (c *CartController) DeleteUserCart() {
 	}
 	isadmin, err := e.HasRoleForUser(userid, "role_"+roleid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	for _, id := range Array {
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		usercart, err := models.GetUserCartbyId(idNum)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		if isadmin || usercart.UserId == user.Id {
 			err = models.DeleteUserCart(idNum)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 		}
 	}
@@ -447,9 +460,9 @@ func (c *CartController) DeleteUserCart() {
 // @Failure 404 cart not found
 // @router /updateapprovalcart [post]
 func (c *CartController) UpdateApprovalCart() {
-	ids := c.GetString("ids")
+	ids := c.Input().Get("ids")
 	if ids == "" {
-		logs.Error("matterUuids cannot be null")
+		beego.Error("matterUuids cannot be null")
 	}
 
 	Array := strings.Split(ids, ",")
@@ -457,16 +470,16 @@ func (c *CartController) UpdateApprovalCart() {
 	// json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
 
 	if len(Array) == 0 {
-		logs.Error("share at least one file")
+		beego.Error("share at least one file")
 	}
 	for _, id := range Array {
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		err = models.UpdateApprovalCart(idNum)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	c.Data["json"] = map[string]interface{}{"code": "OK", "info": "OK", "msg": "OK", "data": ids}

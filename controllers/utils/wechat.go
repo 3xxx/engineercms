@@ -7,10 +7,8 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/client/cache"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/cache"
 	"io"
 	"io/ioutil"
 	"log"
@@ -18,7 +16,6 @@ import (
 	"net/http"
 	"net/url"
 	// "strconv"
-	"context"
 	"strings"
 	"time"
 )
@@ -61,7 +58,7 @@ func init() {
 	var err error
 	bm, err = cache.NewCache("memory", `{"interval":7200}`)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	AesKey = EncodingAESKey2AESKey(encodingAESKey)
@@ -77,37 +74,22 @@ func GetAccessToken(app_version string) (accesstoken string, errcode float64, er
 	//   _ = json.Unmarshal(category.([]uint8), &data)
 	//   return data
 	// var accessToken cache.Cache
-	resultToken, err := bm.Get(context.TODO(), "access_token")
-	if err != nil {
-		logs.Error(err)
-	}
+	resultToken := bm.Get("access_token")
 	if resultToken == nil {
 		var APPID, SECRET string
 		if app_version == "1" {
-			APPID, err = web.AppConfig.String("wxAPPID")
-			if err != nil {
-				logs.Error(err)
-			}
-			SECRET, err = web.AppConfig.String("wxSECRET")
-			if err != nil {
-				logs.Error(err)
-			}
+			APPID = beego.AppConfig.String("wxAPPID")
+			SECRET = beego.AppConfig.String("wxSECRET")
 		} else {
 			appstring := "wxAPPID" + app_version
-			APPID, err = web.AppConfig.String(appstring)
-			if err != nil {
-				logs.Error(err)
-			}
+			APPID = beego.AppConfig.String(appstring)
 			secretstring := "wxSECRET" + app_version
-			SECRET, err = web.AppConfig.String(secretstring)
-			if err != nil {
-				logs.Error(err)
-			}
+			SECRET = beego.AppConfig.String(secretstring)
 		}
 		// 重新获取，存入缓存，返回值
 		accessToken, errcode, errmsg, err := requestToken(APPID, SECRET)
 		if accessToken != "" {
-			bm.Put(context.TODO(), "access_token", accessToken, 7200*time.Second)
+			bm.Put("access_token", accessToken, 7200*time.Second)
 			return accessToken, 0, "", nil
 		} else {
 			return "", errcode, errmsg, err
@@ -192,26 +174,26 @@ func MsgSecCheck(scene, version int, access_token, openid, content string) (errc
 	// })
 	b, err := json.Marshal(msg)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "json转换错误", err
 	}
-	// beego.Info(string(b))
+	beego.Info(string(b))
 
 	resp, err := http.Post(requestUrl, "application/x-www-form-urlencoded", bytes.NewBuffer(b)) //注意，这里是post
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "post请求错误", err
 		// return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "请求返回错误", err
 	}
 	var data map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "解析body错误", err
 	} else {
 		errcode := data["errcode"].(float64)
@@ -243,7 +225,7 @@ func MsgSecCheck(scene, version int, access_token, openid, content string) (errc
 // }
 
 func ImgSecCheck(bts []byte, accessToken string) (errcode float64, errmsg string, err error) {
-	// beego.Info(accessToken)
+	beego.Info(accessToken)
 	var bufReader bytes.Buffer
 	//	"mime/multipart" 可以将上传文件封装
 	mpWriter := multipart.NewWriter(&bufReader)
@@ -252,7 +234,7 @@ func ImgSecCheck(bts []byte, accessToken string) (errcode float64, errmsg string
 	//字段名必须为media
 	writer, err := mpWriter.CreateFormFile("media", fileName)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "建立media错误", err
 	}
 	reader := bytes.NewReader(bts)
@@ -279,7 +261,7 @@ func ImgSecCheck(bts []byte, accessToken string) (errcode float64, errmsg string
 
 	resp, err := client.Do(req)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "请求错误", err
 	}
 	defer resp.Body.Close()
@@ -288,13 +270,13 @@ func ImgSecCheck(bts []byte, accessToken string) (errcode float64, errmsg string
 	result, _ := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		// return false
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "读取返回值错误", err
 	}
 	err = json.Unmarshal(result, &vs)
 	if err != nil {
 		// return false
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "解析json错误", err
 	}
 	//errcode 存在，且为0，返回通过，87014有风险
@@ -393,7 +375,7 @@ func SendMessage(access_token, openid, template_id string) (errcode float64, err
 	message.Touser = openid
 	wxmessage, err := json.Marshal(message)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "json转换错误", err
 	}
 	// beego.Info(message)
@@ -411,19 +393,19 @@ func SendMessage(access_token, openid, template_id string) (errcode float64, err
 	//估计下面的"application/json;charset=utf-8"不影响结果吧，没有试
 	resp, err := http.Post(requestUrl, "application/json;charset=utf-8", bytes.NewBuffer(wxmessage))
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "post请求错误", err
 		// return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "请求返回错误", err
 	}
 	var msgdata map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&msgdata)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		return 0, "解析body错误", err
 	} else {
 		errcode := msgdata["errcode"].(float64)
@@ -451,18 +433,15 @@ func testmain() {
 
 	timeoutDuration := 10000000 * time.Second
 
-	err = cache_conn.Put(context.TODO(), "wilson1231111", "xu", timeoutDuration*time.Second)
+	err = cache_conn.Put("wilson1231111", "xu", timeoutDuration*time.Second)
 	if err != nil {
 		fmt.Println("数据读取出错，错误为：", err)
 	} else {
 		fmt.Println("redis 读取正常")
 	}
-	cache_areardata, err := cache_conn.Get(context.TODO(), "area")
-	if err != nil {
-		fmt.Println("数据读取出错，错误为：", err)
-	}
-	if areaData := cache_areardata; areaData != nil {
-		// beego.Info("get data from cache===========")
+
+	if areaData := cache_conn.Get("area"); areaData != nil {
+		beego.Info("get data from cache===========")
 		//resp["data"] = areaData
 		fmt.Println("从redis中读取出的数据为：", areaData)
 	} else {

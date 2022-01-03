@@ -1,14 +1,12 @@
 package controllers
 
 import (
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
 	"net/http/pprof"
 )
 
 type ProfController struct {
-	web.Controller
+	beego.Controller
 }
 
 func (this *ProfController) Get() {

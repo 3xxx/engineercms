@@ -1,17 +1,24 @@
 package controllers
 
 import (
+	// "github.com/eyebluecn/tank/code/core"
+	// "github.com/eyebluecn/tank/code/tool/builder"
+	// "github.com/eyebluecn/tank/code/tool/i18n"
+	"github.com/3xxx/engineercms/controllers/tool/result"
+	"github.com/3xxx/engineercms/controllers/utils/ziptil"
+	// "github.com/eyebluecn/tank/code/tool/util"
+	// "net/http"
+	// "archive/tar"
+	// "compress/gzip"
 	"encoding/json"
 	"errors"
-	"github.com/3xxx/engineercms/controllers/tool/result"
 	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/3xxx/engineercms/controllers/utils/ziptil"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/beego/v2/server/web/context"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	"io"
 	"io/ioutil"
+	// "net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -46,7 +53,7 @@ type WebResult struct {
 
 type ShareController struct {
 	// BaseController
-	web.Controller
+	beego.Controller
 	// shareDao  *ShareDao
 	// bridgeDao *BridgeDao
 	// matterDao *MatterDao
@@ -103,12 +110,12 @@ func (c *ShareController) Create() {
 	// matterUuids := request.FormValue("matterUuids")
 	// expireInfinityStr := request.FormValue("expireInfinity")
 	// expireTimeStr := request.FormValue("expireTime")
-	matterUuids := c.GetString("matterUuids")
-	expireInfinityStr := c.GetString("expireInfinityStr")
-	expireTimeStr := c.GetString("expireTimeStr")
+	matterUuids := c.Input().Get("matterUuids")
+	expireInfinityStr := c.Input().Get("expireInfinityStr")
+	expireTimeStr := c.Input().Get("expireTimeStr")
 	if matterUuids == "" {
 		// panic(result.BadRequest("matterUuids cannot be null"))
-		logs.Error("matterUuids cannot be null")
+		beego.Error("matterUuids cannot be null")
 	}
 	var expireTime time.Time
 	expireInfinity := false
@@ -118,24 +125,24 @@ func (c *ShareController) Create() {
 	} else {
 		if expireTimeStr == "" {
 			// panic(result.BadRequest("time format error"))
-			logs.Error("time format error")
+			beego.Error("time format error")
 		} else {
 			expireTime = utils.ConvertDateTimeStringToTime(expireTimeStr)
 		}
 
 		if expireTime.Before(time.Now()) {
 			// panic(result.BadRequest("expire time cannot before now"))
-			logs.Error("expire time cannot before now")
+			beego.Error("expire time cannot before now")
 		}
 	}
 	uuidArray := strings.Split(matterUuids, ",")
 
 	if len(uuidArray) == 0 {
 		// panic(result.BadRequest("share at least one file"))
-		logs.Error("share at least one file")
+		beego.Error("share at least one file")
 	} else if len(uuidArray) > SHARE_MAX_NUM {
 		// panic(result.BadRequestI18n(request, i18n.ShareNumExceedLimit, len(uuidArray), SHARE_MAX_NUM))
-		logs.Error("ShareNumExceedLimit")
+		beego.Error("ShareNumExceedLimit")
 	}
 
 	var name string
@@ -148,7 +155,7 @@ func (c *ShareController) Create() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
@@ -164,7 +171,7 @@ func (c *ShareController) Create() {
 		// }
 		idNum, err := strconv.ParseInt(uuid, 10, 64)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		product, err := models.GetProd(idNum)
 		productslice[0] = product
@@ -202,7 +209,7 @@ func (c *ShareController) Create() {
 	// this.shareDao.Create(share)
 	share, err = models.CreateShare(share)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	for _, product := range products {
 		bridge := &models.Bridge{
@@ -212,7 +219,7 @@ func (c *ShareController) Create() {
 		// this.bridgeDao.Create(bridge)
 		_, err = models.CreateBridge(bridge)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	c.Data["json"] = map[string]interface{}{"code": "OK", "msg": "", "data": share}
@@ -263,14 +270,14 @@ func (c *ShareController) Detail() {
 	}
 	share, err := models.CheckByUuidShare(uuid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// v := c.GetSession("uname") //用来获取存储在服务器端中的数据??。
 	// var user models.User
 	// if v != nil { //如果登录了
 	// 	user, err = models.GetUserByUsername(v.(string))
 	// 	if err != nil {
-	// 		logs.Error(err)
+	// 		beego.Error(err)
 	// 	}
 	// }
 
@@ -300,8 +307,8 @@ func (c *ShareController) Browse() {
 	//puuid can be "root"
 	// puuid := request.FormValue("puuid")
 	// rootUuid := request.FormValue("rootUuid")
-	shareUuid := c.GetString("shareUuid")
-	code := c.GetString("code")
+	shareUuid := c.Input().Get("shareUuid")
+	code := c.Input().Get("code")
 	v := c.GetSession("uname") //用来获取存储在服务器端中的数据??。
 	// beego.Info(v)                          //qin.xc
 	var user models.User
@@ -309,7 +316,7 @@ func (c *ShareController) Browse() {
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	// beego.Info(user)
@@ -319,7 +326,7 @@ func (c *ShareController) Browse() {
 	// user := this.findUser(request)
 	share, err := CheckShare(c.Ctx, shareUuid, code, &user)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		// code: "NEED_SHARE_CODE"
 		// data: null
 		// msg: "提取码必填"
@@ -329,7 +336,7 @@ func (c *ShareController) Browse() {
 	}
 	bridges, err := models.FindByShareUuid(share.Uuid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": err, "msg": "bridges查询错误", "data": nil}
 		c.ServeJSON()
 		return
@@ -360,7 +367,7 @@ func (c *ShareController) Browse() {
 func CheckShare(ctx *context.Context, shareUuid string, code string, user *models.User) (*models.Share, error) {
 	share, err := models.CheckByUuidShare(shareUuid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	// beego.Info(user)
 	// beego.Info(code)
@@ -370,17 +377,17 @@ func CheckShare(ctx *context.Context, shareUuid string, code string, user *model
 		//if not login or not self's share, shareCode is required.
 		if code == "" {
 			// panic(result.CustomWebResultI18n(request, result.NEED_SHARE_CODE, i18n.ShareCodeRequired))
-			logs.Error("NEED_SHARE_CODE")
+			beego.Error("NEED_SHARE_CODE")
 			return nil, errors.New("NEED_SHARE_CODE")
 		} else if share.Code != code {
 			// panic(result.CustomWebResultI18n(request, result.SHARE_CODE_ERROR, i18n.ShareCodeError))
-			logs.Error("SHARE_CODE_ERROR")
+			beego.Error("SHARE_CODE_ERROR")
 			return nil, errors.New("SHARE_CODE_ERROR")
 		} else {
 			if !share.ExpireInfinity {
 				if share.ExpireTime.Before(time.Now()) {
 					// panic(result.BadRequest("share expired"))
-					logs.Error("share expired")
+					beego.Error("share expired")
 					return nil, errors.New("share expired")
 				}
 			}
@@ -411,16 +418,16 @@ func (c *ShareController) Download() {
 	// beego.Info(ob.Id)
 	// beego.Info(ob.ShareUuid)
 
-	shareUuid := ob.ShareUuid  //c.GetString("shareUuid")
-	code := ob.Code            //c.GetString("code")
-	id := ob.Id                //c.GetString("id")
+	shareUuid := ob.ShareUuid  //c.Input().Get("shareUuid")
+	code := ob.Code            //c.Input().Get("code")
+	id := ob.Id                //c.Input().Get("id")
 	v := c.GetSession("uname") //用来获取存储在服务器端中的数据??。
 	var user models.User
 	// var err error
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 	// beego.Info(&user)
@@ -429,7 +436,7 @@ func (c *ShareController) Download() {
 	// }
 	_, err = CheckShare(c.Ctx, shareUuid, code, &user)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		// code: "NEED_SHARE_CODE"
 		// data: null
 		// msg: "提取码必填"
@@ -441,30 +448,30 @@ func (c *ShareController) Download() {
 	//pid转成64为
 	// idNum, err := strconv.ParseInt(id, 10, 64)
 	// if err != nil {
-	// 	logs.Error(err)
+	// 	beego.Error(err)
 	// 	utils.FileLogs.Error(c.Ctx.Input.IP() + " 转换id " + err.Error())
 	// }
 	product, err := models.GetProd(id)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//查出attachment id
 	attachments, err := models.GetAttachments(product.Id)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 
 	//由proj id取得url
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	//这里只下载第一个文件哦！！
 	if len(attachments) > 0 {
 		fileext := path.Ext(attachments[0].FileName)
 		matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		// beego.Info(matched)
 		if matched {
@@ -631,24 +638,24 @@ func (c *ShareController) DownloadZip() {
 	// beego.Info(ob.Id)
 	// beego.Info(ob.ShareUuid)
 
-	shareUuid := ob.ShareUuid //c.GetString("shareUuid")
-	code := ob.Code           //c.GetString("code")
+	shareUuid := ob.ShareUuid //c.Input().Get("shareUuid")
+	code := ob.Code           //c.Input().Get("code")
 	// id := ob.Id
-	// shareUuid := c.GetString("shareUuid")
-	// code := c.GetString("code")
+	// shareUuid := c.Input().Get("shareUuid")
+	// code := c.Input().Get("code")
 	v := c.GetSession("uname") //用来获取存储在服务器端中的数据??。
 	var user models.User
 	// var err error
 	if v != nil { //如果登录了
 		user, err = models.GetUserByUsername(v.(string))
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 	}
 
 	share, err := CheckShare(c.Ctx, shareUuid, code, &user)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		// code: "NEED_SHARE_CODE"
 		// data: null
 		// msg: "提取码必填"
@@ -658,7 +665,7 @@ func (c *ShareController) DownloadZip() {
 	}
 	bridges, err := models.FindByShareUuid(share.Uuid)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": err, "msg": "bridges查询错误", "data": nil}
 		c.ServeJSON()
 		return
@@ -672,7 +679,7 @@ func (c *ShareController) DownloadZip() {
 				// return false
 				err := os.MkdirAll("./temp/engineercms", 0777)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 			}
 
@@ -684,18 +691,18 @@ func (c *ShareController) DownloadZip() {
 
 			prod, err = models.GetProd(bridge.ProductId)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 			if err != nil {
-				logs.Error(err)
+				beego.Error(err)
 			}
 			attachments, err := models.GetAttachments(bridge.ProductId)
 			for _, v := range attachments {
 				fileext := path.Ext(v.FileName)
 				matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 				if err != nil {
-					logs.Error(err)
+					beego.Error(err)
 				}
 				if matched {
 					c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
@@ -708,7 +715,7 @@ func (c *ShareController) DownloadZip() {
 				//targetfile,sourcefile
 				if err != nil {
 					// fmt.Println(err.Error())
-					logs.Error(err)
+					beego.Error(err)
 				}
 				// fmt.Println(w)
 			}
@@ -742,11 +749,11 @@ func (c *ShareController) DownloadZip() {
 	//delete the temp zip file.
 	err = os.Remove("./temp/" + prod.Title + ".zip")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	err = RemoveContents("./temp/engineercms/")
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 		os.Exit(1)
 	}
 }
@@ -790,13 +797,13 @@ func CopyFile(dstName, srcName string) (written int64, err error) {
 func DeleteEmptyDir(dirPath string) bool {
 	dir, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		logs.Error(err)
+		beego.Error(err)
 	}
 	if len(dir) == 0 {
 		//empty dir
 		err = os.Remove(dirPath)
 		if err != nil {
-			logs.Error(err)
+			beego.Error(err)
 		}
 		return true
 	}
@@ -943,11 +950,11 @@ func DeleteEmptyDir(dirPath string) bool {
 //find the current user from request.
 // SessionName
 // ctx.Input.Session("uname")
-// web.AppConfig.String("wxcatalogid")
+// beego.AppConfig.String("wxcatalogid")
 // func (this *ShareController) findUser(request *http.Request) *User {
 // 	//try to find from SessionCache.
 // 	// sessionId := util.GetSessionUuidFromRequest(request, core.COOKIE_AUTH_KEY)
-// 	sessionId := util.GetSessionUuidFromRequest(request, web.AppConfig.String("SessionName"))
+// 	sessionId := util.GetSessionUuidFromRequest(request, beego.AppConfig.String("SessionName"))
 // 	if sessionId == "" {
 // 		return nil
 // 	}
