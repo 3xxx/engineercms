@@ -1,0 +1,116 @@
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+ol,
+dl,
+dt,
+dd,
+p,
+span,
+object,
+iframe,
+pre,
+a,
+abbr,
+cite,
+input,
+select,
+option {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', 'Microsoft YaHei';
+}
+h1 {
+  font-size: 0.9rem;
+}
+h2 {
+  font-size: 0.75rem;
+}
+h3 {
+  font-size: 0.6rem;
+}
+ul,
+li,
+ol,
+dl,
+dd,
+dt,
+form {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/*html
+  100%*/
+body {
+  background: #f0f0f0;
+  font-family: 'Arial', 'Microsoft YaHei';
+  font: inherit;
+}
+img {
+  border: none;
+  outline: none;
+}
+em,
+i {
+  font-style: normal;
+}
+input {
+  outline: none;
+}
+a {
+  outline: none;
+  text-decoration: none;
+  color: #333;
+}
+a:hover,
+a:active,
+avisited {
+  text-decoration: none;
+}
+.clearfix:after {
+  content: '.';
+  height: 0;
+  visibility: hidden;
+  display: block;
+  clear: both;
+}
+dd,
+dt,
+dl {
+  line-height: 1.2;
+  font-weight: normal;
+}
+label {
+  font-weight: normal;
+}
+@font-face {
+  font-family: "iconfont";
+  src: url('/static/fonts/iconfont.eot?1512613120761'), url('/static/fonts/iconfont.eot?&1512613120761#iefix') format('embedded-opentype'), url('/static/fonts/iconfont.woff?1512613120761') format('woff'), url('/static/fonts/iconfont.ttf?1512613120761') format('truetype'), url('/static/fonts/iconfont.svg?1512613120761#iconfont') format('svg') ;
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+::-webkit-input-placeholder {
+  color: #dfdfdf;
+}
+:-moz-placeholder {
+  color: #dfdfdf;
+}
+::-moz-input-placeholder {
+  color: #dfdfdf;
+}
+:-ms-input-placeholder {
+  color: #dfdfdf;
+}

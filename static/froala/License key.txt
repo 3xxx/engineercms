@@ -1,0 +1,4 @@
+new FroalaEditor('.selector', {
+  key: "1C%kZV[IX)_SL}UJHAEFZMUJOYGYQE[\\ZJ]RAe(+%$==",
+  attribution: false // to hide "Powered by Froala"
+});

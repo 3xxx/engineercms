@@ -1,0 +1,1 @@
+__adroll.set_consent(true, false, false, "CN", "US", {"euconsent":null,"purposes":null,"banner":"banner_declined"});
