@@ -25,6 +25,10 @@ import (
 	"time"
 )
 
+// graceful错误——删除router下的另外2个文件，重新运行生成即可。
+// 项目引用了vendor里面的库，里面库go文件在init函数里面有同样的命名，从而在加载引用的时候会被调用，从而在main运行的时候提示已经解析多次。
+// 用goland查找默认是该项目下的文件，可以通过指定vendor目录进行查找。
+
 // 2021-8-30发现建表有问题：
 // 1.beego是首先运行controllers里的init()，然后运行models里的init()，这是不科学的。gorm就先运行models里的init()，建立表格
 // 2.因为controllers里先查询表还是操作表啥的出错，eforce那个，总是提示没有casbin_rule表，出错，程序走不下去，不去models里执行init()里的建表代码
@@ -168,11 +172,12 @@ func initialization() {
 		panic(err.Error())
 	}
 
+	// command.go里已经注册过了
 	lang, _ := web.AppConfig.String("default_lang")
-	err = i18n.SetMessage(lang, "conf/lang/"+lang+".ini")
-	if err != nil {
-		panic(fmt.Errorf("initialize locale error: %s", err))
-	}
+	// err = i18n.SetMessage(lang, "conf/lang/"+lang+".ini")
+	// if err != nil {
+	// 	panic(fmt.Errorf("initialize locale error: %s", err))
+	// }
 
 	member, err := models.NewMember().FindByFieldFirst("account", "admin")
 	if errors.Is(err, orm.ErrNoRows) {

@@ -275,14 +275,28 @@ func GetUserStandardCount(searchText string) (count int64, err error) {
 }
 
 //由分类SL和编号搜索有效版本库
-func SearchLiabraryNumber(Category, Number string) (*Library, error) {
-	o := orm.NewOrm()
-	library := new(Library)
-	qs := o.QueryTable("library")
-	err := qs.Filter("category", Category).Filter("number", Number).One(library)
-	if err != nil {
-		return nil, err
-	}
+// func SearchLiabraryNumber(Category, Number string) (*Library, error) {
+// 	o := orm.NewOrm()
+// 	library := new(Library)
+// 	qs := o.QueryTable("library")
+// 	err := qs.Filter("category", Category).Filter("number", Number).One(library)//当有多条返回时竟然出错
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return library, err
+// }
+
+// 获取第一条匹配的记录
+// db.Where("name = ?", "jinzhu").First(&user)
+// SELECT * FROM users WHERE name = 'jinzhu' ORDER BY id LIMIT 1;
+// 获取全部匹配的记录
+// db.Where("name <> ?", "jinzhu").Find(&users)
+// "name LIKE ?", "%jin%"
+func SearchLibraryNumber(Category, Number string) (library *Library, err error) {
+	db := _db //GetDB()
+	err = db.Order("library.updated desc").
+		Where("category LIKE ?", "%"+Category+"%").Where("number = ?", Number).
+		First(&library).Error
 	return library, err
 }
 

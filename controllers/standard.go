@@ -405,11 +405,14 @@ func (c *StandardController) Search() { //search用的是post方法
 		for i, v := range Results1 {
 			//由standardnumber正则得到编号50268和分类GB
 			Category, _, Number := SplitStandardFileNumber(v.Number)
+			// logs.Info(Category)
+			// logs.Info(Number)
 			//由分类和编号查有效版本库中的编号
-			library, err := models.SearchLiabraryNumber(Category, Number)
+			library, err := models.SearchLibraryNumber(Category, Number)
 			if err != nil {
 				logs.Error(err.Error)
 			}
+			// logs.Info(library)
 			aa[i].Id = v.Id
 			aa[i].Number = v.Number //`orm:"unique"`
 			aa[i].Title = v.Title
@@ -731,7 +734,7 @@ func (c *StandardController) SearchWxStandards() {
 			//由standardnumber正则得到编号50268和分类GB
 			Category, _, Number := SplitStandardFileNumber(v.Number)
 			//由分类和编号查有效版本库中的编号
-			library, err := models.SearchLiabraryNumber(Category, Number)
+			library, err := models.SearchLibraryNumber(Category, Number)
 			if err != nil {
 				logs.Error(err.Error)
 			}

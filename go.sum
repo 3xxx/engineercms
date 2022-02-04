@@ -5,6 +5,8 @@ gitea.com/xorm/sqlfiddle v0.0.0-20180821085327-62ce714f951a/go.mod h1:EXuID2Zs0p
 github.com/3xxx/flow v0.9.0 h1:pYg1xh2IsLX9dtREi1+x95X04oxNvHAMvu43p7VU5ik=
 github.com/3xxx/flow v0.9.0/go.mod h1:MAXu78fxc9BgfOCSFnb6fs3lss1D3a6BukDiiSVCVRc=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/DataDog/go-python3 v0.0.0-20210805105248-03d93fb21b67 h1:zzKCKrn9LBFO2EVefaXQbbugA6yBv+LrllqYDw7dayo=
+github.com/DataDog/go-python3 v0.0.0-20210805105248-03d93fb21b67/go.mod h1:7ctnOCLiUlwKO9GvAjusUF68edSbiHqC18gVPQF0ojA=
 github.com/Knetic/govaluate v3.0.0+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
 github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible h1:1G1pk05UrOh0NlF1oeaaix1x8XzrfjIDK47TY0Zehcw=
 github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=

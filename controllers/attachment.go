@@ -1613,7 +1613,7 @@ func (c *AttachController) Attachment() {
 	fileext := path.Ext(filePath)
 	filepath1 := path.Dir(filePath)
 	array := strings.Split(filepath1, "/")
-	// beego.Info(array[1])
+	logs.Info(array[1])
 	// beego.Info(fileext)
 	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 	if err != nil {
@@ -2646,6 +2646,63 @@ func (c *AttachController) GetWxExcelTempPdf() {
 	pdflink := filepath + "/" + filenameOnly + ".pdf"
 	// beego.Info(pdflink)
 	c.Ctx.Output.Download(pdflink)
+}
+
+// @Title dowload ansys data
+// @Description get ansys data by link
+// @Param id path string  true "The id of data"
+// @Success 200 {object} models.GetAttachbyId
+// @Failure 400 Invalid page supplied
+// @Failure 404 data not found
+// @router /getansysdata/:id [get]
+// ansys data数据
+// 重复下载不扣费
+func (c *AttachController) GetAnsysData() {
+	// 加权限判断
+	var err error
+	var uintid uint
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "用户未登录！"}
+		c.ServeJSON()
+		return
+	}
+
+	id := c.Ctx.Input.Param(":id")
+	// logs.Info(id)
+	if id != "" {
+		//id转成uint为
+		idint, err := strconv.Atoi(id)
+		if err != nil {
+			logs.Error(err)
+		}
+		uintid = uint(idint)
+	}
+
+	//根据history uint查出路径
+	history, err := models.GetHistoryAnsys(uintid) //这里修改
+	if err != nil {
+		logs.Error(err)
+	}
+
+	// logs.Info(history)
+	// fileext := path.Ext(history.PdfUrl)
+	filename := filepath.Base(history.PdfUrl)
+	// logs.Info(filename)
+	// beego.Info(usertemple)
+	// 去除文件名
+	filepath := path.Dir(history.PdfUrl)
+	// 文件名
+	// filename := usertemple.Title //path.Base(usertemple.TempPath)
+	// 文件后缀
+	filesuffix := path.Ext(history.PdfUrl)
+	filenameOnly := strings.TrimSuffix(filename, filesuffix) //只留下文件名，无后缀
+	// logs.Info(filenameOnly)
+	pdflink := filepath + "/" + filenameOnly + ".dat"
+	pdflink = strings.Replace(pdflink, "/attachment", "attachment", -1)
+	// logs.Info(pdflink)
+	c.Ctx.Output.Download(pdflink) //这句和下面都行，调试的时候不知道为什么这句一直出错！！
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, pdflink)
 }
 
 //编码转换

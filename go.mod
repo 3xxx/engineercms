@@ -52,4 +52,5 @@ require (
 	gorm.io/gorm v1.22.4
 	stathat.com/c/consistent v1.0.0 // indirect
 	xorm.io/xorm v1.2.5
+	github.com/DataDog/go-python3 v0.0.0-20210805105248-03d93fb21b67
 )

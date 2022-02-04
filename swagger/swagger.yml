@@ -1320,6 +1320,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /admin/sim:
+    get:
+      tags:
+      - admin
+      description: getsim
+      operationId: AdminController.get sim
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
   /admin/workflow:
     get:
       tags:
@@ -6558,6 +6573,27 @@ paths:
           description: Invalid page supplied
         "404":
           description: Search not found
+  /wx/getansysdata/{id}:
+    get:
+      tags:
+      - wx
+      description: get ansys data by link
+      operationId: AttachController.dowload ansys data
+      parameters:
+      - in: path
+        name: id
+        description: The id of data
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /wx/getapplyrecharge:
     get:
       tags:

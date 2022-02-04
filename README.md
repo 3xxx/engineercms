@@ -73,7 +73,7 @@ Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
 $ git push --delete origin v2.0.2
 To https://github.com/3xxx/engineercms
  - [deleted]         v2.0.2
-
+如果有人想知道如何一次删除多个标签，你可以用空格简单地列出它们，例如git push --delete origin tag1 tag2。本地标签删除git tag -d tag1 tag2同样有效。
 ```
 
 1. 本系统采用go语言（基于[beego](https://github.com/astaxie/beego)框架）开发，运行文件为编译后的二进制可执行文件，所以无需像其他语言（php、nodejs、java等语言）编写的web应用那样，需要配置运行服务环境。
