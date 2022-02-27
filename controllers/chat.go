@@ -144,6 +144,13 @@ func (c *ChatController) Avatar() {
 	// io.Copy(c.Ctx.ResponseWriter, b) // stream实现了io.reader接口
 	c.Ctx.Output.Body(b) //流stream的方式
 	// now `b` is image data which you can write to file or http stream.
+	// 写入文件
+	// var f *os.File
+	// f, err = os.Create(filename) //创建文件
+	// if err != nil {
+	// 	logs.Error(err)
+	// }
+	// _, err = f.Write(b)
 }
 
 // golang文件流下载

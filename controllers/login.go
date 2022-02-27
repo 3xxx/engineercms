@@ -612,7 +612,7 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 	return uname, role, uid
 }
 
-//用户登录，则role是1则是admin，其余没有意义
+//用户登录，则role是1则是admin，其余没有意义!!!
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
 	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的session数据。

@@ -1,8 +1,7 @@
 swagger: "2.0"
 info:
   title: EngineerCMS API
-  description: ECMS has every tool to get any job done, so codename for the new ECMS
-    APIs.
+  description: ECMS has every tool to get any job done, so codename for the new ECMS APIs.
   version: 1.0.0
   contact:
     email: 504284@qq.com
@@ -4858,6 +4857,155 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /passproject/createpassproject:
+    get:
+      tags:
+      - passproject
+      description: create pass_project
+      operationId: PassProjectController.create pass_project
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/getpassproject:
+    get:
+      tags:
+      - passproject
+      description: get excel
+      operationId: PassProjectController.get pass_project
+      parameters:
+      - in: path
+        name: id
+        description: The id of pass_project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/getpassprojectcaldoc/{id}:
+    get:
+      tags:
+      - passproject
+      description: get excel
+      operationId: PassProjectController.get pass_project
+      parameters:
+      - in: path
+        name: id
+        description: The id of pass_project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/getpassprojectdetail:
+    get:
+      tags:
+      - passproject
+      description: get excel
+      operationId: PassProjectController.get pass_project
+      parameters:
+      - in: path
+        name: id
+        description: The id of pass_project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/mathhistopassproject:
+    post:
+      tags:
+      - passproject
+      description: post historymathcad to pass_project..
+      operationId: PassProjectController.post historymathcad to pass_project ...
+      parameters:
+      - in: query
+        name: ids
+        description: The ids of history
+        required: true
+        type: string
+      - in: query
+        name: treeids
+        description: The treeids of project
+        required: true
+        type: string
+      - in: query
+        name: treenodeids
+        description: The treenodeids of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /passproject/quickaddpassproject:
+    post:
+      tags:
+      - passproject
+      description: post quickaddproject..
+      operationId: PassProjectController.post pass quickaddproject...
+      parameters:
+      - in: query
+        name: projectcode
+        description: The projectcode of project
+        required: true
+        type: string
+      - in: query
+        name: projecttitle
+        description: The projecttitle of project
+        required: true
+        type: string
+      - in: query
+        name: projectdescription
+        description: The description of project
+        required: true
+        type: string
+      - in: query
+        name: tempprojid
+        description: The tempprojid of project
+        required: true
+        type: string
+      - in: query
+        name: istemppermission
+        description: The permission of project
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /pdfcpu/addwatermarks/{id}:
     post:
       tags:
@@ -9339,6 +9487,10 @@ definitions:
         $ref: '#/definitions/models.User'
       UserTemple:
         $ref: '#/definitions/models.UserTemple'
+      description:
+        type: string
+      faceimgurl:
+        type: string
       pdfurl:
         type: string
       tempid:
@@ -9383,6 +9535,9 @@ definitions:
   models.excelPdf:
     title: excelPdf
     type: object
+  models.pass_project:
+    title: pass_project
+    type: object
   success:
     title: success
     type: object
@@ -9420,6 +9575,9 @@ tags:
 - name: excel
   description: |
     CMSexcel API
+- name: passproject
+  description: |
+    CMS pass_project API
 - name: elastic
   description: |
     CMSELASTIC API

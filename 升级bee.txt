@@ -1,0 +1,9 @@
+20220219
+安装bee
+go install github.com/beego/bee@latest
+
+beego官网地址：https://beego.vip/
+
+设置go代理：https://goproxy.cn/
+$ go env -w GO111MODULE=on
+$ go env -w GOPROXY=https://goproxy.cn,direc

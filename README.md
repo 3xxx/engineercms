@@ -9,11 +9,13 @@
 
 ```bash
 # 克隆源码
-git clone https://github.com/3xxx/engineercms.git
+# git clone https://github.com/3xxx/engineercms.git
+# go mod vendor
 
 # go mod init
 # go包自动安装
 # 设置go代理
+# go env -w GO111MODULE=on
 # go env -w GOPROXY=https://goproxy.cn,direct
 # 关闭——这个看情况，go mod vendor时，提示Get https://sum.golang.org/lookup/xxxxxx: dial tcp 216.58.200.49:443: i/o timeout
 # go env -w GOSUMDB=off
@@ -24,7 +26,7 @@ go build -ldflags "-w"
 # 数据库初始化(此步骤执行之前，需配置`conf/app.conf`)
 # ./engineercms install
 # 执行
-./engineercms
+# $ nohup ./engineercms &
 ```
 ```bash
 # beego 2.0.0 升级指南

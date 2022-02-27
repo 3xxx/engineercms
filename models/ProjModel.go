@@ -25,6 +25,12 @@ type Project struct {
 	Updated         time.Time `orm:"null","auto_now_add;type(datetime)"`
 }
 
+type ProjectDescription struct {
+	Id          int64
+	ProjectId   int64
+	Description string
+}
+
 type ProjectUser struct {
 	Id        int64
 	ProjectId int64
@@ -144,6 +150,18 @@ func AddProjectUser(pid, uid int64) (id int64, err error) {
 	// result.Error        // 返回 error
 	// result.RowsAffected // 返回插入记录的条数
 	return projectuser.Id, result.Error
+}
+
+func AddProjectDescription(pid int64, description string) (id int64, err error) {
+	db := _db //GetDB()
+	projectdescription := ProjectDescription{ProjectId: pid, Description: description}
+
+	result := db.Create(&projectdescription) // 通过数据的指针来创建
+
+	// user.ID             // 返回插入数据的主键
+	// result.Error        // 返回 error
+	// result.RowsAffected // 返回插入记录的条数
+	return projectdescription.Id, result.Error
 }
 
 func AddProjectLabel(pid int64, label string) (id int64, err error) {

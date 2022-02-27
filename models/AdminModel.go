@@ -209,6 +209,7 @@ func init() {
 	_db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
 	_db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
 	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
+	_db.AutoMigrate(&PassProject{})
 }
 
 //获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。

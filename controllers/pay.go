@@ -323,7 +323,7 @@ func (c *PayController) GetPay() {
 // @router /getuserpay [get]
 // 显示用户收支记录
 func (c *PayController) GetUserPay() {
-	_, _, uid, _, islogin := checkprodRole(c.Ctx)
+	_, _, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	if !islogin {
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "用户未登录！", "title": "", "original": ""}
 		c.ServeJSON()
@@ -331,6 +331,7 @@ func (c *PayController) GetUserPay() {
 	}
 	user := models.GetUserByUserId(uid)
 	c.Data["UserNickname"] = user.Nickname
+	c.Data["IsAdmin"] = isadmin
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
 	if err != nil {

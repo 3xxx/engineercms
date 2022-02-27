@@ -1542,7 +1542,7 @@ func (c *AttachController) DownloadAttachment() {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-			// beego.Info("下载……" + fileurl + "/" + attachment.FileName)
+			logs.Info("下载……" + fileurl + "/" + attachment.FileName)
 			utils.FileLogs.Info(username + " " + "download" + " " + fileurl + "/" + attachment.FileName)
 		} else {
 			utils.FileLogs.Info(c.Ctx.Input.IP() + "want " + "download" + " " + fileurl + "/" + attachment.FileName)
@@ -2661,7 +2661,7 @@ func (c *AttachController) GetAnsysData() {
 	// 加权限判断
 	var err error
 	var uintid uint
-	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	_, _, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	if !islogin {
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "用户未登录！"}
 		c.ServeJSON()
@@ -2685,24 +2685,33 @@ func (c *AttachController) GetAnsysData() {
 		logs.Error(err)
 	}
 
-	// logs.Info(history)
-	// fileext := path.Ext(history.PdfUrl)
-	filename := filepath.Base(history.PdfUrl)
-	// logs.Info(filename)
-	// beego.Info(usertemple)
-	// 去除文件名
-	filepath := path.Dir(history.PdfUrl)
-	// 文件名
-	// filename := usertemple.Title //path.Base(usertemple.TempPath)
-	// 文件后缀
-	filesuffix := path.Ext(history.PdfUrl)
-	filenameOnly := strings.TrimSuffix(filename, filesuffix) //只留下文件名，无后缀
-	// logs.Info(filenameOnly)
-	pdflink := filepath + "/" + filenameOnly + ".dat"
-	pdflink = strings.Replace(pdflink, "/attachment", "attachment", -1)
-	// logs.Info(pdflink)
-	c.Ctx.Output.Download(pdflink) //这句和下面都行，调试的时候不知道为什么这句一直出错！！
-	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, pdflink)
+	var isme bool
+	if history.UserID == uid {
+		isme = true
+	}
+	if isme || isadmin {
+		// logs.Info(history)
+		// fileext := path.Ext(history.PdfUrl)
+		filename := filepath.Base(history.PdfUrl)
+		// logs.Info(filename)
+		// beego.Info(usertemple)
+		// 去除文件名
+		filepath := path.Dir(history.PdfUrl)
+		// 文件名
+		// filename := usertemple.Title //path.Base(usertemple.TempPath)
+		// 文件后缀
+		filesuffix := path.Ext(history.PdfUrl)
+		filenameOnly := strings.TrimSuffix(filename, filesuffix) //只留下文件名，无后缀
+		// logs.Info(filenameOnly)
+		pdflink := filepath + "/" + filenameOnly + ".dat"
+		pdflink = strings.Replace(pdflink, "/attachment", "attachment", -1)
+		// logs.Info(pdflink)
+		c.Ctx.Output.Download(pdflink) //这句和下面都行，调试的时候不知道为什么这句一直出错！！
+		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, pdflink)
+	} else {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "只能本人查阅！"}
+		c.ServeJSON()
+	}
 }
 
 //编码转换

@@ -11,11 +11,16 @@ import (
 	// "context"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web/pagination"
-	"github.com/casbin/beego-orm-adapter"
+	// "github.com/casbin/beego-orm-adapter"
+	beegoormadapter "github.com/casbin/beego-orm-adapter/v3"
+	// "github.com/casbin/beego-orm-adapter/v3.CasbinRule"
 	// "github.com/casbin/casbin"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/beego/beego/v2/core/logs"
 	// "log"
+	"github.com/holys/initials-avatar"
+	// "io"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -1344,6 +1349,12 @@ func (c *ProjController) AddProject() {
 	patharr := make([]Pathstruct, 1)
 	patharr[0].ParentPath = "./attachment/" + projcode + projname
 	create(patharr, nodes, 2, height)
+	// 添加项目avatar头像
+	text := SubString(projname, 0, 1)
+	err = ProjectAvatar(text, "./attachment/"+projcode+projname+"/"+projcode+".png")
+	if err != nil {
+		logs.Error(err)
+	}
 	c.Data["json"] = "ok"
 	c.ServeJSON()
 }
@@ -1468,6 +1479,12 @@ func (c *ProjController) AddProjTemplet() {
 			}
 			//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
 		}
+	}
+	// 添加项目avatar头像
+	text := SubString(projname, 0, 1)
+	err = ProjectAvatar(text, "./attachment/"+projcode+projname+"/"+projcode+".png")
+	if err != nil {
+		logs.Error(err)
 	}
 	if success == true {
 		c.Data["json"] = "ok"
@@ -2772,6 +2789,55 @@ func createtemplet(parentpath string, nodes []*models.FileNode) {
 		}
 	}
 	return
+}
+
+// 项目头像
+func ProjectAvatar(text, filename string) error {
+	// 秦修改了源码，支持字的大小，下面第二个参数是字的大小
+	a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf", 26.0) //./resource/fonts/Hiragino_Sans_GB_W3.ttf
+	// a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf")
+	strData, err := url.QueryUnescape(text)
+	if err != nil {
+		logs.Error(err)
+	}
+
+	b, err := a.DrawToBytes(strData, 32) //背景的大小
+	if err != nil {
+		logs.Error(err)
+	}
+	// beego.Info(b)
+	// w http.ResponseWriter, r *http.Request
+	// io.Copy(c.Ctx.ResponseWriter, b) // stream实现了io.reader接口
+	// c.Ctx.Output.Body(b) //流stream的方式
+	// now `b` is image data which you can write to file or http stream.
+
+	// var wireteString = "测试n"
+	// var filename = "./output1.txt"
+	var f *os.File
+	/***************************** 第一种方式: 使用 io.WriteString 写入文件 ***********************************************/
+	// if checkFileIsExist(filename) { //如果文件存在
+	// 	f, err1 = os.OpenFile(filename, os.O_APPEND, 0666) //打开文件
+	// 	fmt.Println("文件存在")
+	// } else {
+	f, err = os.Create(filename) //创建文件
+	if err != nil {
+		logs.Error(err)
+	}
+	// f, err3 := os.Create("./output3.txt") //创建文件
+	// check(err3)
+	// defer f.Close()
+	_, err = f.Write(b) //写入文件(字节数组)
+	// fmt.Println("文件不存在")
+	// }
+	// check(err1)
+	// _, err = io.WriteString(f, b) //写入文件(字符串)
+	// var d1 = []byte(wireteString)
+
+	// err = ioutil.WriteFile(filename, b, 0666) //写入文件(字节数组)
+
+	return err
+	// check(err1)
+	// fmt.Printf("写入 %d 个字节n", n)
 }
 
 // {
