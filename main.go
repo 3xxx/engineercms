@@ -58,7 +58,7 @@ func main() {
 
 	web.AddFuncMap("loadtimes", loadtimes)
 	web.AddFuncMap("subsuffix", subsuffix)
-	//默认关闭orm调试模式
+	//默认关闭orm调试模式——仅仅针对beego的orm有效。
 	ormDebug, err := web.AppConfig.String("ormDebug")
 	if err != nil {
 		logs.Error("获取ormDebug ->", err.Error())
@@ -112,22 +112,20 @@ func main() {
 	initialization()
 	// commands.RegisterCache()
 	// commands.RegisterLogger(conf.LogFile)
-
 	// commands.RegisterCommand()
 
 	d := daemon.NewDaemon()
-
 	s, err := service.New(d, d.Config())
-
 	if err != nil {
 		fmt.Println("Create service error => ", err)
 		os.Exit(1)
 	}
-
 	if err := s.Run(); err != nil {
 		log.Fatal("启动程序失败 ->", err)
 	}
+
 	// ********mindoc*********
+	// web.SetStaticPath("/down1", "download1")
 	web.Run()
 	// 开启pprof，监听请求,无效
 	// go func() {

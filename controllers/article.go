@@ -2437,8 +2437,8 @@ func (c *ArticleController) UpdateArticle() {
 // 根据文章id删除文章_没删除文章中的图片
 func (c *ArticleController) DeleteArticle() {
 	// _, role := checkprodRole(c.Ctx)
-	_, role, _, _, _ := checkprodRole(c.Ctx)
-	if role == "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	if isadmin {
 		// id := c.Ctx.Input.Param(":id")
 		pid := c.GetString("pid")
 		//id转成64为
@@ -2449,16 +2449,20 @@ func (c *ArticleController) DeleteArticle() {
 		err = models.DeleteArticle(pidNum)
 		if err != nil {
 			logs.Error(err)
+			c.Data["json"] = "删除数据库出错！"
+			c.ServeJSON()
 		} else {
 			c.Data["json"] = "ok"
 			c.ServeJSON()
 		}
 	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		// route := c.Ctx.Request.URL.String()
+		// c.Data["Url"] = route
+		// c.Redirect("/roleerr?url="+route, 302)
 		// c.Redirect("/roleerr", 302)
-		return
+		// return
+		c.Data["json"] = "非管理员，无权删除！"
+		c.ServeJSON()
 	}
 }
 

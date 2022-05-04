@@ -1997,29 +1997,6 @@
                 }
             }
         },
-        "/admin/sim": {
-            "get": {
-                "tags": [
-                    "admin"
-                ],
-                "description": "getsim",
-                "operationId": "AdminController.get sim",
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.AddArticle"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "articl not found"
-                    }
-                }
-            }
-        },
         "/admin/workflow": {
             "get": {
                 "tags": [
@@ -4874,56 +4851,6 @@
                 }
             }
         },
-        "/excel/getWxexcelhistory/{id}": {
-            "get": {
-                "tags": [
-                    "excel"
-                ],
-                "description": "get excelwxhistory..",
-                "operationId": "ExcelController.get excelwxhistory...",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of excels",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchText",
-                        "description": "The searchText of excelhistory",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "description": "The page of excelhistory",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "description": "The size of page",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.ExcelHistory"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "data not found"
-                    }
-                }
-            }
-        },
         "/excel/getexcel/excellist/{id}": {
             "get": {
                 "tags": [
@@ -5479,6 +5406,134 @@
                 }
             }
         },
+        "/excel/getwxexcelhistory/{id}": {
+            "get": {
+                "tags": [
+                    "excel"
+                ],
+                "description": "get excelwxhistory..",
+                "operationId": "ExcelController.get excelwxhistory...",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of excels",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchText",
+                        "description": "The searchText of excelhistory",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of excelhistory",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.ExcelHistory"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
+        "/excel/getwxexcelhistoryinput/{id}": {
+            "get": {
+                "tags": [
+                    "excel"
+                ],
+                "description": "get wxexcelhistoryinput",
+                "operationId": "ExcelController.get wxexcelhistoryinput",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of history",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templeid",
+                        "description": "The id of exceltemple",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.ExcelInputs"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/excel/getwxexcelhistoryoutput/{id}": {
+            "get": {
+                "tags": [
+                    "excel"
+                ],
+                "description": "get wxexcelhistoryoutput",
+                "operationId": "ExcelController.get wxexcelhistoryoutput",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of history",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templeid",
+                        "description": "The id of exceltemple",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.ExcelOutputs"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
         "/excel/postexcel": {
             "post": {
                 "tags": [
@@ -5497,6 +5552,12 @@
                         "in": "query",
                         "name": "excelid",
                         "description": "The excelid",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "description",
+                        "description": "The excelcal description",
                         "type": "string"
                     }
                 ],
@@ -5532,8 +5593,14 @@
                     },
                     {
                         "in": "query",
-                        "name": "excelid",
-                        "description": "The excelid",
+                        "name": "templeid",
+                        "description": "The exceltempleid",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "description",
+                        "description": "The excelcal description",
                         "type": "string"
                     }
                 ],
@@ -5801,6 +5868,38 @@
                 }
             }
         },
+        "/excel/uploadexceltemple_excelize/{id}": {
+            "post": {
+                "tags": [
+                    "excel"
+                ],
+                "description": "post file by BootstrapFileInput",
+                "operationId": "ExcelController.post bootstrapfileinput",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of project",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
         "/excel/wxexcelarticle/{id}": {
             "get": {
                 "tags": [
@@ -6029,56 +6128,6 @@
                 }
             }
         },
-        "/mathcad/getWxhistorytemples/{id}": {
-            "get": {
-                "tags": [
-                    "mathcad"
-                ],
-                "description": "get mathwxhistory..",
-                "operationId": "MathcadController.get mathwxhistory...",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of temples",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchText",
-                        "description": "The searchText of mathhistory",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "description": "The page of mathhistory",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "description": "The size of page",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.UserHistory"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "data not found"
-                    }
-                }
-            }
-        },
         "/mathcad/gethistoryinput/{id}": {
             "get": {
                 "tags": [
@@ -6194,8 +6243,8 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
-                "operationId": "MathcadController.get mathcad",
+                "description": "get mathcad history output",
+                "operationId": "MathcadController.get mathcad history output",
                 "parameters": [
                     {
                         "in": "path",
@@ -6283,26 +6332,26 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get projproducts..",
-                "operationId": "MathcadController.get projproducts...",
+                "description": "get mathcad temples..",
+                "operationId": "MathcadController.get mathcad temples by classid...",
                 "parameters": [
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "The id of projproducts",
+                        "description": "The id of class",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "query",
                         "name": "searchText",
-                        "description": "The searchText of projproducts",
+                        "description": "The searchText of temple",
                         "type": "string"
                     },
                     {
                         "in": "query",
                         "name": "page",
-                        "description": "The page of projproducts",
+                        "description": "The page of temples",
                         "type": "string"
                     },
                     {
@@ -6383,13 +6432,13 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
-                "operationId": "MathcadController.get mathcad",
+                "description": "get mathcad templelist",
+                "operationId": "MathcadController.get mathcad templelist",
                 "parameters": [
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "The id of project",
+                        "description": "The id of templeclass",
                         "required": true,
                         "type": "string"
                     }
@@ -6415,8 +6464,8 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
-                "operationId": "MathcadController.get mathcad",
+                "description": "get mathcadclass",
+                "operationId": "MathcadController.get mathcadclass",
                 "parameters": [
                     {
                         "in": "path",
@@ -6538,6 +6587,134 @@
                 }
             }
         },
+        "/mathcad/getwxhistoryinput/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get mathcad",
+                "operationId": "MathcadController.get wxmathcadhistoryinput",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of history",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templeid",
+                        "description": "The id of usertemple",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.TempleInputs"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/mathcad/getwxhistoryoutput/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get wxmathcad history output",
+                "operationId": "MathcadController.get wxmathcad history output",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of history",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templeid",
+                        "description": "The id of usertemple",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.TempleOutputs"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/mathcad/getwxhistorytemples/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get mathwxhistory..",
+                "operationId": "MathcadController.get mathwxhistory...",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of temples",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchText",
+                        "description": "The searchText of mathhistory",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of mathhistory",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserHistory"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
         "/mathcad/getwxmathcalinput/{id}": {
             "get": {
                 "tags": [
@@ -6608,7 +6785,7 @@
                     "mathcad"
                 ],
                 "description": "get mathcad",
-                "operationId": "MathcadController.get mathcad",
+                "operationId": "MathcadController.get mathcadclass",
                 "parameters": [
                     {
                         "in": "path",
@@ -7131,6 +7308,38 @@
                         "in": "path",
                         "name": "id",
                         "description": "The id of project",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetMathcadPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/mathcad/wsmathcal/{id}": {
+            "get": {
+                "tags": [
+                    "mathcad"
+                ],
+                "description": "get mathcad",
+                "operationId": "WsMathcadController.get mathcad",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of mathtemple",
                         "required": true,
                         "type": "string"
                     }
@@ -8192,6 +8401,75 @@
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/models.Attachment"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/simwe/simansys": {
+            "get": {
+                "tags": [
+                    "simwe"
+                ],
+                "description": "getsimansys",
+                "operationId": "SimweController.get simansys",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.AddArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/simwe/simwe": {
+            "get": {
+                "tags": [
+                    "simwe"
+                ],
+                "description": "getsimwe",
+                "operationId": "SimweController.get simwe",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.AddArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/simwe/threejs": {
+            "get": {
+                "tags": [
+                    "simwe"
+                ],
+                "description": "getthreejs",
+                "operationId": "SimweController.get threejs",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.AddArticle"
                         }
                     },
                     "400": {
@@ -10303,14 +10581,14 @@
                     {
                         "in": "query",
                         "name": "userid",
-                        "description": "The userid of check",
+                        "description": "The userId of check",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "query",
                         "name": "businessid",
-                        "description": "The businessid of check",
+                        "description": "The activityId of check",
                         "required": true,
                         "type": "string"
                     },
@@ -11198,7 +11476,7 @@
                 }
             }
         },
-        "/wx/getwxexcelpdf": {
+        "/wx/getwxexcelpdf/{id}": {
             "get": {
                 "tags": [
                     "wx"
@@ -11208,7 +11486,7 @@
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "pdflink",
+                        "name": "id",
                         "description": "The url of pdf",
                         "required": true,
                         "type": "string"
@@ -11800,6 +12078,29 @@
                     },
                     "404": {
                         "description": "data not found"
+                    }
+                }
+            }
+        },
+        "/wx/passlogin": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post wx login",
+                "operationId": "LoginController.post wx login",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
                     }
                 }
             }
@@ -13708,9 +14009,15 @@
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
+                "description": {
+                    "type": "string"
+                },
                 "exceltempleid": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "faceimgurl": {
+                    "type": "string"
                 },
                 "pdfurl": {
                     "type": "string"
@@ -13858,6 +14165,9 @@
                 "UserID": {
                     "type": "integer",
                     "format": "int64"
+                },
+                "number": {
+                    "type": "string"
                 },
                 "path": {
                     "type": "string"
@@ -14273,12 +14583,12 @@
             "title": "UserTemple",
             "type": "object",
             "properties": {
+                "Article": {
+                    "$ref": "#/definitions/models.MathArticle"
+                },
                 "ClassID": {
                     "type": "integer",
                     "format": "int64"
-                },
-                "MathArticle": {
-                    "$ref": "#/definitions/models.MathArticle"
                 },
                 "User": {
                     "$ref": "#/definitions/models.User"
@@ -14287,16 +14597,19 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "number": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "boolean"
                 },
-                "temppath": {
+                "title": {
                     "type": "string"
                 },
-                "temptitle": {
-                    "type": "string"
-                },
-                "temptitleb": {
+                "titleb": {
                     "type": "string"
                 },
                 "version": {
@@ -14381,6 +14694,10 @@
         {
             "name": "elastic",
             "description": "CMSELASTIC API\n"
+        },
+        {
+            "name": "simwe",
+            "description": "CMSSIMWE API\n"
         }
     ]
 }

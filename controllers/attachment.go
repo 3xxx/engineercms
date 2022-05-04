@@ -1594,8 +1594,8 @@ func (c *AttachController) Attachment() {
 	//如果url带了sessionid,就能取到uid等信息
 	var useridstring string
 	_, _, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	logs.Info(uid)
-	logs.Info(islogin)
+	// logs.Info(uid)
+	// logs.Info(islogin)
 	useridstring = strconv.FormatInt(uid, 10)
 
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
@@ -1613,19 +1613,21 @@ func (c *AttachController) Attachment() {
 	fileext := path.Ext(filePath)
 	filepath1 := path.Dir(filePath)
 	array := strings.Split(filepath1, "/")
-	logs.Info(array[1])
+	// logs.Info(array[1])
 	// beego.Info(fileext)
 	matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 	if err != nil {
 		logs.Error(err)
 	}
-	// beego.Info(matched)
+	// logs.Info(matched)
 	if matched {
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载mcd文件!"}
 		c.ServeJSON()
 		return
 	}
-	if array[1] == "standard" || (array[1] == "mathcad" && fileext == ".pdf") {
+	// logs.Info(matched)
+	// 这里设计不合理，只要是注册人员均可查阅计算稿历史，不好。
+	if array[1] == "standard" || (array[1] == "mathcad" && fileext == ".pdf") || (array[1] == "pass_excel" && fileext == ".pdf") || (array[1] == "pass_ansys" && fileext == ".pdf") {
 		if !islogin {
 			// beego.Info(!islogin)
 			route := c.Ctx.Request.URL.String()
@@ -1707,15 +1709,15 @@ func (c *AttachController) Attachment() {
 		// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
 		// beego.Info("ok")
 		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-		logs.Info(filePath)
-		logs.Info(useridstring)
+		// logs.Info(filePath)
+		// logs.Info(useridstring)
 	//这里缺少权限设置！！！！！！！！！！！
 	default:
 		res, err := e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext)
 		if err != nil {
 			logs.Error(err)
 		}
-		logs.Info(res)
+		// logs.Info(res)
 		if res || isadmin || isme {
 			// beego.Info(e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext))
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
@@ -2207,8 +2209,8 @@ func (c *AttachController) GetMathPdf() {
 			c.ServeJSON()
 			return
 		}
-		// 账户扣除10元，下载pdf扣除10元
-		err = models.AddUserPayMathPdf(filename, history.PdfUrl, uid, 10)
+		// 账户扣除2元，下载pdf扣除2元
+		err = models.AddUserPayMathPdf(filename, history.PdfUrl, uid, 2)
 		if err != nil {
 			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
@@ -2316,8 +2318,8 @@ func (c *AttachController) GetWxMathPdf() {
 			return
 		}
 
-		// 账户扣除10元，下载pdf扣除10元
-		err = models.AddUserPayMathPdf(filename, history.PdfUrl, user.Id, 10)
+		// 账户扣除2元，下载pdf扣除2元
+		err = models.AddUserPayMathPdf(filename, history.PdfUrl, user.Id, 2)
 		if err != nil {
 			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
@@ -2342,7 +2344,7 @@ func (c *AttachController) GetWxTempPdf() {
 	// 加权限判断
 	openID := c.GetSession("openID")
 	if openID != nil {
-		// beego.Info(openID.(string))
+		logs.Info(openID.(string))
 		_, err := models.GetUserByOpenID(openID.(string))
 		if err != nil {
 			logs.Error(err)
@@ -2351,9 +2353,45 @@ func (c *AttachController) GetWxTempPdf() {
 			return
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户未登录"}
-		c.ServeJSON()
-		return
+		hotqinsessionid := c.GetString("hotqinsessionid")
+		logs.Info(hotqinsessionid)
+		//这里用security.go里的方法
+		requestUrl := "http://127.0.0.1:8082/v1/wx/passlogin?hotqinsessionid=" + hotqinsessionid
+		resp, err := http.Get(requestUrl)
+		if err != nil {
+			logs.Error(err)
+			// return
+		}
+		defer resp.Body.Close()
+		var data map[string]interface{}
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			logs.Error(err)
+		}
+		if _, ok := data["token"]; !ok {
+			info := data["info"].(string)
+			logs.Info(info)
+			data := data["data"].(string)
+			c.Data["json"] = map[string]interface{}{"info": info, "state": "ERROR", "data": data}
+			c.ServeJSON()
+			return
+		} else {
+			var openID, token string
+			openID = data["openid"].(string)
+			token = data["token"].(string)
+			logs.Info(openID)
+			logs.Info(token)
+			// 对token进行验证
+			userName, err := utils.CheckToken(token)
+			if err != nil {
+				logs.Error(err)
+			}
+			if userName == "" {
+				c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "用户未登录"}
+				c.ServeJSON()
+				return
+			}
+		}
 	}
 
 	id := c.Ctx.Input.Param(":id")
@@ -2370,6 +2408,9 @@ func (c *AttachController) GetWxTempPdf() {
 	usertemple, err := models.GetMathTemple(usertempleid)
 	if err != nil {
 		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "查询数据库错误！"}
+		c.ServeJSON()
+		return
 	}
 	// beego.Info(usertemple)
 	// 去除文件名
@@ -2390,7 +2431,7 @@ func (c *AttachController) GetWxTempPdf() {
 	// 	return
 	// }
 	pdflink := filepath + "/" + filenameOnly + ".pdf"
-	// beego.Info(pdflink)
+	logs.Info(pdflink)
 	c.Ctx.Output.Download(pdflink)
 }
 
@@ -2462,8 +2503,8 @@ func (c *AttachController) GetExcelPdf() {
 			c.ServeJSON()
 			return
 		}
-		// 账户扣除10元，下载pdf扣除10元
-		err = models.AddUserPayExcelPdf(filename, history.PdfUrl, uid, 10)
+		// 账户扣除2元，下载pdf扣除2元
+		err = models.AddUserPayExcelPdf(filename, history.PdfUrl, uid, 2)
 		if err != nil {
 			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
@@ -2479,11 +2520,11 @@ func (c *AttachController) GetExcelPdf() {
 
 // @Title dowload wx pdf
 // @Description get wx pdf by link
-// @Param pdflink query string  true "The url of pdf"
+// @Param id query string  true "The url of pdf"
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
-// @router /getwxexcelpdf [get]
+// @router /getwxexcelpdf/:id [get]
 // 小程序端下载mexcel pdf计算书
 //
 func (c *AttachController) GetWxExcelPdf() {
@@ -2517,7 +2558,7 @@ func (c *AttachController) GetWxExcelPdf() {
 		uintid = uint(idint)
 	}
 	//根据history uint查出路径
-	history, err := models.GetHistory(uintid)
+	history, err := models.GetHistoryExcel(uintid)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -2571,8 +2612,8 @@ func (c *AttachController) GetWxExcelPdf() {
 			return
 		}
 
-		// 账户扣除10元，下载pdf扣除10元
-		err = models.AddUserPayExcelPdf(filename, history.PdfUrl, user.Id, 10)
+		// 账户扣除2元，下载pdf扣除2元
+		err = models.AddUserPayExcelPdf(filename, history.PdfUrl, user.Id, 2)
 		if err != nil {
 			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
@@ -2580,6 +2621,7 @@ func (c *AttachController) GetWxExcelPdf() {
 			return
 		}
 	}
+	// logs.Info(history.PdfUrl)
 	pdflink := strings.Replace(history.PdfUrl, "/attachment", "attachment", -1)
 	c.Ctx.Output.Download(pdflink)
 }

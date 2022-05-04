@@ -1,7 +1,7 @@
 <!-- 项目列表页 后端分页-->
 <!DOCTYPE html>
 {{template "header"}}
-<title>项目列表-EngiCMS</title>
+<title>项目列表|EngiCMS</title>
 <script src="/static/js/bootstrap-treeview.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
 <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
@@ -647,7 +647,7 @@
           url: "/project/deleteproject",
           data: { ids: ids },
           success: function(data, status) {
-            alert("删除“" + data + "”成功！(status:" + status + ".)");
+            alert("删除“" + data.data + "”成功！(status:" + status + ".)");
             //删除已选数据
             $('#table0').bootstrapTable('remove', {
               field: 'Id',
@@ -766,7 +766,7 @@
             url: "/project/addproject",
             data: { code: projcode, name: projname, label: projlabel, principal: projprincipal, ids: ids }, //
             success: function(data, status) {
-              alert("添加“" + data + "”成功！(status:" + status + ".)");
+              alert("添加“" + data.data + "”成功！(status:" + status + ".)");
               //按确定后再刷新
               $('#modalTable').modal('hide');
               $('#table0').bootstrapTable('refresh', { url: '/project/getprojects' });
@@ -797,7 +797,7 @@
           url: "/project/updateproject",
           data: { code: projcode, name: projname, label: projlabel, principal: projprincipal, pid: pid }, //
           success: function(data, status) {
-            alert(data + "(status:" + status + ".)");
+            alert(data.data + "(status:" + status + ".)");
             //按确定后再刷新
             $('#modalTable1').modal('hide');
             $('#table0').bootstrapTable('refresh', { url: '/project/getprojects' });

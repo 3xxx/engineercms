@@ -212,7 +212,7 @@
           url: "/admin/project/addprojectcate",
           data: { id: arr[0].id, name: projcatename2, code: projcatecode2 }, //父级id
           success: function(data, status) {
-            alert("添加“" + data + "”成功！(status:" + status + ".)");
+            alert("添加“" + data.data + "”成功！(status:" + status + ".)");
             var singleNode = {
               text: projcatename2,
               id: data,

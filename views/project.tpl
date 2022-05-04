@@ -136,6 +136,7 @@
       loadingIcon: "fa fa-minus",
       lazyLoad: loaddata,
     });
+
     $('#tree').on('nodeSelected', function(event, data) {
       document.getElementById("iframepage").src = "/project/{{.Id}}/" + data.id;
       $.ajax({
@@ -149,14 +150,15 @@
         }
       });
     });
+  })
+
     $("#btn").click(function(e) {
       var arr = $('#tree').treeview('getSelected');
       for (var key in arr) {
         c.innerHTML = c.innerHTML + "," + arr[key].id;
       }
     });
-  })
-
+  
   function loaddata(node, func) {
     $.ajax({
       type: "get",
@@ -169,9 +171,26 @@
       }
     });
   }
+  // 20220407添加跳转
+  $(function(){
+    // alert({{.Gototree}})
+    // alert({{.Node}})
+    if ({{.Gototree}}){
+      $.ajax({
+        type: "get",
+        url: "/project/navbar/" + {{.Node}},
+        success: function(data, status) {
+          $(".breadcrumb #nav").remove();
+          for (i = 0; i < data.length; i++) {
+            $(".breadcrumb").append('<li id="nav"><a href="javascript:gototree(' + data[i].Id + ')">' + data[i].Title + '</a></li>');
+          }
+        }
+      });
+      gototree({{.Node}})
+    }
+  })
 
   function gototree(e) {
-    // alert(e)
     document.getElementById("iframepage").src = "/project/{{.Id}}/" + e;
     var findCheckableNodess = function() {
       return $('#tree').treeview('findNodes', [e, 'id']);

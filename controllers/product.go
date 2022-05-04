@@ -34,6 +34,7 @@ type ProductLink struct {
 	Uid            int64
 	Principal      string
 	ProjectId      int64
+	TopProjectId   int64
 	Content        string
 	Created        time.Time
 	Updated        time.Time

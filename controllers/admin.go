@@ -1711,17 +1711,6 @@ func (c *AdminController) Testdown() {
 	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, "static/download/"+filename)
 }
 
-// @Title get sim
-// @Description getsim
-// @Success 200 {object} models.AddArticle
-// @Failure 400 Invalid page supplied
-// @Failure 404 articl not found
-// @router /sim [get]
-// sim页面
-func (c *AdminController) Sim() {
-	c.TplName = "sim/sim.tpl"
-}
-
 // @Title get wx projectconfig by projectid
 // @Description get wx projectconfig by projectid
 // @Param projectid query string true "The id of project"

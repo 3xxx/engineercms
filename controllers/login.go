@@ -1004,6 +1004,44 @@ func (c *ServiceValidateController) Get() {
 	c.ServeJSON()
 }
 
+// @Title post wx login
+// @Description post wx login
+// @Success 200 {object} success
+// @Failure 400 Invalid page supplied
+// @Failure 404 articl not found
+// @router /passlogin [get]
+// 微信小程序根据openid自动匹配用户名后登录。访问微信服务器获取用户信息
+// 如果 用户不存在，则提供openid给注册界面——wxregion
+func (c *LoginController) PassLogin() {
+	// hotqinsessionid := c.GetString("hotqinsessionid")
+	var user models.User
+	var err error
+	openID := c.GetSession("openID")
+	logs.Info(openID)
+	if openID != nil {
+		user, err = models.GetUserByOpenID(openID.(string))
+		if err != nil {
+			logs.Error(err)
+		}
+	} else {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "用户未登录！"}
+		c.ServeJSON()
+		return
+		// user.Id = 9
+		// user.Username = "qin.xc"
+	}
+	tokenString, err := utils.CreateToken(user.Username)
+	if err != nil {
+		logs.Error(err)
+	}
+	//下面是写在response head中，没什么用处
+	c.Ctx.Output.Header("Authorization", tokenString)
+	//设置cookie 名称,值,时间,路径
+	c.Ctx.SetCookie("TOKEN", tokenString, "3600", "/")
+	c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "token": tokenString, "userId": user.Id, "userNickname": user.Nickname, "userName": user.Username, "openID": openID}
+	c.ServeJSON()
+}
+
 //********
 
 // func Authorizer1(e *casbin.Enforcer, users models.User) func(next http.Handler) http.Handler {

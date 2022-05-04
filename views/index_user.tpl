@@ -4,11 +4,12 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
   <!-- <title>EngineerCMS</title> -->
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
+  
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
@@ -18,54 +19,17 @@
 </head>
 
 <body>
-  <!-- <div class="bs-example"> -->
-  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-    <!-- <ol class="carousel-indicators">
-        {{range $index, $elem :=.Photo}}
-          <li data-target="#carousel-example-generic" data-slide-to="{{$index}}" class=""></li>
-        {{end}} 
-      </ol> -->
-    <div class="carousel-inner">
-      {{range $index, $elem :=.Carousel}}
-      <div {{if eq 0 $index}} class="item active" {{else}} class="item" {{end}} align=center>
-        <img src="{{.Url}}/{{.Title}}" alt="First slide" style="height:300px;">
-        <div class="carousel-caption">
-          <h3>{{.Title|subsuffix}}</h3>
-        </div>
-      </div>
-      {{end}}
-    </div>
-    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-      <span class="glyphicon glyphicon-chevron-left"></span>
-    </a>
-    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-      <span class="glyphicon glyphicon-chevron-right"></span>
-    </a>
-  </div>
-  <!-- </div>  -->
   <div class="text-center">
     <h1><i class="fa fa-terminal" style="font-size:80px"></i>
     </h1>
-    <!-- <i class="glyphicon glyphicon-chevron-right"></i> <i class="glyphicon glyphicon-minus"></i> -->
     <h1>搜索{{.Length}}个 文件</h1>
-    <!--   <p class="large">
-    如果说基于服务器的系统体现了产品特性。
-  </p>
-  <p class="large">
-    那么基于个人的CMS我说体现了文艺:)
-  </p> -->
     <div class="col-lg-4">
-      <!-- <p class="large">
-  </p> -->
     </div>
     <div class="col-lg-4">
-      <!-- col-md-6 col-sm-4 -->
-      <!-- <form >   form支持回车，但是不支持json，如何做到支持json？用jsonform-->
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="请输入关键字进行搜索" autocomplete="off" size="30" id="keyword" onkeypress="getKey();">
+        <input type="text" class="form-control" placeholder="请输入关键字进行搜索" size="30" id="keyword" onkeypress="getKey();">
         <span class="input-group-btn">
           <button class="btn btn-default" type="button" id="search">
-            <!-- type="submit" -->
             <i class="glyphicon glyphicon-search"></i>
             Search!
           </button>
@@ -96,7 +60,7 @@
             <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-align="center" data-valign="middle">附件</th>
             <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-align="center" data-valign="middle">PDF</th>
             <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
-            <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
+            <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-align="center" data-valign="middle">跳转</th>
           </tr>
         </thead>
       </table>
@@ -109,57 +73,37 @@
       $(".info").removeClass("info");
       $(ele).addClass("info");
       rowid = row.Id; //全局变量
-      // rowtitle=row.Title
-      // $("#rowtitle").html("工程目录分级-"+rowtitle);
-      // $("#details").show();
-      // $('#table1').bootstrapTable('refresh', {url:'/admin/category/'+row.Id});
     });
   });
 
-  // $(document).ready(function() {
     $("#search").click(function() { //这里应该用button的id来区分按钮的哪一个,因为本页有好几个button
       var radio = $("input[type='radio']:checked").val();
       $.ajax({
-        type: "post", //这里是否一定要用post，是的，因为get会缓存？？
-        url: "/index/searchproduct", // /project/product/search?keyword={{.Key}}&productid={{.Pid}}
+        type: "get", //这里是否一定要用post，是的，因为get会缓存？？
+        url: "/v1/wx/searchproductdata", // /project/product/search?keyword={{.Key}}&productid={{.Pid}}
         data: { keyword: $("#keyword").val(), radiostring: radio },
         success: function(data, status) { //数据提交成功时返回数据
-          // $.each(data,function(i,d){
-          //   if (radio=="local"){
-
-          //   }else{
-
-          //   }
-          // });
           //显示结果表
           $("#rowtitle").html("搜寻结果");
           $("#details").show();
-          $('#table1').bootstrapTable('append', data);
+          $('#table1').bootstrapTable('append', data.rows);
           $('#table1').bootstrapTable('scrollTo', 'bottom');
         }
       });
     });
-  // });
 
   function getKey() {
     if (event.keyCode == 13) {
       var radio = $("input[type='radio']:checked").val();
       $.ajax({
-        type: "post", //这里是否一定要用post，是的，因为get会缓存？？
-        url: "/index/searchproduct",
+        type: "get", 
+        url: "/v1/wx/searchproductdata",//searchproduct,
         data: { keyword: $("#keyword").val(), radiostring: radio },
         success: function(data, status) { //数据提交成功时返回数据
-          // $.each(data,function(i,d){
-          //   if (radio=="local"){
-
-          //   }else{
-
-          //   }
-          // });
           //显示结果表
           $("#rowtitle").html("搜寻结果");
           $("#details").show();
-          $('#table1').bootstrapTable('append', data);
+          $('#table1').bootstrapTable('append', data.rows);
           $('#table1').bootstrapTable('scrollTo', 'bottom');
         }
       });
@@ -167,7 +111,6 @@
   }
 
   function index1(value, row, index) {
-    // alert( "Data Loaded: " + index );
     return index + 1
   }
 
@@ -180,7 +123,6 @@
   }
 
   function setLable(value, row, index) {
-    // alert(value);
     if (value) { //注意这里如果value未定义则出错，一定要加这个判断。
       var array = value.split(",")
       var labelarray = new Array()
@@ -196,7 +138,6 @@
   }
 
   function setArticle(value, row, index) {
-    // return '<a class="article" href="javascript:void(0)" title="article"><i class="fa fa-file-text-o"></i></a>';
     if (value) {
       if (value.length == 1) { //'<a href="/project/product/article/'
         articleUrl = '<a href="' + value[0].Link + '/' + value[0].Id + '" title="查看" target="_blank"><i class="fa fa-file-text-o"></i></a>';
@@ -238,6 +179,11 @@
     }
   }
 
+  // 跳转**********
+  function actionFormatter(value, row, index) {
+    return '<a class="gototreeButton" href="javascript:void(0)" title="跳转"><i class="fa fa-share"> </i></a>';
+  }
+
   window.actionEvents = {
     'click .article': function(e, value, row, index) {
       var site = /http:\/\/.*?\//.exec(value[1].Link); //非贪婪模式 
@@ -272,7 +218,6 @@
         backdrop: 'static'
       });
     },
-
     'click .pdf': function(e, value, row, index) {
       var site = /http:\/\/.*?\//.exec(value[1].Link); //非贪婪模式 
       if (site) { //跨域
@@ -284,6 +229,11 @@
         show: true,
         backdrop: 'static'
       });
+    },
+    'click .gototreeButton': function(e, value, row, index) {
+      // alert(row.ProjectId);
+      window.open("/project/"+row.TopProjectId+"?node="+row.ProjectId,"_blank");
+      // gototree(2)
     },
   };
 
@@ -301,6 +251,17 @@
   function setPdflink(value, row, index) {
     pdfUrl = '<a href="/pdf?id=' + row.Id + '" title="下载" target="_blank"><i class="fa fa-file-pdf-o"></i></a>';
     return pdfUrl;
+  }
+
+  function gototree(e) {
+    document.getElementById("iframepage").src = "/project/1/" + e;
+    var findCheckableNodess = function() {
+      return $('#tree').treeview('findNodes', [e, 'id']);
+    };
+    var checkableNodes = findCheckableNodess();
+    $('#tree').treeview('toggleNodeSelected', [checkableNodes, { silent: true }]);
+    $('#tree').treeview('toggleNodeExpanded', [checkableNodes, { silent: true }]);
+    $('#tree').treeview('revealNode', [checkableNodes, { silent: true }]);
   }
   </script>
   <!-- 文章列表 -->
@@ -417,6 +378,8 @@
       </div>
     </div>
   </div>
+
+
 </body>
 
 </html>

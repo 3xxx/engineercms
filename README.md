@@ -61,7 +61,7 @@ git add .
 git commit -m "update"
 然后，敲命令git tag <name>就可以打一个新标签：
 
-$ git tag v1.0.0
+$ git tag v2.0.5
 因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
 如果要推送某个标签到远程，使用命令
 $ git push origin <tagname>

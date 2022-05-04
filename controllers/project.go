@@ -499,6 +499,14 @@ func (c *ProjController) GetProject() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	id := c.Ctx.Input.Param(":id")
+	// 跳转后定位目录
+	node := c.GetString("node")
+	var gototree bool
+	if node != "" {
+		gototree = true
+	}
+	c.Data["Gototree"] = gototree
+	c.Data["Node"] = node
 
 	navid1, err := web.AppConfig.String("navigationid1")
 	navid2, err := web.AppConfig.String("navigationid2")

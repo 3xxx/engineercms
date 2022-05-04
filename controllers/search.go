@@ -346,6 +346,8 @@ func (c *SearchController) SearchProductData() {
 			// linkarr[0].Content = w.Content
 			linkarr[0].Created = w.Created
 			linkarr[0].Updated = w.Updated
+			linkarr[0].ProjectId = w.ProjectId
+			linkarr[0].TopProjectId = w.TopProjectId
 			// linkarr[0].Views = w.Views
 			for _, v := range Attachments {
 				// fileext := path.Ext(v.FileName)

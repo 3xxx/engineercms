@@ -659,8 +659,8 @@ type BusinessCheckDate struct {
 
 // @Title get checkin check
 // @Description get check
-// @Param userid query string true "The userid of check"
-// @Param businessid query string true "The businessid of check"
+// @Param userid query string true "The userId of check"
+// @Param businessid query string true "The activityId of check"
 // @Param year query string true "The year of check"
 // @Param month query string true "The month of check"
 // @Success 200 {object} models.GetProductsPage

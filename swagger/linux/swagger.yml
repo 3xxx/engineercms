@@ -1,8 +1,7 @@
 swagger: "2.0"
 info:
   title: EngineerCMS API
-  description: ECMS has every tool to get any job done, so codename for the new ECMS
-    APIs.
+  description: ECMS has every tool to get any job done, so codename for the new ECMS APIs.
   version: 1.0.0
   contact:
     email: 504284@qq.com
@@ -1320,6 +1319,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /admin/sim:
+    get:
+      tags:
+      - admin
+      description: getsim
+      operationId: AdminController.get sim
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
   /admin/workflow:
     get:
       tags:
@@ -1480,6 +1494,755 @@ paths:
           description: Invalid page
         "404":
           description: page not found
+  /ansys/addansysarticle/{id}:
+    post:
+      tags:
+      - ansys
+      description: post article by ansysID
+      operationId: AnsysController.post ansys artile by ansysID
+      parameters:
+      - in: query
+        name: id
+        description: The id of ansysID
+        required: true
+        type: string
+      - in: query
+        name: title
+        description: The title of article
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of article
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ansysArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /ansys/ansysarticle/{id}:
+    get:
+      tags:
+      - ansys
+      description: get article by ansysarticleID
+      operationId: AnsysController.get ansys artile by ansysarticleID
+      parameters:
+      - in: query
+        name: id
+        description: The id of ansysarticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ansysArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /ansys/ansyscal/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetansysPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/deleteansys/{id}:
+    post:
+      tags:
+      - ansys
+      description: delete ansys by id
+      operationId: AnsysController.delete ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansys
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysApdl'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: ansys not found
+  /ansys/editoransysarticle/{id}:
+    get:
+      tags:
+      - ansys
+      description: get editorarticle by ansysarticleID
+      operationId: AnsysController.get editoransys article by ansysarticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansysarticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ansysArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /ansys/getWxansyshistory/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansyswxhistory..
+      operationId: AnsysController.get ansyswxhistory...
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansyss
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of ansyshistory
+        type: string
+      - in: query
+        name: page
+        description: The page of ansyshistory
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /ansys/getansys/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysApdl'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansys/ansyslist/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetansysPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansys/getansyss/{id}:
+    get:
+      tags:
+      - ansys
+      description: get projproducts..
+      operationId: AnsysController.get projproducts...
+      parameters:
+      - in: path
+        name: id
+        description: The id of projproducts
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of projproducts
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysApdl'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /ansys/getansys/getwxansyss/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansyss..
+      operationId: AnsysController.get ansyss...
+      parameters:
+      - in: path
+        name: id
+        description: The class id of ansysansyss
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of ansysansyss
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysApdl'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /ansys/getansyscalinput/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansyscaloutput/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansyshistory/{id}:
+    get:
+      tags:
+      - ansys
+      description: get history..
+      operationId: AnsysController.get history...
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansyss
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of ansyss
+        type: string
+      - in: query
+        name: page
+        description: The page of ansyss
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /ansys/getansyshistorycal/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansyscal history
+      operationId: AnsysController.get ansyscal history
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: path
+        name: ansysid
+        description: The id of ansyss
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetansysPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansyshistoryinput/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: ansysid
+        description: The id of ansysapdl
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansyshistoryoutput/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: ansysid
+        description: The id of ansysapdl
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getansyspdf/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansyspdf by ansysapdlID
+      operationId: AnsysController.get ansyspdf by ansysapdlID
+      parameters:
+      - in: query
+        name: id
+        description: The id of ansysapdlID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ansysPdf'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: ansyspdf not found
+  /ansys/gethistoryansys/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys history
+      operationId: AnsysController.get ansys history
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansyss
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getwxansyscalinput/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getwxansyscaloutput/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/getwxansysclass/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.get ansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/FileNode1'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/postansys:
+    post:
+      tags:
+      - ansys
+      description: post ansys
+      operationId: AnsysController.post ansys
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: ansysid
+        description: The ansysid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetansysPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/postwxansys:
+    post:
+      tags:
+      - ansys
+      description: post ansys
+      operationId: AnsysController.post ansys
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: ansysid
+        description: The ansysid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetansysPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/putansysapdl:
+    post:
+      tags:
+      - ansys
+      description: put ansysapdl
+      operationId: AnsysController.put ansysapdl
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansysapdl
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysApdl'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/putansyscalinput:
+    post:
+      tags:
+      - ansys
+      description: put ansysinput
+      operationId: AnsysController.put ansysinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansysinput
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/putansyscaloutput:
+    post:
+      tags:
+      - ansys
+      description: put ansys output comment
+      operationId: AnsysController.put ansys outputcomment
+      parameters:
+      - in: path
+        name: id
+        description: The id of output
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AnsysOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/updateansysarticle:
+    post:
+      tags:
+      - ansys
+      description: post editorarticle
+      operationId: AnsysController.post editoransys article
+      parameters:
+      - in: query
+        name: aid
+        description: The id of ansysarticle
+        required: true
+        type: string
+      - in: query
+        name: subtext
+        description: The subtext of ansysarticle
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of ansysarticle
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ansysArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /ansys/uploadansys/{id}:
+    get:
+      tags:
+      - ansys
+      description: get ansys
+      operationId: AnsysController.upload ansysansys
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetansysPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /ansys/uploadansysapdl/{id}:
+    post:
+      tags:
+      - ansys
+      description: post file by BootstrapFileInput
+      operationId: AnsysController.post bootstrapfileinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /ansys/wxansysarticle/{id}:
+    get:
+      tags:
+      - ansys
+      description: get wxarticle by ansysarticleID
+      operationId: AnsysController.get wxansys artile by ansysarticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of ansysarticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ansysArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
   /bbs/bbs:
     post:
       tags:
@@ -1726,6 +2489,57 @@ paths:
           description: Invalid page supplied
         "404":
           description: cart not found
+  /chat/avatar/{text}:
+    get:
+      tags:
+      - chat
+      description: get avatar
+      operationId: ChatController.get avatar
+      parameters:
+      - in: path
+        name: text
+        description: The text
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Avatar'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /chat/chat:
+    get:
+      tags:
+      - chat
+      description: get chat
+      operationId: ChatController.get chat
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /chat/wschat:
+    get:
+      tags:
+      - chat
+      description: get wschat
+      operationId: ChatController.get wschat
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetChat'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /checkin/activity/actInfo:
     post:
       tags:
@@ -2196,6 +3010,859 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /elastic/get:
+    get:
+      tags:
+      - elastic
+      description: get elasticsearch web
+      operationId: ElasticController.get elasticsearch web
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetElastic'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Elastic not found
+  /elastic/search:
+    get:
+      tags:
+      - elastic
+      description: get earch
+      operationId: ElasticController.get search
+      parameters:
+      - in: query
+        name: q
+        description: The query=
+        type: string
+      - in: formData
+        name: a
+        description: The after...
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetSearch'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Search not found
+  /elastic/tika:
+    post:
+      tags:
+      - elastic
+      description: post tika
+      operationId: ElasticController.post tika
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.PostTika'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Tika not found
+  /elastic/upload/{id}:
+    post:
+      tags:
+      - elastic
+      description: post file by BootstrapFileInput
+      operationId: ElasticController.post bootstrapfileinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      - in: query
+        name: prodlabel
+        description: The prodlabel
+        type: string
+      - in: query
+        name: prodprincipal
+        description: The prodprincipal
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /elastic/uploadelastic/{id}:
+    get:
+      tags:
+      - elastic
+      description: get upload file to tika&elastic html
+      operationId: ElasticController.upload file to tika&elastic html
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Elastic'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/addexcelarticle/{id}:
+    post:
+      tags:
+      - excel
+      description: post article by excelID
+      operationId: ExcelController.post excel artile by excelID
+      parameters:
+      - in: query
+        name: id
+        description: The id of excelID
+        required: true
+        type: string
+      - in: query
+        name: title
+        description: The title of article
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of article
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.excelArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /excel/deleteexcel/{id}:
+    post:
+      tags:
+      - excel
+      description: delete excel by id
+      operationId: ExcelController.delete excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of excel
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: excel not found
+  /excel/editorexcelarticle/{id}:
+    get:
+      tags:
+      - excel
+      description: get editorarticle by excelarticleID
+      operationId: ExcelController.get editorexcel article by excelarticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of excelarticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.excelArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /excel/excelarticle/{id}:
+    get:
+      tags:
+      - excel
+      description: get article by excelarticleID
+      operationId: ExcelController.get excel artile by excelarticleID
+      parameters:
+      - in: query
+        name: id
+        description: The id of excelarticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.excelArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /excel/excelcal/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getWxexcelhistory/{id}:
+    get:
+      tags:
+      - excel
+      description: get excelwxhistory..
+      operationId: ExcelController.get excelwxhistory...
+      parameters:
+      - in: path
+        name: id
+        description: The id of excels
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of excelhistory
+        type: string
+      - in: query
+        name: page
+        description: The page of excelhistory
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /excel/getexcel/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexcel/excellist/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexcel/getexcels/{id}:
+    get:
+      tags:
+      - excel
+      description: get projproducts..
+      operationId: ExcelController.get projproducts...
+      parameters:
+      - in: path
+        name: id
+        description: The id of projproducts
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of projproducts
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /excel/getexcel/getwxexcels/{id}:
+    get:
+      tags:
+      - excel
+      description: get excels..
+      operationId: ExcelController.get excels...
+      parameters:
+      - in: path
+        name: id
+        description: The class id of excelexcels
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of excelexcels
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /excel/getexcelcalinput/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexcelcaloutput/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexcelhistory/{id}:
+    get:
+      tags:
+      - excel
+      description: get history..
+      operationId: ExcelController.get history...
+      parameters:
+      - in: path
+        name: id
+        description: The id of excels
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of excels
+        type: string
+      - in: query
+        name: page
+        description: The page of excels
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /excel/getexcelhistorycal/{id}:
+    get:
+      tags:
+      - excel
+      description: get excelcal history
+      operationId: ExcelController.get excelcal history
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: path
+        name: excelid
+        description: The id of excels
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexcelhistoryinput/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: excelid
+        description: The id of exceltemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexcelhistoryoutput/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: excelid
+        description: The id of exceltemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getexceltemplepdf/{id}:
+    get:
+      tags:
+      - excel
+      description: get excelpdf by exceltempleID
+      operationId: ExcelController.get excelpdf by exceltempleID
+      parameters:
+      - in: query
+        name: id
+        description: The id of exceltempleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.excelPdf'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: excelpdf not found
+  /excel/gethistoryexcel/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel history
+      operationId: ExcelController.get excel history
+      parameters:
+      - in: path
+        name: id
+        description: The id of excels
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getwxexcelcalinput/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getwxexcelcaloutput/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/getwxexcelclass/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/FileNode1'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/postexcel:
+    post:
+      tags:
+      - excel
+      description: post excel
+      operationId: ExcelController.post excel
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: excelid
+        description: The excelid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/postwxexcel:
+    post:
+      tags:
+      - excel
+      description: post excel
+      operationId: ExcelController.post excel
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: excelid
+        description: The excelid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/putexcelcalinput:
+    post:
+      tags:
+      - excel
+      description: put excelinput
+      operationId: ExcelController.put excelinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of excelinput
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/putexcelcaloutput:
+    post:
+      tags:
+      - excel
+      description: put excel output comment
+      operationId: ExcelController.put excel outputcomment
+      parameters:
+      - in: path
+        name: id
+        description: The id of output
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/putexceltemple:
+    post:
+      tags:
+      - excel
+      description: put exceltemple
+      operationId: ExcelController.put exceltemple
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ExcelTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/updateexcelarticle:
+    post:
+      tags:
+      - excel
+      description: post editorarticle
+      operationId: ExcelController.post editorexcel article
+      parameters:
+      - in: query
+        name: aid
+        description: The id of excelarticle
+        required: true
+        type: string
+      - in: query
+        name: subtext
+        description: The subtext of excelarticle
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of excelarticle
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.excelArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /excel/uploadexcel/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.upload excelexcel
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/uploadexceltemple/{id}:
+    post:
+      tags:
+      - excel
+      description: post file by BootstrapFileInput
+      operationId: ExcelController.post bootstrapfileinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /excel/wxexcelarticle/{id}:
+    get:
+      tags:
+      - excel
+      description: get wxarticle by excelarticleID
+      operationId: ExcelController.get wxexcel artile by excelarticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of excelarticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.excelArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
   /fileinput/bootstrapfileinput:
     post:
       tags:
@@ -2238,6 +3905,11 @@ paths:
       - flv
       description: get admin page
       operationId: FlvController.getFlv
+      parameters:
+      - in: query
+        name: xxl_sso_token
+        description: The tokenText
+        type: string
       responses:
         "200":
           description: ""
@@ -2247,6 +3919,903 @@ paths:
           description: Invalid page
         "404":
           description: page not found
+  /mathcad/addmatharticle/{id}:
+    post:
+      tags:
+      - mathcad
+      description: post article by templeID
+      operationId: MathcadController.post math artile by templeID
+      parameters:
+      - in: query
+        name: id
+        description: The id of templeID
+        required: true
+        type: string
+      - in: query
+        name: title
+        description: The title of article
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of article
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /mathcad/deletetemple/{id}:
+    post:
+      tags:
+      - mathcad
+      description: delete temple by id
+      operationId: MathcadController.delete temple
+      parameters:
+      - in: path
+        name: id
+        description: The id of temple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: temple not found
+  /mathcad/editormatharticle/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get editorarticle by matharticleID
+      operationId: MathcadController.get editormath article by matharticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of matharticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /mathcad/getWxhistorytemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathwxhistory..
+      operationId: MathcadController.get mathwxhistory...
+      parameters:
+      - in: path
+        name: id
+        description: The id of temples
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of mathhistory
+        type: string
+      - in: query
+        name: page
+        description: The page of mathhistory
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/gethistoryinput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: templeid
+        description: The id of usertemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistorymath/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad history
+      operationId: MathcadController.get mathcad history
+      parameters:
+      - in: path
+        name: id
+        description: The id of temples
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistorymathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcal history
+      operationId: MathcadController.get mathcal history
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: path
+        name: templeid
+        description: The id of temples
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistoryoutput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of history
+        required: true
+        type: string
+      - in: query
+        name: templeid
+        description: The id of usertemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/gethistorytemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get history..
+      operationId: MathcadController.get history...
+      parameters:
+      - in: path
+        name: id
+        description: The id of temples
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of temples
+        type: string
+      - in: query
+        name: page
+        description: The page of temples
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserHistory'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/getmath/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmath/gettemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get projproducts..
+      operationId: MathcadController.get projproducts...
+      parameters:
+      - in: path
+        name: id
+        description: The id of projproducts
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of projproducts
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/getmath/getwxtemples/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathtemples..
+      operationId: MathcadController.get mathtemples...
+      parameters:
+      - in: path
+        name: id
+        description: The class id of mathtemples
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of mathtemples
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /mathcad/getmath/templelist/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmathcalinput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmathcaloutput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getmathtemplepdf/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathpdf by usertempleID
+      operationId: MathcadController.get mathpdf by usertempleID
+      parameters:
+      - in: query
+        name: id
+        description: The id of usertempleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathPdf'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: mathpdf not found
+  /mathcad/getwxmathcalinput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getwxmathcaloutput/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/getwxmathclass/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/FileNode1'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/matharticle/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get article by matharticleID
+      operationId: MathcadController.get math artile by matharticleID
+      parameters:
+      - in: query
+        name: id
+        description: The id of matharticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /mathcad/mathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postmath:
+    post:
+      tags:
+      - mathcad
+      description: post mathcad
+      operationId: MathcadController.post mathcad
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: templeid
+        description: The templeid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postmath2/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of usertemple
+        required: true
+        type: string
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: templeid
+        description: The templeid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postmathback:
+    post:
+      tags:
+      - mathcad
+      description: post mathcad
+      operationId: MathcadController.post mathcad
+      parameters:
+      - in: query
+        name: firstInput
+        description: The firstInput
+        type: string
+      - in: query
+        name: secondInput
+        description: The secondInput
+        type: string
+      - in: query
+        name: thirdInput
+        description: The thirdInput
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postwxmath:
+    post:
+      tags:
+      - mathcad
+      description: post mathcad
+      operationId: MathcadController.post mathcad
+      parameters:
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: templeid
+        description: The templeid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/postwxmath2/{id}:
+    get:
+      tags:
+      - mathcad
+      description: post mathcadcal
+      operationId: MathcadController.post mathcadcal
+      parameters:
+      - in: path
+        name: id
+        description: The id of usertemple
+        required: true
+        type: string
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: templeid
+        description: The templeid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/putmathcalinput:
+    post:
+      tags:
+      - mathcad
+      description: put mathinput
+      operationId: MathcadController.put mathinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of mathinput
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/putmathcaloutput:
+    post:
+      tags:
+      - mathcad
+      description: put mathcad output comment
+      operationId: MathcadController.put mathcad outputcomment
+      parameters:
+      - in: path
+        name: id
+        description: The id of output
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.TempleOutputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/putusertemple:
+    post:
+      tags:
+      - mathcad
+      description: put usertemple
+      operationId: MathcadController.put usertemple
+      parameters:
+      - in: path
+        name: id
+        description: The id of usertemple
+        required: true
+        type: string
+      - in: query
+        name: value
+        description: The value
+        required: true
+        type: string
+      - in: query
+        name: name
+        description: The name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/updatearticle:
+    post:
+      tags:
+      - mathcad
+      description: post editorarticle
+      operationId: MathcadController.post editormath article
+      parameters:
+      - in: query
+        name: aid
+        description: The id of matharticle
+        required: true
+        type: string
+      - in: query
+        name: subtext
+        description: The subtext of matharticle
+        required: true
+        type: string
+      - in: query
+        name: content
+        description: The content of matharticle
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /mathcad/uploadmathtemple/{id}:
+    post:
+      tags:
+      - mathcad
+      description: post file by BootstrapFileInput
+      operationId: MathcadController.post bootstrapfileinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /mathcad/uploadtemple/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: MathcadController.upload mathcadtemple
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/wxmatharticle/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get wxarticle by matharticleID
+      operationId: MathcadController.get wxmath artile by matharticleID
+      parameters:
+      - in: path
+        name: id
+        description: The id of matharticleID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.MathArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /onlyoffice/commandbuilder:
+    get:
+      tags:
+      - onlyoffice
+      description: get doc to onlyoffice CommandService
+      operationId: OnlyController.get CommandService builder doc
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /onlyoffice/commanddrop/{id}:
+    get:
+      tags:
+      - onlyoffice
+      description: get doc to onlyoffice CommandService
+      operationId: OnlyController.get CommandService drop doc
+      parameters:
+      - in: path
+        name: id
+        description: The id of user
+        required: true
+        type: string
+      - in: query
+        name: key
+        description: The key of doc
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
+  /onlyoffice/commandinfo/{id}:
+    get:
+      tags:
+      - onlyoffice
+      description: post doc to onlyoffice CommandService
+      operationId: OnlyController.post CommandService info doc
+      parameters:
+      - in: path
+        name: id
+        description: The id of doc
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: article not found
   /onlyoffice/conversion:
     post:
       tags:
@@ -2288,6 +4857,155 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /passproject/createpassproject:
+    get:
+      tags:
+      - passproject
+      description: create pass_project
+      operationId: PassProjectController.create pass_project
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/getpassproject:
+    get:
+      tags:
+      - passproject
+      description: get excel
+      operationId: PassProjectController.get pass_project
+      parameters:
+      - in: path
+        name: id
+        description: The id of pass_project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/getpassprojectcaldoc/{id}:
+    get:
+      tags:
+      - passproject
+      description: get excel
+      operationId: PassProjectController.get pass_project
+      parameters:
+      - in: path
+        name: id
+        description: The id of pass_project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/getpassprojectdetail:
+    get:
+      tags:
+      - passproject
+      description: get excel
+      operationId: PassProjectController.get pass_project
+      parameters:
+      - in: path
+        name: id
+        description: The id of pass_project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.pass_project'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /passproject/mathhistopassproject:
+    post:
+      tags:
+      - passproject
+      description: post historymathcad to pass_project..
+      operationId: PassProjectController.post historymathcad to pass_project ...
+      parameters:
+      - in: query
+        name: ids
+        description: The ids of history
+        required: true
+        type: string
+      - in: query
+        name: treeids
+        description: The treeids of project
+        required: true
+        type: string
+      - in: query
+        name: treenodeids
+        description: The treenodeids of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /passproject/quickaddpassproject:
+    post:
+      tags:
+      - passproject
+      description: post quickaddproject..
+      operationId: PassProjectController.post pass quickaddproject...
+      parameters:
+      - in: query
+        name: projectcode
+        description: The projectcode of project
+        required: true
+        type: string
+      - in: query
+        name: projecttitle
+        description: The projecttitle of project
+        required: true
+        type: string
+      - in: query
+        name: projectdescription
+        description: The description of project
+        required: true
+        type: string
+      - in: query
+        name: tempprojid
+        description: The tempprojid of project
+        required: true
+        type: string
+      - in: query
+        name: istemppermission
+        description: The permission of project
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /pdfcpu/addwatermarks/{id}:
     post:
       tags:
@@ -2806,6 +5524,32 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/addapplyrecharge/{id}:
+    post:
+      tags:
+      - wx
+      description: get user recharge
+      operationId: PayController.post user recharge
+      parameters:
+      - in: path
+        name: id
+        description: The id of user
+        required: true
+        type: string
+      - in: query
+        name: amount
+        description: The amount of money
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Recharge'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: recharge not found
   /wx/addbusiness/{id}:
     post:
       tags:
@@ -2978,6 +5722,114 @@ paths:
           description: Invalid page supplied
         "404":
           description: pas not found
+  /wx/adduser:
+    post:
+      tags:
+      - wx
+      description: add user
+      operationId: UserController.add user
+      parameters:
+      - in: query
+        name: username
+        description: The name of user
+        type: string
+      - in: query
+        name: nickname
+        description: The nickname of user
+        type: string
+      - in: query
+        name: password
+        description: The password of user
+        type: string
+      - in: query
+        name: email
+        description: The email of user
+        type: string
+      - in: query
+        name: department
+        description: The department of user
+        type: string
+      - in: query
+        name: secoffice
+        description: The secoffice of user
+        type: string
+      - in: query
+        name: ip
+        description: The ip of user
+        type: string
+      - in: query
+        name: port
+        description: The port of user
+        type: string
+      - in: query
+        name: status
+        description: The status of user
+        type: string
+      - in: query
+        name: role
+        description: The role of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
+  /wx/adduserpays:
+    post:
+      tags:
+      - wx
+      description: post userpay by mathtempid
+      operationId: PayController.post userpay by mathtempleid
+      parameters:
+      - in: query
+        name: usertempleid
+        description: The id of mathtemple
+        required: true
+        type: string
+      - in: query
+        name: amount
+        description: The amout of pays
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Pay'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pas not found
+  /wx/adduserrecharge/{id}:
+    post:
+      tags:
+      - wx
+      description: get users recharge
+      operationId: PayController.post users recharge
+      parameters:
+      - in: path
+        name: id
+        description: The id of recharge
+        required: true
+        type: string
+      - in: query
+        name: amount
+        description: The amount of money
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Recharge'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: recharge not found
   /wx/addwxarticle:
     post:
       tags:
@@ -3374,6 +6226,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: pas not found
+  /wx/applyrecharge:
+    get:
+      tags:
+      - wx
+      description: get user recharge
+      operationId: PayController.get user recharge
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Recharge'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: recharge not found
   /wx/businesscheck:
     post:
       tags:
@@ -3705,6 +6572,26 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/deleteuser:
+    post:
+      tags:
+      - wx
+      description: delete user
+      operationId: UserController.delete user
+      parameters:
+      - in: query
+        name: ids
+        description: The ids of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/deletewxarticle:
     post:
       tags:
@@ -3789,6 +6676,111 @@ paths:
           description: Invalid page supplied
         "404":
           description: article not found
+  /wx/downloadstandard/{id}:
+    get:
+      tags:
+      - wx
+      description: get standardpdf by id
+      operationId: StandardController.dowload standardpdf
+      parameters:
+      - in: path
+        name: id
+        description: The id of standardpdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/elasticsearch:
+    get:
+      tags:
+      - wx
+      description: get earch
+      operationId: StandardController.get search
+      parameters:
+      - in: query
+        name: q
+        description: The query=
+        type: string
+      - in: formData
+        name: a
+        description: The after...
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetSearch'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Search not found
+  /wx/getansysdata/{id}:
+    get:
+      tags:
+      - wx
+      description: get ansys data by link
+      operationId: AttachController.dowload ansys data
+      parameters:
+      - in: path
+        name: id
+        description: The id of data
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /wx/getapplyrecharge:
+    get:
+      tags:
+      - wx
+      description: get user recharge
+      operationId: PayController.get user recharge
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Recharge'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getapplyrechargedata:
+    get:
+      tags:
+      - wx
+      description: get user rechargedata
+      operationId: PayController.get user rechargedata
+      parameters:
+      - in: query
+        name: page
+        description: The page of recharges
+        type: string
+      - in: query
+        name: limit
+        description: The size of recharges
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Recharge'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/getbusiness/{id}:
     get:
       tags:
@@ -3867,6 +6859,42 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/getelasticstandard:
+    get:
+      tags:
+      - wx
+      description: get standard elasticsearch web
+      operationId: StandardController.get standard elasticsearch web
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetElastic'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Elastic not found
+  /wx/getexcelpdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get math pdf by link
+      operationId: AttachController.dowload math pdf
+      parameters:
+      - in: path
+        name: id
+        description: The id of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/getlistarticles:
     get:
       tags:
@@ -3935,6 +6963,42 @@ paths:
           description: Invalid page supplied
         "404":
           description: location not found
+  /wx/getmathpdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get math pdf by link
+      operationId: AttachController.dowload math pdf
+      parameters:
+      - in: path
+        name: id
+        description: The id of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/getpay:
+    get:
+      tags:
+      - wx
+      description: get pay by page
+      operationId: PayController.get pay list
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/getuserarticle:
     get:
       tags:
@@ -3950,6 +7014,122 @@ paths:
           description: Invalid page supplied
         "404":
           description: articles not found
+  /wx/getuserbyusername:
+    get:
+      tags:
+      - wx
+      description: get user
+      operationId: UserController.get user
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
+  /wx/getusergetappreciations:
+    get:
+      tags:
+      - wx
+      description: get userappreciation by page
+      operationId: PayController.get userappreciations list
+      parameters:
+      - in: query
+        name: page
+        description: The page for myappreciation list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getusermoney:
+    get:
+      tags:
+      - wx
+      description: get user money
+      operationId: PayController.get user money
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetUserMoney'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getuserpay:
+    get:
+      tags:
+      - wx
+      description: get pay by page
+      operationId: PayController.get pay list
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getuserpayappreciations:
+    get:
+      tags:
+      - wx
+      description: get userappreciation by page
+      operationId: PayController.get userappreciations list
+      parameters:
+      - in: query
+        name: page
+        description: The page for myappreciation list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getuserpaylist:
+    get:
+      tags:
+      - wx
+      description: get userpay by page
+      operationId: PayController.get userpays list
+      parameters:
+      - in: query
+        name: page
+        description: The page for mymoney list
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page of projproducts
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/getuservideo/{id}:
     get:
       tags:
@@ -3997,7 +7177,7 @@ paths:
         description: The id of article
         required: true
         type: string
-      - in: path
+      - in: query
         name: skey
         description: The skey of user
         required: true
@@ -4023,7 +7203,7 @@ paths:
         description: The id of article
         required: true
         type: string
-      - in: path
+      - in: query
         name: skey
         description: The skey of user
         required: true
@@ -4247,6 +7427,48 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/getwxexcelpdf:
+    get:
+      tags:
+      - wx
+      description: get wx pdf by link
+      operationId: AttachController.dowload wx pdf
+      parameters:
+      - in: query
+        name: pdflink
+        description: The url of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/getwxexceltemppdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get wx math temp pdf by id
+      operationId: AttachController.dowload wx math temp pdf
+      parameters:
+      - in: path
+        name: id
+        description: The url of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/getwxfinance/{id}:
     get:
       tags:
@@ -4343,6 +7565,27 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/getwxmathpdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get wx pdf by link
+      operationId: AttachController.dowload wx pdf
+      parameters:
+      - in: path
+        name: id
+        description: The id of history pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/getwxpay:
     get:
       tags:
@@ -4404,6 +7647,27 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/getwxtemppdf/{id}:
+    get:
+      tags:
+      - wx
+      description: get wx math temp pdf by id
+      operationId: AttachController.dowload wx math temp pdf
+      parameters:
+      - in: path
+        name: id
+        description: The url of pdf
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
         "400":
           description: Invalid page supplied
         "404":
@@ -4507,6 +7771,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/importusers:
+    post:
+      tags:
+      - wx
+      description: import users
+      operationId: UserController.import users
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/islogin:
     get:
       tags:
@@ -4729,6 +8008,42 @@ paths:
           description: Invalid page supplied
         "404":
           description: drawings not found
+  /wx/searchwxarticles/{id}:
+    get:
+      tags:
+      - wx
+      description: get articles by page
+      operationId: ArticleController.get wx articles list
+      parameters:
+      - in: path
+        name: id
+        description: The productid of article
+        required: true
+        type: string
+      - in: query
+        name: keyword
+        description: The keyword of article
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit for articles list
+        required: true
+        type: string
+      - in: query
+        name: searchpage
+        description: The page for articles list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetArticles'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articles not found
   /wx/searchwxdrawings:
     get:
       tags:
@@ -4813,6 +8128,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: standards not found
+  /wx/sendmessage:
+    post:
+      tags:
+      - wx
+      description: post Data(file)
+      operationId: MainController.post Data(file)
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/ssologin:
     get:
       tags:
@@ -4863,18 +8193,27 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/standard/upload:
+    post:
+      tags:
+      - wx
+      description: post file by BootstrapFileInput
+      operationId: StandardController.post bootstrapfileinput
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
   /wx/standardpdf:
     get:
       tags:
       - wx
       description: get standardpdf
       operationId: StandardController.get standardpdf
-      parameters:
-      - in: query
-        name: file
-        description: The link of standardpdf
-        required: true
-        type: string
       responses:
         "200":
           description: ""
@@ -4967,6 +8306,34 @@ paths:
           description: Invalid page supplied
         "404":
           description: pas not found
+  /wx/updateuser:
+    post:
+      tags:
+      - wx
+      description: add user
+      operationId: UserController.update user
+      parameters:
+      - in: query
+        name: pk
+        description: The pk of user
+        type: string
+      - in: query
+        name: name
+        description: The name of user
+        type: string
+      - in: query
+        name: value
+        description: The value of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/updatewxdiary:
     post:
       tags:
@@ -5130,6 +8497,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/uploadstandard:
+    get:
+      tags:
+      - wx
+      description: get upload file to standard html
+      operationId: StandardController.upload file to standard html
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Elastic'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /wx/uploadwxavatar:
     post:
       tags:
@@ -5249,6 +8631,30 @@ paths:
           description: Invalid page supplied
         "404":
           description: article not found
+  /wx/user/{id}:
+    get:
+      tags:
+      - wx
+      description: get user by userid
+      operationId: UserController.get user
+      parameters:
+      - in: path
+        name: id
+        description: The id of user
+        type: string
+      - in: query
+        name: role
+        description: The role of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/usermanage:
     get:
       tags:
@@ -5264,6 +8670,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/usermyself:
+    get:
+      tags:
+      - wx
+      description: get usermyself
+      operationId: UserController.get usermyself
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/wxhassession:
     get:
       tags:
@@ -5326,6 +8747,42 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/wxregion:
+    post:
+      tags:
+      - wx
+      description: post wx region
+      operationId: RegistController.post wx region
+      parameters:
+      - in: query
+        name: uname
+        description: The username of user
+        required: true
+        type: string
+      - in: query
+        name: password
+        description: The password of account
+        required: true
+        type: string
+      - in: query
+        name: code
+        description: The code of wx
+        required: true
+        type: string
+      - in: query
+        name: app_version
+        description: The app_version of wx
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.SaveUser'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
   /wx/wxregist:
     post:
       tags:
@@ -5384,8 +8841,14 @@ paths:
         "404":
           description: pdf not found
 definitions:
+  FileNode1:
+    title: FileNode1
+    type: object
   SUCCESS:
     title: SUCCESS
+    type: object
+  gorm.Model:
+    title: Model
     type: object
   models.AddAdminCategory:
     title: AddAdminCategory
@@ -5420,6 +8883,164 @@ definitions:
   models.Addfinance:
     title: Addfinance
     type: object
+  models.AnsysApdl:
+    title: AnsysApdl
+    type: object
+    properties:
+      Article:
+        $ref: '#/definitions/models.AnsysArticle'
+      ClassID:
+        type: integer
+        format: int64
+      User:
+        $ref: '#/definitions/models.User'
+      UserID:
+        type: integer
+        format: int64
+      path:
+        type: string
+      status:
+        type: boolean
+      title:
+        type: string
+      titleb:
+        type: string
+      version:
+        type: string
+  models.AnsysArticle:
+    title: AnsysArticle
+    type: object
+    properties:
+      AnsysApdlID:
+        type: integer
+        format: int32
+      html:
+        type: string
+      subtext:
+        type: string
+      title:
+        type: string
+  models.AnsysHistory:
+    title: AnsysHistory
+    type: object
+    properties:
+      AnsysApdl:
+        $ref: '#/definitions/models.AnsysApdl'
+      User:
+        $ref: '#/definitions/models.User'
+      ansysapdlid:
+        type: integer
+        format: int32
+      pdfurl:
+        type: string
+      userid:
+        type: integer
+        format: int64
+  models.AnsysHistoryInputValue:
+    title: AnsysHistoryInputValue
+    type: object
+    properties:
+      ansys_history_id:
+        type: integer
+        format: int32
+      ansysinputsid:
+        type: integer
+        format: int32
+      inputvalue:
+        type: string
+  models.AnsysHistoryOutputValue:
+    title: AnsysHistoryOutputValue
+    type: object
+    properties:
+      AnsysHistoryID:
+        type: integer
+        format: int32
+      ansysoutputsid:
+        type: integer
+        format: int32
+      outputvalue:
+        type: string
+  models.AnsysImage:
+    title: AnsysImage
+    type: object
+    properties:
+      Url:
+        type: string
+  models.AnsysInputs:
+    title: AnsysInputs
+    type: object
+    properties:
+      AnsysApdlID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      historyinputvalue:
+        $ref: '#/definitions/models.AnsysHistoryInputValue'
+      inputalias:
+        type: string
+      inputvalue:
+        type: string
+      realmax:
+        type: string
+      realmin:
+        type: string
+      resulttype:
+        type: string
+      selectvalue:
+        type: array
+        items:
+          $ref: '#/definitions/models.Select2'
+      textarealvalue:
+        $ref: '#/definitions/models.TextAreal'
+      units:
+        type: string
+  models.AnsysOutputs:
+    title: AnsysOutputs
+    type: object
+    properties:
+      AnsysApdlID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      historyoutputvalue:
+        $ref: '#/definitions/models.AnsysHistoryOutputValue'
+      images:
+        type: array
+        items:
+          $ref: '#/definitions/models.AnsysImage'
+      outputalias:
+        type: string
+      outputvalue:
+        type: string
+      resulttype:
+        type: string
+      units:
+        type: string
+  models.Article:
+    title: Article
+    type: object
+    properties:
+      Created:
+        type: string
+        format: datetime
+      ProductId:
+        type: integer
+        format: int64
+      Subtext:
+        type: string
+      Updated:
+        type: string
+        format: datetime
+      Views:
+        type: integer
+        format: int64
+      html:
+        type: string
+      id:
+        type: integer
+        format: int64
   models.Attachment:
     title: Attachment
     type: object
@@ -5444,6 +9065,9 @@ definitions:
       Updated:
         type: string
         format: datetime
+  models.Avatar:
+    title: Avatar
+    type: object
   models.Create:
     title: Create
     type: object
@@ -5459,11 +9083,152 @@ definitions:
   models.DeleteUserCart:
     title: DeleteUserCart
     type: object
+  models.Elastic:
+    title: Elastic
+    type: object
+  models.ExcelArticle:
+    title: ExcelArticle
+    type: object
+    properties:
+      ExcelTempleID:
+        type: integer
+        format: int32
+      html:
+        type: string
+      subtext:
+        type: string
+      title:
+        type: string
+  models.ExcelHistory:
+    title: ExcelHistory
+    type: object
+    properties:
+      ExcelTemple:
+        $ref: '#/definitions/models.ExcelTemple'
+      User:
+        $ref: '#/definitions/models.User'
+      exceltempleid:
+        type: integer
+        format: int32
+      pdfurl:
+        type: string
+      userid:
+        type: integer
+        format: int64
+  models.ExcelHistoryInputValue:
+    title: ExcelHistoryInputValue
+    type: object
+    properties:
+      excel_history_id:
+        type: integer
+        format: int32
+      excelinputsid:
+        type: integer
+        format: int32
+      inputvalue:
+        type: string
+  models.ExcelHistoryOutputValue:
+    title: ExcelHistoryOutputValue
+    type: object
+    properties:
+      ExcelHistoryID:
+        type: integer
+        format: int32
+      exceloutputsid:
+        type: integer
+        format: int32
+      outputvalue:
+        type: string
+  models.ExcelImage:
+    title: ExcelImage
+    type: object
+    properties:
+      Url:
+        type: string
+  models.ExcelInputs:
+    title: ExcelInputs
+    type: object
+    properties:
+      ExcelTempleID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      historyinputvalue:
+        $ref: '#/definitions/models.ExcelHistoryInputValue'
+      inputalias:
+        type: string
+      inputvalue:
+        type: string
+      realmax:
+        type: string
+      realmin:
+        type: string
+      resulttype:
+        type: string
+      selectvalue:
+        type: array
+        items:
+          $ref: '#/definitions/models.Select2'
+      textarealvalue:
+        $ref: '#/definitions/models.TextAreal'
+      units:
+        type: string
+  models.ExcelOutputs:
+    title: ExcelOutputs
+    type: object
+    properties:
+      ExcelTempleID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      historyoutputvalue:
+        $ref: '#/definitions/models.ExcelHistoryOutputValue'
+      images:
+        type: array
+        items:
+          $ref: '#/definitions/models.ExcelImage'
+      outputalias:
+        type: string
+      outputvalue:
+        type: string
+      resulttype:
+        type: string
+      units:
+        type: string
+  models.ExcelTemple:
+    title: ExcelTemple
+    type: object
+    properties:
+      Article:
+        $ref: '#/definitions/models.ExcelArticle'
+      ClassID:
+        type: integer
+        format: int64
+      User:
+        $ref: '#/definitions/models.User'
+      UserID:
+        type: integer
+        format: int64
+      path:
+        type: string
+      status:
+        type: boolean
+      title:
+        type: string
+      titleb:
+        type: string
+      version:
+        type: string
   models.GetAdminCategory:
     title: GetAdminCategory
     type: object
   models.GetArticle:
     title: GetArticle
+    type: object
+  models.GetArticles:
+    title: GetArticles
     type: object
   models.GetAttachbyId:
     title: GetAttachbyId
@@ -5471,14 +9236,23 @@ definitions:
   models.GetBusinessPage:
     title: GetBusinessPage
     type: object
+  models.GetChat:
+    title: GetChat
+    type: object
   models.GetDiary:
     title: GetDiary
+    type: object
+  models.GetElastic:
+    title: GetElastic
     type: object
   models.GetFinance:
     title: GetFinance
     type: object
   models.GetLocationPage:
     title: GetLocationPage
+    type: object
+  models.GetMathcadPage:
+    title: GetMathcadPage
     type: object
   models.GetOnlyPdf:
     title: GetOnlyPdf
@@ -5489,20 +9263,280 @@ definitions:
   models.GetProjectPage:
     title: GetProjectPage
     type: object
+  models.GetSearch:
+    title: GetSearch
+    type: object
   models.GetUserMoney:
     title: GetUserMoney
+    type: object
+  models.GetansysPage:
+    title: GetansysPage
+    type: object
+  models.GetexcelPage:
+    title: GetexcelPage
     type: object
   models.Gettest:
     title: Gettest
     type: object
+  models.HistoryInputValue:
+    title: HistoryInputValue
+    type: object
+    properties:
+      inputvalue:
+        type: string
+      templeinputsid:
+        type: integer
+        format: int32
+      user_history_id:
+        type: integer
+        format: int32
+  models.HistoryOutputValue:
+    title: HistoryOutputValue
+    type: object
+    properties:
+      UserHistoryID:
+        type: integer
+        format: int32
+      outputvalue:
+        type: string
+      templeoutputsid:
+        type: integer
+        format: int32
+  models.MathArticle:
+    title: MathArticle
+    type: object
+    properties:
+      UserTempleID:
+        type: integer
+        format: int32
+      html:
+        type: string
+      subtext:
+        type: string
+      title:
+        type: string
+  models.MathPdf:
+    title: MathPdf
+    type: object
+  models.Pay:
+    title: Pay
+    type: object
+    properties:
+      Amount:
+        type: integer
+        format: int64
+      Article:
+        $ref: '#/definitions/models.Article'
+      ArticleID:
+        type: integer
+        format: int64
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        type: string
+        format: datetime
+      UpdatedAt:
+        type: string
+        format: datetime
+      User:
+        $ref: '#/definitions/models.User'
+      User2ID:
+        type: integer
+        format: int64
+      UserID:
+        type: integer
+        format: int64
+      id:
+        type: integer
+        format: int32
+  models.PostTika:
+    title: PostTika
+    type: object
+  models.Recharge:
+    title: Recharge
+    type: object
+    properties:
+      Amount:
+        type: integer
+        format: int64
+      User:
+        $ref: '#/definitions/models.User'
+      UserID:
+        type: integer
+        format: int64
   models.SaveUser:
     title: SaveUser
     type: object
+  models.Select2:
+    title: Select2
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      value:
+        type: string
+  models.TempleInputs:
+    title: TempleInputs
+    type: object
+    properties:
+      UserTempleID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      historyinputvalue:
+        $ref: '#/definitions/models.HistoryInputValue'
+      inputalias:
+        type: string
+      inputvalue:
+        type: string
+      realmax:
+        type: string
+      realmin:
+        type: string
+      resulttype:
+        type: string
+      selectvalue:
+        type: array
+        items:
+          $ref: '#/definitions/models.Select2'
+      textarealvalue:
+        $ref: '#/definitions/models.TextAreal'
+      units:
+        type: string
+  models.TempleOutputs:
+    title: TempleOutputs
+    type: object
+    properties:
+      UserTempleID:
+        type: integer
+        format: int32
+      comment:
+        type: string
+      historyoutputvalue:
+        $ref: '#/definitions/models.HistoryOutputValue'
+      outputalias:
+        type: string
+      outputvalue:
+        type: string
+      resulttype:
+        type: string
+      units:
+        type: string
+  models.TextAreal:
+    title: TextAreal
+    type: object
+    properties:
+      value:
+        type: string
   models.Update:
     title: Update
     type: object
   models.UpdateBusiness:
     title: UpdateBusiness
+    type: object
+  models.User:
+    title: User
+    type: object
+    properties:
+      Createtime:
+        type: string
+        format: datetime
+      Department:
+        type: string
+      Email:
+        type: string
+      Id:
+        type: integer
+        format: int64
+      Ip:
+        type: string
+      Lastlogintime:
+        type: string
+        format: datetime
+      Nickname:
+        type: string
+      Password:
+        type: string
+      Port:
+        type: string
+      Remark:
+        type: string
+      Repassword:
+        type: string
+      Secoffice:
+        type: string
+      Status:
+        type: integer
+        format: int64
+      Updated:
+        type: string
+        format: datetime
+      name:
+        type: string
+      role:
+        type: string
+  models.UserHistory:
+    title: UserHistory
+    type: object
+    properties:
+      User:
+        $ref: '#/definitions/models.User'
+      UserTemple:
+        $ref: '#/definitions/models.UserTemple'
+      description:
+        type: string
+      faceimgurl:
+        type: string
+      pdfurl:
+        type: string
+      tempid:
+        type: integer
+        format: int32
+      userid:
+        type: integer
+        format: int64
+  models.UserTemple:
+    title: UserTemple
+    type: object
+    properties:
+      ClassID:
+        type: integer
+        format: int64
+      MathArticle:
+        $ref: '#/definitions/models.MathArticle'
+      User:
+        $ref: '#/definitions/models.User'
+      UserID:
+        type: integer
+        format: int64
+      status:
+        type: boolean
+      temppath:
+        type: string
+      temptitle:
+        type: string
+      temptitleb:
+        type: string
+      version:
+        type: string
+  models.ansysArticle:
+    title: ansysArticle
+    type: object
+  models.ansysPdf:
+    title: ansysPdf
+    type: object
+  models.excelArticle:
+    title: excelArticle
+    type: object
+  models.excelPdf:
+    title: excelPdf
+    type: object
+  models.pass_project:
+    title: pass_project
     type: object
   success:
     title: success
@@ -5532,3 +9566,18 @@ tags:
 - name: flv
   description: |
     CMSFLV API
+- name: mathcad
+  description: |
+    CMSMATHCAD API
+- name: ansys
+  description: |
+    CMSansys API
+- name: excel
+  description: |
+    CMSexcel API
+- name: passproject
+  description: |
+    CMS pass_project API
+- name: elastic
+  description: |
+    CMSELASTIC API

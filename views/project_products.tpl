@@ -21,32 +21,8 @@
   <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
   <script type="text/javascript" src="/static/js/clipboard.min.js"></script>
 
-  <!-- <link rel="stylesheet" href="/static/froala/css/froala_editor.css">
-  <link rel="stylesheet" href="/static/froala/css/froala_style.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/code_view.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/draggable.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/colors.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/emoticons.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/image_manager.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/image.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/line_breaker.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/table.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/char_counter.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/video.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/fullscreen.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/file.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/quick_insert.css">
-  <link rel="stylesheet" href="/static/froala/css/plugins/help.css"> -->
-
-  <!-- <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css"> -->
-
-  <!-- <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css"> -->
   <link rel="stylesheet" href="/static/froala/css/codemirror.min.css">
-  <!-- <link rel="stylesheet" href="/static/froala/css/themes/red.css"> -->
 
-
-
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="/static/froala/css/froala_editor.css">
   <link rel="stylesheet" href="/static/froala/css/froala_style.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/code_view.css">
@@ -63,14 +39,9 @@
   <link rel="stylesheet" href="/static/froala/css/plugins/file.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/quick_insert.css">
   <link rel="stylesheet" href="/static/froala/css/plugins/help.css">
-  <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css">
+  <!-- <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css"> -->
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"> -->
 
-  <!-- <link rel="stylesheet" href="/static/css/magnific-popup.css" /> -->
-  <!-- <script type="text/javascript" src="/static/js/jquery.magnific-popup.min.js"></script> -->
-  <!-- <script src="/static/toast/toast.min.js"></script> -->
-  <!-- <link rel="stylesheet" href="/static/toast/toast.min.css"> -->
   <style type="text/css">
   #imgmodalDialog .modal-header {
     cursor: move;
@@ -1838,22 +1809,20 @@
             </div>
             <div class="modal-body">
               <div class="modal-body-content">
-                <!-- <div id="pdfs" style="display:none"> -->
-                <!-- <h3>工程目录分级</h3> -->
                 <table id="articles" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
                   <thead>
                     <tr>
-                      <th data-width="10" data-checkbox="true"></th>
-                      <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="Subtext">副标题</th>
-                      <th data-field="Link" data-formatter="setArticlecontent">查看</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                      <th data-width="10" data-checkbox="true" data-align="center" data-valign="middle"></th>
+                      <th data-formatter="index1" data-align="center" data-valign="middle">#</th>
+                      <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                      <th data-field="Subtext" data-align="center" data-valign="middle">副标题</th>
+                      <th data-field="Link" data-formatter="setArticlecontent" data-align="center" data-valign="middle">查看</th>
+                      <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
+                      <th data-field="operate" data-events="operateEvents" data-formatter="operateFormatter" data-align="center" data-valign="middle">操作</th>
                     </tr>
                   </thead>
                 </table>
-                <!-- </div> -->
               </div>
             </div>
             <div class="modal-footer">
@@ -1881,13 +1850,13 @@
                 <table id="attachs" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true" data-search="true">
                   <thead>
                     <tr>
-                      <th data-width="10" data-checkbox="true"></th>
-                      <th data-formatter="index1">#</th>
-                      <th data-field="Title" data-sortable="true">名称</th>
-                      <th data-field="FileSize" data-sortable="true">大小</th>
-                      <th data-field="Link" data-formatter="setAttachlink">附件</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                      <th data-width="10" data-checkbox="true" data-align="center" data-valign="middle"></th>
+                      <th data-formatter="index1" data-align="center" data-valign="middle">#</th>
+                      <th data-field="Title" data-sortable="true" data-halign="center">名称</th>
+                      <th data-field="FileSize" data-sortable="true" data-align="center" data-valign="middle">大小</th>
+                      <th data-field="Link" data-formatter="setAttachlink" data-align="center" data-valign="middle">附件</th>
+                      <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
                     </tr>
                   </thead>
                 </table>
@@ -1919,13 +1888,13 @@
                 <table id="pdfs" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true" data-search="true">
                   <thead>
                     <tr>
-                      <th data-width="10" data-checkbox="true"></th>
-                      <th data-formatter="index1">#</th>
-                      <th data-field="Title" data-sortable="true">名称</th>
-                      <th data-field="FileSize" data-sortable="true">大小</th>
-                      <th data-field="Link" data-formatter="setPdflink">查看</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                      <th data-width="10" data-checkbox="true" data-align="center" data-valign="middle"></th>
+                      <th data-formatter="index1" data-align="center" data-valign="middle">#</th>
+                      <th data-field="Title" data-sortable="true" data-halign="center">名称</th>
+                      <th data-field="FileSize" data-sortable="true" data-align="center" data-valign="middle">大小</th>
+                      <th data-field="Link" data-formatter="setPdflink" data-align="center" data-valign="middle">查看</th>
+                      <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
                     </tr>
                   </thead>
                 </table>
@@ -2221,45 +2190,6 @@
       </div>
     </div>
   </div>
-  <!-- <script type="text/javascript" src="/static/froala/js/jquery.min.1.11.0.js"></script> -->
-
-  <!-- <script type="text/javascript" src="/static/froala/js/codemirror.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/xml.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/froala_editor.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/align.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/char_counter.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/code_beautifier.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/code_view.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/colors.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/draggable.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/emoticons.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/entities.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/file.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/font_size.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/font_family.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/fullscreen.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/image.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/image_manager.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/line_breaker.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/inline_style.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/link.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/lists.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/paragraph_format.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/paragraph_style.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/quick_insert.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/quote.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/table.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/save.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/url.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/video.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/help.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/print.min.js"></script> -->
-
-  <!-- <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script> -->
-
-  <!-- <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script> -->
-
 
   <script type="text/javascript" src="/static/froala/js/froala_editor.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/align.min.js"></script>
@@ -2290,11 +2220,9 @@
   <script type="text/javascript" src="/static/froala/js/plugins/video.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/help.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/print.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script> -->
   <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script>
-
-
 
   <script src="/static/froala/js/languages/zh_cn.js"></script>
   <script>
@@ -2358,6 +2286,51 @@
       // toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'align','color','fontSize','insertImage','insertTable','undo', 'redo']
     });
   })
+
+  // 文章列表模态框中的操作
+  function operateFormatter(value, row, index) {
+    return [
+      '<a class="delete btn btn-xs btn-danger" style="margin-left:10px" href="javascript:void(0)" title="删除">',
+      '<i class="fa fa-trash"></i>',
+      '</a>',
+      '<a class="pdf btn btn-xs btn-success" style="margin-left:10px" href="javascript:void(0)" title="查看">',
+      '<i class="fa fa-file-pdf-o"></i>',
+      '</a>',
+      '<a class="edit btn btn-xs btn-info" style="margin-left:10px" href="javascript:void(0)" title="编辑">',
+      '<i class="fa fa-pencil"></i>',
+      '</a>'
+    ].join('');
+  }
+
+    window.operateEvents = {
+      'click .delete': function(e, value, row, index) {
+        // alert(row.Id);
+        if ({{.RoleDelete }} == "true") {
+          if (confirm("确定删除吗？一旦删除将无法恢复！")) {
+            $.ajax({
+              type: "post",
+              url: "/project/product/deletearticle",
+              data: { pid: row.Id },
+              success: function(data, status) {
+                alert("删除：“" + data + "”！(status:" + status + ".)");
+                //关闭标签
+                window.close();
+              }
+            });
+          }
+        } else {
+          alert("权限不够！" + {{.Uid }});
+          return;
+        }
+      },
+      'click .pdf': function(e, value, row, index) {
+        var url = '/project/product/article/' + row.Id
+        window.open(url, "_blank", "")
+      },
+      'click .edit': function(e, value, row, index) {
+        alert("编辑功能待完善~")
+      }
+    };
 
   //添加文章
   function save2() {
@@ -2577,7 +2550,7 @@
     }
   }
 
-  $(document).ready(function() {
+  $(function() {
     $("#imgmodalDialog").draggable({ handle: ".modal-header" });
     $("#modalDialog").draggable({ handle: ".modal-header" }); //为模态对话框添加拖拽
     $("#modalDialog1").draggable({ handle: ".modal-header" });

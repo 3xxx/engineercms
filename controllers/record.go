@@ -545,28 +545,28 @@ func MathcadName(filenameWithSuffix string) (Suffix, FileNumber, FileName, Versi
 		loc := re.FindStringIndex(filenameOnly)
 		if loc != nil { //如果有编号——如果没文件名？？？？？
 			FileNumber = SubString(filenameOnly, 0, loc[0])
-			// beego.Info("文件编号：", FileNumber)
+			// logs.Info("文件编号：", FileNumber)
 			FileName = SubString(filenameOnly, loc[0], lengthname-loc[0])
-			// beego.Info("文件名：", FileName)
+			// logs.Info("文件名：", FileName)
 		} else { //如果没有编号
 			FileNumber = filenameOnly
-			// fmt.Println("文件编号：", FileNumber)
+			// logs.Info("文件编号：", FileNumber)
 			FileName = filenameOnly
-			// fmt.Println("文件名：", filenameOnly)
+			// logs.Info("文件名：", filenameOnly)
 		}
 	} else { //如果有空格
 		re, _ := regexp.Compile("[^a-zA-Z0-9-.~]")
 		loc := re.FindStringIndex(filenameOnly)
 		if loc != nil { //如果有编号
 			FileNumber = SubString(filenameOnly, 0, loc[0])
-			// fmt.Println("文件编号：", FileNumber)
+			// logs.Info("文件编号：", FileNumber)
 			FileName = SubString(filenameOnly, loc[0], lengthname-loc[0])
-			// fmt.Println("文件名：", FileName)
+			// logs.Info("文件名：", FileName)
 		} else { //如果没有编号
 			FileNumber = filenameOnly
-			// fmt.Println("文件编号：", FileNumber)
+			// logs.Info("文件编号：", FileNumber)
 			FileName = filenameOnly
-			// fmt.Println("文件名：", filenameOnly)
+			// logs.Info("文件名：", filenameOnly)
 		}
 	}
 

@@ -23,8 +23,9 @@
   <div class="text-center">
     <h1>
       <!-- <i class="glyphicon glyphicon-chevron-right"></i> -->
-      <i class="fa fa-chevron-right fa-lg"></i>
-      <i class="fa fa-window-minimize fa-lg"></i>
+      <!-- <i class="fa fa-chevron-right fa-lg"></i> -->
+      <!-- <i class="fa fa-window-minimize fa-lg"></i> -->
+      <i class="fa fa-terminal fa-3x"></i>
         <!-- <i class="fa fa-free-code-camp fa-lg"></i> -->
         <!-- <i class="fa fa-ravelry fa-lg" aria-hidden="true"></i> -->
       <!-- <i class="fa fa-linode fa-lg" aria-hidden="true"></i> -->

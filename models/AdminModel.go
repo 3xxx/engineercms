@@ -14,11 +14,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"log"
 	"os"
 	"time"
 	"xorm.io/xorm"
+	// "log"
 )
 
 var engine *xorm.Engine
@@ -152,15 +154,17 @@ func init() {
 	// _db, err = gorm.Open(db_type, dns)
 	// 20220102下面这里用了:=导致全局变量一致无法用！！
 	_db, err = gorm.Open(sqlite.Open(dns), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent), //gorm查询静默模式。在conf里设置的，以及main.go里设置的，仅仅针对beego的orm有效
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数表名，启用该选项后，`User` 表将是`user`
 			// NameReplacer:  strings.NewReplacer("CID", "Cid"), // 在转为数据库名称之前，使用NameReplacer更改结构/字段名称。
 			// TablePrefix:   "t_",                              // 表名前缀，`User`表为`t_users`
+
 		},
 	})
 
 	// defer _db.Close()//20200803这个不能打开。
-	// _db.LogMode(true)
+	// db.LogMode(false)
 	if err != nil {
 		panic("连接数据库失败, error=" + err.Error())
 	}
