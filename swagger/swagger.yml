@@ -4872,6 +4872,27 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
+  /mathcad/wswxmathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: get mathcad
+      operationId: WsMathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of mathtemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /mathcad/wxmatharticle/{id}:
     get:
       tags:

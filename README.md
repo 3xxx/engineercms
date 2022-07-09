@@ -59,7 +59,7 @@ https://www.cnblogs.com/cqlb/p/13396107.html
 5 Switched to branch 'master'
 git add .
 git commit -m "update"
-然后，敲命令git tag <name>就可以打一个新标签：
+然后，敲命令git tag <tagname>就可以打一个新标签：
 
 $ git tag v2.0.5
 因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
@@ -195,9 +195,21 @@ To https://github.com/3xxx/engineercms
 
 将二进制文件放到源码文件夹下直接运行即可。
 
-或者去百度网盘下载，直接运行。[链接：https://pan.baidu.com/s/1MDJ-QfCmv_LiychDSLn8jw 提取码：nhar ](https://pan.baidu.com/s/1MDJ-QfCmv_LiychDSLn8jw)
+或者去百度网盘下载，直接运行。[链接：https://pan.baidu.com/s/1f4zuhoymaHMN_QAEgZLwOg 提取码：upvm ](https://pan.baidu.com/s/1f4zuhoymaHMN_QAEgZLwOg)
 
-Linux系统下请替换掉执行文件engineercms(linux)
+Linux系统下请将执行文件engineercms(linux)放入engineercms文件夹内（即win系统下运行的整个解压包）；swagger文件夹下的swagger.json和swagger.yml两个文件拷贝到engineercms目录里的swagger文件夹里
+进入执行文件所在文件夹，运行engineercms如下：
+[root@localhost engineercms]# nohup ./engineercms &
+如果出现：
+-bash: ./ engineercms: Permission denied
+则说明需要修改权限，用下列命令：
+[root@……5 ~]# chmod +x engineercms
+—如果出现端口被占用，需要去conf文件夹内修改app.conf里的端口号，保存后重新运行。
+[root@……5 ~]# systemctl stop firewalld.service关闭防火墙，否则其他电脑访问不了。
+停止engineercms进程的命令
+killall engineercms
+查看进程的命令：
+ps aux
 
 不清楚的，可以加我QQ504284或者微信hotqin999聊，也可参考[quickstart](https://github.com/3xxx/engineercms/blob/master/quickstart%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.txt)。
 

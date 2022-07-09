@@ -120,22 +120,28 @@
 
 	36.请看网盘里的文档[链接：https://pan.baidu.com/s/1MDJ-QfCmv_LiychDSLn8jw 提取码：nhar ](https://pan.baidu.com/s/1MDJ-QfCmv_LiychDSLn8jw)《20190922 engineercms怎样做流程设置 flow nginx node mysql》，flow只支持mysql数据库。
 
-	*************mindoc创作书籍********************
+*************mindoc创作书籍********************
 
 	37.管理员用户名为admin，密码为123456。
 
 	38.它的验证码不是很清晰，很难输入准确。所以用sqlite expert professional先打开sqlite数据库，将md_options表中的“是否启用验证码”的option_value填上false。
 
-
 	更换域名记录
 	购买域名，只要在.net那个域名里购买，填写hotqin即可，默认就是www.hotqin.net
 	上传身份证进行备案
-
-
-	更换域名：
 	engineercms的app里小程序的服务地址要修改成新的域名
-	申请SSL证书：打开远程桌面，打开beyond compare，再点击证书的文件验证，快速拷贝到本机engineercms的static里的download目录里的txt文件里，远程进行文件更新，回到云里，点击验证，3分钟内完成的话，马上就可以扫描到。
 
+*************更换域名和申请证书********************	
+	
+	申请SSL证书要操作迅速：打开服务器远程桌面，打开文件夹engineercms的static里的download目录，再回到证书申请页面，点击申请证书，选择文件验证方式，页面生成了文件名和文件后，快速拷贝文件名和文件内容到远程桌面download里，名称也要符合证书验证要求的名称，
+	例如0452072B8618471E45B2492D3206D8A8.txt，内容为
+	2AB4454B570236BA78893258A3FE32EDC949DB38CAF47BFB7231D30DF08DC0E3
+	COMODOCA.COM
+	pssl8736177178165288
+	回到腾讯云的证书申请页面里，点击验证，显示验证成功。3分钟内完成的话，马上就可以扫描到，再过几分钟证书就下发了，可以下载。
+	如果上述操作不能够快速完成，可能会导致申请很慢。不知道现在改了没。
+	获得证书后，使用nginx证书解压后，改名为server.crt和server.key，和app.conf里的名称一致即可，放到engineercms的根目录下，重启engineercms服务，验证一下web端和小程序端是否可以访问到。
+	
 *************全文检索********************
 	1.docker拉取和运行tika，解析文档内容用
 	You can pull down the version you would like using:
