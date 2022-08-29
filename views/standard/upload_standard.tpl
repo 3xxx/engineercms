@@ -47,13 +47,15 @@
 	$("#input-ke-2").fileinput({
     language:'zh',
     theme: "explorer",
-    uploadAsync: false,//同步上传
+    
     uploadUrl: "/v1/wx/standard/upload",
     minFileCount: 1,
     maxFileCount: 50,
     enctype: 'multipart/form-data',
+    // uploadAsync: false,//同步上传
     //uploadAsync: false,//同步上传  后台参数为MultipartFile[]，若异步参数为MultipartFile;若设置为false为同步上传，多个文件上传只会发送一个post请求，后台接收的参数要设置为MultipartFile[]
     uploadAsync: true,//异步上传，若异步，参数为MultipartFile;若设置为异步，则会发送多个post请求，每个请求会进入一次后台的入口，后台参数需设置为MultipartFile
+    // 设置为同步false时，回调函数为.on("filebatchuploadsuccess", function(event, data, previewId, index) {})；异步true的回调函数为.on("fileuploaded", function (event, data, previewId, index){})。
     maxFileSize: 150000,
     removeFromPreviewOnError: true,
     overwriteInitial: false,

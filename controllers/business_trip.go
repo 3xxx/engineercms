@@ -178,13 +178,14 @@ func (c *BusinessController) AddBusiness() {
 	// 进行敏感字符验证
 	content := projecttitle + drivername + users
 
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
-	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
+	suggest, label, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	// logs.Info(suggest)
+	// logs.Info(label)
 	if err != nil {
 		logs.Error(err)
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
+		c.Data["json"] = map[string]interface{}{"code": 4, "info": suggest, "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
 		//根据项目id添加出差
 		var business models.Business
 		// 添加business
@@ -256,7 +257,7 @@ func (c *BusinessController) AddBusiness() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"code": 3, "info": suggest, "data": label}
 		c.ServeJSON()
 	}
 }
@@ -388,13 +389,14 @@ func (c *BusinessController) UpdateBusiness() {
 	// g":true},{"index":2,"name":"61","showtag":true}]
 	// 进行敏感字符验证
 	content := projecttitle + drivername + users
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	suggest, label, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	// errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
 	if err != nil {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
 		//根据项目id添加出差
 		var business models.Business
 		// 添加business
@@ -476,7 +478,7 @@ func (c *BusinessController) UpdateBusiness() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"info": suggest, "data": label}
 		c.ServeJSON()
 	}
 }

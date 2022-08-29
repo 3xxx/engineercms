@@ -75,12 +75,14 @@ func (c *LocationController) AddLocationPart() {
 	// 进行敏感字符验证
 	content := title + describe
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	suggest, label, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	// errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	if err != nil {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
+		// } else if errcode != 87014 {
 		//根据项目id添加定位组
 		var location models.Location
 		// 添加location
@@ -105,7 +107,7 @@ func (c *LocationController) AddLocationPart() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"code": 3, "info": suggest, "data": label}
 		c.ServeJSON()
 	}
 }
@@ -181,12 +183,13 @@ func (c *LocationController) AddLocationNavigate() {
 	// 进行敏感字符验证
 	content := address
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	suggest, outlabel, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	// errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	if err != nil {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
 		//根据项目id添加出差
 		// var locationnavigate models.LocationNavigate
 		// 添加location
@@ -215,7 +218,7 @@ func (c *LocationController) AddLocationNavigate() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"info": suggest, "data": outlabel}
 		c.ServeJSON()
 	}
 }

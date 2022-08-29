@@ -27,10 +27,10 @@ type Document struct {
 	DocumentId   int    `orm:"pk;auto;unique;column(document_id)" json:"doc_id"`
 	DocumentName string `orm:"column(document_name);size(500)" json:"doc_name"`
 	// Identify 文档唯一标识
-	Identify  string `orm:"column(identify);size(100);index;null;default(null)" json:"identify"`
-	BookId    int    `orm:"column(book_id);type(int);index" json:"book_id"`
-	ParentId  int    `orm:"column(parent_id);type(int);index;default(0)" json:"parent_id"`
-	OrderSort int    `orm:"column(order_sort);default(0);type(int);index" json:"order_sort"`
+	Identify  string `orm:"column(identify);size(100);null;default(null)" json:"identify"`
+	BookId    int    `orm:"column(book_id);type(int)" json:"book_id"`
+	ParentId  int    `orm:"column(parent_id);type(int);default(0)" json:"parent_id"`
+	OrderSort int    `orm:"column(order_sort);default(0);type(int)" json:"order_sort"`
 	// Markdown markdown格式文档.
 	Markdown string `orm:"column(markdown);type(text);null" json:"markdown"`
 	// Release 发布后的Html格式内容.

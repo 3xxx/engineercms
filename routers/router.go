@@ -296,6 +296,11 @@ func init() {
 					&controllers.ElasticController{},
 				),
 			),
+			web.NSNamespace("/simwe",
+				web.NSInclude(
+					&controllers.SimweController{},
+				),
+			),
 			// beego.NSNamespace("/suggest",
 			// 	beego.NSInclude(
 			// 		&controllers.SearchController{},
@@ -831,6 +836,10 @@ func init() {
 
 	web.Router("/mindoclogin", &controllers.AccountController{}, "*:Login")
 	web.Router("/dingtalk_login", &controllers.AccountController{}, "*:DingTalkLogin")
+	web.Router("/workweixin-login", &controllers.AccountController{}, "*:WorkWeixinLogin")
+	web.Router("/workweixin-callback", &controllers.AccountController{}, "*:WorkWeixinLoginCallback")
+	web.Router("/workweixin-bind", &controllers.AccountController{}, "*:WorkWeixinLoginBind")
+	web.Router("/workweixin-ignore", &controllers.AccountController{}, "*:WorkWeixinLoginIgnore")
 	web.Router("/qrlogin/:app", &controllers.AccountController{}, "*:QRLogin")
 	web.Router("/mindoclogout", &controllers.AccountController{}, "*:Logout")
 	web.Router("/register", &controllers.AccountController{}, "*:Register")
@@ -947,6 +956,7 @@ func init() {
 	web.Router("/history/restore", &controllers.DocumentController{}, "*:RestoreHistory")
 
 	web.Router("/docs/:key", &controllers.DocumentController{}, "*:Index")
+	web.Router("/docs/:key/check-password", &controllers.DocumentController{}, "post:CheckPassword")
 	web.Router("/docs/:key/:id", &controllers.DocumentController{}, "*:Read")
 	web.Router("/docs/:key/search", &controllers.DocumentController{}, "post:Search")
 	web.Router("/export/:key", &controllers.DocumentController{}, "*:Export")
@@ -955,6 +965,7 @@ func init() {
 	web.Router("/attach_files/:key/:attach_id", &controllers.DocumentController{}, "get:DownloadAttachment")
 
 	web.Router("/comment/create", &controllers.CommentController{}, "post:Create")
+	web.Router("/comment/delete", &controllers.CommentController{}, "post:Delete")
 	web.Router("/comment/lists", &controllers.CommentController{}, "get:Lists")
 	web.Router("/comment/index", &controllers.CommentController{}, "*:Index")
 

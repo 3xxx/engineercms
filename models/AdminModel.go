@@ -182,6 +182,7 @@ func init() {
 
 	// 3.注册模型
 	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminCalendar), new(AdminSynchIp), new(AdminDepartment), new(AdminCarousel)) //, new(Article)
+	// 来自mindoc-\commands\command.go
 	orm.RegisterModelWithPrefix(conf.GetDatabasePrefix(),
 		new(Member),
 		new(Book),
@@ -200,6 +201,8 @@ func init() {
 		new(TeamMember),
 		new(TeamRelationship),
 		new(Itemsets),
+		new(Comment),
+		new(WorkWeixinAccount),
 	)
 	orm.RegisterModelWithPrefix("share_", new(Bridge), new(Share))
 
@@ -214,6 +217,7 @@ func init() {
 	_db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
 	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
 	_db.AutoMigrate(&PassProject{})
+	_db.AutoMigrate(&PhotoData{})
 }
 
 //获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。

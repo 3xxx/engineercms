@@ -43,7 +43,7 @@ func (c *SearchController) SearchProject() { //search用的是get方法
 // @Failure 400 Invalid page supplied
 // @Failure 404 drawings not found
 // @router /searchprojectproduct [get]
-//显示特定项目的搜索页面
+// 显示特定项目的搜索页面
 func (c *SearchController) SearchProjectProduct() { //search用的是get方法
 	c.Data["IsProject"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()

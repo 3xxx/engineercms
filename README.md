@@ -8,26 +8,40 @@
 ——基于engineercms的设代资料管理平台（真实应用环境）
 
 ```bash
+# go mod使用
+# https://www.jianshu.com/p/760c97ff644c
+
 # 克隆源码
 # git clone https://github.com/3xxx/engineercms.git
-# go mod vendor
-
-# go mod init
+# go run main.go
 # go包自动安装
 # 设置go代理
 # go env -w GO111MODULE=on
 # go env -w GOPROXY=https://goproxy.cn,direct
+
+# 初始化mod：
+# go mod init
+
+# 将新增的依赖包自动写入当前项目的 vendor 目录：
+# go mod vendor
+# 如果 go.mod 发生变化，应当重新执行 go mod vendor！
+# 执行go mod vendor将删除项目中已存在的vendor目录；
+# 永远不要对vendor中的依赖库进行二次修改、更改！
+# go命令不检查vendor中的依赖库是否被修改
 # 关闭——这个看情况，go mod vendor时，提示Get https://sum.golang.org/lookup/xxxxxx: dial tcp 216.58.200.49:443: i/o timeout
 # go env -w GOSUMDB=off
+
+# 更新mod：
 # go mod tidy
-go run main.go
+
 # 编译(sqlite需要CGO支持)
-go build -ldflags "-w"
+# go build -ldflags "-w"
 # 数据库初始化(此步骤执行之前，需配置`conf/app.conf`)
 # ./engineercms install
-# 执行
+# linux上执行
 # $ nohup ./engineercms &
 ```
+
 ```bash
 # beego 2.0.0 升级指南
 # 获取最新版本的 bee 工具 go get -u github.com/beego/bee/v2
@@ -35,47 +49,48 @@ go build -ldflags "-w"
 # 然后进入项目，执行: bee fix -t 2
 # 需要注意的是，如果你是 windows 用户，那么你需要在 WSL 内部运行该命令。
 # 在项目文件夹下鼠标右键——Git Bash Here
-这里需要导入的包是
-github.com/beego/beego/v2/server/web/context
-而不是
-~ github.com/beego/beego/v2/adapter/context ~
+# 这里需要导入的包是
+# github.com/beego/beego/v2/server/web/context
+# 而不是
+# ~ github.com/beego/beego/v2/adapter/context ~
 
-目前来说因为你所有的包都切换过去了beego/beego/v2，所以你对应的context要使用beego/beego/v2/server/web/context下的这个。
+# 目前来说因为你所有的包都切换过去了beego/beego/v2，所以你对应的context要使用beego/beego/v2/server/web/context下的这个。
 
-我教你一个小技巧。当你发现依赖找不到的时候，你把import里面对应的东西删掉，IDE会帮你补全，或者给你提示。如果你用的GOLANG IDE，那么会自动帮你把对应依赖引入。
+# 我教你一个小技巧。当你发现依赖找不到的时候，你把import里面对应的东西删掉，IDE会帮你补全，或者给你提示。如果你用的GOLANG IDE，那么会自动帮你把对应依赖引入。
 
-记住一个核心原则：如果你用的是adapter的包，那么所有的包都应该是adapter的；如果你用的是beego/beego/v2（非adapter)，那么所有的都应该是beego/beego/v2下的。
+# 记住一个核心原则：如果你用的是adapter的包，那么所有的包都应该是adapter的；如果你用的是beego/beego/v2（非adapter)，那么所有的都应该是beego/beego/v2下的。
 ```
 
 ```bash
-https://www.cnblogs.com/cqlb/p/13396107.html
-一、创建标签
-在Git中打标签非常简单，首先，切换到需要打标签的分支上：
+# https://www.cnblogs.com/cqlb/p/13396107.html
+# 一、创建标签
+# 在Git中打标签非常简单，首先，切换到需要打标签的分支上：
 
-1 $ git branch
+# 1 $ git branch
 # 2 * dev
 # 3   master
-4 $ git checkout master
-5 Switched to branch 'master'
-git add .
-git commit -m "update"
-然后，敲命令git tag <tagname>就可以打一个新标签：
+# 4 $ git checkout master
+# 5 Switched to branch 'master'
+# git add .
+# git commit -m "update"
+# 然后，敲命令git tag <tagname>就可以打一个新标签：
 
-$ git tag v2.0.5
-因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
-如果要推送某个标签到远程，使用命令
-$ git push origin <tagname>
+# $ git tag v2.0.5
+# 因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
+# 如果要推送某个标签到远程，使用命令
+# git push --tags
+# $ git push origin <tagname>
 
-Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
-$ git push --delete origin v2.0.0
-To https://github.com/3xxx/engineercms
- - [deleted]         v2.0.0
+# Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
+# $ git push --delete origin v2.0.0
+# To https://github.com/3xxx/engineercms
+#  - [deleted]         v2.0.0
 
-Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
-$ git push --delete origin v2.0.2
-To https://github.com/3xxx/engineercms
- - [deleted]         v2.0.2
-如果有人想知道如何一次删除多个标签，你可以用空格简单地列出它们，例如git push --delete origin tag1 tag2。本地标签删除git tag -d tag1 tag2同样有效。
+# Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
+# $ git push --delete origin v2.0.2
+# To https://github.com/3xxx/engineercms
+#  - [deleted]         v2.0.2
+# 如果有人想知道如何一次删除多个标签，你可以用空格简单地列出它们，例如git push --delete origin tag1 tag2。本地标签删除git tag -d tag1 tag2同样有效。
 ```
 
 1. 本系统采用go语言（基于[beego](https://github.com/astaxie/beego)框架）开发，运行文件为编译后的二进制可执行文件，所以无需像其他语言（php、nodejs、java等语言）编写的web应用那样，需要配置运行服务环境。
@@ -199,6 +214,7 @@ To https://github.com/3xxx/engineercms
 
 Linux系统下请将执行文件engineercms(linux)放入engineercms文件夹内（即win系统下运行的整个解压包）；swagger文件夹下的swagger.json和swagger.yml两个文件拷贝到engineercms目录里的swagger文件夹里
 进入执行文件所在文件夹，运行engineercms如下：
+```bash
 [root@localhost engineercms]# nohup ./engineercms &
 如果出现：
 -bash: ./ engineercms: Permission denied
@@ -210,6 +226,7 @@ Linux系统下请将执行文件engineercms(linux)放入engineercms文件夹内�
 killall engineercms
 查看进程的命令：
 ps aux
+```
 
 不清楚的，可以加我QQ504284或者微信hotqin999聊，也可参考[quickstart](https://github.com/3xxx/engineercms/blob/master/quickstart%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.txt)。
 

@@ -33,7 +33,7 @@ func (c *BbsController) Bbs() {
 	// var err error
 	openID := c.GetSession("openID")
 	if openID == nil {
-		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
+		c.Data["json"] = map[string]interface{}{"code": 6, "info": "用户未登录"}
 		c.ServeJSON()
 		return
 	}
@@ -91,16 +91,18 @@ func (c *BbsController) Bbs() {
 	accessToken, _, _, err := utils.GetAccessToken(app_version)
 	if err != nil {
 		logs.Error(err)
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
+		c.Data["json"] = map[string]interface{}{"code": 5, "info": "ERROR", "data": err}
 		c.ServeJSON()
 		return
 	}
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), desc)
+	suggest, label, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), desc)
+	logs.Info(suggest)
+	logs.Info(label)
 	if err != nil {
 		logs.Error(err)
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
+		c.Data["json"] = map[string]interface{}{"code": 4, "info": suggest, "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
 		_, err = models.BbsBbs(UserId, desc, SelectDate)
 		if err != nil {
 			logs.Error(err)
@@ -111,7 +113,7 @@ func (c *BbsController) Bbs() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"code": 3, "info": suggest, "data": label}
 		c.ServeJSON()
 	}
 }

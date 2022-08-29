@@ -138,8 +138,8 @@ func (c *RegistController) WxRegist() {
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
-	// beego.Info(user.Password)
-	// beego.Info(user.Username)
+	logs.Info(user.Password)
+	logs.Info(user.Username)
 	err := models.ValidateUser(user)
 	if err == nil {
 		JSCODE := c.GetString("code")

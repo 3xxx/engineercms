@@ -1,0 +1,104 @@
+/**
+ * This file is part of Shadowbox <http://shadowbox-js.com/>
+ */
+
+#shadowbox {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  text-align: left;
+  visibility: hidden;
+  display: none;
+}
+
+#shadowbox img {
+  border: none;
+}
+
+#shadowbox * {
+  outline: 0; /* Disable dotted outline in Firefox */
+}
+
+#sb-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#sb-wrapper {
+  position: absolute;
+  display: block;
+  visibility: hidden;
+  left: 50%;
+  top: 50%;
+}
+
+#sb-body,
+#sb-content,
+#sb-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#sb-body {}
+
+#sb-content { 
+  background: black;
+  background: hsla(0,0%,0%,0.6);
+}
+  z-index: 999;
+}
+
+#sb-cover {
+  background: black;
+  background: hsla(0,0%,0%,0.6);
+}
+
+#sb-close,
+#sb-next,
+#sb-prev {
+  position: absolute;
+  background: url("shadowbox-icons.png") no-repeat;
+  cursor: pointer;
+}
+
+
+#shadowbox.active #sb-close,
+#shadowbox.has-next #sb-next,
+#shadowbox.has-prev #sb-prev {
+  display: block;
+}
+
+#sb-close {
+    display: none;
+}
+
+#sb-next {
+  right: 0;
+  top: 50%;
+  width: 60px;
+  height: 46px;
+  background-position: 50% -40px;
+  margin: -20px -40px 0 0;
+}
+
+#sb-prev {
+  left: 0;
+  top: 50%;
+  width: 60px;
+  height: 46px;
+  background-position: 50% -86px;
+  margin: -20px 0 0 -37px;
+}
+
+#sb-content > img {
+  vertical-align: super !important;
+}
+
+#sb-body {
+    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.5), 0 15px 30px hsla(0, 0%, 0%, 0.5);
+}

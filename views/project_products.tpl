@@ -719,7 +719,7 @@
       var uploader = WebUploader.create({
         // 不压缩image
         resize: false,
-        fileSingleSizeLimit: 50 * 1024 * 1024, //限制大小50M，单文件
+        fileSingleSizeLimit: 100 * 1024 * 1024, //限制大小100M，单文件
         fileSizeLimit: allMaxSize * 1024 * 1024, //限制大小500M，所有被选文件，超出选择不上
         // swf文件路径fex-team-webuploader/dist
         swf: '/static/js/Uploader.swf',

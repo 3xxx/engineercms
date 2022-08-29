@@ -240,7 +240,7 @@ func (c *ProjController) GetProjects() {
 		// 	logs.Error(err)
 		// }
 		//取得每个项目的成果数量
-		projects1 := make([]Project1, 0) //这里不能加*号
+		// projects1 := make([]Project1, 0) //这里不能加*号
 		for _, v := range projects {
 			aa := make([]Project1, 1)
 			aa[0].Id = v.Id

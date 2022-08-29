@@ -238,6 +238,17 @@ func (m *BookResult) ToBookResult(book Book) *BookResult {
 			m.ItemName = item.ItemName
 		}
 	}
+	if m.CommentStatus == "closed" {
+		m.IsDisplayComment = false
+	} else if m.CommentStatus == "open" {
+		m.IsDisplayComment = true
+	} else if m.CommentStatus == "registered_only" {
+		// todo
+	} else if m.CommentStatus == "group_only" {
+		// todo
+	} else {
+		m.IsDisplayComment = false;
+	}
 	return m
 }
 
@@ -469,9 +480,6 @@ func (m *BookResult) Converter(sessionId string) (ConvertBookResult, error) {
 
 	if err := filetil.CopyDir(filepath.Join(conf.WorkingDirectory, "static", "font-awesome"), filepath.Join(tempOutputPath, "styles", "font-awesome")); err != nil {
 		logs.Error("复制CSS样式出错 -> static/font-awesome", err)
-	}
-	if err := filetil.CopyFile(filepath.Join(conf.WorkingDirectory, "static", "editor.md", "lib", "mermaid", "mermaid.css"), filepath.Join(tempOutputPath, "styles", "css", "mermaid.css")); err != nil {
-		logs.Error("复制CSS样式出错 -> static/editor.md/lib/mermaid/mermaid.css", err)
 	}
 
 	eBookConverter := &converter.Converter{

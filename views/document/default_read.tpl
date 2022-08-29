@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-
     <title>{{.Title}} - Powered by MinDoc</title>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="renderer" content="webkit">
-    <meta name="author" content="Minho" />
-    <meta name="site" content="https://www.iminho.me" />
-    <meta name="keywords" content="MinDoc,文档在线管理系统,WIKI,wiki,wiki在线,文档在线管理,接口文档在线管理,接口文档管理,{{.Model.BookName}},{{.Title}}">
-    <meta name="description" content="{{.Title}}-{{if .Description}}{{.Description}}{{else}}{{.Model.Description}}{{end}}">
-
-    <!-- Bootstrap -->
-    <link href="{{cdncss "/static/mindoc/bootstrap/css/bootstrap.min.css"}}" rel="stylesheet">
-
-    <link href="{{cdncss "/static/mindoc/jstree/3.3.4/themes/default/style.min.css"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/font-awesome/css/font-awesome.min.css"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/nprogress/nprogress.css"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/css/kancloud.css" "version"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/css/jstree.css"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/editor.md/lib/mermaid/mermaid.css" "version"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/editor.md/lib/sequence/sequence-diagram-min.css" "version"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/editor.md/css/editormd.preview.css" "version"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/css/markdown.preview.css" "version"}}" rel="stylesheet">
-    <link href="{{cdncss (print "/static/mindoc/editor.md/lib/highlight/styles/" .HighlightStyle ".css") "version"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/katex/katex.min.css"}}" rel="stylesheet">
-    <link href="{{cdncss "/static/mindoc/css/print.css" "version"}}" media="print" rel="stylesheet">
-
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta name="author" content="Minho" />
+  <meta name="site" content="https://www.iminho.me" />
+  <meta name="keywords" content="MinDoc,文档在线管理系统,WIKI,wiki,wiki在线,文档在线管理,接口文档在线管理,接口文档管理,{{.Model.BookName}},{{.Title}}">
+  <meta name="description" content="{{.Title}}-{{if .Description}}{{.Description}}{{else}}{{.Model.Description}}{{end}}">
+  <!-- Bootstrap -->
+  <link href="{{cdncss "/static/mindoc/bootstrap/css/bootstrap.min.css"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/jstree/3.3.4/themes/default/style.min.css"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/font-awesome/css/font-awesome.min.css"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/nprogress/nprogress.css"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/css/kancloud.css" "version"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/css/jstree.css"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/editor.md/lib/mermaid/mermaid.css" "version"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/editor.md/lib/sequence/sequence-diagram-min.css" "version"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/editor.md/css/editormd.preview.css" "version"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/css/markdown.preview.css" "version"}}" rel="stylesheet">
+  <link href="{{cdncss (print "/static/mindoc/editor.md/lib/highlight/styles/" .HighlightStyle ".css") "version"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/katex/katex.min.css"}}" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/css/print.css" "version"}}" media="print" rel="stylesheet">
+  <link href="{{cdncss "/static/mindoc/editor.md/lib/codemirror/codemirror.min.css" "version"}}" rel="stylesheet">
+  <script type="text/javascript">
+        window.IS_ENABLE_IFRAME = '{{conf "enable_iframe" }}' === 'true';
+        window.BASE_URL = '{{urlfor "HomeController.Index" }}';
+        window.IS_DOCUMENT_INDEX = '{{if .IS_DOCUMENT_INDEX}}true{{end}}' === 'true';
+        window.IS_DISPLAY_COMMENT = '{{if .Model.IsDisplayComment}}true{{end}}' === 'true';
+    </script>
     <script type="text/javascript">window.book={"identify":"{{.Model.Identify}}"};</script>
+    <style>
+        .btn-mobile {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .not-show-comment {
+            display: none;
+        }
+
+        @media screen and (min-width: 840px) {
+            .btn-mobile{
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="m-manual manual-mode-view manual-reader">
@@ -40,33 +60,34 @@
                 <a href="{{urlfor "DocumentController.Index" ":key" .Model.Identify}}" title="{{.Model.BookName}}" class="book-title">{{.Model.BookName}}</a>
                 <span style="font-size: 12px;font-weight: 100;"></span>
             </div>
+            <a href="{{urlfor "HomeController.Index"}}" class="btn btn-default btn-mobile"> <i class="fa fa-home" aria-hidden="true"></i> {{i18n .Lang "common.home"}}</a>
             <div class="navbar-header pull-right manual-menu">
-                <a href="javascript:window.print();" id="printSinglePage" class="btn btn-default" style="margin-right: 10px;"><i class="fa fa-print"></i> 打印</a>
+                <div class="dropdown pull-left" style="margin-right: 10px;">
+                    <a href="{{urlfor "HomeController.Index"}}" class="btn btn-default"><i class="fa fa-home" aria-hidden="true"></i> {{i18n .Lang "common.home"}}</a>
+                </div>
                 {{if gt .Member.MemberId 0}}
                 {{if eq .Model.RoleId 0 1 2}}
-                <div class="dropdown pull-right">
-                    <a href="{{urlfor "DocumentController.Edit" ":key" .Model.Identify ":id" ""}}" class="btn btn-default"><i class="fa fa-edit" aria-hidden="true"></i> 编辑</a>
+                <div class="dropdown pull-left" style="margin-right: 10px;">
+                    <a href="{{urlfor "DocumentController.Edit" ":key" .Model.Identify ":id" ""}}" class="btn btn-danger"><i class="fa fa-edit" aria-hidden="true"></i> {{i18n .Lang "blog.edit"}}</a>
                     {{if eq .Model.RoleId 0 1}}
-                    <a href="{{urlfor "BookController.Users" ":key" .Model.Identify}}" class="btn btn-success"><i class="fa fa-user" aria-hidden="true"></i> 成员</a>
-                    <a href="{{urlfor "BookController.Setting" ":key" .Model.Identify}}" class="btn btn-primary"><i class="fa fa-gear" aria-hidden="true"></i> 设置</a>
+                    <a href="{{urlfor "BookController.Users" ":key" .Model.Identify}}" class="btn btn-success"><i class="fa fa-user" aria-hidden="true"></i> {{i18n .Lang "blog.member"}}</a>
+                    <a href="{{urlfor "BookController.Setting" ":key" .Model.Identify}}" class="btn btn-primary"><i class="fa fa-gear" aria-hidden="true"></i> {{i18n .Lang "common.setting"}}</a>
                     {{end}}
                 </div>
                 {{end}}
                 {{end}}
-                <div class="dropdown pull-right" style="margin-right: 10px;">
-                    <a href="{{urlfor "HomeController.Index"}}" class="btn btn-default"><i class="fa fa-home" aria-hidden="true"></i> 首页</a>
-                </div>
+                <a href="javascript:window.print();" id="printSinglePage" class="btn btn-default" style="margin-right: 10px;"><i class="fa fa-print"></i> {{i18n .Lang "doc.print"}}</a>
                 <div class="dropdown pull-right" style="margin-right: 10px;">
                 {{if eq .Model.PrivatelyOwned 0}}
                 {{if .Model.IsEnableShare}}
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#shareProject"><i class="fa fa-share-square" aria-hidden="true"></i> 分享</button>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#shareProject"><i class="fa fa-share-square" aria-hidden="true"></i> {{i18n .Lang "doc.share"}}</button>
                 {{end}}
                 {{end}}
                 </div>
                 {{if .Model.IsDownload}}
                 <div class="dropdown pull-right" style="margin-right: 10px;">
                     <button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-cloud-download" aria-hidden="true"></i> 下载 <span class="caret"></span>
+                        <i class="fa fa-cloud-download" aria-hidden="true"></i> {{i18n .Lang "doc.download"}} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="margin-top: -5px;">
                         <li><a href="{{urlfor "DocumentController.Export" ":key" .Model.Identify "output" "pdf"}}" target="_blank">PDF</a> </li>
@@ -86,13 +107,17 @@
         <div class="manual-left">
             <div class="manual-tab">
                 <div class="tab-navg">
-                    <span data-mode="view" class="navg-item active"><i class="fa fa-align-justify"></i><b class="text">目录</b></span>
-                    <span data-mode="search" class="navg-item"><i class="fa fa-search"></i><b class="text">搜索</b></span>
+                    <span data-mode="view" class="navg-item active"><i class="fa fa-align-justify"></i><b class="text">{{i18n .Lang "doc.contents"}}</b></span>
+                    <span data-mode="search" class="navg-item"><i class="fa fa-search"></i><b class="text">{{i18n .Lang "doc.search"}}</b></span>
+                    <span id="handlerMenuShow" style="float: right;display: inline-block;padding: 5px;cursor: pointer;">
+                        <i class="fa fa-angle-left" style="font-size: 20px;padding-right: 5px;"></i>
+                        <span class="pull-right" style="padding-top: 4px;">{{i18n .Lang "doc.expand"}}</span>
+                    </span>
                 </div>
                 <div class="tab-util">
                     <span class="manual-fullscreen-switch">
-                        <b class="open fa fa-angle-right" title="展开"></b>
-                        <b class="close fa fa-angle-left" title="关闭"></b>
+                        <b class="open fa fa-angle-right" title="{{i18n .Lang "doc.expand"}}"></b>
+                        <b class="close fa fa-angle-left" title="{{i18n .Lang "doc.close"}}"></b>
                     </span>
                 </div>
                 <div class="tab-wrap">
@@ -107,7 +132,7 @@
                             <div class="search-form">
                                 <form id="searchForm" action="{{urlfor "DocumentController.Search" ":key" .Model.Identify}}" method="post">
                                     <div class="form-group">
-                                        <input type="search" placeholder="请输入搜索关键字" class="form-control" name="keyword">
+                                        <input type="search" placeholder="{{i18n .Lang "message.search_placeholder"}}" class="form-control" name="keyword">
                                         <button type="submit" class="btn btn-default btn-search" id="btnSearch">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -117,7 +142,7 @@
                             <div class="search-result">
                                 <div class="search-empty">
                                     <i class="fa fa-search-plus" aria-hidden="true"></i>
-                                    <b class="text">暂无相关搜索结果！</b>
+                                    <b class="text">{{i18n .Lang "message.no_search_result"}}</b>
                                 </div>
                                 <ul class="search-list" id="searchList">
                                 </ul>
@@ -128,7 +153,8 @@
             </div>
             <div class="m-copyright">
                 <p>
-                    本文档使用 <a href="https://www.iminho.me" target="_blank">MinDoc</a> 发布
+                    <div id="view_count">{{i18n .Lang "doc.view_count"}}：{{.ViewCount}}</div>
+                    {{i18n $.Lang "doc.doc_publish_by"}} <a href="https://www.iminho.me" target="_blank">MinDoc</a> {{i18n $.Lang "doc.doc_publish"}}
                 </p>
             </div>
         </div>
@@ -152,53 +178,45 @@
                     <div class="article-body  {{if eq .Model.Editor "markdown"}}markdown-body editormd-preview-container{{else}}editor-content{{end}}"  id="page-content">
                         {{.Content}}
                     </div>
-                    <!--
-                    {{/*
+
                     {{if .Model.IsDisplayComment}}
-                    <div id="articleComment" class="m-comment">
-                        <div class="comment-result">
-                            <strong class="title">相关评论(<b class="comment-total">{{.Model.CommentCount}}</b>)</strong>
-                            <div class="comment-post">
-                                <form class="form" action="/comment/create" method="post">
-                                    <label class="enter w-textarea textarea-full">
-                                        <textarea class="textarea-input form-control" name="content" placeholder="文明上网，理性发言" style="height: 72px;"></textarea>
-                                        <input type="hidden" name="doc_id" value="118003">
-                                    </label>
-                                    <div class="util cf">
-                                        <div class="pull-left"><span style="font-size: 12px;color: #999"> 支持Markdown语法 </span></div>
-                                        <div class="pull-right">
-                                            <span class="form-tip w-fragment fragment-tip">Ctrl + Enter快速发布</span>
-                                            <label class="form-submit w-btn btn-success btn-m">
-                                                <button class="btn btn-success btn-sm" type="submit">发布</button>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </form>
+                    <div id="articleComment" class="m-comment{{if .IS_DOCUMENT_INDEX}} not-show-comment{{end}}">
+                        <!-- 评论列表 -->
+                        <div class="comment-list" id="commentList">
+                            {{range $i, $c := .Page.List}}
+                            <div class="comment-item" data-id="{{$c.CommentId}}">
+                                <p class="info"><a class="name">{{$c.Author}}</a><span class="date">{{date $c.CommentDate "Y-m-d H:i:s"}}</span></p>
+                                <div class="content">{{$c.Content}}</div>
+                                <p class="util">
+                                    <span class="operate {{if eq $c.ShowDel 1}}toggle{{end}}">
+                                        <span class="number">{{$c.Index}}#</span>
+                                        {{if eq $c.ShowDel 1}}
+                                        <i class="delete e-delete glyphicon glyphicon-remove" style="color:red" onclick="onDelComment({{$c.CommentId}})"></i>
+                                        {{end}}
+                                    </span>
+                                </p>
                             </div>
-                            <div class="clearfix"></div>
-                            <div class="comment-list">
-                                <div class="comment-empty"><b class="text">暂无相关评论</b></div>
-                                <div class="comment-item" data-id="5841">
-                                    <p class="info"><a href="/@phptest" class="name">静夜思</a><span class="date">9月1日评论</span></p>
-                                    <div class="content">一直不明白，控制器分层和模型分层调用起来到底有什么区别</div>
-                                    <p class="util">
-                                        <span class="vote">
-                                            <a class="agree e-agree" href="javascript:;" data-id="5841" title="赞成">
-                                                <i class="fa fa-thumbs-o-up"></i></a><b class="count">4</b>
-                                            <a class="oppose e-oppose" href="javascript:;" data-id="5841" title="反对"><i class="fa fa-thumbs-o-down"></i></a>
-                                        </span>
-                                        <a class="reply e-reply" data-account="phptest">回复</a>
-                                        <span class="operate toggle">
-                                            <a class="delete e-delete" data-id="5841" data-href="/comment/delete"><i class="icon icon-cross"></i></a>
-                                            <span class="number">23#</span>
-                                        </span>
-                                    </p>
+                            {{end}}
+                        </div>
+
+                        <!-- 翻页 -->
+                        <ul id="page"></ul>
+
+                        <!-- 发表评论 -->
+                        <div class="comment-post">
+                            <form class="form" id="commentForm" action="{{urlfor "CommentController.Create"}}" method="post">
+                                <label class="enter w-textarea textarea-full">
+                                    <textarea class="textarea-input form-control" name="content" id="commentContent" placeholder="文明上网，理性发言" style="height: 72px;"></textarea>
+                                    <input type="hidden" name="doc_id" id="doc_id" value="{{.DocumentId}}">
+                                </label>
+                                <div class="pull-right">
+                                    <button class="btn btn-success btn-sm" type="submit" id="btnSubmitComment" data-loading-text="提交中...">提交评论</button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     {{end}}
-*/}}-->
+
                     <div class="jump-top">
                         <a href="javascript:;" class="view-backtop"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                     </div>
@@ -217,7 +235,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">项目分享</h4>
+                <h4 class="modal-title" id="myModalLabel">{{i18n .Lang "doc.share_project"}}</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -226,15 +244,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="col-sm-2 control-label">项目地址</label>
+                    <label for="password" class="col-sm-2 control-label">{{i18n .Lang "doc.share_url"}}</label>
                     <div class="col-sm-10">
-                        <input type="text" value="{{urlfor "DocumentController.Index" ":key" .Model.Identify}}" class="form-control" onmouseover="this.select()" id="projectUrl" title="项目地址">
+                        <input type="text" value="{{urlfor "DocumentController.Index" ":key" .Model.Identify}}" class="form-control" onmouseover="this.select()" id="projectUrl" title="{{i18n .Lang "doc.share_url"}}">
                     </div>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{i18n .Lang "doc.close"}}</button>
             </div>
         </div>
     </div>
@@ -246,7 +264,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">项目分享</h4>
+                <h4 class="modal-title" id="myModalLabel">{{i18n .Lang "doc.share_project"}}</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -255,43 +273,115 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="col-sm-2 control-label">项目地址</label>
+                    <label for="password" class="col-sm-2 control-label">{{i18n .Lang "doc.share_url"}}</label>
                     <div class="col-sm-10">
-                        <input type="text" value="{{urlfor "DocumentController.Index" ":key" .Model.Identify}}" class="form-control" onmouseover="this.select()" id="projectUrl" title="项目地址">
+                        <input type="text" value="{{urlfor "DocumentController.Index" ":key" .Model.Identify}}" class="form-control" onmouseover="this.select()" id="projectUrl" title="{{i18n .Lang "doc.share_url"}}">
                     </div>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{i18n .Lang "doc.close"}}</button>
             </div>
         </div>
     </div>
-</div>
+  </div>
+  <script src="{{cdnjs "/static/mindoc/jquery/1.12.4/jquery.min.js"}}"></script>
+  <script src="{{cdnjs "/static/mindoc/bootstrap/js/bootstrap.min.js"}}"></script>
+  <script src="{{cdnjs "/static/mindoc/bootstrap-paginator/bootstrap-paginator.min.js"}}"></script>
+  <script src="{{cdnjs "/static/mindoc/js/jquery.form.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/layer/layer.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/jstree/3.3.4/jstree.min.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/editor.md/editormd.js" "version"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/nprogress/nprogress.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/editor.md/lib/highlight/highlight.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/js/jquery.highlight.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/js/kancloud.js" "version"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/js/splitbar.js" "version"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/js/custom-elements-builtin-0.6.5.min.js"}}" type="text/javascript"></script>
+  <script src="{{cdnjs "/static/mindoc/js/x-frame-bypass-1.0.2.js"}}" type="text/javascript"></script>
+  
+<!--   <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.7.11/dist/browser/view.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.7.11/dist/browser/transform.min.js"></script> -->
 
-<script src="{{cdnjs "/static/mindoc/jquery/1.12.4/jquery.min.js"}}"></script>
-<script src="{{cdnjs "/static/mindoc/bootstrap/js/bootstrap.min.js"}}"></script>
-<script src="{{cdnjs "/static/mindoc/js/jquery.form.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/layer/layer.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/jstree/3.3.4/jstree.min.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/nprogress/nprogress.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/editor.md/lib/highlight/highlight.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/js/jquery.highlight.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/js/kancloud.js" "version"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/js/splitbar.js" "version"}}" type="text/javascript"></script>
-<script type="text/javascript">
-$(function () {
-    $("#searchList").on("click","a",function () {
-        var id = $(this).attr("data-id");
-        var url = "{{urlfor "DocumentController.Read" ":key" .Model.Identify ":id" ""}}/" + id;
-        $(this).parent("li").siblings().find("a").removeClass("active");
-        $(this).addClass("active");
-        loadDocument(url,id,function (body) {
-            return $(body).highlight(window.keyword);
-        });
+<!-- <svg id="mindmap"></svg> -->
+<!--   <pre id="mmm" hidden>
+# foobar
+
+## foo
+
+- f
+- o
+- o
+
+## bar
+
+- b
+- a
+- r
+    </pre> -->
+
+  <script type="text/javascript">
+  // markdown = document.getElementById("mm").innerHTML;
+  // const data = markmap.transform(markdown);
+  // console.log(data)
+  // markmap.Markmap.create("#mindmap", null, data);
+
+  $(function() {
+    $("#searchList").on("click", "a", function() {
+      var id = $(this).attr("data-id");
+      var url = "{{urlfor "DocumentController.Read " ": key " .Model.Identify ": id " ""}}/" + id;
+      $(this).parent("li").siblings().find("a").removeClass("active");
+      $(this).addClass("active");
+      loadDocument(url, id, function(body) {
+        return $(body).highlight(window.keyword);
+      });
     });
+
+    window.menuControl = true;
+    window.menuSetting = "open" ;
+    if (menuSetting == 'open' || menuSetting == 'first') {
+        $('#handlerMenuShow').find('span').text('{{i18n .Lang "doc.fold"}}');
+        $('#handlerMenuShow').find('i').attr("class","fa fa-angle-down");
+        if (menuSetting == 'open') {
+            window.jsTree.jstree().open_all()
+        }
+        if (menuSetting == 'first') {
+            window.jsTree.jstree('close_all')
+            var $target = $('.jstree-container-ul').children('li').filter(function(index){
+                if($(this).attr('aria-expanded')==false||$(this).attr('aria-expanded')){
+                    return $(this)
+                }else{
+                    delete $(this)
+                }
+            })
+            $target.children('i').trigger('click')
+        }
+    } else {
+        menuControl = false;
+        window.jsTree.jstree('close_all')
+    }
+    $('#handlerMenuShow').on('click', function(){
+        if(menuControl){
+            $(this).find('span').text('{{i18n .Lang "doc.expand"}}')
+            $(this).find('i').attr("class","fa fa-angle-left")
+            window.menuControl = false
+            window.jsTree.jstree('close_all')
+        }else{
+            window.menuControl = true
+            $(this).find('span').text('{{i18n .Lang "doc.fold"}}')
+            $(this).find('i').attr("class","fa fa-angle-down")
+            window.jsTree.jstree().open_all()
+        }
+    });
+
+    if (!window.IS_DOCUMENT_INDEX && IS_DISPLAY_COMMENT) {
+        pageClicked(-1, parseInt($('#doc_id').val()));
+    }
 });
 </script>
 {{.Scripts}}
 </body>
+
 </html>

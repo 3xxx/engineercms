@@ -67,6 +67,7 @@ func CreateVideo(projectid, userid int64, content, name, url string) (id int64, 
 	return id, nil
 }
 
+// 更新视频封面
 func UpdateVideo(vid int64, coverurl string) error {
 	db := _db //GetDB()
 	err := db.Table("video").Where("id = ?", vid).Update("cover_url", coverurl).Error
@@ -93,7 +94,7 @@ func GetUserVideo(pid int64, limit, offset int, searchText string) (uservideos [
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户借阅记录总数
+//查询某个用户视频记录总数
 func GetUserVideoCount(pid int64, searchText string) (count int64, err error) {
 	//获取DB
 	db := _db //GetDB()

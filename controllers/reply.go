@@ -46,7 +46,8 @@ func (c *ReplyController) AddWxRelease() {
 	// beego.Info(accessToken)
 	content := c.GetString("content")
 	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, content)
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	suggest, label, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
+	// errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), content)
 	// beego.Info(accessToken)
 	// beego.Info(openID.(string))
 	// beego.Info(content)
@@ -56,7 +57,7 @@ func (c *ReplyController) AddWxRelease() {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
 		id := c.Ctx.Input.Param(":id")
 		//id转成64为
 		idNum, err := strconv.ParseInt(id, 10, 64)
@@ -84,7 +85,7 @@ func (c *ReplyController) AddWxRelease() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"info": suggest, "data": label}
 		c.ServeJSON()
 	}
 

@@ -34,11 +34,11 @@
   <!-- <div id="toolbar1" class="btn-group"> -->
   <button type="button" data-name="updateButton" id="updateButton" class="btn btn-default"> <i class="fa fa-plus">点击升级</i>
   </button>
-  <!-- <button type="button" data-name="modifyButton" id="modifyButton" class="btn btn-default"> <i class="fa fa-plus">test</i>
-  </button> -->
+  <button type="button" data-name="addPhotoDataButton" id="addPhotoDataButton" class="btn btn-default"> <i class="fa fa-plus">文件夹图片数据存入数据库</i>
+  </button>
 </div>
 <script type="text/javascript">
-  $(document).ready(function() {
+  // $(document).ready(function() {
     $("#updateButton").click(function() {
       $.ajax({
         type:"post",
@@ -48,9 +48,9 @@
         }
       });
     })
-  })
+  // })
 
-  $(document).ready(function() {
+  // $(document).ready(function() {
     $("#modifyButton").click(function() {
       $.ajax({
         type:"post",
@@ -60,6 +60,16 @@
         }
       });
     })
+  // })
+
+  $("#addPhotoDataButton").click(function() {
+    $.ajax({
+      type:"get",
+      url:"/v1/wx/createphotodata",
+      success:function(data,status){
+        alert("添加“"+data+"”成功！(status:"+status+".)");
+      }
+    });
   })
 </script>
 </body>

@@ -86,18 +86,18 @@ func main() {
 		toolbox.StartTask()
 		defer toolbox.StopTask()
 	}
-	// 上传文件给zsj.itdos
-	// time2 := "0 30 23 * * *"
-	// tk2 := toolbox.NewTask("tk2", time2, func() error { controllers.Postdata(); return nil })
-	// toolbox.AddTask("tk2", tk2)
-	// toolbox.StartTask()
-	// defer toolbox.StopTask()
-	// 备份数据库文件,controllers里必须有postdata()2个方法
-	// time3 := "0 30 23 * * *" //每天晚上23:30执行
-	// tk3 := toolbox.NewTask("tk3", time3, func() error { controllers.Postdata(); return nil })
-	// toolbox.AddTask("tk3", tk3)
-	// toolbox.StartTask()
-	// defer toolbox.StopTask()
+	// 定时备份数据库
+	time2, err := web.AppConfig.String("backupdatatime")
+	if err != nil {
+		logs.Error("获取tasktime ->", err.Error())
+	}
+	// logs.Info(time2)
+	if time2 != "" {
+		tk2 := toolbox.NewTask("tk2", time2, func() error { controllers.Postdata(); return nil }) //func() error { fmt.Println("tk1"); return nil }
+		toolbox.AddTask("tk2", tk2)
+		toolbox.StartTask()
+		defer toolbox.StopTask()
+	}
 	// ********mindoc*********
 	// if len(os.Args) >= 3 && os.Args[1] == "service" {
 	// 	if os.Args[2] == "install" {
@@ -161,15 +161,12 @@ func version(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, fmt.Sprintf("%s", out))
 }
 
-//初始化数据
+//初始化数据，来自commands install.go
 func initialization() {
-
 	err := models.NewOption().Init()
-
 	if err != nil {
 		panic(err.Error())
 	}
-
 	// command.go里已经注册过了
 	lang, _ := web.AppConfig.String("default_lang")
 	// err = i18n.SetMessage(lang, "conf/lang/"+lang+".ini")
@@ -204,7 +201,7 @@ func initialization() {
 		book.Description = i18n.Tr(lang, "init.default_proj_desc") //"这是一个MinDoc演示项目，该项目是由系统初始化时自动创建。"
 		book.CommentCount = 0
 		book.PrivatelyOwned = 0
-		book.CommentStatus = "closed"
+		book.CommentStatus = "open" //"closed"
 		book.Identify = "mindoc"
 		book.DocCount = 0
 		book.CommentCount = 0

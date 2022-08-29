@@ -2571,7 +2571,7 @@ func (c *ArticleController) GetWxUserArticles() {
 
 // @Title get wx articles list
 // @Description get articles by page
-// @Param id path string  true "The productid of article"
+// @Param id path string  true "The projectid of article"
 // @Param keyword query string true "The keyword of article"
 // @Param limit query string true "The limit for articles list"
 // @Param searchpage query string  true "The page for articles list"
@@ -2624,7 +2624,7 @@ func (c *ArticleController) SearchWxArticles() {
 		}
 		Articleslice := make([]WxArticle, 0)
 		articlearr := make([]WxArticle, 1)
-
+		// logs.Info(Articles[0].Id)
 		//
 		// Articles, err := models.SearchWxArticles(limit1, offset, key, false)
 		// if err != nil {

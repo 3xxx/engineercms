@@ -469,11 +469,30 @@ func (c *StandardController) StandardPdf() { //search用的是post方法
 		c.Data["Url"] = route
 		c.Redirect("/login?url="+route, 302)
 	}
-	// pdflink := c.GetString("file") // 这个只是一个route路径
+	pdflink := c.GetString("file") // 这个只是一个route路径
+	// logs.Info(path.Base(pdflink))// 1
+	id := path.Base(pdflink)
+	// id := c.Ctx.Input.Param(":id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		logs.Error(err)
+	}
+	//根据id取得规范的路径
+	standard, err := models.GetStandard(idNum)
+	if err != nil {
+		logs.Error(err)
+	}
+	// logs.Info(standard.Route)// /attachment/standard/GB/GBT 555-2008水库除险加固计算案例.pdf
+	fileurl := strings.Replace(standard.Route, "/attachment/", "attachment/", -1)
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, standard.Route)
+	// logs.Info(path.Base(standard.Route)) // GBT 555-2008水库除险加固计算案例.pdf
+	filename := path.Base(fileurl)
+
 	// c.Data["PdfLink"] = pdflink
 	// id := c.Ctx.Input.Param(":id")
 	// c.Data["Id"] = id
-	// c.Data["file"] = pdflink
+	c.Data["fileName"] = filename
 	c.TplName = "pdf/web/viewer.html" //?file=\"" + pdflink + "\""
 }
 

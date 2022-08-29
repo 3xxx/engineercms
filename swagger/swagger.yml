@@ -3202,7 +3202,7 @@ paths:
       parameters:
       - in: path
         name: id
-        description: The id of project
+        description: The id of excel
         required: true
         type: string
       responses:
@@ -3665,7 +3665,36 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
-  /excel/postexcel:
+  /excel/postexcel/{id}:
+    get:
+      tags:
+      - excel
+      description: get excel
+      operationId: ExcelController.get excel
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: excelid
+        description: The excelid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/postexcel_back:
     post:
       tags:
       - excel
@@ -3693,7 +3722,36 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
-  /excel/postwxexcel:
+  /excel/postwxexcel/{id}:
+    get:
+      tags:
+      - excel
+      description: post excelcal
+      operationId: ExcelController.post excelcal
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      - in: query
+        name: inputdata
+        description: The inputdata
+        type: string
+      - in: query
+        name: excelid
+        description: The excelid
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/postwxexcel_back:
     post:
       tags:
       - excel
@@ -3908,6 +3966,48 @@ paths:
           description: Invalid page supplied
         "404":
           description: page not found
+  /excel/wsexcelcal/{id}:
+    get:
+      tags:
+      - excel
+      description: get excelwscal
+      operationId: WsExcelcalController.get excelwscal
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetExcel'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/wswxexcelcal/{id}:
+    get:
+      tags:
+      - excel
+      description: get wxexcelcal
+      operationId: WsExcelcalController.get wxexcelcal
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetExcel'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /excel/wxexcelarticle/{id}:
     get:
       tags:
@@ -4225,7 +4325,7 @@ paths:
         type: string
       - in: query
         name: searchText
-        description: The searchText of temple
+        description: The searchText of temples
         type: string
       - in: query
         name: page
@@ -4365,7 +4465,7 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: get wxmathcadhistoryinput
       operationId: MathcadController.get wxmathcadhistoryinput
       parameters:
       - in: path
@@ -5162,6 +5262,34 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /passsearch/mathtemples:
+    get:
+      tags:
+      - passsearch
+      description: get mathcad temples by keyword...
+      operationId: PassSearchController.get mathcad temples by keyword...
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of mathtemples
+        type: string
+      - in: query
+        name: page
+        description: The page of mathtemples
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
         "400":
           description: Invalid page supplied
         "404":
@@ -6777,6 +6905,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/createphotodata:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /wx/deleteuser:
     post:
       tags:
@@ -7189,12 +7332,53 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/getmonthphotodata:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      parameters:
+      - in: query
+        name: page
+        description: The page for photos list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for photos list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/getpay:
     get:
       tags:
       - wx
       description: get pay by page
       operationId: PayController.get pay list
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getpostdata:
+    post:
+      tags:
+      - wx
+      description: get Data(file)
+      operationId: MainController.get Data(file)
       responses:
         "200":
           description: ""
@@ -8047,6 +8231,77 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/photo:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      parameters:
+      - in: query
+        name: page
+        description: The page for photos list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for photos list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/photo_back:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/photodetail:
+    get:
+      tags:
+      - wx
+      description: get photodetail
+      operationId: MainController.get photodetail
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/photodetail_back:
+    get:
+      tags:
+      - wx
+      description: get photodetail
+      operationId: MainController.get photodetail
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/photoswipe:
     get:
       tags:
@@ -8062,6 +8317,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/postdata:
+    post:
+      tags:
+      - wx
+      description: post Data(file)
+      operationId: MainController.post Data(file)
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/project/product/pdf/{id}:
     get:
       tags:
@@ -8237,7 +8507,7 @@ paths:
       parameters:
       - in: path
         name: id
-        description: The productid of article
+        description: The projectid of article
         required: true
         type: string
       - in: query
@@ -8348,21 +8618,6 @@ paths:
           description: Invalid page supplied
         "404":
           description: standards not found
-  /wx/sendmessage:
-    post:
-      tags:
-      - wx
-      description: post Data(file)
-      operationId: MainController.post Data(file)
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articls not found
   /wx/ssologin:
     get:
       tags:
@@ -9471,6 +9726,9 @@ definitions:
   models.GetElastic:
     title: GetElastic
     type: object
+  models.GetExcel:
+    title: GetExcel
+    type: object
   models.GetFinance:
     title: GetFinance
     type: object
@@ -9802,7 +10060,7 @@ tags:
     CMSansys API
 - name: excel
   description: |
-    CMSexcel API
+    CMSMATHCAD API
 - name: passproject
   description: |
     CMS pass_project API

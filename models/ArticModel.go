@@ -151,15 +151,16 @@ func GetWxUserArticles(pid int64) (results []*Result, err error) {
 // 	Total        int64 `json:"value"`
 // }
 
-//由名字模糊搜索,productid——projectid
+// 由名字模糊搜索,productid——projectid
 // Select("product_id as product_id,article.id as id,article.subtext as subtext,article.content as content,article.created as created").
+// 不加上面这句，就会导致Id一直是projectid，因为是join，所以id会冲突，以最后查询出的id当做ariticle这个结构体的id了。
 func SearchArticles(pid int64, limit, offset int, key string, isDesc bool) (articles []*Article, err error) {
 	db := _db //GetDB()
 	err = db.Order("created desc").Table("article").
+		Select("product_id as product_id,article.id as id,article.subtext as subtext,article.content as content,article.created as created").
 		Joins("left JOIN product on product.id = article.product_id").
 		Joins("left JOIN project on project.id = product.project_id").
 		Where("project.id=? AND article.subtext like ?", pid, "%"+key+"%").
-		// Limit(limit).Offset(offset).Scan(&wxarticleresult).Error
 		Limit(limit).Offset(offset).Scan(&articles).Error
 	return articles, err
 

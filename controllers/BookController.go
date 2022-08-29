@@ -515,7 +515,6 @@ func (c *BookController) Create() {
 		book.Identify = identify
 		book.DocCount = 0
 		book.MemberId = c.Member.MemberId
-		book.CommentCount = 0
 		book.Version = time.Now().Unix()
 		book.IsEnableShare = 0
 		book.IsUseFirstDocument = 1
@@ -568,7 +567,7 @@ func (c *BookController) Copy() {
 	}
 }
 
-//导入zip压缩包
+// 导入zip压缩包或docx
 func (c *BookController) Import() {
 
 	file, moreFile, err := c.GetFile("import-file")
@@ -605,7 +604,7 @@ func (c *BookController) Import() {
 
 	ext := filepath.Ext(moreFile.Filename)
 
-	if !strings.EqualFold(ext, ".zip") {
+	if !strings.EqualFold(ext, ".zip") && !strings.EqualFold(ext, ".docx") {
 		c.JsonResult(6004, "不支持的文件类型")
 	}
 
@@ -633,14 +632,17 @@ func (c *BookController) Import() {
 	book.Identify = identify
 	book.DocCount = 0
 	book.MemberId = c.Member.MemberId
-	book.CommentCount = 0
 	book.Version = time.Now().Unix()
 	book.ItemId = itemId
 
 	book.Editor = "markdown"
 	book.Theme = "default"
 
-	go book.ImportBook(tempPath, c.Lang)
+	if strings.EqualFold(ext, ".zip") {
+		go book.ImportBook(tempPath, c.Lang)
+	} else if strings.EqualFold(ext, ".docx") {
+		go book.ImportWordBook(tempPath, c.Lang)
+	}
 
 	logs.Info("用户[", c.Member.Account, "]导入了项目 ->", book)
 

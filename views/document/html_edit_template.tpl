@@ -6,7 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>编辑文档 - Powered by MinDoc</title>
-
+    <style type="text/css">
+        .w-e-menu.selected > i {
+            color: #44B036 !important;
+        }
+    </style>
+    <script type="text/javascript">
+        window.IS_ENABLE_IFRAME = '{{conf "enable_iframe" }}' === 'true';
+        window.BASE_URL = '{{urlfor "HomeController.Index" }}';
+    </script>
     <script type="text/javascript">
         window.editor = null;
         window.imageUploadURL = "{{urlfor "DocumentController.Upload" "identify" .Model.Identify}}";
@@ -74,6 +82,9 @@
         <div class="manual-category" id="manualCategory" style="top: 0;">
             <div class="manual-nav">
                 <div class="nav-item active"><i class="fa fa-bars" aria-hidden="true"></i> 文档</div>
+                <div class="nav-plus pull-right" data-toggle="tooltip" data-title="返回" data-direction="right">
+                    <a style="color: #999999;" href="{{urlfor "BookController.Dashboard" ":key" .Model.Identify}}" target="_blank"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+                </div>
                 <div class="nav-plus pull-right" id="btnAddDocument" data-toggle="tooltip" data-title="创建文档" data-direction="right"><i class="fa fa-plus" aria-hidden="true"></i></div>
                 <div class="clearfix"></div>
             </div>
@@ -86,14 +97,14 @@
                 <div id="htmlEditor" class="manual-editormd-active" style="height: 100%"></div>
             </div>
             <div class="manual-editor-status">
-                <div id="attachInfo" class="item">0 个附件</div>
+                <div id="attachInfo" class="item" style="display: inline-block; padding: 0 3em;">0 个附件</div>
             </div>
         </div>
 
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="addDocumentModal" tabindex="-1" role="dialog" aria-labelledby="addDocumentModalLabel">
+<div class="modal fade" id="addDocumentModal" tabindex="-1" style="z-index: 10001 !important;" role="dialog" aria-labelledby="addDocumentModalLabel">
     <div class="modal-dialog" role="document">
         <form method="post" action="{{urlfor "DocumentController.Create" ":key" .Model.Identify}}" id="addDocumentForm" class="form-horizontal">
             <input type="hidden" name="identify" value="{{.Model.Identify}}">
@@ -129,7 +140,7 @@
         </form>
     </div>
 </div>
-<div class="modal fade" id="uploadAttachModal" tabindex="-1" role="dialog" aria-labelledby="uploadAttachModalLabel">
+<div class="modal fade" id="uploadAttachModal" tabindex="-1" style="z-index: 10001 !important;" role="dialog" aria-labelledby="uploadAttachModalLabel">
     <div class="modal-dialog" role="document">
         <form method="post" action="{{urlfor "DocumentController.Create" ":key" .Model.Identify}}" id="addDocumentForm" class="form-horizontal">
             <input type="hidden" name="identify" value="{{.Model.Identify}}">
@@ -188,18 +199,22 @@
 <script src="{{cdnjs "/static/mindoc/vuejs/vue.min.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/mindoc/jstree/3.3.4/jstree.min.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/mindoc/webuploader/webuploader.min.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/wangEditor/js/wangEditor.min.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/wangEditor/plugins/save-menu.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/wangEditor/plugins/release-menu.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/wangEditor/plugins/attach-menu.js"}}" type="text/javascript"></script>
-<script src="{{cdnjs "/static/mindoc/wangEditor/plugins/history-menu.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/class2browser.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/wangEditor/wangEditor.min.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/wangEditor-plugins/save-menu.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/wangEditor-plugins/release-menu.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/wangEditor-plugins/attach-menu.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/wangEditor-plugins/history-menu.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/mindoc/layer/layer.js"}}" type="text/javascript" ></script>
 <script src="{{cdnjs "/static/mindoc/to-markdown/dist/to-markdown.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/mindoc/js/jquery.form.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/mindoc/js/editor.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/mindoc/js/html-editor.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/custom-elements-builtin-0.6.5.min.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/x-frame-bypass-1.0.2.js"}}" type="text/javascript"></script>
 <script type="text/javascript">
     $(function () {
+        lang = {{i18n $.Lang "common.js_lang"}};
         $("#attachInfo").on("click",function () {
             $("#uploadAttachModal").modal("show");
         });

@@ -67,13 +67,14 @@ func (c *TodoController) Create() {
 		c.ServeJSON()
 		return
 	}
-	// errcode, errmsg, err := utils.MsgSecCheck(accessToken, name)
-	errcode, errmsg, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), name)
+	suggest, label, err := utils.MsgSecCheck(2, 2, accessToken, openID.(string), name)
+	// logs.Info(suggest)
+	// logs.Info(label)
 	if err != nil {
 		logs.Error(err)
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
+		c.Data["json"] = map[string]interface{}{"code": 4, "info": suggest, "data": err}
 		c.ServeJSON()
-	} else if errcode != 87014 {
+	} else if suggest == "pass" {
 		todoid, err := models.TodoCreate(ProjectId, name, userid)
 		if err != nil {
 			logs.Error(err)
@@ -84,7 +85,7 @@ func (c *TodoController) Create() {
 			c.ServeJSON()
 		}
 	} else {
-		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": errmsg}
+		c.Data["json"] = map[string]interface{}{"code": 3, "info": suggest, "data": label}
 		c.ServeJSON()
 	}
 }

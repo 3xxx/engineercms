@@ -169,6 +169,7 @@
         tex                  : false,          // TeX(LaTeX), based on KaTeX
         flowChart            : false,          // flowChart.js only support IE9+
         sequenceDiagram      : false,          // sequenceDiagram.js only support IE9+
+        mindMap              : true,           // 脑图
         mermaid              : true,
         previewCodeHighlight : true,
 
@@ -568,6 +569,20 @@
                         });
                     });
                 }
+
+                if (settings.mindMap)
+                    {
+                        editormd.loadScript(loadPath + "mindmap/d3@5", function() {
+                            editormd.loadScript(loadPath + "mindmap/transform", function() {
+                                editormd.loadScript(loadPath + "mindmap/view", function() {
+                                    if (!isLoadedDisplay){
+                                        isLoadedDisplay = true;
+                                        _this.loadedDisplay();
+                                    }
+                                });
+                            });
+                        });
+                    }
 
                 if(settings.sequenceDiagram) {
                     editormd.loadCSS(loadPath + "sequence/sequence-diagram-min", function () {
@@ -1561,6 +1576,22 @@
         },
 
         /**
+         * 解析思维导图 - 2020-04-12
+         *
+         * @returns {editormd}             返回editormd的实例对象
+         */
+        mindmapRender:function(){
+            // console.log("开始解析脑图")
+            this.previewContainer.find(".mindmap").each(function(){
+                var mmap  = $(this);
+                var md_data = window.markmap.transform(mmap.text().trim());
+                window.markmap.markmap("svg#"+this.id,md_data)
+                //drawMindMap(mmap[0]) // kityminder的实现
+            });
+            return this;
+        },
+
+        /**
          * 解析和渲染流程图及时序图
          * FlowChart and SequenceDiagram Renderer
          *
@@ -2069,6 +2100,7 @@
                 sequenceDiagram      : settings.sequenceDiagram,
                 previewCodeHighlight : settings.previewCodeHighlight,
                 mermaid              : settings.mermaid,
+                mindMap              : settings.mindMap, // 思维导图
             };
 
             var markedOptions = this.markedOptions = {
@@ -2148,6 +2180,13 @@
                         editormd.$katex = katex;
                         this.katexRender();
                     }
+                }
+
+                // 渲染脑图
+                if(settings.mindMap){
+                    setTimeout(function(){
+                        _this.mindmapRender();
+                    },10)
                 }
 
                 if (settings.flowChart || settings.sequenceDiagram || settings.mermaid)
@@ -3896,6 +3935,38 @@
             {
                 return "<p class=\"" + editormd.classNames.tex + "\">" + code + "</p>";
             }
+            // else if (/^mindmap/i.test(lang)){
+            // 　　var len = 9 || 32;
+            // 　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+            // 　　var maxPos = $chars.length;
+            // 　　var map_id = '';
+            // 　　for (var i = 0; i < len; i++) {
+            // 　　　　map_id += $chars.charAt(Math.floor(Math.random() * maxPos));
+            //     }
+                // var map_id = lang.split('>')[1];
+                // console.log(map_id)
+                // return "<svg class='mindmap' style='width:100%;min-height=150px;' id='mindmap-"+ map_id +"'>"+code+"</svg>";
+
+            else if (/^mindmap/i.test(lang)){ // 思维导图
+            　　var len = 9 || 32;
+            　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; 
+            　　var maxPos = $chars.length;
+            　　var map_id = '';
+            　　for (var i = 0; i < len; i++) {
+            　　　　map_id += $chars.charAt(Math.floor(Math.random() * maxPos));
+                }
+                // var map_id = lang.split('>')[1];
+                // console.log(map_id)
+                var custom_height;
+                var h = lang.split('>')[1];
+                if(h != undefined){
+                    custom_height = h;
+                }else{
+                    custom_height = 150;
+                }
+
+                return "<svg class='mindmap' style='width:100%;min-height:150px;height:"+ custom_height +"px;' id='mindmap-"+ map_id +"'>"+code+"</svg>";
+            }
             else
             {
 
@@ -4183,6 +4254,7 @@
             sequenceDiagram      : false,
             previewCodeHighlight : true,
             mermaid              : true,
+            mindMap              : true, //思维导图
         };
 
         editormd.$marked  = marked;
@@ -4213,6 +4285,7 @@
             flowChart            : settings.flowChart,
             sequenceDiagram      : settings.sequenceDiagram,
             mermaid              : settings.mermaid,
+            mindMap              : settings.mindMap, // 思维导图
             previewCodeHighlight : settings.previewCodeHighlight,
         };
 
@@ -4306,7 +4379,19 @@
                 katexHandle();
             }
         }
-
+        // 前台渲染脑图
+        if(settings.mindMap){
+            // console.log("前台渲染脑图")
+            var mindmapHandle = function(){
+                div.find(".mindmap").each(function(){
+                    var mmap  = $(this);
+                    var md_data = window.markmap.transform(mmap.text().trim());
+                    window.markmap.markmap("svg#"+this.id,md_data)
+                    //drawMindMap(mmap[0]) // kityminder的实现
+                });
+            }
+            mindmapHandle();
+        }
         div.getMarkdown = function() {
             return saveTo.val();
         };
