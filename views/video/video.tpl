@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="renderer" content="webkit">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>工程相册</title>
-  <meta name="keywords" content="工程相册">
-  <meta name="description" content="简约大气的工程相册">
+  <title>工程视频</title>
+  <meta name="keywords" content="工程视频">
+  <meta name="description" content="简约大气的工程视频">
   <meta name="author" content="order by">
   <link rel="shortcut icon" href="/static/photo/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" href="/static/photo/bootstrap.min.css">
@@ -42,8 +42,8 @@
                     <div></div>
                   </li>
                   <li style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/" title="网站首页">首页</a></li>
-                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/article/"> 文章插图 </a></li>
-                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/diary/"> 日志插图 </a></li>
+                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/article/"> 文章视频 </a></li>
+                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/diary/"> 日志视频 </a></li>
                 </ul>
               </div>
             </div>
@@ -73,8 +73,8 @@
               <div class="menu-menu-1-container">
                 <ul id="menu-menu-2" class="menu">
                   <li><a href="/" title="网站首页">首页</a></li>
-                  <li class=""><a href="/article/"> 文章插图 </a></li>
-                  <li class=""><a href="/diary/"> 日志插图 </a></li>
+                  <li class=""><a href="/article/"> 文章视频 </a></li>
+                  <li class=""><a href="/diary/"> 日志视频 </a></li>
                 </ul>
               </div>
             </div>
@@ -94,21 +94,21 @@
   <!-- #header -->
   <div id="wrapper" class="hfeed">
     <div class="topTitle">
-      <h1>工程图册</h1>
-      <p class="description">珍贵记忆 - 为工程相册而生</p>
+      <h1>工程视频</h1>
+      <p class="description">珍贵记忆 - 为工程视频而生</p>
     </div>
     <div class="category container">
-      {{range .MonthPhotoList}}
+      {{range .MonthVideoList}}
       <h2>{{.YearMonth}}</h2>
       <div class="row">
-          {{range .PhotoLists}}
+          {{range .VideoLists}}
         <div class="col-xs-6 col-sm-4 col-lg-3 waterfallGrid">
-          <a href="/v1/wx/photodetail?keywords={{.YearMonthDay}}" target="_blank">
+          <a href="/v1/wx/videodetail/{{.Id}}" target="_blank">
             <div class="post-photo album">
               <div class="img">
-                <div style="background-image: url(&quot;{{.Url}}&quot;); height: 249px;" ratio="1" realratio="1"></div>
+                <div style="background-image: url(&quot;{{.CoverUrl}}&quot;); height: 249px;" ratio="1" realratio="1"></div>
               </div>
-              <h3 class="title">{{.YearMonthDay}}</h3>
+              <h3 class="title">{{.Content}}</h3>
             </div>
           </a>
         </div>
@@ -120,31 +120,32 @@
       加载数据……
     </div>
   </div>
-  <div id="footer" class="container"><span class="text">Copyright © 2016~2022 工程相册 <a href="https://zsj.itdos.net/" target="_blank">水务设计</a> <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a> <a href="/sitemap.xml" target="_blank">XML地图</a> <a href="https://zsj.itdos.net/" target="_blank">工程相册</a></span></div>
+  <div id="footer" class="container"><span class="text">Copyright © 2016~2022 工程视频 <a href="https://zsj.itdos.net/" target="_blank">水务设计</a> <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a> <a href="/sitemap.xml" target="_blank">XML地图</a> <a href="https://zsj.itdos.net/" target="_blank">工程视频</a></span></div>
   <script type="text/javascript" src="/static/photo/theme.js"></script>
   <script type="text/javascript" src="/static/photo/wp-embed.min.js?ver=4.8"></script>
   <script type="text/javascript">
   var i = 2;
   var flag = false;//防止多次调用下拉触发事件
-
   $(function() {
     var loadData = function(ii) {
-      $.getJSON("/v1/wx/getmonthphotodata?page=" + ii, function(data) {
+      $.getJSON("/v1/wx/getmonthvideodata?page=" + ii, function(data) {
         // console.log(data)
-        $.each(data, function(i, photolist) {
-          console.log(photolist.PhotoLists)
-          if (photolist.PhotoLists.length == 0) {
+        
+        $.each(data, function(i, videolist) {
+          console.log(videolist.VideoLists)
+          if (videolist.VideoLists.length == 0) {
             $("#loadMore").removeClass('hidden').text('已加载全部数据！');
           }
           // array = tl["start"].split("-");
           // console.log(photolist)
           // console.log(photolist.YearMonth)
           // var _timeline_head_p_small_i_ = $("<i class='glyphicon glyphicon-time'></i>");
-          $(".category").append("<h2>"+photolist.YearMonth+"</h2>")
+
+          $(".category").append("<h2>"+videolist.YearMonth+"</h2>")
           var _timeline_invert_=""
 
-          $.each(photolist.PhotoLists, function(i, photolists) {
-            _timeline_invert_ = _timeline_invert_+'<div class="col-xs-6 col-sm-4 col-lg-3 waterfallGrid"><a href="/v1/wx/photodetail?keywords='+photolists.YearMonthDay+'" target="_blank"><div class="post-photo album"><div class="img"><div style="background-image: url(&quot;'+photolists.Url+'&quot;); height: 249px;" ratio="1" realratio="1"></div></div><h3 class="title">'+photolists.YearMonthDay+'</h3> </div></a></div>'
+          $.each(videolist.VideoLists, function(i, videolists) {
+            _timeline_invert_ = _timeline_invert_+'<div class="col-xs-6 col-sm-4 col-lg-3 waterfallGrid"><a href="/v1/wx/videodetail/'+videolists.Id+'" target="_blank"><div class="post-photo album"><div class="img"><div style="background-image: url(&quot;'+videolists.CoverUrl+'&quot;); height: 249px;" ratio="1" realratio="1"></div></div><h3 class="title">'+videolists.Content+'</h3> </div></a></div>'
           });
 
           $(".category").append('<div class="row">'+_timeline_invert_+'</div>')
@@ -157,18 +158,18 @@
         });
       })
     }
+
     var tcScroll = function() {
       $(window).on('scroll', function() {
         // var scrollTop = document.documentElement.scrollTop
-        var clientHeight = document.documentElement.clientHeight//整个网页的高度（包括未显示的部分）
-        var scrollTop = $(this).scrollTop();//滚动条滚动上去的高度
-        var bodyHeight = document.body.clientHeight//设备可见区域高度
-        console.log(scrollTop,clientHeight,bodyHeight)//1706 2205 499
+        var scrollTop = $(this).scrollTop();
+        var clientHeight = document.documentElement.clientHeight
+        var bodyHeight = document.body.clientHeight
+        // console.log(scrollTop,clientHeight,bodyHeight)//1706 2205 499
+
         if (clientHeight-scrollTop-bodyHeight <= 100&& flag === false) {
-        // clientHeight=scrollTop+bodyHeight
         // if (scrollTop + windowHeight == scrollHeight) {
             //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
-          flag = true;
           console.log("触底了!!!!");
           //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
           loadData(i);

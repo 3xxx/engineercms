@@ -180,11 +180,11 @@
         success: function(data, status) {
           console.log(data)
           $(".option").remove();
-          $.each(data, function(i, d) {
+          $.each(data.rows, function(i, d) {
             // console.log(data.processing[0])
             // console.log(i)
             // console.log(d)
-            $("#activity").append('<option class="option" value="' + data[i].id + '">' + data[i].title + '</option>');
+            $("#activity").append('<option class="option" value="' + data.rows[i].Id + '">' + data.rows[i].Title + '</option>');
           });
           var page = $("li.page-number.active").text()
           // alert(page)
@@ -194,7 +194,7 @@
             ajax: function(request) {
               $.ajax({
                 type: "GET",
-                url: "/v1/wx/businessmonthcheck5/"+data[0].id+"?&year=" + b + "&month=" + d,
+                url: "/v1/wx/businessmonthcheck5/"+data.rows[0].Id+"?&year=" + b + "&month=" + d,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 data: { page: 1, limit: 500 },

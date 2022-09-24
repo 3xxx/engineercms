@@ -3,6 +3,7 @@ package models
 import (
 	// "errors"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"time"
 )
 
@@ -19,7 +20,8 @@ type PhotoData struct {
 func AddPhotoData(photodatas []PhotoData) error {
 	db := _db //GetDB()
 	// err := db.Create(&photodatas).Error //sqlite不能超过999条
-	err := db.CreateInBatches(photodatas, 100).Error
+	err := db.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(photodatas, 100).Error
+	// err := db.CreateInBatches(photodatas, 100).Error
 	// err = db.Where("user_id = ? AND temp_title = ?", userid, templetitle).FirstOrCreate(&usertemple).Error
 	return err
 }

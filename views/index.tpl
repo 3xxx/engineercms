@@ -2,16 +2,17 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>EngineerCMS</title>
-<!-- <script src="/static/js/echarts.min.js"></script> -->
-<!-- <script src="/static/js/china.js"></script> -->
-<!-- <script src="/static/js/world.js"></script>   -->
-<!-- <script src="/static/js/jquery.min223.js"></script>   -->
-<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh"></script> -->
-<!-- <script src="/static/js/echarts-gl.min.js "></script> -->
-<!-- <script src="/static/js/bmap.min.js"></script> -->
-
+<meta charset="utf-8">
+<script src="/static/js/bootstrap-treeview.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
+<script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+<script src="/static/js/tableExport.js"></script>
+<script type="text/javascript" src="/static/js/moment.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
-<script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
 
 </head>
 <!-- <div class="navbar navba-default navbar-fixed-top"> -->

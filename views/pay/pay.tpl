@@ -146,6 +146,9 @@
       <div class="btn-group">
         <a href="/v1/wx/applyrecharge" target="_blank" type="button"><i class="fa fa-money">&nbsp;&nbsp;充值&nbsp;&nbsp;</i></a>
       </div>
+      <div class="btn-group" {{if ne true .IsAdmin}} style="display:none" {{end}} >
+        <a href="/v1/wx/getapplyrecharge" target="_blank" type="button"><i class="fa fa-money">&nbsp;&nbsp;查阅申请&nbsp;&nbsp;</i></a>
+      </div>
     </div>
     <h1 id="amount">{{.UserNickname}} di 账号余额：</h1>
     <table id="table0"></table>
@@ -300,7 +303,7 @@
     }
 
     function localDateFormatter(value) {
-      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+      return moment(value, 'YYYY-MM-DD h:mm:ss a').format('YYYY-MM-DD h:mm:ss a');
     }
 
     function operateFormatter(value, row, index) {

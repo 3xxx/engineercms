@@ -500,9 +500,16 @@ func (c *LoginController) WxLogin() {
 				logs.Error(err)
 				// return
 			}
-			sessionId := c.Ctx.Input.Cookie(sessionname) //这一步什么意思
-			// beego.Info(sessionId)                                                  //32f6966c2ba2a1144d453fe8969c822e
-			c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "userId": uid, "userNickname": user.Nickname, "userName": user.Username, "isAdmin": isAdmin, "sessionId": sessionId, "openID": openID, "photo": photo, "appreciationphoto": appreciationphoto}
+			sessionId := c.Ctx.Input.Cookie(sessionname) //这一步什么意思？hotqinsessionid
+			// 返回请求中的 cookie 数据，例如 Cookie("username")，就可以获取请求头中携带的 cookie 信息中 username 对应的值
+			// beego.Info(sessionId) //32f6966c2ba2a1144d453fe8969c822e
+			// 解释以上的意思：小程序请求带上这个sessionid，服务端就能获取到openId。原理是什么？openid := c.GetSession("openID")
+			tokenString, err := utils.CreateToken(user.Username)
+			if err != nil {
+				logs.Error(err)
+			}
+
+			c.Data["json"] = map[string]interface{}{"errNo": 1, "msg": "success", "userId": uid, "userNickname": user.Nickname, "userName": user.Username, "isAdmin": isAdmin, "sessionId": sessionId, "token": tokenString, "openID": openID, "photo": photo, "appreciationphoto": appreciationphoto}
 			c.ServeJSON()
 		}
 		// beego.Info(useridstring)

@@ -892,20 +892,32 @@ const PDFViewerApplication = {
     throw new Error("Not implemented: initPassiveLoading");
   },
 
+  // setTitleUsingUrl(url = "") {
+  //   this.url = url;
+  //   this.baseUrl = url.split("#")[0];
+  //   let title = (0, _pdfjsLib.getPdfFilenameFromUrl)(url, "");
+
+  //   if (!title) {
+  //     try {
+  //       title = decodeURIComponent((0, _pdfjsLib.getFilenameFromUrl)(url)) || url;
+  //     } catch (ex) {
+  //       title = url;
+  //     }
+  //   }
+
+  //   this.setTitle(title);
+  // },
   setTitleUsingUrl(url = "") {
     this.url = url;
-    this.baseUrl = url.split("#")[0];
-    let title = (0, _pdfjsLib.getPdfFilenameFromUrl)(url, "");
-
-    if (!title) {
-      try {
-        title = decodeURIComponent((0, _pdfjsLib.getFilenameFromUrl)(url)) || url;
-      } catch (ex) {
-        title = url;
-      }
+    try {
+      var titleTmp = (TITLE == '' || TITLE == undefined) ? 
+          (decodeURIComponent(pdfjsLib.getFilenameFromUrl(url)) || url) : TITLE;
+      this.setTitle(titleTmp);
+    } catch (e) {
+      // decodeURIComponent may throw URIError,
+      // fall back to using the unprocessed url in that case
+      this.setTitle(url);
     }
-
-    this.setTitle(title);
   },
 
   setTitle(title) {

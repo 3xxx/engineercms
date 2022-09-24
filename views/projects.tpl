@@ -68,8 +68,17 @@
         </button>
       </div>
     </div>
+
     <table id="table0"></table>
+
     <script type="text/javascript">
+      
+  $(function() {
+    var projectid = window.localStorage.getItem('projectid')
+    if (projectid != null) {
+      window.open("/project/"+projectid, "_self" )
+    }
+  })
     //项目列表
     $(function() {
       // 初始化【未接受】工作流表格
@@ -368,7 +377,7 @@
     window.actionEvents = {
       //大事记
       'click .memorabilia': function(e, value, row, index) {
-        window.open('/project/gettimeline/' + row.Id );
+        window.open('/project/gettimeline/' + row.Id);
       },
       //日志
       'click .log': function(e, value, row, index) {
@@ -1112,30 +1121,33 @@
 
   // 搜索所有项目成果
   $("#search").click(function() {
-    window.location.href="/v1/wx/searchproduct?keyword="+$("#keyword2").val()
+    window.location.href = "/v1/wx/searchproduct?keyword=" + $("#keyword2").val()
   });
-  function searchAllProjectsProduct(){
-    window.location.href="/v1/wx/searchproduct?keyword="+$("#keyword2").val()
+
+  function searchAllProjectsProduct() {
+    window.location.href = "/v1/wx/searchproduct?keyword=" + $("#keyword2").val()
   }
+
   function getKey2() {
     if (event.keyCode == 13) {
-      window.location.href="/v1/wx/searchproduct?keyword="+$("#keyword2").val()
+      window.location.href = "/v1/wx/searchproduct?keyword=" + $("#keyword2").val()
     }
   }
   // 搜索选定项目成果
   $("#search3").click(function() {
-    window.location.href="/v1/wx/searchprojectproduct?productid="+$("#cid").val()+"&keyword="+$("#keyword3").val()
+    window.location.href = "/v1/wx/searchprojectproduct?productid=" + $("#cid").val() + "&keyword=" + $("#keyword3").val()
   });
-  function searchProjectProduct(){
-    window.location.href="/v1/wx/searchprojectproduct?productid="+$("#cid").val()+"&keyword="+$("#keyword3").val()
+
+  function searchProjectProduct() {
+    window.location.href = "/v1/wx/searchprojectproduct?productid=" + $("#cid").val() + "&keyword=" + $("#keyword3").val()
   }
+
   function getKey3() {
     if (event.keyCode == 13) {
-      window.location.href="/v1/wx/searchprojectproduct?productid="+$("#cid").val()+"&keyword="+$("#keyword3").val()
+      window.location.href = "/v1/wx/searchprojectproduct?productid=" + $("#cid").val() + "&keyword=" + $("#keyword3").val()
     }
   }
   </script>
-
 </body>
 
 </html>

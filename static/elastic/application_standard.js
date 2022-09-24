@@ -157,3 +157,24 @@
 
   return app
 })()
+
+// vue.js提示Vue is not a constructor或Vue.createApp is not a function解决方法 -->
+/*Vue 3*/
+// Vue.createApp({
+//   data() {
+//     return {
+//       items: [{ message: 'Foo' }, { message: 'Bar' }]
+//     }
+//   }
+// }).mount('#array-rendering')
+
+/*Vue 2*/
+// var example1 = new Vue({
+//   el: '#example-1',
+//   data: {
+//     items: [
+//       { message: 'Foo' },
+//       { message: 'Bar' }
+//     ]
+//   }
+// })

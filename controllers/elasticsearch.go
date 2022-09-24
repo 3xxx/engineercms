@@ -44,8 +44,11 @@ import (
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	// "github.com/elastic/go-elasticsearch/v8/esutil"
+	"crypto/tls"
 	"io"
 	"math/rand"
+	"net"
+	"net/http"
 	"path"
 )
 
@@ -475,10 +478,10 @@ func CreateIndex(mapping string) error {
 
 	res, err := es.Indices.Exists([]string{indexName})
 	if err != nil {
+		logs.Error(err)
 		return err
 	}
 	//s, _ := ioutil.ReadAll(res.Body)
-	logs.Error(err)
 	// beego.Info(res.Body)
 	// beego.Info(res.Status()) //1.存在：200 OK 2.不存在：404 Not Found 3.未启动：
 	res.Body.Close()
@@ -737,7 +740,7 @@ const searchAll = `
 
 		}
 	},
-	"size" : 5,
+	"size" : 10,
 	"sort" : { "published" : "desc", "_doc" : "asc" }`
 
 const searchMatch = `
@@ -757,7 +760,7 @@ const searchMatch = `
 		},
 		"max_analyzed_offset":900000
 	},
-	"size" : 5,
+	"size" : 10,
 	"sort" : [ { "_score" : "desc" }, { "_doc" : "asc" } ]`
 
 // @Title post tika
@@ -842,6 +845,246 @@ func (c *ElasticController) Tika() {
 	//}
 }
 
+// 官方用法
+// https://blog.csdn.net/weixin_52025712/article/details/126253327
+func esdefaultconfig() {
+	es, _ := elasticsearch.NewDefaultClient()
+	res, _ := es.Info()
+	defer res.Body.Close()
+	log.Println(res)
+}
+
+func esapicustomconfig() {
+	// 自定义配置
+	cfg := elasticsearch.Config{
+		// 有多个节点时需要配置
+		Addresses: []string{
+			"http://localhost:9200",
+		},
+		// 配置HTTP传输对象
+		Transport: &http.Transport{
+			//MaxIdleConnsPerHost 如果非零，控制每个主机保持的最大空闲(keep-alive)连接。如果为零，则使用默认配置2。
+			MaxIdleConnsPerHost: 10,
+			//ResponseHeaderTimeout 如果非零，则指定在写完请求(包括请求体，如果有)后等待服务器响应头的时间。
+			ResponseHeaderTimeout: time.Second,
+			//DialContext 指定拨号功能，用于创建不加密的TCP连接。如果DialContext为nil(下面已弃用的Dial也为nil)，那么传输拨号使用包网络。
+			DialContext: (&net.Dialer{Timeout: time.Second}).DialContext,
+			// TLSClientConfig指定TLS.client使用的TLS配置。
+			//如果为空，则使用默认配置。
+			//如果非nil，默认情况下可能不启用HTTP/2支持。
+			TLSClientConfig: &tls.Config{
+				MaxVersion: tls.VersionTLS11,
+				//InsecureSkipVerify 控制客户端是否验证服务器的证书链和主机名。
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+	es, _ := elasticsearch.NewClient(cfg)
+	res, _ := es.Info()
+	defer res.Body.Close()
+	log.Println(res)
+}
+
+// CRUD
+// 新增文档
+// 使用 index api对文档进行增添或是修改操作。如果id不存在为创建文档，如果文档存在则进行修改。
+func esindex() {
+	es, _ := elasticsearch.NewDefaultClient()
+	// 在索引中创建或更新文档。
+	res, err := es.Index(
+		"test",                                  // Index name
+		strings.NewReader(`{"title" : "Test"}`), // Document body
+		es.Index.WithDocumentID("1"),            // Document ID
+		//es.Index.WithRefresh("true"),               // Refresh
+	)
+	if err != nil {
+		log.Fatalf("ERROR: %s", err)
+	}
+	defer res.Body.Close()
+
+	log.Println(res)
+}
+
+// 也可以使用esapi进行请求的包装，然后使用Do()方法执行请求。我们做同上面一样的操作，如下
+func esapiindexrequest() {
+	es, _ := elasticsearch.NewDefaultClient()
+	req := esapi.IndexRequest{
+		Index:      "test",                                  // Index name
+		Body:       strings.NewReader(`{"title" : "Test"}`), // Document body
+		DocumentID: "1",                                     // Document ID
+		Refresh:    "true",                                  // Refresh
+	}
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Fatalf("Error getting response: %s", err)
+	}
+	defer res.Body.Close()
+
+	log.Println(res)
+}
+
+// 下面都将之使用esapi方法实现。
+
+// 不覆盖的创建文档
+// 如果不想因为在创建文档填写错了id而对不想进行操作的文档进行了修改，那么可以使用CreateRequest包装请求。
+func esapicreaterequest() {
+	es, _ := elasticsearch.NewDefaultClient()
+	req := esapi.CreateRequest{
+		Index: "learn",
+		// DocumentType: "user",
+		DocumentID: "1",
+		Body: strings.NewReader(`
+{
+   "name": "张三",
+   "age": 25,
+   "about": "一个热爱刑法的男人，但是不精通唱跳Rap"
+}`),
+	}
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Println("出错了，这个你麻麻滴错误是", err)
+	}
+	log.Println(res)
+}
+
+// 查询文档
+// 查询单个文档
+// 使用GetRequest包装请求。
+func esapigetrequest() {
+	es, _ := elasticsearch.NewDefaultClient()
+
+	req := esapi.GetRequest{
+		Index: "learn",
+		// DocumentType: "user",
+		DocumentID: "1",
+	}
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Fatalf("ERROR: %s", err)
+	}
+	defer res.Body.Close()
+
+	log.Println(res)
+}
+
+// 查询多个文档
+// 使用MgetRequest包装请求。
+func esapiMgetrequest() {
+	es, _ := elasticsearch.NewDefaultClient()
+	request := esapi.MgetRequest{
+		Index: "learn",
+		// DocumentType: "user",
+		Body: strings.NewReader(`{
+  "docs": [
+    {
+      "_id": "1"
+    },
+    {
+      "_id": "2"
+    }
+  ]
+}`),
+	}
+	res, err := request.Do(context.Background(), es)
+	if err != nil {
+		log.Println("出错了，错误是", err)
+	}
+	log.Println(res)
+}
+
+// 修改文档
+// 在上面我们已经进行了创建或者修改的操作，但是使用 index api进行的修改操作需要提供所有的字段，不然会返回 400。
+// 但我们大多数时候只是进行单个字段或多个字段的修改，并不会修改整个文档，这时候我们可以使用UpdateRequest包装请求。
+func esapiupdaterequest() {
+	es, _ := elasticsearch.NewDefaultClient()
+	req := esapi.UpdateRequest{
+		Index: "learn",
+		// DocumentType: "user",
+		DocumentID: "1",
+		Body: strings.NewReader(`
+{
+   "doc": {
+   "name": "张三"
+   }
+}`),
+	}
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Println("出错了，这个你麻麻滴错误是", err)
+	}
+	log.Println(res)
+}
+
+// 删除文档
+// 使用DeleteRequest包装请求。
+func esapideleterequest() {
+	// 创建一个默认配置的客户端
+	es, _ := elasticsearch.NewDefaultClient()
+
+	// 使用index请求
+	req := esapi.DeleteRequest{
+		Index: "test",
+		// DocumentType: "_doc",
+		DocumentID: "1",
+	}
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Fatalf("ERROR: %s", err)
+	}
+	defer res.Body.Close()
+
+	log.Println(res)
+}
+
+// 批量操作
+// 使用BulkRequest包装请求。注意：格式一定要按照bulk api的格式来写，不然会400，最后别忘了回车
+func esapibulkrequest() {
+	es, _ := elasticsearch.NewDefaultClient()
+
+	// 使用index请求
+	req := esapi.BulkRequest{
+		// 在body中写入bulk请求
+		Body: strings.NewReader(`{ "index" : { "_index" : "test", "_id" : "1" } }
+{ "title" : "Test2" }
+{ "delete" : { "_index" : "test", "_id" : "2" } }
+{ "create" : { "_index" : "test", "_id" : "3" } }
+{ "field1" : "value3" }
+{ "update" : {"_id" : "1", "_index" : "test"} }
+{ "doc" : {"field2" : "value2"} }
+`),
+	}
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Fatalf("ERROR: %s", err)
+	}
+	defer res.Body.Close()
+
+	log.Println(res)
+}
+
+// 搜索
+// 使用SearchRequest对请求进行包装。
+func esapisearch() {
+	es, _ := elasticsearch.NewDefaultClient()
+	req := esapi.SearchRequest{
+		Index: []string{"learn"},
+		// DocumentType: []string{"user"},
+		Body: strings.NewReader(`{
+  "query": {
+    "match": {
+      "about": "唱跳"
+    }
+  }
+}`),
+	}
+	response, err := req.Do(context.Background(), es)
+	if err != nil {
+		log.Println("出错了，这个你麻麻滴错误是", err)
+	}
+	log.Println(response)
+}
+
+// 一下作废，非官方用法
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)

@@ -167,8 +167,26 @@ type MsgInput struct {
 	Content string `json:"content"`
 }
 
+type MsgOut struct {
+	Errcode int         `json:"errcode"`
+	Errmsg  string      `json:"errmsg"`
+	Result  MsgResult   `json:"result"`
+	Detail  []MsgDetail `json:"detail"`
+}
+type MsgResult struct {
+	Suggest string `json:"suggest"`
+	Label   int    `json:"label"`
+}
+type MsgDetail struct {
+	Strategy string `json:"strategy"`
+	Errcode  int    `json:"errcode"`
+	Suggest  string `json:"suggest"`
+	Label    int    `json:"label"`
+	Prob     int    `json:"prob"`
+}
+
 // 文本敏感字符检测
-func MsgSecCheck(scene, version int, access_token, openid, content string) (errcode float64, errmsg string, err error) {
+func MsgSecCheck(scene, version int, access_token, openid, content string) (suggest string, label int, err error) {
 	// access_token = data["access_token"].(string)
 	// https://api.weixin.qq.com/wxa/msg_sec_check?access_token=ACCESS_TOKEN
 	requestUrl := "https://api.weixin.qq.com/wxa/msg_sec_check?access_token=" + access_token
@@ -193,32 +211,49 @@ func MsgSecCheck(scene, version int, access_token, openid, content string) (errc
 	b, err := json.Marshal(msg)
 	if err != nil {
 		logs.Error(err)
-		return 0, "json转换错误", err
+		return "json转换错误", 0, err
 	}
-	// beego.Info(string(b))
+	// logs.Info(string(b))
 
 	resp, err := http.Post(requestUrl, "application/x-www-form-urlencoded", bytes.NewBuffer(b)) //注意，这里是post
 	if err != nil {
 		logs.Error(err)
-		return 0, "post请求错误", err
+		return "post请求错误", 0, err
 		// return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		logs.Error(err)
-		return 0, "请求返回错误", err
+		return "请求返回错误", 0, err
 	}
-	var data map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&data)
+	var msgout MsgOut
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		logs.Error(err)
-		return 0, "解析body错误", err
-	} else {
-		errcode := data["errcode"].(float64)
-		// beego.Info(errcode)
-		errmsg := data["errmsg"].(string)
-		return errcode, errmsg, nil
+		return "请求返回错误", 0, err
 	}
+	err = json.Unmarshal([]byte(body), &msgout)
+	if err != nil {
+		logs.Error(err)
+		return "解析至json错误", 0, err
+	}
+	// logs.Info(msgout)
+	return msgout.Result.Suggest, msgout.Result.Label, nil
+	// var data map[string]interface{}
+	// err = json.NewDecoder(resp.Body).Decode(&data)
+	// if err != nil {
+	// 	logs.Error(err)
+	// 	return 0, "解析body错误", err
+	// } else {
+	// 	errcode := data["errcode"].(float64)
+	// 	logs.Info(errcode)
+	// 	errmsg := data["errmsg"].(string)
+	// 	// err = json.Unmarshal(data["result"], &MsgResult)
+	// 	// result := data["result"].(string)
+	// 	// detail := data["detail"].(string)
+	// 	// logs.Info(detail)
+	// 	return errcode, errmsg, nil
+	// }
 }
 
 // 图片检测

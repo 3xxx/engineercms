@@ -148,7 +148,7 @@
       self.loadResults()
 
       window.onscroll = function() {
-        self.isBottom = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight === document.documentElement.scrollHeight
+        self.isBottom = (document.documentElement.scrollTop || document.body.scrollTop) + window.innerHeight+100 >= document.documentElement.scrollHeight
       }
     }
   })

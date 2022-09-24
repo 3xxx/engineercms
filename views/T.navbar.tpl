@@ -1,5 +1,5 @@
 {{define "navbar"}}
-<!-- navbar-inverse一个带有黑色背景白色文本的导航栏 
+<!-- navbar-inverse一个带有黑色背景白色文本的导航栏
 固定在页面的顶部，向 .navbar class 添加 class .navbar-fixed-top
 为了防止导航栏与页面主体中的其他内容
 的顶部相交错，需要向 <body> 标签添加内边距，内边距的值至少是导航栏的高度。
@@ -14,8 +14,12 @@ a.navbar-brand {
     display: inline-block;
   }
 }
+
+#NavmodalTable .modal-header {
+  cursor: move;
+}
 </style>
-<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
 <nav class="navbar navbar-default navbar-static-top" style="margin-bottom: 5px;" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#target-menu">
@@ -31,8 +35,8 @@ a.navbar-brand {
       <li {{if .IsIndex}} class="active" {{end}}>
         <a href="/index">首页</a>
       </li>
-      <li {{if .IsProject}}class="active"{{end}}>
-        <a href="/project/">项目</a>
+      <li {{if .IsProject}} class="active" {{end}}>
+        <a href="/project/" id="project">项目</a>
       </li>
       <!-- **********定制导航条菜单开始******** -->
       <!-- /project/id——此处id为app.conf里的navigationid1~navigationid9 -->
@@ -202,10 +206,10 @@ a.navbar-brand {
           <li {{if .IsAttendanceCalendar}} class="active" {{end}}>
             <a href="/attendance">考勤</a>
           </li>
-          <li {{if .IsMonthCheck}}class="active"{{end}}>
+          <li {{if .IsMonthCheck}} class="active" {{end}}>
             <a href="/v1/checkin/monthchecksum">设代统计</a>
           </li>
-          <li {{if .IsMonthCheck}}class="active"{{end}}>
+          <li {{if .IsMonthCheck}} class="active" {{end}}>
             <a href="/v1/wx/businessmonthchecksum">出差统计</a>
           </li>
         </ul>
@@ -214,22 +218,32 @@ a.navbar-brand {
         <a href="/mindoc" title="创作你的书籍" target="_blank">BOOK</a>
       </li>
       <li {{if .IsFLV}} class="active" {{end}}>
-        <a href="/v1/flv/flvlist" title="视频点播" target="_blank">视频</a>
+        <a href="/v1/wx/video" title="视频点播" target="_blank">视频</a>
       </li>
       <li {{if .IsPhotoWipe}} class="active" {{end}}>
-        <a href="/v1/wx/photoswipe" title="相册" target="_blank">相册</a>
+        <!-- <a href="/v1/wx/photoswipe" title="相册" target="_blank">相册</a> -->
+        <a href="/v1/wx/photo" title="相册" target="_blank">相册</a>
       </li>
       <li {{if .IsPhotoWipe}} class="active" {{end}}>
         <a href="http://192.168.100.37:8080/merit" title="价值" target="_blank">价值</a>
       </li>
       <li {{if .IsMath}} class="active" {{end}}>
-        <a href="/v1/mathcad/getmath/26989" title="云计算" target="_blank">云计算</a>
+        <a href="/v1/mathcad/getmath/1" title="Mathcad">Mathcad</a>
+      </li>
+      <li {{if .IsAnsys}} class="active" {{end}}>
+        <a href="/v1/ansys/getansys/1" title="Ansys">Ansys</a>
+      </li>
+      <li {{if .IsExcel}} class="active" {{end}}>
+        <a href="/v1/excel/getexcel/1" title="Excel">Excel</a>
+      </li>
+      <li {{if .IsPassProject}} class="active" {{end}}>
+        <a href="/v1/passproject/getpassproject" title="项目" target="_blank">项目</a>
       </li>
     </ul>
     <div class="pull-right">
       <ul class="nav navbar-nav navbar-right">
+        <li><a class="navbar-brand" href="javascript:void(0)" onclick="chooseProjectButton()" id="chooseProject">切换项目</a></li>
         {{if eq true .IsAdmin}}
-        
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -259,23 +273,7 @@ a.navbar-brand {
             <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
           </ul>
         </li>
-        
         {{else}}
-        
-        <!-- <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="/admin" title="管理">进入后台</a></li>
-            <li><a href="/cms/#/flow/usertobeprocessed" title="邮箱">邮箱</a></li>
-            <li><a href="javascript:void(0)" id="login">重新登录</a></li>
-            <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
-            <li><a href="/project/gettimeline/25001" title="大事记">大事记</a></li>
-            <li><a href="/project/gettimeline/25001" title="项目日历">项目日历</a></li>
-            <li><a href="/calendar" title="日程安排">日程安排</a></li>
-            <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
-          </ul>
-        </li> -->
-        
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -283,7 +281,6 @@ a.navbar-brand {
             <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
           </ul>
         </li>
-        
         {{end}}
         <li {{if .IsChat}} class="active" {{end}}>
           <a href="/v1/chat/chat">Chat</a>
@@ -348,7 +345,40 @@ a.navbar-brand {
     </div>
   </div>
 </div>
+<!-- 项目切换模态框 -->
+<div class="form-horizontal">
+  <div class="modal fade" id="NavmodalTable">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title">切换项目</h3>
+        </div>
+        <div class="modal-body">
+          <table id="Navtable2"></table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="saveproj" onclick="setlocalstorage()">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
+$(function() {
+  // console.log(window.localStorage.getItem('projectid'))
+  var projectid = window.localStorage.getItem('projectid')
+  // console.log(projectid)
+  if (projectid == null) {
+    document.getElementById('chooseProject').innerText = '选择项目';
+  } else {
+    // $('#project').attr('href', '/project/' + projectid);
+  }
+})
+
 // 弹出登录模态框
 $("#login").click(function() {
   $('#modalNav').modal({
@@ -414,12 +444,174 @@ function getKey() {
     login()
   }
 }
+
+$(function() {
+  var projectid = window.localStorage.getItem('projectid')
+  // 初始化【未接受】工作流表格
+  $("#Navtable2").bootstrapTable({
+    url: '/project/getprojects',
+    method: 'get',
+    search: 'true',
+    showRefresh: 'true',
+    showToggle: 'true',
+    showColumns: 'true',
+    // toolbar:'#toolbar1',
+    pagination: 'true',
+    sidePagination: "server",
+    queryParamsType: '',
+    //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+    // limit, offset, search, sort, order 否则, 需要包含:
+    // pageSize, pageNumber, searchText, sortName, sortOrder.
+    // 返回false将会终止请求。
+    pageSize: 15,
+    pageNumber: 1,
+    pageList: [15, 20, 50, 100],
+    singleSelect: "true",
+    clickToSelect: "true",
+    selectItemName: "project",
+    queryParams: function queryParams(params) { //设置查询参数
+      var param = {
+        limit: params.pageSize, //每页多少条数据
+        pageNo: params.pageNumber, // 页码
+        searchText: $(".search .form-control").val()
+      };
+      //搜索框功能
+      //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+      // if (null != searchText) {
+      //   try {
+      //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+      //   } catch (Exception e) {
+      //     e.printStackTrace();
+      //   }
+      // }
+      return param;
+    },
+    columns: [{
+        title: '选择',
+        radio: 'true',
+        width: '10',
+        align: "center",
+        valign: "middle",
+        formatter: function(value, row, index) {
+          return {checked: row.Id==projectid}
+        },
+      },
+      {
+        // field: 'Number',
+        title: '序号',
+        formatter: function(value, row, index) {
+          return index + 1
+        },
+        align: "center",
+        valign: "middle"
+      },
+      {
+        field: 'Code',
+        title: '编号',
+        // formatter:setCode,
+        align: "center",
+        valign: "middle"
+      },
+      {
+        field: 'Title',
+        title: '名称',
+        // formatter:setTitle,
+        align: "center",
+        valign: "middle"
+      },
+      // {
+      //   field: 'Label',
+      //   title: '标签',
+      //   formatter:setLable,
+      //   align:"center",
+      //   valign:"middle"
+      // },
+      {
+        field: 'Principal',
+        title: '负责人',
+        align: "center",
+        valign: "middle"
+      },
+      // {
+      //   field: 'Number',
+      //   title: '成果数量',
+      //   formatter:setCode,
+      //   align:"center",
+      //   valign:"middle"
+      // },
+      // {
+      //   field: 'action',
+      //   title: '时间轴',
+      //   formatter:actionFormatter,
+      //   events:actionEvents,
+      //   align:"center",
+      //   valign:"middle"
+      // },
+      {
+        field: 'Created',
+        title: '建立时间',
+        formatter: localDateFormatter,
+        align: "center",
+        valign: "middle"
+      }
+      // {
+      // field: 'dContMainEntity.createTime',
+      // title: '发起时间',
+      // formatter: function (value, row, index) {
+      // return new Date(value).toLocaleString().substring(0,9);
+      // }
+      // },
+      // {
+      // field: 'dContMainEntity.operate',
+      // title: '操作',
+      // formatter: operateFormatter
+      // }
+    ]
+  });
+});
+
+// 切换项目
+function chooseProjectButton() {
+  if (!{{.IsLogin }}) {
+    alert("请登录！");
+    return;
+  }
+
+  // $('#project').$("input[name='types']").attr('checked','true');
+
+  $('#NavmodalTable').modal({
+    show: true,
+    backdrop: 'static'
+  });
+}
+
+// 将选择的项目id存入浏览器内存
+function setlocalstorage() {
+  var selectRow2 = $('#Navtable2').bootstrapTable('getSelections');
+  if (selectRow2.length < 1) {
+    alert("请先勾选项目！");
+    return;
+  }
+  console.log(selectRow2[0].Id)
+  window.localStorage.setItem('projectid', selectRow2[0].Id);
+  $('#NavmodalTable').modal('hide');
+  // window.location.reload();
+}
+
+$(function() {
+  $("#NavmodalTable").draggable({ handle: ".modal-header" }); //为模态对话框添加拖拽
+  $("#myModal").css("overflow", "hidden"); //禁止模态对话框的半透明背景滚动
+})
+
+function localDateFormatter(value) {
+  return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+}
 </script>
 {{end}}
 <!--前端递归解析json 数据
  $(function () {
         var showlist = $("<ul></ul>");
-        showall(menulist.menulist, showlist); 
+        showall(menulist.menulist, showlist);
         $("#div_menu").append(showlist);
 });
 /**
@@ -442,7 +634,7 @@ function showall(menu_list, parent) {
            $("<li></li>").append(menu_list[menu].MName).appendTo(parent);
         }
     }
-} 
+}
 
 /**
  * Created on 2017/6/27.
@@ -477,7 +669,5 @@ $(function () {
 });
 
 js代码
-
-
 
 -->

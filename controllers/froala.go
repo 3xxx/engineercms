@@ -974,7 +974,7 @@ func (c *FroalaController) UploadWxVideo() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 article not found
 // @router /uploadwxvideocover/:id [post]
-//微信wx添加视频
+// 微信wx添加视频封面
 func (c *FroalaController) UploadWxVideoCover() {
 	//解析表单
 	vid := c.Ctx.Input.Param(":id")

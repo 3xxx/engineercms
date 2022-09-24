@@ -107,7 +107,7 @@ func SaveUser(user User) (uid int64, err error) {
 	return user1.Id, err
 }
 
-//后台手工操作添加微信小程序openid和用户名
+// 后台手工操作添加微信小程序openid和用户名
 func AddUserOpenID(userid int64, openid string) (id int64, err error) {
 	o := orm.NewOrm()
 	var useropenid UserOpenID

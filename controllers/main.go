@@ -721,9 +721,10 @@ func (c *MainController) CreatePhotoData() {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "errNo": 1, "info": "插入photo数据失败！", "data": "插入photo数据失败！", "msg": "插入photo数据失败！"}
 		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "errNo": 0, "info": "插入photo数据成功！", "data": "插入photo数据成功！", "msg": "插入photo数据成功！"}
+		c.ServeJSON()
 	}
-	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "errNo": 0, "info": "插入photo数据成功！", "data": "插入photo数据成功！", "msg": "插入photo数据成功！"}
-	c.ServeJSON()
 }
 
 // @Title get photodetail

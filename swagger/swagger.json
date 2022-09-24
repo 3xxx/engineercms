@@ -11102,6 +11102,45 @@
                 }
             }
         },
+        "/wx/getmonthvideodata": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get video",
+                "operationId": "VideoController.get video",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for video list",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The limit of page for video list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetAttachbyId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pdf not found"
+                    }
+                }
+            }
+        },
         "/wx/getpay": {
             "get": {
                 "tags": [
@@ -13820,6 +13859,114 @@
                 }
             }
         },
+        "/wx/video": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get video",
+                "operationId": "VideoController.get video",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for photos list",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The limit of page for photos list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetAttachbyId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pdf not found"
+                    }
+                }
+            }
+        },
+        "/wx/videodetail/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get videodetail",
+                "operationId": "VideoController.get videodetail",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of video",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetVideobyId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pdf not found"
+                    }
+                }
+            }
+        },
+        "/wx/wxelasticsearch": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get earch",
+                "operationId": "StandardController.get search",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The query=",
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "search_after",
+                        "description": "paginated by earchpage...",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Search not found"
+                    }
+                }
+            }
+        },
         "/wx/wxhassession": {
             "get": {
                 "tags": [
@@ -14032,6 +14179,13 @@
                         "in": "path",
                         "name": "id",
                         "description": "The id of standardpdf",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "The token of user",
                         "required": true,
                         "type": "string"
                     }
@@ -14672,6 +14826,10 @@
         },
         "models.GetUserMoney": {
             "title": "GetUserMoney",
+            "type": "object"
+        },
+        "models.GetVideobyId": {
+            "title": "GetVideobyId",
             "type": "object"
         },
         "models.GetansysPage": {

@@ -2,9 +2,17 @@
 <!DOCTYPE html>
 {{template "header"}}
 <title>项目详细-EngiCMS</title>
-<script src="/static/js/bootstrap-treeview.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
 <meta charset="utf-8">
+<script src="/static/js/bootstrap-treeview.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
+<script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+<script src="/static/js/tableExport.js"></script>
+<script type="text/javascript" src="/static/js/moment.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
 <!-- <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css"> -->
 <link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.min.css">
 <link rel="stylesheet" href="/static/css/custom.css">
@@ -128,6 +136,56 @@
   //   $('.sidebar').toggleClass('side');
   // })
 
+  // function onStorageChange(e) {
+  //   console.log(e.key);
+  // }
+  // window.addEventListener('storage', onStorageChange);
+  // window.addEventListener('storage',function (e) {
+  //   console.log(e.newValue);
+  //   window.location
+  // })
+
+  //当前页面监听localstorage值得变化
+var orignalSetItem = localStorage.setItem;
+localStorage.setItem = function(key, newValue) {
+  var setItemEvent = new Event("setItemEvent");
+  setItemEvent.key = key;
+  setItemEvent.newValue = newValue;
+  window.dispatchEvent(setItemEvent);
+  orignalSetItem.apply(this, arguments);
+};
+
+window.addEventListener("setItemEvent", function(e) {
+  if (e.key == 'projectid') {
+    var _this = localStorage.getItem("projectid")
+    if (_this != e.newValue) {
+      alert('key值为projectid的值发生改变,之前是' + _this + '当前为' + e.newValue)
+      window.open("/project/"+e.newValue, "_self" )
+    } else {
+      alert('key值为projectid值' + e.newValue);
+    }
+  }
+});
+
+var orignalremoveItem = localStorage.removeItem;
+localStorage.removeItem = function(key, newValue) {
+  var removeItemEvent = new Event("removeItemEvent");
+  removeItemEvent.key = key;
+  removeItemEvent.newValue = newValue;
+  window.dispatchEvent(removeItemEvent);
+  orignalremoveItem.apply(this, arguments);
+};
+
+window.addEventListener("removeItemEvent", function(e) {
+  if (localStorage.getItem("projectid")) {
+    if (e.key == 'projectid') {
+      alert("key值为demo，删除成功");
+    }
+  } else {
+    alert("本地数据无key值为demo")
+  }
+});
+
   $(function() {
     $('#tree').treeview({
       data: [{{.json }}],
@@ -152,14 +210,14 @@
     });
   })
 
-    $("#btn").click(function(e) {
-      var arr = $('#tree').treeview('getSelected');
-      for (var key in arr) {
-        c.innerHTML = c.innerHTML + "," + arr[key].id;
-      }
-    });
-  
-  function loaddata(node, func) {
+  $("#btn").click(function(e) {
+    var arr = $('#tree').treeview('getSelected');
+    for (var key in arr) {
+      c.innerHTML = c.innerHTML + "," + arr[key].id;
+    }
+  });
+
+  function loaddata(node, func) {//这个技巧真高，即能返回参数，又能把参数通过函数发回去
     $.ajax({
       type: "get",
       url: "/project/getprojcate",
@@ -172,13 +230,13 @@
     });
   }
   // 20220407添加跳转
-  $(function(){
+  $(function() {
     // alert({{.Gototree}})
     // alert({{.Node}})
-    if ({{.Gototree}}){
+    if ({{.Gototree }}) {
       $.ajax({
         type: "get",
-        url: "/project/navbar/" + {{.Node}},
+        url: "/project/navbar/" + {{.Node }},
         success: function(data, status) {
           $(".breadcrumb #nav").remove();
           for (i = 0; i < data.length; i++) {
@@ -186,7 +244,7 @@
           }
         }
       });
-      gototree({{.Node}})
+      gototree({{.Node }})
     }
   })
 

@@ -161,15 +161,14 @@
       warn.style.display = 'none';
       $.post("/v1/wx/addapplyrecharge/{{.Uid}}", options, function(data) {
         $(".submit").html("充值申请");
-        if (data.islogin == 0) {
+        if (data.state == "SUCCESS") {
           // console.log(data.service)
-          // alert("onkeydown")
-          location.href = "/index";
+          alert("申请成功！")
+          location.href = "/";
           // window.location.reload();
-        } else if (data.islogin == 1) {
+        } else if (data.state == "ERROR") {
+          alert("申请出错，请联系管理员处理！")
           ShowMsg("输入错误！");
-        } else if (data.islogin == 2) {
-          ShowMsg("密码错误！");
         }
       });
     }

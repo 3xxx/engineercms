@@ -122,6 +122,7 @@ func (c *ProjController) GetProjects() {
 	id := c.GetString("projectid")
 	var err error
 	var offset, limit1, page1 int
+	// var page1 int
 	limit := c.GetString("limit")
 	if limit == "" {
 		limit1 = 15
@@ -141,145 +142,100 @@ func (c *ProjController) GetProjects() {
 		}
 	}
 
-	if page1 <= 1 {
-		offset = 0
-	} else {
-		offset = (page1 - 1) * limit1
-	}
-	// beego.Info(offset)
 	searchText := c.GetString("searchText")
 	projects1 := make([]Project1, 0)
 	// var paths []beegoormadapter.CasbinRule
+	var projid string
+	strMap := make(map[string]string)
 	if id == "" {
 		// ****鲁班开始
 		// 根据用户角色，显示对应的项目显示全部
 		// 根据用户名查出用户角色——多个角色循环——角色对应的项目id——去重map——循环项目id取得项目细节
-		// _, _, uid, isadmin, _ := checkprodRole(c.Ctx)
-		// beego.Info(isadmin)
+		_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
+		// logs.Info(uid)
 		var count int64
-		// if !isadmin {
-		// 	userroles := e.GetRolesForUser(strconv.FormatInt(uid, 10))
-		// 	// beego.Info(userroles)
-		// 	permissions := e.GetPermissionsForUser(strconv.FormatInt(uid, 10))
-		// 	myRes := e.GetPermissionsForUser("2")
-		// 	log.Print("Permissions for ", "2", ": ", myRes)
-		// 	for _, v := range permissions {
-		// 		for _, w := range v {
-		// 			beego.Info(w)
-		// 		}
-		// 	}
-		// 	// role, err := models.GetRoleByUserId(uid)
-		// 	// if err != nil {
-		// 	// 	logs.Error(err)
-		// 	// }
-
-		// 	// var projids []string
-		// 	strMap := make(map[string]string)
-		// 	for _, v := range userroles {
-		// 		o := orm.NewOrm()
-		// 		qs := o.QueryTable("casbin_rule")
-		// 		_, err := qs.Filter("PType", "p").Filter("v0", v).All(&paths)
-		// 		if err != nil {
-		// 			logs.Error(err)
-		// 		}
-		// 		// 用map去重
-
-		// 		for _, w := range paths {
-		// 			projid := strings.Replace(w.V1, "/*", "", -1)
-		// 			// strMap[path.Base(projid)] = path.Base(projid)
-		// 			strMap[strings.Split(projid, "/")[1]] = strings.Split(projid, "/")[1]
-		// 		}
-		// 	}
-		// 	for _, v := range strMap {
-		// 		// beego.Info(projids)
-		// 		projectid, err := strconv.ParseInt(v, 10, 64)
-		// 		if err != nil {
-		// 			logs.Error(err)
-		// 		}
-		// 		aa := make([]Project1, 1)
-		// 		aa[0].Id = projectid
-		// 		project, err := models.GetProj(projectid)
-		// 		if err != nil {
-		// 			logs.Error(err)
-		// 		}
-		// 		aa[0].Code = project.Code
-		// 		aa[0].Title = project.Title
-		// 		aa[0].Label = project.Label
-		// 		aa[0].Principal = project.Principal
-		// 		//根据项目id取得项目下所有成果数量
-		// 		count, _, err := models.GetProjProducts(project.Id, 3)
-		// 		if err != nil {
-		// 			logs.Error(err)
-		// 		}
-		// 		aa[0].Number = count //len(products)
-		// 		aa[0].Created = project.Created
-		// 		aa[0].Updated = project.Updated
-		// 		projects1 = append(projects1, aa...)
-		// 	}
-		// 	count = int64(len(strMap))
-		// 	// ******鲁班结束****
-		// 	table := Tableserver{projects1, page1, count}
-		// 	c.Data["json"] = table
-		// 	c.ServeJSON()
-		// } else {
-		// beego.Info(limit1)
-		// beego.Info(offset)
-		projects, err := models.GetProjectsPage(limit1, offset, searchText)
-		if err != nil {
-			logs.Error(err)
-		}
-		// beego.Info(projects)
-		//记录开始时间
-		// start := time.Now()
-		//取得项目所有成果——速度太慢
-		//修改为一次性取到所有成果，然后循环赋值给aa
-		//取项目所有子孙
-		//效率太低
-		// categories, err := models.GetProjectsbyPid(v.Id)
-		// if err != nil {
-		// 	logs.Error(err)
-		// }
-		//取得每个项目的成果数量
-		// projects1 := make([]Project1, 0) //这里不能加*号
-		for _, v := range projects {
-			aa := make([]Project1, 1)
-			aa[0].Id = v.Id
-			aa[0].Code = v.Code
-			aa[0].Title = v.Title
-			aa[0].Label = v.Label
-			aa[0].Principal = v.Principal
-			//根据项目id取得项目下所有成果数量
-			count, _, err := models.GetProjProducts(v.Id, 3)
+		if !isadmin {
+			permissions, err := e.GetImplicitPermissionsForUser(strconv.FormatInt(uid, 10))
 			if err != nil {
 				logs.Error(err)
 			}
-			// var count int
-			// for _, m := range products {
-			// 	if v.Id == m.ProjectId {
-			// 		count = count + 1
-			// 	}
-			// }
-			// beego.Info(count)
-			// slice := getsons(v.Id, categories)
-			// beego.Info(slice)
-			// 如果遍历的当前节点下还有子节点，则进入该子节点进行递归
-			// if len(slice) > 0 {
-			// 	getprodcount(slice, categories, products, &count)
-			// }
-			aa[0].Number = count //len(products)
-			aa[0].Created = v.Created
-			aa[0].Updated = v.Updated
-			projects1 = append(projects1, aa...)
+			for _, v := range permissions {
+				logs.Info(v[1])
+				// 用map去重
+				projid = strings.Replace(v[1], "/*", "", -1)
+				// strMap[path.Base(projid)] = path.Base(projid)
+				// tempstr := strings.Split(projid, "/")
+				// logs.Info(tempstr[0])
+				// logs.Info(tempstr[1])
+				strMap[strings.Split(projid, "/")[1]] = strings.Split(projid, "/")[1]
+			}
+			for _, v := range strMap {
+				// beego.Info(projids)
+				projectid, err := strconv.ParseInt(v, 10, 64)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa := make([]Project1, 1)
+				aa[0].Id = projectid
+				project, err := models.GetProj(projectid)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa[0].Code = project.Code
+				aa[0].Title = project.Title
+				aa[0].Label = project.Label
+				aa[0].Principal = project.Principal
+				//根据项目id取得项目下所有成果数量
+				count, _, err := models.GetProjProducts(project.Id, 3)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa[0].Number = count //len(products)
+				aa[0].Created = project.Created
+				aa[0].Updated = project.Updated
+				projects1 = append(projects1, aa...)
+			}
+			// logs.Info(projects1)
+			count = int64(len(strMap))
+			table := Tableserver{projects1, page1, count}
+			c.Data["json"] = table
+			c.ServeJSON()
+		} else {
+			projects, err := models.GetProjectsPage(limit1, offset, searchText)
+			if err != nil {
+				logs.Error(err)
+			}
+			//记录开始时间
+			// start := time.Now()
+			//取得项目所有成果——速度太慢
+			//修改为一次性取到所有成果，然后循环赋值给aa
+			//取项目所有子孙
+			//效率太低
+			//取得每个项目的成果数量
+			for _, v := range projects {
+				aa := make([]Project1, 1)
+				aa[0].Id = v.Id
+				aa[0].Code = v.Code
+				aa[0].Title = v.Title
+				aa[0].Label = v.Label
+				aa[0].Principal = v.Principal
+				count, _, err := models.GetProjProducts(v.Id, 3)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa[0].Number = count
+				aa[0].Created = v.Created
+				aa[0].Updated = v.Updated
+				projects1 = append(projects1, aa...)
+			}
+			count, err = models.GetProjectsCount(searchText)
+			if err != nil {
+				logs.Error(err)
+			}
+			table := Tableserver{projects1, page1, count}
+			c.Data["json"] = table
+			c.ServeJSON()
 		}
-		count, err = models.GetProjectsCount(searchText)
-		if err != nil {
-			logs.Error(err)
-		}
-		table := Tableserver{projects1, page1, count}
-		c.Data["json"] = table
-		c.ServeJSON()
-		// }
-
 		//记录结束时间差
 		// elapsed := time.Since(start)
 		// beego.Info(elapsed)
@@ -302,7 +258,6 @@ func (c *ProjController) GetProjects() {
 			aa[0].Title = v.Title
 			aa[0].Label = v.Label
 			aa[0].Principal = v.Principal
-
 			aa[0].Created = v.Created
 			aa[0].Updated = v.Updated
 			projects1 = append(projects1, aa...)
@@ -313,7 +268,6 @@ func (c *ProjController) GetProjects() {
 		// }
 		count := int64(len(projects))
 		table := Tableserver{projects1, page1, count}
-
 		c.Data["json"] = table
 		c.ServeJSON()
 	}
@@ -379,7 +333,33 @@ func lubancheckRole(ctx *context.Context, urltoken string) {
 // http://127.0.0.1/v1/project/getwxprojects
 // 根据用户角色权限获取项目列表
 func (c *ProjController) GetWxProjects() {
-	// beego.Info("hah")
+	var uid int64
+	var isadmin bool
+	openID := c.GetSession("openID")
+	if openID == nil {
+		uid = 0
+	} else {
+		user, err := models.GetUserByOpenID(openID.(string))
+		if err != nil {
+			logs.Error(err)
+		}
+		uid = user.Id
+		//判断是否具备admin角色
+		role, err := models.GetRoleByRolename("admin")
+		if err != nil {
+			logs.Error(err)
+		}
+		uid := strconv.FormatInt(user.Id, 10)
+		roleid := strconv.FormatInt(role.Id, 10)
+		hasrole, err := e.HasRoleForUser(uid, "role_"+roleid)
+		if err != nil {
+			logs.Error(err)
+		}
+		if hasrole {
+			isadmin = true
+		}
+	}
+
 	id := c.GetString("projectid")
 	var err error
 	var offset, limit1, page1 int
@@ -401,23 +381,6 @@ func (c *ProjController) GetWxProjects() {
 			logs.Error(err)
 		}
 	}
-	// if limit == "" {
-	// 	limit1 = 150
-	// } else {
-	// 	limit1, err = strconv.ParseInt(limit, 10, 64)
-	// 	if err != nil {
-	// 		logs.Error(err)
-	// 	}
-	// }
-	// page := c.GetString("pageNo")
-	// if page == "" {
-	// 	page1 = 1
-	// } else {
-	// 	page1, err = strconv.ParseInt(page, 10, 64)
-	// 	if err != nil {
-	// 		logs.Error(err)
-	// 	}
-	// }
 
 	if page1 <= 1 {
 		offset = 0
@@ -427,31 +390,82 @@ func (c *ProjController) GetWxProjects() {
 
 	searchText := c.GetString("searchText")
 	projects1 := make([]Project1, 0)
+	var projid string
+	strMap := make(map[string]string)
 	if id == "" {
-		//显示全部
-		projects, err := models.GetProjectsPage(limit1, offset, searchText)
-		if err != nil {
-			logs.Error(err)
-		}
-		for _, v := range projects {
-			aa := make([]Project1, 1)
-			aa[0].Id = v.Id
-			aa[0].Code = v.Code
-			aa[0].Title = v.Title
-			aa[0].Label = v.Label
-			aa[0].Principal = v.Principal
+		var count int64
+		if !isadmin {
+			permissions, err := e.GetImplicitPermissionsForUser(strconv.FormatInt(uid, 10))
+			if err != nil {
+				logs.Error(err)
+			}
+			for _, v := range permissions {
+				// logs.Info(v[1])
+				// 用map去重
+				projid = strings.Replace(v[1], "/*", "", -1)
+				// strMap[path.Base(projid)] = path.Base(projid)
+				// tempstr := strings.Split(projid, "/")
+				// logs.Info(tempstr[0])
+				// logs.Info(tempstr[1])
+				strMap[strings.Split(projid, "/")[1]] = strings.Split(projid, "/")[1]
+			}
+			for _, v := range strMap {
+				// beego.Info(projids)
+				projectid, err := strconv.ParseInt(v, 10, 64)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa := make([]Project1, 1)
+				aa[0].Id = projectid
+				project, err := models.GetProj(projectid)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa[0].Code = project.Code
+				aa[0].Title = project.Title
+				aa[0].Label = project.Label
+				aa[0].Principal = project.Principal
+				//根据项目id取得项目下所有成果数量
+				count, _, err := models.GetProjProducts(project.Id, 3)
+				if err != nil {
+					logs.Error(err)
+				}
+				aa[0].Number = count //len(products)
+				aa[0].Created = project.Created
+				aa[0].Updated = project.Updated
+				projects1 = append(projects1, aa...)
+			}
+			// logs.Info(projects1)
+			count = int64(len(strMap))
+			table := Tableserver{projects1, page1, count}
+			c.Data["json"] = table
+			c.ServeJSON()
+		} else {
+			//显示全部
+			projects, err := models.GetProjectsPage(limit1, offset, searchText)
+			if err != nil {
+				logs.Error(err)
+			}
+			for _, v := range projects {
+				aa := make([]Project1, 1)
+				aa[0].Id = v.Id
+				aa[0].Code = v.Code
+				aa[0].Title = v.Title
+				aa[0].Label = v.Label
+				aa[0].Principal = v.Principal
 
-			aa[0].Created = v.Created
-			aa[0].Updated = v.Updated
-			projects1 = append(projects1, aa...)
+				aa[0].Created = v.Created
+				aa[0].Updated = v.Updated
+				projects1 = append(projects1, aa...)
+			}
+			count, err := models.GetProjectsCount(searchText)
+			if err != nil {
+				logs.Error(err)
+			}
+			table := Tableserver{projects1, page1, count}
+			c.Data["json"] = table
+			c.ServeJSON()
 		}
-		count, err := models.GetProjectsCount(searchText)
-		if err != nil {
-			logs.Error(err)
-		}
-		table := Tableserver{projects1, page1, count}
-		c.Data["json"] = table
-		c.ServeJSON()
 	} else {
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {

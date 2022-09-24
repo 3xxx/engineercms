@@ -94,6 +94,13 @@ func GetUserVideo(pid int64, limit, offset int, searchText string) (uservideos [
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
+// 查询最新的limit个视频数据，按yearmonth分组
+func GetVideoData(limit, offset int) (results []Video, err error) {
+	db := _db
+	err = db.Limit(limit).Order("created desc").Offset(offset).Table("video").Scan(&results).Error
+	return results, err
+}
+
 //查询某个用户视频记录总数
 func GetUserVideoCount(pid int64, searchText string) (count int64, err error) {
 	//获取DB

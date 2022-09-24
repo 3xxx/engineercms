@@ -14,6 +14,7 @@ import (
 	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/elastic/go-elasticsearch/v8"
 	// "github.com/elastic/go-elasticsearch/v8/esapi"
+	// "github.com/3xxx/engineercms/controllers/utils"
 	"github.com/google/go-tika/tika"
 	"github.com/tealeg/xlsx"
 	"github.com/xuri/excelize/v2"
@@ -153,7 +154,7 @@ func (c *StandardController) DeleteStandard() {
 	}
 }
 
-func (c *StandardController) Index() { //
+func (c *StandardController) Index() {
 	c.Data["IsStandard"] = true
 	u := c.Ctx.Input.UserAgent()
 	// re := regexp.MustCompile("Trident")
@@ -326,6 +327,129 @@ func (c *StandardController) ElasticSearch() { //(*SearchResults, error)
 	// beego.Info(&results)
 	//return &results, nil
 	c.Data["json"] = &results //map[string]interface{}{"status": 1, "info": "SUCCESS", "id": aid}
+	c.ServeJSON()
+}
+
+// @Title get search
+// @Description get earch
+// @Param keyword query string false "The query="
+// @Param search_after formData string false "paginated by earchpage..."
+// @Success 200 {object} models.GetSearch
+// @Failure 400 Invalid page supplied
+// @Failure 404 Search not found
+// @router /wxelasticsearch [get]
+// Search returns results matching a query, paginated by after.
+func (c *StandardController) WxElasticSearch() { //(*SearchResults, error)
+	// 3. Search for the indexed documents
+	// Build the request body.
+	query := c.GetString("keyword")
+	after := c.GetStrings("search_after")
+	//beego.Info(after)
+	//if query == "" {
+	//	query = "目标"
+	//}
+	// *************
+	es, err := elasticsearch.NewDefaultClient()
+	if err != nil {
+		log.Fatalf("Error creating the client: %s", err)
+	}
+	var results SearchResults
+	//Search returns results matching a query, paginated by after.
+	res, err := es.Search(
+		es.Search.WithIndex(indexName),
+		es.Search.WithBody(buildQuery(query, after...)),
+	)
+
+	defer res.Body.Close()
+	//log.Printf(res.String())
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			//return //&results, err
+			c.Data["json"] = map[string]interface{}{"status": 1, "info": "ERR"}
+			c.ServeJSON()
+		}
+		//return //&results, fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
+		c.Data["json"] = map[string]interface{}{"status": 2, "info": "ERR"}
+		c.ServeJSON()
+	}
+
+	type envelopeResponse struct {
+		Took int
+		Hits struct {
+			Total struct {
+				Value int
+			}
+			Hits []struct {
+				ID         string          `json:"_id"`
+				Source     json.RawMessage `json:"_source"`
+				Highlights json.RawMessage `json:"highlight"`
+				Sort       []interface{}   `json:"sort"`
+			}
+		}
+	}
+
+	var r envelopeResponse
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		//return //&results, err
+		c.Data["json"] = map[string]interface{}{"status": 3, "info": "ERR"}
+		c.ServeJSON()
+	}
+
+	results.Total = r.Hits.Total.Value
+
+	if len(r.Hits.Hits) < 1 {
+		// results.Hits = []*Hit{}
+		//return //&results, nil
+		c.Data["json"] = []*Hit{} //map[string]interface{}{"status": 1, "info": "SUCCESS", "id": aid}
+		c.ServeJSON()
+	}
+
+	wxsite, err := web.AppConfig.String("wxreqeustsite")
+	if err != nil {
+		logs.Error(err)
+	}
+	var wxsearchresults []*Hit
+	for _, hit := range r.Hits.Hits {
+		var h Hit
+		h.ID = hit.ID
+		h.Sort = hit.Sort
+		//如果是office文件，则/officeview/id，如果是pdf文件，则/pdf?id=
+		//根据id（attatchment id）判断附件类型
+		//h.URL = strings.Join([]string{baseURL, h.ID, ""}, "/")
+		// h.URL = strings.Join([]string{baseURL, h.ID}, "?id=")
+		h.URL = strings.Join([]string{baseURL, h.ID, "&keyword=" + query}, "")
+
+		if err := json.Unmarshal(hit.Source, &h); err != nil {
+			//return //&results, err
+			logs.Error(err)
+			c.Data["json"] = map[string]interface{}{"status": 5, "info": "ERR"}
+			c.ServeJSON()
+		}
+
+		// 对body字段进行缩减
+		//myString.substr(start, 318)
+		//beego.Info(h.Body)
+		h.Body = SubString(h.Body, 0, 300)
+
+		if len(hit.Highlights) > 0 {
+			if err := json.Unmarshal(hit.Highlights, &h.Highlights); err != nil {
+				//return //&results, err
+				c.Data["json"] = map[string]interface{}{"status": 6, "info": "ERR"}
+				c.ServeJSON()
+			}
+		}
+
+		h.ImageURL = wxsite + h.ImageURL
+
+		// results.Hits = append(results.Hits, &h)
+		wxsearchresults = append(wxsearchresults, &h)
+	}
+	// beego.Info(&results)
+	//return &results, nil
+	c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "searchers": &wxsearchresults}
+	// c.Data["json"] = //map[string]interface{}{"status": 1, "info": "SUCCESS", "id": aid}
 	c.ServeJSON()
 }
 
@@ -702,8 +826,8 @@ func splitSize(length int64) (size int64) {
 
 // @Title get wx standards list
 // @Description get standards by page
-// @Param keyword query string  true "The keyword of standards"
-// @Param searchpage query string  true "The page for drawings list"
+// @Param keyword query string true "The keyword of standards"
+// @Param searchpage query string true "The page for drawings list"
 // @Success 200 {object} models.GetProductsPage
 // @Failure 400 Invalid page supplied
 // @Failure 404 standards not found
@@ -793,13 +917,27 @@ func (c *StandardController) SearchWxStandards() {
 
 // @Title dowload wx standardpdf
 // @Description get wx standardpdf by id
-// @Param id path string  true "The id of standardpdf"
+// @Param id path string true "The id of standardpdf"
+// @Param token query string true "The token of user"
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
 // @router /wxstandardpdf/:id [get]
-// 小程序查询规范
+// 小程序下载规范
 func (c *StandardController) WxStandardPdf() {
+	// 20220908测试通过
+	// token := c.GetString("token")
+	// logs.Info(token)
+	// username, err := utils.CheckToken(token)
+	// if err != nil {
+	// 	logs.Error(err)
+	// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "token错误！"}
+	// 	return
+	// } else if username == "" {
+	// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户未登录或未授权！"}
+	// 	return
+	// }
+	// logs.Info(username)
 	// id := c.GetString("id")
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
@@ -1373,7 +1511,7 @@ func (c *StandardController) Upload() {
 		Body:      article_body,
 	}
 
-	err = Createitem(indexName, doc)
+	err = Createitem(indexName, doc) //这个indexName是全局变量
 	if err != nil {
 		// log.Fatalln(err)
 		logs.Error(err)
@@ -1382,3 +1520,7 @@ func (c *StandardController) Upload() {
 		return
 	}
 }
+
+// 全文检索删除，根据id
+
+// 全文检索更新

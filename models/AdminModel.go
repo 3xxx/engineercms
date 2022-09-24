@@ -159,7 +159,7 @@ func init() {
 			SingularTable: true, // 使用单数表名，启用该选项后，`User` 表将是`user`
 			// NameReplacer:  strings.NewReplacer("CID", "Cid"), // 在转为数据库名称之前，使用NameReplacer更改结构/字段名称。
 			// TablePrefix:   "t_",                              // 表名前缀，`User`表为`t_users`
-
+			// CreateBatchSize: 1000,
 		},
 	})
 

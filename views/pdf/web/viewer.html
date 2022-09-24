@@ -31,8 +31,12 @@ See https://github.com/adobe-type-tools/cmap-resources
   <!-- This snippet is used in production (included from viewer.html) -->
   <link rel="resource" type="application/l10n" href="/static/pdf/web/locale/locale.properties">
   <script src="/static/pdf/build/pdf.js"></script>
+  <script type="text/javascript" language="javascript">
+    var TITLE = {{.fileName}};
+  </script>
 
   <script src="/static/pdf/web/viewer.js"></script>
+{{/*  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>*/}}
 </head>
 
 <body tabindex="1">
@@ -371,5 +375,43 @@ See https://github.com/adobe-type-tools/cmap-resources
   </div> <!-- outerContainer -->
   <div id="printContainer"></div>
 </body>
+
+<script>
+  // var viewer=new Viewer(document.getElementById("viewer"),{
+  //   inline: false,//这里使用的是嵌入模式，图片框会嵌入到一定范围，而不会是生产到body中（全屏）
+  //   navbar:navbar,//是否有底部功能栏，
+  //   show: function(){//显示后
+  //     //do something
+  //     alert("hah")
+  //   },
+  //   viewed: function(evt){
+  //     //do something
+  //   },
+  //   hidden: function(){
+  //     //do something
+  //   }
+  // });
+
+  // const [searcher = {}, setSearcher] = useState({
+  //   phraseSearch: true, // 是否短语查找
+  //   query: '电', // 查询字段
+  //   findPrevious: true, // 是否循环查找
+  //   highlightAll: true, // 是否高亮
+  // });
+
+  // PDFViewerApplication.findController.executeCommand()
+  //         .findController.executeCommand('find',
+  //         {
+  //           phraseSearch: true, // 是否短语查找
+  //           query: '电', // 查询字段
+  //           findPrevious: true, // 是否循环查找
+  //           highlightAll: true, // 是否高亮
+  //           // caseSensitive: evt.caseSensitive,
+  //           // entireWord: evt.entireWord,
+  //         }
+  // );
+
+  // PDFViewerApplication.open("/v1/wx/downloadstandard/41");
+</script>
 
 </html>
