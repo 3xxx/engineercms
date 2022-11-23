@@ -352,6 +352,6 @@ froala富文本编辑器支持word图片自动上传，视频和附件
 ![snap13](https://user-images.githubusercontent.com/10678867/42722537-3c71c216-8780-11e8-8065-f1538bbcad18.png)
 ![snap6](https://user-images.githubusercontent.com/10678867/42722539-40376bc6-8780-11e8-8173-1f6e9e60ef14.png)
 
-![mapus地图协作](https://pass.itdos.net/mapus?file=1)，部分替代91地图
+[mapus地图协作](https://pass.itdos.net/mapus?file=1)，部分替代91地图
 [mapus document](https://zsj.itdos.net/docs/supa-mapus)
 ![Snap24](https://user-images.githubusercontent.com/10678867/203514151-36be4944-e336-4f0d-bc16-786b88e35311.jpg)
