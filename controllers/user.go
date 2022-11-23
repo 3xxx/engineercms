@@ -215,7 +215,7 @@ func (c *UserController) View() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /adduser [post]
-//添加用户
+// 添加用户
 func (c *UserController) AddUser() {
 	var user m.User
 	user.Username = c.GetString("username")
@@ -228,10 +228,10 @@ func (c *UserController) AddUser() {
 	user.Password = hex.EncodeToString(cipherStr)
 	// user.Repassword = c.GetString("repassword")
 	// Pwd1=c.GetString("password")
-	// 				md5Ctx := md5.New()
-	// 				md5Ctx.Write([]byte(Pwd1))
-	// 				cipherStr := md5Ctx.Sum(nil)
-	// 				user.Password = hex.EncodeToString(cipherStr)
+	// md5Ctx := md5.New()
+	// md5Ctx.Write([]byte(Pwd1))
+	// cipherStr := md5Ctx.Sum(nil)
+	// user.Password = hex.EncodeToString(cipherStr)
 
 	user.Email = c.GetString("email")
 	user.Department = c.GetString("department")
@@ -241,6 +241,8 @@ func (c *UserController) AddUser() {
 	statusint, err := strconv.Atoi(c.GetString("status"))
 	if err != nil {
 		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "message": err}
+		c.ServeJSON()
 	}
 	user.Status = statusint
 	user.Role = c.GetString("role")
@@ -248,12 +250,18 @@ func (c *UserController) AddUser() {
 	if err == nil && id > 0 {
 		// c.Rsp(true, "Success")
 		// return
-		c.Data["json"] = "ok"
+		c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "message": "ok", "data": id}
 		c.ServeJSON()
-	} else {
+	} else if err == nil && id == 0 {
 		// c.Rsp(false, err.Error())
 		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "message": "用户已存在", "data": id}
+		c.ServeJSON()
 		// return
+	} else {
+		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "message": err, "data": id}
+		c.ServeJSON()
 	}
 }
 
@@ -581,8 +589,8 @@ func (c *UserController) Usermyself() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /importusers [post]
-//上传excel文件，导入到数据库
-//引用来自category的查看成果类型里的成果
+// 上传excel文件，导入到数据库
+// 引用来自category的查看成果类型里的成果
 func (c *UserController) ImportUsers() {
 	//获取上传的文件
 	_, h, err := c.GetFile("usersexcel")

@@ -215,9 +215,13 @@
           url: "/v1/wx/adduser",
           data: { username: Username, nickname: Nickname, password: Password, repassword: Repassword, email: Email, department: Department, secoffice: Secoffice, ip: Ip, port: Port, status: Status, role: Role },
           success: function(data, status) {
-            $('#table0').bootstrapTable('refresh', { url: '/v1/wx/user/0' });
-            $('#modalTable').modal('hide');
-            alert("添加“" + data + "”成功！(status:" + status + ".)");
+            if (data.info!="ERROR"){
+              $('#table0').bootstrapTable('refresh', { url: '/v1/wx/user/0' });
+              $('#modalTable').modal('hide');
+              alert("添加“" + data.data + "”成功！(status:" + status + ".)");
+            }else if (data.info=="ERROR"){
+              alert(data.message);
+            }
           }
         });
       } else {

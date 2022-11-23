@@ -78,7 +78,7 @@ func (c *TodoController) Create() {
 		todoid, err := models.TodoCreate(ProjectId, name, userid)
 		if err != nil {
 			logs.Error(err)
-			c.Data["json"] = map[string]interface{}{"message": "写入数据库出错"}
+			c.Data["json"] = map[string]interface{}{"info": "ERROR", "message": "写入数据库出错"}
 			c.ServeJSON()
 		} else {
 			c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "message": "ok", "todoid": todoid}

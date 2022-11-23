@@ -79,9 +79,11 @@ func SaveUser(user User) (uid int64, err error) {
 	err = o.QueryTable("user").Filter("username", user.Username).One(&user1, "Id")
 	if err == orm.ErrNoRows { //Filter("tnumber", tnumber).One(topic, "Id")==nil则无法建立
 		// 没有找到记录
-		uid, err = o.Insert(&user)
-		if err != nil {
-			return uid, err
+		uid, err2 := o.Insert(&user)
+		if err2 == nil {
+			return uid, err2
+		} else {
+			return 0, err2
 		}
 	} //else { //应该进行更新操作
 	// user1 := &User{Id: user1.Id}
@@ -103,8 +105,9 @@ func SaveUser(user User) (uid int64, err error) {
 	// 		return 0, err
 	// 	}
 	// 	uid = user1.Id
-	// }
-	return user1.Id, err
+	//return 0, err
+	//}
+	return 0, err
 }
 
 // 后台手工操作添加微信小程序openid和用户名

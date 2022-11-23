@@ -1122,3 +1122,7 @@ func (c *MainController) ModifyDatabase() {
 func (c *MainController) Autodesk() {
 	c.TplName = "autodeskview.tpl"
 }
+
+func (c *MainController) Mapus() {
+	c.TplName = "supa-mapus/mapus.html"
+}

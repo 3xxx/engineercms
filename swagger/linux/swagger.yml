@@ -6905,6 +6905,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /wx/createphotodata:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /wx/deleteuser:
     post:
       tags:
@@ -7317,12 +7332,79 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/getmonthphotodata:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      parameters:
+      - in: query
+        name: page
+        description: The page for photos list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for photos list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/getmonthvideodata:
+    get:
+      tags:
+      - wx
+      description: get video
+      operationId: VideoController.get video
+      parameters:
+      - in: query
+        name: page
+        description: The page for video list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for video list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/getpay:
     get:
       tags:
       - wx
       description: get pay by page
       operationId: PayController.get pay list
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/getpostdata:
+    post:
+      tags:
+      - wx
+      description: get Data(file)
+      operationId: MainController.get Data(file)
       responses:
         "200":
           description: ""
@@ -8175,6 +8257,77 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/photo:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      parameters:
+      - in: query
+        name: page
+        description: The page for photos list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for photos list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/photo_back:
+    get:
+      tags:
+      - wx
+      description: get photo
+      operationId: MainController.get photo
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/photodetail:
+    get:
+      tags:
+      - wx
+      description: get photodetail
+      operationId: MainController.get photodetail
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/photodetail_back:
+    get:
+      tags:
+      - wx
+      description: get photodetail
+      operationId: MainController.get photodetail
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
   /wx/photoswipe:
     get:
       tags:
@@ -8190,6 +8343,21 @@ paths:
           description: Invalid page supplied
         "404":
           description: pdf not found
+  /wx/postdata:
+    post:
+      tags:
+      - wx
+      description: post Data(file)
+      operationId: MainController.post Data(file)
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /wx/project/product/pdf/{id}:
     get:
       tags:
@@ -8476,21 +8644,6 @@ paths:
           description: Invalid page supplied
         "404":
           description: standards not found
-  /wx/sendmessage:
-    post:
-      tags:
-      - wx
-      description: post Data(file)
-      operationId: MainController.post Data(file)
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articls not found
   /wx/ssologin:
     get:
       tags:
@@ -9033,6 +9186,77 @@ paths:
           description: Invalid page supplied
         "404":
           description: user not found
+  /wx/video:
+    get:
+      tags:
+      - wx
+      description: get video
+      operationId: VideoController.get video
+      parameters:
+      - in: query
+        name: page
+        description: The page for photos list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for photos list
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/videodetail/{id}:
+    get:
+      tags:
+      - wx
+      description: get videodetail
+      operationId: VideoController.get videodetail
+      parameters:
+      - in: path
+        name: id
+        description: The id of video
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetVideobyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: pdf not found
+  /wx/wxelasticsearch:
+    get:
+      tags:
+      - wx
+      description: get earch
+      operationId: StandardController.get search
+      parameters:
+      - in: query
+        name: keyword
+        description: The query=
+        type: string
+      - in: formData
+        name: search_after
+        description: paginated by earchpage...
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetSearch'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Search not found
   /wx/wxhassession:
     get:
       tags:
@@ -9177,6 +9401,11 @@ paths:
       - in: path
         name: id
         description: The id of standardpdf
+        required: true
+        type: string
+      - in: query
+        name: token
+        description: The token of user
         required: true
         type: string
       responses:
@@ -9625,6 +9854,9 @@ definitions:
     type: object
   models.GetUserMoney:
     title: GetUserMoney
+    type: object
+  models.GetVideobyId:
+    title: GetVideobyId
     type: object
   models.GetansysPage:
     title: GetansysPage

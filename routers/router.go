@@ -313,6 +313,7 @@ func init() {
 	web.Router("/debug/pprof/:app([\\w]+)", &controllers.ProfController{})
 
 	web.Router("/test", &controllers.MainController{}, "*:Test")
+	web.Router("/mapus", &controllers.MainController{}, "*:Mapus")
 	web.Router("/autodesk", &controllers.MainController{}, "*:Autodesk")
 	// web.Router("/usermanage", &controllers.MainController{}, "*:UserManage")
 	// web.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")

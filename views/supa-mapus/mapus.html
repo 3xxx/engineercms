@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /> -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+  <link rel="stylesheet" href="/static/supa-mapus/styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.13.1/dist/leaflet-geoman.css" />
+  <style type="text/css">
+  /*  .leaflet-top .leaflet-control {
+    margin-top: 140px;
+  }*/
+
+  /*.leaflet-top .leaflet-bottom {*/
+  /*position: fixed;*/
+  /*position:absolute;*/
+  /*right: 11px;*/
+  /*bottom: 116px;*/
+  /*}*/
+
+  .toggle-icon {
+    top: 10px;
+    left: 20px;
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    fill: currentColor;
+    width: 30px;
+    height: 30px;
+    color: #666;
+    cursor: pointer;
+    transform: rotate(90deg);
+  }
+
+  .icon-mobile {
+    width: 50px;
+    height: 50px;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .trans {
+    animation: rotate .4s linear;
+  }
+
+  .trans-revert {
+    animation: rotate-revert .4s linear;
+    left: 258px;
+    transform: rotate(0);
+  }
+
+  @keyframes rotate {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+      -webkit-transform: rotate(90deg);
+    }
+  }
+
+  @keyframes rotate-revert {
+    0% {
+      -webkit-transform: rotate(90deg);
+    }
+
+    100% {
+      -webkit-transform: rotate(0deg);
+    }
+  }
+  </style>
+</head>
+
+<body style="margin:0px;">
+  <div id="share">
+    <div id="share-nav">
+      <span>Share Cool Map</span>
+      <img src="/static/supa-mapus/assets/close-button.svg" id="close-share">
+    </div>
+    <input value="https://coollink.com/haha" id="share-url" readonly="readonly">
+    <div id="share-copy">Copy link</div>
+  </div>
+  <div id="sign">
+    <div id="sign-nav">
+      <span>Sign In Cool Map</span>
+      <img src="/static/supa-mapus/assets/close-button.svg" id="close-sign">
+    </div>
+    <label class="cursor-label">Email
+      <!-- <input id="email" type="email" placeholder="输入email"> -->
+      <input id="email" type="email" list="emaillist" placeholder="输入email">
+      <datalist id="emaillist">
+        <option>123@qq.com</option>
+        <option>223@qq.com</option>
+        <option>323@qq.com</option>
+        <option>423@qq.com</option>
+      </datalist>
+    </label>
+    <label class="cursor-label">Password <input value="123456" id="password" type="password">
+    </label>
+    <div id="google-signin"><img src="/static/supa-mapus/assets/google-logo.svg">Sign</div>
+  </div>
+  <div id="popup">
+    <div class="header-text">Welcome to Mapus!</div>
+    <div class="subheader-text">To get started, click below to sign in with Google.</div>
+    <div id="google-signin"><img src="/static/supa-mapus/assets/google-logo.svg"> Sign in with Google</div>
+  </div>
+  <div id="overlay"></div>
+  <div id="more-menu">
+    <div class="more-item" id="geojson">Export to GeoJSON</div>
+    <div class="more-item" id="importgeojson">Import GeoJSON File</div>
+    <div class="more-item" id="xmltogeojson">Xml To GeoJSON File</div>
+    <a href="https://github.com/alyssaxuu/mapus" target="_blank" class="more-item">GitHub repo</a>
+    <div class="more-item" id="logout">Log out</div>
+  </div>
+  <div id="sidebar">
+    <div id="map-details" class="section">
+      <input id="map-name" value="Cool map 👻" disabled>
+      <input id="map-description" value="Let's all collaborate here">
+      <div id="more-vertical">
+        <img src="/static/supa-mapus/assets/more-vertical.svg">
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-name">Find nearby</div>
+      <table>
+        <tr>
+          <th class="find-nearby" data-type="supermarket" data-color="#5EBE86" data-others="convenience,deli,organic,markerplace">
+            <img src="/static/supa-mapus/assets/groceries-button.svg"><br>
+            Groceries
+          </th>
+          <th class="find-nearby" data-type="fashion" data-color="#A564D2" data-others="beauty,art,bicycle,books,carpet,clothes,computer,cosmetics,department_store,electronics,fashion,florist,furniture,garden_centre,general,gift,hardware,jewelry,kiosk,mall,music,shoes,shopping_centre,sports,stationery,toys">
+            <img src="/static/supa-mapus/assets/shopping-button.svg"><br>
+            Shopping
+          </th>
+          <th class="find-nearby" data-type="restaurant" data-color="#4890E8" data-others="bar,fast-food,seafood,food,organic,deli,confectionery,bakery">
+            <img src="/static/supa-mapus/assets/food-button.svg"><br>
+            Food
+          </th>
+          <th class="find-nearby" data-type="bar" data-color="#F9D458" data-others="beverages,wine,pub,cafe">
+            <img src="/static/supa-mapus/assets/drinks-button.svg"><br>
+            Drinks
+          </th>
+        </tr>
+        <tr>
+          <th class="find-nearby" data-type="atm" data-color="#634FF1" data-others="bank,coworking,embassy,library,police,post_box,post_office">
+            <img src="/static/supa-mapus/assets/services-button.svg"><br>
+            Services
+          </th>
+          <th class="find-nearby" data-type="hospital" data-color="#E15F59" data-others="pharmacy,massage,optician,salon,hairdresser,clinic,dentist,doctors,gym">
+            <img src="/static/supa-mapus/assets/health-button.svg"><br>
+            Health
+          </th>
+          <th class="find-nearby" data-type="hotel" data-color="#AC6C48" data-others="chalet,camp_site,caravan_site,guest_house,hostel,motel">
+            <img src="/static/supa-mapus/assets/hotels-button.svg"><br>
+            Hotels
+          </th>
+          <th class="find-nearby" data-type="station" data-color="#718390">
+            <img src="/static/supa-mapus/assets/transport-button.svg"><br>
+            Transport
+          </th>
+        </tr>
+      </table>
+    </div>
+    <div class="section" id="annotations-section">
+      <div id="annotations-header">
+        <div class="section-name">Annotations</div>
+        <div id="hide-annotations">Hide all</div>
+      </div>
+      <div id="annotations-list">
+      </div>
+    </div>
+    <div class="section copyright-bottom" id="attribution-section">
+      <div class="section-name">Made by Alyssa X</div>
+      <div id="attribution">© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors</div>
+    </div>
+  </div>
+  <span class="toggle-icon" id="icon-close">
+    <svg t="1667393698047" class="icon" viewBox="0 0 1138 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4615" width="200" height="200">
+      <path d="M0 1024 0 910.222222 1137.777778 910.222222 1137.777778 1024 0 1024ZM0 455.111111 1137.777778 455.111111 1137.777778 568.888889 0 568.888889 0 455.111111ZM0 0 1137.777778 0 1137.777778 113.777778 0 113.777778 0 0Z" p-id="4616"></path>
+    </svg>
+  </span>
+  <div id="search-box">
+    <input id="search-input" placeholder="Search for a place" />
+    <img src="/static/supa-mapus/assets/search-icon.svg">
+  </div>
+  <div id="right-nav">
+    <div id="share-button">Share</div>
+  </div>
+  <div id="right-nav2">
+    <div id="sign-button">Sign</div>
+  </div>
+  <div id="drawing-controls" class="noselect">
+    <div id="cursor-tool" class="tool tool-active">
+      <img src="/static/supa-mapus/assets/cursor-tool.svg">
+    </div>
+    <div id="pen-tool" class="tool">
+      <img src="/static/supa-mapus/assets/pen-tool.svg">
+    </div>
+    <div id="eraser-tool" class="tool">
+      <img src="/static/supa-mapus/assets/eraser-tool.svg">
+    </div>
+    <div id="marker-tool" class="tool">
+      <img src="/static/supa-mapus/assets/marker-tool.svg">
+    </div>
+    <div id="path-tool" class="tool">
+      <img src="/static/supa-mapus/assets/path-tool.svg">
+    </div>
+    <div id="area-tool" class="tool">
+      <img src="/static/supa-mapus/assets/area-tool.svg">
+    </div>
+    <div id="edit-tool" class="tool">
+      <img src="/static/supa-mapus/assets/edit-tool.svg">
+    </div>
+    <div id="drag-tool" class="tool">
+      <img src="/static/supa-mapus/assets/drag-tool.svg">
+    </div>
+    <div id="color-picker">
+      <div id="inner-color"></div>
+      <div id="color-list">
+        <div class="color" id="color1" data-color="#E15F59"></div>
+        <div class="color" id="color2" data-color="#F29F51"></div>
+        <div class="color" id="color3" data-color="#F9D458"></div>
+        <div class="color" id="color4" data-color="#5EBE86"></div>
+        <div class="color" id="color5" data-color="#4890E8"></div>
+        <div class="color" id="color6" data-color="#634FF1"></div>
+        <div class="color" id="color7" data-color="#A564D2"></div>
+        <div class="color" id="color8" data-color="#222222"></div>
+      </div>
+    </div>
+  </div>
+  <div id="location-control">
+    <img src="/static/supa-mapus/assets/location-icon.svg">
+  </div>
+  <div id="zoom-controls" class="noselect">
+    <div id="zoom-in"><img src="/static/supa-mapus/assets/zoomin.svg"></div>
+    <div id="zoom-out"><img src="/static/supa-mapus/assets/zoomout.svg"></div>
+  </div>
+  <div id="outline">
+    <div id="observing-name"></div>
+  </div>
+  <div id="mapDiv"></div>
+  <div id="param-test">
+    测试参数：<input id="url-input" type="text" placeholder="输入地址参数, 例：qt=vtile&styles=sl&showtext=0&scaler=1&v=083 或 img, 并回车" onkeydown="loadTile(this.value)" />
+  </div>
+  <!-- <div id="map" /> -->
+  <!-- <div><button id="insert-data">insertdata</button></div> -->
+  <!-- <div id="google-signin">
+        <label>Email <input id="email" type="email" /></label>
+        <label>Password <input id="password" type="password" /></label>
+        <img src="/static/supa-mapus/assets/google-logo.svg"> Sign in
+      </div> -->
+  <!--   <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-database.js"></script> -->
+  <!-- 首先引入supabase客户端，这里采用cdn引入 -->
+  <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- <script src="supabase2.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  // Your web app's Firebase configuration
+  // var firebaseConfig = {
+  //   apiKey: "YOUR_API_KEY",
+  //   authDomain: "DOMAIN.firebaseapp.com",
+  //   projectId: "PROJECT_ID",
+  //   databaseURL: "DB_URL.firebaseio.com",
+  //   storageBucket: "DOMAIN.appspot.com",
+  //   messagingSenderId: "ID",
+  //   appId: "APP_ID"
+  // };
+  // Initialize Firebase
+  // firebase.initializeApp(firebaseConfig);
+  // firebase.analytics();
+
+  // 然后把url和秘钥复制进去可以进行数据库链接
+  const { createClient } = supabase
+  // const _supabase = createClient('url', 'anon_key')
+  // const _supabase = createClient('https://ccuon0a5g6h3ij26oli0.baseapi.memfiredb.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImV4cCI6MzIwMjg5Nzg1MiwiaWF0IjoxNjY0OTc3ODUyLCJpc3MiOiJzdXBhYmFzZSJ9.AeqPG73OPjekOxpCak8XBBAqP-wSk57XVQAmuUYq3C4')
+  const _supabase = createClient('https://gsglmaiuplauvkfjalkg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZ2xtYWl1cGxhdXZrZmphbGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjUwOTgxMjQsImV4cCI6MTk4MDY3NDEyNH0.wDlCSjtYZkGj9AhCSyIIfUbzYzOAF9_4hKKeEIi9PyE')
+  // 就可以进行数据库api操作了
+  window.onload = async function() {
+    // 查询
+    // const { data, error } = await _supabase
+    // .from('userdemo')
+    // .select(`
+    //   id,
+    //   name
+    // `)
+    // console.log('data', data)
+
+    // realtime
+    // _supabase
+    // .channel('*')
+    // .on('postgres_changes', { event: '*', schema: '*' }, payload => {
+    //   console.log('Change received!', payload)
+    // })
+    // .subscribe()
+  }
+  </script>
+  <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+  <!-- <script src="leaflet.min.js"></script> -->
+  <!-- <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script> -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.13.1/dist/leaflet-geoman.min.js"></script>
+  <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
+  <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
+  <script src="https://unpkg.com/gcoord@0.3.2/dist/gcoord.js"></script>
+  <script src="/static/supa-mapus/tileLayer.baidu.js"></script>
+  <script src="/static/supa-mapus/main.min.js"></script>
+  <!-- <script src="/static/supa-mapus/main.js"></script> -->
+  <!-- <script type="text/javascript" src="tutorial.js"></script> -->
+  <!-- <script src="coordtransform.js"></script> -->
+  <script>
+  //国测局坐标(火星坐标,比如高德地图在用),百度坐标,wgs84坐标(谷歌国外以及绝大部分国外在线地图使用的坐标)
+  //百度经纬度坐标转国测局坐标
+  // var bd09togcj02 = coordtransform.bd09togcj02(116.404, 39.915);
+  // //国测局坐标转百度经纬度坐标
+  // var gcj02tobd09 = coordtransform.gcj02tobd09(116.404, 39.915);
+  // //wgs84转国测局坐标
+  // var wgs84togcj02 = coordtransform.wgs84togcj02(116.404, 39.915);
+  // //国测局坐标转wgs84坐标
+  // var gcj02towgs84 = coordtransform.gcj02towgs84(116.404, 39.915);
+  // console.log(bd09togcj02);
+  // console.log(gcj02tobd09);
+  // console.log(wgs84togcj02);
+  // console.log(gcj02towgs84);
+  //result
+  //bd09togcj02:   [ 116.39762729119315, 39.90865673957631 ]
+  //gcj02tobd09:   [ 116.41036949371029, 39.92133699351021 ]
+  //wgs84togcj02:  [ 116.41024449916938, 39.91640428150164 ]
+  //gcj02towgs84:  [ 116.39775550083061, 39.91359571849836 ]
+  // 隐藏侧栏
+  function init() {
+    if (window.navigator.userAgent.match(/mobile/i)) {
+      document.getElementById('icon-close').classList.add('icon-mobile')
+    }
+    document.getElementById('icon-close').addEventListener('click', (e) => {
+      if (window.getComputedStyle(document.getElementById('mapDiv')).left === '0px') {
+        document.getElementById('icon-close').classList.remove('trans')
+        document.getElementById('icon-close').classList.add('trans-revert')
+        document.getElementById('mapDiv').style.left = '338px'
+        document.getElementById('mapDiv').style.wisdth = 'calc(100% - 338px);'
+      } else {
+        document.getElementById('icon-close').classList.add('trans')
+        document.getElementById('icon-close').classList.remove('trans-revert')
+        document.getElementById('mapDiv').style.left = 0
+        document.getElementById('mapDiv').style.width = '100%'
+      }
+    })
+    setTimeout(() => {
+      document.getElementById('icon-close').click()
+    }, 200);
+  }
+  init()
+  </script>
+</body>
+
+</html>

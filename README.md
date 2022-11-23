@@ -22,6 +22,7 @@
 # 初始化mod：
 # go mod init
 
+# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，再执行bee run -gendoc=true -downdoc=true
 # 将新增的依赖包自动写入当前项目的 vendor 目录：
 # go mod vendor
 # 如果 go.mod 发生变化，应当重新执行 go mod vendor！
@@ -38,7 +39,11 @@
 # go build -ldflags "-w"
 # 数据库初始化(此步骤执行之前，需配置`conf/app.conf`)
 # ./engineercms install
-# linux上执行
+
+# linux上执行，先杀死进程，再拷贝新的执行文件和路由文件
+# killall engineercms
+# 拷贝engineercms和swagger里的swagger.yml和swagger.json到对应文件夹里
+# $ chmod 
 # $ nohup ./engineercms &
 ```
 
@@ -109,6 +114,7 @@
 12. 整合了[mindoc](https://github.com/lifei6671/mindoc)，实现了在线创作、查阅、分享、导入、导出电子书籍。
 13. 文件分享提取码。
 14. 全文检索：上传office文档、pdf等，调用tika解析后存入elasticsearch（中文分词ik），实现全文检索。
+15. 新增supa-mapus地图协作，部分代替91地图功能，方便工程师查看现场定位建筑物
 
 一 特性：
 
@@ -188,6 +194,12 @@
 
 √全文检索，快速定位文档；
 
+√工程图片服务；
+
+√工程视频服务；
+
+√mapus地图协作，现场定位工程建筑物；
+
 
 二 todo:
 
@@ -202,7 +214,6 @@
 × 项目合并和拆分：将2个项目目录合并起来，其中一个项目合并到另一个项目的子目录中，手动合并文件夹，自动修改数据库；
 
 × 流媒体服务；
-× 图片服务；
 
 ## 下载和安装
 
@@ -297,6 +308,7 @@ git submodule update --init
 22. [axios](https://github.com/axios/axios)
 23. [element组件](https://github.com/ElemeFE/element)
 24. [vxe-table表格在线编辑](https://github.com/xuliangzhan/vxe-table)
+25. [mapus地图协作](https://github.com/alyssaxuu/mapus)
 
 ## LICENSE
 
@@ -339,3 +351,7 @@ IPAD移动端效果
 froala富文本编辑器支持word图片自动上传，视频和附件
 ![snap13](https://user-images.githubusercontent.com/10678867/42722537-3c71c216-8780-11e8-8065-f1538bbcad18.png)
 ![snap6](https://user-images.githubusercontent.com/10678867/42722539-40376bc6-8780-11e8-8173-1f6e9e60ef14.png)
+
+![mapus地图协作](https://pass.itdos.net/mapus?file=1)，部分替代91地图
+[mapus document](https://zsj.itdos.net/docs/supa-mapus)
+![Snap24](https://user-images.githubusercontent.com/10678867/203514151-36be4944-e336-4f0d-bc16-786b88e35311.jpg)
