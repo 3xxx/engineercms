@@ -165,3 +165,12 @@
 
 	4.安装ik分词器
 
+*************minio分布式存储设置************************
+	1. 下载编译好的minio.exe文件的压缩包，见官网https://min.io/download#/windows或我的网盘https://pan.baidu.com/s/1f4zuhoymaHMN_QAEgZLwOg?pwd=upvm 。解压后进入minio.exe所在文件夹，执行以下命令
+	2. minio.exe server e:\  ，留意提示里的ip和端口，用API的IP和端口9000即可，不要用第一个IP，每次都会变化。
+	3. 浏览器进入minio管理截面，新建bucket，设置新建的bucket的密钥，设置bucket的访问策略，例如设置为public
+	4. 设置engineercms的app.conf里minio有关参数：IP和端口，密钥，SSL之类
+	5. 运行engineercms，上传文件
+  详细操作文档见https://zsj.itdos.net/docs/engineercms_008
+
+

@@ -206,6 +206,148 @@ func (c *VideoController) Video() {
 	}
 }
 
+// @Title upload videodata
+// @Description upload video
+// @Success 200 {object} models.uploadvideo
+// @Failure 400 Invalid page supplied
+// @Failure 404 video not found
+// @router /uploadvideo [get]
+func (c *VideoController) UploadVideo() {
+	// beego.Info(c.Ctx.Input.UserAgent())
+	u := c.Ctx.Input.UserAgent()
+	// re := regexp.MustCompile("Trident")
+	// loc := re.FindStringIndex(u)
+	// loc[0] > 1
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		logs.Error(err)
+	}
+	if matched == true {
+		// beego.Info("移动端~")
+		c.TplName = "photo/upload_video.tpl"
+	} else {
+		// beego.Info("电脑端！")
+		c.TplName = "photo/upload_video.tpl"
+	}
+}
+
+// @Title post wx video
+// @Description post video
+// @Success 200 {object} SUCCESS
+// @Failure 400 Invalid page supplied
+// @Failure 404 video not found
+// @router /uploadvideodata [post]
+//
+// func (c *VideoController) UploadVideoData() {
+// 	photopath, err := web.AppConfig.String("photopath")
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	cwd, _ := os.Getwd()
+// 	replacephotopath := strings.Replace(cwd, "\\", "/", -1)
+
+// 	DiskDirectory := replacephotopath + photopath
+// 	logs.Info(DiskDirectory)
+// 	//获取上传的文件
+// 	_, h, err := c.GetFile("input-ke-2[]")
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	fileSuffix := path.Ext(h.Filename)
+// 	// random_name
+// 	nanoname := strconv.FormatInt(time.Now().UnixNano(), 10)
+// 	newname := nanoname + fileSuffix // + "_" + filename
+// 	small_newname := nanoname + "_small" + fileSuffix
+// 	year, month, _ := time.Now().Date()
+// 	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	var imagepath, new_imagepath, Url string
+// 	var filesize int64
+// 	if h != nil {
+// 		//保存附件
+// 		imagepath = DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + newname
+// 		logs.Info(imagepath)
+// 		new_imagepath = DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + small_newname
+// 		Url = photopath + strconv.Itoa(year) + month.String() + "/"
+// 		logs.Info(Url)
+// 		err = c.SaveToFile("input-ke-2[]", imagepath) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+// 		if err != nil {
+// 			logs.Error(err)
+// 			c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": "", "data": "文件保存错误！"}
+// 			c.ServeJSON()
+// 			return
+// 		}
+// 		filesize, _ = FileSize(imagepath)
+// 		filesize = filesize / 1000.0
+
+// 		//*****压缩图片***
+// 		file, err := os.Open(imagepath)
+// 		if err != nil {
+// 			// log.Fatal(err)
+// 			logs.Error(err)
+// 		}
+// 		defer file.Close()
+// 		var img image.Image
+// 		var typeImage int
+// 		// ext := filepath.Ext(imagepath)
+// 		if strings.EqualFold(fileSuffix, ".jpg") || strings.EqualFold(fileSuffix, ".jpeg") {
+// 			img, err = jpeg.Decode(file)
+// 			if err != nil {
+// 				// log.Fatal(err)
+// 				logs.Error(err)
+// 			}
+// 			typeImage = 0
+// 		} else if strings.EqualFold(fileSuffix, ".png") {
+// 			// decode png into image.Image
+// 			img, err = png.Decode(file)
+// 			if err != nil {
+// 				// log.Fatal(err)
+// 				logs.Error(err)
+// 			}
+// 			typeImage = 1
+// 		} else if strings.EqualFold(fileSuffix, ".gif") {
+// 			img, err = gif.Decode(file)
+// 			if err != nil {
+// 				// log.Fatal(err)
+// 				logs.Error(err)
+// 			}
+// 			typeImage = 2
+// 		}
+
+// 		// file.Close()
+
+// 		// resize to width 1000 using Lanczos resampling
+// 		// and preserve aspect ratio
+// 		m := resize.Resize(1000, 0, img, resize.Lanczos3)
+// 		// m := resize.Thumbnail(1000, 0, img, resize.Lanczos3)
+
+// 		out, err := os.Create(new_imagepath)
+// 		defer out.Close()
+// 		if err != nil {
+// 			logs.Error(err)
+// 		}
+// 		if typeImage == 0 {
+// 			err = jpeg.Encode(out, m, &jpeg.Options{Quality: 80})
+// 			if err != nil {
+// 				logs.Error(err)
+// 			}
+// 		} else {
+// 			err = png.Encode(out, m)
+// 			if err != nil {
+// 				logs.Error(err)
+// 			}
+// 		}
+
+// 		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + small_newname, "title": "111", "original": "demo.jpg"}
+// 		c.ServeJSON()
+// 	} else {
+// 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": ""}
+// 		c.ServeJSON()
+// 	}
+// }
+
 // @Title get video
 // @Description get video
 // @Param page query string true "The page for video list"

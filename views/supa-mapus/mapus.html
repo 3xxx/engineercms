@@ -91,12 +91,13 @@
     </div>
     <label class="cursor-label">Email
       <!-- <input id="email" type="email" placeholder="输入email"> -->
-      <input id="email" type="email" list="emaillist" placeholder="输入email">
+      <input id="email" type="email" list="emaillist" placeholder="输入email：123@qq.com">
       <datalist id="emaillist">
         <option>123@qq.com</option>
         <option>223@qq.com</option>
         <option>323@qq.com</option>
         <option>423@qq.com</option>
+        <option>523@qq.com</option>
       </datalist>
     </label>
     <label class="cursor-label">Password <input value="123456" id="password" type="password">
@@ -183,10 +184,10 @@
       <path d="M0 1024 0 910.222222 1137.777778 910.222222 1137.777778 1024 0 1024ZM0 455.111111 1137.777778 455.111111 1137.777778 568.888889 0 568.888889 0 455.111111ZM0 0 1137.777778 0 1137.777778 113.777778 0 113.777778 0 0Z" p-id="4616"></path>
     </svg>
   </span>
-  <div id="search-box">
+  <!-- <div id="search-box">
     <input id="search-input" placeholder="Search for a place" />
     <img src="/static/supa-mapus/assets/search-icon.svg">
-  </div>
+  </div> -->
   <div id="right-nav">
     <div id="share-button">Share</div>
   </div>
@@ -303,39 +304,22 @@
     // .subscribe()
   }
   </script>
-  <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script> -->
   <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
   <!-- <script src="leaflet.min.js"></script> -->
-  <!-- <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script> -->
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+  <!-- <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script> -->
   <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.13.1/dist/leaflet-geoman.min.js"></script>
   <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
   <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
   <script src="https://unpkg.com/gcoord@0.3.2/dist/gcoord.js"></script>
-  <script src="/static/supa-mapus/tileLayer.baidu.js"></script>
-  <script src="/static/supa-mapus/main.min.js"></script>
-  <!-- <script src="/static/supa-mapus/main.js"></script> -->
+  <!-- <script src="/static/supa-mapus/tileLayer.baidu.js"></script> -->
+  <!-- <script src="/static/supa-mapus/main.min.js"></script> -->
+  <script src="/static/supa-mapus/main.js"></script>
   <!-- <script type="text/javascript" src="tutorial.js"></script> -->
   <!-- <script src="coordtransform.js"></script> -->
   <script>
-  //国测局坐标(火星坐标,比如高德地图在用),百度坐标,wgs84坐标(谷歌国外以及绝大部分国外在线地图使用的坐标)
-  //百度经纬度坐标转国测局坐标
-  // var bd09togcj02 = coordtransform.bd09togcj02(116.404, 39.915);
-  // //国测局坐标转百度经纬度坐标
-  // var gcj02tobd09 = coordtransform.gcj02tobd09(116.404, 39.915);
-  // //wgs84转国测局坐标
-  // var wgs84togcj02 = coordtransform.wgs84togcj02(116.404, 39.915);
-  // //国测局坐标转wgs84坐标
-  // var gcj02towgs84 = coordtransform.gcj02towgs84(116.404, 39.915);
-  // console.log(bd09togcj02);
-  // console.log(gcj02tobd09);
-  // console.log(wgs84togcj02);
-  // console.log(gcj02towgs84);
-  //result
-  //bd09togcj02:   [ 116.39762729119315, 39.90865673957631 ]
-  //gcj02tobd09:   [ 116.41036949371029, 39.92133699351021 ]
-  //wgs84togcj02:  [ 116.41024449916938, 39.91640428150164 ]
-  //gcj02towgs84:  [ 116.39775550083061, 39.91359571849836 ]
+
   // 隐藏侧栏
   function init() {
     if (window.navigator.userAgent.match(/mobile/i)) {

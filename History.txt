@@ -1,4 +1,10 @@
                        EngineerCMS revision history
+
+26,engineercms 2.0.1 (Jun 9,2023)
+	+) supabase+mapus
+	+) minio
+	+) photo
+	+) video
 		       
 25,engineercms 2.0 (Jun 1,2022)
 	+) update beego_v2.0		       

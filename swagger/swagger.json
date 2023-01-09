@@ -10419,7 +10419,7 @@
                     "wx"
                 ],
                 "description": "get photo",
-                "operationId": "MainController.get photo",
+                "operationId": "PhotoController.get photo",
                 "responses": {
                     "200": {
                         "description": "",
@@ -11069,7 +11069,7 @@
                     "wx"
                 ],
                 "description": "get photo",
-                "operationId": "MainController.get photo",
+                "operationId": "PhotoController.get photo",
                 "parameters": [
                     {
                         "in": "query",
@@ -12462,7 +12462,7 @@
                     "wx"
                 ],
                 "description": "get photo",
-                "operationId": "MainController.get photo",
+                "operationId": "PhotoController.get photo",
                 "parameters": [
                     {
                         "in": "query",
@@ -12501,7 +12501,7 @@
                     "wx"
                 ],
                 "description": "get photo",
-                "operationId": "MainController.get photo",
+                "operationId": "PhotoController.get photo",
                 "responses": {
                     "200": {
                         "description": "",
@@ -12524,7 +12524,7 @@
                     "wx"
                 ],
                 "description": "get photodetail",
-                "operationId": "MainController.get photodetail",
+                "operationId": "PhotoController.get photodetail",
                 "responses": {
                     "200": {
                         "description": "",
@@ -12547,30 +12547,7 @@
                     "wx"
                 ],
                 "description": "get photodetail",
-                "operationId": "MainController.get photodetail",
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetAttachbyId"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "pdf not found"
-                    }
-                }
-            }
-        },
-        "/wx/photoswipe": {
-            "get": {
-                "tags": [
-                    "wx"
-                ],
-                "description": "get photoswipe",
-                "operationId": "MainController.get photoswipe",
+                "operationId": "PhotoController.get photodetail",
                 "responses": {
                     "200": {
                         "description": "",
@@ -13572,6 +13549,52 @@
                 }
             }
         },
+        "/wx/uploadphoto": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "upload photo page",
+                "operationId": "PhotoController.upload photo page",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.UploadPhoto"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "photo not found"
+                    }
+                }
+            }
+        },
+        "/wx/uploadphotodata": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post photo",
+                "operationId": "PhotoController.post wx photo img",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "photo not found"
+                    }
+                }
+            }
+        },
         "/wx/uploadstandard": {
             "get": {
                 "tags": [
@@ -13591,6 +13614,29 @@
                     },
                     "404": {
                         "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/wx/uploadvideo": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "upload video",
+                "operationId": "VideoController.upload videodata",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.uploadvideo"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "video not found"
                     }
                 }
             }
@@ -15073,6 +15119,10 @@
             "title": "UpdateBusiness",
             "type": "object"
         },
+        "models.UploadPhoto": {
+            "title": "UploadPhoto",
+            "type": "object"
+        },
         "models.User": {
             "title": "User",
             "type": "object",
@@ -15217,6 +15267,10 @@
         },
         "models.pass_project": {
             "title": "pass_project",
+            "type": "object"
+        },
+        "models.uploadvideo": {
+            "title": "uploadvideo",
             "type": "object"
         },
         "success": {

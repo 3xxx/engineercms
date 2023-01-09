@@ -204,6 +204,7 @@ func init() {
 					&controllers.DiaryController{},
 					&controllers.PayController{},
 					&controllers.FinanceController{},
+					&controllers.PhotoController{},
 					&controllers.VideoController{},
 					&controllers.BusinessController{},
 					&controllers.LocationController{},
