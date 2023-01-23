@@ -1,7 +1,8 @@
 swagger: "2.0"
 info:
   title: EngineerCMS API
-  description: ECMS has every tool to get any job done, so codename for the new ECMS APIs.
+  description: |
+    ECMS has every tool to get any job done, so codename for the new ECMS APIs.
   version: 1.0.0
   contact:
     email: 504284@qq.com
@@ -11,7 +12,9 @@ paths:
     get:
       tags:
       - admin
-      description: get admin page
+      description: |-
+        get admin page
+        <br>
       operationId: AdminController.getAdminBlock
       responses:
         "200":
@@ -26,7 +29,9 @@ paths:
     get:
       tags:
       - admin
-      description: Get Category list by some info
+      description: |-
+        Get Category list by some info
+        <br>
       operationId: AdminController.Get Category list
       parameters:
       - in: path
@@ -42,7 +47,9 @@ paths:
     post:
       tags:
       - admin
-      description: Get Category list by title info
+      description: |-
+        Get Category list by title info
+        <br>
       operationId: AdminController.Post Category by pid title code grade
       parameters:
       - in: query
@@ -70,7 +77,9 @@ paths:
     get:
       tags:
       - admin
-      description: Get Category list by title info
+      description: |-
+        Get Category list by title info
+        <br>
       operationId: AdminController.Get Category by title
       parameters:
       - in: query
@@ -86,7 +95,9 @@ paths:
     post:
       tags:
       - admin
-      description: post AccessContext..
+      description: |-
+        post AccessContext..
+        <br>
       operationId: FlowController.post wf AccessContext...
       parameters:
       - in: query
@@ -107,7 +118,9 @@ paths:
     get:
       tags:
       - admin
-      description: post AccessContext..
+      description: |-
+        post AccessContext..
+        <br>
       operationId: FlowController.get wf AccessContext...
       parameters:
       - in: query
@@ -128,7 +141,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocaccesscontext..
+      description: |-
+        post workflowdocaccesscontext..
+        <br>
       operationId: FlowController.post wf docaccesscontext...
       parameters:
       - in: query
@@ -148,7 +163,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocaction..
+      description: |-
+        post workflowdocaction..
+        <br>
       operationId: FlowController.post wf docaction...
       parameters:
       - in: query
@@ -169,7 +186,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocaction..
+      description: |-
+        post workflowdocaction..
+        <br>
       operationId: FlowController.post wf docaction...
       parameters:
       - in: query
@@ -190,7 +209,9 @@ paths:
     get:
       tags:
       - admin
-      description: get workflowdocaction..
+      description: |-
+        get workflowdocaction..
+        <br>
       operationId: FlowController.get wf docaction...
       parameters:
       - in: query
@@ -211,7 +232,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocaction..
+      description: |-
+        post workflowdocaction..
+        <br>
       operationId: FlowController.post wf docaction...
       parameters:
       - in: query
@@ -231,7 +254,9 @@ paths:
     post:
       tags:
       - admin
-      description: post document
+      description: |-
+        post document
+        <br>
       operationId: FlowController.post wf document
       parameters:
       - in: query
@@ -271,7 +296,9 @@ paths:
     post:
       tags:
       - admin
-      description: get docevent
+      description: |-
+        get docevent
+        <br>
       operationId: FlowController.post wf event
       parameters:
       - in: query
@@ -292,7 +319,9 @@ paths:
     get:
       tags:
       - admin
-      description: get doceventlist
+      description: |-
+        get doceventlist
+        <br>
       operationId: FlowController.get wf eventlist
       parameters:
       - in: query
@@ -313,7 +342,9 @@ paths:
     get:
       tags:
       - admin
-      description: get workflow doclist
+      description: |-
+        get workflow doclist
+        <br>
       operationId: FlowController.get wf doclist
       parameters:
       - in: query
@@ -339,7 +370,9 @@ paths:
     get:
       tags:
       - admin
-      description: get documentdetail
+      description: |-
+        get documentdetail
+        <br>
       operationId: FlowController.get wf document details
       parameters:
       - in: query
@@ -365,7 +398,9 @@ paths:
     get:
       tags:
       - admin
-      description: get document
+      description: |-
+        get document
+        <br>
       operationId: FlowController.get wf document
       parameters:
       - in: query
@@ -408,7 +443,9 @@ paths:
     get:
       tags:
       - admin
-      description: get document
+      description: |-
+        get document
+        <br>
       operationId: FlowController.get wf document
       parameters:
       - in: query
@@ -451,7 +488,9 @@ paths:
     post:
       tags:
       - admin
-      description: post Group..
+      description: |-
+        post Group..
+        <br>
       operationId: FlowController.post wf Group...
       parameters:
       - in: query
@@ -477,7 +516,9 @@ paths:
     get:
       tags:
       - admin
-      description: post Group..
+      description: |-
+        post Group..
+        <br>
       operationId: FlowController.get wf Group...
       parameters:
       - in: query
@@ -498,7 +539,9 @@ paths:
     get:
       tags:
       - admin
-      description: get groupmailbox
+      description: |-
+        get groupmailbox
+        <br>
       operationId: FlowController.get group mailbox
       parameters:
       - in: query
@@ -532,7 +575,9 @@ paths:
     post:
       tags:
       - admin
-      description: post GroupRole..
+      description: |-
+        post GroupRole..
+        <br>
       operationId: FlowController.post wf GroupRole...
       parameters:
       - in: query
@@ -553,7 +598,9 @@ paths:
     get:
       tags:
       - admin
-      description: get GroupRole..
+      description: |-
+        get GroupRole..
+        <br>
       operationId: FlowController.get wf GroupRole...
       parameters:
       - in: query
@@ -574,7 +621,9 @@ paths:
     get:
       tags:
       - admin
-      description: post Group..
+      description: |-
+        post Group..
+        <br>
       operationId: FlowController.get wf GroupUsers...
       parameters:
       - in: query
@@ -595,7 +644,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflow next
+      description: |-
+        post workflow next
+        <br>
       operationId: FlowController.post wf next
       parameters:
       - in: query
@@ -635,7 +686,9 @@ paths:
     post:
       tags:
       - admin
-      description: post Node..
+      description: |-
+        post Node..
+        <br>
       operationId: FlowController.post wf Node...
       parameters:
       - in: query
@@ -676,7 +729,9 @@ paths:
     get:
       tags:
       - admin
-      description: post Node..
+      description: |-
+        post Node..
+        <br>
       operationId: FlowController.get wf Node...
       parameters:
       - in: query
@@ -697,7 +752,9 @@ paths:
     post:
       tags:
       - admin
-      description: post Permission..
+      description: |-
+        post Permission..
+        <br>
       operationId: FlowController.post wf Permission...
       parameters:
       - in: query
@@ -718,7 +775,9 @@ paths:
     post:
       tags:
       - admin
-      description: post Role..
+      description: |-
+        post Role..
+        <br>
       operationId: FlowController.post wf Role...
       parameters:
       - in: query
@@ -739,7 +798,9 @@ paths:
     get:
       tags:
       - admin
-      description: post Role..
+      description: |-
+        post Role..
+        <br>
       operationId: FlowController.get wf Role...
       parameters:
       - in: query
@@ -760,7 +821,9 @@ paths:
     get:
       tags:
       - admin
-      description: post Permission..
+      description: |-
+        post Permission..
+        <br>
       operationId: FlowController.get wf Permission...
       parameters:
       - in: query
@@ -781,7 +844,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocstate..
+      description: |-
+        post workflowdocstate..
+        <br>
       operationId: FlowController.post wf docstate...
       parameters:
       - in: query
@@ -802,7 +867,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocstate..
+      description: |-
+        post workflowdocstate..
+        <br>
       operationId: FlowController.post wf docstate...
       parameters:
       - in: query
@@ -823,7 +890,9 @@ paths:
     get:
       tags:
       - admin
-      description: post workflowdocstate..
+      description: |-
+        post workflowdocstate..
+        <br>
       operationId: FlowController.post wf docstate...
       parameters:
       - in: query
@@ -847,7 +916,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdocstate..
+      description: |-
+        post workflowdocstate..
+        <br>
       operationId: FlowController.post wf docstate...
       parameters:
       - in: query
@@ -867,7 +938,9 @@ paths:
     post:
       tags:
       - admin
-      description: post transition..
+      description: |-
+        post transition..
+        <br>
       operationId: FlowController.post wf transition...
       parameters:
       - in: query
@@ -888,7 +961,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdoctransition..
+      description: |-
+        post workflowdoctransition..
+        <br>
       operationId: FlowController.post wf doctransition...
       parameters:
       - in: query
@@ -909,7 +984,9 @@ paths:
     get:
       tags:
       - admin
-      description: post transition..
+      description: |-
+        post transition..
+        <br>
       operationId: FlowController.get wf transition...
       parameters:
       - in: query
@@ -930,7 +1007,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdoctransition..
+      description: |-
+        post workflowdoctransition..
+        <br>
       operationId: FlowController.post wf doctransition...
       parameters:
       - in: query
@@ -950,7 +1029,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdoctype..
+      description: |-
+        post workflowdoctype..
+        <br>
       operationId: FlowController.post wf doctype...
       parameters:
       - in: query
@@ -971,7 +1052,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdoctype..
+      description: |-
+        post workflowdoctype..
+        <br>
       operationId: FlowController.post wf doctype...
       parameters:
       - in: query
@@ -992,7 +1075,9 @@ paths:
     get:
       tags:
       - admin
-      description: get workflowdoctype..
+      description: |-
+        get workflowdoctype..
+        <br>
       operationId: FlowController.get wf doctypelist...
       parameters:
       - in: query
@@ -1016,7 +1101,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflowdoctype..
+      description: |-
+        post workflowdoctype..
+        <br>
       operationId: FlowController.post wf doctype...
       parameters:
       - in: query
@@ -1036,7 +1123,9 @@ paths:
     post:
       tags:
       - admin
-      description: post user..
+      description: |-
+        post user..
+        <br>
       operationId: FlowController.post wf user...
       parameters:
       - in: query
@@ -1072,7 +1161,9 @@ paths:
     post:
       tags:
       - admin
-      description: post Group..
+      description: |-
+        post Group..
+        <br>
       operationId: FlowController.post wf GroupUser...
       parameters:
       - in: query
@@ -1093,7 +1184,9 @@ paths:
     get:
       tags:
       - admin
-      description: post user..
+      description: |-
+        post user..
+        <br>
       operationId: FlowController.get wf user...
       parameters:
       - in: query
@@ -1114,7 +1207,9 @@ paths:
     get:
       tags:
       - admin
-      description: get usermailbox
+      description: |-
+        get usermailbox
+        <br>
       operationId: FlowController.get user mailbox
       parameters:
       - in: query
@@ -1148,7 +1243,9 @@ paths:
     get:
       tags:
       - admin
-      description: get usermailbox
+      description: |-
+        get usermailbox
+        <br>
       operationId: FlowController.get user mailbox
       parameters:
       - in: query
@@ -1182,7 +1279,9 @@ paths:
     post:
       tags:
       - admin
-      description: post Workflow..
+      description: |-
+        post Workflow..
+        <br>
       operationId: FlowController.post wf Workflow...
       parameters:
       - in: query
@@ -1213,7 +1312,9 @@ paths:
     get:
       tags:
       - admin
-      description: post Workflow..
+      description: |-
+        post Workflow..
+        <br>
       operationId: FlowController.post wf Workflow...
       parameters:
       - in: query
@@ -1234,7 +1335,9 @@ paths:
     get:
       tags:
       - admin
-      description: get wx projectconfig by projectid
+      description: |-
+        get wx projectconfig by projectid
+        <br>
       operationId: AdminController.get wx projectconfig by projectid
       parameters:
       - in: query
@@ -1255,7 +1358,9 @@ paths:
     get:
       tags:
       - admin
-      description: get wx projectconfig by projectid
+      description: |-
+        get wx projectconfig by projectid
+        <br>
       operationId: AdminController.get wx projectconfig by projectid
       parameters:
       - in: query
@@ -1276,7 +1381,9 @@ paths:
     get:
       tags:
       - admin
-      description: get flowchart text
+      description: |-
+        get flowchart text
+        <br>
       operationId: FlowController.get flowchart text
       parameters:
       - in: query
@@ -1297,7 +1404,9 @@ paths:
     post:
       tags:
       - admin
-      description: put wx projectconfig by projectid
+      description: |-
+        put wx projectconfig by projectid
+        <br>
       operationId: AdminController.update wx projectconfig by projectid
       parameters:
       - in: query
@@ -1323,7 +1432,9 @@ paths:
     get:
       tags:
       - admin
-      description: show workflow page
+      description: |-
+        show workflow page
+        <br>
       operationId: FlowController.show wf page
       responses:
         "200":
@@ -1338,7 +1449,9 @@ paths:
     post:
       tags:
       - admin
-      description: post document
+      description: |-
+        post document
+        <br>
       operationId: FlowController.post wf document
       parameters:
       - in: query
@@ -1379,7 +1492,9 @@ paths:
     post:
       tags:
       - admin
-      description: post workflow next
+      description: |-
+        post workflow next
+        <br>
       operationId: FlowController.post wf next
       parameters:
       - in: query
@@ -1424,7 +1539,9 @@ paths:
     get:
       tags:
       - admin
-      description: get usermailbox
+      description: |-
+        get usermailbox
+        <br>
       operationId: FlowController.get user mailbox
       parameters:
       - in: query
@@ -1453,7 +1570,9 @@ paths:
     get:
       tags:
       - adminlog
-      description: get log list
+      description: |-
+        get log list
+        <br>
       operationId: AdminLogController.getAdminBlock
       responses:
         "200":
@@ -1468,7 +1587,9 @@ paths:
     get:
       tags:
       - adminlog
-      description: get log list
+      description: |-
+        get log list
+        <br>
       operationId: AdminLogController.getAdminBlock
       responses:
         "200":
@@ -1483,7 +1604,9 @@ paths:
     post:
       tags:
       - ansys
-      description: post article by ansysID
+      description: |-
+        post article by ansysID
+        <br>
       operationId: AnsysController.post ansys artile by ansysID
       parameters:
       - in: query
@@ -1514,7 +1637,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get article by ansysarticleID
+      description: |-
+        get article by ansysarticleID
+        <br>
       operationId: AnsysController.get ansys artile by ansysarticleID
       parameters:
       - in: query
@@ -1535,7 +1660,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1556,7 +1683,9 @@ paths:
     post:
       tags:
       - ansys
-      description: delete ansys by id
+      description: |-
+        delete ansys by id
+        <br>
       operationId: AnsysController.delete ansys
       parameters:
       - in: path
@@ -1577,7 +1706,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get editorarticle by ansysarticleID
+      description: |-
+        get editorarticle by ansysarticleID
+        <br>
       operationId: AnsysController.get editoransys article by ansysarticleID
       parameters:
       - in: path
@@ -1598,7 +1729,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansyswxhistory..
+      description: |-
+        get ansyswxhistory..
+        <br>
       operationId: AnsysController.get ansyswxhistory...
       parameters:
       - in: path
@@ -1631,7 +1764,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1652,7 +1787,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1673,7 +1810,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get projproducts..
+      description: |-
+        get projproducts..
+        <br>
       operationId: AnsysController.get projproducts...
       parameters:
       - in: path
@@ -1706,7 +1845,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansyss..
+      description: |-
+        get ansyss..
+        <br>
       operationId: AnsysController.get ansyss...
       parameters:
       - in: path
@@ -1739,7 +1880,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1760,7 +1903,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1781,7 +1926,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get history..
+      description: |-
+        get history..
+        <br>
       operationId: AnsysController.get history...
       parameters:
       - in: path
@@ -1814,7 +1961,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansyscal history
+      description: |-
+        get ansyscal history
+        <br>
       operationId: AnsysController.get ansyscal history
       parameters:
       - in: path
@@ -1840,7 +1989,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1866,7 +2017,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1892,7 +2045,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansyspdf by ansysapdlID
+      description: |-
+        get ansyspdf by ansysapdlID
+        <br>
       operationId: AnsysController.get ansyspdf by ansysapdlID
       parameters:
       - in: query
@@ -1913,7 +2068,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys history
+      description: |-
+        get ansys history
+        <br>
       operationId: AnsysController.get ansys history
       parameters:
       - in: path
@@ -1934,7 +2091,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1955,7 +2114,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1976,7 +2137,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.get ansys
       parameters:
       - in: path
@@ -1997,7 +2160,9 @@ paths:
     post:
       tags:
       - ansys
-      description: post ansys
+      description: |-
+        post ansys
+        <br>
       operationId: AnsysController.post ansys
       parameters:
       - in: query
@@ -2021,7 +2186,9 @@ paths:
     post:
       tags:
       - ansys
-      description: post ansys
+      description: |-
+        post ansys
+        <br>
       operationId: AnsysController.post ansys
       parameters:
       - in: query
@@ -2045,7 +2212,9 @@ paths:
     post:
       tags:
       - ansys
-      description: put ansysapdl
+      description: |-
+        put ansysapdl
+        <br>
       operationId: AnsysController.put ansysapdl
       parameters:
       - in: path
@@ -2076,7 +2245,9 @@ paths:
     post:
       tags:
       - ansys
-      description: put ansysinput
+      description: |-
+        put ansysinput
+        <br>
       operationId: AnsysController.put ansysinput
       parameters:
       - in: path
@@ -2107,7 +2278,9 @@ paths:
     post:
       tags:
       - ansys
-      description: put ansys output comment
+      description: |-
+        put ansys output comment
+        <br>
       operationId: AnsysController.put ansys outputcomment
       parameters:
       - in: path
@@ -2138,7 +2311,9 @@ paths:
     post:
       tags:
       - ansys
-      description: post editorarticle
+      description: |-
+        post editorarticle
+        <br>
       operationId: AnsysController.post editoransys article
       parameters:
       - in: query
@@ -2169,7 +2344,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get ansys
+      description: |-
+        get ansys
+        <br>
       operationId: AnsysController.upload ansysansys
       parameters:
       - in: path
@@ -2190,7 +2367,9 @@ paths:
     post:
       tags:
       - ansys
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: AnsysController.post bootstrapfileinput
       parameters:
       - in: path
@@ -2211,7 +2390,9 @@ paths:
     get:
       tags:
       - ansys
-      description: get wxarticle by ansysarticleID
+      description: |-
+        get wxarticle by ansysarticleID
+        <br>
       operationId: AnsysController.get wxansys artile by ansysarticleID
       parameters:
       - in: path
@@ -2232,7 +2413,9 @@ paths:
     post:
       tags:
       - bbs
-      description: post bbs
+      description: |-
+        post bbs
+        <br>
       operationId: BbsController.post bbs
       parameters:
       - in: query
@@ -2273,7 +2456,9 @@ paths:
     get:
       tags:
       - bbs
-      description: get bbs
+      description: |-
+        get bbs
+        <br>
       operationId: BbsController.get checkin bbs
       parameters:
       - in: query
@@ -2299,7 +2484,9 @@ paths:
     get:
       tags:
       - bbs
-      description: get bbs
+      description: |-
+        get bbs
+        <br>
       operationId: BbsController.get bbs
       parameters:
       - in: query
@@ -2330,7 +2517,9 @@ paths:
     post:
       tags:
       - cart
-      description: post create a new cart
+      description: |-
+        post create a new cart
+        <br>
       operationId: CartController.post create a new cart
       parameters:
       - in: query
@@ -2351,7 +2540,9 @@ paths:
     post:
       tags:
       - cart
-      description: post delete a usercart
+      description: |-
+        post delete a usercart
+        <br>
       operationId: CartController.post delete usercart
       parameters:
       - in: query
@@ -2372,7 +2563,9 @@ paths:
     get:
       tags:
       - cart
-      description: get usercartlist
+      description: |-
+        get usercartlist
+        <br>
       operationId: CartController.get usercartlist
       parameters:
       - in: query
@@ -2407,7 +2600,9 @@ paths:
     get:
       tags:
       - cart
-      description: get usercartlist
+      description: |-
+        get usercartlist
+        <br>
       operationId: CartController.get usercartlist
       parameters:
       - in: query
@@ -2442,7 +2637,9 @@ paths:
     get:
       tags:
       - cart
-      description: get usercarttpl
+      description: |-
+        get usercarttpl
+        <br>
       operationId: CartController.get usercarttpl
       responses:
         "200":
@@ -2457,7 +2654,9 @@ paths:
     post:
       tags:
       - cart
-      description: post update carts
+      description: |-
+        post update carts
+        <br>
       operationId: CartController.post update carts
       parameters:
       - in: query
@@ -2478,7 +2677,9 @@ paths:
     get:
       tags:
       - chat
-      description: get avatar
+      description: |-
+        get avatar
+        <br>
       operationId: ChatController.get avatar
       parameters:
       - in: path
@@ -2499,7 +2700,9 @@ paths:
     get:
       tags:
       - chat
-      description: get chat
+      description: |-
+        get chat
+        <br>
       operationId: ChatController.get chat
       responses:
         "200":
@@ -2514,7 +2717,9 @@ paths:
     get:
       tags:
       - chat
-      description: get wschat
+      description: |-
+        get wschat
+        <br>
       operationId: ChatController.get wschat
       responses:
         "200":
@@ -2529,7 +2734,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2550,7 +2757,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2571,7 +2780,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin activity
       parameters:
       - in: query
@@ -2647,7 +2858,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2668,7 +2881,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2689,7 +2904,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2710,7 +2927,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2736,7 +2955,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2757,7 +2978,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2778,7 +3001,9 @@ paths:
     get:
       tags:
       - checkin
-      description: get check
+      description: |-
+        get check
+        <br>
       operationId: CheckController.get checkin check
       parameters:
       - in: query
@@ -2814,7 +3039,9 @@ paths:
     get:
       tags:
       - checkin
-      description: get Signature
+      description: |-
+        get Signature
+        <br>
       operationId: CheckController.get Signature
       parameters:
       - in: query
@@ -2850,7 +3077,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2871,7 +3100,9 @@ paths:
     get:
       tags:
       - checkin
-      description: get monthcheck
+      description: |-
+        get monthcheck
+        <br>
       operationId: CheckController.get mothcheckin
       parameters:
       - in: query
@@ -2910,7 +3141,9 @@ paths:
     get:
       tags:
       - checkin
-      description: get monthcheck
+      description: |-
+        get monthcheck
+        <br>
       operationId: CheckController.get mothcheckin
       parameters:
       - in: query
@@ -2931,7 +3164,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: CheckController.post checkin person
       parameters:
       - in: query
@@ -2952,7 +3187,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post Message
+      description: |-
+        post Message
+        <br>
       operationId: CheckController.post Message
       parameters:
       - in: query
@@ -2978,7 +3215,9 @@ paths:
     post:
       tags:
       - checkin
-      description: post subscribemessage
+      description: |-
+        post subscribemessage
+        <br>
       operationId: CheckController.post subscribemessage
       parameters:
       - in: query
@@ -2999,7 +3238,9 @@ paths:
     get:
       tags:
       - elastic
-      description: get elasticsearch web
+      description: |-
+        get elasticsearch web
+        <br>
       operationId: ElasticController.get elasticsearch web
       responses:
         "200":
@@ -3014,7 +3255,9 @@ paths:
     get:
       tags:
       - elastic
-      description: get earch
+      description: |-
+        get earch
+        <br>
       operationId: ElasticController.get search
       parameters:
       - in: query
@@ -3038,7 +3281,9 @@ paths:
     post:
       tags:
       - elastic
-      description: post tika
+      description: |-
+        post tika
+        <br>
       operationId: ElasticController.post tika
       responses:
         "200":
@@ -3053,7 +3298,9 @@ paths:
     post:
       tags:
       - elastic
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: ElasticController.post bootstrapfileinput
       parameters:
       - in: path
@@ -3082,7 +3329,9 @@ paths:
     get:
       tags:
       - elastic
-      description: get upload file to tika&elastic html
+      description: |-
+        get upload file to tika&elastic html
+        <br>
       operationId: ElasticController.upload file to tika&elastic html
       parameters:
       - in: path
@@ -3103,7 +3352,9 @@ paths:
     post:
       tags:
       - excel
-      description: post article by excelID
+      description: |-
+        post article by excelID
+        <br>
       operationId: ExcelController.post excel artile by excelID
       parameters:
       - in: query
@@ -3134,7 +3385,9 @@ paths:
     post:
       tags:
       - excel
-      description: delete excel by id
+      description: |-
+        delete excel by id
+        <br>
       operationId: ExcelController.delete excel
       parameters:
       - in: path
@@ -3155,7 +3408,9 @@ paths:
     get:
       tags:
       - excel
-      description: get editorarticle by excelarticleID
+      description: |-
+        get editorarticle by excelarticleID
+        <br>
       operationId: ExcelController.get editorexcel article by excelarticleID
       parameters:
       - in: path
@@ -3176,7 +3431,9 @@ paths:
     get:
       tags:
       - excel
-      description: get article by excelarticleID
+      description: |-
+        get article by excelarticleID
+        <br>
       operationId: ExcelController.get excel artile by excelarticleID
       parameters:
       - in: query
@@ -3197,7 +3454,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3218,7 +3477,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3239,7 +3500,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3260,7 +3523,9 @@ paths:
     get:
       tags:
       - excel
-      description: get projproducts..
+      description: |-
+        get projproducts..
+        <br>
       operationId: ExcelController.get projproducts...
       parameters:
       - in: path
@@ -3293,7 +3558,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excels..
+      description: |-
+        get excels..
+        <br>
       operationId: ExcelController.get excels...
       parameters:
       - in: path
@@ -3326,7 +3593,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3347,7 +3616,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3368,7 +3639,9 @@ paths:
     get:
       tags:
       - excel
-      description: get history..
+      description: |-
+        get history..
+        <br>
       operationId: ExcelController.get history...
       parameters:
       - in: path
@@ -3401,7 +3674,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excelcal history
+      description: |-
+        get excelcal history
+        <br>
       operationId: ExcelController.get excelcal history
       parameters:
       - in: path
@@ -3427,7 +3702,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3453,7 +3730,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3479,7 +3758,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excelpdf by exceltempleID
+      description: |-
+        get excelpdf by exceltempleID
+        <br>
       operationId: ExcelController.get excelpdf by exceltempleID
       parameters:
       - in: query
@@ -3500,7 +3781,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel history
+      description: |-
+        get excel history
+        <br>
       operationId: ExcelController.get excel history
       parameters:
       - in: path
@@ -3521,7 +3804,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3542,7 +3827,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3563,7 +3850,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3584,7 +3873,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excelwxhistory..
+      description: |-
+        get excelwxhistory..
+        <br>
       operationId: ExcelController.get excelwxhistory...
       parameters:
       - in: path
@@ -3617,7 +3908,9 @@ paths:
     get:
       tags:
       - excel
-      description: get wxexcelhistoryinput
+      description: |-
+        get wxexcelhistoryinput
+        <br>
       operationId: ExcelController.get wxexcelhistoryinput
       parameters:
       - in: path
@@ -3643,7 +3936,9 @@ paths:
     get:
       tags:
       - excel
-      description: get wxexcelhistoryoutput
+      description: |-
+        get wxexcelhistoryoutput
+        <br>
       operationId: ExcelController.get wxexcelhistoryoutput
       parameters:
       - in: path
@@ -3669,7 +3964,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.get excel
       parameters:
       - in: path
@@ -3698,7 +3995,9 @@ paths:
     post:
       tags:
       - excel
-      description: post excel
+      description: |-
+        post excel
+        <br>
       operationId: ExcelController.post excel
       parameters:
       - in: query
@@ -3726,7 +4025,9 @@ paths:
     get:
       tags:
       - excel
-      description: post excelcal
+      description: |-
+        post excelcal
+        <br>
       operationId: ExcelController.post excelcal
       parameters:
       - in: path
@@ -3755,7 +4056,9 @@ paths:
     post:
       tags:
       - excel
-      description: post excel
+      description: |-
+        post excel
+        <br>
       operationId: ExcelController.post excel
       parameters:
       - in: query
@@ -3783,7 +4086,9 @@ paths:
     post:
       tags:
       - excel
-      description: put excelinput
+      description: |-
+        put excelinput
+        <br>
       operationId: ExcelController.put excelinput
       parameters:
       - in: path
@@ -3814,7 +4119,9 @@ paths:
     post:
       tags:
       - excel
-      description: put excel output comment
+      description: |-
+        put excel output comment
+        <br>
       operationId: ExcelController.put excel outputcomment
       parameters:
       - in: path
@@ -3845,7 +4152,9 @@ paths:
     post:
       tags:
       - excel
-      description: put exceltemple
+      description: |-
+        put exceltemple
+        <br>
       operationId: ExcelController.put exceltemple
       parameters:
       - in: path
@@ -3876,7 +4185,9 @@ paths:
     post:
       tags:
       - excel
-      description: post editorarticle
+      description: |-
+        post editorarticle
+        <br>
       operationId: ExcelController.post editorexcel article
       parameters:
       - in: query
@@ -3907,7 +4218,9 @@ paths:
     get:
       tags:
       - excel
-      description: get excel
+      description: |-
+        get excel
+        <br>
       operationId: ExcelController.upload excelexcel
       parameters:
       - in: path
@@ -3928,7 +4241,9 @@ paths:
     post:
       tags:
       - excel
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: ExcelController.post bootstrapfileinput
       parameters:
       - in: path
@@ -3949,7 +4264,9 @@ paths:
     post:
       tags:
       - excel
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: ExcelController.post bootstrapfileinput
       parameters:
       - in: path
@@ -3966,53 +4283,13 @@ paths:
           description: Invalid page supplied
         "404":
           description: page not found
-  /excel/wsexcelcal/{id}:
-    get:
-      tags:
-      - excel
-      description: get excelwscal
-      operationId: WsExcelcalController.get excelwscal
-      parameters:
-      - in: path
-        name: id
-        description: The id of exceltemple
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetExcel'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
-  /excel/wswxexcelcal/{id}:
-    get:
-      tags:
-      - excel
-      description: get wxexcelcal
-      operationId: WsExcelcalController.get wxexcelcal
-      parameters:
-      - in: path
-        name: id
-        description: The id of exceltemple
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetExcel'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
   /excel/wxexcelarticle/{id}:
     get:
       tags:
       - excel
-      description: get wxarticle by excelarticleID
+      description: |-
+        get wxarticle by excelarticleID
+        <br>
       operationId: ExcelController.get wxexcel artile by excelarticleID
       parameters:
       - in: path
@@ -4033,7 +4310,9 @@ paths:
     post:
       tags:
       - fileinput
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: FileinputController.post bootstrapfileinput
       responses:
         "200":
@@ -4048,7 +4327,9 @@ paths:
     get:
       tags:
       - flv
-      description: get admin page
+      description: |-
+        get admin page
+        <br>
       operationId: FlvController.getFlv
       parameters:
       - in: query
@@ -4069,7 +4350,9 @@ paths:
     get:
       tags:
       - flv
-      description: get admin page
+      description: |-
+        get admin page
+        <br>
       operationId: FlvController.getFlv
       parameters:
       - in: query
@@ -4089,7 +4372,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: post article by templeID
+      description: |-
+        post article by templeID
+        <br>
       operationId: MathcadController.post math artile by templeID
       parameters:
       - in: query
@@ -4120,7 +4405,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: delete temple by id
+      description: |-
+        delete temple by id
+        <br>
       operationId: MathcadController.delete temple
       parameters:
       - in: path
@@ -4141,7 +4428,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get editorarticle by matharticleID
+      description: |-
+        get editorarticle by matharticleID
+        <br>
       operationId: MathcadController.get editormath article by matharticleID
       parameters:
       - in: path
@@ -4162,7 +4451,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4188,7 +4479,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad history
+      description: |-
+        get mathcad history
+        <br>
       operationId: MathcadController.get mathcad history
       parameters:
       - in: path
@@ -4209,7 +4502,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcal history
+      description: |-
+        get mathcal history
+        <br>
       operationId: MathcadController.get mathcal history
       parameters:
       - in: path
@@ -4235,7 +4530,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad history output
+      description: |-
+        get mathcad history output
+        <br>
       operationId: MathcadController.get mathcad history output
       parameters:
       - in: path
@@ -4261,7 +4558,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get history..
+      description: |-
+        get history..
+        <br>
       operationId: MathcadController.get history...
       parameters:
       - in: path
@@ -4294,7 +4593,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcadclass
+      description: |-
+        get mathcadclass
+        <br>
       operationId: MathcadController.get mathcadclass
       parameters:
       - in: path
@@ -4315,7 +4616,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad temples..
+      description: |-
+        get mathcad temples..
+        <br>
       operationId: MathcadController.get mathcad temples by classid...
       parameters:
       - in: path
@@ -4348,7 +4651,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathtemples..
+      description: |-
+        get mathtemples..
+        <br>
       operationId: MathcadController.get mathtemples...
       parameters:
       - in: path
@@ -4381,7 +4686,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad templelist
+      description: |-
+        get mathcad templelist
+        <br>
       operationId: MathcadController.get mathcad templelist
       parameters:
       - in: path
@@ -4402,7 +4709,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4423,7 +4732,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4444,7 +4755,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathpdf by usertempleID
+      description: |-
+        get mathpdf by usertempleID
+        <br>
       operationId: MathcadController.get mathpdf by usertempleID
       parameters:
       - in: query
@@ -4465,7 +4778,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get wxmathcadhistoryinput
+      description: |-
+        get wxmathcadhistoryinput
+        <br>
       operationId: MathcadController.get wxmathcadhistoryinput
       parameters:
       - in: path
@@ -4491,7 +4806,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get wxmathcad history output
+      description: |-
+        get wxmathcad history output
+        <br>
       operationId: MathcadController.get wxmathcad history output
       parameters:
       - in: path
@@ -4517,7 +4834,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathwxhistory..
+      description: |-
+        get mathwxhistory..
+        <br>
       operationId: MathcadController.get mathwxhistory...
       parameters:
       - in: path
@@ -4550,7 +4869,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4571,7 +4892,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4592,7 +4915,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcadclass
       parameters:
       - in: path
@@ -4613,7 +4938,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get article by matharticleID
+      description: |-
+        get article by matharticleID
+        <br>
       operationId: MathcadController.get math artile by matharticleID
       parameters:
       - in: query
@@ -4634,7 +4961,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4655,7 +4984,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: post mathcad
+      description: |-
+        post mathcad
+        <br>
       operationId: MathcadController.post mathcad
       parameters:
       - in: query
@@ -4679,7 +5010,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.get mathcad
       parameters:
       - in: path
@@ -4708,7 +5041,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: post mathcad
+      description: |-
+        post mathcad
+        <br>
       operationId: MathcadController.post mathcad
       parameters:
       - in: query
@@ -4736,7 +5071,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: post mathcad
+      description: |-
+        post mathcad
+        <br>
       operationId: MathcadController.post mathcad
       parameters:
       - in: query
@@ -4760,7 +5097,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: post mathcadcal
+      description: |-
+        post mathcadcal
+        <br>
       operationId: MathcadController.post mathcadcal
       parameters:
       - in: path
@@ -4789,7 +5128,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: put mathinput
+      description: |-
+        put mathinput
+        <br>
       operationId: MathcadController.put mathinput
       parameters:
       - in: path
@@ -4820,7 +5161,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: put mathcad output comment
+      description: |-
+        put mathcad output comment
+        <br>
       operationId: MathcadController.put mathcad outputcomment
       parameters:
       - in: path
@@ -4851,7 +5194,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: put usertemple
+      description: |-
+        put usertemple
+        <br>
       operationId: MathcadController.put usertemple
       parameters:
       - in: path
@@ -4882,7 +5227,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: post editorarticle
+      description: |-
+        post editorarticle
+        <br>
       operationId: MathcadController.post editormath article
       parameters:
       - in: query
@@ -4913,7 +5260,9 @@ paths:
     post:
       tags:
       - mathcad
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: MathcadController.post bootstrapfileinput
       parameters:
       - in: path
@@ -4934,7 +5283,9 @@ paths:
     get:
       tags:
       - mathcad
-      description: get mathcad
+      description: |-
+        get mathcad
+        <br>
       operationId: MathcadController.upload mathcadtemple
       parameters:
       - in: path
@@ -4951,53 +5302,13 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
-  /mathcad/wsmathcal/{id}:
-    get:
-      tags:
-      - mathcad
-      description: get mathcad
-      operationId: WsMathcadController.get mathcad
-      parameters:
-      - in: path
-        name: id
-        description: The id of mathtemple
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetMathcadPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
-  /mathcad/wswxmathcal/{id}:
-    get:
-      tags:
-      - mathcad
-      description: get mathcad
-      operationId: WsMathcadController.get mathcad
-      parameters:
-      - in: path
-        name: id
-        description: The id of mathtemple
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetMathcadPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
   /mathcad/wxmatharticle/{id}:
     get:
       tags:
       - mathcad
-      description: get wxarticle by matharticleID
+      description: |-
+        get wxarticle by matharticleID
+        <br>
       operationId: MathcadController.get wxmath artile by matharticleID
       parameters:
       - in: path
@@ -5018,7 +5329,9 @@ paths:
     get:
       tags:
       - onlyoffice
-      description: get doc to onlyoffice CommandService
+      description: |-
+        get doc to onlyoffice CommandService
+        <br>
       operationId: OnlyController.get CommandService builder doc
       responses:
         "200":
@@ -5033,7 +5346,9 @@ paths:
     get:
       tags:
       - onlyoffice
-      description: get doc to onlyoffice CommandService
+      description: |-
+        get doc to onlyoffice CommandService
+        <br>
       operationId: OnlyController.get CommandService drop doc
       parameters:
       - in: path
@@ -5059,7 +5374,9 @@ paths:
     get:
       tags:
       - onlyoffice
-      description: post doc to onlyoffice CommandService
+      description: |-
+        post doc to onlyoffice CommandService
+        <br>
       operationId: OnlyController.post CommandService info doc
       parameters:
       - in: path
@@ -5080,7 +5397,9 @@ paths:
     post:
       tags:
       - onlyoffice
-      description: post doc to onlyoffice conversion
+      description: |-
+        post doc to onlyoffice conversion
+        <br>
       operationId: OnlyController.post conversion doc
       responses:
         "200":
@@ -5095,7 +5414,9 @@ paths:
     post:
       tags:
       - onlyoffice
-      description: post download onlydoc by id
+      description: |-
+        post download onlydoc by id
+        <br>
       operationId: OnlyController.post download onlydoc
       parameters:
       - in: query
@@ -5117,188 +5438,13 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
-  /passproject/createpassproject:
-    get:
-      tags:
-      - passproject
-      description: create pass_project
-      operationId: PassProjectController.create pass_project
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.pass_project'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
-  /passproject/getpassproject:
-    get:
-      tags:
-      - passproject
-      description: get excel
-      operationId: PassProjectController.get pass_project
-      parameters:
-      - in: path
-        name: id
-        description: The id of pass_project
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.pass_project'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
-  /passproject/getpassprojectcaldoc/{id}:
-    get:
-      tags:
-      - passproject
-      description: get excel
-      operationId: PassProjectController.get pass_project
-      parameters:
-      - in: path
-        name: id
-        description: The id of pass_project
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.pass_project'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
-  /passproject/getpassprojectdetail:
-    get:
-      tags:
-      - passproject
-      description: get excel
-      operationId: PassProjectController.get pass_project
-      parameters:
-      - in: path
-        name: id
-        description: The id of pass_project
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.pass_project'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: Page not found
-  /passproject/mathhistopassproject:
-    post:
-      tags:
-      - passproject
-      description: post historymathcad to pass_project..
-      operationId: PassProjectController.post historymathcad to pass_project ...
-      parameters:
-      - in: query
-        name: ids
-        description: The ids of history
-        required: true
-        type: string
-      - in: query
-        name: treeids
-        description: The treeids of project
-        required: true
-        type: string
-      - in: query
-        name: treenodeids
-        description: The treenodeids of project
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
-  /passproject/quickaddpassproject:
-    post:
-      tags:
-      - passproject
-      description: post quickaddproject..
-      operationId: PassProjectController.post pass quickaddproject...
-      parameters:
-      - in: query
-        name: projectcode
-        description: The projectcode of project
-        required: true
-        type: string
-      - in: query
-        name: projecttitle
-        description: The projecttitle of project
-        required: true
-        type: string
-      - in: query
-        name: projectdescription
-        description: The description of project
-        required: true
-        type: string
-      - in: query
-        name: tempprojid
-        description: The tempprojid of project
-        required: true
-        type: string
-      - in: query
-        name: istemppermission
-        description: The permission of project
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
-  /passsearch/mathtemples:
-    get:
-      tags:
-      - passsearch
-      description: get mathcad temples by keyword...
-      operationId: PassSearchController.get mathcad temples by keyword...
-      parameters:
-      - in: query
-        name: keyword
-        description: The keyword of mathtemples
-        type: string
-      - in: query
-        name: page
-        description: The page of mathtemples
-        type: string
-      - in: query
-        name: limit
-        description: The size of page
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.UserTemple'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
   /pdfcpu/addwatermarks/{id}:
     post:
       tags:
       - pdfcpu
-      description: post signature to pdf
+      description: |-
+        post signature to pdf
+        <br>
       operationId: PdfCpuController.post signature to pdf
       parameters:
       - in: path
@@ -5345,7 +5491,9 @@ paths:
     get:
       tags:
       - pdfcpu
-      description: get only pdf
+      description: |-
+        get only pdf
+        <br>
       operationId: PdfCpuController.get only pdf
       parameters:
       - in: path
@@ -5366,7 +5514,9 @@ paths:
     get:
       tags:
       - pdfcpu
-      description: get test
+      description: |-
+        get test
+        <br>
       operationId: PdfCpuController.get test
       parameters:
       - in: path
@@ -5387,7 +5537,9 @@ paths:
     get:
       tags:
       - project
-      description: get projectlist..
+      description: |-
+        get projectlist..
+        <br>
       operationId: ProjController.get cms projectlist...
       parameters:
       - in: query
@@ -5415,7 +5567,9 @@ paths:
     get:
       tags:
       - project
-      description: get projecttree..
+      description: |-
+        get projecttree..
+        <br>
       operationId: ProjController.get cms projecttree...
       parameters:
       - in: path
@@ -5436,7 +5590,9 @@ paths:
     get:
       tags:
       - project
-      description: get projectlist..
+      description: |-
+        get projectlist..
+        <br>
       operationId: ProjController.get wx projectlist...
       parameters:
       - in: query
@@ -5464,7 +5620,9 @@ paths:
     get:
       tags:
       - project
-      description: get projproducts..
+      description: |-
+        get projproducts..
+        <br>
       operationId: ProdController.get projproducts...
       parameters:
       - in: path
@@ -5497,7 +5655,9 @@ paths:
     get:
       tags:
       - project
-      description: get project user permission
+      description: |-
+        get project user permission
+        <br>
       operationId: ProjController.get project user permission
       parameters:
       - in: query
@@ -5518,7 +5678,9 @@ paths:
     post:
       tags:
       - project
-      description: post quickaddproject..
+      description: |-
+        post quickaddproject..
+        <br>
       operationId: ProjController.post wx quickaddproject...
       parameters:
       - in: query
@@ -5553,7 +5715,9 @@ paths:
     get:
       tags:
       - project
-      description: get user project editor tree
+      description: |-
+        get user project editor tree
+        <br>
       operationId: ProjController.get user project editor tree
       parameters:
       - in: query
@@ -5574,7 +5738,9 @@ paths:
     get:
       tags:
       - project
-      description: get user project editor tree
+      description: |-
+        get user project editor tree
+        <br>
       operationId: ProjController.get user project editor tree
       parameters:
       - in: query
@@ -5595,7 +5761,9 @@ paths:
     get:
       tags:
       - share
-      description: get a share
+      description: |-
+        get a share
+        <br>
       operationId: ShareController.get a share
       parameters:
       - in: query
@@ -5620,7 +5788,9 @@ paths:
     post:
       tags:
       - share
-      description: post create a new share
+      description: |-
+        post create a new share
+        <br>
       operationId: ShareController.post create a new share
       parameters:
       - in: query
@@ -5651,7 +5821,9 @@ paths:
     get:
       tags:
       - share
-      description: get a share
+      description: |-
+        get a share
+        <br>
       operationId: ShareController.get a share
       responses:
         "200":
@@ -5666,7 +5838,9 @@ paths:
     post:
       tags:
       - share
-      description: download a share
+      description: |-
+        download a share
+        <br>
       operationId: ShareController.download a share
       parameters:
       - in: query
@@ -5696,7 +5870,9 @@ paths:
     post:
       tags:
       - share
-      description: download a share
+      description: |-
+        download a share
+        <br>
       operationId: ShareController.download a share
       parameters:
       - in: query
@@ -5721,7 +5897,9 @@ paths:
     get:
       tags:
       - simwe
-      description: getsimansys
+      description: |-
+        getsimansys
+        <br>
       operationId: SimweController.get simansys
       responses:
         "200":
@@ -5736,7 +5914,9 @@ paths:
     get:
       tags:
       - simwe
-      description: getsimwe
+      description: |-
+        getsimwe
+        <br>
       operationId: SimweController.get simwe
       responses:
         "200":
@@ -5751,7 +5931,9 @@ paths:
     get:
       tags:
       - simwe
-      description: getthreejs
+      description: |-
+        getthreejs
+        <br>
       operationId: SimweController.get threejs
       responses:
         "200":
@@ -5766,7 +5948,9 @@ paths:
     post:
       tags:
       - todo
-      description: post todo
+      description: |-
+        post todo
+        <br>
       operationId: TodoController.post todo
       parameters:
       - in: query
@@ -5792,7 +5976,9 @@ paths:
     post:
       tags:
       - todo
-      description: delete tolist
+      description: |-
+        delete tolist
+        <br>
       operationId: TodoController.delete todolist
       parameters:
       - in: query
@@ -5812,7 +5998,9 @@ paths:
     get:
       tags:
       - todo
-      description: get tolist
+      description: |-
+        get tolist
+        <br>
       operationId: TodoController.get todolist
       parameters:
       - in: query
@@ -5841,7 +6029,9 @@ paths:
     post:
       tags:
       - todo
-      description: update tolist
+      description: |-
+        update tolist
+        <br>
       operationId: TodoController.update todolist
       parameters:
       - in: query
@@ -5861,7 +6051,9 @@ paths:
     post:
       tags:
       - wx
-      description: get user recharge
+      description: |-
+        get user recharge
+        <br>
       operationId: PayController.post user recharge
       parameters:
       - in: path
@@ -5887,7 +6079,9 @@ paths:
     post:
       tags:
       - wx
-      description: post business by projectid
+      description: |-
+        post business by projectid
+        <br>
       operationId: BusinessController.post business by projectid
       parameters:
       - in: query
@@ -5970,7 +6164,9 @@ paths:
     post:
       tags:
       - wx
-      description: post locationnavigate by locationid
+      description: |-
+        post locationnavigate by locationid
+        <br>
       operationId: LocationController.post locationnavigate by locationid
       parameters:
       - in: query
@@ -6018,7 +6214,9 @@ paths:
     post:
       tags:
       - wx
-      description: post location by projectid
+      description: |-
+        post location by projectid
+        <br>
       operationId: LocationController.post location by projectid
       parameters:
       - in: query
@@ -6059,7 +6257,9 @@ paths:
     post:
       tags:
       - wx
-      description: add user
+      description: |-
+        add user
+        <br>
       operationId: UserController.add user
       parameters:
       - in: query
@@ -6115,7 +6315,9 @@ paths:
     post:
       tags:
       - wx
-      description: post userpay by mathtempid
+      description: |-
+        post userpay by mathtempid
+        <br>
       operationId: PayController.post userpay by mathtempleid
       parameters:
       - in: query
@@ -6141,7 +6343,9 @@ paths:
     post:
       tags:
       - wx
-      description: get users recharge
+      description: |-
+        get users recharge
+        <br>
       operationId: PayController.post users recharge
       parameters:
       - in: path
@@ -6167,7 +6371,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article by catalogid
+      description: |-
+        post article by catalogid
+        <br>
       operationId: ArticleController.post wx artile by catalogId
       parameters:
       - in: query
@@ -6197,7 +6403,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article by catalogid
+      description: |-
+        post article by catalogid
+        <br>
       operationId: ArticleController.post wx artile by catalogId
       parameters:
       - in: path
@@ -6248,7 +6456,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article by catalogid
+      description: |-
+        post article by catalogid
+        <br>
       operationId: ArticleController.post wx artile by catalogId
       parameters:
       - in: query
@@ -6279,7 +6489,9 @@ paths:
     post:
       tags:
       - wx
-      description: post attachment by projectid
+      description: |-
+        post attachment by projectid
+        <br>
       operationId: AttachController.post wx attachment by projectid
       parameters:
       - in: query
@@ -6300,7 +6512,9 @@ paths:
     post:
       tags:
       - wx
-      description: post diary by projectid
+      description: |-
+        post diary by projectid
+        <br>
       operationId: DiaryController.post wx diary by catalogId
       parameters:
       - in: query
@@ -6351,7 +6565,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article by catalogid
+      description: |-
+        post article by catalogid
+        <br>
       operationId: ArticleController.post wx artile by catalogId
       parameters:
       - in: query
@@ -6381,7 +6597,9 @@ paths:
     post:
       tags:
       - wx
-      description: post finance by projectid
+      description: |-
+        post finance by projectid
+        <br>
       operationId: FinanceController.post wx finance by catalogId
       parameters:
       - in: path
@@ -6436,7 +6654,9 @@ paths:
     post:
       tags:
       - wx
-      description: post like by articleId
+      description: |-
+        post like by articleId
+        <br>
       operationId: ReplyController.post wx like by articleId
       parameters:
       - in: query
@@ -6457,7 +6677,9 @@ paths:
     post:
       tags:
       - wx
-      description: post release by articleId
+      description: |-
+        post release by articleId
+        <br>
       operationId: ReplyController.post wx release by articleId
       parameters:
       - in: query
@@ -6494,7 +6716,9 @@ paths:
     post:
       tags:
       - wx
-      description: post user
+      description: |-
+        post user
+        <br>
       operationId: UserController.post wx user
       parameters:
       - in: query
@@ -6537,7 +6761,9 @@ paths:
     post:
       tags:
       - wx
-      description: post userpay by articleid
+      description: |-
+        post userpay by articleid
+        <br>
       operationId: PayController.post wx userpay by articleid
       parameters:
       - in: query
@@ -6563,7 +6789,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user recharge
+      description: |-
+        get user recharge
+        <br>
       operationId: PayController.get user recharge
       responses:
         "200":
@@ -6578,7 +6806,9 @@ paths:
     post:
       tags:
       - wx
-      description: post person
+      description: |-
+        post person
+        <br>
       operationId: BusinessController.post checkin person
       parameters:
       - in: query
@@ -6639,7 +6869,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       parameters:
       - in: path
@@ -6678,7 +6910,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       parameters:
       - in: path
@@ -6717,7 +6951,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       parameters:
       - in: path
@@ -6756,7 +6992,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       parameters:
       - in: path
@@ -6795,7 +7033,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       parameters:
       - in: path
@@ -6834,7 +7074,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       responses:
         "200":
@@ -6849,7 +7091,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       responses:
         "200":
@@ -6864,7 +7108,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       responses:
         "200":
@@ -6879,7 +7125,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       responses:
         "200":
@@ -6894,7 +7142,9 @@ paths:
     get:
       tags:
       - wx
-      description: get businessmonthcheck
+      description: |-
+        get businessmonthcheck
+        <br>
       operationId: BusinessController.get businessmothcheckin
       responses:
         "200":
@@ -6909,8 +7159,10 @@ paths:
     get:
       tags:
       - wx
-      description: get photo
-      operationId: MainController.get photo
+      description: |-
+        get photo
+        <br>
+      operationId: PhotoController.get photo
       responses:
         "200":
           description: ""
@@ -6924,7 +7176,9 @@ paths:
     post:
       tags:
       - wx
-      description: delete user
+      description: |-
+        delete user
+        <br>
       operationId: UserController.delete user
       parameters:
       - in: query
@@ -6944,7 +7198,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article by catalogid
+      description: |-
+        post article by catalogid
+        <br>
       operationId: ArticleController.post wx artile by articleId
       parameters:
       - in: query
@@ -6965,7 +7221,9 @@ paths:
     post:
       tags:
       - wx
-      description: post diary by catalogid
+      description: |-
+        post diary by catalogid
+        <br>
       operationId: DiaryController.post wx diary by diaryId
       parameters:
       - in: query
@@ -6986,7 +7244,9 @@ paths:
     post:
       tags:
       - wx
-      description: post finance by catalogid
+      description: |-
+        post finance by catalogid
+        <br>
       operationId: FinanceController.post wx finance by financeId
       parameters:
       - in: query
@@ -7007,7 +7267,9 @@ paths:
     post:
       tags:
       - wx
-      description: delete release by releaseid
+      description: |-
+        delete release by releaseid
+        <br>
       operationId: ReplyController.delete wx release by releaseid
       parameters:
       - in: query
@@ -7028,7 +7290,9 @@ paths:
     get:
       tags:
       - wx
-      description: get standardpdf by id
+      description: |-
+        get standardpdf by id
+        <br>
       operationId: StandardController.dowload standardpdf
       parameters:
       - in: path
@@ -7049,7 +7313,9 @@ paths:
     get:
       tags:
       - wx
-      description: get earch
+      description: |-
+        get earch
+        <br>
       operationId: StandardController.get search
       parameters:
       - in: query
@@ -7073,7 +7339,9 @@ paths:
     get:
       tags:
       - wx
-      description: get ansys data by link
+      description: |-
+        get ansys data by link
+        <br>
       operationId: AttachController.dowload ansys data
       parameters:
       - in: path
@@ -7094,7 +7362,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user recharge
+      description: |-
+        get user recharge
+        <br>
       operationId: PayController.get user recharge
       responses:
         "200":
@@ -7109,7 +7379,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user rechargedata
+      description: |-
+        get user rechargedata
+        <br>
       operationId: PayController.get user rechargedata
       parameters:
       - in: query
@@ -7133,7 +7405,9 @@ paths:
     get:
       tags:
       - wx
-      description: get business by userid
+      description: |-
+        get business by userid
+        <br>
       operationId: BusinessController.get business by userid
       parameters:
       - in: path
@@ -7154,7 +7428,9 @@ paths:
     get:
       tags:
       - wx
-      description: get business by businessid
+      description: |-
+        get business by businessid
+        <br>
       operationId: BusinessController.get business by businessid
       parameters:
       - in: path
@@ -7175,7 +7451,9 @@ paths:
     get:
       tags:
       - wx
-      description: get check
+      description: |-
+        get check
+        <br>
       operationId: BusinessController.get checkin check
       parameters:
       - in: query
@@ -7211,7 +7489,9 @@ paths:
     get:
       tags:
       - wx
-      description: get standard elasticsearch web
+      description: |-
+        get standard elasticsearch web
+        <br>
       operationId: StandardController.get standard elasticsearch web
       responses:
         "200":
@@ -7226,7 +7506,9 @@ paths:
     get:
       tags:
       - wx
-      description: get math pdf by link
+      description: |-
+        get math pdf by link
+        <br>
       operationId: AttachController.dowload math pdf
       parameters:
       - in: path
@@ -7247,7 +7529,9 @@ paths:
     get:
       tags:
       - wx
-      description: get articles by page
+      description: |-
+        get articles by page
+        <br>
       operationId: ArticleController.get wx artiles list
       parameters:
       - in: query
@@ -7273,7 +7557,9 @@ paths:
     get:
       tags:
       - wx
-      description: get location by userid
+      description: |-
+        get location by userid
+        <br>
       operationId: LocationController.get location by userid
       parameters:
       - in: path
@@ -7294,7 +7580,9 @@ paths:
     get:
       tags:
       - wx
-      description: get location by locationid
+      description: |-
+        get location by locationid
+        <br>
       operationId: LocationController.get location by locationid
       parameters:
       - in: path
@@ -7315,7 +7603,9 @@ paths:
     get:
       tags:
       - wx
-      description: get math pdf by link
+      description: |-
+        get math pdf by link
+        <br>
       operationId: AttachController.dowload math pdf
       parameters:
       - in: path
@@ -7336,8 +7626,10 @@ paths:
     get:
       tags:
       - wx
-      description: get photo
-      operationId: MainController.get photo
+      description: |-
+        get photo
+        <br>
+      operationId: PhotoController.get photo
       parameters:
       - in: query
         name: page
@@ -7362,7 +7654,9 @@ paths:
     get:
       tags:
       - wx
-      description: get video
+      description: |-
+        get video
+        <br>
       operationId: VideoController.get video
       parameters:
       - in: query
@@ -7388,7 +7682,9 @@ paths:
     get:
       tags:
       - wx
-      description: get pay by page
+      description: |-
+        get pay by page
+        <br>
       operationId: PayController.get pay list
       responses:
         "200":
@@ -7403,7 +7699,9 @@ paths:
     post:
       tags:
       - wx
-      description: get Data(file)
+      description: |-
+        get Data(file)
+        <br>
       operationId: MainController.get Data(file)
       responses:
         "200":
@@ -7418,7 +7716,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userarticles by projid
+      description: |-
+        get userarticles by projid
+        <br>
       operationId: ArticleController.get wx userarticles count
       responses:
         "200":
@@ -7433,7 +7733,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user
+      description: |-
+        get user
+        <br>
       operationId: UserController.get user
       responses:
         "200":
@@ -7448,7 +7750,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userappreciation by page
+      description: |-
+        get userappreciation by page
+        <br>
       operationId: PayController.get userappreciations list
       parameters:
       - in: query
@@ -7469,7 +7773,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user money
+      description: |-
+        get user money
+        <br>
       operationId: PayController.get user money
       responses:
         "200":
@@ -7484,7 +7790,9 @@ paths:
     get:
       tags:
       - wx
-      description: get pay by page
+      description: |-
+        get pay by page
+        <br>
       operationId: PayController.get pay list
       responses:
         "200":
@@ -7499,7 +7807,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userappreciation by page
+      description: |-
+        get userappreciation by page
+        <br>
       operationId: PayController.get userappreciations list
       parameters:
       - in: query
@@ -7520,7 +7830,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userpay by page
+      description: |-
+        get userpay by page
+        <br>
       operationId: PayController.get userpays list
       parameters:
       - in: query
@@ -7549,7 +7861,9 @@ paths:
     get:
       tags:
       - wx
-      description: get uservideolist
+      description: |-
+        get uservideolist
+        <br>
       operationId: VideoController.get uservideolist
       parameters:
       - in: path
@@ -7584,7 +7898,9 @@ paths:
     get:
       tags:
       - wx
-      description: get article by articleid
+      description: |-
+        get article by articleid
+        <br>
       operationId: ArticleController.get wx artile by articleId
       parameters:
       - in: path
@@ -7610,7 +7926,9 @@ paths:
     get:
       tags:
       - wx
-      description: get article by articleid
+      description: |-
+        get article by articleid
+        <br>
       operationId: ArticleController.get wx artile by articleId
       parameters:
       - in: path
@@ -7651,7 +7969,9 @@ paths:
     get:
       tags:
       - wx
-      description: get articles by page
+      description: |-
+        get articles by page
+        <br>
       operationId: ArticleController.get wx artiles list
       parameters:
       - in: query
@@ -7682,7 +8002,9 @@ paths:
     get:
       tags:
       - wx
-      description: get articles by page
+      description: |-
+        get articles by page
+        <br>
       operationId: ArticleController.get wx artiles list
       parameters:
       - in: path
@@ -7713,7 +8035,9 @@ paths:
     get:
       tags:
       - wx
-      description: get articles by page
+      description: |-
+        get articles by page
+        <br>
       operationId: ArticleController.get wx artiles list
       parameters:
       - in: query
@@ -7754,7 +8078,9 @@ paths:
     get:
       tags:
       - wx
-      description: get diaries to doc
+      description: |-
+        get diaries to doc
+        <br>
       operationId: DiaryController.get wx diaries to doc
       parameters:
       - in: query
@@ -7785,7 +8111,9 @@ paths:
     get:
       tags:
       - wx
-      description: get diaries by page
+      description: |-
+        get diaries by page
+        <br>
       operationId: DiaryController.get wx diaries list
       parameters:
       - in: path
@@ -7820,7 +8148,9 @@ paths:
     get:
       tags:
       - wx
-      description: get diary by diaryid
+      description: |-
+        get diary by diaryid
+        <br>
       operationId: DiaryController.get wx diary by diaryId
       parameters:
       - in: path
@@ -7846,7 +8176,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx pdf by link
+      description: |-
+        get wx pdf by link
+        <br>
       operationId: AttachController.dowload wx pdf
       parameters:
       - in: query
@@ -7867,7 +8199,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx math temp pdf by id
+      description: |-
+        get wx math temp pdf by id
+        <br>
       operationId: AttachController.dowload wx math temp pdf
       parameters:
       - in: path
@@ -7888,7 +8222,9 @@ paths:
     get:
       tags:
       - wx
-      description: get finance by financeid
+      description: |-
+        get finance by financeid
+        <br>
       operationId: FinanceController.get wx finance by financeId
       parameters:
       - in: path
@@ -7914,7 +8250,9 @@ paths:
     get:
       tags:
       - wx
-      description: get finance by page
+      description: |-
+        get finance by page
+        <br>
       operationId: FinanceController.get wx finance list
       parameters:
       - in: path
@@ -7949,7 +8287,9 @@ paths:
     get:
       tags:
       - wx
-      description: get finance by page
+      description: |-
+        get finance by page
+        <br>
       operationId: FinanceController.get wx finance list
       parameters:
       - in: path
@@ -7984,7 +8324,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx pdf by link
+      description: |-
+        get wx pdf by link
+        <br>
       operationId: AttachController.dowload wx pdf
       parameters:
       - in: path
@@ -8005,7 +8347,9 @@ paths:
     get:
       tags:
       - wx
-      description: get pay by page
+      description: |-
+        get pay by page
+        <br>
       operationId: PayController.get wx pay list
       responses:
         "200":
@@ -8020,7 +8364,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx pdf by id
+      description: |-
+        get wx pdf by id
+        <br>
       operationId: AttachController.dowload wx pdf
       parameters:
       - in: path
@@ -8041,7 +8387,9 @@ paths:
     get:
       tags:
       - wx
-      description: get pdf by page
+      description: |-
+        get pdf by page
+        <br>
       operationId: SearchController.get wx pdf list
       parameters:
       - in: query
@@ -8070,7 +8418,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx math temp pdf by id
+      description: |-
+        get wx math temp pdf by id
+        <br>
       operationId: AttachController.dowload wx math temp pdf
       parameters:
       - in: path
@@ -8091,7 +8441,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userarticles by projid
+      description: |-
+        get userarticles by projid
+        <br>
       operationId: ArticleController.get wx userarticles count
       parameters:
       - in: path
@@ -8112,7 +8464,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userappreciation by page
+      description: |-
+        get userappreciation by page
+        <br>
       operationId: PayController.get wx userappreciations list
       parameters:
       - in: query
@@ -8133,7 +8487,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user money
+      description: |-
+        get user money
+        <br>
       operationId: PayController.get wx user money
       responses:
         "200":
@@ -8148,7 +8504,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userappreciation by page
+      description: |-
+        get userappreciation by page
+        <br>
       operationId: PayController.get wx userappreciations list
       parameters:
       - in: query
@@ -8169,7 +8527,9 @@ paths:
     get:
       tags:
       - wx
-      description: get userpay by page
+      description: |-
+        get userpay by page
+        <br>
       operationId: PayController.get wx userpays list
       parameters:
       - in: query
@@ -8190,7 +8550,9 @@ paths:
     post:
       tags:
       - wx
-      description: import users
+      description: |-
+        import users
+        <br>
       operationId: UserController.import users
       responses:
         "200":
@@ -8205,7 +8567,9 @@ paths:
     get:
       tags:
       - wx
-      description: get login..
+      description: |-
+        get login..
+        <br>
       operationId: LoginController.get user login...
       responses:
         "200":
@@ -8220,7 +8584,9 @@ paths:
     post:
       tags:
       - wx
-      description: post login..
+      description: |-
+        post login..
+        <br>
       operationId: LoginController.post user login...
       parameters:
       - in: query
@@ -8246,7 +8612,9 @@ paths:
     get:
       tags:
       - wx
-      description: post wx login
+      description: |-
+        post wx login
+        <br>
       operationId: LoginController.post wx login
       responses:
         "200":
@@ -8261,8 +8629,10 @@ paths:
     get:
       tags:
       - wx
-      description: get photo
-      operationId: MainController.get photo
+      description: |-
+        get photo
+        <br>
+      operationId: PhotoController.get photo
       parameters:
       - in: query
         name: page
@@ -8287,8 +8657,10 @@ paths:
     get:
       tags:
       - wx
-      description: get photo
-      operationId: MainController.get photo
+      description: |-
+        get photo
+        <br>
+      operationId: PhotoController.get photo
       responses:
         "200":
           description: ""
@@ -8302,8 +8674,10 @@ paths:
     get:
       tags:
       - wx
-      description: get photodetail
-      operationId: MainController.get photodetail
+      description: |-
+        get photodetail
+        <br>
+      operationId: PhotoController.get photodetail
       responses:
         "200":
           description: ""
@@ -8317,23 +8691,10 @@ paths:
     get:
       tags:
       - wx
-      description: get photodetail
-      operationId: MainController.get photodetail
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.GetAttachbyId'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: pdf not found
-  /wx/photoswipe:
-    get:
-      tags:
-      - wx
-      description: get photoswipe
-      operationId: MainController.get photoswipe
+      description: |-
+        get photodetail
+        <br>
+      operationId: PhotoController.get photodetail
       responses:
         "200":
           description: ""
@@ -8347,7 +8708,9 @@ paths:
     post:
       tags:
       - wx
-      description: post Data(file)
+      description: |-
+        post Data(file)
+        <br>
       operationId: MainController.post Data(file)
       responses:
         "200":
@@ -8362,7 +8725,9 @@ paths:
     get:
       tags:
       - wx
-      description: get documentdetail
+      description: |-
+        get documentdetail
+        <br>
       operationId: AttachController.get wf document details
       parameters:
       - in: query
@@ -8388,7 +8753,9 @@ paths:
     get:
       tags:
       - wx
-      description: get standardlist
+      description: |-
+        get standardlist
+        <br>
       operationId: StandardController.get standardlist
       parameters:
       - in: query
@@ -8418,7 +8785,9 @@ paths:
     get:
       tags:
       - wx
-      description: get allprojects' products search by page
+      description: |-
+        get allprojects' products search by page
+        <br>
       operationId: SearchController.get allprojects' products search list
       parameters:
       - in: query
@@ -8442,7 +8811,9 @@ paths:
     get:
       tags:
       - wx
-      description: get all projects' products search by page
+      description: |-
+        get all projects' products search by page
+        <br>
       operationId: SearchController.get all projects' products search list
       parameters:
       - in: query
@@ -8470,7 +8841,9 @@ paths:
     get:
       tags:
       - wx
-      description: get a project's products search by page
+      description: |-
+        get a project's products search by page
+        <br>
       operationId: SearchController.get a project's products search list
       parameters:
       - in: query
@@ -8494,7 +8867,9 @@ paths:
     get:
       tags:
       - wx
-      description: get a project's products search by page
+      description: |-
+        get a project's products search by page
+        <br>
       operationId: SearchController.get a project's products search list
       parameters:
       - in: query
@@ -8528,7 +8903,9 @@ paths:
     get:
       tags:
       - wx
-      description: get articles by page
+      description: |-
+        get articles by page
+        <br>
       operationId: ArticleController.get wx articles list
       parameters:
       - in: path
@@ -8564,7 +8941,9 @@ paths:
     get:
       tags:
       - wx
-      description: get drawings by page
+      description: |-
+        get drawings by page
+        <br>
       operationId: SearchController.get wx drawings list
       parameters:
       - in: query
@@ -8593,7 +8972,9 @@ paths:
     get:
       tags:
       - wx
-      description: get drawings by page
+      description: |-
+        get drawings by page
+        <br>
       operationId: SearchController.get wx drawings list
       parameters:
       - in: query
@@ -8622,7 +9003,9 @@ paths:
     get:
       tags:
       - wx
-      description: get standards by page
+      description: |-
+        get standards by page
+        <br>
       operationId: StandardController.get wx standards list
       parameters:
       - in: query
@@ -8648,7 +9031,9 @@ paths:
     get:
       tags:
       - wx
-      description: get sso logintpl
+      description: |-
+        get sso logintpl
+        <br>
       operationId: LoginController.get sso login
       parameters:
       - in: query
@@ -8668,7 +9053,9 @@ paths:
     post:
       tags:
       - wx
-      description: post sso login data
+      description: |-
+        post sso login data
+        <br>
       operationId: LoginController.post sso login
       parameters:
       - in: query
@@ -8698,7 +9085,9 @@ paths:
     post:
       tags:
       - wx
-      description: post file by BootstrapFileInput
+      description: |-
+        post file by BootstrapFileInput
+        <br>
       operationId: StandardController.post bootstrapfileinput
       responses:
         "200":
@@ -8713,7 +9102,9 @@ paths:
     get:
       tags:
       - wx
-      description: get standardpdf
+      description: |-
+        get standardpdf
+        <br>
       operationId: StandardController.get standardpdf
       responses:
         "200":
@@ -8724,11 +9115,36 @@ paths:
           description: Invalid page supplied
         "404":
           description: cart not found
+  /wx/tianditusearch:
+    get:
+      tags:
+      - wx
+      description: |-
+        get tianditu location
+        <br>
+      operationId: SupaMapusController.get tianditu location
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of location
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: location not found
   /wx/updatebusiness/{id}:
     post:
       tags:
       - wx
-      description: post update business by businessid
+      description: |-
+        post update business by businessid
+        <br>
       operationId: BusinessController.post update business by businessid
       parameters:
       - in: query
@@ -8811,7 +9227,9 @@ paths:
     post:
       tags:
       - wx
-      description: add user
+      description: |-
+        add user
+        <br>
       operationId: UserController.update user
       parameters:
       - in: query
@@ -8839,7 +9257,9 @@ paths:
     post:
       tags:
       - wx
-      description: post diary by diaryid
+      description: |-
+        post diary by diaryid
+        <br>
       operationId: DiaryController.post wx diary by diaryid
       parameters:
       - in: query
@@ -8870,7 +9290,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article by articleid
+      description: |-
+        post article by articleid
+        <br>
       operationId: ArticleController.post wx artile by articleid
       parameters:
       - in: query
@@ -8905,7 +9327,9 @@ paths:
     post:
       tags:
       - wx
-      description: post finance by financeid
+      description: |-
+        post finance by financeid
+        <br>
       operationId: FinanceController.post wx finance by financeid
       parameters:
       - in: query
@@ -8951,7 +9375,9 @@ paths:
     post:
       tags:
       - wx
-      description: post user password by uid
+      description: |-
+        post user password by uid
+        <br>
       operationId: UserController.post wx userpassword by uid
       parameters:
       - in: query
@@ -8987,7 +9413,9 @@ paths:
     post:
       tags:
       - wx
-      description: post user avatar
+      description: |-
+        post user avatar
+        <br>
       operationId: FroalaController.post wx user avatar
       responses:
         "200":
@@ -8998,11 +9426,47 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /wx/uploadphoto:
+    get:
+      tags:
+      - wx
+      description: |-
+        upload photo page
+        <br>
+      operationId: PhotoController.upload photo page
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UploadPhoto'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: photo not found
+  /wx/uploadphotodata:
+    post:
+      tags:
+      - wx
+      description: |-
+        post photo
+        <br>
+      operationId: PhotoController.post wx photo img
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: photo not found
   /wx/uploadstandard:
     get:
       tags:
       - wx
-      description: get upload file to standard html
+      description: |-
+        get upload file to standard html
+        <br>
       operationId: StandardController.upload file to standard html
       responses:
         "200":
@@ -9013,11 +9477,30 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
+  /wx/uploadvideo:
+    get:
+      tags:
+      - wx
+      description: |-
+        upload video
+        <br>
+      operationId: VideoController.upload videodata
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.uploadvideo'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: video not found
   /wx/uploadwxavatar:
     post:
       tags:
       - wx
-      description: post user avatar
+      description: |-
+        post user avatar
+        <br>
       operationId: FroalaController.post wx user avatar
       responses:
         "200":
@@ -9032,7 +9515,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article img by catalogid
+      description: |-
+        post article img by catalogid
+        <br>
       operationId: FroalaController.post wx artile img by catalogId
       parameters:
       - in: query
@@ -9053,7 +9538,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article img by catalogid
+      description: |-
+        post article img by catalogid
+        <br>
       operationId: FroalaController.post wx artile img by catalogId
       responses:
         "200":
@@ -9068,7 +9555,9 @@ paths:
     post:
       tags:
       - wx
-      description: post article img by catalogid
+      description: |-
+        post article img by catalogid
+        <br>
       operationId: FroalaController.post wx artile img by catalogId
       parameters:
       - in: path
@@ -9089,7 +9578,9 @@ paths:
     post:
       tags:
       - wx
-      description: post video by catalogid
+      description: |-
+        post video by catalogid
+        <br>
       operationId: FroalaController.post wx video by catalogId
       parameters:
       - in: path
@@ -9115,7 +9606,9 @@ paths:
     post:
       tags:
       - wx
-      description: post videoCover by videoid
+      description: |-
+        post videoCover by videoid
+        <br>
       operationId: FroalaController.post wx videoCover by videoid
       parameters:
       - in: query
@@ -9136,7 +9629,9 @@ paths:
     get:
       tags:
       - wx
-      description: get user by userid
+      description: |-
+        get user by userid
+        <br>
       operationId: UserController.get user
       parameters:
       - in: path
@@ -9160,7 +9655,9 @@ paths:
     get:
       tags:
       - wx
-      description: get usermanage
+      description: |-
+        get usermanage
+        <br>
       operationId: MainController.get usermanage
       responses:
         "200":
@@ -9175,7 +9672,9 @@ paths:
     get:
       tags:
       - wx
-      description: get usermyself
+      description: |-
+        get usermyself
+        <br>
       operationId: UserController.get usermyself
       responses:
         "200":
@@ -9190,7 +9689,9 @@ paths:
     get:
       tags:
       - wx
-      description: get video
+      description: |-
+        get video
+        <br>
       operationId: VideoController.get video
       parameters:
       - in: query
@@ -9216,7 +9717,9 @@ paths:
     get:
       tags:
       - wx
-      description: get videodetail
+      description: |-
+        get videodetail
+        <br>
       operationId: VideoController.get videodetail
       parameters:
       - in: path
@@ -9237,7 +9740,9 @@ paths:
     get:
       tags:
       - wx
-      description: get earch
+      description: |-
+        get earch
+        <br>
       operationId: StandardController.get search
       parameters:
       - in: query
@@ -9261,7 +9766,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx usersession
+      description: |-
+        get wx usersession
+        <br>
       operationId: LoginController.get wx haslogin
       responses:
         "200":
@@ -9276,7 +9783,9 @@ paths:
     get:
       tags:
       - wx
-      description: post wx login
+      description: |-
+        post wx login
+        <br>
       operationId: LoginController.post wx login
       parameters:
       - in: path
@@ -9302,7 +9811,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx pdf by id
+      description: |-
+        get wx pdf by id
+        <br>
       operationId: AttachController.dowload wx pdf
       parameters:
       - in: path
@@ -9323,7 +9834,9 @@ paths:
     post:
       tags:
       - wx
-      description: post wx region
+      description: |-
+        post wx region
+        <br>
       operationId: RegistController.post wx region
       parameters:
       - in: query
@@ -9359,7 +9872,9 @@ paths:
     post:
       tags:
       - wx
-      description: post wx regist
+      description: |-
+        post wx regist
+        <br>
       operationId: RegistController.post wx regist
       parameters:
       - in: query
@@ -9395,7 +9910,9 @@ paths:
     get:
       tags:
       - wx
-      description: get wx standardpdf by id
+      description: |-
+        get wx standardpdf by id
+        <br>
       operationId: StandardController.dowload wx standardpdf
       parameters:
       - in: path
@@ -9424,9 +9941,24 @@ definitions:
   SUCCESS:
     title: SUCCESS
     type: object
+  gorm.DeletedAt:
+    title: DeletedAt
+    type: object
   gorm.Model:
     title: Model
     type: object
+    properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
   models.AddAdminCategory:
     title: AddAdminCategory
     type: object
@@ -9469,9 +10001,21 @@ definitions:
       ClassID:
         type: integer
         format: int64
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       UserID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
       path:
@@ -9481,6 +10025,7 @@ definitions:
       title:
         type: string
       titleb:
+        description: 简要名称，无日期，无版本号，无扩展名
         type: string
       version:
         type: string
@@ -9491,6 +10036,17 @@ definitions:
       AnsysApdlID:
         type: integer
         format: int32
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       html:
         type: string
       subtext:
@@ -9503,6 +10059,17 @@ definitions:
     properties:
       AnsysApdl:
         $ref: '#/definitions/models.AnsysApdl'
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       ansysapdlid:
@@ -9511,12 +10078,24 @@ definitions:
       pdfurl:
         type: string
       userid:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
   models.AnsysHistoryInputValue:
     title: AnsysHistoryInputValue
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       ansys_history_id:
         type: integer
         format: int32
@@ -9530,8 +10109,20 @@ definitions:
     type: object
     properties:
       AnsysHistoryID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int32
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       ansysoutputsid:
         type: integer
         format: int32
@@ -9550,6 +10141,17 @@ definitions:
       AnsysApdlID:
         type: integer
         format: int32
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       comment:
         type: string
       historyinputvalue:
@@ -9557,6 +10159,7 @@ definitions:
       inputalias:
         type: string
       inputvalue:
+        description: 默认值
         type: string
       realmax:
         type: string
@@ -9579,6 +10182,17 @@ definitions:
       AnsysApdlID:
         type: integer
         format: int32
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       comment:
         type: string
       historyoutputvalue:
@@ -9667,9 +10281,20 @@ definitions:
     title: ExcelArticle
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
       ExcelTempleID:
         type: integer
         format: int32
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       html:
         type: string
       subtext:
@@ -9680,8 +10305,19 @@ definitions:
     title: ExcelHistory
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
       ExcelTemple:
         $ref: '#/definitions/models.ExcelTemple'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       description:
@@ -9694,12 +10330,24 @@ definitions:
       pdfurl:
         type: string
       userid:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
   models.ExcelHistoryInputValue:
     title: ExcelHistoryInputValue
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       excel_history_id:
         type: integer
         format: int32
@@ -9712,9 +10360,21 @@ definitions:
     title: ExcelHistoryOutputValue
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
       ExcelHistoryID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int32
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       exceloutputsid:
         type: integer
         format: int32
@@ -9730,9 +10390,20 @@ definitions:
     title: ExcelInputs
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
       ExcelTempleID:
         type: integer
         format: int32
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       comment:
         type: string
       historyinputvalue:
@@ -9740,6 +10411,7 @@ definitions:
       inputalias:
         type: string
       inputvalue:
+        description: 默认值
         type: string
       realmax:
         type: string
@@ -9759,9 +10431,20 @@ definitions:
     title: ExcelOutputs
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
       ExcelTempleID:
         type: integer
         format: int32
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       comment:
         type: string
       historyoutputvalue:
@@ -9787,9 +10470,21 @@ definitions:
       ClassID:
         type: integer
         format: int64
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       UserID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
       number:
@@ -9801,6 +10496,7 @@ definitions:
       title:
         type: string
       titleb:
+        description: 简要名称，无日期，无版本号，无扩展名
         type: string
       version:
         type: string
@@ -9871,6 +10567,17 @@ definitions:
     title: HistoryInputValue
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       inputvalue:
         type: string
       templeinputsid:
@@ -9883,7 +10590,19 @@ definitions:
     title: HistoryOutputValue
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       UserHistoryID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int32
       outputvalue:
@@ -9895,6 +10614,17 @@ definitions:
     title: MathArticle
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       UserTempleID:
         type: integer
         format: int32
@@ -9930,10 +10660,12 @@ definitions:
         format: datetime
       User:
         $ref: '#/definitions/models.User'
+        description: 这个外键难道不是错的么？应该是UserID?没错，因为column:user_id
       User2ID:
         type: integer
         format: int64
       UserID:
+        description: One-To-One (属于 - 本表的BillingAddressID作外键
         type: integer
         format: int64
       id:
@@ -9949,9 +10681,21 @@ definitions:
       Amount:
         type: integer
         format: int64
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       UserID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
   models.SaveUser:
@@ -9962,6 +10706,7 @@ definitions:
     type: object
     properties:
       id:
+        description: 这个在前端table中显示，必须是string
         type: string
       text:
         type: string
@@ -9971,6 +10716,17 @@ definitions:
     title: TempleInputs
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       UserTempleID:
         type: integer
         format: int32
@@ -9978,9 +10734,11 @@ definitions:
         type: string
       historyinputvalue:
         $ref: '#/definitions/models.HistoryInputValue'
+        description: 带条件的预加载,条件是UserHistoryID
       inputalias:
         type: string
       inputvalue:
+        description: 默认值
         type: string
       realmax:
         type: string
@@ -9989,6 +10747,7 @@ definitions:
       resulttype:
         type: string
       selectvalue:
+        description: hasMany
         type: array
         items:
           $ref: '#/definitions/models.Select2'
@@ -10000,6 +10759,17 @@ definitions:
     title: TempleOutputs
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       UserTempleID:
         type: integer
         format: int32
@@ -10026,6 +10796,9 @@ definitions:
     type: object
   models.UpdateBusiness:
     title: UpdateBusiness
+    type: object
+  models.UploadPhoto:
+    title: UploadPhoto
     type: object
   models.User:
     title: User
@@ -10065,13 +10838,26 @@ definitions:
         type: string
         format: datetime
       name:
+        description: 这个拼音的简写
         type: string
       role:
+        description: 这个不是角色，这个无意义
         type: string
   models.UserHistory:
     title: UserHistory
     type: object
     properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       UserTemple:
@@ -10086,6 +10872,7 @@ definitions:
         type: integer
         format: int32
       userid:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
   models.UserTemple:
@@ -10097,9 +10884,21 @@ definitions:
       ClassID:
         type: integer
         format: int64
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
       User:
         $ref: '#/definitions/models.User'
       UserID:
+        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
       number:
@@ -10111,6 +10910,7 @@ definitions:
       title:
         type: string
       titleb:
+        description: 简要名称，无日期，无版本号，无扩展名
         type: string
       version:
         type: string
@@ -10129,6 +10929,9 @@ definitions:
   models.pass_project:
     title: pass_project
     type: object
+  models.uploadvideo:
+    title: uploadvideo
+    type: object
   success:
     title: success
     type: object
@@ -10136,6 +10939,9 @@ tags:
 - name: admin
   description: |
     VueFlow API
+- name: wx
+  description: |
+    CMSWX article API
 - name: adminlog
   description: |
     CMSADMIN API
@@ -10165,10 +10971,7 @@ tags:
     CMSansys API
 - name: excel
   description: |
-    CMSMATHCAD API
-- name: passproject
-  description: |
-    CMS pass_project API
+    CMSexcel API
 - name: elastic
   description: |
     CMSELASTIC API

@@ -1,0 +1,85 @@
+.leaflet-control-measure {
+    background-color: #FFFFFF;
+}
+.leaflet-measure-toggle {
+    background-size: 14px 14px;
+    background-image: url(assets/rulers.svg);
+    /*background-image: url('data:image/svg+xml;utf8,<svg t="1599643864260" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="26869" width="32" height="32"><path d="M910.623 777.748h-79.725V325.977l-53.15 53.149v398.622H282.715l580.416-605.875-37.58-37.578-579.299 604.707v-492.75h372.591l48.92-53.149H246.252v-79.725c0-14.688-11.886-26.575-26.575-26.575-14.688 0-26.575 11.886-26.575 26.575v79.725h-79.724c-14.689 0-26.575 11.886-26.575 26.575s11.886 26.575 26.575 26.575h79.724v584.646h584.646v79.725c0 14.688 11.887 26.574 26.574 26.574 14.689 0 26.576-11.887 26.576-26.574v-79.725h79.725c14.688 0 26.574-11.887 26.574-26.576 0-14.688-11.886-26.575-26.574-26.575z"></path></svg>');*/
+    border: 0;
+    border-radius: 4px;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    box-shadow: none;
+    border-radius: 4px;
+}
+.leaflet-measure-contents {
+    padding: 10px;
+    display: none;
+}
+.leaflet-control-measure h3 {
+    margin: 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+}
+.leaflet-measure-actions {
+    margin: 0;
+    padding: 5px 0 0;
+    text-align: right;
+    list-style: none;
+    list-style-image: none;
+}
+.leaflet-control-measure a.start {
+    display: block;
+    width: auto;
+    padding: 0 5px 0 25px;
+    border: 0;
+    text-align: left;
+    /*background-image: url(assets/rulers.svg)*/
+    background-image: url('data:image/svg+xml;utf8,<svg t="1599647825038" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8356" width="16" height="16"><path d="M113.777778 682.666667H0v227.555555c0 62.577778 51.2 113.777778 113.777778 113.777778h227.555555v-113.777778H113.777778v-227.555555zM113.777778 113.777778h227.555555V0H113.777778C51.2 0 0 51.2 0 113.777778v227.555555h113.777778V113.777778z m796.444444-113.777778h-227.555555v113.777778h227.555555v227.555555h113.777778V113.777778c0-62.577778-51.2-113.777778-113.777778-113.777778z m0 910.222222h-227.555555v113.777778h227.555555c62.577778 0 113.777778-51.2 113.777778-113.777778v-227.555555h-113.777778v227.555555zM512 284.444444C386.275556 284.444444 284.444444 386.275556 284.444444 512s101.831111 227.555556 227.555556 227.555556 227.555556-101.831111 227.555556-227.555556-101.831111-227.555556-227.555556-227.555556z m0 341.333334c-62.577778 0-113.777778-51.2-113.777778-113.777778s51.2-113.777778 113.777778-113.777778 113.777778 51.2 113.777778 113.777778-51.2 113.777778-113.777778 113.777778z" p-id="8357"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: 5px 50%;
+    background-size: 14px 14px;
+    background-color: transparent;
+    text-decoration: none;
+}
+.leaflet-control-measure a.start:hover {
+    opacity: .5;
+    background-color: transparent;
+}
+.leaflet-measure-expanded .leaflet-measure-contents {
+  display: block;
+}
+.leaflet-measure-map {
+  cursor: crosshair !important;
+}
+.leaflet-measure-lable {
+    padding: 1px 7px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+    position: absolute;
+}
+.leaflet-measure-lable .content {
+    width: auto;
+    display: inline-block;
+}
+
+.leaflet-measure-lable .close {
+    width: 15px;
+    height: 15px;
+    position: relative !important;
+    top: 0px !important;
+    left: 5px !important;
+    cursor: pointer;
+}
+
+.leaflet-measure-lable .close .icon {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    top: 2px;
+    position: relative;
+}

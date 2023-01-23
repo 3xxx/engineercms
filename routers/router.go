@@ -208,6 +208,7 @@ func init() {
 					&controllers.VideoController{},
 					&controllers.BusinessController{},
 					&controllers.LocationController{},
+					&controllers.SupaMapusController{},
 				),
 			),
 			web.NSNamespace("/share",

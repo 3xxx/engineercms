@@ -120,7 +120,7 @@
       加载数据……
     </div>
   </div>
-  <div id="footer" class="container"><span class="text">Copyright © 2016~2022 工程相册 <a href="https://zsj.itdos.net/" target="_blank">水务设计</a> <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a> <a href="/sitemap.xml" target="_blank">XML地图</a> <a href="https://zsj.itdos.net/" target="_blank">工程相册</a></span></div>
+  <div id="footer" class="container"><span class="text">Copyright © 2022~2023 工程相册 <a href="https://zsj.itdos.net/" target="_blank">水务设计</a> <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a> <a href="/sitemap.xml" target="_blank">XML地图</a> <a href="https://zsj.itdos.net/" target="_blank">工程相册</a></span></div>
   <script type="text/javascript" src="/static/photo/theme.js"></script>
   <script type="text/javascript" src="/static/photo/wp-embed.min.js?ver=4.8"></script>
   <script type="text/javascript">

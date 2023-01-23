@@ -1,4 +1,4 @@
-//project只能是运行ip权限下操作，即只判断iprole，不提供远程操作
+// project只能是运行ip权限下操作，即只判断iprole，不提供远程操作
 package controllers
 
 import (
@@ -34,7 +34,7 @@ type ProjController struct {
 	web.Controller
 }
 
-//成果页导航条
+// 成果页导航条
 type Navbartruct struct {
 	Id    int64
 	Title string
@@ -51,7 +51,7 @@ type Project1 struct {
 	Updated   time.Time
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type Tableserver struct {
 	Rows  []Project1 `json:"rows"`
 	Page  int        `json:"page"`
@@ -140,6 +140,12 @@ func (c *ProjController) GetProjects() {
 		if err != nil {
 			logs.Error(err)
 		}
+	}
+
+	if page1 <= 1 {
+		offset = 0
+	} else {
+		offset = (page1 - 1) * limit1
 	}
 
 	searchText := c.GetString("searchText")
@@ -501,9 +507,9 @@ func (c *ProjController) GetWxProjects() {
 	}
 }
 
-//分页提供给项目列表页的table中json数据
-//根据id查看项目，查出项目当前级和下一级目录
-//点击第二级后，用下面的懒加载目录
+// 分页提供给项目列表页的table中json数据
+// 根据id查看项目，查出项目当前级和下一级目录
+// 点击第二级后，用下面的懒加载目录
 func (c *ProjController) GetProject() {
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
@@ -677,8 +683,8 @@ func (c *ProjController) GetProject() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 data not found
 // @router /getprojecttree/:id [get]
-//根据id查看项目，查出项目当前级和下一级目录
-//点击第二级后，用下面的懒加载目录
+// 根据id查看项目，查出项目当前级和下一级目录
+// 点击第二级后，用下面的懒加载目录
 func (c *ProjController) GetProjectTree() {
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
@@ -805,7 +811,7 @@ func (c *ProjController) GetProjectTree() {
 	c.ServeJSON()
 }
 
-//根据id懒加载项目下级目录——上面那个是显示第一级和第二级目录
+// 根据id懒加载项目下级目录——上面那个是显示第一级和第二级目录
 func (c *ProjController) GetProjCate() {
 	// id := c.Ctx.Input.Param(":id")
 	id := c.GetString("id")
@@ -938,8 +944,8 @@ func (c *ProjController) GetProjCate() {
 	c.ServeJSON()
 }
 
-//点击项目名称，根据id查看项目下所有成果
-//这个只是页面。表格内的数据填充用product controllers里的getprojproducts方法
+// 点击项目名称，根据id查看项目下所有成果
+// 这个只是页面。表格内的数据填充用product controllers里的getprojproducts方法
 func (c *ProjController) GetProjProducts() {
 	c.Data["IsProject"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
@@ -977,7 +983,7 @@ func (c *ProjController) GetProjProducts() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 project not found
 // @router /userprojecteditortree [get]
-//用户跳转到自己编辑项目目录页面
+// 用户跳转到自己编辑项目目录页面
 func (c *ProjController) UserpProjectEditorTree() {
 	_, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1014,7 +1020,7 @@ func (c *ProjController) UserpProjectEditorTree() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 project not found
 // @router /userprojectpermission [get]
-//用户跳转到自己编辑项目目录页面
+// 用户跳转到自己编辑项目目录页面
 func (c *ProjController) UserProjectPermission() {
 	_, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1045,7 +1051,7 @@ func (c *ProjController) UserProjectPermission() {
 	}
 }
 
-//后台根据id查出项目目录，以便进行编辑
+// 后台根据id查出项目目录，以便进行编辑
 func (c *ProjController) GetProjectCate() {
 	id := c.Ctx.Input.Param(":id")
 	// id := c.GetString("id")
@@ -1076,7 +1082,7 @@ func (c *ProjController) GetProjectCate() {
 	c.ServeJSON()
 }
 
-//后台添加项目id的子节点
+// 后台添加项目id的子节点
 func (c *ProjController) AddProjectCate() {
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
 	id := c.GetString("id")
@@ -1165,7 +1171,7 @@ func (c *ProjController) AddProjectCate() {
 	}
 }
 
-//后台修改项目目录节点名称
+// 后台修改项目目录节点名称
 func (c *ProjController) UpdateProjectCate() {
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
 	id := c.GetString("id")
@@ -1228,9 +1234,9 @@ func (c *ProjController) UpdateProjectCate() {
 	// c.Data["IsProjects"] = true
 }
 
-//根据项目侧栏id查看这个id下的成果，不含子目录中的成果
-//任何一级目录下都可以放成果
-//这个作废——以product中的GetProjProd()
+// 根据项目侧栏id查看这个id下的成果，不含子目录中的成果
+// 任何一级目录下都可以放成果
+// 这个作废——以product中的GetProjProd()
 func (c *ProjController) GetProjProd() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -1249,7 +1255,7 @@ func (c *ProjController) GetProjProd() {
 	}
 }
 
-//取得某个侧栏id下的导航条
+// 取得某个侧栏id下的导航条
 func (c *ProjController) GetProjNav() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -1301,7 +1307,7 @@ func (c *ProjController) GetProjNav() {
 	c.ServeJSON()
 }
 
-//添加项目和项目目录、文件夹
+// 添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
 	c.Data["IsProjects"] = true
 	_, _, uid, _, isLogin := checkprodRole(c.Ctx)
@@ -1381,7 +1387,7 @@ func (c *ProjController) AddProject() {
 	c.ServeJSON()
 }
 
-//根据项目模板添加项目
+// 根据项目模板添加项目
 func (c *ProjController) AddProjTemplet() {
 	_, _, uid, _, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1526,7 +1532,7 @@ func (c *ProjController) AddProjTemplet() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 data not found
 // @router /quickaddwxproject [post]
-//根据项目模板添加项目
+// 根据项目模板添加项目
 func (c *ProjController) QuickAddWxProjTemplet() {
 	//content去验证
 	// app_version := c.GetString("app_version")
@@ -1693,7 +1699,7 @@ func (c *ProjController) QuickAddWxProjTemplet() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 project not found
 // @router /projectuserrole [get]
-//判断登录用户是管理员还是isme
+// 判断登录用户是管理员还是isme
 func (c *ProjController) ProjectUserRole() {
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 	pid := c.GetString("pid")
@@ -1767,9 +1773,9 @@ func (c *ProjController) UpdateProject() {
 	}
 }
 
-//后台删除项目目录节点——这个用删除项目代替了。
-//删除多节点
-//删除多节点的子节点
+// 后台删除项目目录节点——这个用删除项目代替了。
+// 删除多节点
+// 删除多节点的子节点
 // 作废了，用DeleteProject代替了！！！！
 func (c *ProjController) DeleteProjectCate() {
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
@@ -1851,8 +1857,8 @@ func (c *ProjController) DeleteProjectCate() {
 	}
 }
 
-//根据id删除proj
-//后台删除目录，代替DeleteProjectCate
+// 根据id删除proj
+// 后台删除目录，代替DeleteProjectCate
 func (c *ProjController) DeleteProject() {
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
 	ids := c.GetString("ids")
@@ -1990,8 +1996,8 @@ func (c *ProjController) DeleteProject() {
 	}
 }
 
-//*******项目日历*****
-//添加日历
+// *******项目日历*****
+// 添加日历
 func (c *ProjController) AddCalendar() {
 	var starttime, endtime time.Time
 	projectid := c.Ctx.Input.Param(":id")
@@ -2062,8 +2068,8 @@ func (c *ProjController) GetCalendar() {
 	c.TplName = "project_calendar.tpl"
 }
 
-//返回日历json数据
-//如果是管理员，则显示全部，非管理员，显示公开
+// 返回日历json数据
+// 如果是管理员，则显示全部，非管理员，显示公开
 func (c *ProjController) Calendar() {
 	projectid := c.Ctx.Input.Param(":id")
 	pid, err := strconv.ParseInt(projectid, 10, 64)
@@ -2100,7 +2106,7 @@ func (c *ProjController) Calendar() {
 	// c.TplName = "Proj_category.tpl"
 }
 
-//修改
+// 修改
 func (c *ProjController) UpdateCalendar() {
 	var starttime, endtime time.Time
 	cid := c.GetString("cid")
@@ -2186,7 +2192,7 @@ func (c *ProjController) UpdateCalendar() {
 	// }
 }
 
-//拖曳
+// 拖曳
 func (c *ProjController) DropCalendar() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -2214,7 +2220,7 @@ func (c *ProjController) DropCalendar() {
 	}
 }
 
-//resize
+// resize
 func (c *ProjController) ResizeCalendar() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -2244,7 +2250,7 @@ func (c *ProjController) ResizeCalendar() {
 	}
 }
 
-//删除，如果有下级，一起删除
+// 删除，如果有下级，一起删除
 func (c *ProjController) DeleteCalendar() {
 	cid := c.GetString("cid")
 	//pid转成64为
@@ -2262,7 +2268,7 @@ func (c *ProjController) DeleteCalendar() {
 	}
 }
 
-//****项目时间轴——大事记
+// ****项目时间轴——大事记
 type List struct {
 	Name string `json:"name"`
 }
@@ -2281,7 +2287,7 @@ type Listimage struct {
 	Utime     string   `json:"utime"`
 }
 
-//项目时间轴
+// 项目时间轴
 func (c *ProjController) ProjectTimeline() {
 	projectid := c.Ctx.Input.Param(":id")
 	pid, err := strconv.ParseInt(projectid, 10, 64)
@@ -2323,7 +2329,7 @@ func (c *ProjController) ProjectTimeline() {
 	// }
 }
 
-//要分页
+// 要分页
 func (c *ProjController) Timeline() {
 	// page := c.GetString("p")
 	// pagenum, err := strconv.Atoi(page)
@@ -2408,7 +2414,7 @@ func (c *ProjController) Timeline() {
 	c.ServeJSON()
 }
 
-//应该将日历改为froala，那么这个就可以淘汰了。
+// 应该将日历改为froala，那么这个就可以淘汰了。
 func (c *ProjController) UploadImage() {
 	id := c.GetString("pid")
 	//pid转成64为
@@ -2448,7 +2454,7 @@ func (c *ProjController) UploadImage() {
 	c.ServeJSON()
 }
 
-//求出[]int最大值
+// 求出[]int最大值
 func intmax(first int, args ...int) int {
 	for _, v := range args {
 		if first < v {
@@ -2458,7 +2464,7 @@ func intmax(first int, args ...int) int {
 	return first
 }
 
-//递归将目录写入数据库
+// 递归将目录写入数据库
 func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height int) (cid []models.Pidstruct) {
 	for _, v := range pid {
 		for _, v1 := range nodes {
@@ -2507,7 +2513,7 @@ func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height
 	return
 }
 
-//树状目录数据——带成果数量和懒加载
+// 树状目录数据——带成果数量和懒加载
 type FileNode2 struct {
 	Id    int64  `json:"id"`
 	Title string `json:"text"`
@@ -2516,7 +2522,7 @@ type FileNode2 struct {
 	LazyLoad bool      `json:"lazyLoad"`
 }
 
-//树状目录数据——带成果数量
+// 树状目录数据——带成果数量
 type FileNode1 struct {
 	Id        int64        `json:"id"`
 	Title     string       `json:"text"`
@@ -2526,7 +2532,7 @@ type FileNode1 struct {
 	FileNodes []*FileNode1 `json:"nodes"`
 }
 
-//vue.js-project树状目录数据——带成果数量
+// vue.js-project树状目录数据——带成果数量
 type EleProjTree struct {
 	Id       int64          `json:"id"`
 	Label    string         `json:"label"`
@@ -2536,7 +2542,7 @@ type EleProjTree struct {
 	Children []*EleProjTree `json:"children"`
 }
 
-//树状目录数据
+// 树状目录数据
 type FileNode struct {
 	Id        int64       `json:"id"`
 	Title     string      `json:"text"`
@@ -2567,7 +2573,7 @@ type FileNode struct {
 // 	return
 // }
 
-//递归构造项目树状目录_带成果数量_懒加载只显示一层
+// 递归构造项目树状目录_带成果数量_懒加载只显示一层
 func maketreejson3(cates, categories []*models.Project, products []*models.Product, node *FileNode2) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -2596,7 +2602,7 @@ func maketreejson3(cates, categories []*models.Project, products []*models.Produ
 	return
 }
 
-//递归构造项目树状目录_带成果数量_只显示项目层和下面第一层
+// 递归构造项目树状目录_带成果数量_只显示项目层和下面第一层
 func maketreejson2(cates, categories []*models.Project, products []*models.Product, node *FileNode1) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -2630,7 +2636,7 @@ func maketreejson2(cates, categories []*models.Project, products []*models.Produ
 	return
 }
 
-//递归构造项目树状目录_带成果数量_只显示项目层和下面第一层
+// 递归构造项目树状目录_带成果数量_只显示项目层和下面第一层
 func makeeletreejson(cates, categories []*models.Project, products []*models.Product, node *EleProjTree) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -2664,7 +2670,7 @@ func makeeletreejson(cates, categories []*models.Project, products []*models.Pro
 	return
 }
 
-//递归构造项目树状目录_带成果数量
+// 递归构造项目树状目录_带成果数量
 func maketreejson1(cates, categories []*models.Project, products []*models.Product, node *FileNode1) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -2698,7 +2704,7 @@ func maketreejson1(cates, categories []*models.Project, products []*models.Produ
 	return
 }
 
-//递归构造项目树状目录_不带标签，用于后台目录编辑使用
+// 递归构造项目树状目录_不带标签，用于后台目录编辑使用
 func maketreejson(cates, categories []*models.Project, node *FileNode) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -2717,7 +2723,7 @@ func maketreejson(cates, categories []*models.Project, node *FileNode) {
 	return
 }
 
-//递归构造项目树状目录_不带标签，用于项目模板生成项目使用
+// 递归构造项目树状目录_不带标签，用于项目模板生成项目使用
 func maketreejsontemplet(cates, categories []*models.Project, node *models.FileNode) {
 	// 遍历目录
 	for _, proj := range cates {
@@ -2737,7 +2743,7 @@ func maketreejsontemplet(cates, categories []*models.Project, node *models.FileN
 	return
 }
 
-//取得树状目录下的成果数量
+// 取得树状目录下的成果数量
 func getprodcount(cates, categories []*models.Project, products []*models.Product, count *int) {
 	for _, k := range cates {
 		for _, m := range products {
@@ -2755,7 +2761,7 @@ func getprodcount(cates, categories []*models.Project, products []*models.Produc
 	return
 }
 
-//取得数组的下级目录
+// 取得数组的下级目录
 func getsons(idNum int64, categories []*models.Project) (slice []*models.Project) {
 	// slice := make([]*models.Project, 0)
 	for _, k := range categories {
@@ -2770,7 +2776,7 @@ type Pathstruct struct {
 	ParentPath string
 }
 
-//根据分级目录递归建立文件夹
+// 根据分级目录递归建立文件夹
 func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int) (cpath []Pathstruct) {
 	for _, v := range path {
 		for _, v1 := range nodes {
@@ -2796,7 +2802,7 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 	return
 }
 
-//根据项目模板递归建立文件夹
+// 根据项目模板递归建立文件夹
 func createtemplet(parentpath string, nodes []*models.FileNode) {
 	for _, v1 := range nodes {
 		//建立目录，并返回作为父级目录

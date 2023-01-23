@@ -1,0 +1,35 @@
+20220219
+安装bee
+go install github.com/beego/bee@latest
+
+beego官网地址：https://beego.vip/
+
+设置go代理：https://goproxy.cn/
+$ go env -w GO111MODULE=on
+$ go env -w GOPROXY=https://goproxy.cn,direc
+
+****linux升级go**************************
+go env查看go的安装目录
+
+GOROOT="/usr/local/go"
+
+1.删除 go 目录：
+sudo rm -rf /usr/local/go
+2.删除软链接：
+sudo rm -rf /usr/bin/go
+
+3.下载的linux gz文件放到local文件夹里
+
+4. tar zxvf go1.17.5.linux-amd64.tar.gz
+完成之后再压缩包所在目录会多出一个go文件夹，我这里的目录是/usr/local下
+
+5.建立软链接
+sudo ln -s /usr/local/go/bin/* /usr/bin/
+
+配置环境变量
+将go的可执行文件的路径添加到PATH中：
+export PATH="/usr/local/go/bin:$PATH"
+如果上一个版本的路径与其相同，则不用重复添加
+
+cd /root/gocode/src/github.com/3xxx/engineercms
+go mod vendor

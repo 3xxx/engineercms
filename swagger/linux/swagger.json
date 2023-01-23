@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "title": "EngineerCMS API",
-        "description": "ECMS has every tool to get any job done, so codename for the new ECMS APIs.",
+        "description": "ECMS has every tool to get any job done, so codename for the new ECMS APIs.\n",
         "version": "1.0.0",
         "contact": {
             "email": "504284@qq.com"
@@ -15,7 +15,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get admin page",
+                "description": "get admin page\n\u003cbr\u003e",
                 "operationId": "AdminController.getAdminBlock",
                 "responses": {
                     "200": {
@@ -38,7 +38,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "Get Category list by title info",
+                "description": "Get Category list by title info\n\u003cbr\u003e",
                 "operationId": "AdminController.Post Category by pid title code grade",
                 "parameters": [
                     {
@@ -81,7 +81,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "Get Category list by some info",
+                "description": "Get Category list by some info\n\u003cbr\u003e",
                 "operationId": "AdminController.Get Category list",
                 "parameters": [
                     {
@@ -106,7 +106,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "Get Category list by title info",
+                "description": "Get Category list by title info\n\u003cbr\u003e",
                 "operationId": "AdminController.Get Category by title",
                 "parameters": [
                     {
@@ -131,7 +131,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post AccessContext..",
+                "description": "post AccessContext..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf AccessContext...",
                 "parameters": [
                     {
@@ -163,7 +163,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post AccessContext..",
+                "description": "post AccessContext..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf AccessContext...",
                 "parameters": [
                     {
@@ -195,7 +195,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocaccesscontext..",
+                "description": "post workflowdocaccesscontext..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docaccesscontext...",
                 "parameters": [
                     {
@@ -226,7 +226,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocaction..",
+                "description": "post workflowdocaction..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docaction...",
                 "parameters": [
                     {
@@ -258,7 +258,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocaction..",
+                "description": "post workflowdocaction..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docaction...",
                 "parameters": [
                     {
@@ -290,7 +290,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get workflowdocaction..",
+                "description": "get workflowdocaction..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf docaction...",
                 "parameters": [
                     {
@@ -322,7 +322,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocaction..",
+                "description": "post workflowdocaction..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docaction...",
                 "parameters": [
                     {
@@ -353,7 +353,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post document",
+                "description": "post document\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf document",
                 "parameters": [
                     {
@@ -412,7 +412,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get docevent",
+                "description": "get docevent\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf event",
                 "parameters": [
                     {
@@ -444,7 +444,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get doceventlist",
+                "description": "get doceventlist\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf eventlist",
                 "parameters": [
                     {
@@ -476,7 +476,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get workflow doclist",
+                "description": "get workflow doclist\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf doclist",
                 "parameters": [
                     {
@@ -515,7 +515,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get documentdetail",
+                "description": "get documentdetail\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf document details",
                 "parameters": [
                     {
@@ -554,7 +554,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get document",
+                "description": "get document\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf document",
                 "parameters": [
                     {
@@ -618,7 +618,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get document",
+                "description": "get document\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf document",
                 "parameters": [
                     {
@@ -682,7 +682,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Group..",
+                "description": "post Group..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf Group...",
                 "parameters": [
                     {
@@ -721,7 +721,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Group..",
+                "description": "post Group..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf Group...",
                 "parameters": [
                     {
@@ -753,7 +753,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get groupmailbox",
+                "description": "get groupmailbox\n\u003cbr\u003e",
                 "operationId": "FlowController.get group mailbox",
                 "parameters": [
                     {
@@ -804,7 +804,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post GroupRole..",
+                "description": "post GroupRole..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf GroupRole...",
                 "parameters": [
                     {
@@ -836,7 +836,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get GroupRole..",
+                "description": "get GroupRole..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf GroupRole...",
                 "parameters": [
                     {
@@ -868,7 +868,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Group..",
+                "description": "post Group..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf GroupUsers...",
                 "parameters": [
                     {
@@ -900,7 +900,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflow next",
+                "description": "post workflow next\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf next",
                 "parameters": [
                     {
@@ -959,7 +959,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Node..",
+                "description": "post Node..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf Node...",
                 "parameters": [
                     {
@@ -1019,7 +1019,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Node..",
+                "description": "post Node..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf Node...",
                 "parameters": [
                     {
@@ -1051,7 +1051,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Permission..",
+                "description": "post Permission..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf Permission...",
                 "parameters": [
                     {
@@ -1083,7 +1083,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Role..",
+                "description": "post Role..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf Role...",
                 "parameters": [
                     {
@@ -1115,7 +1115,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Role..",
+                "description": "post Role..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf Role...",
                 "parameters": [
                     {
@@ -1147,7 +1147,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Permission..",
+                "description": "post Permission..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf Permission...",
                 "parameters": [
                     {
@@ -1179,7 +1179,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocstate..",
+                "description": "post workflowdocstate..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docstate...",
                 "parameters": [
                     {
@@ -1211,7 +1211,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocstate..",
+                "description": "post workflowdocstate..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docstate...",
                 "parameters": [
                     {
@@ -1243,7 +1243,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocstate..",
+                "description": "post workflowdocstate..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docstate...",
                 "parameters": [
                     {
@@ -1280,7 +1280,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdocstate..",
+                "description": "post workflowdocstate..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf docstate...",
                 "parameters": [
                     {
@@ -1311,7 +1311,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post transition..",
+                "description": "post transition..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf transition...",
                 "parameters": [
                     {
@@ -1343,7 +1343,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdoctransition..",
+                "description": "post workflowdoctransition..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf doctransition...",
                 "parameters": [
                     {
@@ -1375,7 +1375,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post transition..",
+                "description": "post transition..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf transition...",
                 "parameters": [
                     {
@@ -1407,7 +1407,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdoctransition..",
+                "description": "post workflowdoctransition..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf doctransition...",
                 "parameters": [
                     {
@@ -1438,7 +1438,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdoctype..",
+                "description": "post workflowdoctype..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf doctype...",
                 "parameters": [
                     {
@@ -1470,7 +1470,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdoctype..",
+                "description": "post workflowdoctype..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf doctype...",
                 "parameters": [
                     {
@@ -1502,7 +1502,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get workflowdoctype..",
+                "description": "get workflowdoctype..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf doctypelist...",
                 "parameters": [
                     {
@@ -1539,7 +1539,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflowdoctype..",
+                "description": "post workflowdoctype..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf doctype...",
                 "parameters": [
                     {
@@ -1570,7 +1570,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post user..",
+                "description": "post user..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf user...",
                 "parameters": [
                     {
@@ -1623,7 +1623,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Group..",
+                "description": "post Group..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf GroupUser...",
                 "parameters": [
                     {
@@ -1655,7 +1655,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post user..",
+                "description": "post user..\n\u003cbr\u003e",
                 "operationId": "FlowController.get wf user...",
                 "parameters": [
                     {
@@ -1687,7 +1687,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get usermailbox",
+                "description": "get usermailbox\n\u003cbr\u003e",
                 "operationId": "FlowController.get user mailbox",
                 "parameters": [
                     {
@@ -1738,7 +1738,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get usermailbox",
+                "description": "get usermailbox\n\u003cbr\u003e",
                 "operationId": "FlowController.get user mailbox",
                 "parameters": [
                     {
@@ -1789,7 +1789,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Workflow..",
+                "description": "post Workflow..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf Workflow...",
                 "parameters": [
                     {
@@ -1835,7 +1835,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post Workflow..",
+                "description": "post Workflow..\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf Workflow...",
                 "parameters": [
                     {
@@ -1867,7 +1867,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get wx projectconfig by projectid",
+                "description": "get wx projectconfig by projectid\n\u003cbr\u003e",
                 "operationId": "AdminController.get wx projectconfig by projectid",
                 "parameters": [
                     {
@@ -1899,7 +1899,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get wx projectconfig by projectid",
+                "description": "get wx projectconfig by projectid\n\u003cbr\u003e",
                 "operationId": "AdminController.get wx projectconfig by projectid",
                 "parameters": [
                     {
@@ -1931,7 +1931,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get flowchart text",
+                "description": "get flowchart text\n\u003cbr\u003e",
                 "operationId": "FlowController.get flowchart text",
                 "parameters": [
                     {
@@ -1963,7 +1963,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "put wx projectconfig by projectid",
+                "description": "put wx projectconfig by projectid\n\u003cbr\u003e",
                 "operationId": "AdminController.update wx projectconfig by projectid",
                 "parameters": [
                     {
@@ -2002,7 +2002,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "show workflow page",
+                "description": "show workflow page\n\u003cbr\u003e",
                 "operationId": "FlowController.show wf page",
                 "responses": {
                     "200": {
@@ -2025,7 +2025,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post document",
+                "description": "post document\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf document",
                 "parameters": [
                     {
@@ -2085,7 +2085,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "post workflow next",
+                "description": "post workflow next\n\u003cbr\u003e",
                 "operationId": "FlowController.post wf next",
                 "parameters": [
                     {
@@ -2151,7 +2151,7 @@
                 "tags": [
                     "admin"
                 ],
-                "description": "get usermailbox",
+                "description": "get usermailbox\n\u003cbr\u003e",
                 "operationId": "FlowController.get user mailbox",
                 "parameters": [
                     {
@@ -2195,7 +2195,7 @@
                 "tags": [
                     "adminlog"
                 ],
-                "description": "get log list",
+                "description": "get log list\n\u003cbr\u003e",
                 "operationId": "AdminLogController.getAdminBlock",
                 "responses": {
                     "200": {
@@ -2218,7 +2218,7 @@
                 "tags": [
                     "adminlog"
                 ],
-                "description": "get log list",
+                "description": "get log list\n\u003cbr\u003e",
                 "operationId": "AdminLogController.getAdminBlock",
                 "responses": {
                     "200": {
@@ -2241,7 +2241,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "post article by ansysID",
+                "description": "post article by ansysID\n\u003cbr\u003e",
                 "operationId": "AnsysController.post ansys artile by ansysID",
                 "parameters": [
                     {
@@ -2287,7 +2287,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get article by ansysarticleID",
+                "description": "get article by ansysarticleID\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys artile by ansysarticleID",
                 "parameters": [
                     {
@@ -2319,7 +2319,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2351,7 +2351,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "delete ansys by id",
+                "description": "delete ansys by id\n\u003cbr\u003e",
                 "operationId": "AnsysController.delete ansys",
                 "parameters": [
                     {
@@ -2383,7 +2383,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get editorarticle by ansysarticleID",
+                "description": "get editorarticle by ansysarticleID\n\u003cbr\u003e",
                 "operationId": "AnsysController.get editoransys article by ansysarticleID",
                 "parameters": [
                     {
@@ -2415,7 +2415,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansyswxhistory..",
+                "description": "get ansyswxhistory..\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansyswxhistory...",
                 "parameters": [
                     {
@@ -2465,7 +2465,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2497,7 +2497,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get projproducts..",
+                "description": "get projproducts..\n\u003cbr\u003e",
                 "operationId": "AnsysController.get projproducts...",
                 "parameters": [
                     {
@@ -2547,7 +2547,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansyss..",
+                "description": "get ansyss..\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansyss...",
                 "parameters": [
                     {
@@ -2597,7 +2597,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2629,7 +2629,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2661,7 +2661,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2693,7 +2693,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get history..",
+                "description": "get history..\n\u003cbr\u003e",
                 "operationId": "AnsysController.get history...",
                 "parameters": [
                     {
@@ -2743,7 +2743,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansyscal history",
+                "description": "get ansyscal history\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansyscal history",
                 "parameters": [
                     {
@@ -2782,7 +2782,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2821,7 +2821,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2860,7 +2860,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansyspdf by ansysapdlID",
+                "description": "get ansyspdf by ansysapdlID\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansyspdf by ansysapdlID",
                 "parameters": [
                     {
@@ -2892,7 +2892,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys history",
+                "description": "get ansys history\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys history",
                 "parameters": [
                     {
@@ -2924,7 +2924,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2956,7 +2956,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -2988,7 +2988,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.get ansys",
                 "parameters": [
                     {
@@ -3020,7 +3020,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "post ansys",
+                "description": "post ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.post ansys",
                 "parameters": [
                     {
@@ -3057,7 +3057,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "post ansys",
+                "description": "post ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.post ansys",
                 "parameters": [
                     {
@@ -3094,7 +3094,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "put ansysapdl",
+                "description": "put ansysapdl\n\u003cbr\u003e",
                 "operationId": "AnsysController.put ansysapdl",
                 "parameters": [
                     {
@@ -3140,7 +3140,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "put ansysinput",
+                "description": "put ansysinput\n\u003cbr\u003e",
                 "operationId": "AnsysController.put ansysinput",
                 "parameters": [
                     {
@@ -3186,7 +3186,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "put ansys output comment",
+                "description": "put ansys output comment\n\u003cbr\u003e",
                 "operationId": "AnsysController.put ansys outputcomment",
                 "parameters": [
                     {
@@ -3232,7 +3232,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "post editorarticle",
+                "description": "post editorarticle\n\u003cbr\u003e",
                 "operationId": "AnsysController.post editoransys article",
                 "parameters": [
                     {
@@ -3278,7 +3278,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get ansys",
+                "description": "get ansys\n\u003cbr\u003e",
                 "operationId": "AnsysController.upload ansysansys",
                 "parameters": [
                     {
@@ -3310,7 +3310,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "AnsysController.post bootstrapfileinput",
                 "parameters": [
                     {
@@ -3342,7 +3342,7 @@
                 "tags": [
                     "ansys"
                 ],
-                "description": "get wxarticle by ansysarticleID",
+                "description": "get wxarticle by ansysarticleID\n\u003cbr\u003e",
                 "operationId": "AnsysController.get wxansys artile by ansysarticleID",
                 "parameters": [
                     {
@@ -3374,7 +3374,7 @@
                 "tags": [
                     "bbs"
                 ],
-                "description": "post bbs",
+                "description": "post bbs\n\u003cbr\u003e",
                 "operationId": "BbsController.post bbs",
                 "parameters": [
                     {
@@ -3434,7 +3434,7 @@
                 "tags": [
                     "bbs"
                 ],
-                "description": "get bbs",
+                "description": "get bbs\n\u003cbr\u003e",
                 "operationId": "BbsController.get checkin bbs",
                 "parameters": [
                     {
@@ -3473,7 +3473,7 @@
                 "tags": [
                     "bbs"
                 ],
-                "description": "get bbs",
+                "description": "get bbs\n\u003cbr\u003e",
                 "operationId": "BbsController.get bbs",
                 "parameters": [
                     {
@@ -3519,7 +3519,7 @@
                 "tags": [
                     "cart"
                 ],
-                "description": "post create a new cart",
+                "description": "post create a new cart\n\u003cbr\u003e",
                 "operationId": "CartController.post create a new cart",
                 "parameters": [
                     {
@@ -3551,7 +3551,7 @@
                 "tags": [
                     "cart"
                 ],
-                "description": "post delete a usercart",
+                "description": "post delete a usercart\n\u003cbr\u003e",
                 "operationId": "CartController.post delete usercart",
                 "parameters": [
                     {
@@ -3583,7 +3583,7 @@
                 "tags": [
                     "cart"
                 ],
-                "description": "get usercartlist",
+                "description": "get usercartlist\n\u003cbr\u003e",
                 "operationId": "CartController.get usercartlist",
                 "parameters": [
                     {
@@ -3635,7 +3635,7 @@
                 "tags": [
                     "cart"
                 ],
-                "description": "get usercartlist",
+                "description": "get usercartlist\n\u003cbr\u003e",
                 "operationId": "CartController.get usercartlist",
                 "parameters": [
                     {
@@ -3687,7 +3687,7 @@
                 "tags": [
                     "cart"
                 ],
-                "description": "get usercarttpl",
+                "description": "get usercarttpl\n\u003cbr\u003e",
                 "operationId": "CartController.get usercarttpl",
                 "responses": {
                     "200": {
@@ -3710,7 +3710,7 @@
                 "tags": [
                     "cart"
                 ],
-                "description": "post update carts",
+                "description": "post update carts\n\u003cbr\u003e",
                 "operationId": "CartController.post update carts",
                 "parameters": [
                     {
@@ -3742,7 +3742,7 @@
                 "tags": [
                     "chat"
                 ],
-                "description": "get avatar",
+                "description": "get avatar\n\u003cbr\u003e",
                 "operationId": "ChatController.get avatar",
                 "parameters": [
                     {
@@ -3774,7 +3774,7 @@
                 "tags": [
                     "chat"
                 ],
-                "description": "get chat",
+                "description": "get chat\n\u003cbr\u003e",
                 "operationId": "ChatController.get chat",
                 "responses": {
                     "200": {
@@ -3797,7 +3797,7 @@
                 "tags": [
                     "chat"
                 ],
-                "description": "get wschat",
+                "description": "get wschat\n\u003cbr\u003e",
                 "operationId": "ChatController.get wschat",
                 "responses": {
                     "200": {
@@ -3820,7 +3820,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -3852,7 +3852,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -3884,7 +3884,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin activity",
                 "parameters": [
                     {
@@ -3993,7 +3993,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4025,7 +4025,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4057,7 +4057,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4089,7 +4089,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4128,7 +4128,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4160,7 +4160,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4192,7 +4192,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "get check",
+                "description": "get check\n\u003cbr\u003e",
                 "operationId": "CheckController.get checkin check",
                 "parameters": [
                     {
@@ -4245,7 +4245,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "get Signature",
+                "description": "get Signature\n\u003cbr\u003e",
                 "operationId": "CheckController.get Signature",
                 "parameters": [
                     {
@@ -4298,7 +4298,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4330,7 +4330,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "get monthcheck",
+                "description": "get monthcheck\n\u003cbr\u003e",
                 "operationId": "CheckController.get mothcheckin",
                 "parameters": [
                     {
@@ -4388,7 +4388,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "get monthcheck",
+                "description": "get monthcheck\n\u003cbr\u003e",
                 "operationId": "CheckController.get mothcheckin",
                 "parameters": [
                     {
@@ -4420,7 +4420,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "CheckController.post checkin person",
                 "parameters": [
                     {
@@ -4452,7 +4452,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post Message",
+                "description": "post Message\n\u003cbr\u003e",
                 "operationId": "CheckController.post Message",
                 "parameters": [
                     {
@@ -4491,7 +4491,7 @@
                 "tags": [
                     "checkin"
                 ],
-                "description": "post subscribemessage",
+                "description": "post subscribemessage\n\u003cbr\u003e",
                 "operationId": "CheckController.post subscribemessage",
                 "parameters": [
                     {
@@ -4523,7 +4523,7 @@
                 "tags": [
                     "elastic"
                 ],
-                "description": "get elasticsearch web",
+                "description": "get elasticsearch web\n\u003cbr\u003e",
                 "operationId": "ElasticController.get elasticsearch web",
                 "responses": {
                     "200": {
@@ -4546,7 +4546,7 @@
                 "tags": [
                     "elastic"
                 ],
-                "description": "get earch",
+                "description": "get earch\n\u003cbr\u003e",
                 "operationId": "ElasticController.get search",
                 "parameters": [
                     {
@@ -4583,7 +4583,7 @@
                 "tags": [
                     "elastic"
                 ],
-                "description": "post tika",
+                "description": "post tika\n\u003cbr\u003e",
                 "operationId": "ElasticController.post tika",
                 "responses": {
                     "200": {
@@ -4606,7 +4606,7 @@
                 "tags": [
                     "elastic"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "ElasticController.post bootstrapfileinput",
                 "parameters": [
                     {
@@ -4650,7 +4650,7 @@
                 "tags": [
                     "elastic"
                 ],
-                "description": "get upload file to tika\u0026elastic html",
+                "description": "get upload file to tika\u0026elastic html\n\u003cbr\u003e",
                 "operationId": "ElasticController.upload file to tika\u0026elastic html",
                 "parameters": [
                     {
@@ -4682,7 +4682,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post article by excelID",
+                "description": "post article by excelID\n\u003cbr\u003e",
                 "operationId": "ExcelController.post excel artile by excelID",
                 "parameters": [
                     {
@@ -4728,7 +4728,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "delete excel by id",
+                "description": "delete excel by id\n\u003cbr\u003e",
                 "operationId": "ExcelController.delete excel",
                 "parameters": [
                     {
@@ -4760,7 +4760,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get editorarticle by excelarticleID",
+                "description": "get editorarticle by excelarticleID\n\u003cbr\u003e",
                 "operationId": "ExcelController.get editorexcel article by excelarticleID",
                 "parameters": [
                     {
@@ -4792,7 +4792,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get article by excelarticleID",
+                "description": "get article by excelarticleID\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel artile by excelarticleID",
                 "parameters": [
                     {
@@ -4824,7 +4824,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -4856,7 +4856,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -4888,7 +4888,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get projproducts..",
+                "description": "get projproducts..\n\u003cbr\u003e",
                 "operationId": "ExcelController.get projproducts...",
                 "parameters": [
                     {
@@ -4938,7 +4938,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excels..",
+                "description": "get excels..\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excels...",
                 "parameters": [
                     {
@@ -4988,7 +4988,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5020,7 +5020,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5052,7 +5052,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5084,7 +5084,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get history..",
+                "description": "get history..\n\u003cbr\u003e",
                 "operationId": "ExcelController.get history...",
                 "parameters": [
                     {
@@ -5134,7 +5134,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excelcal history",
+                "description": "get excelcal history\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excelcal history",
                 "parameters": [
                     {
@@ -5173,7 +5173,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5212,7 +5212,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5251,7 +5251,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excelpdf by exceltempleID",
+                "description": "get excelpdf by exceltempleID\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excelpdf by exceltempleID",
                 "parameters": [
                     {
@@ -5283,7 +5283,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel history",
+                "description": "get excel history\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel history",
                 "parameters": [
                     {
@@ -5315,7 +5315,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5347,7 +5347,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5379,7 +5379,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5411,7 +5411,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excelwxhistory..",
+                "description": "get excelwxhistory..\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excelwxhistory...",
                 "parameters": [
                     {
@@ -5461,7 +5461,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get wxexcelhistoryinput",
+                "description": "get wxexcelhistoryinput\n\u003cbr\u003e",
                 "operationId": "ExcelController.get wxexcelhistoryinput",
                 "parameters": [
                     {
@@ -5500,7 +5500,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get wxexcelhistoryoutput",
+                "description": "get wxexcelhistoryoutput\n\u003cbr\u003e",
                 "operationId": "ExcelController.get wxexcelhistoryoutput",
                 "parameters": [
                     {
@@ -5539,7 +5539,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.get excel",
                 "parameters": [
                     {
@@ -5583,7 +5583,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post excel",
+                "description": "post excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.post excel",
                 "parameters": [
                     {
@@ -5626,7 +5626,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post excelcal",
+                "description": "post excelcal\n\u003cbr\u003e",
                 "operationId": "ExcelController.post excelcal",
                 "parameters": [
                     {
@@ -5670,7 +5670,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post excel",
+                "description": "post excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.post excel",
                 "parameters": [
                     {
@@ -5713,7 +5713,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "put excelinput",
+                "description": "put excelinput\n\u003cbr\u003e",
                 "operationId": "ExcelController.put excelinput",
                 "parameters": [
                     {
@@ -5759,7 +5759,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "put excel output comment",
+                "description": "put excel output comment\n\u003cbr\u003e",
                 "operationId": "ExcelController.put excel outputcomment",
                 "parameters": [
                     {
@@ -5805,7 +5805,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "put exceltemple",
+                "description": "put exceltemple\n\u003cbr\u003e",
                 "operationId": "ExcelController.put exceltemple",
                 "parameters": [
                     {
@@ -5851,7 +5851,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post editorarticle",
+                "description": "post editorarticle\n\u003cbr\u003e",
                 "operationId": "ExcelController.post editorexcel article",
                 "parameters": [
                     {
@@ -5897,7 +5897,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "get excel",
+                "description": "get excel\n\u003cbr\u003e",
                 "operationId": "ExcelController.upload excelexcel",
                 "parameters": [
                     {
@@ -5929,7 +5929,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "ExcelController.post bootstrapfileinput",
                 "parameters": [
                     {
@@ -5961,7 +5961,7 @@
                 "tags": [
                     "excel"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "ExcelController.post bootstrapfileinput",
                 "parameters": [
                     {
@@ -5988,76 +5988,12 @@
                 }
             }
         },
-        "/excel/wsexcelcal/{id}": {
-            "get": {
-                "tags": [
-                    "excel"
-                ],
-                "description": "get excelwscal",
-                "operationId": "WsExcelcalController.get excelwscal",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of exceltemple",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetExcel"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
-        "/excel/wswxexcelcal/{id}": {
-            "get": {
-                "tags": [
-                    "excel"
-                ],
-                "description": "get wxexcelcal",
-                "operationId": "WsExcelcalController.get wxexcelcal",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of exceltemple",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetExcel"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
         "/excel/wxexcelarticle/{id}": {
             "get": {
                 "tags": [
                     "excel"
                 ],
-                "description": "get wxarticle by excelarticleID",
+                "description": "get wxarticle by excelarticleID\n\u003cbr\u003e",
                 "operationId": "ExcelController.get wxexcel artile by excelarticleID",
                 "parameters": [
                     {
@@ -6089,7 +6025,7 @@
                 "tags": [
                     "fileinput"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "FileinputController.post bootstrapfileinput",
                 "responses": {
                     "200": {
@@ -6112,7 +6048,7 @@
                 "tags": [
                     "flv"
                 ],
-                "description": "get admin page",
+                "description": "get admin page\n\u003cbr\u003e",
                 "operationId": "FlvController.getFlv",
                 "parameters": [
                     {
@@ -6144,7 +6080,7 @@
                 "tags": [
                     "flv"
                 ],
-                "description": "get admin page",
+                "description": "get admin page\n\u003cbr\u003e",
                 "operationId": "FlvController.getFlv",
                 "parameters": [
                     {
@@ -6175,7 +6111,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post article by templeID",
+                "description": "post article by templeID\n\u003cbr\u003e",
                 "operationId": "MathcadController.post math artile by templeID",
                 "parameters": [
                     {
@@ -6221,7 +6157,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "delete temple by id",
+                "description": "delete temple by id\n\u003cbr\u003e",
                 "operationId": "MathcadController.delete temple",
                 "parameters": [
                     {
@@ -6253,7 +6189,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get editorarticle by matharticleID",
+                "description": "get editorarticle by matharticleID\n\u003cbr\u003e",
                 "operationId": "MathcadController.get editormath article by matharticleID",
                 "parameters": [
                     {
@@ -6285,7 +6221,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -6324,7 +6260,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad history",
+                "description": "get mathcad history\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad history",
                 "parameters": [
                     {
@@ -6356,7 +6292,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcal history",
+                "description": "get mathcal history\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcal history",
                 "parameters": [
                     {
@@ -6395,7 +6331,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad history output",
+                "description": "get mathcad history output\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad history output",
                 "parameters": [
                     {
@@ -6434,7 +6370,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get history..",
+                "description": "get history..\n\u003cbr\u003e",
                 "operationId": "MathcadController.get history...",
                 "parameters": [
                     {
@@ -6484,7 +6420,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad temples..",
+                "description": "get mathcad temples..\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad temples by classid...",
                 "parameters": [
                     {
@@ -6534,7 +6470,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathtemples..",
+                "description": "get mathtemples..\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathtemples...",
                 "parameters": [
                     {
@@ -6584,7 +6520,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad templelist",
+                "description": "get mathcad templelist\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad templelist",
                 "parameters": [
                     {
@@ -6616,7 +6552,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcadclass",
+                "description": "get mathcadclass\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcadclass",
                 "parameters": [
                     {
@@ -6648,7 +6584,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -6680,7 +6616,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -6712,7 +6648,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathpdf by usertempleID",
+                "description": "get mathpdf by usertempleID\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathpdf by usertempleID",
                 "parameters": [
                     {
@@ -6744,7 +6680,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get wxmathcadhistoryinput",
+                "description": "get wxmathcadhistoryinput\n\u003cbr\u003e",
                 "operationId": "MathcadController.get wxmathcadhistoryinput",
                 "parameters": [
                     {
@@ -6783,7 +6719,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get wxmathcad history output",
+                "description": "get wxmathcad history output\n\u003cbr\u003e",
                 "operationId": "MathcadController.get wxmathcad history output",
                 "parameters": [
                     {
@@ -6822,7 +6758,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathwxhistory..",
+                "description": "get mathwxhistory..\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathwxhistory...",
                 "parameters": [
                     {
@@ -6872,7 +6808,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -6904,7 +6840,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -6936,7 +6872,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcadclass",
                 "parameters": [
                     {
@@ -6968,7 +6904,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get article by matharticleID",
+                "description": "get article by matharticleID\n\u003cbr\u003e",
                 "operationId": "MathcadController.get math artile by matharticleID",
                 "parameters": [
                     {
@@ -7000,7 +6936,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -7032,7 +6968,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post mathcad",
+                "description": "post mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.post mathcad",
                 "parameters": [
                     {
@@ -7069,7 +7005,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.get mathcad",
                 "parameters": [
                     {
@@ -7113,7 +7049,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post mathcad",
+                "description": "post mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.post mathcad",
                 "parameters": [
                     {
@@ -7156,7 +7092,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post mathcad",
+                "description": "post mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.post mathcad",
                 "parameters": [
                     {
@@ -7193,7 +7129,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post mathcadcal",
+                "description": "post mathcadcal\n\u003cbr\u003e",
                 "operationId": "MathcadController.post mathcadcal",
                 "parameters": [
                     {
@@ -7237,7 +7173,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "put mathinput",
+                "description": "put mathinput\n\u003cbr\u003e",
                 "operationId": "MathcadController.put mathinput",
                 "parameters": [
                     {
@@ -7283,7 +7219,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "put mathcad output comment",
+                "description": "put mathcad output comment\n\u003cbr\u003e",
                 "operationId": "MathcadController.put mathcad outputcomment",
                 "parameters": [
                     {
@@ -7329,7 +7265,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "put usertemple",
+                "description": "put usertemple\n\u003cbr\u003e",
                 "operationId": "MathcadController.put usertemple",
                 "parameters": [
                     {
@@ -7375,7 +7311,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post editorarticle",
+                "description": "post editorarticle\n\u003cbr\u003e",
                 "operationId": "MathcadController.post editormath article",
                 "parameters": [
                     {
@@ -7421,7 +7357,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "MathcadController.post bootstrapfileinput",
                 "parameters": [
                     {
@@ -7453,7 +7389,7 @@
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get mathcad",
+                "description": "get mathcad\n\u003cbr\u003e",
                 "operationId": "MathcadController.upload mathcadtemple",
                 "parameters": [
                     {
@@ -7480,76 +7416,12 @@
                 }
             }
         },
-        "/mathcad/wsmathcal/{id}": {
-            "get": {
-                "tags": [
-                    "mathcad"
-                ],
-                "description": "get mathcad",
-                "operationId": "WsMathcadController.get mathcad",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of mathtemple",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetMathcadPage"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
-        "/mathcad/wswxmathcal/{id}": {
-            "get": {
-                "tags": [
-                    "mathcad"
-                ],
-                "description": "get mathcad",
-                "operationId": "WsMathcadController.get mathcad",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of mathtemple",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetMathcadPage"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
         "/mathcad/wxmatharticle/{id}": {
             "get": {
                 "tags": [
                     "mathcad"
                 ],
-                "description": "get wxarticle by matharticleID",
+                "description": "get wxarticle by matharticleID\n\u003cbr\u003e",
                 "operationId": "MathcadController.get wxmath artile by matharticleID",
                 "parameters": [
                     {
@@ -7581,7 +7453,7 @@
                 "tags": [
                     "onlyoffice"
                 ],
-                "description": "get doc to onlyoffice CommandService",
+                "description": "get doc to onlyoffice CommandService\n\u003cbr\u003e",
                 "operationId": "OnlyController.get CommandService builder doc",
                 "responses": {
                     "200": {
@@ -7604,7 +7476,7 @@
                 "tags": [
                     "onlyoffice"
                 ],
-                "description": "get doc to onlyoffice CommandService",
+                "description": "get doc to onlyoffice CommandService\n\u003cbr\u003e",
                 "operationId": "OnlyController.get CommandService drop doc",
                 "parameters": [
                     {
@@ -7643,7 +7515,7 @@
                 "tags": [
                     "onlyoffice"
                 ],
-                "description": "post doc to onlyoffice CommandService",
+                "description": "post doc to onlyoffice CommandService\n\u003cbr\u003e",
                 "operationId": "OnlyController.post CommandService info doc",
                 "parameters": [
                     {
@@ -7675,7 +7547,7 @@
                 "tags": [
                     "onlyoffice"
                 ],
-                "description": "post doc to onlyoffice conversion",
+                "description": "post doc to onlyoffice conversion\n\u003cbr\u003e",
                 "operationId": "OnlyController.post conversion doc",
                 "responses": {
                     "200": {
@@ -7698,7 +7570,7 @@
                 "tags": [
                     "onlyoffice"
                 ],
-                "description": "post download onlydoc by id",
+                "description": "post download onlydoc by id\n\u003cbr\u003e",
                 "operationId": "OnlyController.post download onlydoc",
                 "parameters": [
                     {
@@ -7732,279 +7604,12 @@
                 }
             }
         },
-        "/passproject/createpassproject": {
-            "get": {
-                "tags": [
-                    "passproject"
-                ],
-                "description": "create pass_project",
-                "operationId": "PassProjectController.create pass_project",
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.pass_project"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
-        "/passproject/getpassproject": {
-            "get": {
-                "tags": [
-                    "passproject"
-                ],
-                "description": "get excel",
-                "operationId": "PassProjectController.get pass_project",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of pass_project",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.pass_project"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
-        "/passproject/getpassprojectcaldoc/{id}": {
-            "get": {
-                "tags": [
-                    "passproject"
-                ],
-                "description": "get excel",
-                "operationId": "PassProjectController.get pass_project",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of pass_project",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.pass_project"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
-        "/passproject/getpassprojectdetail": {
-            "get": {
-                "tags": [
-                    "passproject"
-                ],
-                "description": "get excel",
-                "operationId": "PassProjectController.get pass_project",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "The id of pass_project",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.pass_project"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "Page not found"
-                    }
-                }
-            }
-        },
-        "/passproject/mathhistopassproject": {
-            "post": {
-                "tags": [
-                    "passproject"
-                ],
-                "description": "post historymathcad to pass_project..",
-                "operationId": "PassProjectController.post historymathcad to pass_project ...",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "ids",
-                        "description": "The ids of history",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "treeids",
-                        "description": "The treeids of project",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "treenodeids",
-                        "description": "The treenodeids of project",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetProductsPage"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "data not found"
-                    }
-                }
-            }
-        },
-        "/passproject/quickaddpassproject": {
-            "post": {
-                "tags": [
-                    "passproject"
-                ],
-                "description": "post quickaddproject..",
-                "operationId": "PassProjectController.post pass quickaddproject...",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "projectcode",
-                        "description": "The projectcode of project",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "projecttitle",
-                        "description": "The projecttitle of project",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "projectdescription",
-                        "description": "The description of project",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "tempprojid",
-                        "description": "The tempprojid of project",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "istemppermission",
-                        "description": "The permission of project",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetProductsPage"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "data not found"
-                    }
-                }
-            }
-        },
-        "/passsearch/mathtemples": {
-            "get": {
-                "tags": [
-                    "passsearch"
-                ],
-                "description": "get mathcad temples by keyword...",
-                "operationId": "PassSearchController.get mathcad temples by keyword...",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "keyword",
-                        "description": "The keyword of mathtemples",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "description": "The page of mathtemples",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "description": "The size of page",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.UserTemple"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "data not found"
-                    }
-                }
-            }
-        },
         "/pdfcpu/addwatermarks/{id}": {
             "post": {
                 "tags": [
                     "pdfcpu"
                 ],
-                "description": "post signature to pdf",
+                "description": "post signature to pdf\n\u003cbr\u003e",
                 "operationId": "PdfCpuController.post signature to pdf",
                 "parameters": [
                     {
@@ -8074,7 +7679,7 @@
                 "tags": [
                     "pdfcpu"
                 ],
-                "description": "get only pdf",
+                "description": "get only pdf\n\u003cbr\u003e",
                 "operationId": "PdfCpuController.get only pdf",
                 "parameters": [
                     {
@@ -8106,7 +7711,7 @@
                 "tags": [
                     "pdfcpu"
                 ],
-                "description": "get test",
+                "description": "get test\n\u003cbr\u003e",
                 "operationId": "PdfCpuController.get test",
                 "parameters": [
                     {
@@ -8138,7 +7743,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get projectlist..",
+                "description": "get projectlist..\n\u003cbr\u003e",
                 "operationId": "ProjController.get cms projectlist...",
                 "parameters": [
                     {
@@ -8181,7 +7786,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get projecttree..",
+                "description": "get projecttree..\n\u003cbr\u003e",
                 "operationId": "ProjController.get cms projecttree...",
                 "parameters": [
                     {
@@ -8213,7 +7818,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get projectlist..",
+                "description": "get projectlist..\n\u003cbr\u003e",
                 "operationId": "ProjController.get wx projectlist...",
                 "parameters": [
                     {
@@ -8256,7 +7861,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get projproducts..",
+                "description": "get projproducts..\n\u003cbr\u003e",
                 "operationId": "ProdController.get projproducts...",
                 "parameters": [
                     {
@@ -8306,7 +7911,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get project user permission",
+                "description": "get project user permission\n\u003cbr\u003e",
                 "operationId": "ProjController.get project user permission",
                 "parameters": [
                     {
@@ -8338,7 +7943,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "post quickaddproject..",
+                "description": "post quickaddproject..\n\u003cbr\u003e",
                 "operationId": "ProjController.post wx quickaddproject...",
                 "parameters": [
                     {
@@ -8390,7 +7995,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get user project editor tree",
+                "description": "get user project editor tree\n\u003cbr\u003e",
                 "operationId": "ProjController.get user project editor tree",
                 "parameters": [
                     {
@@ -8422,7 +8027,7 @@
                 "tags": [
                     "project"
                 ],
-                "description": "get user project editor tree",
+                "description": "get user project editor tree\n\u003cbr\u003e",
                 "operationId": "ProjController.get user project editor tree",
                 "parameters": [
                     {
@@ -8454,7 +8059,7 @@
                 "tags": [
                     "share"
                 ],
-                "description": "get a share",
+                "description": "get a share\n\u003cbr\u003e",
                 "operationId": "ShareController.get a share",
                 "parameters": [
                     {
@@ -8492,7 +8097,7 @@
                 "tags": [
                     "share"
                 ],
-                "description": "post create a new share",
+                "description": "post create a new share\n\u003cbr\u003e",
                 "operationId": "ShareController.post create a new share",
                 "parameters": [
                     {
@@ -8538,7 +8143,7 @@
                 "tags": [
                     "share"
                 ],
-                "description": "get a share",
+                "description": "get a share\n\u003cbr\u003e",
                 "operationId": "ShareController.get a share",
                 "responses": {
                     "200": {
@@ -8561,7 +8166,7 @@
                 "tags": [
                     "share"
                 ],
-                "description": "download a share",
+                "description": "download a share\n\u003cbr\u003e",
                 "operationId": "ShareController.download a share",
                 "parameters": [
                     {
@@ -8606,7 +8211,7 @@
                 "tags": [
                     "share"
                 ],
-                "description": "download a share",
+                "description": "download a share\n\u003cbr\u003e",
                 "operationId": "ShareController.download a share",
                 "parameters": [
                     {
@@ -8644,7 +8249,7 @@
                 "tags": [
                     "simwe"
                 ],
-                "description": "getsimansys",
+                "description": "getsimansys\n\u003cbr\u003e",
                 "operationId": "SimweController.get simansys",
                 "responses": {
                     "200": {
@@ -8667,7 +8272,7 @@
                 "tags": [
                     "simwe"
                 ],
-                "description": "getsimwe",
+                "description": "getsimwe\n\u003cbr\u003e",
                 "operationId": "SimweController.get simwe",
                 "responses": {
                     "200": {
@@ -8690,7 +8295,7 @@
                 "tags": [
                     "simwe"
                 ],
-                "description": "getthreejs",
+                "description": "getthreejs\n\u003cbr\u003e",
                 "operationId": "SimweController.get threejs",
                 "responses": {
                     "200": {
@@ -8713,7 +8318,7 @@
                 "tags": [
                     "todo"
                 ],
-                "description": "post todo",
+                "description": "post todo\n\u003cbr\u003e",
                 "operationId": "TodoController.post todo",
                 "parameters": [
                     {
@@ -8752,7 +8357,7 @@
                 "tags": [
                     "todo"
                 ],
-                "description": "delete tolist",
+                "description": "delete tolist\n\u003cbr\u003e",
                 "operationId": "TodoController.delete todolist",
                 "parameters": [
                     {
@@ -8783,7 +8388,7 @@
                 "tags": [
                     "todo"
                 ],
-                "description": "get tolist",
+                "description": "get tolist\n\u003cbr\u003e",
                 "operationId": "TodoController.get todolist",
                 "parameters": [
                     {
@@ -8827,7 +8432,7 @@
                 "tags": [
                     "todo"
                 ],
-                "description": "update tolist",
+                "description": "update tolist\n\u003cbr\u003e",
                 "operationId": "TodoController.update todolist",
                 "parameters": [
                     {
@@ -8858,7 +8463,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user recharge",
+                "description": "get user recharge\n\u003cbr\u003e",
                 "operationId": "PayController.post user recharge",
                 "parameters": [
                     {
@@ -8897,7 +8502,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post business by projectid",
+                "description": "post business by projectid\n\u003cbr\u003e",
                 "operationId": "BusinessController.post business by projectid",
                 "parameters": [
                     {
@@ -9021,7 +8626,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post locationnavigate by locationid",
+                "description": "post locationnavigate by locationid\n\u003cbr\u003e",
                 "operationId": "LocationController.post locationnavigate by locationid",
                 "parameters": [
                     {
@@ -9092,7 +8697,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post location by projectid",
+                "description": "post location by projectid\n\u003cbr\u003e",
                 "operationId": "LocationController.post location by projectid",
                 "parameters": [
                     {
@@ -9152,7 +8757,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "add user",
+                "description": "add user\n\u003cbr\u003e",
                 "operationId": "UserController.add user",
                 "parameters": [
                     {
@@ -9237,7 +8842,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post userpay by mathtempid",
+                "description": "post userpay by mathtempid\n\u003cbr\u003e",
                 "operationId": "PayController.post userpay by mathtempleid",
                 "parameters": [
                     {
@@ -9276,7 +8881,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get users recharge",
+                "description": "get users recharge\n\u003cbr\u003e",
                 "operationId": "PayController.post users recharge",
                 "parameters": [
                     {
@@ -9315,7 +8920,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article by catalogid",
+                "description": "post article by catalogid\n\u003cbr\u003e",
                 "operationId": "ArticleController.post wx artile by catalogId",
                 "parameters": [
                     {
@@ -9360,7 +8965,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article by catalogid",
+                "description": "post article by catalogid\n\u003cbr\u003e",
                 "operationId": "ArticleController.post wx artile by catalogId",
                 "parameters": [
                     {
@@ -9434,7 +9039,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article by catalogid",
+                "description": "post article by catalogid\n\u003cbr\u003e",
                 "operationId": "ArticleController.post wx artile by catalogId",
                 "parameters": [
                     {
@@ -9480,7 +9085,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post attachment by projectid",
+                "description": "post attachment by projectid\n\u003cbr\u003e",
                 "operationId": "AttachController.post wx attachment by projectid",
                 "parameters": [
                     {
@@ -9512,7 +9117,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post diary by projectid",
+                "description": "post diary by projectid\n\u003cbr\u003e",
                 "operationId": "DiaryController.post wx diary by catalogId",
                 "parameters": [
                     {
@@ -9586,7 +9191,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article by catalogid",
+                "description": "post article by catalogid\n\u003cbr\u003e",
                 "operationId": "ArticleController.post wx artile by catalogId",
                 "parameters": [
                     {
@@ -9631,7 +9236,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post finance by projectid",
+                "description": "post finance by projectid\n\u003cbr\u003e",
                 "operationId": "FinanceController.post wx finance by catalogId",
                 "parameters": [
                     {
@@ -9711,7 +9316,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post like by articleId",
+                "description": "post like by articleId\n\u003cbr\u003e",
                 "operationId": "ReplyController.post wx like by articleId",
                 "parameters": [
                     {
@@ -9743,7 +9348,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post release by articleId",
+                "description": "post release by articleId\n\u003cbr\u003e",
                 "operationId": "ReplyController.post wx release by articleId",
                 "parameters": [
                     {
@@ -9799,7 +9404,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post user",
+                "description": "post user\n\u003cbr\u003e",
                 "operationId": "UserController.post wx user",
                 "parameters": [
                     {
@@ -9863,7 +9468,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post userpay by articleid",
+                "description": "post userpay by articleid\n\u003cbr\u003e",
                 "operationId": "PayController.post wx userpay by articleid",
                 "parameters": [
                     {
@@ -9902,7 +9507,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user recharge",
+                "description": "get user recharge\n\u003cbr\u003e",
                 "operationId": "PayController.get user recharge",
                 "responses": {
                     "200": {
@@ -9925,7 +9530,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post person",
+                "description": "post person\n\u003cbr\u003e",
                 "operationId": "BusinessController.post checkin person",
                 "parameters": [
                     {
@@ -10013,7 +9618,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "parameters": [
                     {
@@ -10071,7 +9676,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "parameters": [
                     {
@@ -10129,7 +9734,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "parameters": [
                     {
@@ -10187,7 +9792,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "parameters": [
                     {
@@ -10245,7 +9850,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "parameters": [
                     {
@@ -10303,7 +9908,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "responses": {
                     "200": {
@@ -10326,7 +9931,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "responses": {
                     "200": {
@@ -10349,7 +9954,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "responses": {
                     "200": {
@@ -10372,7 +9977,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "responses": {
                     "200": {
@@ -10395,7 +10000,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get businessmonthcheck",
+                "description": "get businessmonthcheck\n\u003cbr\u003e",
                 "operationId": "BusinessController.get businessmothcheckin",
                 "responses": {
                     "200": {
@@ -10418,8 +10023,8 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get photo",
-                "operationId": "MainController.get photo",
+                "description": "get photo\n\u003cbr\u003e",
+                "operationId": "PhotoController.get photo",
                 "responses": {
                     "200": {
                         "description": "",
@@ -10441,7 +10046,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "delete user",
+                "description": "delete user\n\u003cbr\u003e",
                 "operationId": "UserController.delete user",
                 "parameters": [
                     {
@@ -10472,7 +10077,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article by catalogid",
+                "description": "post article by catalogid\n\u003cbr\u003e",
                 "operationId": "ArticleController.post wx artile by articleId",
                 "parameters": [
                     {
@@ -10504,7 +10109,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post diary by catalogid",
+                "description": "post diary by catalogid\n\u003cbr\u003e",
                 "operationId": "DiaryController.post wx diary by diaryId",
                 "parameters": [
                     {
@@ -10536,7 +10141,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post finance by catalogid",
+                "description": "post finance by catalogid\n\u003cbr\u003e",
                 "operationId": "FinanceController.post wx finance by financeId",
                 "parameters": [
                     {
@@ -10568,7 +10173,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "delete release by releaseid",
+                "description": "delete release by releaseid\n\u003cbr\u003e",
                 "operationId": "ReplyController.delete wx release by releaseid",
                 "parameters": [
                     {
@@ -10600,7 +10205,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get standardpdf by id",
+                "description": "get standardpdf by id\n\u003cbr\u003e",
                 "operationId": "StandardController.dowload standardpdf",
                 "parameters": [
                     {
@@ -10632,7 +10237,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get earch",
+                "description": "get earch\n\u003cbr\u003e",
                 "operationId": "StandardController.get search",
                 "parameters": [
                     {
@@ -10669,7 +10274,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get ansys data by link",
+                "description": "get ansys data by link\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload ansys data",
                 "parameters": [
                     {
@@ -10701,7 +10306,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user recharge",
+                "description": "get user recharge\n\u003cbr\u003e",
                 "operationId": "PayController.get user recharge",
                 "responses": {
                     "200": {
@@ -10724,7 +10329,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user rechargedata",
+                "description": "get user rechargedata\n\u003cbr\u003e",
                 "operationId": "PayController.get user rechargedata",
                 "parameters": [
                     {
@@ -10761,7 +10366,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get business by userid",
+                "description": "get business by userid\n\u003cbr\u003e",
                 "operationId": "BusinessController.get business by userid",
                 "parameters": [
                     {
@@ -10793,7 +10398,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get business by businessid",
+                "description": "get business by businessid\n\u003cbr\u003e",
                 "operationId": "BusinessController.get business by businessid",
                 "parameters": [
                     {
@@ -10825,7 +10430,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get check",
+                "description": "get check\n\u003cbr\u003e",
                 "operationId": "BusinessController.get checkin check",
                 "parameters": [
                     {
@@ -10878,7 +10483,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get standard elasticsearch web",
+                "description": "get standard elasticsearch web\n\u003cbr\u003e",
                 "operationId": "StandardController.get standard elasticsearch web",
                 "responses": {
                     "200": {
@@ -10901,7 +10506,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get math pdf by link",
+                "description": "get math pdf by link\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload math pdf",
                 "parameters": [
                     {
@@ -10933,7 +10538,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get articles by page",
+                "description": "get articles by page\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx artiles list",
                 "parameters": [
                     {
@@ -10972,7 +10577,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get location by userid",
+                "description": "get location by userid\n\u003cbr\u003e",
                 "operationId": "LocationController.get location by userid",
                 "parameters": [
                     {
@@ -11004,7 +10609,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get location by locationid",
+                "description": "get location by locationid\n\u003cbr\u003e",
                 "operationId": "LocationController.get location by locationid",
                 "parameters": [
                     {
@@ -11036,7 +10641,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get math pdf by link",
+                "description": "get math pdf by link\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload math pdf",
                 "parameters": [
                     {
@@ -11068,8 +10673,8 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get photo",
-                "operationId": "MainController.get photo",
+                "description": "get photo\n\u003cbr\u003e",
+                "operationId": "PhotoController.get photo",
                 "parameters": [
                     {
                         "in": "query",
@@ -11107,7 +10712,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get video",
+                "description": "get video\n\u003cbr\u003e",
                 "operationId": "VideoController.get video",
                 "parameters": [
                     {
@@ -11146,7 +10751,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get pay by page",
+                "description": "get pay by page\n\u003cbr\u003e",
                 "operationId": "PayController.get pay list",
                 "responses": {
                     "200": {
@@ -11169,7 +10774,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get Data(file)",
+                "description": "get Data(file)\n\u003cbr\u003e",
                 "operationId": "MainController.get Data(file)",
                 "responses": {
                     "200": {
@@ -11192,7 +10797,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userarticles by projid",
+                "description": "get userarticles by projid\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx userarticles count",
                 "responses": {
                     "200": {
@@ -11215,7 +10820,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user",
+                "description": "get user\n\u003cbr\u003e",
                 "operationId": "UserController.get user",
                 "responses": {
                     "200": {
@@ -11238,7 +10843,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userappreciation by page",
+                "description": "get userappreciation by page\n\u003cbr\u003e",
                 "operationId": "PayController.get userappreciations list",
                 "parameters": [
                     {
@@ -11270,7 +10875,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user money",
+                "description": "get user money\n\u003cbr\u003e",
                 "operationId": "PayController.get user money",
                 "responses": {
                     "200": {
@@ -11293,7 +10898,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get pay by page",
+                "description": "get pay by page\n\u003cbr\u003e",
                 "operationId": "PayController.get pay list",
                 "responses": {
                     "200": {
@@ -11316,7 +10921,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userappreciation by page",
+                "description": "get userappreciation by page\n\u003cbr\u003e",
                 "operationId": "PayController.get userappreciations list",
                 "parameters": [
                     {
@@ -11348,7 +10953,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userpay by page",
+                "description": "get userpay by page\n\u003cbr\u003e",
                 "operationId": "PayController.get userpays list",
                 "parameters": [
                     {
@@ -11392,7 +10997,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get uservideolist",
+                "description": "get uservideolist\n\u003cbr\u003e",
                 "operationId": "VideoController.get uservideolist",
                 "parameters": [
                     {
@@ -11444,7 +11049,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get article by articleid",
+                "description": "get article by articleid\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx artile by articleId",
                 "parameters": [
                     {
@@ -11483,7 +11088,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get article by articleid",
+                "description": "get article by articleid\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx artile by articleId",
                 "parameters": [
                     {
@@ -11543,7 +11148,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get articles by page",
+                "description": "get articles by page\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx artiles list",
                 "parameters": [
                     {
@@ -11589,7 +11194,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get articles by page",
+                "description": "get articles by page\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx artiles list",
                 "parameters": [
                     {
@@ -11635,7 +11240,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get articles by page",
+                "description": "get articles by page\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx artiles list",
                 "parameters": [
                     {
@@ -11695,7 +11300,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get diaries to doc",
+                "description": "get diaries to doc\n\u003cbr\u003e",
                 "operationId": "DiaryController.get wx diaries to doc",
                 "parameters": [
                     {
@@ -11741,7 +11346,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get diaries by page",
+                "description": "get diaries by page\n\u003cbr\u003e",
                 "operationId": "DiaryController.get wx diaries list",
                 "parameters": [
                     {
@@ -11793,7 +11398,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get diary by diaryid",
+                "description": "get diary by diaryid\n\u003cbr\u003e",
                 "operationId": "DiaryController.get wx diary by diaryId",
                 "parameters": [
                     {
@@ -11832,7 +11437,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx pdf by link",
+                "description": "get wx pdf by link\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload wx pdf",
                 "parameters": [
                     {
@@ -11864,7 +11469,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx math temp pdf by id",
+                "description": "get wx math temp pdf by id\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload wx math temp pdf",
                 "parameters": [
                     {
@@ -11896,7 +11501,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get finance by financeid",
+                "description": "get finance by financeid\n\u003cbr\u003e",
                 "operationId": "FinanceController.get wx finance by financeId",
                 "parameters": [
                     {
@@ -11935,7 +11540,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get finance by page",
+                "description": "get finance by page\n\u003cbr\u003e",
                 "operationId": "FinanceController.get wx finance list",
                 "parameters": [
                     {
@@ -11987,7 +11592,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get finance by page",
+                "description": "get finance by page\n\u003cbr\u003e",
                 "operationId": "FinanceController.get wx finance list",
                 "parameters": [
                     {
@@ -12039,7 +11644,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx pdf by link",
+                "description": "get wx pdf by link\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload wx pdf",
                 "parameters": [
                     {
@@ -12071,7 +11676,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get pay by page",
+                "description": "get pay by page\n\u003cbr\u003e",
                 "operationId": "PayController.get wx pay list",
                 "responses": {
                     "200": {
@@ -12094,7 +11699,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx pdf by id",
+                "description": "get wx pdf by id\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload wx pdf",
                 "parameters": [
                     {
@@ -12126,7 +11731,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get pdf by page",
+                "description": "get pdf by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get wx pdf list",
                 "parameters": [
                     {
@@ -12170,7 +11775,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx math temp pdf by id",
+                "description": "get wx math temp pdf by id\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload wx math temp pdf",
                 "parameters": [
                     {
@@ -12202,7 +11807,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userarticles by projid",
+                "description": "get userarticles by projid\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx userarticles count",
                 "parameters": [
                     {
@@ -12234,7 +11839,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userappreciation by page",
+                "description": "get userappreciation by page\n\u003cbr\u003e",
                 "operationId": "PayController.get wx userappreciations list",
                 "parameters": [
                     {
@@ -12266,7 +11871,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user money",
+                "description": "get user money\n\u003cbr\u003e",
                 "operationId": "PayController.get wx user money",
                 "responses": {
                     "200": {
@@ -12289,7 +11894,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userappreciation by page",
+                "description": "get userappreciation by page\n\u003cbr\u003e",
                 "operationId": "PayController.get wx userappreciations list",
                 "parameters": [
                     {
@@ -12321,7 +11926,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get userpay by page",
+                "description": "get userpay by page\n\u003cbr\u003e",
                 "operationId": "PayController.get wx userpays list",
                 "parameters": [
                     {
@@ -12353,7 +11958,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "import users",
+                "description": "import users\n\u003cbr\u003e",
                 "operationId": "UserController.import users",
                 "responses": {
                     "200": {
@@ -12376,7 +11981,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get login..",
+                "description": "get login..\n\u003cbr\u003e",
                 "operationId": "LoginController.get user login...",
                 "responses": {
                     "200": {
@@ -12399,7 +12004,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post login..",
+                "description": "post login..\n\u003cbr\u003e",
                 "operationId": "LoginController.post user login...",
                 "parameters": [
                     {
@@ -12438,7 +12043,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post wx login",
+                "description": "post wx login\n\u003cbr\u003e",
                 "operationId": "LoginController.post wx login",
                 "responses": {
                     "200": {
@@ -12461,8 +12066,8 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get photo",
-                "operationId": "MainController.get photo",
+                "description": "get photo\n\u003cbr\u003e",
+                "operationId": "PhotoController.get photo",
                 "parameters": [
                     {
                         "in": "query",
@@ -12500,8 +12105,8 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get photo",
-                "operationId": "MainController.get photo",
+                "description": "get photo\n\u003cbr\u003e",
+                "operationId": "PhotoController.get photo",
                 "responses": {
                     "200": {
                         "description": "",
@@ -12523,8 +12128,8 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get photodetail",
-                "operationId": "MainController.get photodetail",
+                "description": "get photodetail\n\u003cbr\u003e",
+                "operationId": "PhotoController.get photodetail",
                 "responses": {
                     "200": {
                         "description": "",
@@ -12546,31 +12151,8 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get photodetail",
-                "operationId": "MainController.get photodetail",
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/models.GetAttachbyId"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page supplied"
-                    },
-                    "404": {
-                        "description": "pdf not found"
-                    }
-                }
-            }
-        },
-        "/wx/photoswipe": {
-            "get": {
-                "tags": [
-                    "wx"
-                ],
-                "description": "get photoswipe",
-                "operationId": "MainController.get photoswipe",
+                "description": "get photodetail\n\u003cbr\u003e",
+                "operationId": "PhotoController.get photodetail",
                 "responses": {
                     "200": {
                         "description": "",
@@ -12592,7 +12174,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post Data(file)",
+                "description": "post Data(file)\n\u003cbr\u003e",
                 "operationId": "MainController.post Data(file)",
                 "responses": {
                     "200": {
@@ -12615,7 +12197,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get documentdetail",
+                "description": "get documentdetail\n\u003cbr\u003e",
                 "operationId": "AttachController.get wf document details",
                 "parameters": [
                     {
@@ -12654,7 +12236,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get standardlist",
+                "description": "get standardlist\n\u003cbr\u003e",
                 "operationId": "StandardController.get standardlist",
                 "parameters": [
                     {
@@ -12699,7 +12281,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get allprojects' products search by page",
+                "description": "get allprojects' products search by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get allprojects' products search list",
                 "parameters": [
                     {
@@ -12736,7 +12318,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get all projects' products search by page",
+                "description": "get all projects' products search by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get all projects' products search list",
                 "parameters": [
                     {
@@ -12779,7 +12361,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get a project's products search by page",
+                "description": "get a project's products search by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get a project's products search list",
                 "parameters": [
                     {
@@ -12816,7 +12398,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get a project's products search by page",
+                "description": "get a project's products search by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get a project's products search list",
                 "parameters": [
                     {
@@ -12867,7 +12449,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get articles by page",
+                "description": "get articles by page\n\u003cbr\u003e",
                 "operationId": "ArticleController.get wx articles list",
                 "parameters": [
                     {
@@ -12920,7 +12502,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get drawings by page",
+                "description": "get drawings by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get wx drawings list",
                 "parameters": [
                     {
@@ -12964,7 +12546,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get drawings by page",
+                "description": "get drawings by page\n\u003cbr\u003e",
                 "operationId": "SearchController.get wx drawings list",
                 "parameters": [
                     {
@@ -13008,7 +12590,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get standards by page",
+                "description": "get standards by page\n\u003cbr\u003e",
                 "operationId": "StandardController.get wx standards list",
                 "parameters": [
                     {
@@ -13047,7 +12629,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get sso logintpl",
+                "description": "get sso logintpl\n\u003cbr\u003e",
                 "operationId": "LoginController.get sso login",
                 "parameters": [
                     {
@@ -13078,7 +12660,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post sso login data",
+                "description": "post sso login data\n\u003cbr\u003e",
                 "operationId": "LoginController.post sso login",
                 "parameters": [
                     {
@@ -13123,7 +12705,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post file by BootstrapFileInput",
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
                 "operationId": "StandardController.post bootstrapfileinput",
                 "responses": {
                     "200": {
@@ -13146,7 +12728,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get standardpdf",
+                "description": "get standardpdf\n\u003cbr\u003e",
                 "operationId": "StandardController.get standardpdf",
                 "responses": {
                     "200": {
@@ -13164,12 +12746,44 @@
                 }
             }
         },
+        "/wx/tianditusearch": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get tianditu location\n\u003cbr\u003e",
+                "operationId": "SupaMapusController.get tianditu location",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The keyword of location",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetAttachbyId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "location not found"
+                    }
+                }
+            }
+        },
         "/wx/updatebusiness/{id}": {
             "post": {
                 "tags": [
                     "wx"
                 ],
-                "description": "post update business by businessid",
+                "description": "post update business by businessid\n\u003cbr\u003e",
                 "operationId": "BusinessController.post update business by businessid",
                 "parameters": [
                     {
@@ -13293,7 +12907,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "add user",
+                "description": "add user\n\u003cbr\u003e",
                 "operationId": "UserController.update user",
                 "parameters": [
                     {
@@ -13336,7 +12950,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post diary by diaryid",
+                "description": "post diary by diaryid\n\u003cbr\u003e",
                 "operationId": "DiaryController.post wx diary by diaryid",
                 "parameters": [
                     {
@@ -13382,7 +12996,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article by articleid",
+                "description": "post article by articleid\n\u003cbr\u003e",
                 "operationId": "ArticleController.post wx artile by articleid",
                 "parameters": [
                     {
@@ -13434,7 +13048,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post finance by financeid",
+                "description": "post finance by financeid\n\u003cbr\u003e",
                 "operationId": "FinanceController.post wx finance by financeid",
                 "parameters": [
                     {
@@ -13501,7 +13115,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post user password by uid",
+                "description": "post user password by uid\n\u003cbr\u003e",
                 "operationId": "UserController.post wx userpassword by uid",
                 "parameters": [
                     {
@@ -13554,7 +13168,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post user avatar",
+                "description": "post user avatar\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx user avatar",
                 "responses": {
                     "200": {
@@ -13572,12 +13186,58 @@
                 }
             }
         },
+        "/wx/uploadphoto": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "upload photo page\n\u003cbr\u003e",
+                "operationId": "PhotoController.upload photo page",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.UploadPhoto"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "photo not found"
+                    }
+                }
+            }
+        },
+        "/wx/uploadphotodata": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post photo\n\u003cbr\u003e",
+                "operationId": "PhotoController.post wx photo img",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "photo not found"
+                    }
+                }
+            }
+        },
         "/wx/uploadstandard": {
             "get": {
                 "tags": [
                     "wx"
                 ],
-                "description": "get upload file to standard html",
+                "description": "get upload file to standard html\n\u003cbr\u003e",
                 "operationId": "StandardController.upload file to standard html",
                 "responses": {
                     "200": {
@@ -13595,12 +13255,35 @@
                 }
             }
         },
+        "/wx/uploadvideo": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "upload video\n\u003cbr\u003e",
+                "operationId": "VideoController.upload videodata",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.uploadvideo"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "video not found"
+                    }
+                }
+            }
+        },
         "/wx/uploadwxavatar": {
             "post": {
                 "tags": [
                     "wx"
                 ],
-                "description": "post user avatar",
+                "description": "post user avatar\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx user avatar",
                 "responses": {
                     "200": {
@@ -13623,7 +13306,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article img by catalogid",
+                "description": "post article img by catalogid\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx artile img by catalogId",
                 "parameters": [
                     {
@@ -13655,7 +13338,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article img by catalogid",
+                "description": "post article img by catalogid\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx artile img by catalogId",
                 "responses": {
                     "200": {
@@ -13678,7 +13361,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post article img by catalogid",
+                "description": "post article img by catalogid\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx artile img by catalogId",
                 "parameters": [
                     {
@@ -13710,7 +13393,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post video by catalogid",
+                "description": "post video by catalogid\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx video by catalogId",
                 "parameters": [
                     {
@@ -13749,7 +13432,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post videoCover by videoid",
+                "description": "post videoCover by videoid\n\u003cbr\u003e",
                 "operationId": "FroalaController.post wx videoCover by videoid",
                 "parameters": [
                     {
@@ -13781,7 +13464,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get user by userid",
+                "description": "get user by userid\n\u003cbr\u003e",
                 "operationId": "UserController.get user",
                 "parameters": [
                     {
@@ -13818,7 +13501,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get usermanage",
+                "description": "get usermanage\n\u003cbr\u003e",
                 "operationId": "MainController.get usermanage",
                 "responses": {
                     "200": {
@@ -13841,7 +13524,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get usermyself",
+                "description": "get usermyself\n\u003cbr\u003e",
                 "operationId": "UserController.get usermyself",
                 "responses": {
                     "200": {
@@ -13864,7 +13547,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get video",
+                "description": "get video\n\u003cbr\u003e",
                 "operationId": "VideoController.get video",
                 "parameters": [
                     {
@@ -13903,7 +13586,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get videodetail",
+                "description": "get videodetail\n\u003cbr\u003e",
                 "operationId": "VideoController.get videodetail",
                 "parameters": [
                     {
@@ -13935,7 +13618,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get earch",
+                "description": "get earch\n\u003cbr\u003e",
                 "operationId": "StandardController.get search",
                 "parameters": [
                     {
@@ -13972,7 +13655,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx usersession",
+                "description": "get wx usersession\n\u003cbr\u003e",
                 "operationId": "LoginController.get wx haslogin",
                 "responses": {
                     "200": {
@@ -13995,7 +13678,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post wx login",
+                "description": "post wx login\n\u003cbr\u003e",
                 "operationId": "LoginController.post wx login",
                 "parameters": [
                     {
@@ -14034,7 +13717,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx pdf by id",
+                "description": "get wx pdf by id\n\u003cbr\u003e",
                 "operationId": "AttachController.dowload wx pdf",
                 "parameters": [
                     {
@@ -14066,7 +13749,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post wx region",
+                "description": "post wx region\n\u003cbr\u003e",
                 "operationId": "RegistController.post wx region",
                 "parameters": [
                     {
@@ -14119,7 +13802,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "post wx regist",
+                "description": "post wx regist\n\u003cbr\u003e",
                 "operationId": "RegistController.post wx regist",
                 "parameters": [
                     {
@@ -14172,7 +13855,7 @@
                 "tags": [
                     "wx"
                 ],
-                "description": "get wx standardpdf by id",
+                "description": "get wx standardpdf by id\n\u003cbr\u003e",
                 "operationId": "StandardController.dowload wx standardpdf",
                 "parameters": [
                     {
@@ -14216,9 +13899,30 @@
             "title": "SUCCESS",
             "type": "object"
         },
+        "gorm.DeletedAt": {
+            "title": "DeletedAt",
+            "type": "object"
+        },
         "gorm.Model": {
             "title": "Model",
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                }
+            }
         },
         "models.AddAdminCategory": {
             "title": "AddAdminCategory",
@@ -14275,10 +13979,26 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
                 "UserID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 },
@@ -14292,6 +14012,7 @@
                     "type": "string"
                 },
                 "titleb": {
+                    "description": "简要名称，无日期，无版本号，无扩展名",
                     "type": "string"
                 },
                 "version": {
@@ -14306,6 +14027,21 @@
                 "AnsysApdlID": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "html": {
                     "type": "string"
@@ -14325,6 +14061,21 @@
                 "AnsysApdl": {
                     "$ref": "#/definitions/models.AnsysApdl"
                 },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
@@ -14336,6 +14087,7 @@
                     "type": "string"
                 },
                 "userid": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 }
@@ -14345,6 +14097,21 @@
             "title": "AnsysHistoryInputValue",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "ansys_history_id": {
                     "type": "integer",
                     "format": "int32"
@@ -14363,8 +14130,24 @@
             "type": "object",
             "properties": {
                 "AnsysHistoryID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int32"
+                },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "ansysoutputsid": {
                     "type": "integer",
@@ -14392,6 +14175,21 @@
                     "type": "integer",
                     "format": "int32"
                 },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "comment": {
                     "type": "string"
                 },
@@ -14402,6 +14200,7 @@
                     "type": "string"
                 },
                 "inputvalue": {
+                    "description": "默认值",
                     "type": "string"
                 },
                 "realmax": {
@@ -14434,6 +14233,21 @@
                 "AnsysApdlID": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "comment": {
                     "type": "string"
@@ -14558,9 +14372,24 @@
             "title": "ExcelArticle",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
                 "ExcelTempleID": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "html": {
                     "type": "string"
@@ -14577,8 +14406,23 @@
             "title": "ExcelHistory",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
                 "ExcelTemple": {
                     "$ref": "#/definitions/models.ExcelTemple"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "User": {
                     "$ref": "#/definitions/models.User"
@@ -14597,6 +14441,7 @@
                     "type": "string"
                 },
                 "userid": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 }
@@ -14606,6 +14451,21 @@
             "title": "ExcelHistoryInputValue",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "excel_history_id": {
                     "type": "integer",
                     "format": "int32"
@@ -14623,9 +14483,25 @@
             "title": "ExcelHistoryOutputValue",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
                 "ExcelHistoryID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int32"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "exceloutputsid": {
                     "type": "integer",
@@ -14649,9 +14525,24 @@
             "title": "ExcelInputs",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
                 "ExcelTempleID": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "comment": {
                     "type": "string"
@@ -14663,6 +14554,7 @@
                     "type": "string"
                 },
                 "inputvalue": {
+                    "description": "默认值",
                     "type": "string"
                 },
                 "realmax": {
@@ -14692,9 +14584,24 @@
             "title": "ExcelOutputs",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
                 "ExcelTempleID": {
                     "type": "integer",
                     "format": "int32"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "comment": {
                     "type": "string"
@@ -14733,10 +14640,26 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
                 "UserID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 },
@@ -14753,6 +14676,7 @@
                     "type": "string"
                 },
                 "titleb": {
+                    "description": "简要名称，无日期，无版本号，无扩展名",
                     "type": "string"
                 },
                 "version": {
@@ -14848,6 +14772,21 @@
             "title": "HistoryInputValue",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "inputvalue": {
                     "type": "string"
                 },
@@ -14865,7 +14804,23 @@
             "title": "HistoryOutputValue",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "UserHistoryID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int32"
                 },
@@ -14882,6 +14837,21 @@
             "title": "MathArticle",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "UserTempleID": {
                     "type": "integer",
                     "format": "int32"
@@ -14929,13 +14899,15 @@
                     "format": "datetime"
                 },
                 "User": {
-                    "$ref": "#/definitions/models.User"
+                    "$ref": "#/definitions/models.User",
+                    "description": "这个外键难道不是错的么？应该是UserID?没错，因为column:user_id"
                 },
                 "User2ID": {
                     "type": "integer",
                     "format": "int64"
                 },
                 "UserID": {
+                    "description": "One-To-One (属于 - 本表的BillingAddressID作外键",
                     "type": "integer",
                     "format": "int64"
                 },
@@ -14957,10 +14929,26 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
                 "UserID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 }
@@ -14975,6 +14963,7 @@
             "type": "object",
             "properties": {
                 "id": {
+                    "description": "这个在前端table中显示，必须是string",
                     "type": "string"
                 },
                 "text": {
@@ -14989,6 +14978,21 @@
             "title": "TempleInputs",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "UserTempleID": {
                     "type": "integer",
                     "format": "int32"
@@ -14997,12 +15001,14 @@
                     "type": "string"
                 },
                 "historyinputvalue": {
-                    "$ref": "#/definitions/models.HistoryInputValue"
+                    "$ref": "#/definitions/models.HistoryInputValue",
+                    "description": "带条件的预加载,条件是UserHistoryID"
                 },
                 "inputalias": {
                     "type": "string"
                 },
                 "inputvalue": {
+                    "description": "默认值",
                     "type": "string"
                 },
                 "realmax": {
@@ -15015,6 +15021,7 @@
                     "type": "string"
                 },
                 "selectvalue": {
+                    "description": "hasMany",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Select2"
@@ -15032,6 +15039,21 @@
             "title": "TempleOutputs",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "UserTempleID": {
                     "type": "integer",
                     "format": "int32"
@@ -15071,6 +15093,10 @@
         },
         "models.UpdateBusiness": {
             "title": "UpdateBusiness",
+            "type": "object"
+        },
+        "models.UploadPhoto": {
+            "title": "UploadPhoto",
             "type": "object"
         },
         "models.User": {
@@ -15125,9 +15151,11 @@
                     "format": "datetime"
                 },
                 "name": {
+                    "description": "这个拼音的简写",
                     "type": "string"
                 },
                 "role": {
+                    "description": "这个不是角色，这个无意义",
                     "type": "string"
                 }
             }
@@ -15136,6 +15164,21 @@
             "title": "UserHistory",
             "type": "object",
             "properties": {
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
@@ -15156,6 +15199,7 @@
                     "format": "int32"
                 },
                 "userid": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 }
@@ -15172,10 +15216,26 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "CreatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DeletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UpdatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
                 "User": {
                     "$ref": "#/definitions/models.User"
                 },
                 "UserID": {
+                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int64"
                 },
@@ -15192,6 +15252,7 @@
                     "type": "string"
                 },
                 "titleb": {
+                    "description": "简要名称，无日期，无版本号，无扩展名",
                     "type": "string"
                 },
                 "version": {
@@ -15219,6 +15280,10 @@
             "title": "pass_project",
             "type": "object"
         },
+        "models.uploadvideo": {
+            "title": "uploadvideo",
+            "type": "object"
+        },
         "success": {
             "title": "success",
             "type": "object"
@@ -15228,6 +15293,10 @@
         {
             "name": "admin",
             "description": "VueFlow API\n"
+        },
+        {
+            "name": "wx",
+            "description": "CMSWX article API\n"
         },
         {
             "name": "adminlog",
@@ -15267,11 +15336,7 @@
         },
         {
             "name": "excel",
-            "description": "CMSMATHCAD API\n"
-        },
-        {
-            "name": "passproject",
-            "description": "CMS pass_project API\n"
+            "description": "CMSexcel API\n"
         },
         {
             "name": "elastic",

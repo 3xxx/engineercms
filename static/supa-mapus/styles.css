@@ -33,7 +33,8 @@ body {
   right: 0px;
   top: 0px;
   bottom: 0px;
-  height: 190px;
+  /*height: 190px;*/
+  height: 350px;
   background-color: #FFF;
   border-radius: 5px;
   font-size: 5px;
@@ -75,11 +76,30 @@ body {
   margin-right: auto;
   margin-top: 25px;
 }
+#google-signin-2 {
+  height: 45px;
+  line-height: 45px;
+  border-radius: 5px;
+  background-color: #FFF;
+  border: 1px solid #E7EAEC;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 2px rgba(53, 87, 98, 0.1);
+  text-align: center;
+  color: var(--text-grey);
+  font-family: Inter;
+  font-weight: 700;
+  font-size: 14px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
+}
 #create-map {
   height: 45px;
   line-height: 45px;
   border-radius: 5px;
-  background-color: var(--text-black);
+  /*background-color: var(--text-black);*/
+  background-color: #147adb;
   border: 1px solid #E7EAEC;
   box-sizing: border-box;
   text-align: center;
@@ -90,7 +110,11 @@ body {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 25px;
+  margin-top: 12px;
+}
+#create-map:hover {
+  cursor: pointer;
+  background-color: #297847!important;
 }
 #google-signin img {
   display: inline-block;
@@ -98,7 +122,17 @@ body {
   vertical-align: middle;
   margin-top: -2px;
 }
+#google-signin-2 img {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+  margin-top: -2px;
+}
 #google-signin:hover {
+  cursor: pointer;
+  background-color: var(--hover-grey)!important;
+}
+#google-signin-2:hover {
   cursor: pointer;
   background-color: var(--hover-grey)!important;
 }
@@ -308,7 +342,8 @@ th img {
 }
 /* Annotation section */
 #annotations-section {
-  height: calc(100% - 430px);
+  /*height: calc(100% - 430px);*/
+  height: calc(100% - 200px);
   overflow-y: auto;
 }
 #annotations-header {
@@ -352,7 +387,8 @@ th img {
   font-weight: 500;
   vertical-align: middle;
 }
-.annotation-name span {
+/*.annotation-name span {*/
+/*.annotation-name input {
   margin-left: 8px;
   vertical-align: middle;
   overflow: hidden;
@@ -360,6 +396,28 @@ th img {
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
+}*/
+.annotation-name input {
+  /*margin-left: 8px;*/
+  vertical-align: middle;
+  overflow: hidden;
+  /*width: 230px;*/
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-black);
+  margin-top: 5px;
+  border: 0px;
+  text-indent: 0px;
+  box-sizing: border-box;
+  padding: 0px;
+  outline: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
 }
 .annotation-focus {
   font-weight: 700!important;
@@ -406,7 +464,21 @@ th img {
   font-weight: 500;
   line-height: normal;
   width: 90%;
+
+  /*font-family: Inter;*/
+  /*font-weight: 500;*/
+  /*font-size: 13px;*/
+  /*color: var(--text-black);*/
+  /*margin-top: 5px;*/
+  border: 0px;
+  text-indent: 0px;
+  box-sizing: border-box;
+  padding: 0px;
+  outline: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
 }
+
 .annotation-data {
   font-family: Inter;
   font-size: 13px;
@@ -675,7 +747,7 @@ th img {
   vertical-align: middle;
 }
 #share-button {
-  height: 48px;
+/*  height: 48px;
   padding-left: 20px;
   padding-right: 20px;
   color: #FFF;
@@ -687,7 +759,7 @@ th img {
   font-family: Inter;
   font-weight: 700;
   vertical-align: middle;
-  font-size: 14px;
+  font-size: 14px;*/
 }
 #share-button:hover {
   cursor: pointer;
@@ -1017,7 +1089,7 @@ h3 img {
   vertical-align: middle;
 }
 #sign-button {
-  height: 48px;
+/*  height: 48px;
   padding-left: 20px;
   padding-right: 20px;
   color: #FFF;
@@ -1029,7 +1101,7 @@ h3 img {
   font-family: Inter;
   font-weight: 700;
   vertical-align: middle;
-  font-size: 14px;
+  font-size: 14px;*/
 }
 #sign-button:hover {
   cursor: pointer;
@@ -1116,3 +1188,91 @@ h3 img {
 .copyright-bottom {
   padding-bottom: 12px;
 }
+/*下载地图*/
+#chooseTileZoom {
+  position: absolute;
+  margin: auto;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 480px;
+  /*height: 135px;*/
+  height: 220px;
+  border-radius: 5px;
+  background-color: #FFF;
+  z-index: 99999999;
+  visibility: hidden;
+}
+/*#sign-nav {
+  height: 45px;
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  line-height: 45px;
+}*/
+#chooseTileZoom span {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-black);
+  margin-left: 20px;
+}
+#close-choosetilezoom {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+#close-choosetilezoom:hover {
+  cursor: pointer;
+  opacity: .6;
+}
+#chooseTileZoom input {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  width: 319px;
+  height: 39px;
+  /*height: 89px;*/
+  color: var(--text-grey);
+  margin-left: 20px;
+  margin-top: 20px;
+  font-family: Inter;
+  font-size: 13px;
+  font-weight: 500;
+  text-indent: 15px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.chooseTileZoom-show {
+  visibility: visible!important;
+}
+
+#draw-rectangle {
+  height: 45px;
+  line-height: 45px;
+  border-radius: 5px;
+  background-color: #FFF;
+  border: 1px solid #E7EAEC;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 2px rgba(53, 87, 98, 0.1);
+  text-align: center;
+  color: var(--text-grey);
+  font-family: Inter;
+  font-weight: 700;
+  font-size: 14px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
+}
+#draw-rectangle img {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+  margin-top: -2px;
+}
+#draw-rectangle:hover {
+  cursor: pointer;
+  background-color: var(--hover-grey)!important;
+}
+/*下载地图结束*/

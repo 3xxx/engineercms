@@ -26,7 +26,7 @@
 # go mod tidy——下载新增的依赖包
 # go mod vendor——更新
 
-# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，再执行bee run -gendoc=true -downdoc=true
+# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，再执行bee generate docs,再执行bee run -gendoc=true -downdoc=true
 # 将新增的依赖包自动写入当前项目的 vendor 目录：
 # go mod vendor
 # 如果 go.mod 发生变化，应当重新执行 go mod vendor！
@@ -50,7 +50,7 @@
 
 ```bash
 # beego 2.0.0 升级指南
-# 获取最新版本的 bee 工具 go get -u github.com/beego/bee/v2
+# 获取最新版本的 bee 工具 go install github.com/beego/bee/v2@latest
 # 更新 beego 框架 go get -u github.com/beego/beego/v2
 # 然后进入项目，执行: bee fix -t 2
 # 需要注意的是，如果你是 windows 用户，那么你需要在 WSL 内部运行该命令。
@@ -65,9 +65,23 @@
 # 我教你一个小技巧。当你发现依赖找不到的时候，你把import里面对应的东西删掉，IDE会帮你补全，或者给你提示。如果你用的GOLANG IDE，那么会自动帮你把对应依赖引入。
 
 # 记住一个核心原则：如果你用的是adapter的包，那么所有的包都应该是adapter的；如果你用的是beego/beego/v2（非adapter)，那么所有的都应该是beego/beego/v2下的。
-```
 
-```bash
+手动执行 bee generate docs以及bee generate routers重新生成commentsRouter_controllers.go，新版本删除了自动生成功能
+bee run -gendoc=true -downdoc=true
+
+go get 是拉取远程包的命令，还是继续使用的
+go install 是对项目进行编译并自动拉取所需包并生成 可执行文件的。
+
+还好，你说的编译一下，生成可执行命令了，感谢！
+
+解决步骤：
+1、go get -u github.com/beego/bee/v2
+2、cd 到这个bee/v2版本中
+3、go mod tidy 整理一下
+4、go install
+此时在 GOPATH目录bin文件夹下生成了bee.exe 。
+测试 ./bee.exe new hello 已正常创建项目，自己将bin目录加入到全局即可。
+
 # https://www.cnblogs.com/cqlb/p/13396107.html
 # 一、创建标签
 # 在Git中打标签非常简单，首先，切换到需要打标签的分支上：
