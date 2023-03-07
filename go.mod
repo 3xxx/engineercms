@@ -15,9 +15,7 @@ require (
 	github.com/casbin/casbin/v2 v2.60.0
 	github.com/casbin/xorm-adapter/v2 v2.5.1
 	github.com/disintegration/gift v1.2.1
-	github.com/dlclark/regexp2 v1.7.0
 	github.com/elastic/go-elasticsearch/v8 v8.5.0
-	github.com/go-ole/go-ole v1.2.6
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/go-tika v0.3.0
@@ -35,13 +33,12 @@ require (
 	github.com/pborman/uuid v1.2.1
 	github.com/pdfcpu/pdfcpu v0.3.13
 	github.com/russross/blackfriday/v2 v2.1.0
-	github.com/smartystreets/goconvey v1.7.2
 	github.com/tealeg/xlsx v1.0.5
 	github.com/unidoc/unioffice v1.21.1
 	github.com/xuri/excelize/v2 v2.6.1
 	golang.org/x/crypto v0.5.0
 	golang.org/x/net v0.5.0
-	golang.org/x/text v0.6.0
+	golang.org/x/text v0.7.0
 	google.golang.org/appengine v1.6.7
 	gopkg.in/ldap.v2 v2.5.1
 	gorm.io/driver/sqlite v1.4.4
@@ -66,14 +63,12 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hhrutter/lzw v0.0.0-20190829144645-6f07a24e8650 // indirect
 	github.com/hhrutter/tiff v0.0.0-20190829141212-736cae8d0bc7 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/klauspost/cpuid/v2 v2.1.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
@@ -94,11 +89,11 @@ require (
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
-	github.com/smartystreets/assertions v1.2.0 // indirect
+	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
-	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539 // indirect
+	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
