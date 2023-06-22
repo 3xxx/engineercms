@@ -42,7 +42,7 @@ a.navbar-brand {
         <a href="/project/25003">施工专业</a>
       </li> -->
       <!-- <li {{if .IsNav1}} class="dropdown active" {{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           试验段 <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -61,7 +61,7 @@ a.navbar-brand {
         </ul>
       </li>
       <li {{if .IsNav2}} class="dropdown active" {{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           顺德部<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -80,7 +80,7 @@ a.navbar-brand {
         </ul>
       </li>
       <li {{if .IsNav3}} class="dropdown active" {{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           南沙部<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -99,7 +99,7 @@ a.navbar-brand {
         </ul>
       </li>
       <li {{if .IsNav4}} class="dropdown active" {{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           东莞部<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -118,7 +118,7 @@ a.navbar-brand {
         </ul>
       </li>
       <li {{if .IsNav5}} class="dropdown active" {{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           罗田部<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -141,7 +141,7 @@ a.navbar-brand {
         <a href="/onlyoffice">OnlyOffice</a>
       </li>
       <!-- <li {{if or .IsDesignGant .IsConstructGant}}class="dropdown active"{{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           进度 <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -160,7 +160,7 @@ a.navbar-brand {
         <button type="submit" class="btn btn-default" id="search">Submit</button>
       </form> -->
       <li {{if or .IsStandard .IsLegislation}} class="dropdown active" {{end}} class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           规范 <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -185,7 +185,7 @@ a.navbar-brand {
         <a href="/diary">日志</a>
       </li> -->
       <!-- <li {{if or .IsMeetingroomCalendar .IsCarCalendar .IsOrderCalendar .IsAttendanceCalendar}} class="dropdown active" {{end}}>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           预订 <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
@@ -220,7 +220,7 @@ a.navbar-brand {
       <ul class="nav navbar-nav navbar-right">
         {{if eq true .IsAdmin}}
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
+          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/admin" title="管理">进入后台</a></li>
             <li><a href="/cms/#/flow/usertobeprocessed" title="邮箱"><i class="fa fa-envelope">&nbsp; 邮箱</i></a></li>
@@ -235,7 +235,7 @@ a.navbar-brand {
         </li>
         {{else if eq true .IsLogin}}
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
+          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/cms/#/flow/usertobeprocessed" title="邮箱"><i class="fa fa-envelope">&nbsp; 邮箱</i></a></li>
             <li><a href="/v1/cart/getcart" title="购物车"><i class="fa fa-shopping-cart">&nbsp; 购物车</i></a></li>
@@ -250,7 +250,7 @@ a.navbar-brand {
         </li>
         {{else}}
         <!-- <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
+          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/admin" title="管理">进入后台</a></li>
             <li><a href="/cms/#/flow/usertobeprocessed" title="邮箱">邮箱</a></li>
@@ -263,7 +263,7 @@ a.navbar-brand {
           </ul>
         </li> -->
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
+          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="javascript:void(0)" id="login">登陆</a></li>
             <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
@@ -274,7 +274,7 @@ a.navbar-brand {
           <a href="/wiki">Wiki</a>
         </li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
             帮助 <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">

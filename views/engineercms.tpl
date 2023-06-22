@@ -180,7 +180,7 @@
   </div>
   <hr class="featurette-divider">
   <footer>
-    <p class="pull-right"><a href="#">Back to top</a></p>
+    <p class="pull-right"><a href="javascript:void(0)">Back to top</a></p>
     <!-- <p>&copy; 2017 Lock &middot; <a href="http://www.milu365.com" target="_blank">迷路365</a> &middot; <a href="http://mianshi.milu365.cn" target="_blank">面试小助手</a> </p> -->
     <h4>Copyright © 2016-2018 EngineerCMS</h4>
     <p>

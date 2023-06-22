@@ -59,7 +59,7 @@
                                 <tbody>
                                 <tr v-for="item in lists">
                                     <td>${item.member_id}</td>
-                                    <td><img :src="item.avatar" onerror="this.src='{{cdnimg "/static/images/middle.gif"}}'" class="img-circle" width="34" height="34"></td>
+                                    <td><img :src="item.avatar" onerror="this.src='{{cdnimg "/static/mindoc/images/middle.gif"}}'" class="img-circle" width="34" height="34"></td>
                                     <td>${item.account}</td>
                                     <td>${item.real_name}</td>
                                     <td>

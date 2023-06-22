@@ -101,7 +101,7 @@
   <!-- <link href="/static/eyeblue/chunk-vendors.588116bf.js" rel="preload" as="script"> -->
   <!-- <link href="/static/eyeblue/chunk-vendors.fc2d671c.css" rel="stylesheet"> -->
   <link href="/static/eyeblue/app.310dcbb8.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <style type="text/css">
@@ -145,7 +145,6 @@
       bottom: 0
     }
   }
- 
   </style>
 </head>
 
@@ -164,7 +163,7 @@
                       <div class="upper">
                         <div class="left-box"><img src="/static/eyeblue/img/archive.77d78eb7.svg" class="share-icon"><span class="name">
                             {{.Share.Name}}
-                            </span></div>
+                          </span></div>
                         <div class="right-box"><button class="btn btn-primary btn-sm mr5" onclick="downloadzip()"><i class="fa fa-download"></i>
                             下载
                           </button>
@@ -185,8 +184,6 @@
                         </span>
                       </div>
                     </div>
-
-
                     <div id="matter-panel">
                       <!-- <div class="widget-share-matter-panel">
                         <div>
@@ -211,8 +208,6 @@
                         </div>
                       </div> -->
                     </div>
-
-
                     <div class="mt20">
                       <div>
                         <div class="text-center" style="display: none;"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
@@ -250,9 +245,9 @@
                     </div>
                     <div class="col-md-4 col-md-offset-4 mt100" id="code">
                       <div class="input-group"><input type="text" placeholder="请输入提取码" class="form-control" id="password"><span class="input-group-btn">
-                        <button type="button" class="btn btn-primary" onclick="browse()">
+                          <button type="button" class="btn btn-primary" onclick="browse()">
                             提取文件
-                        </button></span>
+                          </button></span>
                       </div>
                     </div>
                   </div>
@@ -279,7 +274,7 @@
     browse()
   })
 
-  function browse(){
+  function browse() {
     var code = $('#password').val()
     $.ajax({
       type: "get",
@@ -291,17 +286,17 @@
         // data: null
         // msg: "提取码必填"
         if (data.code != "OK") {
-          document.getElementById("share-block").style.display = "none"//不显示
-          document.getElementById("matter-panel").style.display = "none"//不显示
+          document.getElementById("share-block").style.display = "none" //不显示
+          document.getElementById("matter-panel").style.display = "none" //不显示
           document.getElementById("code").style.display = "block"
           // document.getElementById("nav").style.display = "block"//显示
-        }else{
-          for(let i = 0;i<data.data.length;i++){
-          $("#matter-panel").append('<div class="widget-share-matter-panel"><div><div class="media"><div class="pull-left"><div class="left-part"><span class="basic-span"><img src="/static/eyeblue/img/folder.f8d1b500.svg" class="matter-icon"></span></div></div><div class="pull-right hidden-sm hidden-xs"><div class="right-part"><span class="matter-operation"  onclick="download('+data.data[i].Id+')"><i title="下载" class="fa fa-download btn-action text-primary"></i></span><span class="matter-size">4.7 kB </span><span class="matter-date">'+moment(data.data[i].Created).format('YYYY-MM-DD HH:mm:ss')+'</span></div></div><div class="pull-right hidden-lg hidden-md"><span class="more-btn"><i title="更多" class="fa fa-ellipsis-h btn-action" onClick="show('+data.data[i].Id+')"></i></span></div><div class="media-body"><div class="middle-part"><span title="" class="matter-name">'+data.data[i].Code+'-'+data.data[i].Title+'</span></div></div></div></div><div class="hidden-lg hidden-md more-panel" style="display: none;" id="'+data.data[i].Id+'"><div class="cell-btn" style="border: none;"><span>'+moment(data.data[i].Created).format('YYYY-MM-DD HH:mm:ss')+'</span></div><div title="下载" class="cell-btn" onclick="download('+data.data[i].Id+')"><i class="fa fa-download"></i>下载</div></div></div>')
+        } else {
+          for (let i = 0; i < data.data.length; i++) {
+            $("#matter-panel").append('<div class="widget-share-matter-panel"><div><div class="media"><div class="pull-left"><div class="left-part"><span class="basic-span"><img src="/static/eyeblue/img/folder.f8d1b500.svg" class="matter-icon"></span></div></div><div class="pull-right hidden-sm hidden-xs"><div class="right-part"><span class="matter-operation"  onclick="download(' + data.data[i].Id + ')"><i title="下载" class="fa fa-download btn-action text-primary"></i></span><span class="matter-size">4.7 kB </span><span class="matter-date">' + moment(data.data[i].Created).format('YYYY-MM-DD HH:mm:ss') + '</span></div></div><div class="pull-right hidden-lg hidden-md"><span class="more-btn"><i title="更多" class="fa fa-ellipsis-h btn-action" onClick="show(' + data.data[i].Id + ')"></i></span></div><div class="media-body"><div class="middle-part"><span title="" class="matter-name">' + data.data[i].Code + '-' + data.data[i].Title + '</span></div></div></div></div><div class="hidden-lg hidden-md more-panel" style="display: none;" id="' + data.data[i].Id + '"><div class="cell-btn" style="border: none;"><span>' + moment(data.data[i].Created).format('YYYY-MM-DD HH:mm:ss') + '</span></div><div title="下载" class="cell-btn" onclick="download(' + data.data[i].Id + ')"><i class="fa fa-download"></i>下载</div></div></div>')
           }
           document.getElementById("share-block").style.display = "block"
           document.getElementById("matter-panel").style.display = "block"
-          document.getElementById("code").style.display = "none"//不显示
+          document.getElementById("code").style.display = "none" //不显示
         }
       },
       error: function(data, status) {
@@ -310,24 +305,24 @@
     });
   }
 
-  function show(id){
+  function show(id) {
     var _container = document.getElementsByClassName("hidden-lg hidden-md more-panel");
-        // console.log(_container[0].style.display);
-        for(let i = 0;i<_container.length;i++){
-          _container[i].style.display = "none"
-        }
+    // console.log(_container[0].style.display);
+    for (let i = 0; i < _container.length; i++) {
+      _container[i].style.display = "none"
+    }
     // document.getElementsByClassName("hidden-lg hidden-md more-panel").style.display = "none"
     // console.log(document.getElementById(id).style.display)
     // if (document.getElementById(id).style.display == "none"){
-      document.getElementById(id).style.display = "block"
+    document.getElementById(id).style.display = "block"
     // }else{
-      // document.getElementById(id).style.display = "none"
+    // document.getElementById(id).style.display = "none"
     // }
   }
 
-  function download(id){
+  function download(id) {
     var code = $('#password').val();
-    fetch('/v1/share/download',{
+    fetch('/v1/share/download', {
       // signal, // 在option中加入signal
       method: 'POST',
       // credentials:'include',
@@ -336,28 +331,28 @@
       },
       body: JSON.stringify({
         shareUuid: {{.Shareuuid }},
-        code:code,
+        code: code,
         id: id,
       })
     }).then(res => res.blob().then(blob => {
       // if (res.code === 0) {
-        // console.log(blob)
+      // console.log(blob)
       var a = document.createElement('a');
       var url = window.URL.createObjectURL(blob);
       var filename = res.headers.get('Content-Disposition').split(';')[1].split('=')[1];
-      
-      a.href = url;
-      a.download = decodeURI(filename);
-      a.click();
-      window.URL.revokeObjectURL(url);
+
+      a.href = url;
+      a.download = decodeURI(filename);
+      a.click();
+      window.URL.revokeObjectURL(url);
       // document.body.removeChild(a);
       // document.getElementById('status').innerHTML = '下载完成';
     }));
   }
 
-  function downloadzip(id){
+  function downloadzip(id) {
     var code = $('#password').val();
-    fetch('/v1/share/downloadzip',{
+    fetch('/v1/share/downloadzip', {
       // signal, // 在option中加入signal
       method: 'POST',
       // credentials:'include',
@@ -366,7 +361,7 @@
       },
       body: JSON.stringify({
         shareUuid: {{.Shareuuid }},
-        code:code,
+        code: code,
         // id: id,
       })
     }).then(res => res.blob().then(blob => {
@@ -376,34 +371,34 @@
       var filename = res.headers.get('Content-Disposition').split(';')[1].split('=')[1];
       // console.log(filename);
       // console.log(decodeURI(filename));
-      a.href = url;
-      a.download = decodeURI(filename);
-      a.click();
-      window.URL.revokeObjectURL(url);
+      a.href = url;
+      a.download = decodeURI(filename);
+      a.click();
+      window.URL.revokeObjectURL(url);
       // document.body.removeChild(a);
       // document.getElementById('status').innerHTML = '下载完成';
     }));
   }
-//触发方法下载后
-// const params = [new Date(),new Date(),new Date(),new Date()];
-// var url = 'http://localhost:8080/api/file';
-// fetch(url,{
-//     method: 'POST',
-//     body: window.JSON.stringify(params),
-//     credentials: 'include',
-//     headers: new Headers({
-//         'Content-Type': 'application/json',
-//     })
-// }).then(res => res.blob().then(blob => {
-//     var a = document.createElement('a');
-//     var url = window.URL.createObjectURL(blob);
-//     var filename = res.headers.get('Content-Disposition');
-//     a.href = url;
-//     a.download = filename;
-//     a.click();
-//     window.URL.revokeObjectURL(url);
-//     document.getElementById('status').innerHTML = '下载完成';
-// }))
+  //触发方法下载后
+  // const params = [new Date(),new Date(),new Date(),new Date()];
+  // var url = 'http://localhost:8080/api/file';
+  // fetch(url,{
+  //     method: 'POST',
+  //     body: window.JSON.stringify(params),
+  //     credentials: 'include',
+  //     headers: new Headers({
+  //         'Content-Type': 'application/json',
+  //     })
+  // }).then(res => res.blob().then(blob => {
+  //     var a = document.createElement('a');
+  //     var url = window.URL.createObjectURL(blob);
+  //     var filename = res.headers.get('Content-Disposition');
+  //     a.href = url;
+  //     a.download = filename;
+  //     a.click();
+  //     window.URL.revokeObjectURL(url);
+  //     document.getElementById('status').innerHTML = '下载完成';
+  // }))
 
 
   // var url = "http://localhost/sample/upload.php";
@@ -412,7 +407,7 @@
   //   fetch(url).then(res => res.blob().then(blob => {
   //       var a = document.createElement('a');
   //       var url = window.URL.createObjectURL(blob);
-        
+
   //       var filename = res.headers.get('Content-Disposition');
   //       a.href = url;
   //       a.download = filename;
@@ -422,83 +417,83 @@
   //   }));
   // };
 
-//下载
-// function downloadBlob(blob,fileName){
-//   let blobUrl = window.URL.createObjectURL(blob);
-//   let a = document.createElement('a');
-//   a.href = blobUrl;
-//   a.target = '_blank';
-//   a.style.display = 'none'
-//   document.body.appendChild(a)
-//   a.download = fileName;
-//   a.click();
-//   window.URL.revokeObjectURL(blobUrl);
-//   document.body.removeChild(a)
-//   that.setState({
-//     downloading:false
-//   })
-// }
+  //下载
+  // function downloadBlob(blob,fileName){
+  //   let blobUrl = window.URL.createObjectURL(blob);
+  //   let a = document.createElement('a');
+  //   a.href = blobUrl;
+  //   a.target = '_blank';
+  //   a.style.display = 'none'
+  //   document.body.appendChild(a)
+  //   a.download = fileName;
+  //   a.click();
+  //   window.URL.revokeObjectURL(blobUrl);
+  //   document.body.removeChild(a)
+  //   that.setState({
+  //     downloading:false
+  //   })
+  // }
 
-// 下载excel文件，对象为一个二进制数据流
-// fetch(myRequest).then(function(response) {
-//     response.arrayBuffer().then(res=> {
-//         var blob = new Blob([res], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-//         var objectUrl = URL.createObjectURL(blob);
-//         var a = document.createElement("a");
-//         document.body.appendChild(a);
-//         a.style = "display: none";
-//         a.href = objectUrl;
-//         a.click();
-//         document.body.removeChild(a);
-//      })
-// });
-// 用 async/await 重新写了一版
-// async function postDownload(url, params) {
-//   const request = {
-//     body: JSON.stringify(params),
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json;charset=UTF-8'
-//     }
-//   }
-//   const response = await fetch(url, request)
-//   const filename = response.headers.get('content-disposition').split(';')[1].split('=')[1]
-//   const blob = await response.blob()
-//   const link = document.createElement('a')
-//   link.download = decodeURIComponent(filename)
-//   link.style.display = 'none'
-//   link.href = URL.createObjectURL(blob)
-//   document.body.appendChild(link)
-//   link.click()
-//   URL.revokeObjectURL(link.href)
-//   document.body.removeChild(link)j
-// }
+  // 下载excel文件，对象为一个二进制数据流
+  // fetch(myRequest).then(function(response) {
+  //     response.arrayBuffer().then(res=> {
+  //         var blob = new Blob([res], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  //         var objectUrl = URL.createObjectURL(blob);
+  //         var a = document.createElement("a");
+  //         document.body.appendChild(a);
+  //         a.style = "display: none";
+  //         a.href = objectUrl;
+  //         a.click();
+  //         document.body.removeChild(a);
+  //      })
+  // });
+  // 用 async/await 重新写了一版
+  // async function postDownload(url, params) {
+  //   const request = {
+  //     body: JSON.stringify(params),
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json;charset=UTF-8'
+  //     }
+  //   }
+  //   const response = await fetch(url, request)
+  //   const filename = response.headers.get('content-disposition').split(';')[1].split('=')[1]
+  //   const blob = await response.blob()
+  //   const link = document.createElement('a')
+  //   link.download = decodeURIComponent(filename)
+  //   link.style.display = 'none'
+  //   link.href = URL.createObjectURL(blob)
+  //   document.body.appendChild(link)
+  //   link.click()
+  //   URL.revokeObjectURL(link.href)
+  //   document.body.removeChild(link)j
+  // }
 
-// export function get(url,params){
-// if (params) {
-// let paramsArray = [];
-// //拼接参数
-// Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
-// if (url.search(/\?/) === -1) {
-// url += '?' + paramsArray.join('&')
-// } else {
-// url += '&' + paramsArray.join('&')
-// }
-// }
-// //fetch请求,get请求只能在url里拼接参数哦！！
-// fetch(url,{
-// method: 'GET',
-// })
-// .then((response) => response.json())
-// .then((json) => {
-// console.log("戴假发"+JSON.stringify(json));
-// // this.setState({ discounts: json.data })
-// })
-// .catch((error) => {
-// alert(error)
-// })
-// }
-</script>
+  // export function get(url,params){
+  // if (params) {
+  // let paramsArray = [];
+  // //拼接参数
+  // Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
+  // if (url.search(/\?/) === -1) {
+  // url += '?' + paramsArray.join('&')
+  // } else {
+  // url += '&' + paramsArray.join('&')
+  // }
+  // }
+  // //fetch请求,get请求只能在url里拼接参数哦！！
+  // fetch(url,{
+  // method: 'GET',
+  // })
+  // .then((response) => response.json())
+  // .then((json) => {
+  // console.log("戴假发"+JSON.stringify(json));
+  // // this.setState({ discounts: json.data })
+  // })
+  // .catch((error) => {
+  // alert(error)
+  // })
+  // }
+  </script>
 </body>
 
 </html>

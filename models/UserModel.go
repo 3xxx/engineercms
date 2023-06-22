@@ -17,7 +17,7 @@ import (
 
 // var e *casbin.Enforcer
 
-//用户表
+// 用户表
 type User struct {
 	Id            int64
 	Username      string `json:"name",orm:"unique"` //这个拼音的简写
@@ -25,6 +25,8 @@ type User struct {
 	Password      string `orm:"size(50)"`
 	Repassword    string `form:"Repassword"`
 	Email         string `orm:"size(32)"`
+	Sex           string `orm:"size(4)"`
+	IsPartyMember bool   `json:"IsPartyMember"`
 	Department    string //分院
 	Secoffice     string //科室,这里应该用科室id，才能保证即时重名也不怕。否则，查看科室必须要上溯到分院才能避免科室名称重复问题
 	Remark        string `orm:"null;size(200)"`
@@ -39,14 +41,14 @@ type User struct {
 	// Roles         []*Role   `orm:"rel(m2m)"`
 }
 
-//用户和openid对应表,一个用户对应多个openid
+// 用户和openid对应表,一个用户对应多个openid
 type UserOpenID struct {
 	Id     int64
 	Uid    int64
 	OpenID string
 }
 
-//用户和AvatorUrl对应表,一个用户对应多个AvatorUrl
+// 用户和AvatorUrl对应表,一个用户对应多个AvatorUrl
 type UserAvatar struct {
 	Id         int64
 	Uid        int64
@@ -54,7 +56,7 @@ type UserAvatar struct {
 	Createtime time.Time `orm:"type(datetime);auto_now_add" `
 }
 
-//用户和AppreciationUrl对应表,一个用户对应多个AppreciationUrl
+// 用户和AppreciationUrl对应表,一个用户对应多个AppreciationUrl
 type UserAppreciation struct {
 	Id              int64
 	Uid             int64
@@ -71,7 +73,7 @@ func init() { //
 	// _db.CreateTable(&User{})
 }
 
-//这个是使用的，下面那个adduser不知干啥的
+// 这个是使用的，下面那个adduser不知干啥的
 func SaveUser(user User) (uid int64, err error) {
 	o := orm.NewOrm()
 	var user1 User
@@ -128,7 +130,7 @@ func AddUserOpenID(userid int64, openid string) (id int64, err error) {
 	return useropenid.Uid, err //这里需要改改，否则，即使已经存在，则err为空。id=0则已经存在
 }
 
-//取出所有openid
+// 取出所有openid
 func GetOpenIDs() (openids []*UserOpenID, err error) {
 	o := orm.NewOrm()
 	// openid := new(UserOpenID)
@@ -141,7 +143,7 @@ func GetOpenIDs() (openids []*UserOpenID, err error) {
 	return openids, err
 }
 
-//添加用户头像
+// 添加用户头像
 func AddUserAvator(userid int64, avatarurl string) (id int64, err error) {
 	o := orm.NewOrm()
 	var useravatar UserAvatar
@@ -155,7 +157,7 @@ func AddUserAvator(userid int64, avatarurl string) (id int64, err error) {
 	return id, err //这里需要改改，否则，即使已经存在，则err为空。
 }
 
-//添加用户赞赏码
+// 添加用户赞赏码
 func AddUserAppreciation(userid int64, appreciationurl string) (id int64, err error) {
 	o := orm.NewOrm()
 	var userappreciation UserAppreciation
@@ -169,7 +171,7 @@ func AddUserAppreciation(userid int64, appreciationurl string) (id int64, err er
 	return id, err //这里需要改改，否则，即使已经存在，则err为空。
 }
 
-//根据openid查user
+// 根据openid查user
 func GetUserByOpenID(openid string) (user User, err error) {
 	o := orm.NewOrm()
 	var useropenid UserOpenID
@@ -190,7 +192,7 @@ type UserAvatarUrl struct {
 	UserAvatar `xorm:"extends"`
 }
 
-//取出用户头像
+// 取出用户头像
 func GetUserAvatorUrl(uid int64) ([]*UserAvatarUrl, error) {
 	useravatarurl := make([]*UserAvatarUrl, 0)
 	return useravatarurl, engine.Table("user").Join("INNER", "user_avatar", "user.id = user_avatar.uid").Where("user.id=?", uid).Desc("user_avatar.createtime").Find(&useravatarurl)
@@ -201,7 +203,7 @@ type UserAppreciationUrl struct {
 	UserAppreciation `xorm:"extends"`
 }
 
-//取出用户赞赏码
+// 取出用户赞赏码
 func GetUserAppreciationUrl(uid int64) ([]*UserAppreciationUrl, error) {
 	userappreciationurl := make([]*UserAppreciationUrl, 0)
 	return userappreciationurl, engine.Table("user").Join("INNER", "user_appreciation", "user.id = user_appreciation.uid").Where("user.id=?", uid).Desc("user_appreciation.createtime").Find(&userappreciationurl)
@@ -283,7 +285,7 @@ func (u *User) Valid(v *validation.Validation) {
 	}
 }
 
-//验证用户信息
+// 验证用户信息
 func checkUser(u *User) (err error) {
 	valid := validation.Validation{}
 	b, _ := valid.Valid(&u)
@@ -316,7 +318,28 @@ func GetUsers() (users []*User, err error) {
 	return users, err
 }
 
-//get user list
+func GetUsersPage(limit, offset int64, sort, searchText string) (users []*User, count int64, err error) {
+	o := orm.NewOrm()
+	user := new(User)
+	qs := o.QueryTable(user)
+	if searchText != "" {
+		cond := orm.NewCondition()
+		cond1 := cond.Or("Username__contains", searchText).Or("Nickname__contains", searchText).Or("Email__contains", searchText).Or("Sex__contains", searchText).Or("Department__contains", searchText).Or("Secoffice__contains", searchText)
+		// cond2 := cond.AndCond(cond1).And("ProjectId", id)
+		qs = qs.SetCond(cond1)
+		_, err = qs.Limit(limit, offset).OrderBy(sort).All(&users)
+
+		// qs.Limit(limit, offset).OrderBy(sort).All(&users)
+		count, err = qs.Count()
+	} else {
+		qs.Limit(limit, offset).OrderBy(sort).All(&users)
+		count, err = qs.Count()
+	}
+
+	return users, count, err
+}
+
+// get user list
 func Getuserlist(page int64, page_size int64, sort string) (users []orm.Params, count int64) {
 	o := orm.NewOrm()
 	user := new(User)
@@ -347,7 +370,7 @@ func GetAllusers(page int64, page_size int64, sort string) (users []*User, count
 	return users, count
 }
 
-//根据分院和科室名称查所有用户，只有状态1的
+// 根据分院和科室名称查所有用户，只有状态1的
 func GetUsersbySec(department, secoffice string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
 	// cates := make([]*Category, 0)
@@ -363,8 +386,8 @@ func GetUsersbySec(department, secoffice string) (users []*User, count int, err 
 	return users, count, err
 }
 
-//根据分院名称查所有用户——适用于没有科室的部门
-//查出所有人员，只有分院（部门）而没科室字段的人员，只有状态1的
+// 根据分院名称查所有用户——适用于没有科室的部门
+// 查出所有人员，只有分院（部门）而没科室字段的人员，只有状态1的
 func GetUsersbySecOnly(department string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
 	// cates := make([]*Category, 0)
@@ -380,7 +403,7 @@ func GetUsersbySecOnly(department string) (users []*User, count int, err error) 
 	return users, count, err
 }
 
-//根据科室id查所有用户
+// 根据科室id查所有用户
 func GetUsersbySecId(secofficeid string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
 	// cates := make([]*Category, 0)
@@ -411,7 +434,7 @@ func GetUsersbySecId(secofficeid string) (users []*User, count int, err error) {
 	return users, count, err
 }
 
-//添加用户
+// 添加用户
 func AddUser(u *User) (int64, error) {
 	if err := checkUser(u); err != nil {
 		return 0, err
@@ -462,7 +485,7 @@ func AddUser(u *User) (int64, error) {
 // 	return num, err
 // }
 
-//用户修改一个用户的某个字段
+// 用户修改一个用户的某个字段
 func UpdateUser(cid int64, fieldname, value string) error {
 	o := orm.NewOrm()
 	var user User
@@ -515,6 +538,26 @@ func UpdateUser(cid int64, fieldname, value string) error {
 		case "Email":
 			user.Email = value
 			_, err := o.Update(&user, "Email", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "Sex":
+			user.Sex = value
+			_, err := o.Update(&user, "Sex", "Updated")
+			if err != nil {
+				return err
+			} else {
+				return nil
+			}
+		case "IsPartyMember":
+			if value == "true" {
+				user.IsPartyMember = true
+			} else {
+				user.IsPartyMember = false
+			}
+			_, err := o.Update(&user, "IsPartyMember", "Updated")
 			if err != nil {
 				return err
 			} else {
@@ -603,7 +646,7 @@ func UpdateUser(cid int64, fieldname, value string) error {
 // 	return nil
 // }
 
-//更新用户登陆时间
+// 更新用户登陆时间
 func UpdateUserlastlogintime(username string) error {
 	o := orm.NewOrm()
 	user := make(orm.Params)
@@ -625,7 +668,7 @@ func DelUserById(Id int64) (int64, error) {
 	return status, err
 }
 
-//###*****这里特别注意，这个是用户名，是汉语拼音，不是Nickname！！！！
+// ###*****这里特别注意，这个是用户名，是汉语拼音，不是Nickname！！！！
 func GetUserByUsername(username string) (user User, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
@@ -637,7 +680,7 @@ func GetUserByUsername(username string) (user User, err error) {
 	return user, err
 }
 
-//根据ip查询用户
+// 根据ip查询用户
 func GetUserByIp(ip string) (user User, err error) {
 	o := orm.NewOrm()
 	// var user User
@@ -655,7 +698,7 @@ func GetUserByIp(ip string) (user User, err error) {
 	}
 }
 
-//根据用户nickname取得用户
+// 根据用户nickname取得用户
 func GetUserByNickname(nickname string) (user User) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
@@ -664,7 +707,7 @@ func GetUserByNickname(nickname string) (user User) {
 	return user
 }
 
-//取到一个用户数据，不是数组，所以table无法显示
+// 取到一个用户数据，不是数组，所以table无法显示
 func GetUserByUserId(userid int64) (user User) {
 	user = User{Id: userid}
 	o := orm.NewOrm()
@@ -672,7 +715,7 @@ func GetUserByUserId(userid int64) (user User) {
 	return user
 }
 
-//*********初始化数据库中的用户********
+// *********初始化数据库中的用户********
 func InsertUser() {
 	fmt.Println("insert user ...")
 	// u := new(User)

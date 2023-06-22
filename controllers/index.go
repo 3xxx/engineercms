@@ -1,4 +1,3 @@
-//
 package controllers
 
 import (
@@ -34,22 +33,34 @@ type Select1 struct {
 }
 
 type AchEmployee struct { //员工姓名
-	Id       int64  `json:"Id"` //`form:"-"`
-	Pid      int64  `form:"-"`
-	Nickname string `json:"text"` //这个是侧栏显示的内容
-	Level    string `json:"Level"`
-	Href     string `json:"href"`
+	Id             int64  `json:"Id"` //`form:"-"`
+	Pid            int64  `form:"-"`
+	Nickname       string `json:"text"` //这个是侧栏显示的内容
+	Level          string `json:"Level"`
+	Href           string `json:"href"`
+	Icon           string `json:"icon"`
+	Image          string `json:"image"`
+	Color          string `json:"color"`
+	BackColor      string `json:"backColor"`
+	IconColor      string `json:"iconColor"`
+	IconBackground string `json:"iconBackground"`
 }
 
 type AchSecoffice struct { //专业室：水工、施工……
-	Id         int64         `json:"Id"` //`form:"-"`
-	Pid        int64         `form:"-"`
-	Title      string        `json:"text"`
-	Tags       [1]string     `json:"tags"` //显示员工数量，如果定义为数值[1]int，则无论如何都显示0，所以要做成字符
-	Employee   []AchEmployee `json:"nodes"`
-	Level      string        `json:"Level"`
-	Href       string        `json:"href"`
-	Selectable bool          `json:"selectable"` //这个不能要，虽然没赋值。否则点击node，没反应，即默认false？？
+	Id             int64         `json:"Id"` //`form:"-"`
+	Pid            int64         `form:"-"`
+	Title          string        `json:"text"`
+	Tags           [1]string     `json:"tags"` //显示员工数量，如果定义为数值[1]int，则无论如何都显示0，所以要做成字符
+	Employee       []AchEmployee `json:"nodes"`
+	Level          string        `json:"Level"`
+	Href           string        `json:"href"`
+	Icon           string        `json:"icon"`
+	Image          string        `json:"image"`
+	Color          string        `json:"color"`
+	BackColor      string        `json:"backColor"`
+	IconColor      string        `json:"iconColor"`
+	IconBackground string        `json:"iconBackground"`
+	Selectable     bool          `json:"selectable"` //这个不能要，虽然没赋值。否则点击node，没反应，即默认false？？
 }
 
 type AchDepart struct { //分院：施工预算、水工分院……
@@ -76,7 +87,7 @@ func (c *IndexController) Cms() {
 	c.TplName = "index.html"
 }
 
-//显示侧栏结构，科室里员工
+// 显示侧栏结构，科室里员工
 func (c *IndexController) GetIndex() {
 	c.Data["IsIndex"] = true
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
@@ -131,6 +142,22 @@ func (c *IndexController) GetIndex() {
 				}
 				for i3, _ := range users {
 					cc := make([]AchEmployee, 1)
+					cc[0].Icon = "glyphicon glyphicon-user" //-flag
+					// cc[0].Image = "/static/img/go.jpg"
+					// cc[0].Color = "#0969DA" //文字颜色HOTPINKFF69B4_黑色000000
+					if users[i3].IsPartyMember == true {
+						cc[0].BackColor = "#FFF0F5" // 横条整体背景色
+					} else {
+						cc[0].BackColor = "#FFF" // 横条整体背景色
+					}
+					if users[i3].Sex == "女" {
+						cc[0].IconColor = "#54aeff"
+						cc[0].Color = "#54aeff"
+					} else {
+						cc[0].IconColor = "#0969DA" //浅蓝色——白色FFFFFF
+						cc[0].Color = "#0969DA"
+					}
+					// cc[0].IconBackground = "#90EE90" //头像颜色 浅绿
 					cc[0].Id = users[i3].Id
 					cc[0].Level = "3"
 					cc[0].Href = users[i3].Ip + ":" + users[i3].Port
@@ -154,6 +181,19 @@ func (c *IndexController) GetIndex() {
 		}
 		for i3, _ := range users {
 			dd := make([]AchSecoffice, 1)
+			dd[0].Icon = "glyphicon glyphicon-user" //-flag
+			if users[i3].IsPartyMember == true {
+				dd[0].BackColor = "#FFF0F5" // 横条整体背景色
+			} else {
+				dd[0].BackColor = "#FFF" // 横条整体背景色
+			}
+			if users[i3].Sex == "女" {
+				dd[0].IconColor = "#54aeff"
+				dd[0].Color = "#54aeff"
+			} else {
+				dd[0].IconColor = "#0969DA" //浅蓝色——白色FFFFFF
+				dd[0].Color = "#0969DA"
+			}
 			dd[0].Id = users[i3].Id
 			dd[0].Level = "3"
 			dd[0].Href = users[i3].Ip + ":" + users[i3].Port
@@ -185,8 +225,8 @@ func (c *IndexController) GetIndex() {
 	// c.TplName = "index.tpl"
 }
 
-//上面那个是显示侧栏
-//这个是显示右侧iframe框架
+// 上面那个是显示侧栏
+// 这个是显示右侧iframe框架
 func (c *IndexController) GetUser() {
 	carousels, err := models.GetAdminCarousel()
 	if err != nil {
@@ -208,8 +248,8 @@ func (c *IndexController) GetUser() {
 	c.TplName = "index_user.tpl"
 }
 
-//上面那个是显示右侧页面
-//这个是填充数据最新成果、项目、文章
+// 上面那个是显示右侧页面
+// 这个是填充数据最新成果、项目、文章
 func (c *IndexController) Product() {
 
 }
@@ -241,8 +281,8 @@ func (c *IndexController) Calendar() {
 	c.TplName = "index_calendar.tpl"
 }
 
-//*******汽车
-//显示页面
+// *******汽车
+// 显示页面
 func (c *IndexController) GetCarCalendar() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -271,7 +311,7 @@ func (c *IndexController) GetCarCalendar() {
 	c.TplName = "car_calendar.tpl"
 }
 
-//添加日历
+// 添加日历
 func (c *IndexController) AddCarCalendar() {
 	// username, _ := checkprodRole(c.Ctx)
 	ip := c.Ctx.Input.IP()
@@ -314,8 +354,8 @@ func (c *IndexController) AddCarCalendar() {
 	}
 }
 
-//返回日历json数据
-//如果是管理员，则显示全部，非管理员，显示公开
+// 返回日历json数据
+// 如果是管理员，则显示全部，非管理员，显示公开
 func (c *IndexController) CarCalendar() {
 	start := c.GetString("start")
 	end := c.GetString("end")
@@ -347,7 +387,7 @@ func (c *IndexController) CarCalendar() {
 	// c.TplName = "admin_category.tpl"
 }
 
-//修改
+// 修改
 func (c *IndexController) UpdateCarCalendar() {
 	cid := c.GetString("cid")
 	//pid转成64为
@@ -415,7 +455,7 @@ func (c *IndexController) UpdateCarCalendar() {
 	// }
 }
 
-//拖曳
+// 拖曳
 func (c *IndexController) DropCarCalendar() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -443,7 +483,7 @@ func (c *IndexController) DropCarCalendar() {
 	}
 }
 
-//resize
+// resize
 func (c *IndexController) ResizeCarCalendar() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -473,7 +513,7 @@ func (c *IndexController) ResizeCarCalendar() {
 	}
 }
 
-//删除，如果有下级，一起删除
+// 删除，如果有下级，一起删除
 func (c *IndexController) DeleteCarCalendar() {
 	cid := c.GetString("cid")
 	//pid转成64为
@@ -491,8 +531,8 @@ func (c *IndexController) DeleteCarCalendar() {
 	}
 }
 
-//*****会议室
-//显示页面
+// *****会议室
+// 显示页面
 func (c *IndexController) MeetingroomCalendar() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -520,7 +560,7 @@ func (c *IndexController) MeetingroomCalendar() {
 	c.TplName = "meetingroom_calendar.tpl"
 }
 
-//添加日历
+// 添加日历
 func (c *IndexController) AddMeetCalendar() {
 	ip := c.Ctx.Input.IP()
 	title := c.GetString("title")
@@ -562,8 +602,8 @@ func (c *IndexController) AddMeetCalendar() {
 	}
 }
 
-//返回日历json数据
-//如果是管理员，则显示全部，非管理员，显示公开
+// 返回日历json数据
+// 如果是管理员，则显示全部，非管理员，显示公开
 func (c *IndexController) MeetCalendar() {
 	start := c.GetString("start")
 	end := c.GetString("end")
@@ -595,7 +635,7 @@ func (c *IndexController) MeetCalendar() {
 	// c.TplName = "admin_category.tpl"
 }
 
-//修改
+// 修改
 func (c *IndexController) UpdateMeetCalendar() {
 	cid := c.GetString("cid")
 	//pid转成64为
@@ -663,7 +703,7 @@ func (c *IndexController) UpdateMeetCalendar() {
 	// }
 }
 
-//拖曳
+// 拖曳
 func (c *IndexController) DropMeetCalendar() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -691,7 +731,7 @@ func (c *IndexController) DropMeetCalendar() {
 	}
 }
 
-//resize
+// resize
 func (c *IndexController) ResizeMeetCalendar() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -721,7 +761,7 @@ func (c *IndexController) ResizeMeetCalendar() {
 	}
 }
 
-//删除，如果有下级，一起删除
+// 删除，如果有下级，一起删除
 func (c *IndexController) DeleteMeetCalendar() {
 	cid := c.GetString("cid")
 	//pid转成64为
@@ -762,8 +802,8 @@ func (c *IndexController) SearchCalendar() {
 	c.ServeJSON()
 }
 
-//*****订餐
-//显示页面
+// *****订餐
+// 显示页面
 func (c *IndexController) GetOrderCalendar() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -791,8 +831,8 @@ func (c *IndexController) GetOrderCalendar() {
 	c.TplName = "order_calendar.tpl"
 }
 
-//*****考勤
-//显示页面
+// *****考勤
+// 显示页面
 func (c *IndexController) GetAttendanceCalendar() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)

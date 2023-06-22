@@ -38,10 +38,10 @@
 
 <body data-spy="scroll">
   <!--   <nav class="navbar fixed-top navbar-light bg-light">
-  <a class="navbar-brand" href="#">Fixed top</a>
+  <a class="navbar-brand" href="javascript:void(0)">Fixed top</a>
 </nav> -->
   <!-- <nav class="navbar navbar-dark bg-dark sticky-top navbar-light bg-light">
-  <a class="navbar-brand" href="#">Sticky top</a>
+  <a class="navbar-brand" href="javascript:void(0)">Sticky top</a>
 </nav> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top navbar-light bg-light">
     <a class="navbar-brand" href="/">首页</a>
@@ -57,11 +57,11 @@
           <a class="nav-link" href="/v1/flv/flvlist">直播</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">点播</a>
+          <a class="nav-link" href="javascript:void(0)">点播</a>
         </li>
       </ul>
       <span class="navbar-text">培训 工程 音乐
-        <!-- <a class="nav-link" href="#"></a> -->
+        <!-- <a class="nav-link" href="javascript:void(0)"></a> -->
       </span>
     </div>
   </nav>
@@ -74,7 +74,7 @@
       <p class="lead text-warning">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
       <hr class="my-4 text-success">
       <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+      <a class="btn btn-primary btn-lg" href="javascript:void(0)" role="button">Learn more</a>
     </div>
   </div>
   <div class="container-fluid">

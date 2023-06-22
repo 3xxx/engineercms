@@ -24,7 +24,7 @@
 <body>
   <!-- navbar top -->
   <div class="navbar-top">
-    <div class="side-nav-panel-left"><a href="#" data-activates="slide-out-left" class="side-nav-left"><i class="fa fa-bars"></i></a></div><!-- site brand -->
+    <div class="side-nav-panel-left"><a href="javascript:void(0)" data-activates="slide-out-left" class="side-nav-left"><i class="fa fa-bars"></i></a></div><!-- site brand -->
     <div class="site-brand"><a href="home.html">
         <h1>V</h1>
       </a></div><!-- end site brand -->

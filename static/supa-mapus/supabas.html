@@ -1,0 +1,213 @@
+<html>
+<button onclick="insertdata()">insert</button>
+<button onclick="signUpNewUser()">signUpNewUser</button>
+<button onclick="getUser()">getUser</button>
+<button onclick="signInPass()">signInPass</button>
+<button onclick="getSession()">getSession</button>
+<button onclick="signIngit()">signIngit</button>
+<button onclick="UpdateUser()">UpdateUser</button>
+<input type="file" id="importxml" value="选择文件"></input>
+
+</html>
+<!-- 首先引入supabase客户端，这里采用cdn引入 -->
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// 然后把url和秘钥复制进去可以进行数据库链接
+const { createClient } = supabase
+// const _supabase = createClient('https://ccuon0a5g6h3ij26oli0.baseapi.memfiredb.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImV4cCI6MzIwMjg5Nzg1MiwiaWF0IjoxNjY0OTc3ODUyLCJpc3MiOiJzdXBhYmFzZSJ9.AeqPG73OPjekOxpCak8XBBAqP-wSk57XVQAmuUYq3C4')
+const _supabase = createClient('https://gsglmaiuplauvkfjalkg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZ2xtYWl1cGxhdXZrZmphbGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjUwOTgxMjQsImV4cCI6MTk4MDY3NDEyNH0.wDlCSjtYZkGj9AhCSyIIfUbzYzOAF9_4hKKeEIi9PyE')
+// 数据库登录密码
+
+// 就可以进行数据库api操作了
+window.onload = async function() {
+  // 查询
+  // const { data: data2, error } = await _supabase
+  //   .from('userdemo')
+  //   .select(`
+  //   id,
+  //   name
+  // `)
+  // console.log('data2', data2)
+
+  // _supabase
+  //   .channel('*')
+  //   .on('postgres_changes', { event: '*', schema: '*' }, payload => {
+  //     console.log('Change received!', payload.new)
+  //   })
+  //   .subscribe()
+}
+
+async function insertdata() {
+  //插入数据
+  const { data, error } = await _supabase
+    .from('userdemo')
+    .insert({ id: 23, name: "220" }).select()
+  // .from('objects')
+  // .insert({
+  //   type: "area",
+  //   name: "Area",
+  //   desc: "",
+  //   distance: 0,
+  //   area: 0,
+  //   completed: false,
+  //   path: ""
+  // }).select('id')
+  console.log('data', data)
+}
+
+async function signUpNewUser() {
+  const { data, error } = await _supabase.auth.signUp({
+    email: '423@qq.com',
+    password: '123456',
+  })
+  console.log('data', data)
+}
+
+async function signInPass() {
+  const { data, error } = await _supabase.auth.signInWithPassword({
+    email: '123@qq.com',
+    password: '123456',
+  })
+  console.log('data', data)
+}
+async function getUser() {
+  const { data: { user } } = await _supabase.auth.getUser()
+  console.log('data', user)
+}
+
+async function getSession() {
+  const { data, error } = await _supabase.auth.getSession()
+  console.log('data', data)
+}
+
+async function signIngit() {
+  const { data, error } = await _supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: 'https://gsglmaiuplauvkfjalkg.supabase.co/auth/v1/callback'
+    }
+  })
+}
+async function UpdateUser() {
+  const { data, error } = await _supabase.auth.updateUser({ password: '' })
+  console.log('data', data)
+}
+
+
+$(document).on("click", "#importxml", popFileSelector);
+
+function popFileSelector() {
+  $(`<input type="file" value="选择文件"></input>`).click().on("change", event => {
+    let file = event.target.files[0];
+    let file_reader = new FileReader();
+    file_reader.onload = () => {
+      let fc = file_reader.result;
+      const allLines = fc.split(/\r\n|\n/); // Reading line by line
+      let results = "";
+      allLines.map((line) => {
+        if (!line.length || line.startsWith(";")) return;
+        if (line.indexOf("<Placemark") !== -1) {
+          results += "{";
+        }
+        results += line;
+        if (line.indexOf("</Placemark") !== -1) {
+          results += "}";
+        }
+      });
+      // inp.on("close", () => {
+      const bb = results.split("}");
+      // console.log(bb)
+      const geojson = {
+        type: "FeatureCollection",
+        features: []
+      };
+      const geojson2 = {
+        type: "FeatureCollection",
+        features: []
+      };
+      // console.log(bb.length)
+      for (let i = 0; i < bb.length - 2; i++) {
+        // if (bb[i].split("<Placemark id=")[1]) {
+        // console.log(bb[i])
+        if (bb[i].split("<Placemark")[1]) {
+          // const coor = bb[i].split("<coordinates>")[1].split("</coordinates>")[0].split(",");
+          const coor = bb[i].split("<coordinates>")[1].split("</coordinates>")[0].split(/ |,/);
+          // /\r\n|\n/
+          // const coor1 = bb[i + 1].split("<coordinates>")[1].split("</coordinates>")[0].split(",");
+          // 循环
+          var coordinates = [];
+          for (let ii = 0; ii < coor.length; ii = ii + 1) {
+            if (coor[ii] != "" && coor[ii + 1] != "" && coor[ii + 2] != "") {
+              coordinates.push([Number(coor[ii]), Number(coor[ii + 1]), Number(coor[ii + 2])]);
+            }
+          }
+          geojson.features.push({
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: coordinates
+              // coordinates: [
+              //   [Number(coor[0]), Number(coor[1])],
+              //   [Number(coor1[0]), Number(coor1[1])]
+              // ]
+            },
+            properties: {
+              // measure: bb[i].split('<Placemark id="')[1].split('">')[0]
+              measure: bb[i].split('<Placemark')[1].split('">')[0]
+            }
+          });
+        }
+      }
+      for (let i = 0; i < bb.length; i++) {
+        // if (bb[i].split("<Placemark id=")[1]) {
+        if (bb[i].split("<Placemark")[1]) {
+          const coor = bb[i].split("<coordinates>")[1].split("</coordinates>")[0].split(",");
+          geojson2.features.push({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [Number(coor[0]), Number(coor[1])]
+            },
+            properties: {
+              // measure: bb[i].split('<Placemark id="')[1].split('">')[0]
+              measure: bb[i].split('<Placemark')[1].split('">')[0]
+            }
+          });
+        }
+      }
+
+      // console.log(JSON.stringify(geojson, null, 2))
+      // console.log(JSON.stringify(geojson2, null, 2))
+
+      // var json = JSON.stringify(geojson, null, 2);    // test -> localStorage
+      // var file = new File([json],"geojson", {type:"application/json"});
+      // var blobUrl = (URL || webkitURL).createObjectURL(file);
+      // window.location = blobUrl;
+
+      // Download GeoJSON locally
+      var a = document.createElement("a");
+      var file = new Blob([JSON.stringify(geojson)], {
+        type: "application/json"
+      });
+      a.href = URL.createObjectURL(file);
+      a.download = "geojson";
+      a.click();
+      // fs.writeFileSync(DIR + k.split(".kml")[0] + ".geojson", JSON.stringify(geojson, null, 2));
+      // fs.writeFileSync(DIR + k.split(".kml")[0] + "点.geojson", JSON.stringify(geojson2, null, 2));
+      // });
+    };
+    file_reader.readAsText(file, "UTF-8");
+    // }
+    // });
+  });
+}
+
+
+
+
+
+// node generator.js
+</script>
+<!-- token name 3xxx -->
+<!-- sbp_7618b7098d311d29612462b001d95c268bea2fb1 -->

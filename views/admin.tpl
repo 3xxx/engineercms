@@ -16,13 +16,13 @@
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <style type="text/css">
-.page-wrapper.toggled .sidebar-wrapper {
-  position: absolute;
-  display: inline-block;
-  left: 0px;
-  top: 0px;
-}
-}
+    .page-wrapper.toggled .sidebar-wrapper {
+      position: absolute;
+      display: inline-block;
+      left: 0px;
+      top: 0px;
+    }
+  }
   </style>
 </head>
 
@@ -32,10 +32,10 @@
       <div class="sidebar-content mCustomScrollbar _mCS_1 mCS-autoHide desktop">
         <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
           <div id="mCSB_1_container" class="mCSB_container" style="position: relative; left: 0px; top: 0px;" dir="ltr">
-            <a href="#" id="toggle-sidebar"> <i class="fa fa-bars"></i>
+            <a href="javascript:void(0)" id="toggle-sidebar"> <i class="fa fa-bars"></i>
             </a>
             <div class="sidebar-brand">
-              <a href="#">pro sidebar</a>
+              <a href="javascript:void(0)">pro sidebar</a>
             </div>
             <div class="sidebar-header">
               <div class="user-pic">
@@ -46,7 +46,7 @@
                 </span>
                 <span class="user-role">Administrator</span>
                 <div class="user-status">
-                  <a href="#">
+                  <a href="javascript:void(0)">
                     <span class="label label-success">Online</span>
                   </a>
                 </div>
@@ -81,15 +81,15 @@
       </div>
       <!-- sidebar-content  -->
       <div class="sidebar-footer">
-        <a href="#">
+        <a href="javascript:void(0)">
           <i class="fa fa-bell"></i>
           <span class="label label-warning notification">3</span>
         </a>
-        <a href="#">
+        <a href="javascript:void(0)">
           <i class="fa fa-envelope"></i>
           <span class="label label-success notification">7</span>
         </a>
-        <a href="#">
+        <a href="javascript:void(0)">
           <i class="fa fa-gear"></i>
         </a>
         <a href="/">

@@ -799,7 +799,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </a>
-    <a href="#" class="open-menu">
+    <a href="javascript:void(0)" class="open-menu">
       <i class="fa fa-navicon"></i> transform:rotate(180deg);
       <i v-model="isCollapse" @click="changeCollapse(isCollapse)" :class="{'el-icon-d-arrow-right':isCollapse,'el-icon-d-arrow-left':!isCollapse}"></i>  
     </a>
@@ -857,7 +857,7 @@
   </el-row> -->
   <!-- <div class="header">
     <a href="index.html" class="header-logo"></a>
-    <a href="#" class="open-menu">
+    <a href="javascript:void(0)" class="open-menu">
       <i class="fa fa-navicon"></i>
       <i class="el-icon-d-arrow-right"></i>  
     </a>
@@ -936,8 +936,8 @@
           <!-- <div class="decoration"></div> -->
             <!-- Staff Slider-->
             <!-- <div class="container">
-                <a href="#" class="next-staff"></a>
-                <a href="#" class="prev-staff"></a>
+                <a href="javascript:void(0)" class="next-staff"></a>
+                <a href="javascript:void(0)" class="prev-staff"></a>
                 <div class="staff-slider" data-snap-ignore="true">
                     <div>
                         <div class="staff-item">
@@ -945,7 +945,7 @@
                             <h4>John Doe</h4>
                             <em>Web Designer</em>
                             <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                            <a href="#" class="button button-red center-button">Call</a>
+                            <a href="javascript:void(0)" class="button button-red center-button">Call</a>
                         </div>
                     </div>
                     <div>
@@ -954,7 +954,7 @@
                             <h4>Jane Hidden</h4>
                             <em>Front End Developer</em>
                             <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                            <a href="#" class="button button-green center-button">Text</a>
+                            <a href="javascript:void(0)" class="button button-green center-button">Text</a>
                         </div>
                     </div>
                     <div>
@@ -963,7 +963,7 @@
                             <h4>Johanna Pear</h4>
                             <em>Business Manager</em>
                             <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                            <a href="#" class="button button-blue center-button">Mail</a>
+                            <a href="javascript:void(0)" class="button button-blue center-button">Mail</a>
                         </div>
                     </div>
                     <div>
@@ -972,7 +972,7 @@
                             <h4>Mike Grape</h4>
                             <em>Web Designer</em>
                             <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                            <a href="#" class="button button-dark center-button">Read More</a>
+                            <a href="javascript:void(0)" class="button button-dark center-button">Read More</a>
                         </div>
                     </div>
                     <div>
@@ -981,7 +981,7 @@
                             <h4>Victor Leaf</h4>
                             <em>Front End Developer</em>
                             <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                            <a href="#" class="button button-orange center-button">Facebook</a>
+                            <a href="javascript:void(0)" class="button button-orange center-button">Facebook</a>
                         </div>
                     </div>
                     <div>
@@ -990,7 +990,7 @@
                             <h4>Snow White</h4>
                             <em>Business Manager</em>
                             <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                            <a href="#" class="button button-yellow center-button">Twitter</a>
+                            <a href="javascript:void(0)" class="button button-yellow center-button">Twitter</a>
                         </div>
                     </div>
                 </div>
@@ -1019,7 +1019,7 @@
                     <h4>[[post.id]]John Doe</h4>
                     <em>Web Designer</em>
                     <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                    <!-- <a href="#" class="button button-red center-button"></a> -->
+                    <!-- <a href="javascript:void(0)" class="button button-red center-button"></a> -->
                     <el-button type="primary" style="display:block;margin:0 auto;width:200px;">Call</el-button>
                   </div>
                 </div>
@@ -1035,7 +1035,7 @@
                     <h4>Johanna Pear</h4>
                     <em>Business Manager</em>
                     <strong style="font-size:16px;">We love quotes, and sometimes it's annoying to see tons of them that you need to scroll to!</strong>
-                    <!-- <a href="#" class="button button-blue center-button">Mail</a> -->
+                    <!-- <a href="javascript:void(0)" class="button button-blue center-button">Mail</a> -->
                     <el-button type="primary" style="display:block;margin:0 auto;width:200px;">Mail</el-button>
                   </div>
                 </div>

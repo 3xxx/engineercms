@@ -331,7 +331,8 @@
   $(function() {
     $("#searchList").on("click", "a", function() {
       var id = $(this).attr("data-id");
-      var url = "{{urlfor "DocumentController.Read " ": key " .Model.Identify ": id " ""}}/" + id;
+      // 十分注意，下面这行如果用自动格式，出现空格，则造成url错误！！！-2023-05-14
+      var url = "{{urlfor "DocumentController.Read" ":key" .Model.Identify ":id" ""}}" + id;
       $(this).parent("li").siblings().find("a").removeClass("active");
       $(this).addClass("active");
       loadDocument(url, id, function(body) {

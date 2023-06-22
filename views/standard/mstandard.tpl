@@ -20,7 +20,6 @@
     <h1> <i class="glyphicon glyphicon-chevron-right"></i> <i class="glyphicon glyphicon-minus"></i>
     </h1>
     <h1>搜索 {{.Length}}个 文件</h1>
-
     <div class="col-lg-4">
       <!-- <form >   form支持回车，但是不支持ajax，如何做到支持ajax？用ajaxform-->
       <div class="input-group">
@@ -33,7 +32,6 @@
         </span>
       </div>
     </div>
-
     <div class="col-xs-12 col-sm-12">
       <br>
       <!--SWF在初始化的时候指定，在后面将展示-->
@@ -46,7 +44,6 @@
       <br>
     </div>
   </div>
-
   <div class="col-xs-12 col-sm-12">
     <!-- 规范查询结果表 -->
     <toolbar id="btn_toolbar" class="toolbar">
@@ -57,7 +54,6 @@
         <!-- <button type="button" id="importButton" class="btn btn-default" data-target="default"><i class="fa fa-trash" aria-hidden="true" title="导入规范数据"></i>导入</button> -->
       </div>
     </toolbar>
-
     <div id="details" style="display:none">
       <h3>查询结果</h3>
       <table id="table"></table>
@@ -94,7 +90,7 @@
       <hr />
     </div>
     <div class="col-xs-12 col-sm-12 text-center">
-      <h4>Copyright © 2016~2021 EngineerCMS</h4>
+      <h4>Copyright © 2016~2023 EngineerCMS</h4>
     </div>
   </div>
   <!-- 使用说明 -->
@@ -251,7 +247,6 @@
       </div>
     </div>
   </div>
-
   <script>
   function actionFormatter(value, row, index) {
     return row.Category + ' ' + row.Number + '-' + row.Year
@@ -414,7 +409,7 @@
     })
     //导入规范数据
     $("#importButton").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -425,7 +420,7 @@
     })
 
     $("#editorButton").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -452,7 +447,7 @@
     })
 
     $("#deleteButton").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -499,7 +494,7 @@
   //有效版本库表格增删改
   $(document).ready(function() {
     $("#addButton1").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -510,7 +505,7 @@
     })
 
     $("#importButton1").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -521,7 +516,7 @@
     })
 
     $("#editorButton1").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -548,7 +543,7 @@
     })
 
     $("#deleteButton1").click(function() {
-      if (!{{.IsAdmin }}) {
+      if (!{ {.IsAdmin } }) {
         alert("非管理员，无权限！")
         return
       }
@@ -590,7 +585,7 @@
   })
 
   function updatestandard() {
-    if (!{{.IsAdmin }}) {
+    if (!{ {.IsAdmin } }) {
       alert("非管理员，无权限！")
       return
     }

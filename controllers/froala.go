@@ -47,7 +47,7 @@ type UploadimgFroala struct {
 	// "state": "SUCCESS"
 }
 
-//下面这个没用
+// 下面这个没用
 func (c *FroalaController) ControllerFroala() {
 	op := c.GetString("action")
 	key := c.GetString("key") //这里进行判断各个页面，如果是addtopic，如果是addcategory
@@ -331,7 +331,7 @@ func (c *FroalaController) ControllerFroala() {
 	}
 }
 
-//这个没用
+// 这个没用
 func UploadImg(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("upfile")
 	if err != nil {
@@ -362,7 +362,7 @@ func UploadImg(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-//添加文章里的图片上传
+// 添加文章里的图片上传
 func (c *FroalaController) UploadImg() {
 	// 登录
 	_, _, _, _, islogin := checkprodRole(c.Ctx)
@@ -428,7 +428,7 @@ func (c *FroalaController) UploadImg() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /uploadwximg [post]
-//微信wx添加文章里的图片上传_独立上传图片模式
+// 微信wx添加文章里的图片上传_独立上传图片模式
 func (c *FroalaController) UploadWxImg() {
 	//解析表单
 	pid, err := web.AppConfig.String("wxcatalogid") //"26159" //c.GetString("pid")
@@ -485,7 +485,7 @@ func (c *FroalaController) UploadWxImg() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /uploadwxeditorimg [post]
-//微信wx添加文章里的图片上传_小程序富文本里的上传图片
+// 微信wx添加文章里的图片上传_小程序富文本里的上传图片
 func (c *FroalaController) UploadWxEditorImg() {
 	var ProjectId int64
 	var err error
@@ -610,7 +610,7 @@ func (c *FroalaController) UploadWxEditorImg() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /uploadwximgs/:id [post]
-//微信wx添加文章里的图片上传——这个鲁班宝，但这个id更通用
+// 微信wx添加文章里的图片上传——这个鲁班宝，但这个id更通用
 func (c *FroalaController) UploadWxImgs() {
 	//解析表单
 	pid := c.Ctx.Input.Param(":id")
@@ -1033,7 +1033,7 @@ func (c *FroalaController) UploadWxVideoCover() {
 	}
 }
 
-//添加wiki里的图片上传
+// 添加wiki里的图片上传
 func (c *FroalaController) UploadWikiImg() {
 	//保存上传的图片
 	_, h, err := c.GetFile("file")
@@ -1060,7 +1060,7 @@ func (c *FroalaController) UploadWikiImg() {
 	c.ServeJSON()
 }
 
-//添加文章里的视频上传
+// 添加文章里的视频上传
 func (c *FroalaController) UploadVideo() {
 	//解析表单
 	pid := c.GetString("pid")

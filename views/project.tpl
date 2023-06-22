@@ -103,10 +103,10 @@
       <div class="sidebar-content mCustomScrollbar _mCS_1 mCS-autoHide desktop">
         <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
           <div id="mCSB_1_container" class="mCSB_container" dir="ltr">
-            <a href="#" id="toggle-sidebar"> <i class="fa fa-bars"></i>
+            <a href="javascript:void(0)" id="toggle-sidebar"> <i class="fa fa-bars"></i>
             </a>
             <div class="sidebar-brand">
-              <a href="#">pro sidebar</a>
+              <a href="javascript:void(0)">pro sidebar</a>
             </div>
             <div class="sidebar-menu">
               <ul id="tree"></ul>
@@ -193,6 +193,7 @@ window.addEventListener("removeItemEvent", function(e) {
       showTags: true,
       loadingIcon: "fa fa-minus",
       lazyLoad: loaddata,
+      emptyIcon:""//没有子节点的节点图标
     });
 
     $('#tree').on('nodeSelected', function(event, data) {

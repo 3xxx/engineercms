@@ -1,0 +1,189 @@
+<!-- <!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>leaflet移动矩形</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    html,body,#map {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+</style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script type="text/javascript" src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script type="text/javascript">
+  //定义矢量线
+  var polyline;
+  //定义矢量矩形
+  var rectangle;
+
+  var map = L.map('map', {
+    //不允许地图拖拽
+    dragging: false,
+  }).setView([36.09, 120.35], 13);
+  var tiles =
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: ''
+    });
+  tiles.addTo(map);
+
+  // //绘制矩形
+  // rectangle = L.rectangle([
+  //   [36.09, 120.35],
+  //   [36.12, 120.55]
+  // ], {
+  //   //颜色
+  //   color: "#ff7800",
+  //   //线宽
+  //   weight: 1,
+  //   //填充色透明度
+  //   fillOpacity: 0.5
+  // }).addTo(map);
+
+  // /**矢量图层鼠标按压事件
+  //  *  @param {string} type 事件类型（鼠标按下）
+  //  *  @param {function} fn 事件触发后的响应函数
+  //  */
+  // // rectangle.once('mousedown', function(e) {
+  //   rectangle.on('mousedown', function(e) {
+  //   debugger
+  //   //获取鼠标按下位置的纬经度坐标
+  //   var coordinate1 = e.latlng;
+  //   //监听地图移动事件，实时改变图形位置
+  //   map.on('mousemove ', function(e) {
+  //     //移动位置处的坐标
+  //     var coordinate2 = e.latlng;
+  //     //计算坐标偏移
+  //     var dx = coordinate2.lat - coordinate1.lat;
+  //     var dy = coordinate2.lng - coordinate1.lng;
+  //     //重新设置矩形位置
+  //     var latlngs = [
+  //       [36.09 + dx, 120.35 + dy],
+  //       [36.12 + dx, 120.55 + dy]
+  //     ];
+  //     rectangle.setBounds(latlngs);
+  //   });
+  // });
+
+  // /**矢量图层鼠标释放事件
+  //  *  @param {string} type 事件类型（鼠标释放）
+  //  *  @param {function} fn 事件触发后的响应函数
+  //  */
+  // // rectangle.once('mouseup', function(e) {
+  //   rectangle.on('dblclick', function(e) {
+  //   //鼠标释放后，注销鼠标移动事件
+  //   map.off('mousemove');
+  //   alert("移动完成！");
+  // });
+
+
+
+    // 矩形旋转缩放移动
+  var rectangle = new L.Rectangle(L.latLngBounds(
+        [36.09, 120.35],
+    [36.12, 120.55]
+    ), {
+      weight: 2,
+      draggable: true,
+      transform: true,
+      fillColor: "transport",
+      fillOpacity: 0
+    }).addTo(map);
+ 
+    this.rectangle.transform.enable({ rotation: false, scaling: true, uniformScaling:true });
+ 
+ 
+    var that = this;
+ 
+    //旋转完执行，一般是为了放中间的图标，所以才要获取位置信息
+    this.rectangle.on("rotateend", function (e) {
+      console.log(e.target.getBounds());
+ 
+      
+    })
+ 
+    //放大缩小执行，一般是为了放中间的图标，所以才要获取位置信息
+    this.rectangle.on("scaleend ", function (e) {
+      console.log(e.target.getBounds());
+ 
+ 
+    })
+ 
+ 
+    //拖动完执行,一般是为了放中间的图标，所以才要获取位置信息
+    this.rectangle.on("dragend ", function (e) {
+      console.log(e.target.getBounds());
+ 
+      
+    })
+  </script>
+</body>
+
+</html> -->
+
+​
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <title>leaflet旋转图形</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="./css/transform/style.css" />
+    <link rel="stylesheet" href="./css/transform/topcoat-desktop-light.css" />
+</head>
+ 
+<body >
+    <div id="map"></div>
+    <div id="controls">
+        <div class="wrapper">
+            <p>
+                <ul>
+                    <li>
+                        <label class="topcoat-checkbox">
+                            <input type="checkbox" id="scaling" checked />
+                            <div class="topcoat-checkbox__checkmark"></div>
+                            Scale
+                        </label>
+                    </li>
+                    <li>
+                        <label class="topcoat-checkbox">
+                            <input type="checkbox" id="rotation" checked />
+                            <div class="topcoat-checkbox__checkmark"></div>
+                            Rotate
+                        </label>
+                    </li>
+                    <li>
+                        <label class="topcoat-checkbox">
+                            <input type="checkbox" id="dragging" checked />
+                            <div class="topcoat-checkbox__checkmark"></div>
+                            Drag
+                        </label>
+                    </li>
+                    <li><br></li>
+                    <li>
+                        <label class="topcoat-checkbox">
+                            <input type="checkbox" id="uniform" checked />
+                            <div class="topcoat-checkbox__checkmark"></div>
+                            Uniform scaling
+                        </label>
+                    </li>
+                </ul>
+            </p>
+        </div>
+    </div>
+    <!-- 引入图形旋转脚本库-->
+    <script src="./js/transform/bundle.js" type="text/javascript"></script>
+</body>
+ 
+</html>
+ 
+​

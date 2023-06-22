@@ -9,7 +9,6 @@
   <!-- <title>EngineerCMS</title> -->
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
@@ -76,34 +75,34 @@
     });
   });
 
-    $("#search").click(function() { //这里应该用button的id来区分按钮的哪一个,因为本页有好几个button
-      var radio = $("input[type='radio']:checked").val();
-      $.ajax({
-        type: "get", //这里是否一定要用post，是的，因为get会缓存？？
-        url: "/v1/wx/searchproductdata", // /project/product/search?keyword={{.Key}}&productid={{.Pid}}
-        data: { keyword: $("#keyword").val(), radiostring: radio },
-        success: function(data, status) { //数据提交成功时返回数据
-          //显示结果表
-          $("#rowtitle").html("搜寻结果");
-          $("#details").show();
-          $('#table1').bootstrapTable('append', data.rows);
-          $('#table1').bootstrapTable('scrollTo', 'bottom');
-        }
-      });
+  $("#search").click(function() { //这里应该用button的id来区分按钮的哪一个,因为本页有好几个button
+    var radio = $("input[type='radio']:checked").val();
+    $.ajax({
+      type: "get", //这里是否一定要用post，是的，因为get会缓存？？
+      url: "/v1/wx/searchproductdata", // /project/product/search?keyword={{.Key}}&productid={{.Pid}}
+      data: { keyword: $("#keyword").val(), radiostring: radio },
+      success: function(data, status) { //数据提交成功时返回数据
+        //显示结果表
+        $("#rowtitle").html("搜寻结果");
+        $("#details").show();
+        $('#table1').bootstrapTable('append', data.rows);//append改为load
+        $('#table1').bootstrapTable('scrollTo', 'bottom');
+      }
     });
+  });
 
   function getKey() {
     if (event.keyCode == 13) {
       var radio = $("input[type='radio']:checked").val();
       $.ajax({
-        type: "get", 
-        url: "/v1/wx/searchproductdata",//searchproduct,
+        type: "get",
+        url: "/v1/wx/searchproductdata", //searchproduct,
         data: { keyword: $("#keyword").val(), radiostring: radio },
         success: function(data, status) { //数据提交成功时返回数据
           //显示结果表
           $("#rowtitle").html("搜寻结果");
           $("#details").show();
-          $('#table1').bootstrapTable('append', data.rows);
+          $('#table1').bootstrapTable('append', data.rows);//append改为load
           $('#table1').bootstrapTable('scrollTo', 'bottom');
         }
       });
@@ -232,7 +231,7 @@
     },
     'click .gototreeButton': function(e, value, row, index) {
       // alert(row.ProjectId);
-      window.open("/project/"+row.TopProjectId+"?node="+row.ProjectId,"_blank");
+      window.open("/project/" + row.TopProjectId + "?node=" + row.ProjectId, "_blank");
       // gototree(2)
     },
   };
@@ -378,8 +377,6 @@
       </div>
     </div>
   </div>
-
-
 </body>
 
 </html>

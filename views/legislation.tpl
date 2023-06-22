@@ -2,9 +2,17 @@
 {{template "header"}}
 <title>首页 - 水利设计CMS系统</title>
 <!-- <meta charset="UTF-8"> -->
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
+<script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+<script src="/static/js/tableExport.js"></script>
+<script type="text/javascript" src="/static/js/moment.min.js"></script>
 <link type="text/css" href="/static/youdao/g3.css" rel="stylesheet">
 <link type="text/css" href="/static/youdao/fanyi.css" rel="stylesheet">
-<script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+<!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
 <script type="text/javascript" src="/static/youdao/openapi.do" charset="utf-8"></script>
 <script type="text/javascript" src="/static/youdao/dict_req_web_1.1.js"></script>
 <script type="text/javascript" src="/static/youdao/fanyi.js" data-main="/fanyi"></script>
@@ -133,7 +141,7 @@
     <a href="/">首页</a>
     <span class="c_fnl">|</span>
     <a href="https://github.com/3xxx">源码托管</a>
-    <p class="c_fcopyright">© 2016~2018 <a href="https://github.com/3xxx" target="_blank" rel="nofollow">3xxx</a> QQ504284</p>
+    <p class="c_fcopyright">© 2016~2023 <a href="https://github.com/3xxx" target="_blank" rel="nofollow">3xxx</a> QQ504284</p>
   </div>
   <script type="text/javascript">
   var global = {};
@@ -158,9 +166,18 @@
           // alert(data[0].Title);
           $.each(data, function(i, d) {
             // alert(data[i].Title);
-            $(".translated_result").append('<p>(' + data[i].Id + ')&nbsp;《' + data[i].LibraryTitle + '》&nbsp;(' + data[i].LibraryNumber + ')</p>');
+            if (data[i].Color == "red") {
+              $(".translated_result").append('<p style="font-size:14px;color:red">(' + data[i].Id + ')&nbsp;《' + data[i].LibraryTitle + '》&nbsp;(' + data[i].LibraryNumber + ')</p>');
+            } else if (data[i].Color == "blue") {
+              if (data[i].LibraryNumber != "") {
+                $(".translated_result").append('<p style="font-size:14px;color:blue">(' + data[i].Id + ')&nbsp;《' + data[i].LibraryTitle + '》&nbsp;(' + data[i].LibraryNumber + ')</p>');
+              } else {
+                $(".translated_result").append('<p style="font-size:14px;color:blue">(' + data[i].Id + ')&nbsp;《' + data[i].LibraryTitle + '》&nbsp;</p>');
+              }
+            } else {
+              $(".translated_result").append('<p style="font-size:14px;">(' + data[i].Id + ')&nbsp;《' + data[i].LibraryTitle + '》&nbsp;(' + data[i].LibraryNumber + ')</p>');
+            }
           });
-
         }
       });
     });

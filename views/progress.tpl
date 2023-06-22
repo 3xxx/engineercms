@@ -770,7 +770,7 @@ $(".js-example-templating").select2({
 
 
 ***********x-editable
-<a href="#" id="country" data-type="select2" data-pk="1" data-value="ru" data-url="/post" data-title="Select country"></a>
+<a href="javascript:void(0)" id="country" data-type="select2" data-pk="1" data-value="ru" data-url="/post" data-title="Select country"></a>
 <script>
 $(function(){
     //local source

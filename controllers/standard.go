@@ -55,7 +55,7 @@ type Standardmore struct {
 	LiNumber      string //完整编号
 }
 
-//显示所有规范
+// 显示所有规范
 func (c *StandardController) GetStandard() {
 	c.Data["IsStandard"] = true //这里修改到ListAllPosts()
 	// c.TplName = "standard.tpl"
@@ -71,7 +71,7 @@ func (c *StandardController) GetStandard() {
 	}
 }
 
-//修改规范
+// 修改规范
 func (c *StandardController) UpdateStandard() {
 	_, _, _, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -115,7 +115,7 @@ func (c *StandardController) UpdateStandard() {
 	}
 }
 
-//删除规范
+// 删除规范
 func (c *StandardController) DeleteStandard() {
 	_, _, _, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -453,7 +453,7 @@ func (c *StandardController) WxElasticSearch() { //(*SearchResults, error)
 	c.ServeJSON()
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type StandardTableserver struct {
 	Rows  []Standardmore `json:"rows"`
 	Page  int            `json:"page"`
@@ -469,9 +469,9 @@ type StandardTableserver struct {
 // @Failure 400 Invalid page supplied
 // @Failure 404 cart not found
 // @router /search [get]
-//根据用户输入的关键字，查询规范
-//搜索规范或者图集的名称或编号
-//20170704：linumber没有用。因为用category+编号+年份比较好
+// 根据用户输入的关键字，查询规范
+// 搜索规范或者图集的名称或编号
+// 20170704：linumber没有用。因为用category+编号+年份比较好
 func (c *StandardController) Search() { //search用的是post方法
 	limit := c.GetString("limit")
 	if limit == "" {
@@ -832,7 +832,7 @@ func splitSize(length int64) (size int64) {
 // @Failure 400 Invalid page supplied
 // @Failure 404 standards not found
 // @router /searchwxstandards [get]
-//小程序取得规范列表，分页_plus
+// 小程序取得规范列表，分页_plus
 func (c *StandardController) SearchWxStandards() {
 	//search用的是post方法
 	// wxsite := web.AppConfig.String("wxreqeustsite")
@@ -970,7 +970,7 @@ func (c *StandardController) WxStandardPdf() {
 	c.Ctx.Output.Download(fileurl)
 }
 
-//显示所有有效库
+// 显示所有有效库
 func (c *StandardController) Valid() {
 	//search用的是post方法
 	// name := c.GetString("name")
@@ -995,7 +995,7 @@ func (c *StandardController) Valid() {
 	logs.Close()
 }
 
-//删除有效库中选中
+// 删除有效库中选中
 func (c *StandardController) DeleteValid() {
 	//search用的是post方法
 	_, _, _, isadmin, isLogin := checkprodRole(c.Ctx)
@@ -1040,7 +1040,7 @@ func (c *StandardController) DeleteValid() {
 	logs.Close()
 }
 
-//上传excel文件，导入到规范数据库，用于批量导入规范文件
+// 上传excel文件，导入到规范数据库，用于批量导入规范文件
 func (c *StandardController) ImportExcel() {
 	_, _, _, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1119,7 +1119,7 @@ func (c *StandardController) ImportExcel() {
 	c.Redirect("/standard", 302)
 }
 
-//上传excel文件，导入到有效版本数据库
+// 上传excel文件，导入到有效版本数据库
 func (c *StandardController) ImportLibrary() {
 	_, _, _, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {

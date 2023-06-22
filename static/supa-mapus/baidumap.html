@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Hello, World</title>
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+        
+        body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px
+        }
+        
+        #map {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            text-align: center;
+        }
+        
+        #container {
+            height: 800px;
+            width: 1600px;
+        }
+    </style>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh">
+    </script>
+</head>
+ 
+<body>
+    <div id='map'>
+        <!-- id不可以更换 -->
+        <div id="container"></div>
+        <button id="btn">地图切换</button>
+    </div>
+ 
+    <script type="text/javascript">
+        var map = new BMapGL.Map("container");
+        // 创建地图实例 
+        var point = new BMapGL.Point(120.846015, 31.477077);
+        // 创建点坐标 
+        map.centerAndZoom(point, 16);
+        // 初始化地图，设置中心点坐标和地图级别
+        map.setHeading(0); //设置地图旋转角度
+        map.setTilt(0); //设置地图的倾斜角度
+        var scaleCtrl = new BMapGL.ScaleControl(); // 添加比例尺控件
+        map.addControl(scaleCtrl);
+        var zoomCtrl = new BMapGL.ZoomControl(); // 添加缩放控件
+        map.addControl(zoomCtrl);
+        var cityCtrl = new BMapGL.CityListControl(); // 添加城市列表控件
+        map.addControl(cityCtrl);
+ 
+        var copCtr = new BMapGL.CopyrightControl();
+        map.addControl(copCtr)
+            //比例尺控件相对位置
+        var opts = {
+                offset: new BMapGL.Size(500, 20)
+            }
+            // 添加控件
+        map.addControl(new BMapGL.ScaleControl(opts));
+        map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+ 
+        map.setMapStyleV2({
+            styleId: 'hYCENCEx1nXO0Nt46ldexfG9oI49xBGh'
+        });
+ 
+        //点击按钮切换地图模式
+        var btn = document.getElementById('btn');
+        var ischanged = true;
+        btn.addEventListener('click', function() {
+            if (ischanged) {
+                map.setMapType(BMAP_EARTH_MAP); // 设置地图类型为地球模式
+                ischanged = false
+            } else {
+                map.setMapType(BMAP_NORMAL_MAP); // 设置地图类型为地球模式
+                ischanged = true
+            }
+        })
+    </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+    body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?type=webgl&v=3.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh"></script>
+    https://api.map.baidu.com/api?v=2.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh
+     vfrckg7ueu1KcGKMtj4vqCFIPeOvePGO
+    <title>地球模式</title>
+</head>
+<body>
+    <div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+    // GL版命名空间为BMapGL
+    var map = new BMapGL.Map("allmap");    // 创建Map实例
+    map.centerAndZoom(new BMapGL.Point(118.5, 27.5), 5);  // 初始化地图,设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    map.setMapType(BMAP_EARTH_MAP);      // 设置地图类型为地球模式
+</script> --> 
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+    body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=vfrckg7ueu1KcGKMtj4vqCFIPeOvePGO"></script>
+    <title>地球模式</title>
+</head>
+<body>
+    <div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+    // GL版命名空间为BMapGL
+    var map = new BMapGL.Map("allmap");    // 创建Map实例
+    map.centerAndZoom(new BMapGL.Point(118.5, 27.5), 5);  // 初始化地图,设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    map.setMapType(BMAP_EARTH_MAP);      // 设置地图类型为地球模式
+</script>
+ -->
+
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>百度地图突破19级缩放限制</title>
+  <style>
+  html,
+  body,
+  .map {
+    height: 100%;
+    margin: 0;
+  }
+
+  .map-tools {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    z-index: 10;
+    padding: 5px 8px;
+    background-color: #fff;
+    border-radius: 2px;
+    font-size: 14px;
+    box-shadow: rgba(0, 0, 0, 0.35) 2px 2px 3px;
+  }
+
+  .zoom-less,
+  .zoom-plus {
+    border: 1px solid #ddd;
+  }
+
+  .zoom-num {
+    padding: 0 5px;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="map-tools">
+    <span>缩放范围：15~25&emsp;&emsp;</span>
+    <button class="zoom-less" onclick="mapZoom('less')">-</button>
+    <strong class="zoom-num">0</strong>
+    <button class="zoom-plus" onclick="mapZoom('plus')">+</button>
+  </div>
+  <div class="map" id="map"></div>
+  <script src="https://api.map.baidu.com/api?v=3.0&ak=vfrckg7ueu1KcGKMtj4vqCFIPeOvePGO"></script>
+  <script>
+  const map = new BMap.Map('map');
+  const defaultMapType = map.getMapType();
+  const defaultTileLayer = defaultMapType.getTileLayer();
+  const newMapType = new BMap.MapType('新地图', defaultTileLayer, { minZoom: 15, maxZoom: 25 });
+
+  const zoomNum = 15;
+  const zoomNumDom = document.querySelector('.zoom-num');
+
+  map.setMapType(newMapType);
+  map.centerAndZoom(new BMap.Point(116.404, 39.915), zoomNum);
+  map.addControl(new BMap.ScaleControl()); //添加比例尺
+  map.enableScrollWheelZoom(true); //激活鼠标滚轮缩放
+  map.addEventListener('zoomend', setMapZoomText); //监听地图缩放
+
+  setMapZoomText();
+
+  //设置缩放级别文字
+  function setMapZoomText() {
+    var zoom = map.getZoom();
+    zoomNumDom.innerText = zoom;
+  }
+
+  //设置缩放级别
+  function mapZoom(type) {
+    var zoom = map.getZoom();
+
+    if (type === 'less') {
+      zoom--;
+    } else {
+      zoom++;
+    }
+
+    map.setZoom(zoom);
+  }
+  </script>
+</body>
+
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>百度地图突破19级缩放限制</title>
+  <style>
+  html,
+  body,
+  .map {
+    height: 100%;
+    margin: 0;
+  }
+
+  .map-tools {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    z-index: 10;
+    padding: 5px 8px;
+    background-color: #fff;
+    border-radius: 2px;
+    font-size: 14px;
+    box-shadow: rgba(0, 0, 0, 0.35) 2px 2px 3px;
+  }
+
+  .zoom-less,
+  .zoom-plus {
+    border: 1px solid #ddd;
+  }
+
+  .zoom-num {
+    padding: 0 5px;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="map-tools">
+    <span>缩放范围：15~25&emsp;&emsp;</span>
+    <button class="zoom-less" onclick="mapZoom('less')">-</button>
+    <strong class="zoom-num">0</strong>
+    <button class="zoom-plus" onclick="mapZoom('plus')">+</button>
+  </div>
+  <div class="map" id="map"></div>
+  <script src="https://api.map.baidu.com/api?v=3.0&ak=vfrckg7ueu1KcGKMtj4vqCFIPeOvePGO"></script>
+  <script>
+  const maxZoom = 25; //最大层级
+  window.BMAP_NORMAL_MAP.m.u4 = window.BMAP_NORMAL_MAP.m.qc = window.BMAP_NORMAL_MAP.m.maxZoom = window.BMAP_PERSPECTIVE_MAP.m.u4 = window.BMAP_PERSPECTIVE_MAP.m.qc = window.BMAP_PERSPECTIVE_MAP.m.maxZoom = window.BMAP_SATELLITE_MAP.m.u4 = window.BMAP_SATELLITE_MAP.m.qc = window.BMAP_SATELLITE_MAP.m.maxZoom = window.BMAP_HYBRID_MAP.m.u4 = window.BMAP_HYBRID_MAP.m.qc = window.BMAP_HYBRID_MAP.m.maxZoom = maxZoom;
+
+
+  const map = new BMap.Map('map', { minZoom: 15 });
+
+  const zoomNum = 15;
+  const zoomNumDom = document.querySelector('.zoom-num');
+
+  map.centerAndZoom(new BMap.Point(116.404, 39.915), zoomNum);
+  map.addControl(new BMap.ScaleControl());
+  map.enableScrollWheelZoom(true);
+  map.addEventListener('zoomend', setMapZoomText);
+
+  setMapZoomText();
+
+  //设置缩放级别文字
+  function setMapZoomText() {
+    var zoom = map.getZoom();
+    zoomNumDom.innerText = zoom;
+  }
+
+  //设置缩放级别
+  function mapZoom(type) {
+    var zoom = map.getZoom();
+
+    if (type === 'less') {
+      zoom--;
+    } else {
+      zoom++;
+    }
+
+    map.setZoom(zoom);
+  }
+  </script>
+</body>
+
+</html> -->

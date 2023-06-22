@@ -5616,6 +5616,40 @@ paths:
           description: Invalid page supplied
         "404":
           description: data not found
+  /project/project/{id}/timeline:
+    get:
+      tags:
+      - project
+      description: |-
+        get aproject time line
+        <br>
+      operationId: ProjController.get project time line
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAllProjCalendar`'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /project/project/gettimeline/{id}:
+    get:
+      tags:
+      - project
+      description: |-
+        get aproject time line
+        <br>
+      operationId: ProjController.get project time line
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAllProjCalendar'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /project/project/products/{id}:
     get:
       tags:
@@ -9494,6 +9528,23 @@ paths:
           description: Invalid page supplied
         "404":
           description: video not found
+  /wx/uploadvideodata:
+    post:
+      tags:
+      - wx
+      description: |-
+        post video
+        <br>
+      operationId: PhotoController.post wx video data
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: video not found
   /wx/uploadwxavatar:
     post:
       tags:
@@ -10503,6 +10554,12 @@ definitions:
   models.GetAdminCategory:
     title: GetAdminCategory
     type: object
+  models.GetAllProjCalendar:
+    title: GetAllProjCalendar
+    type: object
+  models.GetAllProjCalendar`:
+    title: GetAllProjCalendar`
+    type: object
   models.GetArticle:
     title: GetArticle
     type: object
@@ -10831,12 +10888,16 @@ definitions:
         type: string
       Secoffice:
         type: string
+      Sex:
+        type: string
       Status:
         type: integer
         format: int64
       Updated:
         type: string
         format: datetime
+      ispartymember:
+        type: boolean
       name:
         description: 这个拼音的简写
         type: string

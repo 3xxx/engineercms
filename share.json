@@ -1,0 +1,210 @@
+
+
+记录分享功能开发过程
+在这个页面选择一个文件夹和一个文件，进行分享
+https://tank.eyeblue.cn/?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=root&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+
+文件夹uuid是：
+https://tank.eyeblue.cn/api/matter/detail?
+uuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+Request URL: https://tank.eyeblue.cn/api/matter/page?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+进入这个文件夹：
+https://tank.eyeblue.cn/api/matter/detail?
+uuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+
+文件的uuid
+Request URL: https://tank.eyeblue.cn/api/alien/preview/0efd6a4d-57e5-4cb3-6dc3-1ff725208cda/b.txt
+Referer: https://tank.eyeblue.cn/?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=root&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8
+&orderDir=DESC
+查看这个文件：
+https://tank.eyeblue.cn/api/alien/preview/
+0efd6a4d-57e5-4cb3-6dc3-1ff725208cda/b.txt
+
+create请求
+分享一个文件夹和一个文件，1个月时间
+Request URL: https://tank.eyeblue.cn/api/share/create
+Cookie: _ak=d2fc8032-e834-4c49-6753-8cab8566efa8
+
+Referer: https://tank.eyeblue.cn/?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=root&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+
+携带的参数
+matterUuids: 
+f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4,
+0efd6a4d-57e5-4cb3-6dc3-1ff725208cda
+expireInfinity: false
+expireTime: 2020-03-30 13:26:44
+
+
+{code: "OK", msg: "",…}
+code: "OK"
+data: {uuid: "257ec347-bc3b-4e62-66b0-b2b693c308d0", sort: 1582953975535, updateTime: "2020-02-29 13:26:15",…}
+code: "picc"
+createTime: "2020-02-29 13:26:15"
+dirMatter: null
+downloadTimes: 0
+expireInfinity: false
+expireTime: "2020-03-30 13:26:44"
+matters: null
+name: "123,b.txt ..."
+shareType: "MIX"
+sort: 1582953975535
+updateTime: "2020-02-29 13:26:15"
+userUuid: "1bf251f2-758d-4bf7-7117-d83c993524a8"
+username: "demo"
+uuid: "257ec347-bc3b-4e62-66b0-b2b693c308d0"
+msg: ""
+
+
+分享2个文件夹和2个文件——永久有效
+matterUuids: 
+1cf520d8-300a-44c7-4efa-ebd26877b992,
+01c4b6a3-9a3a-4ee0-773e-0b7e3ffbd189,
+4b548647-8a19-4632-76f4-577a0aaf49d7,
+0efd6a4d-57e5-4cb3-6dc3-1ff725208cda
+expireInfinity: true
+expireTime: 2020-02-29 13:38:30
+
+{code: "OK", msg: "",…}
+code: "OK"
+data: {uuid: "dd829684-e6d3-4a2b-6116-6489df774799", sort: 1582954681192, updateTime: "2020-02-29 13:38:01",…}
+code: "3nw3"
+createTime: "2020-02-29 13:38:01"
+dirMatter: null
+downloadTimes: 0
+expireInfinity: true
+expireTime: "2020-02-29 13:38:01"
+matters: null
+name: "ddd,aaaa ..."
+shareType: "MIX"
+sort: 1582954681192
+updateTime: "2020-02-29 13:38:01"
+userUuid: "1bf251f2-758d-4bf7-7117-d83c993524a8"
+username: "demo"
+uuid: "dd829684-e6d3-4a2b-6116-6489df774799"
+msg: ""
+
+链接:https://tank.eyeblue.cn/share/detail/dd829684-e6d3-4a2b-6116-6489df774799 提取码:3nw3
+
+只分享根目录下的文件夹
+https://tank.eyeblue.cn/?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=root&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+
+matterUuids: f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+expireInfinity: false
+expireTime: 2020-03-30 16:16:25
+
+分享文件下的文件夹
+Referer: https://tank.eyeblue.cn/?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=a018e435-bdac-40e4-47a5-42c369630e69&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+
+matterUuids: a0dc7b95-7abe-4994-7f92-57ded1b79169
+expireInfinity: false
+expireTime: 2020-03-30 16:17:40
+
+分享文件夹下文件夹里的文件
+Referer: https://tank.eyeblue.cn/?page=0&pageSize=50&orderCreateTime=DESC&
+puuid=a0dc7b95-7abe-4994-7f92-57ded1b79169&
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+
+matterUuids: f9a3d9dd-e173-4433-4487-de2abc9e24f0
+expireInfinity: false
+expireTime: 2020-03-30 16:18:45
+userUuid=1bf251f2-758d-4bf7-7117-d83c993524a8&orderDir=DESC
+
+puuid=parent file id
+根目录的，值就是root
+
+赋值链接：
+链接:https://tank.eyeblue.cn/share/detail/c1365335-ca27-4fcf-605e-a9459c08329c 提取码:7pxd
+链接:https://zsj.itdos.com/share/detail/a254706b-3d53-4ef8-7ceb-39b249272169&nbsp提取码:iayv
+链接:https://zsj.itdos.com/share/detail/55ca743f-117f-4584-4f1a-cb84f2018c00  提取码:e933
+
+browse请求
+https://tank.eyeblue.cn/api/share/browse
+Referer: https://tank.eyeblue.cn/share/detail/392aab26-a921-4df2-6b26-529ab9b6ad4f
+
+puuid: root
+rootUuid: root
+shareUuid: 392aab26-a921-4df2-6b26-529ab9b6ad4f
+code: um23
+
+返回
+{code: "OK", msg: "",…}
+code: "OK"
+data: {uuid: "392aab26-a921-4df2-6b26-529ab9b6ad4f", sort: 1583077520707, updateTime: "2020-03-01 23:45:21",…}
+code: "um23"
+createTime: "2020-03-01 23:45:21"
+dirMatter: null
+downloadTimes: 0
+expireInfinity: false
+expireTime: "2020-03-31 23:45:50"
+matters: [,…]
+name: "123,b.txt ..."
+shareType: "MIX"
+sort: 1583077520707
+updateTime: "2020-03-01 23:45:21"
+userUuid: "1bf251f2-758d-4bf7-7117-d83c993524a8"
+username: "demo"
+uuid: "392aab26-a921-4df2-6b26-529ab9b6ad4f"
+msg: ""
+
+打开文件
+Request URL: https://tank.eyeblue.cn/api/alien/preview/
+0efd6a4d-57e5-4cb3-6dc3-1ff725208cda/b.txt?
+shareUuid=392aab26-a921-4df2-6b26-529ab9b6ad4f&
+shareCode=um23&
+shareRootUuid=root
+Referer: https://tank.eyeblue.cn/share/detail/
+392aab26-a921-4df2-6b26-529ab9b6ad4f
+请求携带参数
+shareUuid: 392aab26-a921-4df2-6b26-529ab9b6ad4f
+shareCode: um23
+shareRootUuid: root
+
+打开文件夹
+Request URL: https://tank.eyeblue.cn/api/share/browse
+Referer: https://tank.eyeblue.cn/share/detail/
+392aab26-a921-4df2-6b26-529ab9b6ad4f?
+page=0&
+pageSize=50&
+puuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+请求携带参数
+puuid: f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+rootUuid: f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+shareUuid: 392aab26-a921-4df2-6b26-529ab9b6ad4f
+code: um23
+
+跳转到
+Request URL: https://tank.eyeblue.cn/api/matter/page?
+page=0&pageSize=50&orderCreateTime=DESC&
+puuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4&
+orderDir=DESC&
+shareUuid=392aab26-a921-4df2-6b26-529ab9b6ad4f&
+shareCode=um23&
+shareRootUuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+Referer: https://tank.eyeblue.cn/share/detail/392aab26-a921-4df2-6b26-529ab9b6ad4f?page=0&pageSize=50&orderCreateTime=DESC&puuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4&orderDir=DESC&shareUuid=392aab26-a921-4df2-6b26-529ab9b6ad4f&shareCode=um23&shareRootUuid=f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+携带参数
+page: 0
+pageSize: 50
+orderCreateTime: DESC
+puuid: f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+orderDir: DESC
+shareUuid: 392aab26-a921-4df2-6b26-529ab9b6ad4f
+shareCode: um23
+shareRootUuid: f2139e5c-3d31-4d3e-5e6a-6e1c4ca6f0b4
+
+
+shareRootUuid: fa00dd61-769d-47cf-40b5-d2479718b94f
+expireTime: 2020-03-02 00:09:58
+matterUuid: 5a0331ad-52b2-4b5a-4f18-c145b946fb51
+具体文件的uuid: 5a0331ad-52b2-4b5a-4f18-c145b946fb51

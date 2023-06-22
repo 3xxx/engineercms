@@ -1159,7 +1159,7 @@ func (c *DocumentController) DeleteHistory() {
 	c.JsonResult(0, "ok")
 }
 
-//通过文档历史恢复文档
+// 通过文档历史恢复文档
 func (c *DocumentController) RestoreHistory() {
 	c.Prepare()
 

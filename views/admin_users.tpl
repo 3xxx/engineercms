@@ -17,12 +17,14 @@
   <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+  <!-- <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" /> -->
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <script src="/static/js/jquery.form.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/select2.css" />
-  <script type="text/javascript" src="/static/js/select2.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/> -->
+  <!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
+  <link href="/static/css/select2.min.css" rel="stylesheet" />
+  <script src="/static/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -39,8 +41,9 @@
         <i class="fa fa-trash">删除</i>
       </button>
     </div>
-    <table id="table0" data-search="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-striped="true" data-toolbar="#toolbar" data-query-params="queryParams" data-sort-name="Username" data-sort-order="desc" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-single-select="true" data-click-to-select="true" data-show-export="true">
-    </table>
+
+    <table id="table0"></table>
+
     <script type="text/javascript">
     /*数据json*/
     var json = [{ "Id": "1", "UserName": "水利", "UserNickname": "SL", "Lastlogintime": "2016-01-05" },
@@ -112,6 +115,24 @@
                     <label class="col-sm-3 control-label">邮箱</label>
                     <div class="col-sm-7">
                       <input type="text" class="form-control" id="Email"></div>
+                  </div>
+                  <div class="form-group must">
+                    <label class="col-sm-3 control-label">性别</label>
+                    <div class="col-sm-7">
+                      <!-- <input type="text" class="form-control" id="Sex"> -->
+                      <select id="Sex" class="form-control">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                      </select>
+                    </div>
+                  </div><div class="form-group must">
+                    <label class="col-sm-3 control-label">是否党员</label>
+                    <div class="col-sm-7">
+                      <select id="IsPartyMember" class="form-control">
+                        <option value="true">是</option>
+                        <option value="false">否</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="form-group must">
                     <label class="col-sm-3 control-label">部门</label>
@@ -202,6 +223,8 @@
       var Password = $('#Password').val();
       var Repassword = $('#Repassword').val();
       var Email = $('#Email').val();
+      var Sex = $('#Sex').val();
+      var IsPartyMember = $('#IsPartyMember').val();
       var Department = $('#Department').val();
       var Secoffice = $('#Secoffice').val();
       var Ip = $('#Ip').val();
@@ -213,7 +236,7 @@
         $.ajax({
           type: "post",
           url: "/v1/wx/adduser",
-          data: { username: Username, nickname: Nickname, password: Password, repassword: Repassword, email: Email, department: Department, secoffice: Secoffice, ip: Ip, port: Port, status: Status, role: Role },
+          data: { username: Username, nickname: Nickname, password: Password, repassword: Repassword, email: Email,sex: Sex, ispartymember: IsPartyMember, department: Department, secoffice: Secoffice, ip: Ip, port: Port, status: Status, role: Role },
           success: function(data, status) {
             if (data.info!="ERROR"){
               $('#table0').bootstrapTable('refresh', { url: '/v1/wx/user/0' });
@@ -291,19 +314,61 @@
       $('#table0').bootstrapTable({
         idField: 'Id',
         url: '/v1/wx/user/0',
+        method: 'get',
+        search: 'true',
+        showRefresh: 'true',
+        showColumns: 'true',
+        toolbar: '#toolbar1',
+        pagination: 'true',
+        sidePagination: "server",
+        queryParamsType: '',
+        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+        // limit, offset, search, sort, order 否则, 需要包含:
+        // pageSize, pageNumber, searchText, sortName, sortOrder.
+        // 返回false将会终止请求。
+        pageSize: 5,
+        pageNumber: 1,
+        pageList: [5, 25, 50, 100, 'All'],
+        uniqueId: "id",
+        // singleSelect:"true",
+        clickToSelect: "true",
+        showExport: "true",
+        queryParams: function queryParams(params) { //设置查询参数
+          var param = {
+            limit: params.pageSize, //每页多少条数据
+            pageNo: params.pageNumber, // 页码
+            searchText: $(".search .form-control").val()
+          };
+          //搜索框功能
+          //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+          // if (null != searchText) {
+          //   try {
+          //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+          //   } catch (Exception e) {
+          //     e.printStackTrace();
+          //   }
+          // }
+          return param;
+        },
         // striped: "true",
         columns: [{
+            valign: 'middle',
+            align: 'center',
             radio: 'true',
             width: '10'
           },
           {
             // field: 'Number',
             title: '序号',
+            valign: 'middle',
+            align: 'center',
             formatter: function(value, row, index) {
               return index + 1
             }
           }, {
             field: 'name', //Username
+            valign: 'middle',
+            align: 'center',
             title: '用户名',
             sortable: 'true',
             editable: {
@@ -314,6 +379,8 @@
             }
           }, {
             field: 'Nickname',
+            valign: 'middle',
+            align: 'center',
             title: '昵称',
             editable: {
               type: 'text',
@@ -323,6 +390,8 @@
             }
           }, {
             field: 'Password',
+            valign: 'middle',
+            align: 'center',
             visible: false,
             title: '密码',
             editable: {
@@ -335,6 +404,8 @@
             }
           }, {
             field: 'Email',
+            valign: 'middle',
+            align: 'center',
             visible: false,
             title: '邮箱',
             // sortable:'true',
@@ -345,7 +416,50 @@
               title: 'Enter Email'
             }
           }, {
+            field: 'Sex',
+            valign: 'middle',
+            align: 'center',
+            visible: true,
+            title: '性别',
+            // sortable:'true',
+            editable: {
+              type: 'text',
+              pk: 1,
+              url: '/v1/wx/updateuser',
+              title: 'Enter Sex'
+            }
+          }, {
+            field: 'IsPartyMember',
+            valign: 'middle',
+            align: 'center',
+            visible: true,
+            title: '是否党员',
+            // sortable:'true',
+            editable: {
+              type: 'select',
+              source: [
+                {text: '是', value: true},
+                {text: '否', value: false}
+              ],
+              // type: 'select2',
+              // source: [
+              //   { id: '1', text: '是', value: true },
+              //   { id: '2', text: '否', value: false }
+              // ],
+              // select2: {
+              //   allowClear: true,
+              //   // width: '150px',
+              //   placeholder: '请选择状态',
+              //   multiple: true
+              // },
+              pk: 1,
+              url: '/v1/wx/updateuser',
+              title: 'Enter IsPartyMember'
+            },  
+          }, {
             field: 'Department',
+            valign: 'middle',
+            align: 'center',
             title: '部门',
             editable: {
               type: 'text',
@@ -356,6 +470,8 @@
           }, {
             field: 'Secoffice',
             title: '科室',
+            valign: 'middle',
+            align: 'center',
             sortable: 'true',
             editable: {
               type: 'text',
@@ -367,6 +483,8 @@
           }, {
             field: 'Ip',
             title: 'IP',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               pk: 1,
@@ -376,6 +494,8 @@
           }, {
             field: 'Port',
             title: '端口Port',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               pk: 1,
@@ -385,6 +505,8 @@
           }, {
             field: 'Status',
             title: '状态',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'select2',
               // source:{{.Userselect}},//'/regist/getuname1',
@@ -406,17 +528,23 @@
             }
           }, {
             field: 'Lastlogintime',
+            valign: 'middle',
+            align: 'center',
             visible: false,
             title: '最后登录',
             formatter: localDateFormatter,
           }, {
             field: 'Createtime',
+            valign: 'middle',
+            align: 'center',
             visible: false,
             title: '建立',
             formatter: localDateFormatter,
           }, {
             field: 'role', //'Role'
             visible: false,
+            valign: 'middle',
+            align: 'center',
             title: '权限',
             editable: {
               type: 'select2',
@@ -440,6 +568,8 @@
             }
           }, {
             field: 'action',
+            valign: 'middle',
+            align: 'center',
             title: '操作',
             formatter: 'actionFormatter',
             events: 'actionEvents',

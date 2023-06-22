@@ -1775,7 +1775,7 @@ html[dir="rtl"] .toolbarButton#secondaryToolbarToggle::before {
   text-decoration: none;
 }
 
-.bookmark[href="#"] {
+.bookmark[href="javascript:void(0)"] {
   opacity: 0.5;
   pointer-events: none;
 }

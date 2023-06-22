@@ -1,5 +1,15 @@
                        EngineerCMS revision history
 
+28,engineercms 2.0.3 (Jun 22,2023)
+	*) fix bug of tpl : href="javascript:void(0)"
+	+) project/product/onlyofficeview permission
+	+) onlyoffice - downzip multifiles
+	+) freecad model view
+
+27,engineercms 2.0.2 (May 20,2023)
+	*) fix bug of pass : wss connect error
+	*) fix bug of mindoc : link of search result
+
 26,engineercms 2.0.1 (Jun 9,2023)
 	+) supabase+mapus
 	+) minio

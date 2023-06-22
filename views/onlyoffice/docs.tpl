@@ -38,77 +38,77 @@
   <link rel="stylesheet" type="text/css" href="/static/css/select2.css" />
   <script type="text/javascript" src="/static/js/select2.js"></script>
   <style type="text/css">
-  #modalDialog .modal-header {
-    cursor: move;
-  }
+    #modalDialog .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog1 .modal-header {
-    cursor: move;
-  }
+    #modalDialog1 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog2 .modal-header {
-    cursor: move;
-  }
+    #modalDialog2 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog3 .modal-header {
-    cursor: move;
-  }
+    #modalDialog3 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog4 .modal-header {
-    cursor: move;
-  }
+    #modalDialog4 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog5 .modal-header {
-    cursor: move;
-  }
+    #modalDialog5 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog6 .modal-header {
-    cursor: move;
-  }
+    #modalDialog6 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog7 .modal-header {
-    cursor: move;
-  }
+    #modalDialog7 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog8 .modal-header {
-    cursor: move;
-  }
+    #modalDialog8 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog9 .modal-header {
-    cursor: move;
-  }
+    #modalDialog9 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog10 .modal-header {
-    cursor: move;
-  }
+    #modalDialog10 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog11 .modal-header {
-    cursor: move;
-  }
+    #modalDialog11 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog12 .modal-header {
-    cursor: move;
-  }
+    #modalDialog12 .modal-header {
+      cursor: move;
+    }
 
-  #modalDialog13 .modal-header {
-    cursor: move;
-  }
+    #modalDialog13 .modal-header {
+      cursor: move;
+    }
 
-  /*.form-group .datepicker{
-        z-index: 9999;
-      }*/
-  /*模态框效果*/
-  /*.modal-header {*/
-  /*background: #00FF00;*/
-  /*min-height: 16.42857143px;
-      padding: 15px;
-      border-bottom: 1px solid #e5e5e5;*/
-  /*}*/
-  /*.col-sm-1 input[type=checkbox]{
+    /*.form-group .datepicker{
+          z-index: 9999;
+        }*/
+    /*模态框效果*/
+    /*.modal-header {*/
+    /*background: #00FF00;*/
+    /*min-height: 16.42857143px;
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;*/
+    /*}*/
+    /*.col-sm-1 input[type=checkbox]{
 　　display: inline-block;
 　　vertical-align: middle;
 　　margin-bottom: 2px;
-    }*/
+      }*/
   </style>
 </head>
 <div class="container-fill">{{template "navbar" .}}</div>
@@ -132,19 +132,19 @@
       <button type="button" data-name="sharesetting" id="sharesetting" class="btn btn-default">
         <i class="fa fa-share-alt">权限</i>
       </button>
-      <button type="button" data-name="download" id="download" class="btn btn-default">
+      <button type="button" data-name="download" id="download" class="btn btn-default" title="下载单个文件">
         <i class="fa fa-download">下载</i>
       </button>
-      <!-- <button type="button" data-name="downloadas" id="downloadas" class="btn btn-default">
-        <i class="fa fa-download">下载为</i>
-        </button> -->
+      <button type="button" data-name="downloadZip" id="downloadZip" class="btn btn-default" title="批量下载">
+        <i class="fa fa-download">下载ZIP</i>
+      </button>
     </div>
-    <!--data-click-to-select="true" -->
-    <table id="table0" data-toggle="table" data-url="/onlyoffice/getdata" data-search="true" data-show-search-clear-button="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar1" data-query-params="queryParams" data-sort-name="Code" data-sort-order="desc" data-page-size="15" data-page-list="[10,15, 50, 100, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-single-select="true" data-click-to-select="true" data-show-export="true">
+    <!--data-click-to-select="true" data-single-select="true" -->
+    <table id="table0" data-toggle="table" data-url="/onlyoffice/getdata" data-search="true" data-show-search-clear-button="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar1" data-query-params="queryParams" data-sort-name="Code" data-sort-order="desc" data-page-size="15" data-page-list="[10,15, 50, 100, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true" data-show-export="true">
       <thead>
         <tr>
-          <!-- radiobox data-checkbox="true" data-formatter="setCode" data-formatter="setTitle"-->
-          <th data-width="10" data-radio="true"></th>
+          <!-- radiobox data-checkbox="true" data-radio="true" data-formatter="setCode" data-formatter="setTitle"-->
+          <th data-width="10" data-checkbox="true"></th>
           <th data-formatter="index1" data-align="center">#</th>
           <th data-field="Code" data-halign="center">编号</th>
           <th data-field="Title" data-halign="center">名称</th>
@@ -393,11 +393,11 @@
         // alert(row.userid+row.key)
         $.ajax({
           type: "get",
-          url: "/v1/onlyoffice/commanddrop/"+ row.userid,
+          url: "/v1/onlyoffice/commanddrop/" + row.userid,
           data: { key: row.key },
           success: function(data, status) {
-            if (data.error==0){
-              alert(row.usernickname+"断开成功!");
+            if (data.error == 0) {
+              alert(row.usernickname + "断开成功!");
             }
           },
           error: function(data, status) {
@@ -467,7 +467,7 @@
       });
     })
 
-    $(document).ready(function() {
+    $(function() {
       $list1 = $('#thelist');
       $btn = $('#ctlBtn');
       state = 'pending';
@@ -767,99 +767,155 @@
 
     })
 
-
-    $(document).ready(function() {
-      var uploader;
-      $('#modalAttachEditor').on('shown.bs.modal', function() {
-        // var $ = jQuery,
-        $list2 = $('#thelist2'),
-          $btn = $('#ctlBtn2'),
-          state = 'pending',
-          // uploader;
-          uploader = WebUploader.create({
-            // 不压缩image
-            resize: false,
-            // swf文件路径
-            swf: '/static/js/Uploader.swf',
-            // 文件接收服务端。
-            server: '/onlyoffice/updateattachment',
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#picker2'
-          });
-        // 当有文件添加进来的时候
-        uploader.on('fileQueued', function(file) {
-          $list2.append('<div id="' + file.id + '" class="item">' +
-            '<h4 class="info">' + file.name + '</h4>' +
-            '<p class="state">等待上传...</p>' +
-            '</div>');
-        });
-
-        //传递参数——成果id
-        uploader.on('startUpload', function() { //uploadBeforeSend——这个居然不行？
-          var pid = $('#pid').val();
-          uploader.option('formData', {
-            "pid": pid,
-          });
-        });
-
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on('uploadProgress', function(file, percentage) {
-          var $li = $('#' + file.id),
-            $percent = $li.find('.progress .progress-bar');
-          // 避免重复创建
-          if (!$percent.length) {
-            $percent = $('<div class="progress progress-striped active">' +
-              '<div class="progress-bar" role="progressbar" style="width: 0%">' +
-              '</div>' +
-              '</div>').appendTo($li).find('.progress-bar');
-          }
-          $li.find('p.state').text('上传中');
-          $percent.css('width', percentage * 100 + '%');
-        });
-
-        uploader.on('uploadSuccess', function(file) {
-          $('#' + file.id).find('p.state').text('已上传');
-        });
-
-        uploader.on('uploadError', function(file) {
-          $('#' + file.id).find('p.state').text('上传出错');
-        });
-
-        uploader.on('uploadComplete', function(file) {
-          $('#' + file.id).find('.progress').fadeOut();
-          $('#attachments').bootstrapTable('refresh', { url: '/onlyoffice/' + selectrowid });
-          $('#table0').bootstrapTable('refresh', { url: '/onlyoffice/data' });
-        });
-
-        uploader.on('all', function(type) {
-          if (type === 'startUpload') {
-            state = 'uploading';
-          } else if (type === 'stopUpload') {
-            state = 'paused';
-          } else if (type === 'uploadFinished') {
-            state = 'done';
-          }
-          if (state === 'uploading') {
-            $btn.text('暂停上传');
+    //下载zip
+    $("#downloadZip").click(function(e) {
+      if ({{.IsAdmin }}) {
+        var selectRow = $('#table0').bootstrapTable('getSelections');
+        if (selectRow.length <= 0) {
+          alert("请先勾选成果！");
+          return false;
+        }
+        //问题：如果多选，而其中有自己的，也有自己不具备权限的********
+        var title = $.map(selectRow, function(row) {
+          return row.Title;
+        })
+        var ids = "";
+        for (var i = 0; i < selectRow.length; i++) {
+          if (i == 0) {
+            ids = selectRow[i].Id;//Docxlink[0].
           } else {
-            $btn.text('开始上传');
+            ids = ids + "," + selectRow[i].Id;
           }
-        });
+        }
+        // $.ajax({
+        // type: "get",
+        // url: "/v1/onlyoffice/downloadzip",
+        // data: { ids: ids },
+        // success: function(data, status) {
+        // alert("下载“" + data + "”成功！(status:" + status + ".)");
+        // }
+        // });
 
-        $btn.on('click', function() {
-          if (state === 'uploading') {
-            uploader.stop();
-          } else {
-            uploader.upload();
-          }
-        });
-      })
+        fetch('/v1/onlyoffice/downloadzip', {
+          // signal, // 在option中加入signal
+          method: 'POST',
+          // credentials:'include',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          body: JSON.stringify({
+            ids: ids
+          })
+        }).then(res => res.blob().then(blob => {
+          // if (res.code === 0) {
+          var a = document.createElement('a');
+          var url = window.URL.createObjectURL(blob);
+          var filename = res.headers.get('Content-Disposition').split(';')[1].split('=')[1];
+          // console.log(filename);
+          // console.log(decodeURI(filename));
+          a.href = url;
+          a.download = decodeURI(filename);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          // document.body.removeChild(a);
+          // document.getElementById('status').innerHTML = '下载完成';
+        }));
+      } else {
+        alert("权限不够！");
+        return;
+      }
+    })
 
-      $('#modalAttachEditor').on('hide.bs.modal', function() {
-        $list2.text("");
-        uploader.destroy(); //销毁uploader
-      })
+    var uploader;
+    $('#modalAttachEditor').on('shown.bs.modal', function() {
+      // var $ = jQuery,
+      $list2 = $('#thelist2'),
+        $btn = $('#ctlBtn2'),
+        state = 'pending',
+        // uploader;
+        uploader = WebUploader.create({
+          // 不压缩image
+          resize: false,
+          // swf文件路径
+          swf: '/static/js/Uploader.swf',
+          // 文件接收服务端。
+          server: '/onlyoffice/updateattachment',
+          // 选择文件的按钮。可选。
+          // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+          pick: '#picker2'
+        });
+      // 当有文件添加进来的时候
+      uploader.on('fileQueued', function(file) {
+        $list2.append('<div id="' + file.id + '" class="item">' +
+          '<h4 class="info">' + file.name + '</h4>' +
+          '<p class="state">等待上传...</p>' +
+          '</div>');
+      });
+
+      //传递参数——成果id
+      uploader.on('startUpload', function() { //uploadBeforeSend——这个居然不行？
+        var pid = $('#pid').val();
+        uploader.option('formData', {
+          "pid": pid,
+        });
+      });
+
+      // 文件上传过程中创建进度条实时显示。
+      uploader.on('uploadProgress', function(file, percentage) {
+        var $li = $('#' + file.id),
+          $percent = $li.find('.progress .progress-bar');
+        // 避免重复创建
+        if (!$percent.length) {
+          $percent = $('<div class="progress progress-striped active">' +
+            '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+            '</div>' +
+            '</div>').appendTo($li).find('.progress-bar');
+        }
+        $li.find('p.state').text('上传中');
+        $percent.css('width', percentage * 100 + '%');
+      });
+
+      uploader.on('uploadSuccess', function(file) {
+        $('#' + file.id).find('p.state').text('已上传');
+      });
+
+      uploader.on('uploadError', function(file) {
+        $('#' + file.id).find('p.state').text('上传出错');
+      });
+
+      uploader.on('uploadComplete', function(file) {
+        $('#' + file.id).find('.progress').fadeOut();
+        $('#attachments').bootstrapTable('refresh', { url: '/onlyoffice/' + selectrowid });
+        $('#table0').bootstrapTable('refresh', { url: '/onlyoffice/data' });
+      });
+
+      uploader.on('all', function(type) {
+        if (type === 'startUpload') {
+          state = 'uploading';
+        } else if (type === 'stopUpload') {
+          state = 'paused';
+        } else if (type === 'uploadFinished') {
+          state = 'done';
+        }
+        if (state === 'uploading') {
+          $btn.text('暂停上传');
+        } else {
+          $btn.text('开始上传');
+        }
+      });
+
+      $btn.on('click', function() {
+        if (state === 'uploading') {
+          uploader.stop();
+        } else {
+          uploader.upload();
+        }
+      });
+    })
+
+    $('#modalAttachEditor').on('hide.bs.modal', function() {
+      $list2.text("");
+      uploader.destroy(); //销毁uploader
     })
 
     // 删除成果
@@ -1206,16 +1262,16 @@
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="">
                     <li>
-                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
                     </li>
                     <li>
-                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
                     </li>
                     <li>
-                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
                     </li>
                     <li>
-                      <a href="#" onclick="shows($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
                     </li>
                   </ul>
                   <!-- </div> -->
@@ -1231,16 +1287,16 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li>
-                        <a href="#" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
                       </li>
                       <li>
-                        <a href="#" onclick="shows1($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
                       </li>
                       <li>
-                        <a href="#" onclick="shows1($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
                       </li>
                       <li>
-                        <a href="#" onclick="shows1($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
                       </li>
                     </ul>
                   </div>
@@ -1251,7 +1307,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" id="saveusers" data-method="" onclick="return saveusers()">保存</button>
-              <button type="button" href="#" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" href="javascript:void(0)" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
           </div>
         </div>
@@ -1267,8 +1323,7 @@
               <h3>用户列表</h3>
             </div>
             <div class="modal-body">
-              <table id="tableusers20" data-search="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-striped="true" data-toolbar="#toolbar" data-query-params="queryParams" data-sort-name="Username" data-sort-order="desc" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true" data-show-export="true">
-              </table>
+              <table id="tableusers20"></table>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" id="btn2Right" data-method="append">保存</button>
@@ -1570,6 +1625,43 @@
   $(function() {
     $tableLeft = $('#tableusers20').bootstrapTable({
       idField: 'Id',
+      url: '/v1/wx/user/0',
+      method: 'get',
+      search: 'true',
+      showRefresh: 'true',
+      showColumns: 'true',
+      toolbar: '#toolbar',
+      pagination: 'true',
+      sidePagination: "server",
+      queryParamsType: '',
+      //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+      // limit, offset, search, sort, order 否则, 需要包含:
+      // pageSize, pageNumber, searchText, sortName, sortOrder.
+      // 返回false将会终止请求。
+      pageSize: 5,
+      pageNumber: 1,
+      pageList: [5, 25, 50, 100, 'All'],
+      uniqueId: "id",
+      // singleSelect:"true",
+      clickToSelect: "true",
+      showExport: "true",
+      queryParams: function queryParams(params) { //设置查询参数
+        var param = {
+          limit: params.pageSize, //每页多少条数据
+          pageNo: params.pageNumber, // 页码
+          searchText: $(".search .form-control").val()
+        };
+        //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+        return param;
+      },
       columns: [{
           checkbox: 'true',
           width: '10'
@@ -1624,6 +1716,7 @@
 
             select2: {
               allowClear: true,
+              dropdownParent: $('#modalDialog9'),
               width: '150px',
               placeholder: '请选择权限',
               id: function(item) {
@@ -1635,7 +1728,6 @@
             // url: '/v1/wx/updateuser',
             title: 'Enter Status'
           }
-
         }
       ]
     });
@@ -1681,6 +1773,7 @@
             ],
             select2: {
               allowClear: true,
+              dropdownParent: $('#modalDialog10'),
               width: '150px',
               placeholder: '请选择权限',
             },
@@ -1740,6 +1833,7 @@
             //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
             select2: {
               allowClear: true,
+              // dropdownParent: $('#modalDialog10'),
               width: '150px',
               placeholder: '请选择权限',
               // multiple: true
@@ -1824,7 +1918,7 @@
   });
 
 
-  $(document).ready(function() {
+  $(function() {
     var now = new Date();
     myDate = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate();
     $("#Date").val(myDate);
@@ -1873,7 +1967,7 @@
     var docid = $('#pid').val();
     $.ajax({
       type: "post",
-      url: "/onlyoffice/addpermission",
+      url: "/officeview/addpermission",
       data: { ids: JSON.stringify(selectRow), docid: docid },
       success: function(data, status) {
         alert("保存“" + data + "”成功！(status:" + status + ".)");

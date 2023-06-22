@@ -1,0 +1,788 @@
+{
+  "text": "省水利设计分院",
+  "collapse": [{
+        "name": "1",
+        "icon": "shop-o",
+        "value": "鲤鱼洲",
+        "title": "A1标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26181",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26201",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26203",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26204",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26205",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26207",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "2",
+        "icon": "shop-o",
+        "value": "西江、大金山",
+        "title": "A2标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26182",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26208",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26210",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26211",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26212",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26214",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "3",
+        "icon": "shop-o",
+        "value": "百丈大桥、龙州公路西",
+        "title": "A3标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26183",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26215",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26217",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26218",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26219",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26221",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "4",
+        "icon": "shop-o",
+        "value": "龙州公路东",
+        "title": "A4标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26184",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26222",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26224",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26225",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26269",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26228",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "5",
+        "icon": "shop-o",
+        "value": "横八路",
+        "title": "A5标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26185",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26229",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26231",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26232",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26233",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26235",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "6",
+        "icon": "shop-o",
+        "value": "李家沙、榄核河",
+        "title": "A6标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26346",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26366",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26368",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26369",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26370",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26372",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "7",
+        "icon": "shop-o",
+        "value": "榄核河、雁沙",
+        "title": "A7标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26347",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26373",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26375",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26376",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26377",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26379",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "8",
+        "icon": "shop-o",
+        "value": "高新沙水库、泵站",
+        "title": "B1标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26348",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26380",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26382",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26383",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26384",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26386",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "9",
+        "icon": "shop-o",
+        "value": "鱼窝头大道",
+        "title": "B2标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26349",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26387",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26389",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26390",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26391",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26393",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "10",
+        "icon": "shop-o",
+        "value": "狮子洋",
+        "title": "B3标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26511",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26531",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26533",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26534",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26535",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26537",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "11",
+        "icon": "shop-o",
+        "value": "沙田、白濠陂",
+        "title": "B4标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26512",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26538",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26540",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26541",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26542",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26544",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "12",
+        "icon": "shop-o",
+        "value": "大岭山、颜屋",
+        "title": "C1标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26676",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26696",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26698",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26699",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26700",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26702",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "13",
+        "icon": "shop-o",
+        "value": "马鞍山、杨屋",
+        "title": "C2标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26677",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26703",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26705",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26706",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26707",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26709",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "14",
+        "icon": "shop-o",
+        "value": "罗田泵站",
+        "title": "D1标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26678",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26710",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26712",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26713",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26714",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26716",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "15",
+        "icon": "shop-o",
+        "value": "深圳分干线",
+        "title": "D2标",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "26679",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26717",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "26719",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "26720",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "26721",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "26723",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      },
+      {
+        "name": "16",
+        "icon": "shop-o",
+        "value": "试验段",
+        "title": "SY",
+        "cell": [{
+            "icon": "location-o",
+            "title": "全部",
+            "url": "25002",
+            "value": "All",
+            "label": "所有图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "综合",
+            "url": "26158",
+            "value": "综合",
+            "label": "综合图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "水工",
+            "url": "25013",
+            "value": "水工",
+            "label": "水工图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "建筑",
+            "url": "25010",
+            "value": "建筑",
+            "label": "建筑图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "机电",
+            "url": "25007",
+            "value": "机电",
+            "label": "机电图纸"
+          },
+          {
+            "icon": "location-o",
+            "title": "施工",
+            "url": "25012",
+            "value": "施工",
+            "label": "施工图纸"
+          }
+        ]
+      }
+    ]
+}

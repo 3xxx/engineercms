@@ -13,7 +13,6 @@
 <script type="text/javascript" src="/static/js/moment.min.js"></script>
 <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css" />
-
 </head>
 <!-- <div class="navbar navba-default navbar-fixed-top"> -->
 <div class="container-fill">{{template "navbar" .}}</div>
@@ -32,9 +31,7 @@
       <br>
       <hr />
       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-
-        <h4>Copyright © 2016-2022 EngineerCMS</h4>
-
+        <h4>Copyright © 2016-2023 EngineerCMS</h4>
         <p>
           <a target="_blank" href="https://beian.miit.gov.cn/">备案号：粤ICP备2021082083号</a>
         </p>
@@ -563,7 +560,7 @@
   //   ]
   // };
   // myChart.setOption(option);
-</script>
+  </script>
 </body>
 
 </html>

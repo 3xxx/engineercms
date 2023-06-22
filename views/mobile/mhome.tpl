@@ -189,7 +189,7 @@
 <body>
   <!-- navbar top -->
   <div class="navbar-top">
-    <div class="side-nav-panel-left"><a href="#" data-activates="slide-out-left" class="side-nav-left"><i class="fa fa-bars"></i></a></div><!-- site brand -->
+    <div class="side-nav-panel-left"><a href="javascript:void(0)" data-activates="slide-out-left" class="side-nav-left"><i class="fa fa-bars"></i></a></div><!-- site brand -->
     <div class="site-brand"><a href="/index">
         <h1>E</h1>
       </a></div><!-- end site brand -->
@@ -307,7 +307,7 @@
             </div>
             <div class="card-content">
               <span class="card-title activator grey-text text-darken-4">卡片标题<i class="fa fa-ellipsis-v right"></i></span>
-              <p><a href="#">这是一个链接</a></p>
+              <p><a href="javascript:void(0)">这是一个链接</a></p>
             </div>
             <div class="card-reveal">
               <span class="card-title grey-text text-darken-4">卡片标题<i class="material-icons right">close</i></span>
@@ -322,7 +322,7 @@
             </div>
             <div class="card-content">
               <span class="card-title activator grey-text text-darken-4">卡片标题<i class="fa fa-ellipsis-v right"></i></span>
-              <p><a href="#">这是一个链接</a></p>
+              <p><a href="javascript:void(0)">这是一个链接</a></p>
             </div>
             <div class="card-reveal">
               <span class="card-title grey-text text-darken-4">卡片标题<i class="material-icons right">close</i></span>

@@ -74,8 +74,8 @@
          1. 根据规范、图集编号或名称关键字检索；可以全文检索规范，有利于关联
         </p>
         <p align="left" class="large">
-          2. 可以上传共享规范和图集；上传规范基本要求<a href="#" id="about"><i class="glyphicon glyphicon-question-sign"></i></a>。
-          <a href="#" id="valid" title="管理有效版本库">《规范目录有效版本》</a>数据来自OA系统
+          2. 可以上传共享规范和图集；上传规范基本要求<a href="javascript:void(0)" id="about"><i class="glyphicon glyphicon-question-sign"></i></a>。
+          <a href="javascript:void(0)" id="valid" title="管理有效版本库">《规范目录有效版本》</a>数据来自OA系统
         </p>
         <p align="left" class="large">
           3. 如果涉及侵权，请联系我清理；如果遇到文件不清晰或未识别，请联系我处理；技术栈：elasticsearch+ik+tika全文检索,pdf.js分片下载
@@ -147,7 +147,7 @@
       <hr />
     </div>
     <div class="col-xs-12 col-sm-12 col-lg-6">
-      <h4>Copyright © 2016~2022 EngineerCMS</h4>
+      <h4>Copyright © 2016~2023 EngineerCMS</h4>
       <p>
         网站由 <i class="user icon"></i>
         <a target="_blank" href="https://github.com/3xxx">@3xxx</a>

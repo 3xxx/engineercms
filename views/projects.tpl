@@ -51,13 +51,13 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="">
           <li>
-            <a href="#" onclick="editorProjButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑项目信息</i></a>
+            <a href="javascript:void(0)" onclick="editorProjButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑项目信息</i></a>
           </li>
           <li>
-            <a href="#" onclick="editorProjTreeButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑项目目录</i></a>
+            <a href="javascript:void(0)" onclick="editorProjTreeButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑项目目录</i></a>
           </li>
           <li>
-            <a href="#" onclick="ProjPermissionButton()"><i class="fa fa-edit">&nbsp;&nbsp;设置项目权限</i></a>
+            <a href="javascript:void(0)" onclick="ProjPermissionButton()"><i class="fa fa-edit">&nbsp;&nbsp;设置项目权限</i></a>
           </li>
         </ul>
       </div>

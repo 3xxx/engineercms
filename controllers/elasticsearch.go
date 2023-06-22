@@ -65,11 +65,11 @@ import (
 //	LastName  string `json:"last_name"`
 //}
 
-//const baseURL = "https://xkcd.com"
+// const baseURL = "https://xkcd.com"
 // http://127.0.0.1:8081/v1/wx/standardpdf?file=/v1/wx/downloadstandard/16
-//注意点：
-//发起的请求，如果成功了，一定要记得关闭返回Response的Body,否则会占用一个连接。
-//全局变量和函数
+// 注意点：
+// 发起的请求，如果成功了，一定要记得关闭返回Response的Body,否则会占用一个连接。
+// 全局变量和函数
 var es *elasticsearch.Client
 
 func checkError(err error) {
@@ -115,7 +115,6 @@ func init() {
 }
 
 // Document wraps an xkcd.com comic.
-//
 type Document struct {
 	ID        string `json:"id"`
 	ImageURL  string `json:"image_url"`
@@ -130,14 +129,12 @@ type Document struct {
 }
 
 // SearchResults wraps the Elasticsearch search response.
-//
 type SearchResults struct {
 	Total int    `json:"total"`
 	Hits  []*Hit `json:"hits"`
 }
 
 // Hit wraps the document returned in search response.
-//
 type Hit struct {
 	//Document
 	URL        string        `json:"url"`
@@ -257,6 +254,17 @@ func (c *ElasticController) Upload() {
 		c.ServeJSON()
 		return
 	}
+
+	openElasticsearch, err := web.AppConfig.String("openElasticsearch")
+	if err != nil {
+		logs.Error(err)
+	}
+	if openElasticsearch == "false" {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户未开启elastic全文检索服务！"}
+		c.ServeJSON()
+		return
+	}
+
 	//获取上传的文件
 	_, h, err := c.GetFile("input-ke-2[]")
 	// beego.Info(h.Filename)自动将英文括号改成了_下划线
@@ -463,7 +471,7 @@ func setupIndex(string) error {
 }
 
 // CreateIndex creates a new index with mapping.
-//func (c *ElasticController) CreateIndex(mapping string) error {
+// func (c *ElasticController) CreateIndex(mapping string) error {
 func CreateIndex(mapping string) error {
 	//es, err := elasticsearch.NewDefaultClient()
 	//if err != nil {
@@ -535,7 +543,6 @@ func Createitem(indexName string, item *Document) error {
 }
 
 // Exists returns true when a document with id already exists in the store.
-//
 func (c *ElasticController) Exists(id string) (bool, error) {
 	//es, err := elasticsearch.NewDefaultClient()
 	//if err != nil {
@@ -765,7 +772,6 @@ const searchMatch = `
 
 // @Title post tika
 // @Description post tika
-// @Success 200 {object} models.PostTika
 // @Failure 400 Invalid page supplied
 // @Failure 404 Tika not found
 // @router /tika [post]
@@ -1527,8 +1533,8 @@ func UpdateByQuery() {
 	fmt.Println(res.String())
 }
 
-//https://www.cnblogs.com/Me1onRind/p/11534544.html
-//删除索引
+// https://www.cnblogs.com/Me1onRind/p/11534544.html
+// 删除索引
 func deleteIndex() {
 	req := esapi.IndicesDeleteRequest{
 		Index: []string{"test_index"},
@@ -1539,8 +1545,8 @@ func deleteIndex() {
 	fmt.Println(res.String())
 }
 
-//往索引插入数据
-//插入单条数据
+// 往索引插入数据
+// 插入单条数据
 func insertSingle() {
 	body := map[string]interface{}{
 		"num": 0,
@@ -1563,7 +1569,7 @@ func insertSingle() {
 
 //[201 Created] {"_index":"test_index","_type":"test_type","_id":"test_1","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1}
 
-//批量插入(很明显，也可以批量做其他操作)
+// 批量插入(很明显，也可以批量做其他操作)
 func insertBatch() {
 	var bodyBuf bytes.Buffer
 	for i := 2; i < 10; i++ {
@@ -1597,22 +1603,24 @@ func insertBatch() {
 	fmt.Println(res.String())
 }
 
-//查询
-//通过sql查询
-//func selectBySql() {
-//	query := map[string]interface{}{
-//		"query": "select count(*) as cnt, max(v) as value, num from test_index where num > 0 group by num",
+// 查询
+// 通过sql查询
+//
+//	func selectBySql() {
+//		query := map[string]interface{}{
+//			"query": "select count(*) as cnt, max(v) as value, num from test_index where num > 0 group by num",
+//		}
+//		jsonBody, _ := json.Marshal(query)
+//		req := esapi.XPackSQLQueryRequest{
+//			Body: bytes.NewReader(jsonBody),
+//		}
+//		res, err := req.Do(context.Background(), es)
+//		checkError(err)
+//		defer res.Body.Close()
+//		fmt.Println(res.String())
 //	}
-//	jsonBody, _ := json.Marshal(query)
-//	req := esapi.XPackSQLQueryRequest{
-//		Body: bytes.NewReader(jsonBody),
-//	}
-//	res, err := req.Do(context.Background(), es)
-//	checkError(err)
-//	defer res.Body.Close()
-//	fmt.Println(res.String())
-//}
-//通过Search Api查询
+//
+// 通过Search Api查询
 func selectBySearch() {
 	query := map[string]interface{}{
 		"query": map[string]interface{}{
@@ -1657,8 +1665,8 @@ func selectBySearch() {
 
 //但是elasticsearch对聚合查询分页并不是很友好，基本上都是得自己手动分页。
 
-//局部更新(批量更新略)
-//根据id更新
+// 局部更新(批量更新略)
+// 根据id更新
 func updateSingle() {
 	body := map[string]interface{}{
 		"doc": map[string]interface{}{
@@ -1683,7 +1691,7 @@ func updateSingle() {
 
 //除了doc方式之外，还有script方式
 
-//根据条件更新
+// 根据条件更新
 func updateByQuery() {
 	body := map[string]interface{}{
 		"script": map[string]interface{}{
@@ -1712,8 +1720,8 @@ func updateByQuery() {
 
 //[200 OK] {"took":109,"timed_out":false,"total":9,"updated":9,"deleted":0,"batches":1,"version_conflicts":0,"noops":0,"retries":{"bulk":0,"search":0},"throttled_millis":0,"requests_per_second":-1.0,"throttled_until_millis":0,"failures":[]}
 
-//删除
-//根据id删除
+// 删除
+// 根据id删除
 func deleteSingle() {
 	req := esapi.DeleteRequest{
 		Index: "test_index",
@@ -1729,7 +1737,7 @@ func deleteSingle() {
 
 //[200 OK] {"_index":"test_index","_type":"test_type","_id":"test_1","_version":6,"result":"deleted","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":7,"_primary_term":1}
 
-//根据条件删除
+// 根据条件删除
 func deleteByQuery() {
 	body := map[string]interface{}{
 		"query": map[string]interface{}{
@@ -1747,7 +1755,7 @@ func deleteByQuery() {
 	fmt.Println(res.String())
 }
 
-//[200 OK] {"took":17,"timed_out":false,"total":9,"deleted":9,"batches":1,"version_conflicts":0,"noops":0,"retries":{"bulk":0,"search":0},"throttled_millis":0,"requests_per_second":-1.0,"throttled_until_millis":0,"failures":[]}
+// [200 OK] {"took":17,"timed_out":false,"total":9,"deleted":9,"batches":1,"version_conflicts":0,"noops":0,"retries":{"bulk":0,"search":0},"throttled_millis":0,"requests_per_second":-1.0,"throttled_until_millis":0,"failures":[]}
 func PathisExist(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {

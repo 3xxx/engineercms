@@ -26,7 +26,7 @@
 # go mod tidy——下载新增的依赖包
 # go mod vendor——更新
 
-# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，再执行bee generate docs,再执行bee run -gendoc=true -downdoc=true
+# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，再执行bee generate docs,bee generate routers,再执行bee run -gendoc=true -downdoc=true
 # 将新增的依赖包自动写入当前项目的 vendor 目录：
 # go mod vendor
 # 如果 go.mod 发生变化，应当重新执行 go mod vendor！
@@ -44,11 +44,9 @@
 # linux上执行，先杀死进程，再拷贝新的执行文件和路由文件
 # killall engineercms
 # 拷贝engineercms和swagger里的swagger.yml和swagger.json到对应文件夹里
-# $ chmod 
+# $ chmod +x engineercms 
 # $ nohup ./engineercms &
-```
 
-```bash
 # beego 2.0.0 升级指南
 # 获取最新版本的 bee 工具 go install github.com/beego/bee/v2@latest
 # 更新 beego 框架 go get -u github.com/beego/beego/v2
@@ -66,21 +64,21 @@
 
 # 记住一个核心原则：如果你用的是adapter的包，那么所有的包都应该是adapter的；如果你用的是beego/beego/v2（非adapter)，那么所有的都应该是beego/beego/v2下的。
 
-手动执行 bee generate docs以及bee generate routers重新生成commentsRouter_controllers.go，新版本删除了自动生成功能
-bee run -gendoc=true -downdoc=true
+# 手动执行 bee generate routers 重新生成commentsRouter_controllers.go，新版本删除了自动生成功能
+# bee run -gendoc=true -downdoc=true
 
-go get 是拉取远程包的命令，还是继续使用的
-go install 是对项目进行编译并自动拉取所需包并生成 可执行文件的。
+# go get 是拉取远程包的命令，还是继续使用的
+# go install 是对项目进行编译并自动拉取所需包并生成 可执行文件的。
 
-还好，你说的编译一下，生成可执行命令了，感谢！
+# 还好，你说的编译一下，生成可执行命令了，感谢！
 
-解决步骤：
-1、go get -u github.com/beego/bee/v2
-2、cd 到这个bee/v2版本中
-3、go mod tidy 整理一下
-4、go install
-此时在 GOPATH目录bin文件夹下生成了bee.exe 。
-测试 ./bee.exe new hello 已正常创建项目，自己将bin目录加入到全局即可。
+# 解决步骤：
+# 1、go get -u github.com/beego/bee/v2
+# 2、cd 到这个bee/v2版本中
+# 3、go mod tidy 整理一下
+# 4、go install
+# 此时在 GOPATH目录bin文件夹下生成了bee.exe 。
+# 测试 ./bee.exe new hello 已正常创建项目，自己将bin目录加入到全局即可。
 
 # https://www.cnblogs.com/cqlb/p/13396107.html
 # 一、创建标签
@@ -93,7 +91,7 @@ go install 是对项目进行编译并自动拉取所需包并生成 可执行�
 # 5 Switched to branch 'master'
 # git add .
 # git commit -m "update"
-# 然后，敲命令git tag <tagname>就可以打一个新标签：
+# 然后，敲命令git tag <tagname> 就可以打一个新标签：
 
 # $ git tag v2.0.5
 # 因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。

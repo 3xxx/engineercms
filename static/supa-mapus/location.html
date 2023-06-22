@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <p id="demo">点击按钮获取您当前坐标：</p>
+  <button onclick="getLocation()">按钮</button>
+  <script>
+  var x = document.getElementById("demo");
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+      x.innerHTML = "该浏览器不支持获取地理位置。";
+    }
+  }
+
+  function showPosition(position) {
+    x.innerHTML = "纬度: " + position.coords.latitude +
+      "<br>经度: " + position.coords.longitude +
+      "<br>位置精度: " + position.coords.accuracy +
+      "<br>海拔: " + position.coords.altitude +
+      "<br>位置的海拔精度: " + position.coords.altitudeAccuracy +
+      "<br>方向: " + position.coords.heading +
+      "<br>速度: " + position.coords.speed;
+  }
+
+  function showError(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        x.innerHTML = "用户拒绝对获取地理位置的请求。"
+        break;
+      case error.POSITION_UNAVAILABLE:
+        x.innerHTML = "位置信息是不可用的。"
+        break;
+      case error.TIMEOUT:
+        x.innerHTML = "请求用户地理位置超时。"
+        break;
+      case error.UNKNOWN_ERROR:
+        x.innerHTML = "未知错误。"
+        break;
+    }
+  }
+  </script>
+</body>
+
+</html>

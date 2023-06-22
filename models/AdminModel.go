@@ -25,7 +25,7 @@ import (
 
 var engine *xorm.Engine
 
-//定义全局的db对象，我们执行数据库操作主要通过他实现。
+// 定义全局的db对象，我们执行数据库操作主要通过他实现。
 var _db *gorm.DB
 
 type AdminCategory struct {
@@ -61,7 +61,7 @@ type AdminCalendar struct {
 	// BColor    string    `json:"borderColor",orm:"null"`
 }
 
-//项目同步ip表
+// 项目同步ip表
 type AdminSynchIp struct {
 	Id       int64     `form:"-"`
 	ParentId int64     `orm:"null"`
@@ -72,7 +72,7 @@ type AdminSynchIp struct {
 	Updated  time.Time `orm:"auto_now;type(datetime)"`
 }
 
-//科室结构
+// 科室结构
 type AdminDepartment struct {
 	Id       int64     `form:"-"`
 	ParentId int64     `orm:"null"`
@@ -82,7 +82,7 @@ type AdminDepartment struct {
 	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
-//首页轮播图片
+// 首页轮播图片
 type AdminCarousel struct {
 	Id      int64     `json:"id",form:"-"`
 	Title   string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
@@ -218,6 +218,7 @@ func init() {
 	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
 	_db.AutoMigrate(&PassProject{})
 	_db.AutoMigrate(&PhotoData{})
+	_db.AutoMigrate(&FreecadModel{})
 }
 
 //获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。
@@ -233,7 +234,7 @@ func init() {
 // 	return _db.WithContext(ctx)
 // }
 
-//创建数据库_来自github.com/beego/admin——这个仅作为参考用，没有使用
+// 创建数据库_来自github.com/beego/admin——这个仅作为参考用，没有使用
 func createdb() {
 	db_type, err := web.AppConfig.String("db_type")
 	db_host, err := web.AppConfig.String("db_host")
@@ -290,7 +291,7 @@ func createdb() {
 	defer db.Close()
 }
 
-//数据库连接_这个仅作为参考，和上面重复
+// 数据库连接_这个仅作为参考，和上面重复
 func Connect() {
 	var dns string
 	db_type, err := web.AppConfig.String("db_type")
@@ -327,7 +328,7 @@ func Connect() {
 	orm.RegisterDataBase("default", db_type, dns)
 }
 
-//添加
+// 添加
 func AddAdminCategory(pid int64, title, code string, grade int) (id int64, err error) {
 	o := orm.NewOrm()
 	// var category AdminCategory
@@ -366,7 +367,7 @@ func AddAdminCategory(pid int64, title, code string, grade int) (id int64, err e
 	return id, nil
 }
 
-//修改
+// 修改
 func UpdateAdminCategory(cid int64, title, code string, grade int) error {
 	o := orm.NewOrm()
 	//id转成64为
@@ -388,7 +389,7 @@ func UpdateAdminCategory(cid int64, title, code string, grade int) error {
 	return nil
 }
 
-//删除
+// 删除
 func DeleteAdminCategory(cid int64) error {
 	o := orm.NewOrm()
 	category := &AdminCategory{Id: cid}
@@ -408,8 +409,8 @@ func DeleteAdminCategory(cid int64) error {
 	return nil
 }
 
-//根据父级id取得所有
-//如果父级id为空，则取所有一级category
+// 根据父级id取得所有
+// 如果父级id为空，则取所有一级category
 func GetAdminCategory(pid int64) (categories []*AdminCategory, err error) {
 	o := orm.NewOrm()
 	categories = make([]*AdminCategory, 0)
@@ -421,7 +422,7 @@ func GetAdminCategory(pid int64) (categories []*AdminCategory, err error) {
 	return categories, err
 }
 
-//根据类别名字title查询所有下级分级category
+// 根据类别名字title查询所有下级分级category
 func GetAdminCategoryTitle(title string) (categories []*AdminCategory, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminCategory")
@@ -444,7 +445,7 @@ func GetAdminCategoryTitle(title string) (categories []*AdminCategory, err error
 	// }
 }
 
-//根据id查分级
+// 根据id查分级
 func GetAdminCategorybyId(id int64) (category []*AdminCategory, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminCategory")
@@ -456,7 +457,7 @@ func GetAdminCategorybyId(id int64) (category []*AdminCategory, err error) {
 	return category, err
 }
 
-//添加ip地址段
+// 添加ip地址段
 func AddAdminIpsegment(title, startip, endip string, iprole int) (id int64, err error) {
 	o := orm.NewOrm()
 	ipsegment := &AdminIpsegment{
@@ -474,7 +475,7 @@ func AddAdminIpsegment(title, startip, endip string, iprole int) (id int64, err 
 	return id, nil
 }
 
-//修改Ip地址段
+// 修改Ip地址段
 func UpdateAdminIpsegment(cid int64, title, startip, endip string, iprole int) error {
 	o := orm.NewOrm()
 	ipsegment := &AdminIpsegment{Id: cid}
@@ -492,7 +493,7 @@ func UpdateAdminIpsegment(cid int64, title, startip, endip string, iprole int) e
 	return nil
 }
 
-//删除
+// 删除
 func DeleteAdminIpsegment(cid int64) error {
 	o := orm.NewOrm()
 	ipsegment := &AdminIpsegment{Id: cid}
@@ -505,7 +506,7 @@ func DeleteAdminIpsegment(cid int64) error {
 	return nil
 }
 
-//查询所有Ip地址段
+// 查询所有Ip地址段
 func GetAdminIpsegment() (ipsegments []*AdminIpsegment, err error) {
 	o := orm.NewOrm()
 	// ipsegments = make([]*AdminIpsegment, 0)
@@ -532,8 +533,8 @@ func GetAdminIpsegment() (ipsegments []*AdminIpsegment, err error) {
 	// }
 }
 
-//********日历********
-//添加
+// ********日历********
+// 添加
 func AddAdminCalendar(title, content, color string, allday, public bool, start, end time.Time) (id int64, err error) {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{
@@ -554,7 +555,7 @@ func AddAdminCalendar(title, content, color string, allday, public bool, start, 
 	return id, err
 }
 
-//取所有——要修改为支持时间段的，比如某个月份
+// 取所有——要修改为支持时间段的，比如某个月份
 func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
@@ -580,8 +581,8 @@ func GetAdminCalendar(start, end time.Time, public bool) (calendars []*AdminCale
 	return calendars, err
 }
 
-//取所有——要修改为支持时间段的，比如某个月份
-//未测试！！！20181117修改filter为cond2
+// 取所有——要修改为支持时间段的，比如某个月份
+// 未测试！！！20181117修改filter为cond2
 func SearchAdminCalendar(title string, public bool) (calendars []*AdminCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("title__contains", title).Or("content__contains", title)
@@ -607,7 +608,7 @@ func SearchAdminCalendar(title string, public bool) (calendars []*AdminCalendar,
 	return calendars, err
 }
 
-//修改
+// 修改
 func UpdateAdminCalendar(cid int64, title, content, color string, allday, public bool, start, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{Id: cid}
@@ -629,7 +630,7 @@ func UpdateAdminCalendar(cid int64, title, content, color string, allday, public
 	return nil
 }
 
-//拖曳
+// 拖曳
 func DropAdminCalendar(cid int64, start, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{Id: cid}
@@ -644,7 +645,7 @@ func DropAdminCalendar(cid int64, start, end time.Time) error {
 	return nil
 }
 
-//resize
+// resize
 func ResizeAdminCalendar(cid int64, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{Id: cid}
@@ -660,7 +661,7 @@ func ResizeAdminCalendar(cid int64, end time.Time) error {
 	return nil
 }
 
-//根据id查询事件
+// 根据id查询事件
 func GetAdminCalendarbyid(id int64) (calendar AdminCalendar, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminCalendar")
@@ -671,7 +672,7 @@ func GetAdminCalendarbyid(id int64) (calendar AdminCalendar, err error) {
 	return calendar, err
 }
 
-//删除事件
+// 删除事件
 func DeleteAdminCalendar(cid int64) error {
 	o := orm.NewOrm()
 	calendar := &AdminCalendar{Id: cid}
@@ -684,8 +685,8 @@ func DeleteAdminCalendar(cid int64) error {
 	return nil
 }
 
-//****项目同步ip****
-//添加AdminSynchIp
+// ****项目同步ip****
+// 添加AdminSynchIp
 func AddAdminSynchIp(pid int64, username, synchip, port string) (id int64, err error) {
 	o := orm.NewOrm()
 	adminsynchip := &AdminSynchIp{
@@ -703,7 +704,7 @@ func AddAdminSynchIp(pid int64, username, synchip, port string) (id int64, err e
 	return id, nil
 }
 
-//修改
+// 修改
 func UpdateAdminSynchIp(cid int64, username, synchip, port string) error {
 	o := orm.NewOrm()
 	adminsynchip := &AdminSynchIp{Id: cid}
@@ -720,7 +721,7 @@ func UpdateAdminSynchIp(cid int64, username, synchip, port string) error {
 	return nil
 }
 
-//删除
+// 删除
 func DeleteAdminSynchIp(cid int64) error {
 	o := orm.NewOrm()
 	synchip := &AdminSynchIp{Id: cid}
@@ -733,7 +734,7 @@ func DeleteAdminSynchIp(cid int64) error {
 	return nil
 }
 
-//根据父级id取得所有AdminSynchIp
+// 根据父级id取得所有AdminSynchIp
 func GetAdminSynchIp(pid int64) (synchips []*AdminSynchIp, err error) {
 	o := orm.NewOrm()
 	synchips = make([]*AdminSynchIp, 0)
@@ -747,7 +748,7 @@ func GetAdminSynchIp(pid int64) (synchips []*AdminSynchIp, err error) {
 
 //***科室结构********
 
-//添加部门
+// 添加部门
 func AddAdminDepart(pid int64, title, code string) (id int64, err error) {
 	o := orm.NewOrm()
 	depart := &AdminDepartment{
@@ -764,7 +765,7 @@ func AddAdminDepart(pid int64, title, code string) (id int64, err error) {
 	return id, nil
 }
 
-//修改
+// 修改
 func UpdateAdminDepart(cid int64, title, code string) error {
 	o := orm.NewOrm()
 	category := &AdminDepartment{Id: cid}
@@ -780,7 +781,7 @@ func UpdateAdminDepart(cid int64, title, code string) error {
 	return nil
 }
 
-//删除
+// 删除
 func DeleteAdminDepart(cid int64) error {
 	o := orm.NewOrm()
 	category := &AdminDepartment{Id: cid}
@@ -793,8 +794,8 @@ func DeleteAdminDepart(cid int64) error {
 	return nil
 }
 
-//根据部门id取得所有科室
-//如果父级id为0，则取所有部门
+// 根据部门id取得所有科室
+// 如果父级id为0，则取所有部门
 func GetAdminDepart(pid int64) (departs []*AdminDepartment, err error) {
 	o := orm.NewOrm()
 	departs = make([]*AdminDepartment, 0)
@@ -806,19 +807,21 @@ func GetAdminDepart(pid int64) (departs []*AdminDepartment, err error) {
 	return departs, err
 }
 
-//根据父级id取得所有
-//如果父级id为空，则取所有一级category
-// func GetAdminCategory(pid int64) (categories []*AdminDepartment, err error) {
-// 	o := orm.NewOrm()
-// 	categories = make([]*AdminDepartment, 0)
-// 	qs := o.QueryTable("AdminDepartment")
-// 	_, err = qs.Filter("parentid", pid).All(&categories)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return categories, err
-// }
-//根据部门名字title返回自身
+// 根据父级id取得所有
+// 如果父级id为空，则取所有一级category
+//
+//	func GetAdminCategory(pid int64) (categories []*AdminDepartment, err error) {
+//		o := orm.NewOrm()
+//		categories = make([]*AdminDepartment, 0)
+//		qs := o.QueryTable("AdminDepartment")
+//		_, err = qs.Filter("parentid", pid).All(&categories)
+//		if err != nil {
+//			return nil, err
+//		}
+//		return categories, err
+//	}
+//
+// 根据部门名字title返回自身
 func GetAdminDepartName(title string) (AdminDepartment, error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminDepartment")
@@ -830,7 +833,7 @@ func GetAdminDepartName(title string) (AdminDepartment, error) {
 	return cate, err
 }
 
-//根据部门名字title查询所有下级科室category
+// 根据部门名字title查询所有下级科室category
 func GetAdminDepartTitle(title string) (categories []*AdminDepartment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminDepartment")
@@ -844,7 +847,7 @@ func GetAdminDepartTitle(title string) (categories []*AdminDepartment, err error
 	return categories, err
 }
 
-//根据id查科室
+// 根据id查科室
 func GetAdminDepartbyId(id int64) (category AdminDepartment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("AdminDepartment")
@@ -855,7 +858,7 @@ func GetAdminDepartbyId(id int64) (category AdminDepartment, err error) {
 	return category, err
 }
 
-//由分院id和科室 名称取得科室
+// 由分院id和科室 名称取得科室
 func GetAdminDepartbyidtitle(id int64, title string) (*AdminDepartment, error) {
 	o := orm.NewOrm()
 	// cate := &Category{Id: id}
@@ -868,7 +871,7 @@ func GetAdminDepartbyidtitle(id int64, title string) (*AdminDepartment, error) {
 	return category, err
 }
 
-//添加轮播动画
+// 添加轮播动画
 func AddAdminCarousel(title, url string) (id int64, err error) {
 	o := orm.NewOrm()
 	carousel := &AdminCarousel{

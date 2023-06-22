@@ -30,13 +30,13 @@
           </button>
           <ul class="dropdown-menu" aria-labelledby="">
             <li>
-              <a href="#" onclick="addButton()"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></a>
+              <a href="javascript:void(0)" onclick="addButton()"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></a>
             </li>
             <li>
-              <a href="#" onclick="addButton1()"><i class="fa fa-plus-square-o">&nbsp;&nbsp;多附件模式</i></a>
+              <a href="javascript:void(0)" onclick="addButton1()"><i class="fa fa-plus-square-o">&nbsp;&nbsp;多附件模式</i></a>
             </li>
             <li>
-              <a href="#" onclick="addButton2()"><i class="fa fa-plus-square">&nbsp;&nbsp;文章模式</i></a>
+              <a href="javascript:void(0)" onclick="addButton2()"><i class="fa fa-plus-square">&nbsp;&nbsp;文章模式</i></a>
             </li>
           </ul>
         </div>
@@ -47,10 +47,10 @@
           </button>
           <ul class="dropdown-menu" aria-labelledby="">
             <li>
-              <a href="#" onclick="editorProdButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑成果信息</i></a>
+              <a href="javascript:void(0)" onclick="editorProdButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑成果信息</i></a>
             </li>
             <li>
-              <a href="#" onclick="editorAttachButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑成果附件</i></a>
+              <a href="javascript:void(0)" onclick="editorAttachButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑成果附件</i></a>
             </li>
           </ul>
         </div>

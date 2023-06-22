@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>天地图－地图API－范例－地图加载单图层</title>
+    <script type="text/javascript" src="http://api.tianditu.gov.cn/api?v=4.0&tk=49fb5337e67fda377699448c7b670eef"></script>
+    <style type="text/css">body,html{width:100%;height:100%;margin:0;font-family:"Microsoft YaHei"}#mapDiv{width:100%;height:100%}input,b,p{margin-left:5px;font-size:14px}</style>
+    <script>
+        var map;
+        var zoom = 18;
+        var lay;
+        var onlyMapLay;
+        function onLoad() {
+            var imageURL = "http://t0.tianditu.gov.cn/img_w/wmts?" +
+                "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+                "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=49fb5337e67fda377699448c7b670eef";
+            //创建自定义图层对象
+            lay = new T.TileLayer(imageURL, {minZoom: 1, maxZoom: 22});
+            var config = {layers: [lay]};
+            //初始化地图对象
+            map = new T.Map("mapDiv", config);
+            //设置显示地图的中心点和级别
+            map.centerAndZoom(new T.LngLat(116.40969, 39.89945), zoom);
+            //允许鼠标滚轮缩放地图
+            map.enableScrollWheelZoom();
+        }
+
+    </script>
+</head>
+<body onLoad="onLoad()">
+<div id="mapDiv"></div>
+<div style="position:absolute;left:520px;">
+</div>
+</body>
+</html>

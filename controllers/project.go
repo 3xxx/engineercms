@@ -173,7 +173,9 @@ func (c *ProjController) GetProjects() {
 				// tempstr := strings.Split(projid, "/")
 				// logs.Info(tempstr[0])
 				// logs.Info(tempstr[1])
-				strMap[strings.Split(projid, "/")[1]] = strings.Split(projid, "/")[1]
+				if len(projid) > 0 && strings.Contains(projid, "/") {
+					strMap[strings.Split(projid, "/")[1]] = strings.Split(projid, "/")[1]
+				}
 			}
 			for _, v := range strMap {
 				// beego.Info(projids)
@@ -2287,6 +2289,12 @@ type Listimage struct {
 	Utime     string   `json:"utime"`
 }
 
+// @Title get project time line
+// @Description get aproject time line
+// @Success 200 {object} models.GetAllProjCalendar
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /project/gettimeline/:id [get]
 // 项目时间轴
 func (c *ProjController) ProjectTimeline() {
 	projectid := c.Ctx.Input.Param(":id")
@@ -2329,6 +2337,12 @@ func (c *ProjController) ProjectTimeline() {
 	// }
 }
 
+// @Title get project time line
+// @Description get aproject time line
+// @Success 200 {object} models.GetAllProjCalendar
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /project/:id/timeline [get]
 // 要分页
 func (c *ProjController) Timeline() {
 	// page := c.GetString("p")

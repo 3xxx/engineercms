@@ -91,7 +91,7 @@ type ServiceValidateController struct {
 // 	c.TplName = "loginerr.tpl"
 // }
 
-//登录页面
+// 登录页面
 func (c *LoginController) Login() {
 
 	url := c.GetString("url")
@@ -111,7 +111,7 @@ func (c *LoginController) Login() {
 	}
 }
 
-//login页面输入用户名和密码后登陆提交
+// login页面输入用户名和密码后登陆提交
 func (c *LoginController) Post() {
 	// uname := c.GetString("uname")
 	// url := c.GetString("returnUrl")
@@ -237,7 +237,7 @@ func GetRandomSalt() []byte {
 	return GetRandomString(8)
 }
 
-//生成随机字符串
+// 生成随机字符串
 func GetRandomString(length int) []byte {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)
@@ -257,7 +257,7 @@ func GetRandomString(length int) []byte {
 // @Failure 400 Invalid page supplied
 // @Failure 404 data not found
 // @router /loginpost [post]
-//login弹框输入用户名和密码后登陆提交//微信用户注册登录用register
+// login弹框输入用户名和密码后登陆提交//微信用户注册登录用register
 func (c *LoginController) LoginPost() {
 	var user models.User
 	user.Username = c.GetString("uname")
@@ -317,9 +317,9 @@ func (c *LoginController) LoginPost() {
 	c.ServeJSON()
 }
 
-//退出登录
+// 退出登录
 func (c *LoginController) Logout() {
-	site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
+	// site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
 	v := c.GetSession("uname")
 	if v != nil {
 		//删除指定的session
@@ -331,12 +331,12 @@ func (c *LoginController) Logout() {
 	}
 	islogin := false
 	// https://www.54lby.com/sso/login?redirect_url=https%3A%2F%2Fcms.54lby.com%2F
-	c.Ctx.Redirect(302, "https://www.54lby.com/sso/logouts?redirect_url="+site+c.Ctx.Request.URL.String())
+	// c.Ctx.Redirect(302, "https://www.54lby.com/sso/logouts?redirect_url="+site+c.Ctx.Request.URL.String())
 	c.Data["json"] = map[string]interface{}{"islogin": islogin}
 	c.ServeJSON()
 }
 
-//作废20180915
+// 作废20180915
 func (c *LoginController) Loginerr() {
 	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
 	url2 := c.GetString("level")
@@ -528,7 +528,7 @@ func (c *LoginController) WxLogin() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /wxhassession [get]
-//微信小程序根据小程序自身存储的session，检查ecms里的openid session是否有效
+// 微信小程序根据小程序自身存储的session，检查ecms里的openid session是否有效
 func (c *LoginController) WxHasSession() {
 	// var openID string
 	openid := c.GetSession("openID")
@@ -551,7 +551,7 @@ func (c *LoginController) WxHasSession() {
 // ce conversion: interface {} is nil, not string
 // 2018/09/09 18:57:04.807 [C] [asm_amd64.s:509] D:/gowork/src/github.com/3xxx/engi
 // neercms/controllers/login.go:260
-//判断用户是否登录
+// 判断用户是否登录
 func checkAccount(ctx *context.Context) bool {
 	var user models.User
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
@@ -619,8 +619,8 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 	return uname, role, uid
 }
 
-//用户登录，则role是1则是admin，其余没有意义!!!
-//ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
+// 用户登录，则role是1则是admin，其余没有意义!!!
+// ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
 	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的session数据。
 	var userid, roleid, userrole string
@@ -773,7 +773,7 @@ func CheckprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 // @Failure 400 Invalid page supplied
 // @Failure 404 data not found
 // @router /islogin [get]
-//login弹框输入用户名和密码后登陆提交
+// login弹框输入用户名和密码后登陆提交
 func (c *LoginController) Islogin() {
 	var islogin, isadmin bool
 	var uname string
@@ -828,7 +828,7 @@ func (c *LoginController) Islogin() {
 	c.ServeJSON()
 }
 
-//*********SSO单点登录JWT token
+// *********SSO单点登录JWT token
 // @Title get sso login
 // @Description get sso logintpl
 // @Param service query string  false "The service of login"

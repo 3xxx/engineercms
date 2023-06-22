@@ -1,0 +1,64 @@
+{
+  "collapse": [
+  {
+    "cell": [
+    {
+      "icon": "location-o",
+      "label": "合同",
+      "title": "全部",
+      "url": "18",
+      "value": "All"
+    },
+    {
+      "icon": "location-o",
+      "label": "进项合同",
+      "title": "进项合同",
+      "url": "20",
+      "value": "进项"
+    },
+    {
+      "icon": "location-o",
+      "label": "出项合同",
+      "title": "出项",
+      "url": "21",
+      "value": "出项"
+    }],
+    "icon": "shop-o",
+    "name": "1",
+    "title": "合同",
+    "value": "合同"
+  },
+  {
+    "cell": [
+    {
+      "icon": "location-o",
+      "label": "建设单位来函",
+      "title": "全部",
+      "url": "17",
+      "value": "All"
+    }],
+    "icon": "shop-o",
+    "name": "2",
+    "title": "函件",
+    "value": "来函"
+  },
+  {
+    "cell": [
+    {
+      "icon": "location-o",
+      "label": "报告单",
+      "title": "全部",
+      "url": "16",
+      "value": "All"
+    }],
+    "icon": "shop-o",
+    "name": "3",
+    "title": "报告单",
+    "value": "报告单"
+  }],
+  "text": "省水利设计分院9885",
+  "projectid": "15",
+  "projecttitle": "龙之杰",
+  "projectcode": "LZJ",
+  "articleid": "15"
+}

@@ -42,6 +42,9 @@
   <!-- <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css"> -->
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
 
+  <link rel="stylesheet" type="text/css" href="/static/css/select2.css" />
+  <script type="text/javascript" src="/static/js/select2.js"></script>
+
   <style type="text/css">
   #imgmodalDialog .modal-header {
     cursor: move;
@@ -95,6 +98,16 @@
     cursor: move;
   }
 
+  #modalDialog81 .modal-header {
+    cursor: move;
+  }
+  #modalDialog91 .modal-header {
+    cursor: move;
+  }
+  #modalDialog101 .modal-header {
+    cursor: move;
+  }
+
   /*#modalNewDwg .modal-header {cursor: move;}*/
   /*#modalFlow .modal-header {cursor: move;}*/
   /*body {
@@ -139,16 +152,16 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="">
           <li>
-            <a href="#" onclick="addButton()"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></a>
+            <a href="javascript:void(0)" onclick="addButton()"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></a>
           </li>
           <li>
-            <a href="#" onclick="addButton1()"><i class="fa fa-plus-square-o">&nbsp;&nbsp;多附件模式</i></a>
+            <a href="javascript:void(0)" onclick="addButton1()"><i class="fa fa-plus-square-o">&nbsp;&nbsp;多附件模式</i></a>
           </li>
           <li>
-            <a href="#" onclick="addButton2()"><i class="fa fa-plus-square">&nbsp;&nbsp;文章模式</i></a>
+            <a href="javascript:void(0)" onclick="addButton2()"><i class="fa fa-plus-square">&nbsp;&nbsp;文章模式</i></a>
           </li>
           <li>
-            <a href="#" onclick="addButton3()"><i class="fa fa-plus-circle">&nbsp;&nbsp;全文模式</i></a>
+            <a href="javascript:void(0)" onclick="addButton3()"><i class="fa fa-plus-circle">&nbsp;&nbsp;全文模式</i></a>
           </li>
         </ul>
       </div>
@@ -159,35 +172,39 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="">
           <li>
-            <a href="#" onclick="editorProdButton()"><i class="fa fa-pencil">&nbsp;&nbsp;编辑成果信息</i></a>
+            <a href="javascript:void(0)" id="editorProdButton"><i class="fa fa-pencil">&nbsp;&nbsp;编辑成果信息</i></a>
           </li>
           <li>
-            <a href="#" onclick="editorAttachButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑成果附件</i></a>
+            <a href="javascript:void(0)" onclick="editorAttachButton()"><i class="fa fa-edit">&nbsp;&nbsp;编辑成果附件</i></a>
           </li>
         </ul>
       </div>
       <div class="btn-group">
-        <!-- <button href="#" onclick="addButton()"  class="btn btn-default"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></button> -->
+        <!-- <button href="javascript:void(0)" onclick="addButton()"  class="btn btn-default"><i class="fa fa-plus">&nbsp;&nbsp;单附件模式</i></button> -->
         <button {{if ne "true" .RoleDelete}} style="display:none" {{end}} type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default" title="删除">
           <i class="fa fa-trash">&nbsp;&nbsp;删除</i>
         </button>
         <button {{if ne "true" .RoleGet}} style="display:none" {{end}} type="button" data-name="shareButton" id="shareButton" class="btn btn-default" title="分享文件">
           <i class="fa fa-share">&nbsp;&nbsp;分享</i>
         </button>
-        <button {{if ne "true" .RoleFlow}} style="display:none" {{end}} type="button" data-name="flowButton" id="flowButton" class="btn btn-default" title="流程、状态">
+        <!-- <button {{if ne "true" .RoleFlow}} style="display:none" {{end}} type="button" data-name="flowButton" id="flowButton" class="btn btn-default" title="流程、状态">
           <i class="fa fa-share-alt">&nbsp;&nbsp;Flow</i>
+        </button> -->
+        <button type="button" data-name="permissionButton" id="permissionButton" class="btn btn-default" title="协作权限">
+          <i class="fa fa-share-alt">&nbsp;&nbsp;协作</i>
         </button>
       </div>
-      <div class="btn-group">
+      
+      <!-- 保留<div class="btn-group">
         <button type="button" data-name="cartButton" id="cartButton" class="btn btn-default" title="购物车">
           <i class="fa fa-shopping-cart">&nbsp;&nbsp;Cart</i>
         </button>
-      </div>
-      <!-- <div class="btn-group"> -->
-        <button onclick="window.open('/v1/elastic/get')" type="button" data-name="searchButton" id="searchButton" class="btn btn-default" title="全文检索">
+      </div> -->
+
+        <!-- 保留<button onclick="window.open('/v1/elastic/get')" type="button" data-name="searchButton" id="searchButton" class="btn btn-default" title="全文检索">
           <i class="fa fa-search-plus">&nbsp;&nbsp;全文检索</i>
-        </button>
-      <!-- </div> -->
+        </button> -->
+
       <!-- 保留<button {{if ne "true" .RoleNewDwg}} style="display:none" {{end}} type="button" data-name="newdwgButton" id="newdwgButton" class="btn btn-default">
         <i class="fa fa-trash">NEWdwg</i>
         </button> -->
@@ -656,6 +673,12 @@
           backdrop: 'static'
         });
       },
+
+      'click .remove': function(e, value, row, index) {
+        var username = []
+        username[0] = row.name
+        $tableRight.bootstrapTable('remove', { field: 'name', values: username });
+      },
     };
 
     //最后面弹出文章列表中用的_根据上面的click，弹出模态框，给模态框中的链接赋值
@@ -853,7 +876,7 @@
       });
     }
 
-    $(document).ready(function() {
+    $(function() {
       $list = $('#thelist1');
       $btn = $('#ctlBtn1');
       state = 'pending';
@@ -994,8 +1017,8 @@
     }
 
     // 编辑成果信息
-    // $("#editorProdButton").click(function() {
-    function editorProdButton() {
+    $("#editorProdButton").click(function() {
+    // function editorProdButton() {
       var selectRow = $('#table0').bootstrapTable('getSelections');
       if (selectRow.length < 1) {
         alert("请先勾选成果！");
@@ -1054,7 +1077,7 @@
         alert("权限不够！" + selectRow[0].Uid);
         return;
       }
-    }
+    })
 
     // 编辑成果附件——删除附件、文章或追加附件
     var selectrowid;
@@ -1108,7 +1131,7 @@
       }
     }
 
-    $(document).ready(function() {
+    $(function() {
       var uploader;
       $('#modalAttachEditor').on('shown.bs.modal', function() {
         // var $ = jQuery,
@@ -1384,6 +1407,39 @@
         });
       } else {
         alert("权限不够！" + selectRow[0].Uid);
+        return;
+      }
+    })
+
+    // 设置文档协作权限
+    $("#permissionButton").click(function() {
+      var selectRow = $('#table0').bootstrapTable('getSelections');
+      if (selectRow.length < 1) {
+        alert("请先勾选成果！");
+        return;
+      }
+      if (selectRow.length > 1) {
+        alert("请不要勾选一个以上成果！");
+        return;
+      }
+      console.log(selectRow)
+      
+      // alert(selectRow[0].Uid);
+      //必须登录用户上传的文档，具有uid，才能设置权限。
+      if ({{.Uid }} === 0) {
+        alert("请登录！");
+        return;
+      } else if (selectRow[0].Uid === {{.Uid }} || {{.IsAdmin }}) {
+        $("input#pid").remove();
+        var th1 = "<input id='pid' type='hidden' name='pid' value='" + selectRow[0].Id + "'/>"
+        $(".modal-body").append(th1); //这里是否要换名字$("p").remove();
+        $('#tableusers1').bootstrapTable('refresh', { url: '/v1/project/product/getpermission?docid=' + selectRow[0].Id }); //取得这个文档的用户和角色列表
+        $('#modalpermission').modal({
+          show: true,
+          backdrop: 'static'
+        });
+      } else {
+        alert("权限不够！因为上传文档用户id为：" + selectRow[0].Uid + "，你的id为：" + {{.Uid }} + "!");
         return;
       }
     })
@@ -2189,6 +2245,124 @@
         </div>
       </div>
     </div>
+
+    <!-- 协作权限设置 -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="modalpermission">
+        <div class="modal-dialog" id="modalDialog81">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">权限设置Permission Settings</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div id="" class="btn-group">
+                  <button type="button" id="addusers" class="btn btn-default">
+                    <i class="fa fa-plus">&nbsp;&nbsp;Add Users</i>
+                  </button>
+                  <!-- <div class="btn-group"> -->
+                  <button class="btn btn-default dropdown-toggle" type="button" id="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i id="dropdownMenu1" class="fa fa-eye">&nbsp;&nbsp;</i>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="">
+                    <li>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" onclick="shows($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
+                    </li>
+                  </ul>
+                  <!-- </div> -->
+                </div>
+                <div id="" class="btn-group">
+                  <div class="btn-group">
+                    <button type="button" id="addroles" data-name="" class="btn btn-default">
+                      <i class="fa fa-plus">&nbsp;&nbsp;Add Groups</i>
+                    </button>
+                    <button type="button" id="addgroups" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <span class="buttonText"><i id="dropdownMenu2" class="fa fa-eye">&nbsp;&nbsp;</i></span>
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-pencil">&nbsp;&nbsp;Full Access</i></a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-commenting-o">&nbsp;&nbsp;Review</i></a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-eye">&nbsp;&nbsp;Read Only</i></a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)" onclick="shows1($(this).text())"><i class="fa fa-eye-slash">&nbsp;&nbsp;Deny Access</i></a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <table id="tableusers1" data-search="true" data-toolbar="" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="name" data-pagination="true" data-side-pagination="client" data-click-to-select="false">
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="saveusers" data-method="" onclick="return saveusers()">保存</button>
+              <button type="button" href="javascript:void(0)" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 协作权限 用户列表模态框 -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="users">
+        <div class="modal-dialog" id="modalDialog91">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #8bc34a">
+              <a class="close" data-dismiss="modal">×</a>
+              <h3>用户列表</h3>
+            </div>
+            <div class="modal-body">
+              <table id="tableusers20"></table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="btn2Right" data-method="append">保存</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 协作权限 角色列表模态框 -->
+    <div class="form-horizontal">
+      <div class="modal fade" id="roles">
+        <div class="modal-dialog" id="modalDialog101">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #FF5722;">
+              <a class="close" data-dismiss="modal">×</a>
+              <h3>角色列表</h3>
+            </div>
+            <div class="modal-body">
+              <table id="tableusers21" data-search="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-striped="true" data-toolbar="#toolbar" data-query-params="queryParams" data-sort-name="Rolename" data-sort-order="desc" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true" data-show-export="true">
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="btn2Right1" data-method="append">保存</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script type="text/javascript" src="/static/froala/js/froala_editor.min.js"></script>
@@ -2564,10 +2738,430 @@
     $("#modalDialog9").draggable({ handle: ".modal-header" });
     $("#modalDialog10").draggable({ handle: ".modal-header" });
     $("#modalDialog11").draggable({ handle: ".modal-header" });
+    $("#modalDialog81").draggable({ handle: ".modal-header" });
+    $("#modalDialog91").draggable({ handle: ".modal-header" });
+    $("#modalDialog101").draggable({ handle: ".modal-header" });
     // $("#modalNewDwg").draggable({ handle: ".modal-header" });
     // $("#modalFlow").draggable({ handle: ".modal-header" });
     $("#myModal").css("overflow", "hidden"); //禁止模态对话框的半透明背景滚动
   })
+
+  // **********协作权限设置*********
+  // 协作权限设置-用户表
+  $(function() {
+    $tableLeft = $('#tableusers20').bootstrapTable({
+      idField: 'Id',
+      url: '/v1/wx/user/0',
+      method: 'get',
+      search: 'true',
+      showRefresh: 'true',
+      showColumns: 'true',
+      toolbar: '#toolbar',
+      pagination: 'true',
+      sidePagination: "server",
+      queryParamsType: '',
+      //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+      // limit, offset, search, sort, order 否则, 需要包含:
+      // pageSize, pageNumber, searchText, sortName, sortOrder.
+      // 返回false将会终止请求。
+      pageSize: 5,
+      pageNumber: 1,
+      pageList: [5, 25, 50, 100, 'All'],
+      uniqueId: "id",
+      // singleSelect:"true",
+      clickToSelect: "true",
+      showExport: "true",
+      queryParams: function queryParams(params) { //设置查询参数
+        var param = {
+          limit: params.pageSize, //每页多少条数据
+          pageNo: params.pageNumber, // 页码
+          searchText: $(".search .form-control").val()
+        };
+        //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+        return param;
+      },
+      columns: [{
+          checkbox: 'true',
+          width: '10'
+        },
+        {
+          // field: 'Number',
+          title: '序号',
+          halign: 'center',
+          align: 'center',
+          formatter: function(value, row, index) {
+            return index + 1
+          }
+        }, {
+          field: 'name',
+          title: '用户名',
+          halign: 'center',
+          align: 'center',
+
+        }, {
+          field: 'Nickname',
+          title: '昵称',
+          halign: 'center',
+          align: 'center',
+
+        }, {
+          field: 'Department',
+          title: '部门',
+          halign: 'center',
+          align: 'center',
+
+        }, {
+          field: 'Secoffice',
+          title: '科室',
+          sortable: 'true',
+          halign: 'center',
+          align: 'center',
+
+        }, {
+          field: 'role',
+          // visible: false,
+          title: '权限',
+          halign: 'center',
+          align: 'center',
+          editable: {
+            type: 'select2',
+            source: [
+              { id: '1', text: '  Full Access', value: '1' },
+              { id: '2', text: '  Review', value: '2' },
+              { id: '3', text: '  Read Only', value: '3' },
+              { id: '4', text: '  Deny Access', value: '4' }
+            ],
+
+            select2: {
+              allowClear: true,
+              dropdownParent: $('#modalDialog91'),
+              width: '150px',
+              placeholder: '请选择权限',
+              id: function(item) {
+                return item.id;
+              },
+              // multiple: true
+            },
+            pk: 1,
+            // url: '/v1/wx/updateuser',
+            title: 'Enter Status'
+          }
+        }
+      ]
+    });
+  });
+
+  // 协作权限设置-选择角色表
+  $(function() {
+    $tableLeft1 = $('#tableusers21').bootstrapTable({
+      idField: 'Id',
+      columns: [{
+          checkbox: 'true',
+          width: '10'
+        },
+        {
+          title: '序号',
+          halign: 'center',
+          align: 'center',
+          formatter: function(value, row, index) {
+            return index + 1
+          }
+        }, {
+          field: 'Rolenumber',
+          title: '角色编码',
+          halign: 'center',
+          align: 'center',
+        }, {
+          field: 'name',
+          title: '角色名称',
+          halign: 'center',
+          align: 'center',
+        }, {
+          field: 'role',
+          title: '权限',
+          halign: 'center',
+          align: 'center',
+          editable: {
+            type: 'select2',
+            source: [
+              { id: '1', text: '  Full Access', value: 1 },
+              { id: '2', text: '  Review', value: 2 },
+              { id: '3', text: '  Read Only', value: 3 },
+              { id: '4', text: '  Deny Access', value: 4 }
+            ],
+            select2: {
+              allowClear: true,
+              dropdownParent: $('#modalDialog101'),
+              width: '150px',
+              placeholder: '请选择权限',
+            },
+            pk: 1,
+            title: 'Enter Permission'
+          }
+        }
+      ]
+    });
+  });
+
+  //协作权限设置- 设置用户/角色权限表
+  $(function() {
+    $tableRight = $('#tableusers1').bootstrapTable({
+      idField: 'Id',
+      url: '',
+      // striped: "true",
+      columns: [
+        // {
+        //   checkbox: 'true',
+        //   width: '10'
+        // },
+        {
+          // field: 'Number',
+          title: '序号',
+          halign: 'center',
+          align: 'center',
+          formatter: function(value, row, index) {
+            return index + 1
+          }
+        }, {
+          field: 'name',
+          title: '用户名/角色名',
+          halign: 'center',
+          align: 'center',
+          sortable: 'true',
+          // editable: {
+          // type: 'text',
+          // pk: 1,
+          // url: '/v1/wx/updateuser',
+          // title: 'Enter ProjectNumber'
+          // }
+        }, {
+          field: 'role',
+          // visible: false,
+          title: '权限',
+          halign: 'center',
+          align: 'center',
+          editable: {
+            type: 'select2',
+            source: [
+              { id: '1', text: '  Full Access', value: 1 },
+              { id: '2', text: '  Review', value: 2 },
+              { id: '3', text: '  Read Only', value: 3 },
+              { id: '4', text: '  Deny Access', value: 4 }
+            ],
+            //'[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}]'
+            select2: {
+              allowClear: true,
+              // dropdownParent: $('#modalDialog10'),
+              width: '150px',
+              placeholder: '请选择权限',
+              // multiple: true
+            },
+            pk: 1,
+            // url: '/v1/wx/updateuser',
+            title: 'Enter Permission'
+          }
+        }, {
+          field: 'action',
+          title: '操作',
+          halign: 'center',
+          align: 'center',
+          formatter: 'actionFormatter',
+          events: 'actionEvents',
+        }
+      ]
+    });
+  });
+
+  jQuery(function($) {
+    //解决模态框背景色越来越深的问题
+    $(document).on('show.bs.modal', '.modal', function(event) {
+      // $(this).appendTo($('body'));
+    }).on('shown.bs.modal', '.modal.in', function(event) {
+      setModalsAndBackdropsOrder();
+    }).on('hidden.bs.modal', '.modal', function(event) {
+      setModalsAndBackdropsOrder();
+    });
+
+    function setModalsAndBackdropsOrder() {
+      var modalZIndex = 1040;
+      $('.modal.in').each(function(index) {
+        var $modal = $(this);
+        modalZIndex++;
+        $modal.css('zIndex', modalZIndex);
+        $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
+      });
+      $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
+    }
+
+    //覆盖Modal.prototype的hideModal方法
+    $.fn.modal.Constructor.prototype.hideModal = function() {
+      var that = this
+      this.$element.hide()
+      this.backdrop(function() {
+        //判断当前页面所有的模态框都已经隐藏了之后body移除.modal-open，即body出现滚动条。
+        $('.modal.fade.in').length === 0 && that.$body.removeClass('modal-open')
+        that.resetAdjustments()
+        that.resetScrollbar()
+        that.$element.trigger('hidden.bs.modal')
+      })
+    }
+  });
+
+  //取得权限表中所有数据——判断是否有重复的
+  //选择用户到权限表中
+  $('#btn2Right').click(function() {
+    var selectContent = $tableLeft.bootstrapTable('getSelections');
+    $tableRight.bootstrapTable("append", selectContent);
+    username = $.map(selectContent, function(row) {
+      return row.name;
+    });
+    $tableLeft.bootstrapTable('remove', {
+      field: 'name',
+      values: username
+    });
+  });
+
+  //选择角色到权限表中
+  $('#btn2Right1').click(function() {
+    var selectContent = $tableLeft1.bootstrapTable('getSelections');
+    $tableRight.bootstrapTable("append", selectContent);
+    rolename = $.map(selectContent, function(row) {
+      return row.name;
+    });
+    // console.log(rolename)
+    $tableLeft1.bootstrapTable('remove', {
+      field: 'name',
+      values: rolename
+    });
+  });
+
+
+  // $(function() {
+    var now = new Date();
+    myDate = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate();
+    $("#Date").val(myDate);
+    //弹出添加用户模态框
+    $("#addusers").click(function() {
+      if ($("#dropdownMenu1").hasClass("fa fa-pencil")) {
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=1' });
+      } else if ($("#dropdownMenu1").hasClass("fa fa-commenting-o")) {
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=2' });
+      } else if ($("#dropdownMenu1").hasClass("fa fa-eye")) {
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=3' });
+      } else if ($("#dropdownMenu1").hasClass("fa fa-eye-slash")) {
+        $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=4' });
+      }
+      $('#users').modal({
+        show: true,
+        backdrop: 'static'
+      });
+    })
+
+    //弹出添加角色模态框
+    $("#addroles").click(function() {
+      if ($("#dropdownMenu2").hasClass("fa fa-pencil")) {
+        $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=1' });
+      } else if ($("#dropdownMenu2").hasClass("fa fa-commenting-o")) {
+        $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=2' });
+      } else if ($("#dropdownMenu2").hasClass("fa fa-eye")) {
+        $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=3' });
+      } else if ($("#dropdownMenu2").hasClass("fa fa-eye-slash")) {
+        $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=4' });
+      }
+      $('#roles').modal({
+        show: true,
+        backdrop: 'static'
+      });
+    })
+  // })
+
+  function actionFormatter(value, row, index) {
+    return '<a class="remove" href="javascript:void(0)" title="删除"><i class="glyphicon glyphicon-remove"></i></a>';
+  }
+
+  //添加用户/角色权限
+  function saveusers() {
+    var selectRow = $('#tableusers1').bootstrapTable('getData');
+    var docid = $('#pid').val();
+    $.ajax({
+      type: "post",
+      url: "/v1/project/product/addpermission",
+      data: { ids: JSON.stringify(selectRow), docid: docid },
+      success: function(data, status) {
+        alert("保存“" + data + "”成功！(status:" + status + ".)");
+      }
+    });
+  }
+
+  //选择用户的角色
+  function shows(a) {
+    // alert(a);
+    if (a == "  Full Access") {
+      $("#dropdownMenu1").removeClass();
+      $("#dropdownMenu1").addClass("fa fa-pencil");
+    } else if (a == "  Review") {
+      $("#dropdownMenu1").removeClass();
+      $("#dropdownMenu1").addClass("fa fa-commenting-o");
+    } else if (a == "  Read Only") {
+      $("#dropdownMenu1").removeClass();
+      $("#dropdownMenu1").addClass("fa fa-eye");
+    } else if (a == "  Deny Access") {
+      $("#dropdownMenu1").removeClass();
+      $("#dropdownMenu1").addClass("fa fa-eye-slash");
+    }
+    // $('.buttonText').text(a)
+  }
+
+  //选择角色的权限
+  function shows1(a) {
+    if (a == "  Full Access") {
+      $("#dropdownMenu2").removeClass();
+      $("#dropdownMenu2").addClass("fa fa-pencil");
+    } else if (a == "  Review") {
+      $("#dropdownMenu2").removeClass();
+      $("#dropdownMenu2").addClass("fa fa-commenting-o");
+    } else if (a == "  Read Only") {
+      $("#dropdownMenu2").removeClass();
+      $("#dropdownMenu2").addClass("fa fa-eye");
+    } else if (a == "  Deny Access") {
+      $("#dropdownMenu2").removeClass();
+      $("#dropdownMenu2").addClass("fa fa-eye-slash");
+    }
+    // $('.buttonText').text(a)
+  }
+
+    //添加用户/角色权限
+    function generate() {
+      var a = $('input:radio:checked').val();
+      alert(a)
+      $("input[type='radio']:checked").val();
+      $("input[name='rd']:checked").val();
+    }
+
+    //设置permission显示
+    function setPermission(value, row, index) {
+      if (value[0].Permission == "1") {
+        permission = '<i class="fa fa-pencil fa-lg" title="可查看、修改" style="color:#9e9e9e;"></i>';
+        return permission;
+      } else if (value[0].Permission == "2") {
+        permission = '<i class="fa fa-commenting-o fa-lg" title="审阅" style="color:#9e9e9e;"></i>';
+        return permission;
+      } else if (value[0].Permission == "3") {
+        permission = '<i class="fa fa-eye fa-lg" title="只读" style="color:#9e9e9e;"></i>';
+        return permission;
+      } else if (value[0].Permission == "4") {
+        permission = '<i class="fa fa-eye-slash fa-lg" title="拒绝访问" style="color:#9e9e9e;"></i>';
+        return permission;
+      }
+    }
   </script>
 </body>
 

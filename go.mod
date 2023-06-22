@@ -15,6 +15,7 @@ require (
 	github.com/casbin/casbin/v2 v2.60.0
 	github.com/casbin/xorm-adapter/v2 v2.5.1
 	github.com/disintegration/gift v1.2.1
+	github.com/disintegration/imaging v1.6.2
 	github.com/dlclark/regexp2 v1.7.0
 	github.com/elastic/go-elasticsearch/v8 v8.5.0
 	github.com/go-ole/go-ole v1.2.6
@@ -37,6 +38,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/smartystreets/goconvey v1.7.2
 	github.com/tealeg/xlsx v1.0.5
+	github.com/u2takey/ffmpeg-go v0.4.1
 	github.com/unidoc/unioffice v1.21.1
 	github.com/xuri/excelize/v2 v2.6.1
 	golang.org/x/crypto v0.5.0
@@ -53,6 +55,7 @@ require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/Unknwon/goconfig v1.0.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
+	github.com/aws/aws-sdk-go v1.38.20 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b // indirect
@@ -72,6 +75,7 @@ require (
 	github.com/hhrutter/tiff v0.0.0-20190829141212-736cae8d0bc7 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
@@ -96,6 +100,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
+	github.com/u2takey/go-utils v0.3.1 // indirect
 	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
 	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539 // indirect

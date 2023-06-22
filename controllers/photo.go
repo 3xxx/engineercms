@@ -9,7 +9,7 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	// beego "github.com/beego/beego/v2/adapter"
 
-	// "io"
+	"io"
 	// "encoding/json"
 	// "net/http"
 	// "github.com/beego/beego/v2/adapter/httplib"
@@ -17,6 +17,7 @@ import (
 	// "bytes"
 	// "io/ioutil"
 	// "mime/multipart"
+	// "bytes"
 	"context"
 	"fmt"
 	"github.com/minio/minio-go/v7"
@@ -152,6 +153,9 @@ func (c *PhotoController) UploadPhotoData() {
 		logs.Error(err)
 	}
 	year, month, _ := time.Now().Date()
+	const layout = "2006-01-02"
+	const layoutyearmonth = "2006-01"
+	photolist := make([]models.PhotoData, 0)
 	if useminio == "true" {
 		minio_endpoint, err := web.AppConfig.String("minio_endpoint")
 		if err != nil {
@@ -194,25 +198,23 @@ func (c *PhotoController) UploadPhotoData() {
 			if filetil.IsImageExt(files[i].Filename) && !strings.Contains(files[i].Filename, "_small") {
 				photoarr := make([]models.PhotoData, 1)
 				temptime := time.Now()
-				const layout = "2006-01-02"
-				const layoutyearmonth = "2006-01"
+
 				photoarr[0].YearMonth = temptime.Format(layoutyearmonth)
 				photoarr[0].YearMonthDay = temptime.Format(layout)
-				photoarr[0].Url = "http://" + minio_endpoint + "/" + minio_bucketname + "/" + files[i].Filename
+				photoarr[0].Url = "http://" + minio_endpoint + "/" + minio_bucketname + "/" + strconv.Itoa(year) + month.String() + "/" + files[i].Filename
 				photoarr[0].CreatedAt = temptime
 				photolist = append(photolist, photoarr...)
 			}
-			err = models.AddPhotoData(photolist)
-			if err != nil {
-				logs.Error(err)
-				c.Data["json"] = map[string]interface{}{"state": "ERROR", "errNo": 1, "info": "插入photo数据失败！", "data": "插入photo数据失败！", "msg": "插入photo数据失败！"}
-				c.ServeJSON()
-			} else {
-				c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "errNo": 0, "info": "插入photo数据成功！", "data": "插入photo数据成功！", "msg": "插入photo数据成功！"}
-				c.ServeJSON()
-			}
 		}
-
+		// err = models.AddPhotoData(photolist)
+		// if err != nil {
+		// 	logs.Error(err)
+		// 	c.Data["json"] = map[string]interface{}{"state": "ERROR", "errNo": 1, "info": "插入photo数据失败！", "data": "插入photo数据失败！", "msg": "插入photo数据失败！"}
+		// 	c.ServeJSON()
+		// } else {
+		// 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "errNo": 0, "info": "插入photo数据成功！", "data": "插入photo数据成功！", "msg": "插入photo数据成功！"}
+		// 	c.ServeJSON()
+		// }
 	} else {
 		photopath, err := web.AppConfig.String("photopath")
 		if err != nil {
@@ -224,43 +226,65 @@ func (c *PhotoController) UploadPhotoData() {
 		DiskDirectory := replacephotopath + photopath
 		// logs.Info(DiskDirectory)
 		//获取上传的文件
-		_, h, err := c.GetFile("input-ke-2[]")
+		files, err := c.GetFiles("input-ke-2[]")
+		// func (c *Controller) GetFiles(key string) ([]*multipart.FileHeader, error) {
 		if err != nil {
 			logs.Error(err)
+			c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": "", "data": "获取上传文件错误！"}
+			c.ServeJSON()
+			return
 		}
-		fileSuffix := path.Ext(h.Filename)
-		// random_name
-		nanoname := strconv.FormatInt(time.Now().UnixNano(), 10)
-		newname := nanoname + fileSuffix // + "_" + filename
-		small_newname := nanoname + "_small" + fileSuffix
-		// year, month, _ := time.Now().Date()
-		err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
-		if err != nil {
-			logs.Error(err)
-		}
-		var imagepath, new_imagepath, Url string
-		var filesize int64
-		if h != nil {
-			//保存附件
-			imagepath = DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + newname
-			logs.Info(imagepath)
-			new_imagepath = DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + small_newname
-			Url = photopath + strconv.Itoa(year) + month.String() + "/"
-			logs.Info(Url)
-			err = c.SaveToFile("input-ke-2[]", imagepath) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		for i, _ := range files {
+			//	//for each fileheader, get a handle to the actual file
+			file, err := files[i].Open()
+			// func (fh *FileHeader) Open() (File, error)
+			// type File interface {
+			// 	io.Reader
+			// 	io.ReaderAt
+			// 	io.Seeker
+			// 	io.Closer
+			// }
+
+			defer file.Close()
 			if err != nil {
+				logs.Error(err)
+				return
+			}
+			fileSuffix := path.Ext(files[i].Filename)
+			// random_name
+			nanoname := strconv.FormatInt(time.Now().UnixNano(), 10)
+			newname := nanoname + fileSuffix // + "_" + filename
+			small_newname := nanoname + "_small" + fileSuffix
+			// year, month, _ := time.Now().Date()
+			err = os.MkdirAll(DiskDirectory+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+			if err != nil {
+				logs.Error(err)
+			}
+			var imagepath, new_imagepath string
+			//保存附件
+			imagepath = DiskDirectory + strconv.Itoa(year) + month.String() + "/" + newname
+			// logs.Info(imagepath)
+			new_imagepath = DiskDirectory + strconv.Itoa(year) + month.String() + "/" + small_newname
+			Url := photopath + strconv.Itoa(year) + month.String() + "/"
+			//create destination file making sure the path is writeable.
+			dst, err := os.Create(imagepath)
+			defer dst.Close()
+			if err != nil {
+				logs.Error(err)
+				return
+			}
+			//copy the uploaded file to the destination file
+			if _, err := io.Copy(dst, file); err != nil {
 				logs.Error(err)
 				c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": "", "data": "文件保存错误！"}
 				c.ServeJSON()
 				return
 			}
-			filesize, _ = FileSize(imagepath)
-			filesize = filesize / 1000.0
 
 			//*****压缩图片***
-			file, err := os.Open(imagepath)
+			file, err = os.Open(imagepath)
+			// func Open(name string) (file *File, err error)
 			if err != nil {
-				// log.Fatal(err)
 				logs.Error(err)
 			}
 			defer file.Close()
@@ -269,6 +293,7 @@ func (c *PhotoController) UploadPhotoData() {
 			// ext := filepath.Ext(imagepath)
 			if strings.EqualFold(fileSuffix, ".jpg") || strings.EqualFold(fileSuffix, ".jpeg") {
 				img, err = jpeg.Decode(file)
+				// func Decode(r io.Reader) (image.Image, error)
 				if err != nil {
 					// log.Fatal(err)
 					logs.Error(err)
@@ -315,132 +340,28 @@ func (c *PhotoController) UploadPhotoData() {
 				}
 			}
 
-			c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": Url + small_newname, "title": "111", "original": "demo.jpg"}
-			c.ServeJSON()
-		} else {
-			c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": ""}
-			c.ServeJSON()
+			if filetil.IsImageExt(files[i].Filename) && !strings.Contains(files[i].Filename, "_small") {
+				photoarr := make([]models.PhotoData, 1)
+				temptime := time.Now()
+
+				photoarr[0].YearMonth = temptime.Format(layoutyearmonth)
+				photoarr[0].YearMonthDay = temptime.Format(layout)
+				photoarr[0].Url = Url + newname
+				// photoarr[0].CreatedAt = temptime
+				photolist = append(photolist, photoarr...)
+			}
 		}
 	}
+	err = models.AddPhotoData(photolist)
+	if err != nil {
+		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"state": "ERROR", "errNo": 1, "info": "插入photo数据失败！", "data": "插入photo数据失败！", "msg": "插入photo数据失败！"}
+		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "errNo": 0, "info": "插入photo数据成功！", "data": photolist, "msg": "插入photo数据成功！"}
+		c.ServeJSON()
+	}
 }
-
-// @Title post wx photo img
-// @Description post photo
-// @Success 200 {object} SUCCESS
-// @Failure 400 Invalid page supplied
-// @Failure 404 photo not found
-// @router /uploadphotodataminio [post]
-// 上传图片到minios
-// func (c *PhotoController) UploadPhotoData() {
-// 	//获取上传的文件
-// 	files, err := c.GetFiles("input-ke-2[]")
-// 	if err != nil {
-// 		logs.Error(err)
-// 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": "", "data": "获取上传文件错误！"}
-// 		c.ServeJSON()
-// 		return
-// 	}
-
-// 	useminio, err := web.AppConfig.String("useminio")
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-
-// 	minio_bucketname, err := web.AppConfig.String("minio_bucketname")
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-
-// 	// GetFiles return multi-upload files
-// 	for i, _ := range files {
-// 		//for each fileheader, get a handle to the actual file
-// 		file, err := files[i].Open()
-// 		defer file.Close()
-// 		if err != nil {
-// 			logs.Error(err)
-// 			return
-// 		}
-
-// 		uploadInfo, err := minioClient.PutObject(context.Background(), minio_bucketname, files[i].Filename, file, -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
-// 		if err != nil {
-// 			fmt.Println(err)
-// 			return
-// 		}
-// 		// fmt.Println("Successfully uploaded bytes: ", uploadInfo)
-// 		fmt.Println("etag: ", uploadInfo.ETag)
-// 	}
-
-// 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": "", "title": "111", "original": "demo.jpg"}
-// 	c.ServeJSON()
-// 	// file2, ok := files.(*os.File)
-
-// 	// FileHeader.Open()
-
-// 	// _, header , _ := c.Request.FormFile("upload")
-// 	// out, _ := os.Open(uploadphoto.Filename)
-
-// 	// files, fileHeader, _ := c.Request.FormFile("file")
-// 	// byteData := make([]byte, h.Size)
-// 	// files.Read(byteData)
-
-// 	// file, _, err := c.Ctx.Request.FormFile("input-ke-2[]")
-// 	// if err != nil {
-// 	// 	logs.Error(err)
-// 	// }
-// 	// f, err := os.OpenFile(tofile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
-// 	// if err != nil {
-// 	// 	logs.Error(err)
-// 	// }
-// 	// defer f.Close()
-
-// 	// file2, err := os.Open(h.Filename)
-// 	// if err != nil {
-// 	// 	logs.Error(err)
-// 	// 	return
-// 	// }
-// }
-
-// Upload an object.
-// _, err = c.PutObject(context.Background(), "bucket", "object", bytes.NewBuffer([]byte("abcd")), 3, minio.PutObjectOptions{})
-
-// b, err := ioutil.ReadFile("TEST_FILE")
-// func ReadFile(filename string) ([]byte, error)
-// if err != nil {
-//   panic(err)
-// }
-// in := bytes.NewReader(b)
-// name := fmt.Sprintf("TEST_%d", x)
-// _, err := minioClient.PutObject(bucketName, name, in, "application/octet-stream")
-
-// content := bytes.NewReader([]byte("Hello again"))
-// _, err = minioClient.PutObject("testbucket", "my-encrypted-object.txt", content, 11, minio.PutObjectOptions{UserMetadata: metadata})
-// func NewReader(b []byte) *Reader
-
-// r := strings.NewReader("foo")
-// _, err := minioClient.PutObject("mybukkit", "myfile/file1", r, 3, minio.PutObjectOptions{})
-// minioClient.putObject('bucket', fileName, file.buffer, (err, etag) => {
-//   if (err) throw err
-//   return res.json(fileName)
-// })
-
-// for p := range files {
-//   fInfo, err := os.Stat(p)
-//   if err != nil {
-//   	fmt.Printf("failed to stat file, path %s, %v\n", p, err)
-//   	return
-//   }
-//   f, err := os.Open(p)
-//   if err != nil {
-//   	fmt.Printf("failed to open file, path %s, %v\n", p, err)
-//   	return
-//   }
-//   n, err := mc.PutObject(
-//   	bName,
-//   	toUpload+strconv.Itoa(i),
-//   	f,
-//   	fInfo.Size(),
-//   	minio.PutObjectOptions{},
-//   )
 
 type MonthPhotoList struct {
 	YearMonth string
@@ -1029,3 +950,121 @@ func (c *PhotoController) PhotoDetail() {
 // http://127.0.0.1:53202/api/v1/buckets/engineercms/objects/download?preview=true&prefix=U25hcDI1LmpwZw==
 
 // http://127.0.0.1:9000/engineercms/Snap25.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3ZKBL4HG9RH3SRTOLR1V%2F20230108%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230108T015415Z&X-Amz-Expires=604800&X-Amz-Security-Token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NLZXkiOiIzWktCTDRIRzlSSDNTUlRPTFIxViIsImV4cCI6MTY3MzE0NjgzNCwicGFyZW50IjoibWluaW9hZG1pbiJ9.jklS00Uh3bSapNXlCJVkCp4hl67xRwVcVn4SzwCA9cjlPJ7yHbW_eSQ7vpK_hmdwXYxgZyJfRSTa8loEjpYx5Q&X-Amz-SignedHeaders=host&versionId=null&X-Amz-Signature=e358e6278bcaf0fb2f57d4e9b725f553946570772ed49b3e93e756df63b7bc4a
+
+// @Title post wx photo img
+// @Description post photo
+// @Success 200 {object} SUCCESS
+// @Failure 400 Invalid page supplied
+// @Failure 404 photo not found
+// @router /uploadphotodataminio [post]
+// 上传图片到minios
+// func (c *PhotoController) UploadPhotoData() {
+// 	//获取上传的文件
+// 	files, err := c.GetFiles("input-ke-2[]")
+// 	if err != nil {
+// 		logs.Error(err)
+// 		c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": "", "data": "获取上传文件错误！"}
+// 		c.ServeJSON()
+// 		return
+// 	}
+
+// 	useminio, err := web.AppConfig.String("useminio")
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+
+// 	minio_bucketname, err := web.AppConfig.String("minio_bucketname")
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+
+// 	// GetFiles return multi-upload files
+// 	for i, _ := range files {
+// 		//for each fileheader, get a handle to the actual file
+// 		file, err := files[i].Open()
+// 		defer file.Close()
+// 		if err != nil {
+// 			logs.Error(err)
+// 			return
+// 		}
+
+// 		uploadInfo, err := minioClient.PutObject(context.Background(), minio_bucketname, files[i].Filename, file, -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
+// 		if err != nil {
+// 			fmt.Println(err)
+// 			return
+// 		}
+// 		// fmt.Println("Successfully uploaded bytes: ", uploadInfo)
+// 		fmt.Println("etag: ", uploadInfo.ETag)
+// 	}
+
+// 	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "link": "", "title": "111", "original": "demo.jpg"}
+// 	c.ServeJSON()
+// 	// file2, ok := files.(*os.File)
+
+// 	// FileHeader.Open()
+
+// 	// _, header , _ := c.Request.FormFile("upload")
+// 	// out, _ := os.Open(uploadphoto.Filename)
+
+// 	// files, fileHeader, _ := c.Request.FormFile("file")
+// 	// byteData := make([]byte, h.Size)
+// 	// files.Read(byteData)
+
+// 	// file, _, err := c.Ctx.Request.FormFile("input-ke-2[]")
+// 	// if err != nil {
+// 	// 	logs.Error(err)
+// 	// }
+// 	// f, err := os.OpenFile(tofile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+// 	// if err != nil {
+// 	// 	logs.Error(err)
+// 	// }
+// 	// defer f.Close()
+
+// 	// file2, err := os.Open(h.Filename)
+// 	// if err != nil {
+// 	// 	logs.Error(err)
+// 	// 	return
+// 	// }
+// }
+
+// Upload an object.
+// _, err = c.PutObject(context.Background(), "bucket", "object", bytes.NewBuffer([]byte("abcd")), 3, minio.PutObjectOptions{})
+
+// b, err := ioutil.ReadFile("TEST_FILE")
+// func ReadFile(filename string) ([]byte, error)
+// if err != nil {
+//   panic(err)
+// }
+// in := bytes.NewReader(b)
+// name := fmt.Sprintf("TEST_%d", x)
+// _, err := minioClient.PutObject(bucketName, name, in, "application/octet-stream")
+
+// content := bytes.NewReader([]byte("Hello again"))
+// _, err = minioClient.PutObject("testbucket", "my-encrypted-object.txt", content, 11, minio.PutObjectOptions{UserMetadata: metadata})
+// func NewReader(b []byte) *Reader
+
+// r := strings.NewReader("foo")
+// _, err := minioClient.PutObject("mybukkit", "myfile/file1", r, 3, minio.PutObjectOptions{})
+// minioClient.putObject('bucket', fileName, file.buffer, (err, etag) => {
+//   if (err) throw err
+//   return res.json(fileName)
+// })
+
+// for p := range files {
+//   fInfo, err := os.Stat(p)
+//   if err != nil {
+//   	fmt.Printf("failed to stat file, path %s, %v\n", p, err)
+//   	return
+//   }
+//   f, err := os.Open(p)
+//   if err != nil {
+//   	fmt.Printf("failed to open file, path %s, %v\n", p, err)
+//   	return
+//   }
+//   n, err := mc.PutObject(
+//   	bName,
+//   	toUpload+strconv.Itoa(i),
+//   	f,
+//   	fInfo.Size(),
+//   	minio.PutObjectOptions{},
+//   )

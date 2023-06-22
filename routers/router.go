@@ -274,6 +274,7 @@ func init() {
 				// beego.NSBefore(FilterUser),
 				web.NSInclude(
 					&controllers.MathcadController{},
+					&controllers.WsMathcadController{},
 				),
 			),
 			web.NSNamespace("/ansys",
@@ -286,6 +287,7 @@ func init() {
 				// beego.NSBefore(FilterUser),
 				web.NSInclude(
 					&controllers.ExcelController{},
+					&controllers.WsExcelcalController{},
 				),
 			),
 			web.NSNamespace("/chat",
@@ -301,6 +303,11 @@ func init() {
 			web.NSNamespace("/simwe",
 				web.NSInclude(
 					&controllers.SimweController{},
+				),
+			),
+			web.NSNamespace("/freecad",
+				web.NSInclude(
+					&controllers.FreeCADController{},
 				),
 			),
 			// beego.NSNamespace("/suggest",
@@ -329,7 +336,7 @@ func init() {
 
 	web.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
 	//cms中预览office回调
-	web.Router("/officeviewcallback", &controllers.OnlyController{}, "*:OfficeViewCallback")
+	web.Router("/officeviewcallback", &controllers.ProdController{}, "*:OfficeViewCallback")
 
 	// 访问onlyoffice页面需要登录
 	// web.InsertFilter("/onlyoffice", web.BeforeRouter, FilterUser)
@@ -343,9 +350,9 @@ func init() {
 	//在onlyoffice中打开文档协作
 	// 协作页面下载文档需要登录
 	// web.InsertFilter("/onlyoffice/:id:string", web.BeforeRouter, FilterUser)
-	web.Router("/onlyoffice/:id:string", &controllers.OnlyController{}, "*:OnlyOffice")
+	web.Router("/onlyoffice/:id:string", &controllers.OnlyController{}, "get:OnlyOffice") //20230603
 	//cms中预览office
-	web.Router("/officeview/:id:string", &controllers.OnlyController{}, "*:OfficeView")
+	web.Router("/officeview/:id:string", &controllers.ProdController{}, "*:OfficeView")
 
 	//删除
 	web.Router("/onlyoffice/deletedoc", &controllers.OnlyController{}, "*:DeleteDoc")
@@ -564,7 +571,8 @@ func init() {
 	web.Router("/project/deleteproject", &controllers.ProjController{}, "*:DeleteProject")
 	//项目时间轴
 	web.Router("/project/gettimeline/:id([0-9]+)", &controllers.ProjController{}, "get:ProjectTimeline")
-	web.Router("/project/timeline/:id([0-9]+)", &controllers.ProjController{}, "get:Timeline")
+	web.Router("/project/:id([0-9]+)/timeline", &controllers.ProjController{}, "get:Timeline")
+	// web.Router("/project/timeline/:id([0-9]+)", &controllers.ProjController{}, "get:Timeline")
 
 	//根据项目id进入一个具体项目的侧栏
 	web.Router("/project/:id([0-9]+)", &controllers.ProjController{}, "*:GetProject")
@@ -841,7 +849,7 @@ func init() {
 	web.Router("/dingtalk_login", &controllers.AccountController{}, "*:DingTalkLogin")
 	web.Router("/workweixin-login", &controllers.AccountController{}, "*:WorkWeixinLogin")
 	web.Router("/workweixin-callback", &controllers.AccountController{}, "*:WorkWeixinLoginCallback")
-	web.Router("/workweixin-bind", &controllers.AccountController{}, "*:WorkWeixinLoginBind")
+	web.Router("/workweixin-bind", &controllers.AccountController{}, "*:WorkWeixinLoginBind") //urlfor params must key-value pair
 	web.Router("/workweixin-ignore", &controllers.AccountController{}, "*:WorkWeixinLoginIgnore")
 	web.Router("/qrlogin/:app", &controllers.AccountController{}, "*:QRLogin")
 	web.Router("/mindoclogout", &controllers.AccountController{}, "*:Logout")
@@ -960,7 +968,9 @@ func init() {
 
 	web.Router("/docs/:key", &controllers.DocumentController{}, "*:Index")
 	web.Router("/docs/:key/check-password", &controllers.DocumentController{}, "post:CheckPassword")
+
 	web.Router("/docs/:key/:id", &controllers.DocumentController{}, "*:Read")
+
 	web.Router("/docs/:key/search", &controllers.DocumentController{}, "post:Search")
 	web.Router("/export/:key", &controllers.DocumentController{}, "*:Export")
 	web.Router("/qrcode/:key.png", &controllers.DocumentController{}, "get:QrCode")

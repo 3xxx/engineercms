@@ -1,0 +1,13 @@
+# gitignore
+
+node_modules
+
+# Only apps should have lockfiles
+npm-shrinkwrap.json
+package-lock.json
+yarn.lock
+
+coverage
+.nyc_output
+
+.github/workflows

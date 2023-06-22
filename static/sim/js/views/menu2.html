@@ -1,0 +1,18 @@
+<template>
+    <div id="menu2">
+        <h1>Hello Menu 2</h1>
+        <h2>{{message}}</h2>
+        <button v-on:click="count++">You clicked me {{ count }} times.</button>
+    </div>
+</template>
+
+<script>
+    exports = {
+        data: function () {
+            return {
+                message: 'Hello Vue 2!',
+                count: 0
+            }
+        }
+    }
+</script>

@@ -127,7 +127,7 @@
         </div>
 
         <!-- <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Uname}} <b class="caret"></b></a>
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Uname}} <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a href="/user/getuserbyusername?username={{.Uname}}">用户资料</a></li>
           <li><a href="/category/viewbyuname?uname={{.Uname}}">项目列表</a></li>

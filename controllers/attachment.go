@@ -1,4 +1,4 @@
-//成果里的附件操作
+// 成果里的附件操作
 package controllers
 
 import (
@@ -32,7 +32,7 @@ type AttachController struct {
 // 	Link  string
 // }
 
-//取得某个成果id下的附件(除去pdf)给table
+// 取得某个成果id下的附件(除去pdf)给table
 func (c *AttachController) GetAttachments() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -92,7 +92,7 @@ func (c *AttachController) GetAttachments() {
 	// c.ServeJSON()
 }
 
-//取得同步成果下的附件列表
+// 取得同步成果下的附件列表
 func (c *AttachController) GetsynchAttachments() {
 	id := c.GetString("id")
 	// this.GetString("jsoninfo")
@@ -117,7 +117,7 @@ func (c *AttachController) GetsynchAttachments() {
 	c.ServeJSON()
 }
 
-//提供给同步用的某个成果id下的附件(除去pdf)给table
+// 提供给同步用的某个成果id下的附件(除去pdf)给table
 func (c *AttachController) ProvideAttachments() {
 	id := c.GetString("id")
 	site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
@@ -176,9 +176,9 @@ func (c *AttachController) ProvideAttachments() {
 	// c.ServeJSON()
 }
 
-//取得某个成果id下的所有附件(包含pdf和文章)给table
-//用于编辑，这个要改，不要显示文章？
-//自从文章采用link后，是否可以一同删除？
+// 取得某个成果id下的所有附件(包含pdf和文章)给table
+// 用于编辑，这个要改，不要显示文章？
+// 自从文章采用link后，是否可以一同删除？
 func (c *AttachController) GetAllAttachments() {
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
@@ -311,7 +311,7 @@ func (c *AttachController) GetPdfs() {
 	c.ServeJSON()
 }
 
-//取得同步成果下的pdf列表
+// 取得同步成果下的pdf列表
 func (c *AttachController) GetsynchPdfs() {
 	id := c.GetString("id")
 	site := c.GetString("site")
@@ -335,7 +335,7 @@ func (c *AttachController) GetsynchPdfs() {
 	c.ServeJSON()
 }
 
-//提供给同步用的pdf列表数据
+// 提供给同步用的pdf列表数据
 func (c *AttachController) ProvidePdfs() {
 	id := c.GetString("id")
 	site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
@@ -391,7 +391,7 @@ func (c *AttachController) ProvidePdfs() {
 	c.ServeJSON()
 }
 
-//向某个侧栏id下添加成果——用于第一种批量添加一对一模式
+// 向某个侧栏id下添加成果——用于第一种批量添加一对一模式
 func (c *AttachController) AddAttachment() {
 	_, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -771,7 +771,7 @@ func (c *AttachController) AddWxAttachment() {
 	}
 }
 
-//向服务器保存dwg文件
+// 向服务器保存dwg文件
 func (c *AttachController) SaveDwgfile() {
 	id := c.GetString("id")
 	//pid转成64为
@@ -815,7 +815,7 @@ func (c *AttachController) SaveDwgfile() {
 	}
 }
 
-//向某个侧栏id下新建dwg文件
+// 向某个侧栏id下新建dwg文件
 func (c *AttachController) NewDwg() {
 	uname, _, uid, _, _ := checkprodRole(c.Ctx)
 	user, err := models.GetUserByUsername(uname)
@@ -945,7 +945,7 @@ func (c *AttachController) NewDwg() {
 	}
 }
 
-//向某个侧栏id下添加成果——用于第二种添加，多附件模式
+// 向某个侧栏id下添加成果——用于第二种添加，多附件模式
 func (c *AttachController) AddAttachment2() {
 	_, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1173,7 +1173,7 @@ func (c *AttachController) AddAttachment2() {
 	}
 }
 
-//向一个成果id下追加附件
+// 向一个成果id下追加附件
 func (c *AttachController) UpdateAttachment() {
 	// _, role := checkprodRole(c.Ctx)
 	// if role == 1 {
@@ -1237,7 +1237,7 @@ func (c *AttachController) UpdateAttachment() {
 	// }
 }
 
-//删除附件——这个用于针对删除一个附件
+// 删除附件——这个用于针对删除一个附件
 func (c *AttachController) DeleteAttachment() {
 	_, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1391,7 +1391,7 @@ func ImageFilter(ctx *context.Context) {
 	// }
 }
 
-//根据权限查看附件/downloadattachment?id=
+// 根据权限查看附件/downloadattachment?id=
 func (c *AttachController) DownloadAttachment() {
 	username, _, uid, isadmin, isLogin := checkprodRole(c.Ctx)
 	if !isLogin {
@@ -1489,7 +1489,7 @@ func (c *AttachController) DownloadAttachment() {
 		return
 	}
 	switch fileext {
-	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP":
+	case ".JPG", ".jpg", ".jpeg", ".JPEG", ".png", ".PNG", ".bmp", ".BMP":
 		// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, fileurl+"/"+attachment.FileName)
 	case ".mp4", ".MP4":
@@ -1583,13 +1583,15 @@ func (c *AttachController) DownloadAttachment() {
 	// utils.FileLogs.Trace("this is a file log with trace.")
 }
 
-//目前有文章中的图片、成果中文档的预览、onlyoffice中的文档协作、pdf中的附件路径等均采用绝对路径型式
-//文章中的附件呢？
-//default中的pdf页面中的{{.pdflink}}，绝对路径
-// type Session struct {
-// 	Session int
-// }
-//attachment/路径/附件名称
+// 目前有文章中的图片、成果中文档的预览、onlyoffice中的文档协作、pdf中的附件路径等均采用绝对路径型式
+// 文章中的附件呢？
+// default中的pdf页面中的{{.pdflink}}，绝对路径
+//
+//	type Session struct {
+//		Session int
+//	}
+//
+// attachment/路径/附件名称
 func (c *AttachController) Attachment() {
 	//如果url带了sessionid,就能取到uid等信息
 	var useridstring string
@@ -1702,7 +1704,7 @@ func (c *AttachController) Attachment() {
 	}
 
 	switch fileext {
-	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
+	case ".JPG", ".jpg", ".jpeg", ".JPEG", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
 		// case ".dwg", ".DWG":
 		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
@@ -1755,7 +1757,7 @@ func (c *AttachController) Attachment() {
 	// }
 }
 
-//首页轮播图片给予任何权限
+// 首页轮播图片给予任何权限
 func (c *AttachController) GetCarousel() {
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
 	// filePath := path.Base(ctx.Request.RequestURI)
@@ -1779,7 +1781,7 @@ func (c *AttachController) GetCarousel() {
 	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
 }
 
-//返回文件大小
+// 返回文件大小
 func FileSize(file string) (int64, error) {
 	f, e := os.Stat(file)
 	if e != nil {
@@ -1788,7 +1790,7 @@ func FileSize(file string) (int64, error) {
 	return f.Size(), nil
 }
 
-//根据侧栏id返回附件url和文件夹路径
+// 根据侧栏id返回附件url和文件夹路径
 func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 	var parentidpath, parentidpath1 string
 	proj, err := models.GetProj(id)
@@ -1833,7 +1835,7 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 	}
 }
 
-//根据id返回项目编号，项目名称，项目阶段，项目专业
+// 根据id返回项目编号，项目名称，项目阶段，项目专业
 func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Section string, err error) {
 	var parentidpath, parentidpath1 string
 	proj, err := models.GetProj(id)
@@ -2526,7 +2528,6 @@ func (c *AttachController) GetExcelPdf() {
 // @Failure 404 pdf not found
 // @router /getwxexcelpdf/:id [get]
 // 小程序端下载mexcel pdf计算书
-//
 func (c *AttachController) GetWxExcelPdf() {
 	// 加权限判断
 	var user models.User

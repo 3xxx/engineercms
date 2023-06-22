@@ -543,19 +543,19 @@ $(document).ready(function() {
                 <div class="col-sm-7">
                   <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
                     <ul class="fc-color-picker" id="color-chooser">
-                      <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-aqua" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-blue" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-light-blue" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-teal" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-yellow" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-orange" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-green" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-lime" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-red" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-purple" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-fuchsia" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-muted" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-navy" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
                     </ul>
                   </div>
                 </div>
@@ -652,19 +652,19 @@ $(document).ready(function() {
                   <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
                   <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
                     <ul class="fc-color-picker" id="color-chooser1">
-                      <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
-                      <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-aqua" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-blue" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-light-blue" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-teal" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-yellow" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-orange" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-green" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-lime" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-red" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-purple" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-fuchsia" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-muted" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
+                      <li><a class="text-navy" href="javascript:void(0)"><i class="fa fa-square"></i></a></li>
                     </ul>
                   </div>
                 </div>

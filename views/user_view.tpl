@@ -89,7 +89,7 @@
                   <div class="form-group must">
                     <label class="col-sm-3 control-label">密码</label>
                     <div class="col-sm-7">
-                      <input type="password" class="form-control" id="password" maxlength="32" placeholder="至多32个字符" required></div>
+                      <input type="password" class="form-control" id="Password" maxlength="32" placeholder="至多32个字符" required></div>
                   </div>
                   <div class="form-group must">
                     <label class="col-sm-3 control-label">确认密码</label>
@@ -100,6 +100,24 @@
                     <label class="col-sm-3 control-label">邮箱</label>
                     <div class="col-sm-7">
                       <input type="text" class="form-control" id="Email"></div>
+                  </div>
+                  <div class="form-group must">
+                    <label class="col-sm-3 control-label">性别</label>
+                    <div class="col-sm-7">
+                      <!-- <input type="text" class="form-control" id="Sex"> -->
+                      <select id="Sex" class="form-control">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                      </select>
+                    </div>
+                  </div><div class="form-group must">
+                    <label class="col-sm-3 control-label">是否党员</label>
+                    <div class="col-sm-7">
+                      <select id="IsPartyMember" class="form-control">
+                        <option value="true">是</option>
+                        <option value="false">否</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="form-group must">
                     <label class="col-sm-3 control-label">部门</label>
@@ -117,9 +135,14 @@
                       <input type="text" class="form-control" id="Ip"></div>
                   </div>
                   <div class="form-group must">
+                    <label class="col-sm-3 control-label">CMS端口Port</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" id="Port"></div>
+                  </div>
+                  <div class="form-group must">
                     <label class="col-sm-3 control-label">状态</label>
                     <div class="col-sm-7">
-                      <select id="Status" class="form-control" required>
+                      <select id="Statusadd" class="form-control" required>
                         <option value="1">显示</option>
                         <option value="2">隐藏</option>
                         <option value="0">禁用</option>
@@ -150,17 +173,23 @@
         // striped: "true",
         columns: [{
             radio: 'true',
-            width: '10'
+            width: '10',
+            valign: 'middle',
+            align: 'center',
           },
           {
             // field: 'Number',
             title: '序号',
+            valign: 'middle',
+            align: 'center',
             formatter: function(value, row, index) {
               return index + 1
             }
           }, {
             field: 'name', //这里用user数据库json字段，不能是username
             title: '用户名',
+            valign: 'middle',
+            align: 'center',
             sortable: 'true',
             // editable: {
             //     type: 'text',
@@ -171,6 +200,8 @@
           }, {
             field: 'Nickname',
             title: '昵称',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               pk: 1,
@@ -180,6 +211,8 @@
           }, {
             field: 'Password',
             title: '密码',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               // type: 'select',
@@ -191,6 +224,8 @@
           }, {
             field: 'Email',
             title: '邮箱',
+            valign: 'middle',
+            align: 'center',
             // sortable:'true',
             editable: {
               type: 'text',
@@ -198,9 +233,52 @@
               url: '/v1/wx/updateuser',
               title: 'Enter Email'
             }
+          },{
+            field: 'Sex',
+            valign: 'middle',
+            align: 'center',
+            visible: true,
+            title: '性别',
+            // sortable:'true',
+            editable: {
+              type: 'text',
+              pk: 1,
+              url: '/v1/wx/updateuser',
+              title: 'Enter Sex'
+            }
+          }, {
+            field: 'IsPartyMember',
+            valign: 'middle',
+            align: 'center',
+            visible: true,
+            title: '是否党员',
+            // sortable:'true',
+            editable: {
+              type: 'select',
+              source: [
+                {text: '是', value: true},
+                {text: '否', value: false}
+              ],
+              // type: 'select2',
+              // source: [
+              //   {text: '是', value: true},
+              //   {text: '否', value: false}
+              // ],
+              // select2: {
+              //   allowClear: true,
+              //   // width: '150px',
+              //   placeholder: '请选择状态',
+              //   multiple: true
+              // },
+              pk: 1,
+              url: '/v1/wx/updateuser',
+              title: 'Enter IsPartyMember'
+            },  
           }, {
             field: 'Department',
             title: '部门',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               pk: 1,
@@ -210,6 +288,8 @@
           }, {
             field: 'Secoffice',
             title: '科室',
+            valign: 'middle',
+            align: 'center',
             sortable: 'true',
             editable: {
               type: 'text',
@@ -221,6 +301,8 @@
           }, {
             field: 'Ip',
             title: 'IP',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               pk: 1,
@@ -230,6 +312,8 @@
           }, {
             field: 'Port',
             title: '端口号',
+            valign: 'middle',
+            align: 'center',
             editable: {
               type: 'text',
               pk: 1,
@@ -239,6 +323,8 @@
           }, {
             field: 'Status',
             title: '状态',
+            valign: 'middle',
+            align: 'center',
             // editable: {
             // type: 'select2',
             //   // source:{{.Userselect}},//'/regist/getuname1',
@@ -261,14 +347,20 @@
           }, {
             field: 'Lastlogintime',
             title: '最后登录',
+            valign: 'middle',
+            align: 'center',
             formatter: localDateFormatter,
           }, {
             field: 'Createtime',
             title: '建立',
+            valign: 'middle',
+            align: 'center',
             formatter: localDateFormatter,
           }, {
             field: 'role',
             title: '权限',
+            valign: 'middle',
+            align: 'center',
             // editable: {
             //   type: 'select2', 
             //   // source:{{.Userselect}},//'/regist/getuname1',
@@ -374,7 +466,7 @@
 
     function StatusFormatter(value, row, index) {
       // alert(row.Status);
-      if (row.role == "0") {
+      if (row.status == "0") {
         return '正常';
       } else {
         return '失效';

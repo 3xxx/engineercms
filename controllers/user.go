@@ -125,27 +125,59 @@ func (c *UserController) Index() {
 	}
 }
 
+// 后端分页的数据结构
+type userTableserver struct {
+	Rows  []*m.User `json:"rows"`
+	Page  int64     `json:"page"`
+	Total int64     `json:"total"` //string或int64都行！
+}
+
 // @Title get user
 // @Description get user by userid
 // @Param id path string false "The id of user"
 // @Param role query string false "The role of user"
+// @Param searchText query string false "The searchText of users"
+// @Param pageNo query string true "The page for users list"
+// @Param limit query string true "The limit of page for users list"
 // @Success 200 {object} models.User
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /user/:id [get]
-//如果不带id则取到所有用户
-//如果带id，则取一个用户
+// 如果不带id则取到所有用户
+// 如果带id，则取一个用户
 func (c *UserController) User() {
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	// var categories []*models.AdminCategory
 	if id == "0" { //如果id为空，则查询类别
+		limit := c.GetString("limit")
+		if limit == "" {
+			limit = "5"
+		}
+		limit1, err := strconv.ParseInt(limit, 10, 64)
+		if err != nil {
+			logs.Error(err)
+		}
+		page := c.GetString("pageNo")
+		page1, err := strconv.ParseInt(page, 10, 64)
+		if err != nil {
+			logs.Error(err)
+		}
+
+		var offset int64
+		if page1 <= 1 {
+			offset = 0
+		} else {
+			offset = (page1 - 1) * limit1
+		}
+
 		_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
 		if !isadmin {
 			c.Redirect("/login", 301)
 		}
-		users, err := m.GetUsers()
+		searchText := c.GetString("searchText")
+		users, count, err := m.GetUsersPage(limit1, offset, "Username", searchText)
 		if err != nil {
 			logs.Error(err)
 		}
@@ -156,7 +188,10 @@ func (c *UserController) User() {
 				v.Role = role
 			}
 		}
-		c.Data["json"] = &users
+		table := userTableserver{users, page1, count}
+		// table := prodTableserver2{products, 1, 20}
+		c.Data["json"] = table
+		// c.Data["json"] = &users
 		c.ServeJSON()
 	} else {
 		//pid转成64为
@@ -184,7 +219,7 @@ func (c *UserController) User() {
 	// }
 }
 
-//用户登录查看自己的资料_不是这个，是GetUserByUsername
+// 用户登录查看自己的资料_不是这个，是GetUserByUsername
 func (c *UserController) View() {
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
@@ -234,6 +269,13 @@ func (c *UserController) AddUser() {
 	// user.Password = hex.EncodeToString(cipherStr)
 
 	user.Email = c.GetString("email")
+	user.Sex = c.GetString("sex")
+	ispartymember := c.GetString("ispartymember")
+	if ispartymember == "true" {
+		user.IsPartyMember = true
+	} else {
+		user.IsPartyMember = false
+	}
 	user.Department = c.GetString("department")
 	user.Secoffice = c.GetString("secoffice")
 	user.Ip = c.GetString("ip")
@@ -277,7 +319,7 @@ func (c *UserController) AddUser() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /addwxuser [post]
-//小程序添加用户
+// 小程序添加用户
 func (c *UserController) AddWxUser() {
 	var user m.User
 	var err error
@@ -369,7 +411,7 @@ func (c *UserController) AddWxUser() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /updatewxuser [post]
-//小程序修改用户密码
+// 小程序修改用户密码
 func (c *UserController) UpdateWxUser() {
 	oldpass := c.GetString("oldpass")
 	uid := c.GetString("uid")
@@ -409,7 +451,7 @@ func (c *UserController) UpdateWxUser() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /updateuser [post]
-//在线修改保存某个字段
+// 在线修改保存某个字段
 func (c *UserController) UpdateUser() {
 	//进行权限判断isme or isadmin
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
@@ -421,13 +463,16 @@ func (c *UserController) UpdateUser() {
 	if isadmin || uid == id {
 		name := c.GetString("name")
 		value := c.GetString("value")
+		logs.Info(value)
 		value = template.HTMLEscapeString(value) //过滤xss攻击
+		logs.Info(value)
 		err = m.UpdateUser(id, name, value)
 		if err != nil {
 			logs.Error(err)
 			data := "写入数据错误!"
 			c.Ctx.WriteString(data)
 		} else {
+			logs.Info("ok")
 			data := "ok!"
 			c.Ctx.WriteString(data)
 		}
@@ -482,7 +527,7 @@ func (c *UserController) UpdateUser() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /deleteuser [post]
-//删除用户
+// 删除用户
 func (c *UserController) DeleteUser() {
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
@@ -508,7 +553,7 @@ func (c *UserController) DeleteUser() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /getuserbyusername [get]
-//用户查看自己，修改密码等
+// 用户查看自己，修改密码等
 func (c *UserController) GetUserByUsername() {
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
@@ -532,7 +577,7 @@ func (c *UserController) GetUserByUsername() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
 // @router /usermyself [get]
-//用户个人数据，填充table，以便编辑
+// 用户个人数据，填充table，以便编辑
 func (c *UserController) Usermyself() {
 	// 	_, role := checkprodRole(c.Ctx)
 	// 	roleint, err := strconv.Atoi(role)
@@ -597,8 +642,6 @@ func (c *UserController) ImportUsers() {
 	if err != nil {
 		logs.Error(err)
 	}
-	// beego.Info(h.path)
-	// var attachment string
 	var path string
 
 	// var filesize int64
@@ -652,31 +695,48 @@ func (c *UserController) ImportUsers() {
 							}
 						}
 						if len(row.Cells) >= 6 {
-							user.Department = row.Cells[j+4].String()
+							user.Sex = row.Cells[j+4].String()
 							if err != nil {
 								logs.Error(err)
 							}
 						}
 						if len(row.Cells) >= 7 {
-							user.Secoffice = row.Cells[j+5].String()
+							ispartymember := row.Cells[j+5].String()
+							if ispartymember == "是" {
+								user.IsPartyMember = true
+							} else {
+								user.IsPartyMember = false
+							}
 							if err != nil {
 								logs.Error(err)
 							}
 						}
 						if len(row.Cells) >= 8 {
-							user.Ip = row.Cells[j+6].String()
+							user.Department = row.Cells[j+6].String()
 							if err != nil {
 								logs.Error(err)
 							}
 						}
 						if len(row.Cells) >= 9 {
-							user.Port = row.Cells[j+7].String()
+							user.Secoffice = row.Cells[j+7].String()
 							if err != nil {
 								logs.Error(err)
 							}
 						}
 						if len(row.Cells) >= 10 {
-							status := row.Cells[j+8].String()
+							user.Ip = row.Cells[j+8].String()
+							if err != nil {
+								logs.Error(err)
+							}
+						}
+						if len(row.Cells) >= 11 {
+							user.Port = row.Cells[j+9].String()
+							if err != nil {
+								logs.Error(err)
+							}
+						}
+						if len(row.Cells) >= 12 {
+							status := row.Cells[j+10].String()
 							if err != nil {
 								logs.Error(err)
 							}
@@ -686,8 +746,8 @@ func (c *UserController) ImportUsers() {
 							}
 							user.Status = status1
 						}
-						if len(row.Cells) >= 11 {
-							role := row.Cells[j+9].String()
+						if len(row.Cells) >= 13 {
+							role := row.Cells[j+11].String()
 							if err != nil {
 								logs.Error(err)
 							}
