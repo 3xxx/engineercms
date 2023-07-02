@@ -1423,21 +1423,26 @@
     </div>
   </div>
   <script type="text/javascript">
+  var role="";// 用户表翻页时，role携带的变量
   //选择用户的角色
   function shows(a) {
     // alert(a);
     if (a == "  Full Access") {
       $("#dropdownMenu1").removeClass();
       $("#dropdownMenu1").addClass("fa fa-pencil");
+      role="1";
     } else if (a == "  Review") {
       $("#dropdownMenu1").removeClass();
       $("#dropdownMenu1").addClass("fa fa-commenting-o");
+      role="2";
     } else if (a == "  Read Only") {
       $("#dropdownMenu1").removeClass();
       $("#dropdownMenu1").addClass("fa fa-eye");
+      role="3";
     } else if (a == "  Deny Access") {
       $("#dropdownMenu1").removeClass();
       $("#dropdownMenu1").addClass("fa fa-eye-slash");
+      role="4";
     }
     // $('.buttonText').text(a)
   }
@@ -1562,7 +1567,7 @@
   })
 
   //******表格追加项目同步ip中的数据*******
-  $(function() {
+  // $(function() {
     $('#synchIP').click(function() {
       // alert("ha ");
       $.ajax({
@@ -1577,7 +1582,7 @@
         }
       });
     });
-  });
+  // });
 
   function randomData() {
     var startId = ~~(Math.random() * 100),
@@ -1649,7 +1654,8 @@
         var param = {
           limit: params.pageSize, //每页多少条数据
           pageNo: params.pageNumber, // 页码
-          searchText: $(".search .form-control").val()
+          searchText: $(".search .form-control").val(),
+          role: role,
         };
         //搜索框功能
         //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
@@ -1917,9 +1923,9 @@
     });
   });
 
-
   $(function() {
     var now = new Date();
+    
     myDate = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate();
     $("#Date").val(myDate);
     //弹出添加用户模态框

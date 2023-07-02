@@ -212,11 +212,11 @@ func init() {
 
 	//gorm
 	_db.AutoMigrate(&Article{}, &Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}, &Location{}, &LocationNavigate{})
-	_db.AutoMigrate(&AnsysApdl{}, &AnsysInputs{}, &AnsysOutputs{}, &AnsysHistory{}, &AnsysHistoryInputValue{}, &AnsysHistoryOutputValue{}, &AnsysArticle{})
-	_db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
-	_db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
-	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
-	_db.AutoMigrate(&PassProject{})
+	// _db.AutoMigrate(&AnsysApdl{}, &AnsysInputs{}, &AnsysOutputs{}, &AnsysHistory{}, &AnsysHistoryInputValue{}, &AnsysHistoryOutputValue{}, &AnsysArticle{})
+	// _db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
+	// _db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
+	// _db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
+	// _db.AutoMigrate(&PassProject{})
 	_db.AutoMigrate(&PhotoData{})
 	_db.AutoMigrate(&FreecadModel{})
 }

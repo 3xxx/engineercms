@@ -1,3 +1,12 @@
+# API v2.0.3
+## Jun, 2023
+
++ 增加项目里的文档协作权限
++ onlyoffice文档管理页面增加批量压缩下载
++ 增加freecad模型在线查看和上传
+* 修复了href="javascript:void(0)"防止页面卷动
+* 修复了onlyoffice页面权限设置里用户名显示bug
+
 # API v1.0.3
 
 ## Aug, 2020

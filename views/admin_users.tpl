@@ -60,7 +60,7 @@
     //         data:json,
     //     });
     // });
-    $(document).ready(function() {
+    // $(document).ready(function() {
       $("#addButton").click(function() {
         $('#modalTable').modal({
           show: true,
@@ -75,7 +75,7 @@
           backdrop: 'static'
         });
       })
-    })
+    // })
     </script>
     <!-- 添加用户 -->
     <div class="container">
@@ -929,7 +929,7 @@ field：点击列的 field 名称 -->
       }
     }
 
-    $(document).ready(function() {
+    // $(document).ready(function() {
       //添加角色
       $("#addButtonrole").click(function() {
         $('#modalTable1').modal({
@@ -1003,7 +1003,7 @@ field：点击列的 field 名称 -->
           backdrop: 'static'
         });
       })
-    })
+    // })
 
     //新建角色
     function saverole() {

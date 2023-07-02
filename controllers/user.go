@@ -181,7 +181,7 @@ func (c *UserController) User() {
 		if err != nil {
 			logs.Error(err)
 		}
-		//如果设置了role,用于onlyoffice的权限设置
+		//如果设置了role,用于onlyoffice/officeview的权限设置
 		role := c.GetString("role")
 		if role != "" {
 			for _, v := range users {

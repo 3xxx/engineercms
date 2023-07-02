@@ -37,7 +37,7 @@ type PayMath struct {
 	Amount       int   `gorm:"column:amount"`
 	User         User  //`gorm:"foreignkey:UserId"` //对于preload来说，这个后面不影响
 	User2        User  //`gorm:"foreignkey:User2Id"`
-	UserTemple   UserTemple
+	// UserTemple   UserTemple
 }
 
 // 用户付费下载pdf文件表
@@ -71,7 +71,7 @@ type PayExcel struct {
 	Amount        int   `gorm:"column:amount"`
 	User          User  `gorm:"foreignkey:Id;references:UserID;"` //对于preload来说，这个后面不影响
 	User2         User  //`gorm:"foreignkey:User2Id"`
-	ExcelTemple   ExcelTemple
+	// ExcelTemple   ExcelTemple
 }
 
 // 用户付费下载pdf文件表
@@ -168,7 +168,7 @@ func init() {
 // 	return _db
 // }
 
-//查询某个打赏记录
+// 查询某个打赏记录
 func GetPay(id int64) (pay Pay, err error) {
 	//获取DB
 	db := _db //GetDB()
@@ -186,7 +186,7 @@ func GetPay(id int64) (pay Pay, err error) {
 	//result := db.Model(&topic).Related(&topic.User, "UserId")
 }
 
-//查询某个用户账户余额
+// 查询某个用户账户余额
 func GetUserMoney(uid int64) (money Money, err error) {
 	//获取DB
 	db := _db //GetDB()
@@ -194,7 +194,7 @@ func GetUserMoney(uid int64) (money Money, err error) {
 	return money, err
 }
 
-//添加某个文章某个用户打赏记录
+// 添加某个文章某个用户打赏记录
 func AddUserPay(articleid, uid int64, amount int) error {
 	//获取DB
 	db := _db //GetDB()
@@ -351,7 +351,7 @@ func AddUserPay(articleid, uid int64, amount int) error {
 	// }
 }
 
-//添加某个math某个用户计算扣费记录
+// 添加某个math某个用户计算扣费记录
 func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	//获取DB
 	db := _db //GetDB()
@@ -460,232 +460,232 @@ func AddUserPayMath(templeid uint, uid int64, amount int) error {
 	return tx.Commit().Error
 }
 
-//添加某个mathpdf某个用户计算扣费记录,归平台所有
-func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
-	//获取DB
-	db := _db //GetDB()
-	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
-	tx := db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
+// // 添加某个mathpdf某个用户计算扣费记录,归平台所有
+// func AddUserPayMathPdf(pdftitle, pdflink string, uid int64, amount int) error {
+// 	//获取DB
+// 	db := _db //GetDB()
+// 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
+// 	tx := db.Begin()
+// 	defer func() {
+// 		if r := recover(); r != nil {
+// 			tx.Rollback()
+// 		}
+// 	}()
 
-	if err := tx.Error; err != nil {
-		return err
-	}
-	//保证pdf正确_目录下有这个文件存在，controllers里判断吧
+// 	if err := tx.Error; err != nil {
+// 		return err
+// 	}
+// 	//保证pdf正确_目录下有这个文件存在，controllers里判断吧
 
-	newamount := 0 - amount
-	if err := tx.Create(&PayMathPdf{UserID: uid, PdfTitle: pdftitle, PdfLink: pdflink, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	newamount := 0 - amount
+// 	if err := tx.Create(&PayMathPdf{UserID: uid, PdfTitle: pdftitle, PdfLink: pdflink, Amount: newamount}).Error; err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	//赞赏者账户
-	var moneyA Money
-	err := db.Where("user_id = ?", uid).First(&moneyA).Error
-	if err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
-	//2.赞赏者账户余额保证大于0
-	newamount = moneyA.Amount - amount
-	if newamount < 0 {
-		tx.Rollback()
-		return err
-		logs.Error(err)
-	}
-	//3.赞赏者账户修改余额
-	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
-	if rowsAffected == 0 {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	//赞赏者账户
+// 	var moneyA Money
+// 	err := db.Where("user_id = ?", uid).First(&moneyA).Error
+// 	if err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
+// 	//2.赞赏者账户余额保证大于0
+// 	newamount = moneyA.Amount - amount
+// 	if newamount < 0 {
+// 		tx.Rollback()
+// 		return err
+// 		logs.Error(err)
+// 	}
+// 	//3.赞赏者账户修改余额
+// 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
+// 	if rowsAffected == 0 {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	return tx.Commit().Error
-}
+// 	return tx.Commit().Error
+// }
 
-//查询某个用户下载过的pdf记录
-func GetUserPayMathPdf(uid int64, pdftitle string) (paymathpdf PayMathPdf, err error) {
-	//获取DB
-	db := _db //GetDB()
-	err = db.Where("user_id = ? AND pdf_title=?", uid, pdftitle).First(&paymathpdf).Error
-	return paymathpdf, err
-}
+// // 查询某个用户下载过的pdf记录
+// func GetUserPayMathPdf(uid int64, pdftitle string) (paymathpdf PayMathPdf, err error) {
+// 	//获取DB
+// 	db := _db //GetDB()
+// 	err = db.Where("user_id = ? AND pdf_title=?", uid, pdftitle).First(&paymathpdf).Error
+// 	return paymathpdf, err
+// }
 
-//添加某个math某个用户计算扣费记录
-func AddUserPayExcel(templeid uint, uid int64, amount int) error {
-	//获取DB
-	db := _db //GetDB()
-	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
-	tx := db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
+// // 添加某个math某个用户计算扣费记录
+// func AddUserPayExcel(templeid uint, uid int64, amount int) error {
+// 	//获取DB
+// 	db := _db //GetDB()
+// 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
+// 	tx := db.Begin()
+// 	defer func() {
+// 		if r := recover(); r != nil {
+// 			tx.Rollback()
+// 		}
+// 	}()
 
-	if err := tx.Error; err != nil {
-		return err
-	}
-	//保证模板id正确
-	var exceltemple ExcelTemple
-	err := db.Where("id = ?", templeid).First(&exceltemple).Error
-	if err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
-	//根据模板id查出作者userid
-	// var product Product
-	// err = db.Where("id = ?", article.ProductId).First(&product).Error
-	// if err != nil {
-	// 	logs.Error(err)
-	// 	tx.Rollback()
-	// 	return err
-	// }
+// 	if err := tx.Error; err != nil {
+// 		return err
+// 	}
+// 	//保证模板id正确
+// 	var exceltemple ExcelTemple
+// 	err := db.Where("id = ?", templeid).First(&exceltemple).Error
+// 	if err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
+// 	//根据模板id查出作者userid
+// 	// var product Product
+// 	// err = db.Where("id = ?", article.ProductId).First(&product).Error
+// 	// if err != nil {
+// 	// 	logs.Error(err)
+// 	// 	tx.Rollback()
+// 	// 	return err
+// 	// }
 
-	newamount := 0 - amount
-	if err = tx.Create(&PayExcel{UserID: uid, User2ID: exceltemple.UserID, ExcelTempleID: templeid, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	newamount := 0 - amount
+// 	if err = tx.Create(&PayExcel{UserID: uid, User2ID: exceltemple.UserID, ExcelTempleID: templeid, Amount: newamount}).Error; err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	//赞赏者账户
-	var moneyA Money
-	err = db.Where("user_id = ?", uid).First(&moneyA).Error
-	if err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
-	//2.赞赏者账户余额保证大于0
-	newamount = moneyA.Amount - amount
-	if newamount < 0 {
-		tx.Rollback()
-		return err
-		logs.Error(err)
-	}
-	//3.赞赏者账户修改余额
-	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
-	if rowsAffected == 0 {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	//赞赏者账户
+// 	var moneyA Money
+// 	err = db.Where("user_id = ?", uid).First(&moneyA).Error
+// 	if err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
+// 	//2.赞赏者账户余额保证大于0
+// 	newamount = moneyA.Amount - amount
+// 	if newamount < 0 {
+// 		tx.Rollback()
+// 		return err
+// 		logs.Error(err)
+// 	}
+// 	//3.赞赏者账户修改余额
+// 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
+// 	if rowsAffected == 0 {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	// 模板作者账户充值记录
-	var moneyB Money
-	//没有查到则新增一条
-	err = db.Where("user_id = ?", exceltemple.UserID).First(&moneyB).Error
-	if err != nil {
-		logs.Error(err)
-		if err = tx.Create(&Money{UserID: exceltemple.UserID, Amount: 100}).Error; err != nil {
-			logs.Error(err)
-			tx.Rollback()
-			return err
-		}
-		//事务新增后要查出来moneyB，供下面的update用
-		// user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
-		// result := db.Create(&user) // 通过数据的指针来创建
-		// tx也能返回id啊result :=  result.Error
-		// user.ID             // 返回插入数据的主键
-		// result.Error        // 返回 error
-		// result.RowsAffected // 返回插入记录的条数
+// 	// 模板作者账户充值记录
+// 	var moneyB Money
+// 	//没有查到则新增一条
+// 	err = db.Where("user_id = ?", exceltemple.UserID).First(&moneyB).Error
+// 	if err != nil {
+// 		logs.Error(err)
+// 		if err = tx.Create(&Money{UserID: exceltemple.UserID, Amount: 100}).Error; err != nil {
+// 			logs.Error(err)
+// 			tx.Rollback()
+// 			return err
+// 		}
+// 		//事务新增后要查出来moneyB，供下面的update用
+// 		// user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
+// 		// result := db.Create(&user) // 通过数据的指针来创建
+// 		// tx也能返回id啊result :=  result.Error
+// 		// user.ID             // 返回插入数据的主键
+// 		// result.Error        // 返回 error
+// 		// result.RowsAffected // 返回插入记录的条数
 
-		//记得下面这个查询用tx，不能用db，因为数据还没真正写入！！！
-		// 用money:=Money{}来创建，然后取到money.ID供后续使用
-		err = tx.Where("user_id = ?", exceltemple.UserID).First(&moneyB).Error
-		if err != nil {
-			tx.Rollback()
-			logs.Error(err)
-			return err
-		}
-		//账户充值_这句干嘛？重复？——这个是充值数据表，上面是账户余额表，不重复
-		err := tx.Create(&Recharge{UserID: exceltemple.UserID, Amount: 100}).Error
-		if err != nil {
-			logs.Error(err)
-			tx.Rollback()
-			return err
-		}
-	}
+// 		//记得下面这个查询用tx，不能用db，因为数据还没真正写入！！！
+// 		// 用money:=Money{}来创建，然后取到money.ID供后续使用
+// 		err = tx.Where("user_id = ?", exceltemple.UserID).First(&moneyB).Error
+// 		if err != nil {
+// 			tx.Rollback()
+// 			logs.Error(err)
+// 			return err
+// 		}
+// 		//账户充值_这句干嘛？重复？——这个是充值数据表，上面是账户余额表，不重复
+// 		err := tx.Create(&Recharge{UserID: exceltemple.UserID, Amount: 100}).Error
+// 		if err != nil {
+// 			logs.Error(err)
+// 			tx.Rollback()
+// 			return err
+// 		}
+// 	}
 
-	newamount = moneyB.Amount + amount
-	rowsAffected = tx.Model(&moneyB).Update("amount", newamount).RowsAffected
-	if rowsAffected == 0 {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	newamount = moneyB.Amount + amount
+// 	rowsAffected = tx.Model(&moneyB).Update("amount", newamount).RowsAffected
+// 	if rowsAffected == 0 {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	return tx.Commit().Error
-}
+// 	return tx.Commit().Error
+// }
 
-//添加某个mathpdf某个用户计算扣费记录,归平台所有
-func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
-	//获取DB
-	db := _db //GetDB()
-	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
-	tx := db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
+// // 添加某个mathpdf某个用户计算扣费记录,归平台所有
+// func AddUserPayExcelPdf(pdftitle, pdflink string, uid int64, amount int) error {
+// 	//获取DB
+// 	db := _db //GetDB()
+// 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
+// 	tx := db.Begin()
+// 	defer func() {
+// 		if r := recover(); r != nil {
+// 			tx.Rollback()
+// 		}
+// 	}()
 
-	if err := tx.Error; err != nil {
-		return err
-	}
-	//保证pdf正确_目录下有这个文件存在，controllers里判断吧
+// 	if err := tx.Error; err != nil {
+// 		return err
+// 	}
+// 	//保证pdf正确_目录下有这个文件存在，controllers里判断吧
 
-	newamount := 0 - amount
-	if err := tx.Create(&PayExcelPdf{UserID: uid, PdfTitle: pdftitle, PdfLink: pdflink, Amount: newamount}).Error; err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	newamount := 0 - amount
+// 	if err := tx.Create(&PayExcelPdf{UserID: uid, PdfTitle: pdftitle, PdfLink: pdflink, Amount: newamount}).Error; err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	//赞赏者账户
-	var moneyA Money
-	err := db.Where("user_id = ?", uid).First(&moneyA).Error
-	if err != nil {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
-	//2.赞赏者账户余额保证大于0
-	newamount = moneyA.Amount - amount
-	if newamount < 0 {
-		tx.Rollback()
-		return err
-		logs.Error(err)
-	}
-	//3.赞赏者账户修改余额
-	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
-	if rowsAffected == 0 {
-		logs.Error(err)
-		tx.Rollback()
-		return err
-	}
+// 	//赞赏者账户
+// 	var moneyA Money
+// 	err := db.Where("user_id = ?", uid).First(&moneyA).Error
+// 	if err != nil {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
+// 	//2.赞赏者账户余额保证大于0
+// 	newamount = moneyA.Amount - amount
+// 	if newamount < 0 {
+// 		tx.Rollback()
+// 		return err
+// 		logs.Error(err)
+// 	}
+// 	//3.赞赏者账户修改余额
+// 	rowsAffected := tx.Model(&moneyA).Update("amount", newamount).RowsAffected
+// 	if rowsAffected == 0 {
+// 		logs.Error(err)
+// 		tx.Rollback()
+// 		return err
+// 	}
 
-	return tx.Commit().Error
-}
+// 	return tx.Commit().Error
+// }
 
-//查询某个用户下载过的pdf记录
-func GetUserPayExcelPdf(uid int64, pdftitle string) (payexcelpdf PayExcelPdf, err error) {
-	//获取DB
-	db := _db //GetDB()
-	err = db.Where("user_id = ? AND pdf_title=?", uid, pdftitle).First(&payexcelpdf).Error
-	return payexcelpdf, err
-}
+// // 查询某个用户下载过的pdf记录
+// func GetUserPayExcelPdf(uid int64, pdftitle string) (payexcelpdf PayExcelPdf, err error) {
+// 	//获取DB
+// 	db := _db //GetDB()
+// 	err = db.Where("user_id = ? AND pdf_title=?", uid, pdftitle).First(&payexcelpdf).Error
+// 	return payexcelpdf, err
+// }
 
-//用户充值和提现
+// 用户充值和提现
 func AddUserRecharge(uid int64, amount int) error {
 	//获取DB
 	db := _db //GetDB()
@@ -863,7 +863,7 @@ func UpdateRecharge(rid uint, amount int) error {
 	return tx.Commit().Error
 }
 
-//查询某个用户花费赞赏 和 获得 文章 赞赏记录
+// // 查询某个用户花费赞赏 和 获得 文章 赞赏记录
 func GetUserPay(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
 	db := _db //GetDB()
@@ -875,7 +875,7 @@ func GetUserPay(uid int64, limit, offset int) (pays []*Pay, err error) {
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户花费赞赏 和 获得 math 赞赏记录
+// 查询某个用户花费赞赏 和 获得 math 赞赏记录
 func GetUserPayMath(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
 	//获取DB
 	db := _db //GetDB()
@@ -887,7 +887,7 @@ func GetUserPayMath(uid int64, limit, offset int) (paymaths []*PayMath, err erro
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户 花费 赞赏（赞赏别人）文章 的记录
+// 查询某个用户 花费 赞赏（赞赏别人）文章 的记录
 func GetUserPayAppreciation(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
 	db := _db                                                                                                                                               //GetDB()
@@ -897,7 +897,7 @@ func GetUserPayAppreciation(uid int64, limit, offset int) (pays []*Pay, err erro
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户 花费 赞赏（赞赏别人）math 的记录
+// 查询某个用户 花费 赞赏（赞赏别人）math 的记录
 func GetUserPayMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
 	//获取DB
 	db := _db                                                                                                                                                          //GetDB()
@@ -907,7 +907,7 @@ func GetUserPayMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMa
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户 获得 赞赏（别人赞赏自己）的记录
+// 查询某个用户 获得 赞赏（别人赞赏自己）的记录
 func GetUserGetAppreciation(uid int64, limit, offset int) (pays []*Pay, err error) {
 	//获取DB
 	db := _db                                                                                                                                                //GetDB()
@@ -917,7 +917,7 @@ func GetUserGetAppreciation(uid int64, limit, offset int) (pays []*Pay, err erro
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询某个用户 获得 赞赏（别人赞赏自己）math 的记录
+// 查询某个用户 获得 赞赏（别人赞赏自己）math 的记录
 func GetUserGetMathAppreciation(uid int64, limit, offset int) (paymaths []*PayMath, err error) {
 	//获取DB
 	db := _db                                                                                                                                                           //GetDB()

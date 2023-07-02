@@ -12,6 +12,8 @@
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
   <script src="/static/js/tableExport.js"></script>
@@ -1411,39 +1413,6 @@
       }
     })
 
-    // 设置文档协作权限
-    $("#permissionButton").click(function() {
-      var selectRow = $('#table0').bootstrapTable('getSelections');
-      if (selectRow.length < 1) {
-        alert("请先勾选成果！");
-        return;
-      }
-      if (selectRow.length > 1) {
-        alert("请不要勾选一个以上成果！");
-        return;
-      }
-      console.log(selectRow)
-      
-      // alert(selectRow[0].Uid);
-      //必须登录用户上传的文档，具有uid，才能设置权限。
-      if ({{.Uid }} === 0) {
-        alert("请登录！");
-        return;
-      } else if (selectRow[0].Uid === {{.Uid }} || {{.IsAdmin }}) {
-        $("input#pid").remove();
-        var th1 = "<input id='pid' type='hidden' name='pid' value='" + selectRow[0].Id + "'/>"
-        $(".modal-body").append(th1); //这里是否要换名字$("p").remove();
-        $('#tableusers1').bootstrapTable('refresh', { url: '/v1/project/product/getpermission?docid=' + selectRow[0].Id }); //取得这个文档的用户和角色列表
-        $('#modalpermission').modal({
-          show: true,
-          backdrop: 'static'
-        });
-      } else {
-        alert("权限不够！因为上传文档用户id为：" + selectRow[0].Uid + "，你的id为：" + {{.Uid }} + "!");
-        return;
-      }
-    })
-
     //分享生成
     function createShare() {
       var selectRow = $('#table0').bootstrapTable('getSelections');
@@ -2664,7 +2633,7 @@
   })
 
   //******表格追加项目同步ip中的数据*******
-  $(function() {
+  // $(function() {
     $('#synchIP').click(function() {
       // alert("ha ");
       $.ajax({
@@ -2679,7 +2648,7 @@
         }
       });
     });
-  });
+  // });
   // $(document).ready(function() {
   //   $('#table0').bootstrapTable({
   //     // onLoadSuccess: function(){
@@ -2747,6 +2716,51 @@
   })
 
   // **********协作权限设置*********
+  var role="";
+  // 设置文档协作权限
+  $("#permissionButton").click(function() {
+    var selectRow = $('#table0').bootstrapTable('getSelections');
+    if (selectRow.length < 1) {
+      alert("请先勾选成果！");
+      return;
+    }
+    if (selectRow.length > 1) {
+      alert("请不要勾选一个以上成果！");
+      return;
+    }
+    // console.log(selectRow)
+    if (selectRow[0].Attachmentlink.length<1) {
+      alert("该成果没有附件！");
+      return;
+    }
+    var filename = selectRow[0].Attachmentlink[0].Title;
+    var index = filename.lastIndexOf(".");
+    var ext = filename.substring(index);
+    if (ext == ".doc" || ext == ".docx" || ext == ".wps"||ext == ".xls" || ext == ".xlsx" || ext == ".et"||ext == ".ppt" || ext == ".pptx" || ext == ".dps"){
+    }else{
+      alert("成果附件不支持协作！");
+      return;
+    }
+
+    // alert(selectRow[0].Uid);
+    //必须登录用户上传的文档，具有uid，才能设置权限。
+    if ({{.Uid }} === 0) {
+      alert("请登录！");
+      return;
+    } else if (selectRow[0].Uid === {{.Uid }} || {{.IsAdmin }}) {
+      $("input#pid").remove();
+      var th1 = "<input id='pid' type='hidden' name='pid' value='" + selectRow[0].Id + "'/>"
+      $(".modal-body").append(th1); //这里是否要换名字$("p").remove();
+      $('#tableusers1').bootstrapTable('refresh', { url: '/v1/project/product/getpermission?docid=' + selectRow[0].Id }); //取得这个文档的用户和角色列表
+      $('#modalpermission').modal({
+        show: true,
+        backdrop: 'static'
+      });
+    } else {
+      alert("权限不够！因为上传文档用户id为：" + selectRow[0].Uid + "，你的id为：" + {{.Uid }} + "!");
+      return;
+    }
+  });
   // 协作权限设置-用户表
   $(function() {
     $tableLeft = $('#tableusers20').bootstrapTable({
@@ -2775,7 +2789,8 @@
         var param = {
           limit: params.pageSize, //每页多少条数据
           pageNo: params.pageNumber, // 页码
-          searchText: $(".search .form-control").val()
+          searchText: $(".search .form-control").val(),
+          role: role,
         };
         //搜索框功能
         //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码

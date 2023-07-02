@@ -26,7 +26,12 @@
 # go mod tidy——下载新增的依赖包
 # go mod vendor——更新
 
-# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，再执行bee generate docs,bee generate routers,再执行bee run -gendoc=true -downdoc=true
+# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，
+
+# 再执行bee generate docs
+# bee generate routers
+# 再执行bee run -gendoc=true -downdoc=true
+
 # 将新增的依赖包自动写入当前项目的 vendor 目录：
 # go mod vendor
 # 如果 go.mod 发生变化，应当重新执行 go mod vendor！

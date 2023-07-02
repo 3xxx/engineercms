@@ -3,20 +3,24 @@
 
 <head>
   <title>FreeCAD Model</title>
-  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<!--   <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/ant-design-icons/dist/anticons.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.compact.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.min.js"></script> -->
+  <!-- <link href="https://cdn.jsdelivr.net/npm/ant-design-icons/dist/anticons.min.css" rel="stylesheet"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.compact.min.css"> -->
+
+  <script crossorigin src="/static/freecad/react.development.js"></script>
+  <script crossorigin src="/static/freecad/react-dom.development.js"></script>
+  <script src="/static/freecad/babel.min.js"></script>
+  <script src="/static/freecad/moment.min.js"></script>
+  <script src="/static/freecad/antd.min.js"></script>
+  <!-- <link href="/static/freecad/anticons.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" type="text/css" href="/static/freecad/antd.compact.min.css">
 
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
-  <!--   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
-  <link href="/static/css/bootstrap-treeview.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.min.css">
-  <link rel="stylesheet" href="/static/css/custom.css">
-  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" /> -->
+
   <style type="text/css">
   #app {
     height: 100vh;
@@ -584,7 +588,7 @@
                 function(){
                   return setCollapsed(!collapsed)
                 }
-              }>{collapsed ? <i className="ai-menu-unfold"></i> : <i className="ai-menu-fold"></i>}</span>
+              }>{collapsed ? <i className="fa fa-chevron-right"></i> : <i className="fa fa-chevron-left"></i>}</span>
             </Sider>
 
             <div className="container-fluid">
