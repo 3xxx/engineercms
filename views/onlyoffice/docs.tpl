@@ -1626,6 +1626,9 @@
     $("#myModal").css("overflow", "hidden"); //禁止模态对话框的半透明背景滚动
   })
 
+  // **********协作权限设置*********
+  var role="";
+
   //选择用户表
   $(function() {
     $tableLeft = $('#tableusers20').bootstrapTable({
@@ -1932,12 +1935,16 @@
     $("#addusers").click(function() {
       if ($("#dropdownMenu1").hasClass("fa fa-pencil")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=1' });
+        role=1
       } else if ($("#dropdownMenu1").hasClass("fa fa-commenting-o")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=2' });
+        role=2
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=3' });
+        role=3
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye-slash")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=4' });
+        role=4
       }
       $('#users').modal({
         show: true,
@@ -1949,12 +1956,16 @@
     $("#addroles").click(function() {
       if ($("#dropdownMenu2").hasClass("fa fa-pencil")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=1' });
+        role=1
       } else if ($("#dropdownMenu2").hasClass("fa fa-commenting-o")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=2' });
+        role=2
       } else if ($("#dropdownMenu2").hasClass("fa fa-eye")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=3' });
+        role=3
       } else if ($("#dropdownMenu2").hasClass("fa fa-eye-slash")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=4' });
+        role=4
       }
       $('#roles').modal({
         show: true,
@@ -1973,7 +1984,7 @@
     var docid = $('#pid').val();
     $.ajax({
       type: "post",
-      url: "/officeview/addpermission",
+      url: "/onlyoffice/addpermission",
       data: { ids: JSON.stringify(selectRow), docid: docid },
       success: function(data, status) {
         alert("保存“" + data + "”成功！(status:" + status + ".)");

@@ -1848,6 +1848,13 @@ func (c *OnlyController) DeleteDoc() {
 	}
 }
 
+// @Title post Addpermission...
+// @Description post Addpermission..
+// @Param ids query string true "The id of document"
+// @Success 200 {object} models.GetOnlyoffice
+// @Failure 400 Invalid page supplied
+// @Failure 404 data not found
+// @router /addpermission [post]
 // onlyoffice权限管理
 // 添加用户和角色的权限
 // 先删除这个文档id下所有permission，再添加新的。

@@ -1,72 +1,74 @@
 <!DOCTYPE html>
-<html>
+<!-- saved from url=(0076)https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html -->
+<html foxified="">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
-  <script src="/static/sim/polyfill.js"></script>
-  <link rel="icon" href="/static/img/pass-16x16.png" sizes="16x16" type="image/png">
-  <link rel="icon" href="/static/img/pass-32x32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="/static/img/pass-96x96.png" sizes="96x96" type="image/png">
-  <link rel="icon" href="/static/img/pass-160x160.png" sizes="160x160" type="image/png">
-  <link rel="icon" href="/static/img/pass-196x196.png" sizes="196x196" type="image/png">
-  <style>.FPSMonitor-module-verticalContainer_qRTek {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-}
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <link rel="icon" href="https://kitware.github.io/vtk-js/icon/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="icon" href="https://kitware.github.io/vtk-js/icon/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://kitware.github.io/vtk-js/icon/favicon-96x96.png" sizes="96x96" type="image/png">
+  <link rel="icon" href="https://kitware.github.io/vtk-js/icon/favicon-160x160.png" sizes="160x160" type="image/png">
+  <link rel="icon" href="https://kitware.github.io/vtk-js/icon/favicon-196x196.png" sizes="196x196" type="image/png">
+  <style type="text/css">
+  .FPSMonitor-module_verticalContainer__1oES5 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
 
-.FPSMonitor-module-horizontalContainer_osn4j {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
+  .FPSMonitor-module_horizontalContainer__3dO_q {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 
-.FPSMonitor-module-leftPane_kt02O {
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-}
+  .FPSMonitor-module_leftPane__3PHsp {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
 
-.FPSMonitor-module-rightPane_H9KH6 {
-  flex: 1;
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-auto-rows: 1.5em;
-  grid-column-gap: 5px;
-  grid-row-gap: 2px;
-  padding: 10px;
-}
+  .FPSMonitor-module_rightPane__30Een {
+    flex: 1;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-rows: 1.5em;
+    grid-column-gap: 5px;
+    grid-row-gap: 2px;
+    padding: 10px;
+  }
 
-.FPSMonitor-module-title_oe8GK {
-  flex: 1;
-  font-weight: bold;
-  padding: 5px 10px 0 10px;
-}
+  .FPSMonitor-module_title__3a5vQ {
+    flex: 1;
+    font-weight: bold;
+    padding: 5px 10px 0 10px;
+  }
 
-.FPSMonitor-module-graph_oDNGp {
-  flex: none;
-  border: solid 1px black;
-  margin: 10px ;
-  border-radius: 2px;
-  overflow: hidden;
-}
+  .FPSMonitor-module_graph__lvtIQ {
+    flex: none;
+    border: solid 1px black;
+    margin: 10px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
 
-.FPSMonitor-module-label_yxnxx {
-  font-weight: bold;
-  text-transform: capitalize;
-  text-align: right;
-  align-self: center;
-}
+  .FPSMonitor-module_label__3saqc {
+    font-weight: bold;
+    text-transform: capitalize;
+    text-align: right;
+    align-self: center;
+  }
 
-.FPSMonitor-module-value_yILm5 {
-  font-style: italic;
-  text-align: center;
-  align-self: center;
-}
-</style>
+  .FPSMonitor-module_value__2WrfF {
+    font-style: italic;
+    text-align: center;
+    align-self: center;
+  }
+  </style>
   <style>.GeometryViewer-module-button_fORXA {
   position: absolute;
   right: 5px;
@@ -124,6 +126,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
+  background-image: url(https://kitware.github.io/vtk-js/examples/GeometryViewer/3fdac36cbee8ffdf80fa.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -163,7 +166,6 @@ select:focus {
   border-radius: 10px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -200,7 +202,10 @@ select:focus {
       <div class="GeometryViewer-module-bigFileDrop_taNXL"><input type="file" multiple="" accept=".dat" style="display: none;"></div>
     </div>
   </div>
-  <script defer="defer" src="/static/sim/GeometryViewer.js"></script>
+  <script defer="defer" src="/static/sim/GeometryViewer2.js"></script>
 </body>
 
 </html>
+<!-- https://github.com/Kitware/vtk-js/blob/master/Examples/Applications/GeometryViewer/index.md -->
+<!-- 页面显示出错，则到上面这个页面，下载保存，然后将页面中的script部分剪切出来，单独放到GeometryViewer2.js文件，再在这个页面中引用即可。 -->
+<!-- 替换为accept=".dat" ，并且路径中带有fileURL就能自动加载这个dat文件，出处已经不记得来自哪里了-->

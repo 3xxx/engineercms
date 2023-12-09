@@ -446,6 +446,22 @@ th img {
 .annotation-item:hover .delete-layer {
   visibility: visible!important;
 }
+.hide-layer {
+  float: right;
+  right: 20px;
+  margin-top: 8px;  
+  margin-right: 10px;
+  vertical-align: middle;
+  display: inline-block;
+  visibility: hidden;
+}
+.hide-layer:hover {
+  cursor: pointer;
+  opacity: .6;
+}
+.annotation-item:hover .hide-layer {
+  visibility: visible!important;
+}
 .arrow-open {
   transform: rotate(90deg);
 }
@@ -558,7 +574,8 @@ th img {
   font-size: 15px;
   border-radius: 5px;
   position: fixed;
-  left: calc(calc(100% - 338px) / 2);
+  /*left: calc(calc(100% - 338px) / 2);*/
+  left: calc(calc(100% - 500px) / 2);
   transform: translateX(calc(-50% + 338px));
   top: 15px;
   box-sizing: border-box;
@@ -596,7 +613,8 @@ th img {
 /* Drawing tools */
 #drawing-controls {
   position: fixed;
-  left: calc(calc(100% - 338px) / 2);
+  /*left: calc(calc(100% - 338px) / 2);*/
+  left: calc(calc(100% - 600px) / 2);
   transform: translateX(calc(-50% + 338px));
   height: 48px;
   background-color: #FFF;
@@ -720,7 +738,7 @@ th img {
   text-align: center;
   font-family: Inter;
   font-weight: 100;
-  font-size: 13px;
+  font-size: 12px;
   position: absolute;
   margin-top: -75px;
   transform: translateX(-50%);
@@ -823,6 +841,34 @@ th img {
   text-align: center;
   box-sizing: border-box;
 }
+
+/* 2023年9月新增 */
+#hidden-tool {
+  position: absolute;
+  right: 11px;
+  bottom: 150px;
+  width: 45px;
+  z-index: 9999999;
+  background-color: #FFF;
+  margin-bottom: 6px;
+}
+
+#hidden-tool {
+  height: 45px;
+  line-height: 45px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 -1px 0px rgb(0 0 0 / 2%);
+  text-align: center;
+  box-sizing: border-box;
+}
+#hidden-tool:hover {
+  cursor: pointer;
+  background: var(--hover-grey);
+}
+#hidden-tool>img {
+  margin-top: 14px;
+}
+
 #location-control img {
   margin-top: 14px;
 }
@@ -1009,17 +1055,18 @@ div.firebase-emulator-warning {
   float: right;
   margin-top: 5px;
 }
-.save-button, .save-button-place {
+.save-button, .save-button-place,.offset-save-button {
   background: #222222;
   color: #FFF;
   float: right;
   vertical-align: middle;
 }
-.cancel-button, .cancel-button-place {
+.cancel-button, .cancel-button-place,.offset-save-reload-button {
   background: #E8E8E8!important;
   color: #626C72!important;
   margin-right: 9px!important;
 }
+
 #shape-desc {
   height: 100px;
 }

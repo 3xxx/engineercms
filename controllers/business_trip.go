@@ -714,7 +714,7 @@ func (c *BusinessController) GetBusinessCheck() {
 	}
 }
 
-//********************统计**************
+// ********************统计**************
 // @Title get businessmothcheckin
 // @Description get businessmonthcheck
 // @Success 200 {object} models.GetProductsPage
@@ -916,6 +916,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
 	var err error
+	var city, province string
 	limit := c.GetString("limit")
 	if limit == "" {
 		limit1 = 500
@@ -1010,15 +1011,27 @@ func (c *BusinessController) BusinessMonthCheck2() {
 						if err != nil {
 							logs.Error(err)
 						}
-						provinceindex := UnicodeIndex(vv.Location, "省") // 查找空格这个字符的位置
-						province := SubString(vv.Location, 0, provinceindex+1)
+						// logs.Info(vv.Location)
+						provinceindex := UnicodeIndex(vv.Location, "省") // 查找格这个字符的位置
+						// logs.Info(provinceindex)
+						if provinceindex == 0 {
+							provinceindex = UnicodeIndex(vv.Location, "自治区")
+							province = SubString(vv.Location, 0, provinceindex+1+2)
+						} else {
+							province = SubString(vv.Location, 0, provinceindex+1)
+						}
 						if province == "广东省" {
 							province = ""
 						}
 						cityindex := UnicodeIndex(vv.Location, "市")
-						// beego.Info(cityindex)
-						city := SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
-						// beego.Info(city)
+						// logs.Info(cityindex)
+						if cityindex == 0 {
+							cityindex = UnicodeIndex(vv.Location, "自治州")
+							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+						} else {
+							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+						}
+						// logs.Info(city)
 						if province == "" && city == "" {
 							city = vv.Location
 						} else {
@@ -1080,6 +1093,7 @@ func (c *BusinessController) BusinessMonthCheckSum3() {
 func (c *BusinessController) BusinessMonthCheck3() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
+	var city, province string
 	var err error
 	limit := c.GetString("limit")
 	if limit == "" {
@@ -1174,14 +1188,25 @@ func (c *BusinessController) BusinessMonthCheck3() {
 						if err != nil {
 							logs.Error(err)
 						}
-						provinceindex := UnicodeIndex(vv.Location, "省") // 查找空格这个字符的位置
-						province := SubString(vv.Location, 0, provinceindex+1)
+						provinceindex := UnicodeIndex(vv.Location, "省") // 查找格这个字符的位置
+						// logs.Info(provinceindex)
+						if provinceindex == 0 {
+							provinceindex = UnicodeIndex(vv.Location, "自治区")
+							province = SubString(vv.Location, 0, provinceindex+1+2)
+						} else {
+							province = SubString(vv.Location, 0, provinceindex+1)
+						}
 						if province == "广东省" {
 							province = ""
 						}
 						cityindex := UnicodeIndex(vv.Location, "市")
-						// beego.Info(cityindex)
-						city := SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+						// logs.Info(cityindex)
+						if cityindex == 0 {
+							cityindex = UnicodeIndex(vv.Location, "自治州")
+							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+						} else {
+							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+						}
 						// beego.Info(city)
 						if province == "" && city == "" {
 							city = vv.Location

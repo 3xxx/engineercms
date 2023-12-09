@@ -6,13 +6,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <title>Mapus地图协作</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
-  <link rel="stylesheet" href="/static/supa-mapus/styles.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css"/>
-  <link rel="stylesheet" href="/static/supa-mapus/leaflet.measure.css"/>
+  <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/> -->
+  <!-- <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.3/leaflet.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/static/supa-mapus/leaflet.css" />
+  <link rel="stylesheet" href="/static/supa-mapus/styles.css" />
+  <!-- <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css"/> -shen4-->
+  <link rel="stylesheet" href="/static/supa-mapus/leaflet-geoman.css" />
+  <link rel="stylesheet" type="text/css" href="/static/supa-mapus/leaflet.measure.css"/>
   <!-- leaflet-elevation -->
-  <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation@2.2.8/dist/leaflet-elevation.min.css"/>
-  
+  <!-- <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation@2.2.8/dist/leaflet-elevation.min.css"/> -->
+  <link rel="stylesheet" href="/static/supa-mapus/leaflet-elevation.min.css" />
   <style type="text/css">
   .toggle-icon {
     top: 10px;
@@ -122,7 +125,7 @@
         <option>16</option>
         <option>17</option>
         <option>18</option>
-        <option>19</option> 
+        <option>19</option>
       </datalist>
     </label>
     <div id="draw-rectangle"><img src="/static/supa-mapus/assets/google-logo.svg">框选范围</div>
@@ -134,7 +137,8 @@
     <div class="more-item" id="xmltogeojson">Xml To GeoJSON File</div>
     <div class="more-item" id="downloadmap">Download BingMap</div>
     <div class="more-item" id="share-button">Share</div>
-    <div class="more-item" id="sign-button">Sign</div>    
+    <div class="more-item" id="sign-button">Sign</div>
+    <div class="more-item" id="clear-button">Clear</div>
     <a href="https://github.com/alyssaxuu/mapus" target="_blank" class="more-item">GitHub repo</a>
     <a href="https://zsj.itdos.net/docs/supa-mapus" target="_blank" class="more-item">About</a>
     <div class="more-item" id="logout">Log out</div>
@@ -203,7 +207,7 @@
     </div>
   </div>
   <span class="toggle-icon" id="icon-close">
-    <svg t="1667393698047" class="icon" viewBox="0 0 1138 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4615" width="200" height="200">
+    <svg t="1667393698047" class="icon" viewBox="0 0 1138 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4615" width="200" height="30">
       <path d="M0 1024 0 910.222222 1137.777778 910.222222 1137.777778 1024 0 1024ZM0 455.111111 1137.777778 455.111111 1137.777778 568.888889 0 568.888889 0 455.111111ZM0 0 1137.777778 0 1137.777778 113.777778 0 113.777778 0 0Z" p-id="4616"></path>
     </svg>
   </span>
@@ -211,7 +215,6 @@
     <input id="search-input" placeholder="Search for a place" />
     <img src="/static/supa-mapus/assets/search-icon.svg">
   </div>
-
   <div id="drawing-controls" class="noselect">
     <div id="cursor-tool" class="tool tool-active">
       <img src="/static/supa-mapus/assets/cursor-tool.svg">
@@ -246,8 +249,18 @@
     <div id="drag-tool" class="tool">
       <img src="/static/supa-mapus/assets/drag-tool.svg">
     </div>
+    <div id="rotate-tool" class="tool">
+      <img src="/static/supa-mapus/assets/rotate-tool.svg">
+    </div>
+    <div id="offset-tool" class="tool">
+      <img src="/static/supa-mapus/assets/offset-tool.svg">
+    </div>
     <div id="profile-tool" class="tool">
       <img src="/static/supa-mapus/assets/profile-tool.svg">
+    </div>
+    <!-- 超级神奇，下面id用navigation-tool的话，就一直闪动，改为navi-tool好了 -->
+    <div id="navi-tool" class="tool">
+      <img src="/static/supa-mapus/assets/marker.svg">
     </div>
     <div id="color-picker">
       <div id="inner-color"></div>
@@ -263,6 +276,9 @@
       </div>
     </div>
   </div>
+  <div id="hidden-tool">
+    <img src="/static/supa-mapus/assets/tool.svg">
+  </div>
   <div id="location-control">
     <img src="/static/supa-mapus/assets/location-icon.svg">
   </div>
@@ -274,13 +290,14 @@
     <div id="observing-name"></div>
   </div>
   <div id="mapDiv"></div>
-
   <!-- 首先引入supabase客户端，这里采用cdn引入 -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <!-- <script src="supabase2.js"></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+  <script src="/static/js/jquery-3.5.1.min.js"></script>
+  <script src="/static/supa-mapus/supabase-js2.js"></script>
+    <!-- <script src="https://unpkg.com/@supabase/supabase-js@2"></script> -->
+  
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
   <script>
-
   // 然后把url和秘钥复制进去可以进行数据库链接
   const { createClient } = supabase
   // const _supabase = createClient('url', 'anon_key')
@@ -306,29 +323,34 @@
     // .subscribe()
   }
   </script>
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+  <!-- <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script> -->
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.3/leaflet.js"></script> -->
+  <script src="/static/supa-mapus/leaflet.js" crossorigin=""></script>
   <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
   <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
-  <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
-  <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
-  <!-- <script src="/static/supa-mapus/leaflet.js"></script> -->
-  <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
-  <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
+  <!-- <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script> -->
+  <script src='/static/supa-mapus/turf.min.js'></script>
   <!-- <script src='/static/supa-mapus/turf.min.js'></script> -->
-  <!-- <script src="/static/supa-mapus/leaflet-geoman.min.js"></script> -->
-  <script src="https://unpkg.com/gcoord@0.3.2/dist/gcoord.js"></script>
-  <!-- <script src="/static/supa-mapus/gcoord.js"></script> -->
+  <!-- <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script> -->
+  <script src="/static/supa-mapus/leaflet-geoman.min.js"></script>
+
+  <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
+  <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
+  <!-- <script src="https://unpkg.com/gcoord@0.3.2/dist/gcoord.js"></script> -->
+  <script src="/static/supa-mapus/gcoord.js"></script>
 
   <script src="/static/supa-mapus/leaflet-bing-layer.js"></script>
   <script src="/static/supa-mapus/leaflet.measure.js"></script>
   <script src="/static/supa-mapus/bingdownload.js"></script>
-  <script src="https://unpkg.com/regenerator-runtime"></script>
-  <script src="https://unpkg.com/leaflet-topography"></script>
-  <script src="https://unpkg.com/@raruto/leaflet-elevation@2.2.8/dist/leaflet-elevation.min.js"></script>
-  <!-- <script src="/static/supa-mapus/regenerator-runtime"></script> -->
-  <!-- <script src="/static/supa-mapus/leaflet-topography"></script> -->
-  <!-- <script src="/static/supa-mapus/leaflet-elevation.min.js"></script> -->
-  <script src="/static/supa-mapus/main.js"></script>
+  <!-- <script src="https://unpkg.com/regenerator-runtime"></script> -->
+  <script src="/static/supa-mapus/runtime.js"></script>
+  <!-- <script src="https://unpkg.com/leaflet-topography"></script> -->
+  <script src="/static/supa-mapus/leaflet-topography.js"></script>
+  <!-- <script src="https://unpkg.com/@raruto/leaflet-elevation@2.2.8/dist/leaflet-elevation.min.js"></script> -->
+  <script src="/static/supa-mapus/leaflet-elevation.min.js"></script>
+  <script src="/static/supa-mapus/main-shen6.js"></script>
+  <script src="/static/supa-mapus/layer/layer.js"></script> 
+  <!-- <script src="/static/supa-mapus/main-shen3.min.js"></script> -->
   <script>
   // 隐藏侧栏
   function init() {
@@ -354,6 +376,169 @@
   }
   init()
 
+  // 手机浏览器通过JavaScript调用百度app导航
+  /**
+   * 浏览器去导航
+   * @param target_lng 目标点经度
+   * @param target_lat 目标点纬度
+   */
+  function H5Navigation(target_lng, target_lat) {
+    var self = this;
+    //起点经度
+    this.start_lng = 0;
+    //起点纬度
+    this.start_lat = 0;
+    //目标经度
+    this.target_lng = target_lng;
+    //目标纬度
+    this.target_lat = target_lat;
+    //获取定位
+    this.getLocation = function() {
+      var options = {
+        enableHighAccuracy: true,
+        maximumAge: 1000
+      }
+      if (navigator.geolocation) {
+        //浏览器支持geolocation
+        navigator.geolocation.getCurrentPosition(self.onSuccessLocation, self.onErrorLocation, options);
+      } else {
+        //浏览器不支持geolocation
+        alert('您的浏览器不支持地理位置定位');
+      }
+    }
+
+    //成功时
+    this.onSuccessLocation = function(position) {
+      //返回用户位置 这里获得的坐标为WGS84坐标
+      //经度
+      self.start_lng = position.coords.longitude;//113.2;
+      // self.start_lng = 113.2;
+      //纬度
+      self.start_lat = position.coords.latitude;// 23.1;
+      // self.start_lat = 23.1;
+      // alert('经度'+self.start_lng+'，纬度'+self.start_lat);
+      //调用百度地图导航
+      // openClient();
+      toBaidu(self.start_lng, self.start_lat, self.target_lng, self.target_lat);
+    }
+
+    //失败时
+    this.onErrorLocation = function(error) {
+      switch (error.code) {
+        case 1:
+          alert("位置服务被拒绝");
+          break;
+        case 2:
+          alert("暂时获取不到位置信息");
+          break;
+        case 3:
+          alert("获取信息超时");
+          break;
+        case 4:
+          alert("未知错误");
+          break;
+      }
+    }
+  }
+
+  var baiduConfig = {
+    scheme_Android: 'bdapp',
+    scheme_IOS: 'baidumap',
+    scheme_web: 'http'
+  };
+
+  // 判断操作系统，返回百度的不同操作系统下的接口
+  function adjustOS() {
+    var ua = window.navigator.userAgent.toLowerCase();
+    return (ua.indexOf('os') > 0) ? baiduConfig.scheme_IOS : baiduConfig.scheme_Android
+  }
+
+  /**
+   * 去百度地图进行导航
+   * @param start_lng 起点经度
+   * @param start_lat 起点纬度
+   * @param target_lng 目标点经度
+   * @param target_lng 目标点经度
+   */
+  function toBaidu(start_lng, start_lat, target_lng, target_lat) {
+    //坐标转换 调用后台API 将WGS84坐标转换为百度的BD09坐标
+    $.get("", { "lng": start_lng, "lat": start_lat, "from": "1", "to": "5" }, function(data) {
+      var start_bd09_lng = start_lng;
+      var start_bd09_lat = start_lat;
+      //调起百度进行导航
+      // location.href = "http://api.map.baidu.com/direction?origin=latlng:" + start_bd09_lat + "," + start_bd09_lng + "|name:我的位置&destination=" + target_lat + "," + target_lng + "&mode=driving&region=中国&output=html&src=webapp.demo.location";
+      // Intent i1 = new Intent();
+      // 驾车路线规划
+      // i1.setData(Uri.parse("baidumap://map/direction?origin=" + start_bd09_lat + "," + start_bd09_lng + "&destination=" + target_lat + "," + target_lng + "&coord_type=wgs84&mode=driving&src=andr.baidu.openAPIdemo"));
+      // startActivity(i1);
+      // 巨坑：不支持“|name:我的位置”，我的位置——应该是准确的自己所在位置的名称
+      var src = adjustOS();
+      if (src == "baidumap") {
+        location.href = "baidumap://map/direction?origin=" + start_bd09_lat + "," + start_bd09_lng + "&destination=" + target_lat + "," + target_lng + "&coord_type=wgs84&mode=driving&src=ios.baidu.openAPIdemo"
+      } else if (src == "bdapp") {
+        location.href = "bdapp://map/direction?origin=" + start_bd09_lat + "," + start_bd09_lng + "&destination=" + target_lat + "," + target_lng + "&coord_type=wgs84&mode=driving&src=andr.baidu.openAPIdemo"
+      } else {
+        location.href = "http://api.map.baidu.com/direction?origin=latlng:" + start_bd09_lat + "," + start_bd09_lng + "&destination=" + target_lat + "," + target_lng + "&mode=driving&region=中国&output=html&src=webapp.demo.location";
+      }
+    })
+  }
+
+  /**
+   * 调用示例
+   */
+  function goNavigation(lat, lng) {
+    // const lat = 23.125178;
+    // const lon = 113.280637;
+    var target_lng = lng; //113.280637; //"目标点经度 WGS84坐标";
+    // var target_lng = 113.280637;
+    var target_lat = lat; //23.125178; //"目标点纬度 WGS84坐标";
+    // var target_lat = 23.125178;
+    //浏览器端去导航
+    new H5Navigation(target_lng, target_lat).getLocation();
+  }
+
+  // http://api.map.baidu.com/direction?origin=latlng:34.264642646862,108.95108518068|name:我家&destination=大雁塔&mode=driving&region=西安&output=html&src=webapp.baidu.openAPIdemo
+
+  // https://lbsyun.baidu.com/index.php?title=uri参考说明
+  //调起百度PC或Web地图，展示"西安市"从（lat:34.264642646862,lng:108.95108518068 ）"我家"到"大雁塔"的驾车路线。
+  // //网页应用调起Android百度地图方式举例
+  // <a href="bdapp://map/direction?region=beijing&origin=39.98871,
+  // 116.43234&destination=西直门&coord_type=bd09ll&mode=driving&src=andr.baidu.openAPIdemo">驾车路线规划</a>
+  //网页应用调起Android百度地图方式举例
+  // <a href="bdapp://map/direction?region=beijing&origin=39.98871,
+  // 116.43234&destination=40.057406655722,116.2964407172&coord_type=bd09ll&mode=walking&src=andr.baidu.openAPIdemo">步行路线规划</a>
+  // 调用ios百度线路规划
+  // <a href="baidumap://map/direction?origin=34.264642646862,108.95108518068&destination=40.007623,116.360582&coord_type=bd09ll&mode=driving&src=ios.baidu.openAPIdemo">路线规划</a>
+  // 另外一种实现
+
+  // var baiduConfig = {
+  //   scheme_Android: 'bdapp://map/marker?location=' + fdata.baiduGpsLat + ',' + fdata.baiduGpsLog + '&title=' + fdata.name + '&content=' + fdata.address,
+  //   scheme_IOS: 'baidumap://map/marker?location=' + fdata.baiduGpsLat + ',' + fdata.baiduGpsLog + '&title=' + fdata.name + '&content=' + fdata.address,
+  //   scheme_web: 'http://api.map.baidu.com/marker?location=' + fdata.baiduGpsLat + ',' + fdata.baiduGpsLog + '&title=' + fdata.name + '&content=' + fdata.address + '&output=html'
+  // };
+  // var timeout = 600;
+  // // 判断操作系统，返回百度的不同操作系统下的接口
+  // function adjustOS() {
+  //   var ua = window.navigator.userAgent.toLowerCase();
+  //   return (ua.indexOf('os') > 0) ? baiduConfig.scheme_IOS : baiduConfig.scheme_Android
+  // }
+
+  // function openClient() {
+  //   var startTime = Date.now();
+  //   var ifr = document.createElement('iframe');
+  //   ifr.src = adjustOS();
+  //   ifr.style.display = 'none';
+  //   document.body.appendChild(ifr);
+  //   var t = setTimeout(function() {
+  //     var endTime = Date.now();
+  //     if (!startTime || endTime - startTime < timeout + 200) {
+  //       window.location.href = baiduConfig.scheme_web;
+  //     }
+  //   }, timeout);
+  //   window.onblur = function() {
+  //     clearTimeout(t);
+  //   }
+  // }
   </script>
 </body>
 

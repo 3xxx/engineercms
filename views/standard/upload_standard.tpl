@@ -10,7 +10,7 @@
   <!-- 网站显示页logo图标 -->
   <link rel="shortcut icon" href="/static/img/elastic.ico">
   <!-- KRAJEE EXPLORER THEME (ADVANCED) -->
-  <title>模板上传</title>
+  <title>标准上传</title>
   <!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
 <link href="/static/bootstrap-fileinput/css/all.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/assets/prod/all-krajee.min.css?ver=201903112143" rel="stylesheet">

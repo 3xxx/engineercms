@@ -339,7 +339,7 @@ func lubancheckRole(ctx *context.Context, urltoken string) {
 // @router /getwxprojects [get]
 // 取出所有项目列表，table中json数据
 // http://127.0.0.1/v1/project/getwxprojects
-// 根据用户角色权限获取项目列表
+// 根据用户角色权限获取项目列表——分页做得不好，没做分页，需要完善
 func (c *ProjController) GetWxProjects() {
 	var uid int64
 	var isadmin bool
@@ -378,6 +378,9 @@ func (c *ProjController) GetWxProjects() {
 		limit1, err = strconv.Atoi(limit)
 		if err != nil {
 			logs.Error(err)
+		}
+		if limit1 <= 15 {
+			limit1 = 150
 		}
 	}
 	page := c.GetString("pageNo")

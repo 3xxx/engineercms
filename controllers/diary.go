@@ -20,7 +20,7 @@ import (
 	// "io/ioutil"
 	"github.com/PuerkitoBio/goquery"
 	"io"
-	"log"
+	// "log"
 
 	"github.com/unidoc/unioffice/common"
 	"github.com/unidoc/unioffice/document"
@@ -33,12 +33,12 @@ type DiaryController struct {
 	web.Controller
 }
 
-//日志列表页
+// 日志列表页
 func (c *DiaryController) Get() {
 	c.TplName = "wxdiaries.tpl"
 }
 
-//日志页面
+// 日志页面
 func (c *DiaryController) GetWxDiary2() {
 	c.TplName = "wxdiary.tpl"
 	var err error
@@ -192,7 +192,7 @@ func (c *DiaryController) AddWxDiary() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /getwxdiaries [get]
-//小程序取得日志列表，分页_珠三角设代用
+// 小程序取得日志列表，分页_珠三角设代用
 func (c *DiaryController) GetWxdiaries() {
 	// id := c.Ctx.Input.Param(":id")
 	// id := web.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
@@ -257,7 +257,7 @@ func (c *DiaryController) GetWxdiaries() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /getwxdiaries2/:id [get]
-//网页页面取得日志列表，返回page rows total
+// 网页页面取得日志列表，返回page rows total
 func (c *DiaryController) GetWxdiaries2() {
 	id := c.Ctx.Input.Param(":id")
 	// id := web.AppConfig.String("wxdiaryprojectid") //"26159" //25002珠三角设代日记id26159
@@ -587,18 +587,18 @@ func (c *DiaryController) HtmlToDoc() {
 				for _, x := range slice2 {
 					img1, err := common.ImageFromFile(x.Src)
 					if err != nil {
-						log.Fatalf("unable to create image: %s", err)
+						logs.Error("unable to create image: %s", err)
 					}
 					img1ref, err := doc.AddImage(img1)
 					if err != nil {
-						log.Fatalf("unable to add image to document: %s", err)
+						logs.Error("unable to add image to document: %s", err)
 					}
 					para = doc.AddParagraph()
 					run = para.AddRun()
 
 					inl, err := run.AddDrawingInline(img1ref)
 					if err != nil {
-						log.Fatalf("unable to add inline image: %s", err)
+						logs.Error("unable to add inline image: %s", err)
 					}
 					inl.SetSize(5.5*measurement.Inch, 5.5*measurement.Inch)
 				}
@@ -653,3 +653,131 @@ func createParaRun(doc *document.Document, s string) document.Run {
 	run.AddText(s)
 	return run
 }
+
+// golang的log.Fatal()和panic()函数的区别
+
+// 在讲两者区别之前我们先看一下os.Exit()函数的定义：
+
+// func Exit(code int)
+
+// Exit causes the current program to exit with the given status code.
+// Conventionally, code zero indicates success, non-zero an error.
+// The program terminates immediately; deferred functions are not run.
+// 注意两点：
+
+// 应用程序马上退出。
+// defer函数不会执行。
+// 再来看log.Fatal函数定义
+
+// func Fatal(v ...interface{})
+
+// Fatal is equivalent to Print() followed by a call to os.Exit(1).
+// 看源代码：go/src/log/log.go
+
+// // Fatal is equivalent to l.Print() followed by a call to os.Exit(1).
+// func (l *Logger) Fatal(v ...interface{}) {
+//     l.Output(2, fmt.Sprint(v...))
+//     os.Exit(1)
+// }
+// 总结起来log.Fatal函数完成：
+
+// 打印输出内容
+// 退出应用程序
+// defer函数不会执行
+// 和os.Exit()相比多了第一步。
+
+// 再来看内置函数panic()函数定义：
+
+// // The panic built-in function stops normal execution of the current
+// // goroutine. When a function F calls panic, normal execution of F stops
+// // immediately. Any functions whose execution was deferred by F are run in
+// // the usual way, and then F returns to its caller. To the caller G, the
+// // invocation of F then behaves like a call to panic, terminating G's
+// // execution and running any deferred functions. This continues until all
+// // functions in the executing goroutine have stopped, in reverse order. At
+// // that point, the program is terminated and the error condition is reported,
+// // including the value of the argument to panic. This termination sequence
+// // is called panicking and can be controlled by the built-in function
+// // recover.
+// func panic(v interface{})
+// 注意几点：
+
+// 函数立刻停止执行 (注意是函数本身，不是应用程序停止)
+// defer函数被执行
+// 返回给调用者(caller)
+// 调用者函数假装也收到了一个panic函数，从而
+// 4.1 立即停止执行当前函数
+// 4.2 它defer函数被执行
+// 4.3 返回给它的调用者(caller)
+// ...(递归重复上述步骤，直到最上层函数)
+// 应用程序停止。
+// panic的行为
+// 简单的总结panic()就有点类似java语言的exception的处理，因而panic的行为和java的exception处理行为就非常类似，行为结合catch，和final语句块的处理流程。
+
+// 下面给几个例子：
+
+// 例子1：log.Fatal
+
+// package main
+
+// import (
+//     "log"
+// )
+
+// func foo() {
+//     defer func () { log.Print("3333")} ()
+//     log.Fatal("4444")
+// }
+
+// func main() {
+//     log.Print("1111")
+//     defer func () { log.Print("2222")} ()
+//     foo()
+//     log.Print("9999")
+// }
+// 运行结果：
+
+// $ go build && ./main
+// 2018/08/20 17:48:44 1111
+// 2018/08/20 17:48:44 4444
+// 可见defer函数的内容并没有被执行，程序在log.Fatal(...)处直接就退出了。
+
+// 例子2：panic()函数
+
+// package main
+
+// import (
+//     "log"
+// )
+
+// func foo() {
+//     defer func () { log.Print("3333")} ()
+//     panic("4444")
+// }
+
+// func main() {
+//     log.Print("1111")
+//     defer func () { log.Print("2222")} ()
+//     foo()
+//     log.Print("9999")
+// }
+// 运行结果：
+
+// $ go build && ./main
+// 2018/08/20 17:49:28 1111
+// 2018/08/20 17:49:28 3333
+// 2018/08/20 17:49:28 2222
+// panic: 4444
+
+// goroutine 1 [running]:
+// main.foo()
+//         /home/.../main.go:9 +0x55
+// main.main()
+//         /home/.../main.go:15 +0x82
+// 可见所有的defer都被调用到了，函数根据父子调用关系所有的defer都被调用直到最上层。
+// 当然如果其中某一层函数定义了recover()功能，那么panic会在那一层函数里面被截获，然后由recover()定义如何处理这个panic，是丢弃，还是向上再抛出。(是不是和exception的处理机制一模一样呢？)
+
+// 作者：CodingCode
+// 链接：https://www.jianshu.com/p/f85ecae6e7df
+// 来源：简书
+// 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

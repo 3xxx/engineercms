@@ -2946,7 +2946,7 @@
             return index + 1
           }
         }, {
-          field: 'name',
+          field: 'name', // 这里有问题！！和Nickname有矛盾！！
           title: '用户名/角色名',
           halign: 'center',
           align: 'center',
@@ -3067,12 +3067,16 @@
     $("#addusers").click(function() {
       if ($("#dropdownMenu1").hasClass("fa fa-pencil")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=1' });
+        role=1
       } else if ($("#dropdownMenu1").hasClass("fa fa-commenting-o")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=2' });
+        role=2
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=3' });
+        role=3
       } else if ($("#dropdownMenu1").hasClass("fa fa-eye-slash")) {
         $tableLeft.bootstrapTable('refresh', { url: '/v1/wx/user/0?role=4' });
+        role=4
       }
       $('#users').modal({
         show: true,
@@ -3084,12 +3088,16 @@
     $("#addroles").click(function() {
       if ($("#dropdownMenu2").hasClass("fa fa-pencil")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=1' });
+        role=1
       } else if ($("#dropdownMenu2").hasClass("fa fa-commenting-o")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=2' });
+        role=2
       } else if ($("#dropdownMenu2").hasClass("fa fa-eye")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=3' });
+        role=3
       } else if ($("#dropdownMenu2").hasClass("fa fa-eye-slash")) {
         $tableLeft1.bootstrapTable('refresh', { url: '/admin/role/get?role=4' });
+        role=4
       }
       $('#roles').modal({
         show: true,

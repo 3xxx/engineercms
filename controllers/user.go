@@ -146,6 +146,11 @@ type userTableserver struct {
 // 如果不带id则取到所有用户
 // 如果带id，则取一个用户
 func (c *UserController) User() {
+	_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"msg": "非管理员权限，无法查询用户信息！", "data": "请登录管理员。"}
+		c.ServeJSON()
+	}
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -171,15 +176,13 @@ func (c *UserController) User() {
 		} else {
 			offset = (page1 - 1) * limit1
 		}
-
-		_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
-		if !isadmin {
-			c.Redirect("/login", 301)
-		}
 		searchText := c.GetString("searchText")
 		users, count, err := m.GetUsersPage(limit1, offset, "Username", searchText)
 		if err != nil {
 			logs.Error(err)
+		}
+		for _, w := range users {
+			w.Password = "0123456789abcdefghijklmnopqrstuv"
 		}
 		//如果设置了role,用于onlyoffice/officeview的权限设置
 		role := c.GetString("role")
@@ -207,6 +210,7 @@ func (c *UserController) User() {
 		// var users1 []*m.User
 		users := make([]*m.User, 1)
 		users[0] = &user
+		users[0].Password = "0123456789abcdefghijklmnopqrstuv"
 		// users = append(users, &user...)
 		c.Data["json"] = users //取到一个用户数据，不是数组，所以table无法显示
 		c.ServeJSON()
@@ -624,6 +628,7 @@ func (c *UserController) Usermyself() {
 	}
 	users := make([]*m.User, 1)
 	users[0] = &user
+	users[0].Password = "0123456789abcdefghijklmnopqrstuv"
 	c.Data["json"] = users
 	c.ServeJSON()
 }
