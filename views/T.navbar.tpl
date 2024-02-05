@@ -239,6 +239,9 @@ a.navbar-brand {
       <li {{if .IsPassProject}} class="active" {{end}}>
         <a href="/v1/passproject/getpassproject" title="项目" target="_blank">项目</a>
       </li>
+      <li {{if .IsFreeCAD}} class="active" {{end}}>
+        <a href="/v1/freecad/freecad" title="FreeCAD" target="_blank">FreeCAD</a>
+      </li>
     </ul>
     <div class="pull-right">
       <ul class="nav navbar-nav navbar-right">

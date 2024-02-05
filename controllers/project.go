@@ -2839,8 +2839,8 @@ func createtemplet(parentpath string, nodes []*models.FileNode) {
 // 项目头像
 func ProjectAvatar(text, filename string) error {
 	// 秦修改了源码，支持字的大小，下面第二个参数是字的大小
-	a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf", 26.0) //./resource/fonts/Hiragino_Sans_GB_W3.ttf
-	// a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf")
+	// a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf", 26.0) //./resource/fonts/Hiragino_Sans_GB_W3.ttf
+	a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf")
 	strData, err := url.QueryUnescape(text)
 	if err != nil {
 		logs.Error(err)

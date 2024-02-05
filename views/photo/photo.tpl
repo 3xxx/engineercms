@@ -124,31 +124,38 @@
   <script type="text/javascript" src="/static/photo/theme.js"></script>
   <script type="text/javascript" src="/static/photo/wp-embed.min.js?ver=4.8"></script>
   <script type="text/javascript">
-  var i = 2;
+  var i = 1;
   var flag = false;//防止多次调用下拉触发事件
+  var key = "";
 
   $(function() {
     var loadData = function(ii) {
       $.getJSON("/v1/wx/getmonthphotodata?page=" + ii, function(data) {
         // console.log(data)
         $.each(data, function(i, photolist) {
-          console.log(photolist.PhotoLists)
+          // console.log(photolist.PhotoLists)
           if (photolist.PhotoLists.length == 0) {
             $("#loadMore").removeClass('hidden').text('已加载全部数据！');
+            key = "over"
+          } else if (data.length > 0) {
+            // array = tl["start"].split("-");
+            // console.log(photolist)
+            // console.log(photolist.YearMonth)
+            // var _timeline_head_p_small_i_ = $("<i class='glyphicon glyphicon-time'></i>");
+            $(".category").append("<h2>"+photolist.YearMonth+"</h2>")
+            var _timeline_invert_=""
+
+            $.each(photolist.PhotoLists, function(i, photolists) {
+              _timeline_invert_ = _timeline_invert_+'<div class="col-xs-6 col-sm-4 col-lg-3 waterfallGrid"><a href="/v1/wx/photodetail?keywords='+photolists.YearMonthDay+'" target="_blank"><div class="post-photo album"><div class="img"><div style="background-image: url(&quot;'+photolists.Url+'&quot;); height: 249px;" ratio="1" realratio="1"></div></div><h3 class="title">'+photolists.YearMonthDay+'</h3> </div></a></div>'
+            });
+            $(".category").append('<div class="row">'+_timeline_invert_+'</div>')
+          };
+
+          if (data.length >= 10) {
+            i = i + 1;
+          } else if (data.length < 10) {
+            key = "over"
           }
-          // array = tl["start"].split("-");
-          // console.log(photolist)
-          // console.log(photolist.YearMonth)
-          // var _timeline_head_p_small_i_ = $("<i class='glyphicon glyphicon-time'></i>");
-          $(".category").append("<h2>"+photolist.YearMonth+"</h2>")
-          var _timeline_invert_=""
-
-          $.each(photolist.PhotoLists, function(i, photolists) {
-            _timeline_invert_ = _timeline_invert_+'<div class="col-xs-6 col-sm-4 col-lg-3 waterfallGrid"><a href="/v1/wx/photodetail?keywords='+photolists.YearMonthDay+'" target="_blank"><div class="post-photo album"><div class="img"><div style="background-image: url(&quot;'+photolists.Url+'&quot;); height: 249px;" ratio="1" realratio="1"></div></div><h3 class="title">'+photolists.YearMonthDay+'</h3> </div></a></div>'
-          });
-
-          $(".category").append('<div class="row">'+_timeline_invert_+'</div>')
-
           // if ($(window).height() >= document.documentElement.scrollHeight) {
           //没有出现滚动条,继续加载下一页
           // loadData(i);
@@ -172,7 +179,7 @@
           console.log("触底了!!!!");
           //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
           loadData(i);
-          i = i + 1;
+          // i = i + 1;
           setTimeout(()=>{
             flag = false;
           },500);
@@ -182,7 +189,7 @@
     tcScroll();
   });
 
-  //页面滚到底部异步加载下一页数据
+  //页面滚到底部异步加载下一页数据——这个没用
   $(window).scroll(function() {
     //已经滚动到上面的页面高度
     var scrollTop = parseFloat($(this).scrollTop()),

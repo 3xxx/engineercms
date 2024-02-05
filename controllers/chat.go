@@ -126,8 +126,8 @@ func handleMessages() {
 // 用户头像，用流stream的方式
 func (c *ChatController) Avatar() {
 	// 秦修改了源码，支持字的大小，下面第二个参数是字的大小
-	a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf", 26.0) //./resource/fonts/Hiragino_Sans_GB_W3.ttf
-	// a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf")
+	// a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf", 26.0) //./resource/fonts/Hiragino_Sans_GB_W3.ttf
+	a := avatar.New("./static/fonts/Hiragino_Sans_GB_W3.ttf")
 	text := c.Ctx.Input.Param(":text")
 	// beego.Info(text)
 	strData, err := url.QueryUnescape(text) //

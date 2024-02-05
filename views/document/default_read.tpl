@@ -26,7 +26,24 @@
   <link href="{{cdncss "/static/mindoc/katex/katex.min.css"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/css/print.css" "version"}}" media="print" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/editor.md/lib/codemirror/codemirror.min.css" "version"}}" rel="stylesheet">
-  <script type="text/javascript">
+
+
+  <!-- <script src="{{cdnjs "/static/iframe-resizer/iframeResizer.min.js"}}" type="text/javascript"></script> -->
+
+<!--   <style>
+  iframe {
+    width: 10px;
+    min-width: 100%;
+  }
+</style> -->
+
+<!-- <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe> -->
+<script>
+  // iFrameResize({ log: true,bodyMargin:10 }, '#myIframe')
+  // $('iframe').iFrameResize([{log: true}]);
+</script>
+
+    <script type="text/javascript">
         window.IS_ENABLE_IFRAME = '{{conf "enable_iframe" }}' === 'true';
         window.BASE_URL = '{{urlfor "HomeController.Index" }}';
         window.IS_DOCUMENT_INDEX = '{{if .IS_DOCUMENT_INDEX}}true{{end}}' === 'true';
@@ -48,6 +65,14 @@
             .btn-mobile{
                 display: none;
             }
+        }
+
+        div.embed_viewer
+        {
+            float: left;
+            border: 1px solid #eeeeee;
+            width: 640px;
+            height: 480px;
         }
     </style>
 </head>
@@ -179,6 +204,22 @@
                         {{.Content}}
                     </div>
 
+            <!-- <div class="online_3d_viewer"
+        style="width: 800px; height: 600px;"
+        model="/static/online3dview/assets/models/DamagedHelmet.glb">
+    </div> -->
+
+    <!-- <div class="online_3d_viewer"
+        style="width: 800px; height: 600px;"
+        model="/static/online3dview/assets/models/DamagedHelmet.glb">
+    </div> -->
+
+<!--     <iframe id="myIframe"
+        src="http://127.0.0.1:8081/v1/freecad/online3dviewembed#model=/static/online3dview/assets/models/DamagedHelmet.glb"
+        width=800 height=600
+        style="border:1px solid #eeeeee;">
+    </iframe> -->
+
                     {{if .Model.IsDisplayComment}}
                     <div id="articleComment" class="m-comment{{if .IS_DOCUMENT_INDEX}} not-show-comment{{end}}">
                         <!-- 评论列表 -->
@@ -300,6 +341,7 @@
   <script src="{{cdnjs "/static/mindoc/js/splitbar.js" "version"}}" type="text/javascript"></script>
   <script src="{{cdnjs "/static/mindoc/js/custom-elements-builtin-0.6.5.min.js"}}" type="text/javascript"></script>
   <script src="{{cdnjs "/static/mindoc/js/x-frame-bypass-1.0.2.js"}}" type="text/javascript"></script>
+
   
 <!--   <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.7.11/dist/browser/view.min.js"></script>

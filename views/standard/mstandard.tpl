@@ -90,7 +90,7 @@
       <hr />
     </div>
     <div class="col-xs-12 col-sm-12 text-center">
-      <h4>Copyright © 2016~2023 EngineerCMS</h4>
+      <h4>Copyright © 2016~2024 EngineerCMS</h4>
     </div>
   </div>
   <!-- 使用说明 -->

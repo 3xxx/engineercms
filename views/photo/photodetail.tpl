@@ -142,7 +142,7 @@
   <div class="mainPageNav"></div>
 </div>
 <div id="footer" class="container">
-  <span class="text">Copyright &copy; 2022-2023 工程相册
+  <span class="text">Copyright &copy; 2022-2024 工程相册
     <a href=https://zsj.itdos.net/ target='_blank'>水务设计</a>
     <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a>
     <a href="/sitemap.xml" target="_blank">XML地图</a>

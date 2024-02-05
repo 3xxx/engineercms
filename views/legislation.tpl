@@ -141,7 +141,7 @@
     <a href="/">首页</a>
     <span class="c_fnl">|</span>
     <a href="https://github.com/3xxx">源码托管</a>
-    <p class="c_fcopyright">© 2016~2023 <a href="https://github.com/3xxx" target="_blank" rel="nofollow">3xxx</a> QQ504284</p>
+    <p class="c_fcopyright">© 2016~2024 <a href="https://github.com/3xxx" target="_blank" rel="nofollow">3xxx</a> QQ504284</p>
   </div>
   <script type="text/javascript">
   var global = {};

@@ -42,8 +42,8 @@ require (
 	github.com/unidoc/unioffice v1.21.1
 	github.com/xuri/excelize/v2 v2.6.1
 	golang.org/x/crypto v0.5.0
-	golang.org/x/net v0.5.0
-	golang.org/x/text v0.6.0
+	golang.org/x/net v0.7.0
+	golang.org/x/text v0.7.0
 	google.golang.org/appengine v1.6.7
 	gopkg.in/ldap.v2 v2.5.1
 	gorm.io/driver/sqlite v1.4.4
@@ -103,8 +103,8 @@ require (
 	github.com/u2takey/go-utils v0.3.1 // indirect
 	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
-	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539 // indirect
-	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/image v0.5.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect
