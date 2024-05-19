@@ -8,12 +8,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/3xxx/engineercms/graphics"
-	"github.com/3xxx/engineercms/models"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/i18n"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/graphics"
+	"github.com/3xxx/engineercms/models"
+	"github.com/3xxx/engineercms/controllers/utils"	
 )
 
 type SettingController struct {
@@ -79,6 +80,9 @@ func (c *SettingController) Password() {
 			c.JsonResult(6007, i18n.Tr(c.Lang, "message.pwd_encrypt_failed"))
 		}
 		c.Member.Password = pwd
+		if c.Member.AuthMethod == "" {
+			c.Member.AuthMethod = "local"
+		}
 		if err := c.Member.Update(); err != nil {
 			c.JsonResult(6008, err.Error())
 		}

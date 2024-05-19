@@ -28,12 +28,19 @@ func SearchProject(key string) (proj []*Project, err error) {
 }
 
 // 搜索本地成果
-func SearchProduct(key string) (prod []*Product, err error) {
+func SearchProduct(key, searchtext string) (prod []*Product, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	var cond4 *orm.Condition
+	if searchtext != "" {
+		cond3 := cond.Or("Code__contains", searchtext).Or("Title__contains", searchtext).Or("Label__contains", searchtext).Or("Principal__contains", searchtext)
+		cond4 = cond.AndCond(cond1).AndCond(cond3)
+	} else {
+		cond4 = cond1
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	qs = qs.SetCond(cond1)
+	qs = qs.SetCond(cond4)
 	_, err = qs.Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	if err != nil {
 		return prod, err
@@ -42,12 +49,19 @@ func SearchProduct(key string) (prod []*Product, err error) {
 }
 
 // 搜索本地成果,分页
-func SearchProductPage(limit, offset int64, key string) (prod []*Product, err error) {
+func SearchProductPage(limit, offset int64, key, searchtext string) (prod []*Product, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	var cond4 *orm.Condition
+	if searchtext != "" {
+		cond3 := cond.Or("Code__contains", searchtext).Or("Title__contains", searchtext).Or("Label__contains", searchtext).Or("Principal__contains", searchtext)
+		cond4 = cond.AndCond(cond1).AndCond(cond3)
+	} else {
+		cond4 = cond1
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	qs = qs.SetCond(cond1)
+	qs = qs.SetCond(cond4)
 	_, err = qs.Distinct().Limit(limit, offset).OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	if err != nil {
 		return prod, err
@@ -66,12 +80,19 @@ func SearchProductPage(limit, offset int64, key string) (prod []*Product, err er
 }
 
 // 搜索本地成果,分页
-func SearchProductCount(key string) (count int64, err error) {
+func SearchProductCount(key, searchtext string) (count int64, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
+	var cond4 *orm.Condition
+	if searchtext != "" {
+		cond3 := cond.Or("Code__contains", searchtext).Or("Title__contains", searchtext).Or("Label__contains", searchtext).Or("Principal__contains", searchtext)
+		cond4 = cond.AndCond(cond1).AndCond(cond3)
+	} else {
+		cond4 = cond1
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	qs = qs.SetCond(cond1)
+	qs = qs.SetCond(cond4)
 	count, err = qs.Distinct().Count()
 	if err != nil {
 		return count, err
@@ -146,7 +167,7 @@ func SearchProjProduct(pid, limit, offset int64, key, searchtext string) (count 
 // 搜索某个项目里的成果，分页，
 // 递归出所有子孙项目，这个厉害
 // 这个条件不行，id1或id2或id3 and code 或key 或
-func SearchProjProductPage(pid, limit, offset int64, key string) (prod []*Product, err error) {
+func SearchProjProductPage(pid, limit, offset int64, key, searchtext string) (prod []*Product, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("ProjectId", pid)
 	//查出所有子孙项目
@@ -156,10 +177,18 @@ func SearchProjProductPage(pid, limit, offset int64, key string) (prod []*Produc
 	for _, v := range sonproj {
 		cond1 = cond1.Or("ProjectId", v.Id)
 	}
+	var cond4 *orm.Condition
 	if key != "" {
 		cond2 := cond.Or("Code__contains", key).Or("Title__contains", key).Or("Label__contains", key).Or("Principal__contains", key)
 		// cond1 = cond1.AndCond(cond2)// 这里会出问题
-		cond1 = cond.AndCond(cond1).AndCond(cond2) // 这里是正确的写法
+		// cond1 = cond.AndCond(cond1).AndCond(cond2) // 这里是正确的写法
+
+		if searchtext != "" {
+			cond3 := cond.Or("Code__contains", searchtext).Or("Title__contains", searchtext).Or("Label__contains", searchtext).Or("Principal__contains", searchtext)
+			cond4 = cond.AndCond(cond1).AndCond(cond2).AndCond(cond3)
+		} else {
+			cond4 = cond.AndCond(cond1).AndCond(cond2)
+		}
 		// cond2 := cond.AndCond(cond1).OrCond(cond.And("name", "slene"))
 		//循环
 		// cond2 := cond.Or("ProjectId", pid1).Or("ProjectId", pid2)……
@@ -177,7 +206,7 @@ func SearchProjProductPage(pid, limit, offset int64, key string) (prod []*Produc
 	//(...or...or...)and()
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	qs = qs.SetCond(cond1)
+	qs = qs.SetCond(cond4)
 	//循环这个id下所有项目？
 	_, err = qs.Limit(limit, offset).Distinct().OrderBy("-created").All(&prod) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	if err != nil {

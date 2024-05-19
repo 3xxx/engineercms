@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"errors"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/models"
+	"strings"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/i18n"
-	"strings"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/models"
 )
 
 type TemplateController struct {

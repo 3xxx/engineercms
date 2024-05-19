@@ -93,9 +93,20 @@ type ServiceValidateController struct {
 
 // 登录页面
 func (c *LoginController) Login() {
-
+	var err error
 	url := c.GetString("url")
-	// beego.Info(url)
+	logs.Info(url)
+	if url == "" {
+		url, err = web.AppConfig.String("redirect")
+		if err != nil {
+			logs.Error(err)
+		}
+		switch url {
+		//登录后默认跳转……
+		case "IsIndex":
+			url = "/index"
+		}
+	}
 	c.Data["Url"] = url
 	u := c.Ctx.Input.UserAgent()
 	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)

@@ -1,9 +1,10 @@
 package models
 
 import (
-	"github.com/3xxx/engineercms/controllers/utils/filetil"
-	"github.com/beego/beego/v2/client/orm"
 	"strings"
+
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/3xxx/engineercms/controllers/utils/filetil"
 )
 
 type AttachmentResult struct {

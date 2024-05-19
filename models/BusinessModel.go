@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-//出差登记信息表
+// 出差登记信息表
 type Business struct {
 	// gorm.Model
 	ID               uint      `json:"id" gorm:"primary_key"`
@@ -34,7 +34,7 @@ type Business struct {
 	Overtime int
 }
 
-//出差人员表
+// 出差人员表
 type BusinessUser struct {
 	gorm.Model
 	// ID     int    `gorm:"primary_key"`
@@ -189,7 +189,7 @@ func GetAllBusiness2(projectid int64) (business []Business, err error) {
 	return business, err
 }
 
-//打卡记录写入数据库
+// 打卡记录写入数据库
 func BusinessCheck(businessid uint, userid int64, Lat, Lng float64, PhotoUrl, location string, SelectDate time.Time) (id uint, err error) {
 	db := _db //GetDB()
 	//查询数据库中有无打卡
@@ -222,7 +222,7 @@ func GetBusinessCheck(businessid, UserId int64, SelectMonth1, SelectMonth2 time.
 	return check, err
 }
 
-//按月统计**************
+// 按月统计**************
 func GetBusinessCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset int) (business []Business, err error) {
 	db := _db //GetDB()
 	err = db.Order("business.updated_at desc").
@@ -262,6 +262,10 @@ func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
 //distinct和limit不能和sql组合
 // }
 
+// https://gorm.io/zh_CN/docs/belongs_to.html
+// 20240331 外键，就是当前表中有个从表的ID字段，再引用从表进来，默认不需要foreignkey和references,只有需要改变字段名称的时候才需要重新定义
+// references是外键约束，并非引用https://www.liaoxuefeng.com/wiki/1177760294764384/1218728424164736
+
 // 注释：Has Many一对多的外键、引用
 // 1.默认外键是 从表中的字段为 主表模型的类型（type）加上其 主键（ID） 生成 ，如：从表card中的UserID
 // 2.可以改变外键`gorm:"foreignKey:UserName"`
@@ -285,7 +289,7 @@ func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
 // type User struct {
 //   gorm.Model
 //   MemberNumber string
-//   CreditCards  []CreditCard `gorm:"foreignKey:UserNumber;references:MemberNumber"`
+//   CreditCards  []CreditCard `gorm:"foreignKey:UserNumber;references:MemberNumber"`// 写反了
 // }
 
 // type CreditCard struct {
@@ -294,7 +298,7 @@ func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
 //   UserNumber string——外键，这个值等于User表中的MemberNumber时，则查询到
 // }
 
-// 奶奶的，为啥和官网例子相反？？
+// 奶奶的，为啥和官网例子相反？？——官网是对的，外键是本表中的某个字段，即CategoryId字段
 // 文章
 // type Topics struct {
 // 	Id         int        `gorm:"primary_key"`

@@ -91,6 +91,7 @@
       url : '/v1/wx/getwxfinance2/170592',
       method: 'get',
       search:'true',
+      classes: "table table-striped", //这里设置表格样式
       showRefresh:'true',
       showToggle:'true',
       showColumns:'true',

@@ -251,7 +251,7 @@
         var param = {
           limit: params.pageSize, //每页多少条数据
           pageNo: params.pageNumber, // 页码
-          searchText: $(".search .form-control").val()
+          searchText: params.searchText // $(".search .form-control").val()
         };
         //搜索框功能
         //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
@@ -353,7 +353,7 @@
       //     var param = {
       //       limit: params.pageSize, //每页多少条数据
       //       pageNo: params.pageNumber, // 页码
-      //       searchText: $(".search .form-control").val()
+      //       searchText: params.searchText // $(".search .form-control").val()
       //     };
       //     return param;
       //   },

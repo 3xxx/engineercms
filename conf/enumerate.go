@@ -48,6 +48,8 @@ const (
 	BookEditor
 	//观察者
 	BookObserver
+	//未指定关系
+	BookRoleNoSpecific
 )
 
 //项目角色
@@ -127,14 +129,19 @@ func GetUploadFileExt() []string {
 func GetUploadFileSize() int64 {
 	size := web.AppConfig.DefaultString("upload_file_size", "0")
 
-	if strings.HasSuffix(size, "MB") {
+	if strings.HasSuffix(size, "TB") {
 		if s, e := strconv.ParseInt(size[0:len(size)-2], 10, 64); e == nil {
-			return s * 1024 * 1024
+			return s * 1024 * 1024 * 1024 * 1024
 		}
 	}
 	if strings.HasSuffix(size, "GB") {
 		if s, e := strconv.ParseInt(size[0:len(size)-2], 10, 64); e == nil {
 			return s * 1024 * 1024 * 1024
+		}
+	}
+	if strings.HasSuffix(size, "MB") {
+		if s, e := strconv.ParseInt(size[0:len(size)-2], 10, 64); e == nil {
+			return s * 1024 * 1024
 		}
 	}
 	if strings.HasSuffix(size, "KB") {
@@ -143,7 +150,7 @@ func GetUploadFileSize() int64 {
 		}
 	}
 	if s, e := strconv.ParseInt(size, 10, 64); e == nil {
-		return s * 1024
+		return s
 	}
 	return 0
 }

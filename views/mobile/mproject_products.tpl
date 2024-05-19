@@ -96,6 +96,7 @@
       $("#table0").bootstrapTable({
         url: '/project/products/{{.Id}}',
         method: 'get',
+        classes: "table table-striped", //这里设置表格样式
         // search: 'true',
         // showRefresh: 'true',
         // showToggle: 'true',
@@ -115,7 +116,7 @@
           var param = {
             limit: params.pageSize, //每页多少条数据
             pageNo: params.pageNumber, // 页码
-            searchText: $(".search .form-control").val()
+            searchText: params.searchText // $(".search .form-control").val()
           };
           return param;
         },

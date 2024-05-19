@@ -44,6 +44,9 @@ func (c *CommentController) Create() {
 
 	m := models.NewComment()
 	m.DocumentId = id
+	if c.Member == nil {
+		c.JsonResult(1, "请先登录，再评论")
+	}
 	if len(c.Member.RealName) != 0 {
 		m.Author = c.Member.RealName
 	} else {

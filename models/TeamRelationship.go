@@ -2,11 +2,12 @@ package models
 
 import (
 	"errors"
-	"github.com/3xxx/engineercms/conf"
+	"time"
 	//beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"time"
+	"github.com/3xxx/engineercms/conf"	
+
 )
 
 type TeamRelationship struct {
@@ -216,8 +217,8 @@ func (m *TeamRelationship) FindNotJoinBookByBookIdentify(bookId int, teamName st
 	o := orm.NewOrm()
 	sql := `select *
 from md_teams as team
-where team.team_id not in (select rel.team_id from md_team_relationship as rel where rel.book_id = ?)
-and team.team_name like ?
+where team.team_id not in (select rel.team_id from md_team_relationship as rel where rel.book_id = ?) 
+and team.team_name like ? 
 order by team.team_id desc limit ?;`
 	teams := make([]*Team, 0)
 

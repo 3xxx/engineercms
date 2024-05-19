@@ -18,7 +18,7 @@ type SearchController struct {
 	web.Controller
 }
 
-//搜索项目
+// 搜索项目
 func (c *SearchController) SearchProject() { //search用的是get方法
 	key := c.GetString("keyword")
 	if key != "" {
@@ -84,6 +84,7 @@ func (c *SearchController) SearchProjectProduct() { //search用的是get方法
 // @Title get a project's products search list
 // @Description get a project's products search by page
 // @Param keyword query string true "The keyword of products"
+// @Param searchText query string false "The searchText of products"
 // @Param pageNo query string false "The pageNo of drawings list"
 // @Param limit query string false "The limit of products list"
 // @Param productid query string true "The id of project"
@@ -256,7 +257,8 @@ func (c *SearchController) SearchProduct() {
 
 // @Title get all projects' products search list
 // @Description get all projects' products search by page
-// @Param keyword query string false "The keyword of products"
+// @Param keyword query string true "The keyword of products"
+// @Param searchText query string false "The searchText of products"
 // @Param limit query string false "The limit of products list"
 // @Param pageNo query string false "The page of products list"
 // @Success 200 {object} models.GetProductsPage
@@ -293,27 +295,14 @@ func (c *SearchController) SearchProductData() {
 	}
 
 	key := c.GetString("keyword")
+	searchText := c.GetString("searchText")
 	if key != "" {
 		// products, err := models.SearchProduct(key)
-		products, err := models.SearchProductPage(limit1, offset, key)
+		products, err := models.SearchProductPage(limit1, offset, key, searchText)
 		if err != nil {
 			logs.Error(err.Error)
 		}
-		//由product取得proj
-		//取目录本身
-		// proj, err := models.GetProj(products.ProjectId)
-		// if err != nil {
-		// 	logs.Error(err)
-		// }
-		//根据目录id取出项目id，以便得到同步ip
-		// array := strings.Split(proj.ParentIdPath, "-")
-		// projid, err := strconv.ParseInt(array[0], 10, 64)
-		// if err != nil {
-		// 	logs.Error(err)
-		// }
-		//由proj id取得url
 
-		// beego.Info(Url)
 		link := make([]ProductLink, 0)
 		Attachslice := make([]AttachmentLink, 0)
 		Pdfslice := make([]PdfLink, 0)
@@ -386,7 +375,7 @@ func (c *SearchController) SearchProductData() {
 			Articleslice = make([]ArticleContent, 0)
 			link = append(link, linkarr...)
 		}
-		count, err := models.SearchProductCount(key)
+		count, err := models.SearchProductCount(key, "")
 		if err != nil {
 			logs.Error(err.Error)
 		}
@@ -441,18 +430,18 @@ func (c *SearchController) SearchWxDrawings() {
 	var products []*models.Product
 	if key != "" {
 		if pidNum == 0 { //搜索所有成果
-			products, err = models.SearchProductPage(limit1, offset, key)
+			products, err = models.SearchProductPage(limit1, offset, key, "")
 			if err != nil {
 				logs.Error(err.Error)
 			}
 		} else {
-			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
+			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key, "")
 			if err != nil {
 				logs.Error(err.Error)
 			}
 		}
 	} else {
-		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
+		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key, "")
 		if err != nil {
 			logs.Error(err.Error)
 		}
@@ -597,7 +586,7 @@ func (c *SearchController) GetWxPdfList() {
 		if err != nil {
 			logs.Error(err)
 		}
-		products, err = models.SearchProjProductPage(pidNum, limit1, offset, "")
+		products, err = models.SearchProjProductPage(pidNum, limit1, offset, "", "")
 		if err != nil {
 			logs.Error(err.Error)
 		}
@@ -606,7 +595,7 @@ func (c *SearchController) GetWxPdfList() {
 		if err != nil {
 			logs.Error(err)
 		}
-		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
+		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key, "")
 		if err != nil {
 			logs.Error(err.Error)
 		}
@@ -703,18 +692,18 @@ func (c *SearchController) SearchWxProducts() {
 	var products []*models.Product
 	if key != "" {
 		if pidNum == 0 { //搜索所有成果
-			products, err = models.SearchProductPage(limit1, offset, key)
+			products, err = models.SearchProductPage(limit1, offset, key, "")
 			if err != nil {
 				logs.Error(err.Error)
 			}
 		} else {
-			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
+			products, err = models.SearchProjProductPage(pidNum, limit1, offset, key, "")
 			if err != nil {
 				logs.Error(err.Error)
 			}
 		}
 	} else {
-		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key)
+		products, err = models.SearchProjProductPage(pidNum, limit1, offset, key, "")
 		if err != nil {
 			logs.Error(err.Error)
 		}
@@ -816,7 +805,7 @@ func (c *SearchController) SearchWxProducts() {
 	c.ServeJSON()
 }
 
-//未修改
+// 未修改
 func (c *SearchController) SearchProjects() {
 	limit := "15"
 	limit1, err := strconv.ParseInt(limit, 10, 64)
@@ -851,7 +840,7 @@ func (c *SearchController) SearchProjects() {
 	}
 }
 
-//搜索wiki
+// 搜索wiki
 func (c *SearchController) SearchWiki() { //search用的是get方法
 	tid := c.GetString("wikiname")
 	if tid != "" {

@@ -367,8 +367,8 @@ field：点击列的 field 名称 -->
     $(document).ready(function() {
       // 批量上传宽幅图片
       $("#addButton1").click(function() {
-        if ({ {.role } } != 1) {
-          alert("权限不够！" + { {.role } });
+        if ({{.role }} != 1) {
+          alert("权限不够！" + {{.role }});
           return;
         }
         $('#uploaderTable').modal({

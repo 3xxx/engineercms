@@ -78,6 +78,7 @@
       url: '/v1/wx/searchproductdata?keyword={{.Key}}',
       method: 'get',
       search: 'true',
+      classes: "table table-striped", //这里设置表格样式
       showRefresh: 'true',
       showToggle: 'true',
       showColumns: 'true',
@@ -99,7 +100,7 @@
         var param = {
           limit: params.pageSize, //每页多少条数据
           pageNo: params.pageNumber, // 页码
-          searchText: $(".search .form-control").val()
+          searchText: params.searchText // $(".search .form-control").val()
         };
         //搜索框功能
         //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码

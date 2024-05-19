@@ -139,6 +139,8 @@
 
 
 <script src="{{cdnjs "/static/mindoc/jquery/1.12.4/jquery.min.js"}}"></script>
+
+
 <script src="{{cdnjs "/static/mindoc/bootstrap/js/bootstrap.min.js"}}"></script>
 <script src="{{cdnjs "/static/mindoc/vuejs/vue.min.js"}}"></script>
 <script src="{{cdnjs "/static/mindoc/js/jquery.form.js"}}" type="text/javascript"></script>

@@ -184,7 +184,7 @@ body.search-show {
   <!-- navbar top -->
   <div class="navbar-top">
     <div class="side-nav-panel-left"><a href="javascript:void(0)" data-activates="slide-out-left" class="side-nav-left"><i class="fa fa-bars"></i></a></div><!-- site brand -->
-    <div class="site-brand"><a href="/index">
+    <div class="site-brand"><a href="/index"></a>
       <h1>E</h1>
     </div><!-- end site brand -->
     <div class="side-nav-panel-right"><a href="" class="side-nav-right"><i class="fa fa-user">{{.Username}}</i></a></div>
@@ -316,8 +316,8 @@ body.search-show {
         var param = {
           limit: params.pageSize, //每页多少条数据
           pageNo: params.pageNumber, // 页码
-          searchText: $(".search .form-control").val(),
-          searchText: $("#name").val()
+          searchText: params.searchText // $(".search .form-control").val(),
+          // searchText: $("#name").val()
         };
         //搜索框功能
         //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码

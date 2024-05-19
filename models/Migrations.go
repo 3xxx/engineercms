@@ -1,9 +1,10 @@
 package models
 
 import (
-	"github.com/3xxx/engineercms/conf"
-	"github.com/beego/beego/v2/client/orm"
 	"time"
+
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/3xxx/engineercms/conf"
 )
 
 type Migration struct {

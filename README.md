@@ -51,6 +51,7 @@
 # 拷贝engineercms和swagger里的swagger.yml和swagger.json到对应文件夹里
 # $ chmod +x engineercms 
 # $ nohup ./engineercms &
+# $ systemctl stop firewalld.service关闭防火墙
 
 # beego 2.0.0 升级指南
 # 获取最新版本的 bee 工具 go install github.com/beego/bee/v2@latest
@@ -78,10 +79,10 @@
 # 还好，你说的编译一下，生成可执行命令了，感谢！
 
 # 解决步骤：
-# 1、go get -u github.com/beego/bee/v2
-# 2、cd 到这个bee/v2版本中
-# 3、go mod tidy 整理一下
-# 4、go install
+# 1 go get -u github.com/beego/bee/v2
+# 2 cd 到这个bee/v2版本中
+# 3 go mod tidy 整理一下
+# 4 go install
 # 此时在 GOPATH目录bin文件夹下生成了bee.exe 。
 # 测试 ./bee.exe new hello 已正常创建项目，自己将bin目录加入到全局即可。
 
@@ -89,6 +90,7 @@
 # 一、创建标签
 # 在Git中打标签非常简单，首先，切换到需要打标签的分支上：
 
+# 要在engineercms文件夹下，鼠标右键，用“git bash here”来启动git，然后执行以下命令。
 # 1 $ git branch
 # 2 * dev
 # 3   master

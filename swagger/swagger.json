@@ -4671,6 +4671,468 @@
                 }
             }
         },
+        "/estimate/getestimatecostarchi/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costarchi tpl\n\u003cbr\u003e",
+                "operationId": "EstimateController.getestimatecostarchi",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of projectphase",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostArchi"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecostarchidata/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costArchi\n\u003cbr\u003e",
+                "operationId": "EstimateController.getEstimateCostArchiData",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of estimatephase",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of estimatecostarchi",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostArchi"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecostelect/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costelect tpl\n\u003cbr\u003e",
+                "operationId": "EstimateController.getestimatecostelect",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of projectphase",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostElect"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecostelectdata/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costArchi\n\u003cbr\u003e",
+                "operationId": "EstimateController.getEstimateCostElectData",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of estimatephase",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of estimatecostelect",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostElect"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecostmetal/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costmetal tpl\n\u003cbr\u003e",
+                "operationId": "EstimateController.getestimatecostmetal",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of projectphase",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostMetal"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecostmetaldata/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costArchi\n\u003cbr\u003e",
+                "operationId": "EstimateController.getEstimateCostMetalData",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of estimatephase",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of estimatecostmetal",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostMetal"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecosttemp/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costtemp tpl\n\u003cbr\u003e",
+                "operationId": "EstimateController.getestimatecostTemp",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of projectphase",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostTemp"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimatecosttempdata/{id}": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get costTemp\n\u003cbr\u003e",
+                "operationId": "EstimateController.getEstimateCostTempData",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of estimatephase",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of estimatecosttemp",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateCostTemp"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimateprojects": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get estimateprojects\n\u003cbr\u003e",
+                "operationId": "EstimateController.getestimateprojects",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateProjects"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/getestimateprojectsdata": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get estimateProjects Data\n\u003cbr\u003e",
+                "operationId": "EstimateController.getEstimateProjectsData",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page of estimateProjectsData",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The size of page",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetEstimateProjectsData"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/updateestproject": {
+            "post": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "add user\n\u003cbr\u003e",
+                "operationId": "EstimateController.update user",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "pk",
+                        "description": "The pk of user",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "description": "The name of user",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "value",
+                        "description": "The value of user",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "user not found"
+                    }
+                }
+            }
+        },
+        "/estimate/uploadexcel": {
+            "get": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "get excel\n\u003cbr\u003e",
+                "operationId": "EstimateController.upload excel",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetexcelPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "Page not found"
+                    }
+                }
+            }
+        },
+        "/estimate/uploadexcelestimate": {
+            "post": {
+                "tags": [
+                    "estimate"
+                ],
+                "description": "post file by BootstrapFileInput\n\u003cbr\u003e",
+                "operationId": "EstimateController.post bootstrapfileinput",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of project",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
         "/excel/addexcelarticle/{id}": {
             "post": {
                 "tags": [
@@ -6543,6 +7005,82 @@
                 }
             }
         },
+        "/freecad/update": {
+            "get": {
+                "tags": [
+                    "freecad"
+                ],
+                "description": "get freecad model update by id...\n\u003cbr\u003e",
+                "operationId": "FreeCADController.get freecad model update by id...",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of freecad",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserTemple"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
+        "/freecad/updatefreecad": {
+            "post": {
+                "tags": [
+                    "freecad"
+                ],
+                "description": "post freecad model update by id...\n\u003cbr\u003e",
+                "operationId": "FreeCADController.post freecad model update by id...",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of freecad",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "description",
+                        "description": "The description of freecad",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "indicators",
+                        "description": "The indicators of freecad",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.FreeCAD"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
         "/freecad/uploadmodel": {
             "get": {
                 "tags": [
@@ -8393,6 +8931,12 @@
                         "in": "query",
                         "name": "projectid",
                         "description": "The id of project",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchText",
+                        "description": "The searchText of project",
                         "type": "string"
                     },
                     {
@@ -10858,6 +11402,38 @@
                 }
             }
         },
+        "/wx/deletefreecad": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post freecad model delete by id...\n\u003cbr\u003e",
+                "operationId": "ArticleController.post freecad model delete by id...",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of freecad",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.FreeCAD"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
         "/wx/deleteuser": {
             "post": {
                 "tags": [
@@ -13142,6 +13718,13 @@
                         "in": "query",
                         "name": "keyword",
                         "description": "The keyword of products",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchText",
+                        "description": "The searchText of products",
                         "type": "string"
                     },
                     {
@@ -13223,6 +13806,12 @@
                         "name": "keyword",
                         "description": "The keyword of products",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchText",
+                        "description": "The searchText of products",
                         "type": "string"
                     },
                     {
@@ -14855,7 +15444,8 @@
                     "format": "datetime"
                 },
                 "User": {
-                    "$ref": "#/definitions/models.User"
+                    "$ref": "#/definitions/models.User",
+                    "description": "这个写法是对的。这样写无法建表：foreignkey:UserID;references:Id;默认可不用谢"
                 },
                 "UserID": {
                     "description": "外键 (属于), tag `index`是为该列创建索引",
@@ -14937,7 +15527,8 @@
                     "format": "datetime"
                 },
                 "User": {
-                    "$ref": "#/definitions/models.User"
+                    "$ref": "#/definitions/models.User",
+                    "description": "这里应该写错了"
                 },
                 "ansysapdlid": {
                     "type": "integer",
@@ -14990,7 +15581,6 @@
             "type": "object",
             "properties": {
                 "AnsysHistoryID": {
-                    "description": "外键 (属于), tag `index`是为该列创建索引",
                     "type": "integer",
                     "format": "int32"
                 },
@@ -15576,6 +16166,10 @@
                 }
             }
         },
+        "models.FreeCAD": {
+            "title": "FreeCAD",
+            "type": "object"
+        },
         "models.FreecadInputs": {
             "title": "FreecadInputs",
             "type": "object",
@@ -15669,10 +16263,16 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "description": {
+                    "type": "string"
+                },
                 "dxfsvgurl": {
                     "type": "string"
                 },
                 "faceimgurl": {
+                    "type": "string"
+                },
+                "indicators": {
                     "type": "string"
                 },
                 "number": {
@@ -15733,6 +16333,30 @@
         },
         "models.GetElastic": {
             "title": "GetElastic",
+            "type": "object"
+        },
+        "models.GetEstimateCostArchi": {
+            "title": "GetEstimateCostArchi",
+            "type": "object"
+        },
+        "models.GetEstimateCostElect": {
+            "title": "GetEstimateCostElect",
+            "type": "object"
+        },
+        "models.GetEstimateCostMetal": {
+            "title": "GetEstimateCostMetal",
+            "type": "object"
+        },
+        "models.GetEstimateCostTemp": {
+            "title": "GetEstimateCostTemp",
+            "type": "object"
+        },
+        "models.GetEstimateProjects": {
+            "title": "GetEstimateProjects",
+            "type": "object"
+        },
+        "models.GetEstimateProjectsData": {
+            "title": "GetEstimateProjectsData",
             "type": "object"
         },
         "models.GetExcel": {
@@ -16378,6 +17002,10 @@
         {
             "name": "simwe",
             "description": "CMSSIMWE API\n"
+        },
+        {
+            "name": "estimate",
+            "description": "CMSexcel API\n"
         }
     ]
 }

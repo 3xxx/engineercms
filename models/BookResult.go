@@ -2,28 +2,30 @@ package models
 
 import (
 	"bytes"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
 	"encoding/json"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils/cryptil"
-	"github.com/3xxx/engineercms/controllers/utils/filetil"
-	"github.com/3xxx/engineercms/controllers/utils/gopool"
-	"github.com/3xxx/engineercms/controllers/utils/requests"
-	"github.com/3xxx/engineercms/controllers/utils/ziptil"
-	"github.com/3xxx/engineercms/converter"
+	"net/http"
+	"regexp"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/i18n"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/converter"
+	"github.com/3xxx/engineercms/controllers/utils/cryptil"
+	"github.com/3xxx/engineercms/controllers/utils/filetil"
+	"github.com/3xxx/engineercms/controllers/utils/gopool"
+	"github.com/3xxx/engineercms/controllers/utils/requests"
+	"github.com/3xxx/engineercms/controllers/utils/ziptil"
 	"github.com/russross/blackfriday/v2"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"path/filepath"
-	"regexp"
-	"strconv"
-	"strings"
-	"time"
 )
 
 var (
@@ -174,16 +176,16 @@ func (m *BookResult) FindToPager(pageIndex, pageSize int) (books []*BookResult, 
 		FROM md_books AS book
 			LEFT JOIN md_relationship AS rel ON rel.book_id = book.book_id AND rel.role_id = 0
 			LEFT JOIN md_members AS m ON rel.member_id = m.member_id
-		ORDER BY book.order_index DESC ,book.book_id DESC  LIMIT ?,?`
+		ORDER BY book.order_index DESC ,book.book_id DESC  limit ? offset ?`
 
 	offset := (pageIndex - 1) * pageSize
 
-	_, err = o.Raw(sql, offset, pageSize).QueryRows(&books)
+	_, err = o.Raw(sql, pageSize, offset).QueryRows(&books)
 
 	return
 }
 
-//实体转换
+// 实体转换
 func (m *BookResult) ToBookResult(book Book) *BookResult {
 
 	m.BookId = book.BookId
@@ -212,6 +214,7 @@ func (m *BookResult) ToBookResult(book Book) *BookResult {
 	m.IsDownload = book.IsDownload == 0
 	m.AutoSave = book.AutoSave == 1
 	m.ItemId = book.ItemId
+	m.RoleId = conf.BookRoleNoSpecific
 
 	if book.Theme == "" {
 		m.Theme = "default"
@@ -247,12 +250,13 @@ func (m *BookResult) ToBookResult(book Book) *BookResult {
 	} else if m.CommentStatus == "group_only" {
 		// todo
 	} else {
-		m.IsDisplayComment = false;
+		m.IsDisplayComment = false
 	}
+
 	return m
 }
 
-//后台转换
+// 后台转换
 func BackgroundConvert(sessionId string, bookResult *BookResult) error {
 
 	if err := converter.CheckConvertCommand(); err != nil {

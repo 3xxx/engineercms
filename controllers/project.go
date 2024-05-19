@@ -107,6 +107,7 @@ func (c *ProjController) Get() {
 // @Title get cms projectlist...
 // @Description get projectlist..
 // @Param projectid query string false "The id of project"
+// @Param searchText query string false "The searchText of project"
 // @Param pageNo query string false "The page of projectlist"
 // @Param limit query string false "The size of page"
 // @Success 200 {object} models.GetProductsPage
@@ -154,6 +155,7 @@ func (c *ProjController) GetProjects() {
 	var projid string
 	strMap := make(map[string]string)
 	if id == "" {
+		logs.Info(1)
 		// ****鲁班开始
 		// 根据用户角色，显示对应的项目显示全部
 		// 根据用户名查出用户角色——多个角色循环——角色对应的项目id——去重map——循环项目id取得项目细节
@@ -161,12 +163,13 @@ func (c *ProjController) GetProjects() {
 		// logs.Info(uid)
 		var count int64
 		if !isadmin {
+			logs.Info(2)
 			permissions, err := e.GetImplicitPermissionsForUser(strconv.FormatInt(uid, 10))
 			if err != nil {
 				logs.Error(err)
 			}
 			for _, v := range permissions {
-				logs.Info(v[1])
+				// logs.Info(v[1])
 				// 用map去重
 				projid = strings.Replace(v[1], "/*", "", -1)
 				// strMap[path.Base(projid)] = path.Base(projid)
@@ -191,7 +194,7 @@ func (c *ProjController) GetProjects() {
 				}
 				aa[0].Code = project.Code
 				aa[0].Title = project.Title
-				aa[0].Label = project.Label
+				// aa[0].Label = project.Label
 				aa[0].Principal = project.Principal
 				//根据项目id取得项目下所有成果数量
 				count, _, err := models.GetProjProducts(project.Id, 3)
@@ -209,6 +212,7 @@ func (c *ProjController) GetProjects() {
 			c.Data["json"] = table
 			c.ServeJSON()
 		} else {
+			logs.Info(3)
 			projects, err := models.GetProjectsPage(limit1, offset, searchText)
 			if err != nil {
 				logs.Error(err)
@@ -248,6 +252,7 @@ func (c *ProjController) GetProjects() {
 		// elapsed := time.Since(start)
 		// beego.Info(elapsed)
 	} else {
+		logs.Info(4)
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
 			logs.Error(err)
@@ -264,7 +269,7 @@ func (c *ProjController) GetProjects() {
 			aa[0].Id = v.Id
 			aa[0].Code = v.Code
 			aa[0].Title = v.Title
-			aa[0].Label = v.Label
+			// aa[0].Label = v.Label
 			aa[0].Principal = v.Principal
 			aa[0].Created = v.Created
 			aa[0].Updated = v.Updated
@@ -434,7 +439,7 @@ func (c *ProjController) GetWxProjects() {
 				}
 				aa[0].Code = project.Code
 				aa[0].Title = project.Title
-				aa[0].Label = project.Label
+				// aa[0].Label = project.Label
 				aa[0].Principal = project.Principal
 				//根据项目id取得项目下所有成果数量
 				count, _, err := models.GetProjProducts(project.Id, 3)
@@ -494,7 +499,7 @@ func (c *ProjController) GetWxProjects() {
 			aa[0].Id = v.Id
 			aa[0].Code = v.Code
 			aa[0].Title = v.Title
-			aa[0].Label = v.Label
+			// aa[0].Label = v.Label
 			aa[0].Principal = v.Principal
 
 			aa[0].Created = v.Created
@@ -523,7 +528,25 @@ func (c *ProjController) GetProject() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
+
+	c.Data["IsProject"] = true
+
 	id := c.Ctx.Input.Param(":id")
+	c.Data["Id"] = id
+	// var categories []*models.ProjCategory
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		logs.Error(err)
+	}
+	//取项目本身
+	category, err := models.GetProj(idNum)
+	if err != nil {
+		logs.Error(err)
+	}
+
+	c.Data["Category"] = category
+
 	// 跳转后定位目录
 	node := c.GetString("node")
 	var gototree bool
@@ -567,31 +590,9 @@ func (c *ProjController) GetProject() {
 	default:
 		c.Data["IsProject"] = true
 	}
-	c.Data["Id"] = id
-	// var categories []*models.ProjCategory
-	// var err error
-	//id转成64为
-	idNum, err := strconv.ParseInt(id, 10, 64)
-	if err != nil {
-		logs.Error(err)
-	}
-	//取项目本身
-	category, err := models.GetProj(idNum)
-	if err != nil {
-		logs.Error(err)
-	}
 
-	//记录开始时间
-	// start := time.Now()
-	//取项目所有子孙
-	categories, err := models.GetProjectsbyPid(idNum)
-	if err != nil {
-		logs.Error(err)
-	}
-	//记录结束时间差
-	// elapsed := time.Since(start)
-	// beego.Info(elapsed)
-	//根据项目顶级id取得项目下所有成果
+	useridstring := strconv.FormatInt(uid, 10)
+
 	var topprojectid int64
 	if category.ParentId != 0 { //如果不是根目录
 		parentidpath := strings.Replace(strings.Replace(category.ParentIdPath, "#$", "-", -1), "$", "", -1)
@@ -604,6 +605,92 @@ func (c *ProjController) GetProject() {
 	} else {
 		topprojectid = category.Id
 	}
+
+	projectuser, err := models.GetProjectUser(topprojectid)
+	if err != nil {
+		logs.Error(err)
+	}
+	// beego.Info(projectuser.Id)
+	// beego.Info(uid)
+	if uid != 0 && projectuser.Id == uid || isadmin {
+		c.Data["RoleAdd"] = "true"
+		c.Data["RoleNewDwg"] = "true"
+		c.Data["RoleFlow"] = "true"
+		c.Data["RoleUpdate"] = "true"
+		c.Data["RoleDelete"] = "true"
+		c.Data["RoleGet"] = "true"
+	} else {
+		//2.取得侧栏目录路径——路由id
+		//2.1 根据id取得路由
+		var projurls string
+		proj, err := models.GetProj(idNum)
+		if err != nil {
+			logs.Error(err)
+		}
+		if proj.ParentId == 0 { //如果是项目根目录
+			projurls = "/" + strconv.FormatInt(proj.Id, 10)
+		} else {
+			// projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+			projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
+		}
+
+		if res, _ := e.Enforce(useridstring, projurls+"/", "POST", ".1"); res {
+			// beego.Info("posttrue")
+			c.Data["RoleAdd"] = "true"
+			c.Data["RoleNewDwg"] = "true"
+			c.Data["RoleFlow"] = "true"
+		} else {
+			c.Data["RoleAdd"] = "false"
+			c.Data["RoleNewDwg"] = "false"
+			c.Data["RoleFlow"] = "false"
+		}
+		if res2, _ := e.Enforce(useridstring, projurls+"/", "PUT", ".1"); res2 {
+			c.Data["RoleUpdate"] = "true"
+		} else {
+			c.Data["RoleUpdate"] = "false"
+		}
+		if res3, _ := e.Enforce(useridstring, projurls+"/", "DELETE", ".1"); res3 {
+			c.Data["RoleDelete"] = "true"
+		} else {
+			c.Data["RoleDelete"] = "false"
+		}
+		if res4, _ := e.Enforce(useridstring, projurls+"/", "GET", ".1"); res4 {
+			c.Data["RoleGet"] = "true"
+		} else {
+			c.Data["RoleGet"] = "false"
+		}
+	}
+
+	site := c.Ctx.Input.Site()
+	port := strconv.Itoa(c.Ctx.Input.Port())
+	if port == "80" {
+		c.Data["Site"] = site
+	} else {
+		c.Data["Site"] = site + ":" + port
+	}
+
+	//记录开始时间
+	// start := time.Now()
+	//取项目所有子孙
+	categories, err := models.GetProjectsbyPid(idNum)
+	if err != nil {
+		logs.Error(err)
+	}
+	//记录结束时间差
+	// elapsed := time.Since(start)
+	//根据项目顶级id取得项目下所有成果
+	// var topprojectid int64
+	// if category.ParentId != 0 { //如果不是根目录
+	// 	parentidpath := strings.Replace(strings.Replace(category.ParentIdPath, "#$", "-", -1), "$", "", -1)
+	// 	parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
+	// 	patharray := strings.Split(parentidpath1, "-")
+	// 	topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
+	// 	if err != nil {
+	// 		logs.Error(err)
+	// 	}
+	// } else {
+	// 	topprojectid = category.Id
+	// }
 	// 取出这个项目下所有成果！！
 	_, products, err := models.GetProjProducts(topprojectid, 2)
 	if err != nil {
@@ -633,7 +720,6 @@ func (c *ProjController) GetProject() {
 		logs.Error(err)
 	}
 	count = len(productcount)
-	// beego.Info(count)
 
 	for _, proj := range cates {
 		id := proj.Id
@@ -642,7 +728,6 @@ func (c *ProjController) GetProject() {
 				count = count + 1
 			}
 		}
-		// beego.Info(count)
 		slice := getsons(id, categories)
 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
 		if len(slice) > 0 {
@@ -660,8 +745,7 @@ func (c *ProjController) GetProject() {
 	maketreejson2(cates, categories, products, &root)
 	//记录结束时间差
 	// elapsed = time.Since(start)
-	// beego.Info(elapsed)
-	// beego.Info(root)
+
 	// data, _ := json.Marshal(root)
 	c.Data["json"] = root //data
 	// c.ServeJSON()
@@ -1150,7 +1234,7 @@ func (c *ProjController) AddProjectCate() {
 			parenttitlepath = category.Title
 		}
 		grade := category.Grade + 1
-		Id, err := models.AddProject(code, title, "", "", parentid, parentidpath, parenttitlepath, grade)
+		Id, err := models.AddProject(code, title, "", parentid, parentidpath, parenttitlepath, grade)
 		if err != nil {
 			logs.Error(err)
 		}
@@ -1226,7 +1310,7 @@ func (c *ProjController) UpdateProjectCate() {
 		if err != nil {
 			logs.Error(err)
 		}
-		err = models.UpdateProject(idNum, code, title, "", "")
+		err = models.UpdateProject(idNum, code, title, "")
 		if err != nil {
 			logs.Error(err)
 		}
@@ -1332,7 +1416,7 @@ func (c *ProjController) AddProject() {
 	//先保存项目名称到数据库，parentid为0，返回id作为下面二级三级四级……的parentid
 	//然后递归保存二级三级……到数据库
 	//最后递归生成硬盘目录
-	Id, err := models.AddProject(projcode, projname, projlabel, principal, 0, "", "", 1)
+	Id, err := models.AddProject(projcode, projname, principal, 0, "", "", 1)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -1437,7 +1521,7 @@ func (c *ProjController) AddProjTemplet() {
 	// walk(category.Id, &root)
 	maketreejsontemplet(cates, categories, &root)
 	//先建立第一层项目编号和名称
-	Id, err := models.AddProject(projcode, projname, projlabel, principal, 0, "", "", 1)
+	Id, err := models.AddProject(projcode, projname, principal, 0, "", "", 1)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -1598,7 +1682,7 @@ func (c *ProjController) QuickAddWxProjTemplet() {
 	// walk(category.Id, &root)
 	maketreejsontemplet(cates, categories, &root)
 	//先建立第一层项目编号和名称
-	Id, err := models.AddProject(projcode, projname, "projlabel", "principal", 0, "", "", 1)
+	Id, err := models.AddProject(projcode, projname, "principal", 0, "", "", 1)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -1760,10 +1844,10 @@ func (c *ProjController) UpdateProject() {
 
 	projcode := c.GetString("code")
 	projname := c.GetString("name")
-	projlabe := c.GetString("label")
+	// projlabe := c.GetString("label")
 	principal := c.GetString("principal")
 
-	err = models.UpdateProject(idNum, projcode, projname, projlabe, principal)
+	err = models.UpdateProject(idNum, projcode, projname, principal)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -2510,7 +2594,7 @@ func write(pid []models.Pidstruct, nodes []*models.AdminCategory, igrade, height
 				}
 
 				grade := igrade
-				Id, err := models.AddProject(code, title, "", "", parentid, parentidpath, parenttitlepath, grade)
+				Id, err := models.AddProject(code, title, "", parentid, parentidpath, parenttitlepath, grade)
 				if err != nil {
 					logs.Error(err)
 				}

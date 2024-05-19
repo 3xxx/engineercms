@@ -191,7 +191,7 @@
       var param = {
         limit: params.pageSize, //每页多少条数据
         pageNo: params.pageNumber, // 页码
-        searchText: $(".search .form-control").val(),
+        searchText: params.searchText // $(".search .form-control").val(),
         status: "0"
       };
       //搜索框功能
@@ -289,7 +289,7 @@
       var param = {
         limit: params.pageSize, //每页多少条数据
         pageNo: params.pageNumber, // 页码
-        searchText: $(".search .form-control").val(),
+        searchText: params.searchText // $(".search .form-control").val(),
         status: "0"
       };
       //搜索框功能
@@ -380,7 +380,7 @@
       var param = {
         limit: params.pageSize, //每页多少条数据
         pageNo: params.pageNumber, // 页码
-        searchText: $(".search .form-control").val(),
+        searchText: params.searchText // $(".search .form-control").val(),
         status: "1"
       };
       //搜索框功能
@@ -471,7 +471,7 @@
       var param = {
         limit: params.pageSize, //每页多少条数据
         pageNo: params.pageNumber, // 页码
-        searchText: $(".search .form-control").val(),
+        searchText: params.searchText // $(".search .form-control").val(),
         status: "1"
       };
       //搜索框功能

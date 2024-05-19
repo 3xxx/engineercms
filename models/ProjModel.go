@@ -12,11 +12,11 @@ import (
 )
 
 type Project struct {
-	Id              int64     `form:"-"`
-	Code            string    `orm:"null"`                                              //编号
-	Title           string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	Label           string    `orm:"null"`                                              //标签
-	Principal       string    `orm:"null"`                                              //负责人id
+	Id    int64  `form:"-"`
+	Code  string `orm:"null"`                                              //编号
+	Title string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	// Label           string    `orm:"null"`                                              //标签
+	Principal       string    `orm:"null"` //负责人id
 	ParentId        int64     `orm:"null"`
 	ParentIdPath    string    `orm:"null"`
 	ParentTitlePath string    `orm:"null"`
@@ -66,7 +66,7 @@ type ProjCalendar struct {
 	// BColor    string    `json:"borderColor",orm:"null"`
 }
 
-//树状目录数据
+// 树状目录数据
 type FileNode struct {
 	Id        int64  `json:"id"`
 	Title     string `json:"text"`
@@ -110,17 +110,17 @@ func init() {
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
 
-//添加项目
-func AddProject(code, title, label, principal string, parentid int64, parentidpath, parenttitlepath string, grade int) (id int64, err error) {
+// 添加项目
+func AddProject(code, title, principal string, parentid int64, parentidpath, parenttitlepath string, grade int) (id int64, err error) {
 	o := orm.NewOrm()
 	//关闭写同步
 	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 	// var project Project
 	// if pid == "" {
 	project := &Project{
-		Code:            code,
-		Title:           title,
-		Label:           label,
+		Code:  code,
+		Title: title,
+		// Label:           label,
 		Principal:       principal,
 		ParentId:        parentid,
 		ParentIdPath:    parentidpath,
@@ -176,14 +176,14 @@ func AddProjectLabel(pid int64, label string) (id int64, err error) {
 	return projectlabel.Id, result.Error
 }
 
-//修改——还没改，有问题，不能用
-func UpdateProject(cid int64, code, title, label, principal string) error {
+// 修改——还没改，有问题，不能用
+func UpdateProject(cid int64, code, title, principal string) error {
 	o := orm.NewOrm()
 	project := &Project{Id: cid}
 	if o.Read(project) == nil {
 		project.Code = code
 		project.Title = title
-		project.Label = label
+		// project.Label = label
 		project.Principal = principal
 		project.Updated = time.Now()
 		_, err := o.Update(project)
@@ -194,7 +194,7 @@ func UpdateProject(cid int64, code, title, label, principal string) error {
 	return nil
 }
 
-//修改项目名称——有问题，不能用
+// 修改项目名称——有问题，不能用
 func UpdateProjectTtile(pid int64, title string) error {
 	o := orm.NewOrm()
 	project := &Project{Id: pid}
@@ -209,7 +209,7 @@ func UpdateProjectTtile(pid int64, title string) error {
 	return nil
 }
 
-//删除
+// 删除
 func DeleteProject(id int64) error {
 	o := orm.NewOrm()
 	//关闭写同步
@@ -224,7 +224,7 @@ func DeleteProject(id int64) error {
 	return nil
 }
 
-//取得所有项目
+// 取得所有项目
 func GetProjects() (proj []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
@@ -235,21 +235,22 @@ func GetProjects() (proj []*Project, err error) {
 	return proj, err
 }
 
-//分页取得项目列表——作废，用下面那个
-// func GetProjectsPage(limit, offset int64, searchText string) (proj []*Project, err error) {
-// 	o := orm.NewOrm()
-// 	qs := o.QueryTable("Project")
-// 	if searchText != "" {
-// 		cond := orm.NewCondition()
-// 		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
-// 		cond2 := cond.AndCond(cond1).And("parent_id", 0)
-// 		qs = qs.SetCond(cond2)
-// 		_, err = qs.Limit(limit, offset).OrderBy("-created").All(&proj)
-// 	} else {
-// 		_, err = qs.Filter("parent_id", 0).Limit(limit, offset).OrderBy("-created").All(&proj)
-// 	}
-// 	return proj, err
-// }
+// 分页取得项目列表——作废，用下面那个
+//
+//	func GetProjectsPage(limit, offset int64, searchText string) (proj []*Project, err error) {
+//		o := orm.NewOrm()
+//		qs := o.QueryTable("Project")
+//		if searchText != "" {
+//			cond := orm.NewCondition()
+//			cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
+//			cond2 := cond.AndCond(cond1).And("parent_id", 0)
+//			qs = qs.SetCond(cond2)
+//			_, err = qs.Limit(limit, offset).OrderBy("-created").All(&proj)
+//		} else {
+//			_, err = qs.Filter("parent_id", 0).Limit(limit, offset).OrderBy("-created").All(&proj)
+//		}
+//		return proj, err
+//	}
 type UserProject struct {
 	Id        int64     `json:"id"`
 	Code      string    `json:"code"`
@@ -274,7 +275,7 @@ func GetProjectsPage(limit, offset int, searchText string) (project []*UserProje
 			Select("project.id as id,project.code as code,project.title as title,project.created as created,user.nickname as principal,project_label.label as label").
 			Where("project.parent_id = ? AND title LIKE ?", 0, "%"+searchText+"%").
 			Or("project.parent_id = ? AND code LIKE ?", 0, "%"+searchText+"%").
-			Or("project.parent_id = ? AND label LIKE ?", 0, "%"+searchText+"%").
+			Or("project.parent_id = ? AND project_label.label LIKE ?", 0, "%"+searchText+"%").
 			Or("project.parent_id = ? AND principal LIKE ?", 0, "%"+searchText+"%").
 			Joins("left JOIN project_user on project.id = project_user.project_id").
 			Joins("left join project_label on project.id = project_label.project_id").
@@ -302,13 +303,13 @@ func GetProjectUser(pid int64) (user User, err error) {
 	return user, err
 }
 
-//取得项目总数
+// 取得项目总数，与上述不一致，没有筛选label
 func GetProjectsCount(searchText string) (count int64, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")
 	if searchText != "" {
-		cond := orm.NewCondition()
-		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Label__contains", searchText).Or("Principal__contains", searchText)
+		cond := orm.NewCondition() // Or("project_label.Label__contains", searchText).
+		cond1 := cond.Or("Code__contains", searchText).Or("Title__contains", searchText).Or("Principal__contains", searchText)
 		cond2 := cond.AndCond(cond1).And("parentid", 0)
 		qs = qs.SetCond(cond2)
 		count, err = qs.Limit(-1).Count()
@@ -318,7 +319,7 @@ func GetProjectsCount(searchText string) (count int64, err error) {
 	return count, err
 }
 
-//取得所有项目目录
+// 取得所有项目目录
 func GetAllProjects() (proj []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")                      //这个表名AchievementTopic需要用驼峰式，
@@ -329,7 +330,7 @@ func GetAllProjects() (proj []*Project, err error) {
 	return proj, err
 }
 
-//根据id取得项目目录
+// 根据id取得项目目录
 func GetProj(id int64) (proj Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
@@ -351,18 +352,18 @@ func GetProj(id int64) (proj Project, err error) {
 // 	return proj, err
 // }
 
-//根据id查出所有子孙，用ParentIdPath
-//逻辑错误：110-210-310包含了10？？？？
-//20180107完美解决这个问题。同ProdModel.go中GetProjProducts一致
-//通过Id为projid，查出本级
-//parentid是projid，查出二级
-//parentidpath包含projid-，查出三级，以及往下
-//还是不严谨，projid-前面还有数据呢？必须前后都有限定符号才行
-//差点按照无闻的视频，将parentidpath存成$id1#$id2#$id3#
-//存：parentidpath="$"+id1+"#"
-//查：__contains,"$"+id1+"#"
-//取：stings.replace(stings.replace(parentidpath,"#",","-1),"$",""-1)
-//输出：strings.split(上面的，",")
+// 根据id查出所有子孙，用ParentIdPath
+// 逻辑错误：110-210-310包含了10？？？？
+// 20180107完美解决这个问题。同ProdModel.go中GetProjProducts一致
+// 通过Id为projid，查出本级
+// parentid是projid，查出二级
+// parentidpath包含projid-，查出三级，以及往下
+// 还是不严谨，projid-前面还有数据呢？必须前后都有限定符号才行
+// 差点按照无闻的视频，将parentidpath存成$id1#$id2#$id3#
+// 存：parentidpath="$"+id1+"#"
+// 查：__contains,"$"+id1+"#"
+// 取：stings.replace(stings.replace(parentidpath,"#",","-1),"$",""-1)
+// 输出：strings.split(上面的，",")
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	idstring := strconv.FormatInt(id, 10)
 	// cond := orm.NewCondition()
@@ -383,7 +384,7 @@ func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	return projects, err
 }
 
-//根据id查出所有儿子
+// 根据id查出所有儿子
 func GetProjSonbyId(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")
@@ -394,7 +395,7 @@ func GetProjSonbyId(id int64) (projects []*Project, err error) {
 	return projects, err
 }
 
-//根据id查是否有下级
+// 根据id查是否有下级
 func Projhasson(id int64) bool {
 	o := orm.NewOrm()
 	exist := o.QueryTable("Project").Filter("ParentId", id).Exist()
@@ -411,7 +412,7 @@ func Projhasson(id int64) bool {
 	// }
 }
 
-//根据名字title查询到项目目录
+// 根据名字title查询到项目目录
 func GetProjectCodeTitle(code, title string) (proj Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")
@@ -437,7 +438,7 @@ func GetProjectCodeTitle(code, title string) (proj Project, err error) {
 //根据目录id取得第一级项目
 //用parentidpath的第一个数字就行了。
 
-//根据parenttitlepath和title取得proj目录
+// 根据parenttitlepath和title取得proj目录
 func GetProjbyParenttitlepath(parenttitlepath, title string) (proj Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
@@ -448,7 +449,7 @@ func GetProjbyParenttitlepath(parenttitlepath, title string) (proj Project, err 
 	return proj, err
 }
 
-//根据parentid和title取得proj目录
+// 根据parentid和title取得proj目录
 func GetProjbyParentidTitle(parentid int64, title string) (proj Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
@@ -459,7 +460,7 @@ func GetProjbyParentidTitle(parentid int64, title string) (proj Project, err err
 	return proj, err
 }
 
-//递归将分级目录写入数据库
+// 递归将分级目录写入数据库
 func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (cid []Pidstruct) {
 	o := orm.NewOrm() //实例化数据库操作对象
 	// o.Using("default")
@@ -539,7 +540,7 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 	return
 }
 
-//递归将项目模板目录写入数据库
+// 递归将项目模板目录写入数据库
 func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []*FileNode) (id int64) {
 	o := orm.NewOrm() //实例化数据库操作对象
 	// o.Using("default")
@@ -593,9 +594,9 @@ func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []
 	return Id
 }
 
-//************项目日历
-//********日历********
-//添加
+// ************项目日历
+// ********日历********
+// 添加
 func AddProjCalendar(pid int64, title, content, color, imgurl string, allday, public, memorabilia bool, start, end time.Time) (id int64, err error) {
 	o := orm.NewOrm()
 	calendar := &ProjCalendar{
@@ -619,7 +620,7 @@ func AddProjCalendar(pid int64, title, content, color, imgurl string, allday, pu
 	return id, err
 }
 
-//取所有——要修改为支持时间段的，比如某个月份
+// 取所有——要修改为支持时间段的，比如某个月份
 func GetProjCalendar(pid int64, start, end time.Time, public bool) (calendars []*ProjCalendar, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
@@ -644,7 +645,7 @@ func GetProjCalendar(pid int64, start, end time.Time, public bool) (calendars []
 	return calendars, err
 }
 
-//取出所有日历日程
+// 取出所有日历日程
 func GetAllProjCalendar(pid int64, public bool) (calendars []*ProjCalendar, err error) {
 	// cond := orm.NewCondition()
 	// cond1 := cond.And("Starttime__gte", start).And("Starttime__lt", end) //这里全部用开始时间来判断
@@ -669,7 +670,7 @@ func GetAllProjCalendar(pid int64, public bool) (calendars []*ProjCalendar, err 
 	return calendars, err
 }
 
-//取出分页的日历
+// 取出分页的日历
 func ListPostsByOffsetAndLimit(pid int64, set, postsPerPage int, public bool) ([]*ProjCalendar, error) {
 	o := orm.NewOrm()
 	calendars := make([]*ProjCalendar, 0)
@@ -684,7 +685,7 @@ func ListPostsByOffsetAndLimit(pid int64, set, postsPerPage int, public bool) ([
 	}
 }
 
-//修改
+// 修改
 func UpdateProjCalendar(cid int64, title, content, color, url string, allday, public, memorabilia bool, start, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &ProjCalendar{Id: cid}
@@ -708,7 +709,7 @@ func UpdateProjCalendar(cid int64, title, content, color, url string, allday, pu
 	return nil
 }
 
-//拖曳
+// 拖曳
 func DropProjCalendar(cid int64, start, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &ProjCalendar{Id: cid}
@@ -723,7 +724,7 @@ func DropProjCalendar(cid int64, start, end time.Time) error {
 	return nil
 }
 
-//resize
+// resize
 func ResizeProjCalendar(cid int64, end time.Time) error {
 	o := orm.NewOrm()
 	calendar := &ProjCalendar{Id: cid}
@@ -739,7 +740,7 @@ func ResizeProjCalendar(cid int64, end time.Time) error {
 	return nil
 }
 
-//根据id查询事件
+// 根据id查询事件
 func GetProjCalendarbyid(id int64) (calendar ProjCalendar, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("ProjCalendar")
@@ -750,7 +751,7 @@ func GetProjCalendarbyid(id int64) (calendar ProjCalendar, err error) {
 	return calendar, err
 }
 
-//删除事件
+// 删除事件
 func DeleteProjCalendar(cid int64) error {
 	o := orm.NewOrm()
 	calendar := &ProjCalendar{Id: cid}

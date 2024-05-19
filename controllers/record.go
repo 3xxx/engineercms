@@ -22,7 +22,7 @@ import (
 	// "time"
 )
 
-//分离图号图名
+// 分离图号图名
 func Record(filenameWithSuffix string) (Suffix, FileNumber, FileName, ProNumber, ProJiduan, ProLeixing, ProZhuanye string) {
 	FileSuffix := path.Ext(filenameWithSuffix) //只留下后缀名
 	LengthSuffix := len([]rune(FileSuffix))
@@ -236,7 +236,7 @@ func Record(filenameWithSuffix string) (Suffix, FileNumber, FileName, ProNumber,
 	return Suffix, FileNumber, FileName, ProNumber, ProJiduan, ProLeixing, ProZhuanye
 }
 
-//分离规范名称为分类，编号，年代和名称，用于规范上传
+// 分离规范名称为分类，编号，年代和名称，用于规范上传
 func SplitStandardName(filenameWithSuffix string) (Category, Categoryname, FileNumber, Year, FileName, Suffix string) {
 	FileSuffix := path.Ext(filenameWithSuffix) //只留下后缀名
 	LengthSuffix := len([]rune(FileSuffix))
@@ -339,6 +339,18 @@ func SplitStandardName(filenameWithSuffix string) (Category, Categoryname, FileN
 			Category = "NACE"
 		case "RC":
 			Category = "RCC"
+		case "HB":
+			Category = "HB"
+		case "GJ":
+			Category = "GJB"
+		case "JJ":
+			Category = "JJF"
+		case "QJ":
+			Category = "QJ"
+		case "TS":
+			Category = "TSG"
+		case "YB":
+			Category = "YBT"
 		default: //图集
 			Category = "Atlas"
 		}
@@ -384,8 +396,8 @@ func SplitStandardName(filenameWithSuffix string) (Category, Categoryname, FileN
 	return Category, Categoryname, FileNumber, Year, FileName, Suffix
 }
 
-//分离上面结果中FileNumber的分类GB和编号50268
-//用于搜索
+// 分离上面结果中FileNumber的分类GB和编号50268
+// 用于搜索
 func SplitStandardFileNumber(filenumber string) (Category, Categoryname, Number string) {
 	r, _ := regexp.Compile(`[a-zA-Z]+\s[0-9A-Za-z\.]+[-][0-9]+`)
 	if r.MatchString(filenumber) { //如果符合正则表达式
@@ -452,6 +464,18 @@ func SplitStandardFileNumber(filenumber string) (Category, Categoryname, Number 
 			Category = "NACE"
 		case "RC":
 			Category = "RCC"
+		case "HB":
+			Category = "HB"
+		case "GJB":
+			Category = "GJB"
+		case "JJF":
+			Category = "JJF"
+		case "QJ":
+			Category = "QJ"
+		case "TSG":
+			Category = "TSG"
+		case "YBT":
+			Category = "YBT"
 		default: //图集
 			Category = "Atlas"
 		}
@@ -463,8 +487,8 @@ func SplitStandardFileNumber(filenumber string) (Category, Categoryname, Number 
 	return Category, Categoryname, Number
 }
 
-//下面这个没什么用了吧，用record代替
-//对于01水电院企业标准.pdf如何办呢，所以最简单是取得第一个汉字的位置即可
+// 下面这个没什么用了吧，用record代替
+// 对于01水电院企业标准.pdf如何办呢，所以最简单是取得第一个汉字的位置即可
 func SubStrings(filenameWithSuffix string) (substr1, substr2 string) {
 	fileSuffix := path.Ext(filenameWithSuffix) //只留下后缀名
 	//	fmt.Println("fileSuffix=", fileSuffix)     //fileSuffix= .go
@@ -501,7 +525,7 @@ func SubStrings(filenameWithSuffix string) (substr1, substr2 string) {
 	return fulleFilename1, fulleFilename2
 }
 
-//取得usertemple名称，日期和版本
+// 取得usertemple名称，日期和版本
 func MathcadName(filenameWithSuffix string) (Suffix, FileNumber, FileName, Version string) {
 	// beego.Info("文件名：", filenameWithSuffix)
 	FileSuffix := path.Ext(filenameWithSuffix) //只留下后缀名
@@ -589,7 +613,7 @@ func UnicodeIndex(str, substr string) int {
 	return result
 }
 
-//如果不够length，返回全部长度范围
+// 如果不够length，返回全部长度范围
 func SubString(str string, begin, length int) (substr string) {
 	// 将字符串的转换成[]rune
 	rs := []rune(str)

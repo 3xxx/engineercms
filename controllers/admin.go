@@ -23,7 +23,7 @@ type AdminController struct {
 	web.Controller
 }
 
-//Catalog添加附件链接和设计说明、校审意见
+// Catalog添加附件链接和设计说明、校审意见
 type CatalogLinkCont struct {
 	Id            int64     `json:"id"`
 	ProjectNumber string    //项目编号
@@ -55,7 +55,7 @@ type CatalogLinkCont struct {
 	Link          []models.CatalogLink
 }
 
-//附件链接表
+// 附件链接表
 type CatalogLinkEditable struct {
 	Id        int64
 	CatalogId int64
@@ -155,7 +155,7 @@ func (c *AdminController) Admin() {
 	}
 }
 
-//添加ip地址段
+// 添加ip地址段
 func (c *AdminController) AddIpsegment() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 
@@ -185,7 +185,7 @@ func (c *AdminController) AddIpsegment() {
 	Createip()
 }
 
-//修改ip地址段
+// 修改ip地址段
 func (c *AdminController) UpdateIpsegment() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 
@@ -221,7 +221,7 @@ func (c *AdminController) UpdateIpsegment() {
 	Createip()
 }
 
-//删除ip
+// 删除ip
 func (c *AdminController) DeleteIpsegment() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -251,7 +251,7 @@ func (c *AdminController) DeleteIpsegment() {
 	Createip()
 }
 
-//查询IP地址段
+// 查询IP地址段
 func (c *AdminController) Ipsegment() {
 	ipsegments, err := models.GetAdminIpsegment()
 	if err != nil {
@@ -267,7 +267,7 @@ func (c *AdminController) Ipsegment() {
 // 4 同一个包中多个init函数的执行顺序go语言没有明确的定义(说明)
 // 5 不同包的init函数按照包导入的依赖关系决定该初始化函数的执行顺序
 // 6 init函数不能被其他函数调用，而是在main函数执行之前，自动被调用
-//读取iprole.txt文件，作为全局变量Iprolemaps，供调用访问者ip的权限用
+// 读取iprole.txt文件，作为全局变量Iprolemaps，供调用访问者ip的权限用
 var (
 	Iprolemaps map[string]int
 )
@@ -346,7 +346,7 @@ func Createip() {
 	// f.Close()
 }
 
-//取得访问者的权限
+// 取得访问者的权限
 func Getiprole(ip string) (role int) {
 	role, ok := Iprolemaps[ip]
 	if ok {
@@ -362,7 +362,7 @@ func Getiprole(ip string) (role int) {
 	// }
 }
 
-//获取下一个IP
+// 获取下一个IP
 func nextIp(ip string) string {
 	ips := strings.Split(ip, ".")
 	var i int
@@ -394,7 +394,7 @@ func nextIp(ip string) string {
 	return ip
 }
 
-//生成IP地址列表
+// 生成IP地址列表
 func processIp(startIp, endIp string) []string {
 	var ips = make([]string, 0)
 	for ; startIp != endIp; startIp = nextIp(startIp) {
@@ -406,7 +406,7 @@ func processIp(startIp, endIp string) []string {
 	return ips
 }
 
-//port代替权限role
+// port代替权限role
 func processFlag(arg []string) (maps map[string]int) {
 	//开始IP,结束IP
 	var startIp, endIp string
@@ -495,7 +495,7 @@ func processFlag(arg []string) (maps map[string]int) {
 // @Success 200 {object} models.GetAdminCategory
 // @Param   id     path   string false       "category id"
 // @router /category/:id [get]
-//根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
+// 根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
 func (c *AdminController) Category() {
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
@@ -525,7 +525,7 @@ func (c *AdminController) Category() {
 // @Success 200 {object} models.GetAdminCategory
 // @Param   title   query   string  false       "title of search"
 // @router /categorytitle [get]
-//根据名称title查询分级表
+// 根据名称title查询分级表
 func (c *AdminController) CategoryTitle() {
 	// title := c.Ctx.Input.Param(":id")
 	title := c.GetString("title")
@@ -548,7 +548,7 @@ func (c *AdminController) CategoryTitle() {
 // @Param   code   query   string  false       "code of category"
 // @Param   grade   query   string  false       "grade of category"
 // @router /category/addcategory [post]
-//添加
+// 添加
 func (c *AdminController) AddCategory() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -587,7 +587,7 @@ func (c *AdminController) AddCategory() {
 	}
 }
 
-//修改
+// 修改
 func (c *AdminController) UpdateCategory() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 
@@ -621,7 +621,7 @@ func (c *AdminController) UpdateCategory() {
 	}
 }
 
-//删除，如果有下级，一起删除
+// 删除，如果有下级，一起删除
 func (c *AdminController) DeleteCategory() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 
@@ -663,8 +663,8 @@ func (c *AdminController) DeleteCategory() {
 	}
 }
 
-//********************日历开始**************
-//添加日历
+// ********************日历开始**************
+// 添加日历
 func (c *AdminController) AddCalendar() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -723,8 +723,8 @@ func (c *AdminController) AddCalendar() {
 	}
 }
 
-//返回日历json数据
-//如果是管理员，则显示全部，非管理员，显示公开
+// 返回日历json数据
+// 如果是管理员，则显示全部，非管理员，显示公开
 func (c *AdminController) Calendar() {
 	start := c.GetString("start")
 	end := c.GetString("end")
@@ -762,7 +762,7 @@ func (c *AdminController) Calendar() {
 	// c.TplName = "admin_category.tpl"
 }
 
-//修改
+// 修改
 func (c *AdminController) UpdateCalendar() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -847,7 +847,7 @@ func (c *AdminController) UpdateCalendar() {
 	// }
 }
 
-//拖曳
+// 拖曳
 func (c *AdminController) DropCalendar() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -883,7 +883,7 @@ func (c *AdminController) DropCalendar() {
 	}
 }
 
-//resize
+// resize
 func (c *AdminController) ResizeCalendar() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -921,7 +921,7 @@ func (c *AdminController) ResizeCalendar() {
 	}
 }
 
-//删除，如果有下级，一起删除
+// 删除，如果有下级，一起删除
 func (c *AdminController) DeleteCalendar() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -976,8 +976,8 @@ func (c *AdminController) SearchCalendar() {
 	c.ServeJSON()
 }
 
-//******编辑项目同步ip**********
-//根据项目id查询ip
+// ******编辑项目同步ip**********
+// 根据项目id查询ip
 func (c *AdminController) SynchIp() {
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
@@ -998,7 +998,7 @@ func (c *AdminController) SynchIp() {
 	c.ServeJSON()
 }
 
-//添加
+// 添加
 func (c *AdminController) AddsynchIp() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1037,7 +1037,7 @@ func (c *AdminController) AddsynchIp() {
 	}
 }
 
-//修改
+// 修改
 func (c *AdminController) UpdatesynchIp() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1070,7 +1070,7 @@ func (c *AdminController) UpdatesynchIp() {
 	}
 }
 
-//删除
+// 删除
 func (c *AdminController) DeletesynchIp() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1100,8 +1100,8 @@ func (c *AdminController) DeletesynchIp() {
 	}
 }
 
-//******后台部门结构********
-//根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
+// ******后台部门结构********
+// 根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
 func (c *AdminController) Department() {
 	id := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = id
@@ -1126,7 +1126,7 @@ func (c *AdminController) Department() {
 	// c.TplName = "admin_category.tpl"
 }
 
-//根据名称title查询分级表
+// 根据名称title查询分级表
 func (c *AdminController) DepartmentTitle() {
 	// title := c.Ctx.Input.Param(":id")
 	title := c.GetString("title")
@@ -1141,7 +1141,7 @@ func (c *AdminController) DepartmentTitle() {
 	// c.TplName = "admin_category.tpl"
 }
 
-//添加
+// 添加
 func (c *AdminController) AddDepartment() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1176,7 +1176,7 @@ func (c *AdminController) AddDepartment() {
 	}
 }
 
-//修改
+// 修改
 func (c *AdminController) UpdateDepartment() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1205,7 +1205,7 @@ func (c *AdminController) UpdateDepartment() {
 	}
 }
 
-//删除，如果有下级，一起删除
+// 删除，如果有下级，一起删除
 func (c *AdminController) DeleteDepartment() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1246,7 +1246,7 @@ func (c *AdminController) DeleteDepartment() {
 	}
 }
 
-//批量上传首页轮播图片
+// 批量上传首页轮播图片
 func (c *AdminController) AddCarousel() {
 	// _, role := checkprodRole(c.Ctx)
 	_, role, _, _, _ := checkprodRole(c.Ctx)
@@ -1289,7 +1289,7 @@ func (c *AdminController) AddCarousel() {
 	}
 }
 
-//查询所有轮播图片
+// 查询所有轮播图片
 func (c *AdminController) Carousel() {
 	carousels, err := models.GetAdminCarousel()
 	if err != nil {
@@ -1299,7 +1299,7 @@ func (c *AdminController) Carousel() {
 	c.ServeJSON()
 }
 
-//删除选中的轮播图片
+// 删除选中的轮播图片
 func (c *AdminController) DeleteCarousel() {
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
@@ -1321,8 +1321,8 @@ func (c *AdminController) DeleteCarousel() {
 	}
 }
 
-//merit基本信息*************************************
-//IP，用户名，姓名，密码
+// merit基本信息*************************************
+// IP，用户名，姓名，密码
 func (c *AdminController) MeritBasic() {
 	meritbasic, err := models.GetMeritBasic()
 	if err != nil {
@@ -1336,7 +1336,7 @@ func (c *AdminController) MeritBasic() {
 	c.ServeJSON()
 }
 
-//在线修改保存某个字段
+// 在线修改保存某个字段
 func (c *AdminController) UpdateMeritBasic() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1362,9 +1362,9 @@ func (c *AdminController) UpdateMeritBasic() {
 	}
 }
 
-//取得成果给table
-//成果清单
-//未提交status=0和已提交status=1
+// 取得成果给table
+// 成果清单
+// 未提交status=0和已提交status=1
 func (c *AdminController) GetPostMerit() {
 	id := c.Ctx.Input.Param(":id")
 	idint, err := strconv.Atoi(id)
@@ -1435,7 +1435,7 @@ func (c *AdminController) GetPostMerit() {
 	c.ServeJSON()
 }
 
-//在线修改保存某个字段
+// 在线修改保存某个字段
 func (c *AdminController) ModifyCatalog() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1491,7 +1491,7 @@ func (c *AdminController) ModifyCatalog() {
 	logs.Close()
 }
 
-//列表显示成果附件
+// 列表显示成果附件
 func (c *AdminController) CatalogAttachment() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -1556,7 +1556,7 @@ func (c *AdminController) CatalogAttachment() {
 	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
 }
 
-//修改link
+// 修改link
 func (c *AdminController) ModifyLink() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1589,7 +1589,7 @@ func (c *AdminController) ModifyLink() {
 	}
 }
 
-//提交meritlist给merit，这个是关键代码
+// 提交meritlist给merit，这个是关键代码
 func (c *AdminController) SendMeritlist() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1654,7 +1654,7 @@ func (c *AdminController) SendMeritlist() {
 	// beego.Info(str)
 }
 
-//删除meritlist
+// 删除meritlist
 func (c *AdminController) DeleteMeritlist() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1678,7 +1678,7 @@ func (c *AdminController) DeleteMeritlist() {
 	}
 }
 
-//回退meritlist已提交给未提交
+// 回退meritlist已提交给未提交
 func (c *AdminController) DownMeritlist() {
 	_, role, _, _, _ := checkprodRole(c.Ctx)
 	if role != "1" {
@@ -1732,7 +1732,7 @@ func (c *AdminController) Jsoneditor() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /getwxprojectconfig [get]
-//给jsoneditor返回json数据
+// 给jsoneditor返回json数据
 func (c *AdminController) GetWxProjectConfig() {
 	id := c.GetString("projectid")
 	contents, _ := ioutil.ReadFile("./conf/" + id + ".json")
@@ -1815,7 +1815,7 @@ func (c *AdminController) PutWxProjectConfig() {
 	}
 }
 
-//导入json数据
+// 导入json数据
 func (c *AdminController) ImportJson() {
 	//获取上传的文件
 	_, h, err := c.GetFile("json")

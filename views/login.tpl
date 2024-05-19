@@ -7,7 +7,7 @@
   <meta name="viewport" content="initial-scale=1,user-scalable=no" />
   <title>知识管理系统</title>
   <!-- 收藏用logo图标 -->
-  <link rel="bookmark"  type="image/x-icon"  href="/static/img/only1.ico"/>
+  <link rel="bookmark" type="image/x-icon" href="/static/img/only1.ico" />
   <!-- 网站显示页logo图标 -->
   <link rel="shortcut icon" href="/static/img/only1.ico">
   <link rel="stylesheet" href="/static/css/sso/login.css" />
@@ -28,14 +28,14 @@
         <span class="monileHidden">认证登录</span>
         <span class="pcHidden">知识管理系统</span>
       </div>
-      <input type="hidden" name="url" value="{{.Url}}"/>
+      <input type="hidden" name="url" value="{{.Url}}" />
       <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <form action="" method="POST" id="login-form">
         <p>
           <span></span><input type="text" id="uname" placeholder="请输入用户名/警号" value="" />
         </p>
         <p>
-          <span></span><input type="password" id="pwd" placeholder="请输入密码" value="" onkeypress="getKey()"/>
+          <span></span><input type="password" id="pwd" placeholder="请输入密码" value="" onkeypress="getKey()" />
         </p>
         <div id="warn"><span>!</span><span id="warnText"></span></div>
         <div class="submit" onclick="return login();">登录</div>
@@ -51,90 +51,87 @@
     <div class="shade"></div>
   </div>
   <script>
-
   $('#referrer').val(document.referrer);
 
-  function checkInput(){
-    var uname=document.getElementById("uname");
-    if (uname.value.length==0){
+  function checkInput() {
+    var uname = document.getElementById("uname");
+    if (uname.value.length == 0) {
       alert("请输入账号");
       return false;
     }
-      var pwd=document.getElementById("pwd");
-    if (pwd.value.length==0){
+    var pwd = document.getElementById("pwd");
+    if (pwd.value.length == 0) {
       alert("请输入密码");
       return false;
-      }
-      return true
+    }
+    return true
   }
 
-  function backToHome(){
-    window.location.href="/";
+  function backToHome() {
+    window.location.href = "/";
     return false;
   }
 
   //监听输入框中回车键
-  function getKey(){  
-    if(event.keyCode==13){  
+  function getKey() {
+    if (event.keyCode == 13) {
       login()
-    }     
+    }
   }
 
   //登陆功能
-function loginback() {
-  var uname = document.getElementById("uname");
-  if (uname.value.length == 0) {
-    alert("请输入账号");
-    return
-  }
-  var pwd = document.getElementById("pwd");
-  if (pwd.value.length == 0) {
-    alert("请输入密码");
-    return
-  }
-
-  $.ajax({
-    type: 'post',
-    url: '/loginpost',
-    data: {
-      "uname": $("#uname").val(),
-      "pwd": $("#pwd").val()
-    },
-    success: function(result) {
-      if (result.islogin == 0) {
-        $("#status").html("登陆成功");
-        // $('#modalNav').modal('hide');
-        window.location.reload();
-      } else if (result.islogin == 1) {
-        $("#status").html("用户名或密码错误！")
-      } else if (result.islogin == 2) {
-        $("#status").html("密码错误")
-      }
+  function loginback() {
+    var uname = document.getElementById("uname");
+    if (uname.value.length == 0) {
+      alert("请输入账号");
+      return
     }
-  })
-}
+    var pwd = document.getElementById("pwd");
+    if (pwd.value.length == 0) {
+      alert("请输入密码");
+      return
+    }
 
-
-  $(function() {
-    $(".layerBox").on("click", ".radio-name", function() {
-      $(this).parent().find("input").click();
+    $.ajax({
+      type: 'post',
+      url: '/loginpost',
+      data: {
+        "uname": $("#uname").val(),
+        "pwd": $("#pwd").val()
+      },
+      success: function(result) {
+        if (result.islogin == 0) {
+          $("#status").html("登陆成功");
+          // $('#modalNav').modal('hide');
+          window.location.reload();
+        } else if (result.islogin == 1) {
+          $("#status").html("用户名或密码错误！")
+        } else if (result.islogin == 2) {
+          $("#status").html("密码错误")
+        }
+      }
     })
-    $("#loginform").attr("action", location.href);
-    window.document.onkeydown = function(evt) {
-      evt = window.event || evt;
-      if (evt.keyCode == 13) {
-        login();
-      }
-    }
-  });
+  }
+
+
+  // $(function() {
+  //   $(".layerBox").on("click", ".radio-name", function() {
+  //     $(this).parent().find("input").click();
+  //   })
+  //   $("#loginform").attr("action", location.href);
+  //   window.document.onkeydown = function(evt) {
+  //     evt = window.event || evt;
+  //     if (evt.keyCode == 13) {
+  //       login();
+  //     }
+  //   }
+  // });
 
   function login() {
     var warn = document.getElementById('warn');
     var user = document.getElementById('uname');
     var psw = document.getElementById('pwd');
-
     var text = !user.value && !psw.value ? '请输入账号和密码！' : !user.value ? '请输入账号！' : !psw.value ? '请输入密码！' : "";
-
     if (text) {
       document.getElementById("warnText").innerHTML = text;
       warn.style.display = 'block';
@@ -161,13 +158,13 @@ function loginback() {
         $(".submit").html("登录");
         if (data.islogin == 0) {
           // console.log(data.service)
-          // alert("onkeydown")
+          alert("登录成功，点确定跳转到首页……")
           // location.href = "/index";
           location.href = "{{.Url}}";
           // window.location.reload();
-        } else if(data.islogin == 1){
+        } else if (data.islogin == 1) {
           ShowMsg("用户名或密码错误！");
-        }else if(data.islogin == 2){
+        } else if (data.islogin == 2) {
           ShowMsg("密码错误！");
         }
       });

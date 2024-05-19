@@ -3286,10 +3286,6 @@ paths:
         <br>
       operationId: ElasticController.post tika
       responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.PostTika'
         "400":
           description: Invalid page supplied
         "404":
@@ -4283,6 +4279,52 @@ paths:
           description: Invalid page supplied
         "404":
           description: page not found
+  /excel/wsexcelcal/{id}:
+    get:
+      tags:
+      - excel
+      description: |-
+        get excelwscal
+        <br>
+      operationId: WsExcelcalController.get excelwscal
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetExcel'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /excel/wswxexcelcal/{id}:
+    get:
+      tags:
+      - excel
+      description: |-
+        get wxexcelcal
+        <br>
+      operationId: WsExcelcalController.get wxexcelcal
+      parameters:
+      - in: path
+        name: id
+        description: The id of exceltemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetExcel'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /excel/wxexcelarticle/{id}:
     get:
       tags:
@@ -4366,6 +4408,366 @@ paths:
             $ref: '#/definitions/success'
         "400":
           description: Invalid page
+        "404":
+          description: page not found
+  /freecad/editfcmodel:
+    post:
+      tags:
+      - freecad
+      description: |-
+        post freecad model parameter json by ajax
+        <br>
+      operationId: FreeCADController.post freecad model parameter
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /freecad/editfcmodelbatch:
+    post:
+      tags:
+      - freecad
+      description: |-
+        post freecad model parameter batch json by ajax
+        <br>
+      operationId: FreeCADController.post freecad model parameter batch
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
+  /freecad/freecad:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get mathcad temples by keyword...
+        <br>
+      operationId: FreeCADController.get mathcad temples by keyword...
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of mathtemples
+        type: string
+      - in: query
+        name: page
+        description: The page of mathtemples
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/freecaddata:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get freecad models by keyword...
+        <br>
+      operationId: FreeCADController.get freecad models by keyword...
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of freecad models
+        type: string
+      - in: query
+        name: page
+        description: The page of freecad models
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/freecadmenu:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get mathcad temples by keyword...
+        <br>
+      operationId: FreeCADController.get mathcad temples by keyword...
+      parameters:
+      - in: query
+        name: keyword
+        description: The keyword of mathtemples
+        type: string
+      - in: query
+        name: page
+        description: The page of mathtemples
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/freecadmodel/{id}:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get freecad model by id...
+        <br>
+      operationId: FreeCADController.get freecad model by id...
+      parameters:
+      - in: path
+        name: id
+        description: The id of freecad model
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.FreecadModel'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/getfcparameter/{id}:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get freecad parameter
+        <br>
+      operationId: FreeCADController.get freecad parameter
+      parameters:
+      - in: query
+        name: id
+        description: The model id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.FreecadInputs'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: model not found
+  /freecad/getfreecad/{id}:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get mathcad temples by keyword...
+        <br>
+      operationId: FreeCADController.get mathcad temples by keyword...
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/online3deditor:
+    get:
+      tags:
+      - freecad
+      description: |-
+        online3deditor
+        <br>
+      operationId: FreeCADController.get online3deditor
+      parameters:
+      - in: query
+        name: model
+        description: The model url
+        required: true
+        type: string
+      - in: query
+        name: id
+        description: The model id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
+  /freecad/online3dview:
+    get:
+      tags:
+      - freecad
+      description: |-
+        getthreejs
+        <br>
+      operationId: FreeCADController.get online3dview
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
+  /freecad/online3dviewembed:
+    get:
+      tags:
+      - freecad
+      description: |-
+        getthreejs
+        <br>
+      operationId: FreeCADController.get online3dviewembed
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
+  /freecad/turbin:
+    get:
+      tags:
+      - freecad
+      description: |-
+        getthreejs
+        <br>
+      operationId: FreeCADController.get turbin
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.AddArticle'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
+  /freecad/update:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get freecad model update by id...
+        <br>
+      operationId: FreeCADController.get freecad model update by id...
+      parameters:
+      - in: query
+        name: id
+        description: The id of freecad
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/updatefreecad:
+    post:
+      tags:
+      - freecad
+      description: |-
+        post freecad model update by id...
+        <br>
+      operationId: FreeCADController.post freecad model update by id...
+      parameters:
+      - in: query
+        name: id
+        description: The id of freecad
+        required: true
+        type: string
+      - in: query
+        name: description
+        description: The description of freecad
+        type: string
+      - in: query
+        name: indicators
+        description: The indicators of freecad
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.FreeCAD'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/uploadmodel:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get mathcad
+        <br>
+      operationId: FreeCADController.upload mathcadtemple
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /freecad/uploadmodelfile:
+    post:
+      tags:
+      - freecad
+      description: |-
+        post file by BootstrapFileInput
+        <br>
+      operationId: FreeCADController.post bootstrapfileinput
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
         "404":
           description: page not found
   /mathcad/addmatharticle/{id}:
@@ -5302,6 +5704,52 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
+  /mathcad/wsmathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: |-
+        get mathcad
+        <br>
+      operationId: WsMathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of mathtemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /mathcad/wswxmathcal/{id}:
+    get:
+      tags:
+      - mathcad
+      description: |-
+        get mathcad
+        <br>
+      operationId: WsMathcadController.get mathcad
+      parameters:
+      - in: path
+        name: id
+        description: The id of mathtemple
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetMathcadPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
   /mathcad/wxmatharticle/{id}:
     get:
       tags:
@@ -5325,6 +5773,29 @@ paths:
           description: Invalid page supplied
         "404":
           description: article not found
+  /onlyoffice/addpermission:
+    post:
+      tags:
+      - onlyoffice
+      description: |-
+        post Addpermission..
+        <br>
+      operationId: OnlyController.post Addpermission...
+      parameters:
+      - in: query
+        name: ids
+        description: The id of document
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetOnlyoffice'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /onlyoffice/commandbuilder:
     get:
       tags:
@@ -5438,6 +5909,52 @@ paths:
           description: Invalid page supplied
         "404":
           description: articls not found
+  /onlyoffice/downloadzip:
+    post:
+      tags:
+      - onlyoffice
+      description: |-
+        download zip
+        <br>
+      operationId: OnlyController.download zip
+      parameters:
+      - in: query
+        name: ids
+        description: The ids of onlydoc
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Onlyoffice'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articl not found
+  /onlyoffice/onlyoffice:
+    get:
+      tags:
+      - onlyoffice
+      description: |-
+        get onlyoffice
+        <br>
+      operationId: OnlyController.get onlyoffce
+      parameters:
+      - in: query
+        name: id
+        description: The id of office
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Ollyoffice'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: office not found
   /pdfcpu/addwatermarks/{id}:
     post:
       tags:
@@ -5616,6 +6133,132 @@ paths:
           description: Invalid page supplied
         "404":
           description: data not found
+  /project/product/addpermission:
+    post:
+      tags:
+      - project
+      description: |-
+        get Addpermission..
+        <br>
+      operationId: ProdController.get Addpermission...
+      parameters:
+      - in: query
+        name: ids
+        description: The id of attachment
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /project/product/getpermission:
+    get:
+      tags:
+      - project
+      description: |-
+        get Getpermission..
+        <br>
+      operationId: ProdController.get Getpermission...
+      parameters:
+      - in: query
+        name: docid
+        description: The id of attachment
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /project/product/officeview/{id}:
+    get:
+      tags:
+      - project
+      description: |-
+        get OfficeView..
+        <br>
+      operationId: ProdController.get OfficeView...
+      parameters:
+      - in: path
+        name: id
+        description: The id of OfficeView
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /project/product/officeviewcallback:
+    get:
+      tags:
+      - project
+      description: |-
+        get OfficeViewCallback..
+        <br>
+      operationId: ProdController.get OfficeViewCallback...
+      parameters:
+      - in: query
+        name: id
+        description: The id of attachment
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /project/project/{id}/timeline:
+    get:
+      tags:
+      - project
+      description: |-
+        get aproject time line
+        <br>
+      operationId: ProjController.get project time line
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAllProjCalendar'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /project/project/gettimeline/{id}:
+    get:
+      tags:
+      - project
+      description: |-
+        get aproject time line
+        <br>
+      operationId: ProjController.get project time line
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetAllProjCalendar'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
   /project/project/products/{id}:
     get:
       tags:
@@ -7168,6 +7811,29 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/models.GetAttachbyId'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /wx/deletefreecad:
+    post:
+      tags:
+      - wx
+      description: |-
+        post freecad model delete by id...
+        <br>
+      operationId: ArticleController.post freecad model delete by id...
+      parameters:
+      - in: query
+        name: id
+        description: The id of freecad
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.FreeCAD'
         "400":
           description: Invalid page supplied
         "404":
@@ -9494,6 +10160,23 @@ paths:
           description: Invalid page supplied
         "404":
           description: video not found
+  /wx/uploadvideodata:
+    post:
+      tags:
+      - wx
+      description: |-
+        post video
+        <br>
+      operationId: PhotoController.post wx video data
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: video not found
   /wx/uploadwxavatar:
     post:
       tags:
@@ -9641,6 +10324,20 @@ paths:
       - in: query
         name: role
         description: The role of user
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of users
+        type: string
+      - in: query
+        name: pageNo
+        description: The page for users list
+        required: true
+        type: string
+      - in: query
+        name: limit
+        description: The limit of page for users list
+        required: true
         type: string
       responses:
         "200":
@@ -10014,6 +10711,7 @@ definitions:
         format: datetime
       User:
         $ref: '#/definitions/models.User'
+        description: 这个写法是对的。这样写无法建表：foreignkey:UserID;references:Id;默认可不用谢
       UserID:
         description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
@@ -10072,6 +10770,7 @@ definitions:
         format: datetime
       User:
         $ref: '#/definitions/models.User'
+        description: 这里应该写错了
       ansysapdlid:
         type: integer
         format: int32
@@ -10109,7 +10808,6 @@ definitions:
     type: object
     properties:
       AnsysHistoryID:
-        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int32
       CreatedAt:
@@ -10500,8 +11198,128 @@ definitions:
         type: string
       version:
         type: string
+  models.FCHistoryInputValue:
+    title: FCHistoryInputValue
+    type: object
+    properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
+      fcuserhistoryid:
+        type: integer
+        format: int32
+      freecadinputsid:
+        type: integer
+        format: int32
+      inputvalue:
+        type: string
+  models.FreeCAD:
+    title: FreeCAD
+    type: object
+  models.FreecadInputs:
+    title: FreecadInputs
+    type: object
+    properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      FreecadModelID:
+        type: integer
+        format: int32
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
+      fchistoryinputvalue:
+        $ref: '#/definitions/models.FCHistoryInputValue'
+        description: 带条件的预加载,条件是UserHistoryID
+      inputvalue:
+        description: 默认值
+        type: number
+        format: double
+      name:
+        type: string
+      number:
+        type: integer
+        format: int64
+      realmax:
+        type: string
+      realmin:
+        type: string
+      remark:
+        type: string
+      selectvalue:
+        description: hasMany
+        type: array
+        items:
+          $ref: '#/definitions/models.Select2'
+      symbol:
+        type: string
+      textarealvalue:
+        $ref: '#/definitions/models.TextAreal'
+      unit:
+        type: string
+  models.FreecadModel:
+    title: FreecadModel
+    type: object
+    properties:
+      CreatedAt:
+        type: string
+        format: datetime
+      DeletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      ID:
+        type: integer
+        format: int32
+      UpdatedAt:
+        type: string
+        format: datetime
+      User:
+        $ref: '#/definitions/models.User'
+      UserID:
+        description: 外键 (属于), tag `index`是为该列创建索引
+        type: integer
+        format: int64
+      description:
+        type: string
+      dxfsvgurl:
+        type: string
+      faceimgurl:
+        type: string
+      indicators:
+        type: string
+      number:
+        type: string
+      path:
+        type: string
+      renderimgurl:
+        type: string
+      status:
+        type: boolean
+      title:
+        type: string
+      titleb:
+        description: 简要名称，无日期，无版本号，无扩展名
+        type: string
+      version:
+        type: string
   models.GetAdminCategory:
     title: GetAdminCategory
+    type: object
+  models.GetAllProjCalendar:
+    title: GetAllProjCalendar
     type: object
   models.GetArticle:
     title: GetArticle
@@ -10524,6 +11342,24 @@ definitions:
   models.GetElastic:
     title: GetElastic
     type: object
+  models.GetEstimateCostArchi:
+    title: GetEstimateCostArchi
+    type: object
+  models.GetEstimateCostElect:
+    title: GetEstimateCostElect
+    type: object
+  models.GetEstimateCostMetal:
+    title: GetEstimateCostMetal
+    type: object
+  models.GetEstimateCostTemp:
+    title: GetEstimateCostTemp
+    type: object
+  models.GetEstimateProjects:
+    title: GetEstimateProjects
+    type: object
+  models.GetEstimateProjectsData:
+    title: GetEstimateProjectsData
+    type: object
   models.GetExcel:
     title: GetExcel
     type: object
@@ -10538,6 +11374,9 @@ definitions:
     type: object
   models.GetOnlyPdf:
     title: GetOnlyPdf
+    type: object
+  models.GetOnlyoffice:
+    title: GetOnlyoffice
     type: object
   models.GetProductsPage:
     title: GetProductsPage
@@ -10637,6 +11476,12 @@ definitions:
   models.MathPdf:
     title: MathPdf
     type: object
+  models.Ollyoffice:
+    title: Ollyoffice
+    type: object
+  models.Onlyoffice:
+    title: Onlyoffice
+    type: object
   models.Pay:
     title: Pay
     type: object
@@ -10671,9 +11516,6 @@ definitions:
       id:
         type: integer
         format: int32
-  models.PostTika:
-    title: PostTika
-    type: object
   models.Recharge:
     title: Recharge
     type: object
@@ -10816,6 +11658,8 @@ definitions:
         format: int64
       Ip:
         type: string
+      IsPartyMember:
+        type: boolean
       Lastlogintime:
         type: string
         format: datetime
@@ -10830,6 +11674,8 @@ definitions:
       Repassword:
         type: string
       Secoffice:
+        type: string
+      Sex:
         type: string
       Status:
         type: integer
@@ -10971,7 +11817,7 @@ tags:
     CMSansys API
 - name: excel
   description: |
-    CMSexcel API
+    CMSMATHCAD API
 - name: elastic
   description: |
     CMSELASTIC API

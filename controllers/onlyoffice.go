@@ -1388,6 +1388,16 @@ func (c *OnlyController) DownloadDoc() {
 		c.ServeJSON()
 		return
 	}
+	matched, err = regexp.MatchString("\\.*[f|F][c|C][s|S][t|T][d|D]", fileext)
+	if err != nil {
+		logs.Error(err)
+	}
+	// beego.Info(matched)
+	if matched {
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "不能下载fcstd文件!"}
+		c.ServeJSON()
+		return
+	}
 
 	downloadfile, err = models.GetOnlyAttachbyName(filename)
 	if err != nil {

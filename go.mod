@@ -41,9 +41,9 @@ require (
 	github.com/u2takey/ffmpeg-go v0.4.1
 	github.com/unidoc/unioffice v1.21.1
 	github.com/xuri/excelize/v2 v2.6.1
-	golang.org/x/crypto v0.5.0
-	golang.org/x/net v0.7.0
-	golang.org/x/text v0.7.0
+	golang.org/x/crypto v0.21.0
+	golang.org/x/net v0.22.0
+	golang.org/x/text v0.14.0
 	google.golang.org/appengine v1.6.7
 	gopkg.in/ldap.v2 v2.5.1
 	gorm.io/driver/sqlite v1.4.4
@@ -52,6 +52,7 @@ require (
 )
 
 require (
+	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 // indirect
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/Unknwon/goconfig v1.0.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
@@ -63,12 +64,14 @@ require (
 	github.com/dchest/lru v0.0.0-20151022103600-d8fd1e40a385 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/elastic/elastic-transport-go/v8 v8.0.0-20211216131617-bbee439d559c // indirect
+	github.com/go-asn1-ber/asn1-ber v1.5.5 // indirect
+	github.com/go-ldap/ldap/v3 v3.4.8 // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hhrutter/lzw v0.0.0-20190829144645-6f07a24e8650 // indirect
@@ -104,7 +107,7 @@ require (
 	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
 	golang.org/x/image v0.5.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect

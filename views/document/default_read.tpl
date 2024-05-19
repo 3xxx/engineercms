@@ -18,32 +18,15 @@
   <link href="{{cdncss "/static/mindoc/nprogress/nprogress.css"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/css/kancloud.css" "version"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/css/jstree.css"}}" rel="stylesheet">
-  <link href="{{cdncss "/static/mindoc/editor.md/lib/mermaid/mermaid.css" "version"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/editor.md/lib/sequence/sequence-diagram-min.css" "version"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/editor.md/css/editormd.preview.css" "version"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/css/markdown.preview.css" "version"}}" rel="stylesheet">
   <link href="{{cdncss (print "/static/mindoc/editor.md/lib/highlight/styles/" .HighlightStyle ".css") "version"}}" rel="stylesheet">
+    <link href="{{cdncss "/static/mindoc/prismjs/prismjs.css"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/katex/katex.min.css"}}" rel="stylesheet">
   <link href="{{cdncss "/static/mindoc/css/print.css" "version"}}" media="print" rel="stylesheet">
-  <link href="{{cdncss "/static/mindoc/editor.md/lib/codemirror/codemirror.min.css" "version"}}" rel="stylesheet">
 
-
-  <!-- <script src="{{cdnjs "/static/iframe-resizer/iframeResizer.min.js"}}" type="text/javascript"></script> -->
-
-<!--   <style>
-  iframe {
-    width: 10px;
-    min-width: 100%;
-  }
-</style> -->
-
-<!-- <iframe id="myIframe" src="http://anotherdomain.com/iframe.html"></iframe> -->
-<script>
-  // iFrameResize({ log: true,bodyMargin:10 }, '#myIframe')
-  // $('iframe').iFrameResize([{log: true}]);
-</script>
-
-    <script type="text/javascript">
+  <script type="text/javascript">
         window.IS_ENABLE_IFRAME = '{{conf "enable_iframe" }}' === 'true';
         window.BASE_URL = '{{urlfor "HomeController.Index" }}';
         window.IS_DOCUMENT_INDEX = '{{if .IS_DOCUMENT_INDEX}}true{{end}}' === 'true';
@@ -67,12 +50,13 @@
             }
         }
 
-        div.embed_viewer
-        {
-            float: left;
-            border: 1px solid #eeeeee;
-            width: 640px;
-            height: 480px;
+        .svg { 
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            vertical-align: middle; 
+            overflow: auto; 
         }
     </style>
 </head>
@@ -204,22 +188,6 @@
                         {{.Content}}
                     </div>
 
-            <!-- <div class="online_3d_viewer"
-        style="width: 800px; height: 600px;"
-        model="/static/online3dview/assets/models/DamagedHelmet.glb">
-    </div> -->
-
-    <!-- <div class="online_3d_viewer"
-        style="width: 800px; height: 600px;"
-        model="/static/online3dview/assets/models/DamagedHelmet.glb">
-    </div> -->
-
-<!--     <iframe id="myIframe"
-        src="http://127.0.0.1:8081/v1/freecad/online3dviewembed#model=/static/online3dview/assets/models/DamagedHelmet.glb"
-        width=800 height=600
-        style="border:1px solid #eeeeee;">
-    </iframe> -->
-
                     {{if .Model.IsDisplayComment}}
                     <div id="articleComment" class="m-comment{{if .IS_DOCUMENT_INDEX}} not-show-comment{{end}}">
                         <!-- 评论列表 -->
@@ -333,43 +301,20 @@
   <script src="{{cdnjs "/static/mindoc/js/jquery.form.js"}}" type="text/javascript"></script>
   <script src="{{cdnjs "/static/mindoc/layer/layer.js"}}" type="text/javascript"></script>
   <script src="{{cdnjs "/static/mindoc/jstree/3.3.4/jstree.min.js"}}" type="text/javascript"></script>
-  <script src="{{cdnjs "/static/mindoc/editor.md/editormd.js" "version"}}" type="text/javascript"></script>
+
   <script src="{{cdnjs "/static/mindoc/nprogress/nprogress.js"}}" type="text/javascript"></script>
   <script src="{{cdnjs "/static/mindoc/editor.md/lib/highlight/highlight.js"}}" type="text/javascript"></script>
   <script src="{{cdnjs "/static/mindoc/js/jquery.highlight.js"}}" type="text/javascript"></script>
-  <script src="{{cdnjs "/static/mindoc/js/kancloud.js" "version"}}" type="text/javascript"></script>
-  <script src="{{cdnjs "/static/mindoc/js/splitbar.js" "version"}}" type="text/javascript"></script>
-  <script src="{{cdnjs "/static/mindoc/js/custom-elements-builtin-0.6.5.min.js"}}" type="text/javascript"></script>
-  <script src="{{cdnjs "/static/mindoc/js/x-frame-bypass-1.0.2.js"}}" type="text/javascript"></script>
 
   
-<!--   <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.7.11/dist/browser/view.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.7.11/dist/browser/transform.min.js"></script> -->
-
-<!-- <svg id="mindmap"></svg> -->
-<!--   <pre id="mmm" hidden>
-# foobar
-
-## foo
-
-- f
-- o
-- o
-
-## bar
-
-- b
-- a
-- r
-    </pre> -->
+<script src="{{cdnjs "/static/mindoc/js/clipboard.min.js" "version"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/prismjs/prismjs.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/kancloud.js" "version"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/splitbar.js" "version"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/custom-elements-builtin-0.6.5.min.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/mindoc/js/x-frame-bypass-1.0.2.js"}}" type="text/javascript"></script>
 
   <script type="text/javascript">
-  // markdown = document.getElementById("mm").innerHTML;
-  // const data = markmap.transform(markdown);
-  // console.log(data)
-  // markmap.Markmap.create("#mindmap", null, data);
-
   $(function() {
     $("#searchList").on("click", "a", function() {
       var id = $(this).attr("data-id");
@@ -382,46 +327,49 @@
       });
     });
 
+
     window.menuControl = true;
-    window.menuSetting = "open" ;
-    if (menuSetting == 'open' || menuSetting == 'first') {
+    window.foldSetting = '{{.FoldSetting}}';
+    if (foldSetting == 'open' || foldSetting == 'first') {
         $('#handlerMenuShow').find('span').text('{{i18n .Lang "doc.fold"}}');
         $('#handlerMenuShow').find('i').attr("class","fa fa-angle-down");
-        if (menuSetting == 'open') {
-            window.jsTree.jstree().open_all()
+        if (foldSetting == 'open') {
+            window.jsTree.jstree().open_all();
         }
-        if (menuSetting == 'first') {
-            window.jsTree.jstree('close_all')
+        if (foldSetting == 'first') {
+            window.jsTree.jstree('close_all');
             var $target = $('.jstree-container-ul').children('li').filter(function(index){
                 if($(this).attr('aria-expanded')==false||$(this).attr('aria-expanded')){
-                    return $(this)
+                    return $(this);
                 }else{
-                    delete $(this)
+                    delete $(this);
                 }
-            })
-            $target.children('i').trigger('click')
+            });
+            $target.children('i').trigger('click');
         }
     } else {
         menuControl = false;
-        window.jsTree.jstree('close_all')
+        window.jsTree.jstree('close_all');
     }
     $('#handlerMenuShow').on('click', function(){
         if(menuControl){
-            $(this).find('span').text('{{i18n .Lang "doc.expand"}}')
-            $(this).find('i').attr("class","fa fa-angle-left")
-            window.menuControl = false
-            window.jsTree.jstree('close_all')
+            $(this).find('span').text('{{i18n .Lang "doc.expand"}}');
+            $(this).find('i').attr("class","fa fa-angle-left");
+            window.menuControl = false;
+            window.jsTree.jstree('close_all');
         }else{
             window.menuControl = true
-            $(this).find('span').text('{{i18n .Lang "doc.fold"}}')
-            $(this).find('i').attr("class","fa fa-angle-down")
-            window.jsTree.jstree().open_all()
+            $(this).find('span').text('{{i18n .Lang "doc.fold"}}');
+            $(this).find('i').attr("class","fa fa-angle-down");
+            window.jsTree.jstree().open_all();
         }
     });
 
     if (!window.IS_DOCUMENT_INDEX && IS_DISPLAY_COMMENT) {
         pageClicked(-1, parseInt($('#doc_id').val()));
     }
+
+
 });
 </script>
 {{.Scripts}}

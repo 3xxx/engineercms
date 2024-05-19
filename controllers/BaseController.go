@@ -3,18 +3,20 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/i18n"
-	"html/template"
 	"io"
-	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"time"
+
+	"html/template"
+	"io/ioutil"
+	"path/filepath"
+
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/i18n"	
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/models"
+	"github.com/3xxx/engineercms/controllers/utils"
 )
 
 type MindocBaseController struct {

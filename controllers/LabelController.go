@@ -3,12 +3,13 @@ package controllers
 import (
 	"math"
 
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils/pagination"
-	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/models"
+	"github.com/3xxx/engineercms/controllers/utils/pagination"
+	// beego "github.com/beego/beego/v2/adapter"
 )
 
 type LabelController struct {

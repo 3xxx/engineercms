@@ -1,4 +1,4 @@
-//项目进度控制器，具体任务控制器另外做吧
+// 项目进度控制器，具体任务控制器另外做吧
 package controllers
 
 import (
@@ -93,7 +93,7 @@ type Rolesvalue struct {
 	Name string `json:"name"`
 }
 
-//项目列表页面
+// 项目列表页面
 func (c *ProjGantController) Get() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -306,7 +306,7 @@ func (c *ProjGantController) Get() {
 
 // }
 
-//根据id查看项目，查出项目目录
+// 根据id查看项目，查出项目目录
 func (c *ProjGantController) GetProjectGant() {
 	// username, role := checkprodRole(c.Ctx)
 	// if role == 1 {
@@ -361,9 +361,9 @@ func (c *ProjGantController) GetProjectGant() {
 	// c.TplName = "cms/project.tpl"
 }
 
-//根据项目侧栏id查看这个id下的成果，不含子目录中的成果
-//任何一级目录下都可以放成果
-//这个作废——以product中的GetProducts
+// 根据项目侧栏id查看这个id下的成果，不含子目录中的成果
+// 任何一级目录下都可以放成果
+// 这个作废——以product中的GetProducts
 func (c *ProjGantController) GetProjGant() {
 	id := c.Ctx.Input.Param(":id")
 	// beego.Info(id)
@@ -397,7 +397,7 @@ func (c *ProjGantController) GetProjGant() {
 	c.TplName = "cms/project_products.tpl"
 }
 
-//添加项目和项目目录、文件夹
+// 添加项目和项目目录、文件夹
 func (c *ProjGantController) AddProjGant() {
 	// iprole := Getiprole(c.Ctx.Input.IP())
 	// if iprole != 1 {
@@ -515,8 +515,8 @@ func (c *ProjGantController) AddProjGant() {
 	c.ServeJSON()
 }
 
-//导入甘特数据
-//上传excel文件，导入到数据库
+// 导入甘特数据
+// 上传excel文件，导入到数据库
 func (c *ProjGantController) ImportProjGant() {
 	// 获取上传的文件
 	_, h, err := c.GetFile("gantsexcel")
@@ -731,7 +731,7 @@ func (c *ProjGantController) ImportProjGant() {
 	}
 }
 
-//修改项目名称、负责人等，
+// 修改项目名称、负责人等，
 func (c *ProjGantController) UpdateProjGant() {
 	iprole := Getiprole(c.Ctx.Input.IP())
 	if iprole != 1 {
@@ -743,7 +743,7 @@ func (c *ProjGantController) UpdateProjGant() {
 	var err error
 	projcode := c.GetString("code")
 	projname := c.GetString("name")
-	projlabe := c.GetString("label")
+	// projlabe := c.GetString("label")
 	principal := c.GetString("principal")
 	pid := c.GetString("pid")
 	//id转成64位
@@ -751,7 +751,7 @@ func (c *ProjGantController) UpdateProjGant() {
 	if err != nil {
 		logs.Error(err)
 	}
-	err = models.UpdateProject(idNum, projcode, projname, projlabe, principal)
+	err = models.UpdateProject(idNum, projcode, projname, principal)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -767,8 +767,8 @@ func (c *ProjGantController) UpdateProjGant() {
 	// c.ServeJSON()
 }
 
-//根据id删除proj
-//后台删除目录，
+// 根据id删除proj
+// 后台删除目录，
 func (c *ProjGantController) DeleteProjGant() {
 	iprole := Getiprole(c.Ctx.Input.IP())
 	if iprole != 1 {
@@ -875,7 +875,7 @@ func (c *ProjGantController) DeleteProjGant() {
 	// }
 }
 
-//关闭项目进度
+// 关闭项目进度
 func (c *ProjGantController) CloseProjGant() {
 	iprole := Getiprole(c.Ctx.Input.IP())
 	if iprole != 1 {

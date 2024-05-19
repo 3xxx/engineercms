@@ -212,13 +212,16 @@ func init() {
 
 	//gorm
 	_db.AutoMigrate(&Article{}, &Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}, &Location{}, &LocationNavigate{})
-	// _db.AutoMigrate(&AnsysApdl{}, &AnsysInputs{}, &AnsysOutputs{}, &AnsysHistory{}, &AnsysHistoryInputValue{}, &AnsysHistoryOutputValue{}, &AnsysArticle{})
-	// _db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
-	// _db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
-	// _db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
-	// _db.AutoMigrate(&PassProject{})
+	_db.AutoMigrate(&AnsysApdl{}, &AnsysInputs{}, &AnsysOutputs{}, &AnsysHistory{}, &AnsysHistoryInputValue{}, &AnsysHistoryOutputValue{}, &AnsysArticle{})
+	_db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
+	_db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
+	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
+	_db.AutoMigrate(&PassProject{})
 	_db.AutoMigrate(&PhotoData{})
-	_db.AutoMigrate(&FreecadModel{})
+	_db.AutoMigrate(&FreecadModel{}, &FreecadInputs{})
+	_db.AutoMigrate(&EstimateProject{})
+	_db.AutoMigrate(&EstimateProjPhase{}) // &EstimateProfessional{}, &EstimateSecondary{}, &EstimateTertiary{},
+	_db.AutoMigrate(&EstimateCostArchi{}, EstimateCostElect{}, EstimateCostMetal{}, EstimateCostTemp{})
 }
 
 //获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。

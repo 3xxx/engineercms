@@ -377,7 +377,7 @@ function uploadImage($id, $callback) {
         if (e.clipboardData && e.clipboardData.items) {
             var clipboard = e.clipboardData;
             for (var i = 0, len = clipboard.items.length; i < len; i++) {
-                if (clipboard.items[i].kind === 'file' || clipboard.items[i].type.indexOf('image') > -1) {// 0
+                if (clipboard.items[i].kind === 'file' || clipboard.items[i].type.indexOf('image') > -1) {
 
                     var imageFile = clipboard.items[i].getAsFile();
 
@@ -447,6 +447,14 @@ function initHighlighting() {
 }
 
 $(function () {
+    locales = {
+        'zh-CN': {
+            attachments: ' 个附件',
+        },
+        'en': {
+            attachments: ' attachments',
+        }
+    }
     window.vueApp = new Vue({
         el: "#attachList",
         data: {
@@ -484,7 +492,7 @@ $(function () {
         },
         watch: {
             lists: function ($lists) {
-                $("#attachInfo").text(" " + $lists.length + " 个附件")
+                $("#attachInfo").text(" " + $lists.length + locales[lang].attachments)
             }
         }
     });

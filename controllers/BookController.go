@@ -5,24 +5,28 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/3xxx/engineercms/controllers/utils/pagination"
-	"github.com/3xxx/engineercms/controllers/utils/sqltil"
-	"github.com/3xxx/engineercms/graphics"
-	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/i18n"
-	"github.com/russross/blackfriday/v2"
+
 	"html/template"
-	"net/http"
+
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+	"github.com/beego/i18n"
+	"github.com/3xxx/engineercms/controllers/utils/sqltil"
+
+	"net/http"
+
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/graphics"
+	"github.com/3xxx/engineercms/models"
+	"github.com/3xxx/engineercms/controllers/utils"
+	"github.com/3xxx/engineercms/controllers/utils/pagination"
+	"github.com/russross/blackfriday/v2"
 )
 
 type BookController struct {
@@ -123,7 +127,7 @@ func (c *BookController) Setting() {
 
 }
 
-//保存项目信息
+// 保存项目信息
 func (c *BookController) SaveBook() {
 	bookResult, err := c.IsPermission()
 
@@ -161,8 +165,8 @@ func (c *BookController) SaveBook() {
 	if !models.NewItemsets().Exist(itemId) {
 		c.JsonResult(6006, i18n.Tr(c.Lang, "message.project_space_not_exist"))
 	}
-	if editor != "markdown" && editor != "html" && editor != "new_html" {
-		editor = "markdown"
+	if editor != EditorMarkdown && editor != EditorCherryMarkdown && editor != EditorHtml && editor != EditorNewHtml {
+		editor = EditorMarkdown
 	}
 
 	book.BookName = bookName
@@ -170,7 +174,13 @@ func (c *BookController) SaveBook() {
 	book.CommentStatus = commentStatus
 	book.Publisher = publisher
 	//book.Label = tag
+	if book.Editor == EditorMarkdown && editor == EditorCherryMarkdown || book.Editor == EditorCherryMarkdown && editor == EditorMarkdown {
+		c.JsonResult(6006, i18n.Tr(c.Lang, "message.editors_not_compatible"))
+	}
 	book.Editor = editor
+	if editor == EditorCherryMarkdown {
+		book.Theme = "cherry"
+	}
 	book.HistoryCount = historyCount
 	book.IsDownload = 0
 	book.BookPassword = strings.TrimSpace(c.GetString("bPassword"))
@@ -213,7 +223,7 @@ func (c *BookController) SaveBook() {
 	c.JsonResult(0, "ok", bookResult)
 }
 
-//设置项目私有状态.
+// 设置项目私有状态.
 func (c *BookController) PrivatelyOwned() {
 
 	status := c.GetString("status")
@@ -293,7 +303,7 @@ func (c *BookController) Transfer() {
 	c.JsonResult(0, "ok")
 }
 
-//上传项目封面.
+// 上传项目封面.
 func (c *BookController) UploadCover() {
 
 	bookResult, err := c.IsPermission()
@@ -541,7 +551,7 @@ func (c *BookController) Create() {
 	c.JsonResult(6001, "error")
 }
 
-//复制项目
+// 复制项目
 func (c *BookController) Copy() {
 	if c.Ctx.Input.IsPost() {
 		//检查是否有复制项目的权限
@@ -619,6 +629,9 @@ func (c *BookController) Import() {
 	tempPath = filepath.Join(tempPath, moreFile.Filename)
 
 	err = c.SaveToFile("import-file", tempPath)
+	if err != nil {
+		c.JsonResult(6004, i18n.Tr(c.Lang, "message.upload_failed"))
+	}
 
 	book := models.NewBook()
 
@@ -721,7 +734,7 @@ func (c *BookController) Delete() {
 	c.JsonResult(0, "ok")
 }
 
-//发布项目.
+// 发布项目.
 func (c *BookController) Release() {
 	c.Prepare()
 
@@ -760,7 +773,7 @@ func (c *BookController) Release() {
 	c.JsonResult(0, i18n.Tr(c.Lang, "message.publish_to_queue"))
 }
 
-//文档排序.
+// 文档排序.
 func (c *BookController) SaveSort() {
 	c.Prepare()
 
@@ -921,7 +934,7 @@ func (c *BookController) TeamAdd() {
 	c.JsonResult(0, "OK", teamRel)
 }
 
-//删除项目的团队.
+// 删除项目的团队.
 func (c *BookController) TeamDelete() {
 	c.Prepare()
 
@@ -952,7 +965,7 @@ func (c *BookController) TeamDelete() {
 	c.JsonResult(0, "OK")
 }
 
-//团队搜索.
+// 团队搜索.
 func (c *BookController) TeamSearch() {
 	c.Prepare()
 
@@ -973,7 +986,7 @@ func (c *BookController) TeamSearch() {
 
 }
 
-//项目空间搜索.
+// 项目空间搜索.
 func (c *BookController) ItemsetsSearch() {
 	c.Prepare()
 

@@ -242,6 +242,9 @@ a.navbar-brand {
       <li {{if .IsFreeCAD}} class="active" {{end}}>
         <a href="/v1/freecad/freecad" title="FreeCAD" target="_blank">FreeCAD</a>
       </li>
+      <li {{if .IsEstimate}} class="active" {{end}}>
+        <a href="/v1/estimate/getestimateprojects" title="Estimate" target="_blank">概预算</a>
+      </li>
     </ul>
     <div class="pull-right">
       <ul class="nav navbar-nav navbar-right">
@@ -370,6 +373,8 @@ a.navbar-brand {
     </div>
   </div>
 </div>
+
+
 <script type="text/javascript">
 $(function() {
   // console.log(window.localStorage.getItem('projectid'))
@@ -476,7 +481,7 @@ $(function() {
       var param = {
         limit: params.pageSize, //每页多少条数据
         pageNo: params.pageNumber, // 页码
-        searchText: $(".search .form-control").val()
+        searchText: params.searchText // $(".search .form-control").val()
       };
       //搜索框功能
       //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码

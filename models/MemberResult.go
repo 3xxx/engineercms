@@ -1,10 +1,11 @@
 package models
 
 import (
-	"github.com/3xxx/engineercms/conf"
+	"time"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/i18n"
-	"time"
+	"github.com/3xxx/engineercms/conf"
 )
 
 type MemberRelationshipResult struct {
@@ -71,9 +72,9 @@ func (m *MemberRelationshipResult) FindForUsersByBookId(lang string, bookId, pag
 
 	var members []*MemberRelationshipResult
 
-	sql1 := "SELECT * FROM md_relationship AS rel LEFT JOIN md_members as member ON rel.member_id = member.member_id WHERE rel.book_id = ? ORDER BY rel.relationship_id DESC  LIMIT ?,?"
+	sql1 := "SELECT * FROM md_relationship AS rel LEFT JOIN md_members as mdmb ON rel.member_id = mdmb.member_id WHERE rel.book_id = ? ORDER BY rel.relationship_id DESC  limit ? offset ?"
 
-	sql2 := "SELECT count(*) AS total_count FROM md_relationship AS rel LEFT JOIN md_members as member ON rel.member_id = member.member_id WHERE rel.book_id = ?"
+	sql2 := "SELECT count(*) AS total_count FROM md_relationship AS rel LEFT JOIN md_members as mdmb ON rel.member_id = mdmb.member_id WHERE rel.book_id = ?"
 
 	var total_count int
 
@@ -85,7 +86,7 @@ func (m *MemberRelationshipResult) FindForUsersByBookId(lang string, bookId, pag
 
 	offset := (pageIndex - 1) * pageSize
 
-	_, err = o.Raw(sql1, bookId, offset, pageSize).QueryRows(&members)
+	_, err = o.Raw(sql1, bookId, pageSize, offset).QueryRows(&members)
 
 	if err != nil {
 		return members, 0, err

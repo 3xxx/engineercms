@@ -1,16 +1,18 @@
 package controllers
 
 import (
+	"strconv"
+	"strings"
+
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/i18n"
 	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/models"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/controllers/utils/sqltil"
-	"github.com/3xxx/engineercms/models"
+	
 	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/i18n"
-	"strconv"
-	"strings"
 )
 
 type MindocSearchController struct {

@@ -22,7 +22,7 @@ type Pagination struct {
 }
 
 //NewPagination 新建分页器
-func NewPagination(req *http.Request, total int, pernum int,baseUrl string) *Pagination {
+func NewPagination(req *http.Request, total int, pernum int, baseUrl string) *Pagination {
 	return &Pagination{
 		Request: req,
 		Total:   total,

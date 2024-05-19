@@ -4,26 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/3xxx/engineercms/controllers/utils/cryptil"
-	"github.com/3xxx/engineercms/controllers/utils/filetil"
-	"github.com/3xxx/engineercms/controllers/utils/gopool"
-	"github.com/3xxx/engineercms/controllers/utils/pagination"
-	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/boombuler/barcode"
-	"github.com/boombuler/barcode/qr"
-	"github.com/russross/blackfriday/v2"
-	// "gopkg.in/russross/blackfriday.v2"
-	// "github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/i18n"
-	// "github.com/boombuler/barcode"
-	// "github.com/boombuler/barcode/qr"
 	"html/template"
 	"image/png"
 	"net/http"
@@ -34,11 +14,36 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/i18n"
+	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/models"	
+	"github.com/3xxx/engineercms/controllers/utils"
+	"github.com/3xxx/engineercms/controllers/utils/cryptil"
+	"github.com/3xxx/engineercms/controllers/utils/filetil"
+	"github.com/3xxx/engineercms/controllers/utils/gopool"
+	"github.com/3xxx/engineercms/controllers/utils/pagination"
+	"github.com/russross/blackfriday/v2"
 )
 
 // DocumentController struct
 type DocumentController struct {
 	MindocBaseController
+}
+
+// Document prev&next
+type DocumentTreeFlatten struct {
+	DocumentId   int    `json:"id"`
+	DocumentName string `json:"text"`
+	// ParentId     interface{} `json:"parent"`
+	Identify string `json:"identify"`
+	// BookIdentify string      `json:"-"`
+	// Version      int64       `json:"version"`
 }
 
 // 文档首页
@@ -70,8 +75,12 @@ func (c *DocumentController) Index() {
 			selected = doc.DocumentId
 			c.Data["Title"] = doc.DocumentName
 			c.Data["Content"] = template.HTML(doc.Release)
-
 			c.Data["Description"] = utils.AutoSummary(doc.Release, 120)
+			c.Data["FoldSetting"] = "first"
+
+			if bookResult.Editor == EditorCherryMarkdown {
+				c.Data["MarkdownTheme"] = doc.MarkdownTheme
+			}
 
 			if bookResult.IsDisplayComment {
 				// 获取评论、分页
@@ -83,6 +92,7 @@ func (c *DocumentController) Index() {
 	} else {
 		c.Data["Title"] = i18n.Tr(c.Lang, "blog.summary")
 		c.Data["Content"] = template.HTML(blackfriday.Run([]byte(bookResult.Description)))
+		c.Data["FoldSetting"] = "closed"
 	}
 
 	tree, err := models.NewDocument().CreateDocumentTreeForHtml(bookResult.BookId, selected)
@@ -98,14 +108,11 @@ func (c *DocumentController) Index() {
 	c.Data["IS_DOCUMENT_INDEX"] = true
 	c.Data["Model"] = bookResult
 	c.Data["Result"] = template.HTML(tree)
-
 }
 
 // CheckPassword : Handles password verification for private documents,
 // and front-end requests are made through Ajax.
 func (c *DocumentController) CheckPassword() {
-	c.Prepare()
-
 	identify := c.Ctx.Input.Param(":key")
 	password := c.GetString("bPassword")
 
@@ -138,9 +145,6 @@ func (c *DocumentController) CheckPassword() {
 
 // 阅读文档
 func (c *DocumentController) Read() {
-	// logs.Info("doc.ViewCoun")
-	c.Prepare()
-
 	identify := c.Ctx.Input.Param(":key")
 	token := c.GetString("token")
 	id := c.GetString(":id")
@@ -191,28 +195,68 @@ func (c *DocumentController) Read() {
 		doc.AttachList = attach
 	}
 
+	// prev,next
+	treeJson, err := models.NewDocument().FindDocumentTree2(bookResult.BookId)
+	if err != nil {
+		logs.Error("生成项目文档树时出错 ->", err)
+	}
+
+	res := getTreeRecursive(treeJson, 0)
+	flat := make([]DocumentTreeFlatten, 0)
+	Flatten(res, &flat)
+	var index int
+	for i, v := range flat {
+		if v.Identify == id {
+			index = i
+		}
+	}
+	var PrevName, PrevPath, NextName, NextPath string
+	if index == 0 {
+		c.Data["PrevName"] = "没有了"
+		PrevName = "没有了"
+	} else {
+		c.Data["PrevPath"] = identify + "/" + flat[index-1].Identify
+		c.Data["PrevName"] = flat[index-1].DocumentName
+		PrevPath = identify + "/" + flat[index-1].Identify
+		PrevName = flat[index-1].DocumentName
+	}
+	if index == len(flat)-1 {
+		c.Data["NextName"] = "没有了"
+		NextName = "没有了"
+	} else {
+		c.Data["NextPath"] = identify + "/" + flat[index+1].Identify
+		c.Data["NextName"] = flat[index+1].DocumentName
+		NextPath = identify + "/" + flat[index+1].Identify
+		NextName = flat[index+1].DocumentName
+	}
+
 	doc.IncrViewCount(doc.DocumentId)
 	doc.ViewCount = doc.ViewCount + 1
 	doc.PutToCache()
 
 	if c.IsAjax() {
 		var data struct {
-			DocId       int    `json:"doc_id"`
-			DocIdentify string `json:"doc_identify"`
-			DocTitle    string `json:"doc_title"`
-			Body        string `json:"body"`
-			Title       string `json:"title"`
-			Version     int64  `json:"version"`
-			ViewCount   int    `json:"view_count"`
+			DocId         int    `json:"doc_id"`
+			DocIdentify   string `json:"doc_identify"`
+			DocTitle      string `json:"doc_title"`
+			Body          string `json:"body"`
+			Title         string `json:"title"`
+			Version       int64  `json:"version"`
+			ViewCount     int    `json:"view_count"`
+			MarkdownTheme string `json:"markdown_theme"`
+			IsMarkdown    bool   `json:"is_markdown"`
 		}
 		data.DocId = doc.DocumentId
 		data.DocIdentify = doc.Identify
 		data.DocTitle = doc.DocumentName
-		data.Body = doc.Release
+		data.Body = doc.Release + "<div class='wiki-bottom-left'>上一篇： <a href='/docs/" + PrevPath + "' rel='prev'>" + PrevName + "</a><br />下一篇： <a href='/docs/" + NextPath + "' rel='next'>" + NextName + "</a><br /></div>"
 		data.Title = doc.DocumentName + " - Powered by MinDoc"
 		data.Version = doc.Version
 		data.ViewCount = doc.ViewCount
-
+		data.MarkdownTheme = doc.MarkdownTheme
+		if bookResult.Editor == EditorCherryMarkdown {
+			data.IsMarkdown = true
+		}
 		c.JsonResult(0, "ok", data)
 	} else {
 		c.Data["DocumentId"] = doc.DocumentId
@@ -238,9 +282,45 @@ func (c *DocumentController) Read() {
 	c.Data["Model"] = bookResult
 	c.Data["Result"] = template.HTML(tree)
 	c.Data["Title"] = doc.DocumentName
-	c.Data["Content"] = template.HTML(doc.Release)
+	c.Data["Content"] = template.HTML(doc.Release + "<div class='wiki-bottom-left'>上一篇： <a href='/docs/" + PrevPath + "' rel='prev'>" + PrevName + "</a><br />下一篇： <a href='/docs/" + NextPath + "' rel='next'>" + NextName + "</a><br /></div>")
 	c.Data["ViewCount"] = doc.ViewCount
-	logs.Info(doc.ViewCount)
+	c.Data["FoldSetting"] = "closed"
+	if bookResult.Editor == EditorCherryMarkdown {
+		c.Data["MarkdownTheme"] = doc.MarkdownTheme
+	}
+	if doc.IsOpen == 1 {
+		c.Data["FoldSetting"] = "open"
+	} else if doc.IsOpen == 2 {
+		c.Data["FoldSetting"] = "empty"
+	}
+}
+
+// 递归得到树状结构体
+func getTreeRecursive(list []*models.DocumentTree, parentId int) (res []*models.DocumentTree) {
+	for _, v := range list {
+		if v.ParentId == parentId {
+			v.Children = getTreeRecursive(list, v.DocumentId)
+			res = append(res, v)
+		}
+	}
+	return res
+}
+
+// 递归将树状结构体转换为扁平结构体数组
+// func Flatten(list []*models.DocumentTree, flattened *[]DocumentTreeFlatten) (flatten *[]DocumentTreeFlatten) {
+func Flatten(list []*models.DocumentTree, flattened *[]DocumentTreeFlatten) {
+	// Treeslice := make([]*DocumentTreeFlatten, 0)
+	for _, v := range list {
+		tree := make([]DocumentTreeFlatten, 1)
+		tree[0].DocumentId = v.DocumentId
+		tree[0].DocumentName = v.DocumentName
+		tree[0].Identify = v.Identify
+		*flattened = append(*flattened, tree...)
+		if len(v.Children) > 0 {
+			Flatten(v.Children, flattened)
+		}
+	}
+	return
 }
 
 // 编辑文档
@@ -280,16 +360,7 @@ func (c *DocumentController) Edit() {
 		}
 	}
 
-	// 根据不同编辑器类型加载编辑器
-	if bookResult.Editor == "markdown" {
-		c.TplName = "document/markdown_edit_template.tpl"
-	} else if bookResult.Editor == "html" {
-		c.TplName = "document/html_edit_template.tpl"
-	} else if bookResult.Editor == "new_html" {
-		c.TplName = "document/new_html_edit_template.tpl"
-	} else {
-		c.TplName = "document/" + bookResult.Editor + "_edit_template.tpl"
-	}
+	c.TplName = fmt.Sprintf("document/%s_edit_template.tpl", bookResult.Editor)
 
 	c.Data["Model"] = bookResult
 
@@ -778,6 +849,7 @@ func (c *DocumentController) Content() {
 	if c.Ctx.Input.IsPost() {
 		markdown := strings.TrimSpace(c.GetString("markdown", ""))
 		content := c.GetString("html")
+		markdownTheme := c.GetString("markdown_theme", "theme__light")
 		version, _ := c.GetInt64("version", 0)
 		isCover := c.GetString("cover")
 
@@ -812,6 +884,7 @@ func (c *DocumentController) Content() {
 			doc.Markdown = content
 		} else {
 			doc.Markdown = markdown
+			doc.MarkdownTheme = markdownTheme
 		}
 
 		doc.Version = time.Now().Unix()
@@ -867,6 +940,7 @@ func (c *DocumentController) Export() {
 	c.Prepare()
 
 	identify := c.Ctx.Input.Param(":key")
+
 	if identify == "" {
 		c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.param_error"))
 	}
@@ -905,9 +979,8 @@ func (c *DocumentController) Export() {
 	if !strings.HasPrefix(bookResult.Cover, "http:://") && !strings.HasPrefix(bookResult.Cover, "https:://") {
 		bookResult.Cover = conf.URLForWithCdnImage(bookResult.Cover)
 	}
-
-	if output == "markdown" {
-		if bookResult.Editor != "markdown" {
+	if output == Markdown {
+		if bookResult.Editor != EditorMarkdown && bookResult.Editor != EditorCherryMarkdown {
 			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.cur_project_not_support_md"))
 		}
 		p, err := bookResult.ExportMarkdown(c.CruSession.SessionID(context.TODO()))
@@ -1226,7 +1299,7 @@ func (c *DocumentController) Compare() {
 	identify := c.Ctx.Input.Param(":key")
 
 	bookId := 0
-	editor := "markdown"
+	editor := EditorMarkdown
 
 	// 如果是超级管理员则忽略权限判断
 	if c.Member.IsAdministrator() {
@@ -1272,7 +1345,7 @@ func (c *DocumentController) Compare() {
 	c.Data["HistoryId"] = historyId
 	c.Data["DocumentId"] = doc.DocumentId
 
-	if editor == "markdown" {
+	if editor == EditorMarkdown || editor == EditorCherryMarkdown {
 		c.Data["HistoryContent"] = history.Markdown
 		c.Data["Content"] = doc.Markdown
 	} else {

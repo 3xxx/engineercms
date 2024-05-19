@@ -147,6 +147,14 @@ function renderPage($data) {
     else {
         pageClicked(-1, $data.doc_id);
     }
+
+    if ($data.is_markdown) {
+        if ($("#view_container").hasClass($data.markdown_theme)) {
+            return
+        }
+        $("#view_container").removeClass("theme__dark theme__green theme__light theme__red theme__default")
+        $("#view_container").addClass($data.markdown_theme)
+    }
 }
 
 /***
@@ -169,7 +177,8 @@ function loadDocument($url, $id, $callback) {
                 }
                 renderPage(data);
 
-                events.trigger('article.open', {$url: $url, $id: $id});
+                loadCopySnippets();
+                events.trigger('article.open', { $url: $url, $id: $id });
 
                 return false;
 
@@ -179,16 +188,14 @@ function loadDocument($url, $id, $callback) {
         },
         success : function ($res) {
             if ($res.errcode === 0) {
-                renderPage($res.data);
-
-                $body = $res.data.body;
-                if (typeof $callback === "function" ) {
-                    $body = $callback(body);
+                var data = $res.data;
+                if (typeof $callback === "function") {
+                    data.body = $callback(data.body);
                 }
-
-                events.data($id, $res.data);
-
-                events.trigger('article.open', { $url : $url, $id : $id });
+                renderPage(data);
+                loadCopySnippets();
+                events.data($id, data);
+                events.trigger('article.open', { $url: $url, $id: $id });
             } else if ($res.errcode === 6000) {
                 window.location.href = "/";
             } else {
@@ -210,7 +217,7 @@ function loadDocument($url, $id, $callback) {
 function initHighlighting() {
     try {
         $('pre,pre.ql-syntax').each(function (i, block) {
-            if ($(this).hasClass('prettyprinted')) {
+            if ($(this).hasClass('prettyprinted') || $(this).hasClass('hljs')) {
                 return;
             }
             hljs.highlightBlock(block);
@@ -292,7 +299,7 @@ $(function () {
             'animation' : 0
         }
     }).on('select_node.jstree', function (node, selected) {
-        //如果是空目录则直接出发展开下一级功能
+        //如果是空目录则直接触发展开下一级功能
         if (selected.node.a_attr && selected.node.a_attr.disabled) {
             selected.instance.toggle_node(selected.node);
             return false
@@ -385,8 +392,8 @@ $(function () {
         success : function (res) {
             if(res.errcode === 0){
                 layer.msg("保存成功");
-            }else{
-                layer.msg("保存失败");
+            } else {
+                layer.msg(res.message);
             }
             $("#btnSubmitComment").button("reset");
             $("#commentContent").val("");
@@ -397,4 +404,16 @@ $(function () {
             $("#btnSubmitComment").button("reset");
         }
     });
+    loadCopySnippets();
 });
+
+function loadCopySnippets() {
+    $("pre").addClass("line-numbers language-bash");
+    $("pre").attr('data-prismjs-copy', '复制');
+    $("pre").attr('data-prismjs-copy-error', '按Ctrl+C复制');
+    $("pre").attr('data-prismjs-copy-success', '代码已复制！');
+    var snippets = document.querySelectorAll('pre code');
+    [].forEach.call(snippets, function (snippet) {
+        Prism.highlightElement(snippet);
+    });
+}

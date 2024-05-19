@@ -3,26 +3,27 @@ package models
 import (
 	"time"
 
-	"github.com/3xxx/engineercms/conf"
+
 	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/3xxx/engineercms/conf"
 )
 
 type DocumentHistory struct {
 	HistoryId    int       `orm:"column(history_id);pk;auto;unique" json:"history_id"`
-	Action       string    `orm:"column(action);size(255)" json:"action"`
-	ActionName   string    `orm:"column(action_name);size(255)" json:"action_name"`
-	DocumentId   int       `orm:"column(document_id);type(int)" json:"doc_id"`
-	DocumentName string    `orm:"column(document_name);size(500)" json:"doc_name"`
-	ParentId     int       `orm:"column(parent_id);type(int);default(0)" json:"parent_id"`
-	Markdown     string    `orm:"column(markdown);type(text);null" json:"markdown"`
-	Content      string    `orm:"column(content);type(text);null" json:"content"`
-	MemberId     int       `orm:"column(member_id);type(int)" json:"member_id"`
-	ModifyTime   time.Time `orm:"column(modify_time);type(datetime);auto_now" json:"modify_time"`
-	ModifyAt     int       `orm:"column(modify_at);type(int)" json:"-"`
-	Version      int64     `orm:"type(bigint);column(version)" json:"version"`
-	IsOpen       int       `orm:"column(is_open);type(int);default(0)" json:"is_open"`
+	Action       string    `orm:"column(action);size(255);description(modify)" json:"action"`
+	ActionName   string    `orm:"column(action_name);size(255);description(修改文档)" json:"action_name"`
+	DocumentId   int       `orm:"column(document_id);type(int);index;description(关联文档id)" json:"doc_id"`
+	DocumentName string    `orm:"column(document_name);size(500);description(关联文档id)" json:"doc_name"`
+	ParentId     int       `orm:"column(parent_id);type(int);index;default(0);description(父级文档id)" json:"parent_id"`
+	Markdown     string    `orm:"column(markdown);type(text);null;description(文档内容)" json:"markdown"`
+	Content      string    `orm:"column(content);type(text);null;description(文档内容)" json:"content"`
+	MemberId     int       `orm:"column(member_id);type(int);description(作者id)" json:"member_id"`
+	ModifyTime   time.Time `orm:"column(modify_time);type(datetime);auto_now;description(修改时间)" json:"modify_time"`
+	ModifyAt     int       `orm:"column(modify_at);type(int);description(修改人id)" json:"-"`
+	Version      int64     `orm:"type(bigint);column(version);description(版本)" json:"version"`
+	IsOpen       int       `orm:"column(is_open);type(int);default(0);description(是否展开子目录 0：阅读时关闭节点 1：阅读时展开节点 2：空目录 单击时会展开下级节点)" json:"is_open"`
 }
 
 type DocumentHistorySimpleResult struct {
@@ -166,9 +167,9 @@ func (m *DocumentHistory) FindToPager(docId, pageIndex, pageSize int) (docs []*D
 FROM md_document_history AS history
 LEFT JOIN md_members AS m1 ON history.member_id = m1.member_id
 LEFT JOIN md_members AS m2 ON history.modify_at = m2.member_id
-WHERE history.document_id = ? ORDER BY history.history_id DESC LIMIT ?,?;`
+WHERE history.document_id = ? ORDER BY history.history_id DESC limit ? offset ?;`
 
-	_, err = o.Raw(sql, docId, offset, pageSize).QueryRows(&docs)
+	_, err = o.Raw(sql, docId, pageSize, offset).QueryRows(&docs)
 
 	if err != nil {
 		return

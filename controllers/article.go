@@ -21,7 +21,7 @@ type ArticleController struct {
 	web.Controller
 }
 
-//取得某个成果id下的文章给table
+// 取得某个成果id下的文章给table
 func (c *ArticleController) GetArticles() {
 	pid := c.Ctx.Input.Param(":id")
 	c.Data["Id"] = pid
@@ -67,7 +67,7 @@ func (c *ArticleController) GetArticles() {
 	}
 }
 
-//取得同步文章列表
+// 取得同步文章列表
 func (c *ArticleController) GetsynchArticles() {
 	id := c.GetString("id")
 	site := c.GetString("site")
@@ -91,7 +91,7 @@ func (c *ArticleController) GetsynchArticles() {
 	c.ServeJSON()
 }
 
-//提供同步文章列表
+// 提供同步文章列表
 func (c *ArticleController) ProvideArticles() {
 	pid := c.GetString("id")
 	site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
@@ -154,7 +154,7 @@ func (c *ArticleController) ProvideArticles() {
 // 	}
 // }
 
-//根据id查看，查出文章
+// 根据id查看，查出文章
 // 20211120优化上一篇和下一篇的效率
 func (c *ArticleController) GetArticle() {
 	id := c.Ctx.Input.Param(":id")
@@ -396,7 +396,7 @@ type WxArticle struct {
 	ProdDoc         models.ProductDocument
 }
 
-//微信小程序里质量流程的单个具体文章
+// 微信小程序里质量流程的单个具体文章
 type WxArticleFlowDetail struct {
 	Id      int64  `json:"id",form:"-"`
 	Title   string `json:"title"`
@@ -444,7 +444,7 @@ type Img struct {
 	Name string `json:"name"`
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type prodWxTableserver struct {
 	Rows  []WxArticle `json:"rows"`
 	Page  int64       `json:"page"`
@@ -602,7 +602,7 @@ func (c *ArticleController) GetWxArticles() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /getwxarticless/:id [get]
-//小程序取得我的文章列表，分页_plus_通用_含文章状态
+// 小程序取得我的文章列表，分页_plus_通用_含文章状态
 func (c *ArticleController) GetWxArticless() {
 	id := c.Ctx.Input.Param(":id")
 	// id := web.AppConfig.String("wxcatalogid") //"26159" //25002珠三角设代日记id26159
@@ -745,7 +745,7 @@ func (c *ArticleController) GetWxArticless() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /getwxarticletype [get]
-//小程序根据flow文档的doctype获取登录者的文档_待提交的文档列表
+// 小程序根据flow文档的doctype获取登录者的文档_待提交的文档列表
 func (c *ArticleController) GetWxArticleType() {
 	// id := c.Ctx.Input.Param(":id")
 	wxsite, err := web.AppConfig.String("wxreqeustsite")
@@ -929,8 +929,8 @@ func (c *ArticleController) GetWxArticleType() {
 	c.ServeJSON()
 }
 
-//递归取得至少5篇文章——逻辑上无法实现
-//仅供研究，没有用上
+// 递归取得至少5篇文章——逻辑上无法实现
+// 仅供研究，没有用上
 func getwxarticles(id, limit, offset int64, articleslice []*WxArticle, wxsite string) {
 	//bug_如果5个成果里都没有文章，则显示文章失败；如果多个文章，会超过5个
 	products, err := models.GetProductsPage(id, limit, offset, 0, "")
@@ -962,7 +962,7 @@ func getwxarticles(id, limit, offset int64, articleslice []*WxArticle, wxsite st
 			})
 			articlearr := make([]*WxArticle, 1)
 			// beego.Info(x.Id)
-			articlearr[0].Id = x.Id //不知为何这里出错？？
+			articlearr[0].Id = x.Id //不知为何这里出错？？好像不能用make([]*WxArticle, 1)，只能用make([]WxArticle, 1)
 			// beego.Info(x.Id)
 			articlearr[0].Title = w.Title
 			articlearr[0].Subtext = x.Subtext
@@ -1555,7 +1555,7 @@ func (c *ArticleController) GetListArticles() {
 	c.ServeJSON()
 }
 
-//向某个侧栏id下添加文章
+// 向某个侧栏id下添加文章
 func (c *ArticleController) AddArticle() {
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
 
@@ -1692,8 +1692,8 @@ func (c *ArticleController) AddArticle() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /addwxarticle [post]
-//作废！向设代日记id下添加微信小程序文章_珠三角设代plus用_
-//这个是文字图片分开方式，用下面这个
+// 作废！向设代日记id下添加微信小程序文章_珠三角设代plus用_
+// 这个是文字图片分开方式，用下面这个
 func (c *ArticleController) AddWxArticle() {
 	// var userrole string
 	// var user models.User
@@ -2529,7 +2529,7 @@ func (c *ArticleController) DeleteWxArticle() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articles not found
 // @router /getuserarticle [get]
-//小程序取得我的文章列表，分页_plus_通用_含文章状态
+// 小程序取得我的文章列表，分页_plus_通用_含文章状态
 func (c *ArticleController) GetUserArticle() {
 	c.TplName = "article_pie.tpl"
 }
@@ -2541,7 +2541,7 @@ func (c *ArticleController) GetUserArticle() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articles not found
 // @router /getwxuserarticles/:id [get]
-//小程序取得我的文章列表，分页_plus_通用_含文章状态
+// 小程序取得我的文章列表，分页_plus_通用_含文章状态
 func (c *ArticleController) GetWxUserArticles() {
 	id := c.Ctx.Input.Param(":id")
 	// var idNum int64

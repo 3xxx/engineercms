@@ -3,6 +3,9 @@ package models
 import (
 	"bytes"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/3xxx/engineercms/cache"
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
@@ -10,27 +13,25 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"strings"
-	"time"
 )
 
-//博文表
+// 博文表
 type Blog struct {
 	BlogId int `orm:"pk;auto;unique;column(blog_id)" json:"blog_id"`
 	//文章标题
-	BlogTitle string `orm:"column(blog_title);size(500)" json:"blog_title"`
+	BlogTitle string `orm:"column(blog_title);size(500);description(文章标题)" json:"blog_title"`
 	//文章标识
-	BlogIdentify string `orm:"column(blog_identify);size(100);unique" json:"blog_identify"`
+	BlogIdentify string `orm:"column(blog_identify);size(100);unique;description(文章标识)" json:"blog_identify"`
 	//排序序号
-	OrderIndex int `orm:"column(order_index);type(int);default(0)" json:"order_index"`
+	OrderIndex int `orm:"column(order_index);type(int);default(0);description(排序序号)" json:"order_index"`
 	//所属用户
-	MemberId int `orm:"column(member_id);type(int);default(0);index" json:"member_id"`
+	MemberId int `orm:"column(member_id);type(int);default(0);index;description(所属用户)" json:"member_id"`
 	//用户头像
 	MemberAvatar string `orm:"-" json:"member_avatar"`
 	//文章类型:0 普通文章/1 链接文章
-	BlogType int `orm:"column(blog_type);type(int);default(0)" json:"blog_type"`
+	BlogType int `orm:"column(blog_type);type(int);default(0);description(文章类型: 0普通文章/1 链接文章)" json:"blog_type"`
 	//链接到的项目中的文档ID
-	DocumentId int `orm:"column(document_id);type(int);default(0)" json:"document_id"`
+	DocumentId int `orm:"column(document_id);type(int);default(0);description(链接到的项目中的文档ID)" json:"document_id"`
 	//文章的标识
 	DocumentIdentify string `orm:"-" json:"document_identify"`
 	//关联文档的项目标识
@@ -38,25 +39,25 @@ type Blog struct {
 	//关联文档的项目ID
 	BookId int `orm:"-" json:"book_id"`
 	//文章摘要
-	BlogExcerpt string `orm:"column(blog_excerpt);size(1500)" json:"blog_excerpt"`
+	BlogExcerpt string `orm:"column(blog_excerpt);size(1500);description(文章摘要)" json:"blog_excerpt"`
 	//文章内容
-	BlogContent string `orm:"column(blog_content);type(text);null" json:"blog_content"`
+	BlogContent string `orm:"column(blog_content);type(text);null;description(文章内容)" json:"blog_content"`
 	//发布后的文章内容
-	BlogRelease string `orm:"column(blog_release);type(text);null" json:"blog_release"`
+	BlogRelease string `orm:"column(blog_release);type(text);null;description(发布后的文章内容)" json:"blog_release"`
 	//文章当前的状态，枚举enum(’publish’,’draft’,’password’)值，publish为已 发表，draft为草稿，password 为私人内容(不会被公开) 。默认为publish。
-	BlogStatus string `orm:"column(blog_status);size(100);default(publish)" json:"blog_status"`
+	BlogStatus string `orm:"column(blog_status);size(100);default(publish);description(状态：publish为已发表-默认，draft:草稿，password :私人内容-不会被公开)" json:"blog_status"`
 	//文章密码，varchar(100)值。文章编辑才可为文章设定一个密码，凭这个密码才能对文章进行重新强加或修改。
-	Password string `orm:"column(password);size(100)" json:"-"`
+	Password string `orm:"column(password);size(100);description(文章密码)" json:"-"`
 	//最后修改时间
-	Modified time.Time `orm:"column(modify_time);type(datetime);auto_now" json:"modify_time"`
+	Modified time.Time `orm:"column(modify_time);type(datetime);auto_now;description(最后修改时间)" json:"modify_time"`
 	//修改人id
-	ModifyAt       int    `orm:"column(modify_at);type(int)" json:"-"`
+	ModifyAt       int    `orm:"column(modify_at);type(int);description(修改人id)" json:"-"`
 	ModifyRealName string `orm:"-" json:"modify_real_name"`
 	//创建时间
-	Created    time.Time `orm:"column(create_time);type(datetime);auto_now_add" json:"create_time"`
+	Created    time.Time `orm:"column(create_time);type(datetime);auto_now_add;description(创建时间)" json:"create_time"`
 	CreateName string    `orm:"-" json:"create_name"`
 	//版本号
-	Version int64 `orm:"type(bigint);column(version)" json:"version"`
+	Version int64 `orm:"type(bigint);column(version);description(版本号)" json:"version"`
 	//附件列表
 	AttachList []*MindocAttachment `orm:"-" json:"attach_list"`
 }
@@ -88,7 +89,7 @@ func NewBlog() *Blog {
 	}
 }
 
-//根据文章ID查询文章
+// 根据文章ID查询文章
 func (b *Blog) Find(blogId int) (*Blog, error) {
 	o := orm.NewOrm()
 
@@ -101,7 +102,7 @@ func (b *Blog) Find(blogId int) (*Blog, error) {
 	return b.Link()
 }
 
-//从缓存中读取文章
+// 从缓存中读取文章
 func (b *Blog) FindFromCache(blogId int) (blog *Blog, err error) {
 	key := fmt.Sprintf("blog-id-%d", blogId)
 	var temp Blog
@@ -125,7 +126,7 @@ func (b *Blog) FindFromCache(blogId int) (blog *Blog, err error) {
 	return
 }
 
-//查找指定用户的指定文章
+// 查找指定用户的指定文章
 func (b *Blog) FindByIdAndMemberId(blogId, memberId int) (*Blog, error) {
 	o := orm.NewOrm()
 
@@ -138,7 +139,7 @@ func (b *Blog) FindByIdAndMemberId(blogId, memberId int) (*Blog, error) {
 	return b.Link()
 }
 
-//根据文章标识查询文章
+// 根据文章标识查询文章
 func (b *Blog) FindByIdentify(identify string) (*Blog, error) {
 	o := orm.NewOrm()
 
@@ -150,7 +151,7 @@ func (b *Blog) FindByIdentify(identify string) (*Blog, error) {
 	return b, nil
 }
 
-//获取指定文章的链接内容
+// 获取指定文章的链接内容
 func (b *Blog) Link() (*Blog, error) {
 	o := orm.NewOrm()
 	//如果是链接文章，则需要从链接的项目中查找文章内容
@@ -210,14 +211,14 @@ func (b *Blog) Link() (*Blog, error) {
 	return b, nil
 }
 
-//判断指定的文章标识是否存在
+// 判断指定的文章标识是否存在
 func (b *Blog) IsExist(identify string) bool {
 	o := orm.NewOrm()
 
 	return o.QueryTable(b.TableNameWithPrefix()).Filter("blog_identify", identify).Exist()
 }
 
-//保存文章
+// 保存文章
 func (b *Blog) Save(cols ...string) error {
 	o := orm.NewOrm()
 
@@ -249,7 +250,7 @@ func (b *Blog) Save(cols ...string) error {
 	return err
 }
 
-//过滤文章的危险标签，处理文章外链以及图片.
+// 过滤文章的危险标签，处理文章外链以及图片.
 func (b *Blog) Processor() *Blog {
 
 	b.BlogRelease = utils.SafetyProcessor(b.BlogRelease)
@@ -284,7 +285,7 @@ func (b *Blog) Processor() *Blog {
 	return b
 }
 
-//分页查询文章列表
+// 分页查询文章列表
 func (b *Blog) FindToPager(pageIndex, pageSize int, memberId int, status string) (blogList []*Blog, totalCount int, err error) {
 
 	o := orm.NewOrm()
@@ -325,7 +326,7 @@ func (b *Blog) FindToPager(pageIndex, pageSize int, memberId int, status string)
 	return
 }
 
-//删除文章
+// 删除文章
 func (b *Blog) Delete(blogId int) error {
 	o := orm.NewOrm()
 
@@ -336,7 +337,7 @@ func (b *Blog) Delete(blogId int) error {
 	return err
 }
 
-//查询下一篇文章
+// 查询下一篇文章
 func (b *Blog) QueryNext(blogId int) (*Blog, error) {
 	o := orm.NewOrm()
 	blog := NewBlog()
@@ -354,7 +355,7 @@ func (b *Blog) QueryNext(blogId int) (*Blog, error) {
 	return blog, err
 }
 
-//查询下一篇文章
+// 查询下一篇文章
 func (b *Blog) QueryPrevious(blogId int) (*Blog, error) {
 	o := orm.NewOrm()
 	blog := NewBlog()
@@ -372,7 +373,7 @@ func (b *Blog) QueryPrevious(blogId int) (*Blog, error) {
 	return blog, err
 }
 
-//关联文章附件
+// 关联文章附件
 func (b *Blog) LinkAttach() (err error) {
 
 	o := orm.NewOrm()

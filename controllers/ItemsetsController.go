@@ -1,12 +1,15 @@
 package controllers
 
 import (
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils/pagination"
-	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
+	"math"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/models"
+	"github.com/3xxx/engineercms/controllers/utils/pagination"
+
+	// beego "github.com/beego/beego/v2/adapter"
 )
 
 type ItemsetsController struct {
@@ -25,7 +28,7 @@ func (c *ItemsetsController) Prepare() {
 func (c *ItemsetsController) Index() {
 	c.Prepare()
 	c.TplName = "items/index.tpl"
-	pageSize := 18
+	pageSize := 16
 
 	pageIndex, _ := c.GetInt("page", 0)
 
@@ -34,7 +37,6 @@ func (c *ItemsetsController) Index() {
 	if err != nil && err != orm.ErrNoRows {
 		c.ShowErrorPage(500, err.Error())
 	}
-	c.Data["TotalPages"] = pageIndex
 	if err == orm.ErrNoRows || len(items) <= 0 {
 		c.Data["Lists"] = items
 		c.Data["PageHtml"] = ""
@@ -47,7 +49,7 @@ func (c *ItemsetsController) Index() {
 	} else {
 		c.Data["PageHtml"] = ""
 	}
-
+	c.Data["TotalPages"] = int(math.Ceil(float64(totalCount) / float64(pageSize)))
 	c.Data["Lists"] = items
 }
 
@@ -86,6 +88,7 @@ func (c *ItemsetsController) List() {
 	} else {
 		c.Data["PageHtml"] = ""
 	}
+	c.Data["TotalPages"] = int(math.Ceil(float64(totalCount) / float64(pageSize)))
 	c.Data["Lists"] = searchResult
 
 	c.Data["Model"] = item

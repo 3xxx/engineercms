@@ -3344,6 +3344,335 @@ paths:
           description: Invalid page supplied
         "404":
           description: Page not found
+  /estimate/getestimatecostarchi/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costarchi tpl
+        <br>
+      operationId: EstimateController.getestimatecostarchi
+      parameters:
+      - in: path
+        name: id
+        description: The id of projectphase
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostArchi'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecostarchidata/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costArchi
+        <br>
+      operationId: EstimateController.getEstimateCostArchiData
+      parameters:
+      - in: path
+        name: id
+        description: The id of estimatephase
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page of estimatecostarchi
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostArchi'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecostelect/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costelect tpl
+        <br>
+      operationId: EstimateController.getestimatecostelect
+      parameters:
+      - in: path
+        name: id
+        description: The id of projectphase
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostElect'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecostelectdata/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costArchi
+        <br>
+      operationId: EstimateController.getEstimateCostElectData
+      parameters:
+      - in: path
+        name: id
+        description: The id of estimatephase
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page of estimatecostelect
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostElect'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecostmetal/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costmetal tpl
+        <br>
+      operationId: EstimateController.getestimatecostmetal
+      parameters:
+      - in: path
+        name: id
+        description: The id of projectphase
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostMetal'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecostmetaldata/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costArchi
+        <br>
+      operationId: EstimateController.getEstimateCostMetalData
+      parameters:
+      - in: path
+        name: id
+        description: The id of estimatephase
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page of estimatecostmetal
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostMetal'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecosttemp/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costtemp tpl
+        <br>
+      operationId: EstimateController.getestimatecostTemp
+      parameters:
+      - in: path
+        name: id
+        description: The id of projectphase
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostTemp'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimatecosttempdata/{id}:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get costTemp
+        <br>
+      operationId: EstimateController.getEstimateCostTempData
+      parameters:
+      - in: path
+        name: id
+        description: The id of estimatephase
+        required: true
+        type: string
+      - in: query
+        name: page
+        description: The page of estimatecosttemp
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateCostTemp'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimateprojects:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get estimateprojects
+        <br>
+      operationId: EstimateController.getestimateprojects
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateProjects'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/getestimateprojectsdata:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get estimateProjects Data
+        <br>
+      operationId: EstimateController.getEstimateProjectsData
+      parameters:
+      - in: query
+        name: page
+        description: The page of estimateProjectsData
+        type: string
+      - in: query
+        name: limit
+        description: The size of page
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetEstimateProjectsData'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/updateestproject:
+    post:
+      tags:
+      - estimate
+      description: |-
+        add user
+        <br>
+      operationId: EstimateController.update user
+      parameters:
+      - in: query
+        name: pk
+        description: The pk of user
+        type: string
+      - in: query
+        name: name
+        description: The name of user
+        type: string
+      - in: query
+        name: value
+        description: The value of user
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: user not found
+  /estimate/uploadexcel:
+    get:
+      tags:
+      - estimate
+      description: |-
+        get excel
+        <br>
+      operationId: EstimateController.upload excel
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.GetexcelPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: Page not found
+  /estimate/uploadexcelestimate:
+    post:
+      tags:
+      - estimate
+      description: |-
+        post file by BootstrapFileInput
+        <br>
+      operationId: EstimateController.post bootstrapfileinput
+      parameters:
+      - in: path
+        name: id
+        description: The id of project
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/SUCCESS'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: page not found
   /excel/addexcelarticle/{id}:
     post:
       tags:
@@ -4682,6 +5011,60 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /freecad/update:
+    get:
+      tags:
+      - freecad
+      description: |-
+        get freecad model update by id...
+        <br>
+      operationId: FreeCADController.get freecad model update by id...
+      parameters:
+      - in: query
+        name: id
+        description: The id of freecad
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.UserTemple'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
+  /freecad/updatefreecad:
+    post:
+      tags:
+      - freecad
+      description: |-
+        post freecad model update by id...
+        <br>
+      operationId: FreeCADController.post freecad model update by id...
+      parameters:
+      - in: query
+        name: id
+        description: The id of freecad
+        required: true
+        type: string
+      - in: query
+        name: description
+        description: The description of freecad
+        type: string
+      - in: query
+        name: indicators
+        description: The indicators of freecad
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.FreeCAD'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /freecad/uploadmodel:
     get:
       tags:
@@ -6008,6 +6391,10 @@ paths:
       - in: query
         name: projectid
         description: The id of project
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of project
         type: string
       - in: query
         name: pageNo
@@ -7761,6 +8148,29 @@ paths:
           description: Invalid page supplied
         "404":
           description: data not found
+  /wx/deletefreecad:
+    post:
+      tags:
+      - wx
+      description: |-
+        post freecad model delete by id...
+        <br>
+      operationId: ArticleController.post freecad model delete by id...
+      parameters:
+      - in: query
+        name: id
+        description: The id of freecad
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.FreeCAD'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: data not found
   /wx/deleteuser:
     post:
       tags:
@@ -9408,6 +9818,11 @@ paths:
       - in: query
         name: keyword
         description: The keyword of products
+        required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of products
         type: string
       - in: query
         name: limit
@@ -9465,6 +9880,10 @@ paths:
         name: keyword
         description: The keyword of products
         required: true
+        type: string
+      - in: query
+        name: searchText
+        description: The searchText of products
         type: string
       - in: query
         name: pageNo
@@ -10634,6 +11053,7 @@ definitions:
         format: datetime
       User:
         $ref: '#/definitions/models.User'
+        description: 这个写法是对的。这样写无法建表：foreignkey:UserID;references:Id;默认可不用谢
       UserID:
         description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
@@ -10692,6 +11112,7 @@ definitions:
         format: datetime
       User:
         $ref: '#/definitions/models.User'
+        description: 这里应该写错了
       ansysapdlid:
         type: integer
         format: int32
@@ -10729,7 +11150,6 @@ definitions:
     type: object
     properties:
       AnsysHistoryID:
-        description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int32
       CreatedAt:
@@ -11143,6 +11563,9 @@ definitions:
         format: int32
       inputvalue:
         type: string
+  models.FreeCAD:
+    title: FreeCAD
+    type: object
   models.FreecadInputs:
     title: FreecadInputs
     type: object
@@ -11211,9 +11634,13 @@ definitions:
         description: 外键 (属于), tag `index`是为该列创建索引
         type: integer
         format: int64
+      description:
+        type: string
       dxfsvgurl:
         type: string
       faceimgurl:
+        type: string
+      indicators:
         type: string
       number:
         type: string
@@ -11256,6 +11683,24 @@ definitions:
     type: object
   models.GetElastic:
     title: GetElastic
+    type: object
+  models.GetEstimateCostArchi:
+    title: GetEstimateCostArchi
+    type: object
+  models.GetEstimateCostElect:
+    title: GetEstimateCostElect
+    type: object
+  models.GetEstimateCostMetal:
+    title: GetEstimateCostMetal
+    type: object
+  models.GetEstimateCostTemp:
+    title: GetEstimateCostTemp
+    type: object
+  models.GetEstimateProjects:
+    title: GetEstimateProjects
+    type: object
+  models.GetEstimateProjectsData:
+    title: GetEstimateProjectsData
     type: object
   models.GetExcel:
     title: GetExcel
@@ -11721,3 +12166,6 @@ tags:
 - name: simwe
   description: |
     CMSSIMWE API
+- name: estimate
+  description: |
+    CMSexcel API
