@@ -1515,7 +1515,7 @@ h3 .share-icon {
       return;
     }
     $("input#pid").remove();
-    var th1 = "<input id='pid' type='hidden' name='pid' value='" + {{.Id }} + "'/>"
+    var th1 = "<input id='pid' type='hidden' name='pid' value='" + table0_id + "'/>" // {{.Id}}
     $(".modal-body").append(th1);
 
     $('#modalTable').modal({
@@ -1559,7 +1559,7 @@ h3 .share-icon {
       } else if (type == "Q_TYPE_DENIED") {
         alert("请上传图片、视频、文档、图纸、压缩等格式文件");
       } else if (type == "F_EXCEED_SIZE") {
-        alert("单个文件大小不能超过50M");
+        alert("单个文件大小不能超过100M");
       }
     });
 
@@ -1609,7 +1609,7 @@ h3 .share-icon {
 
     uploader.on('uploadComplete', function(file) {
       $('#' + file.id).find('.progress').fadeOut();
-      $('#table0').bootstrapTable('refresh', { url: '/project/products/' + {{.Id }} });
+      $('#table0').bootstrapTable('refresh', { url: '/project/products/' + table0_id });// {{.Id}}
     });
 
     uploader.on('all', function(type) {
@@ -1651,7 +1651,7 @@ h3 .share-icon {
       return;
     }
     $("input#pid").remove();
-    var th1 = "<input id='pid' type='hidden' name='pid' value='" + {{.Id }} + "'/>"
+    var th1 = "<input id='pid' type='hidden' name='pid' value='" + table0_id + "'/>" // {{.Id}}
     $(".modal-body").append(th1);
     $('#modalTable1').modal({
       show: true,
@@ -1729,7 +1729,7 @@ h3 .share-icon {
 
       uploader.on('uploadComplete', function(file) {
         $('#' + file.id).find('.progress').fadeOut();
-        $('#table0').bootstrapTable('refresh', { url: '/project/products/' + {{.Id }} });
+        $('#table0').bootstrapTable('refresh', { url: '/project/products/' + table0_id });// {{.Id}}
       });
 
       uploader.on('all', function(type) {
@@ -1775,7 +1775,7 @@ h3 .share-icon {
       return;
     }
     $("input#pid").remove();
-    var th1 = "<input id='pid' type='hidden' name='pid' value='" + {{.Id }} + "'/>"
+    var th1 = "<input id='pid' type='hidden' name='pid' value='" + table0_id + "'/>" // {{.Id }}
     $(".modal-body").append(th1);
 
     $('#modalTable2').modal({
@@ -1789,7 +1789,7 @@ h3 .share-icon {
       alert("权限不够！");
       return;
     }
-    window.open("/v1/elastic/uploadelastic/{{.Id }}")
+    window.open("/v1/elastic/uploadelastic/"+ table0_id) // {{.Id }}
   }
 
   // 编辑成果信息
@@ -1964,7 +1964,7 @@ h3 .share-icon {
       uploader.on('uploadComplete', function(file) {
         $('#' + file.id).find('.progress').fadeOut();
         $('#attachments').bootstrapTable('refresh', { url: '/project/product/allattachments/' + selectrowid });
-        $('#table0').bootstrapTable('refresh', { url: '/project/products/' + {{.Id }} });
+        $('#table0').bootstrapTable('refresh', { url: '/project/products/' + table0_id }); // {{.Id}}
       });
 
       uploader.on('all', function(type) {
@@ -2152,7 +2152,7 @@ h3 .share-icon {
       return;
     }
     $("input#pid").remove();
-    var th1 = "<input id='pid' type='hidden' name='pid' value='" + {{.Id }} + "'/>"
+    var th1 = "<input id='pid' type='hidden' name='pid' value='" + table0_id + "'/>" // {{.Id}}
     $(".modal-body").append(th1);
     $('#modalNewDwg').modal({
       show: true,
@@ -2366,13 +2366,13 @@ h3 .share-icon {
       saveParams: { postId: '1' },
       spellcheck: false,
       imageUploadURL: '/uploadimg', //上传到本地服务器
-      imageUploadParams: { pid: '{{.Id}}' },
-      imageDeleteURL: 'lib/delete_image.php', //删除图片
-      imagesLoadURL: 'lib/load_images.php', //管理图片
+      imageUploadParams: { pid: table0_id }, // '{{.Id}}'
+      imageDeleteURL: 'lib/delete_image.php', // 删除图片
+      imagesLoadURL: 'lib/load_images.php', // 管理图片
       videoUploadURL: '/uploadvideo',
-      videoUploadParams: { pid: '{{.Id}}' },
+      videoUploadParams: { pid: table0_id }, // '{{.Id}}'
       fileUploadURL: '/uploadimg',
-      fileUploadParams: { pid: '{{.Id}}' },
+      fileUploadParams: { pid: table0_id }, // '{{.Id}}'
       // enter: $.FroalaEditor.ENTER_BR,
       language: 'zh_cn',
       // toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'align','color','fontSize','insertImage','insertTable','undo', 'redo']
@@ -2446,7 +2446,7 @@ h3 .share-icon {
         success: function(data, status) {
           alert("添加“" + data + "”成功！(status:" + status + ".)");
           $('#modalTable2').modal('hide');
-          $('#table0').bootstrapTable('refresh', { url: '/project/products/' + {{.Id }} });
+          $('#table0').bootstrapTable('refresh', { url: '/project/products/' + table0_id }); // {{.Id}}
         },
       });
     } else {
@@ -2495,7 +2495,7 @@ h3 .share-icon {
         success: function(data, status) {
           alert("添加“" + data + "”成功！(status:" + status + ".)");
           $('#modalNewDwg').modal('hide');
-          $('#table0').bootstrapTable('refresh', { url: '/project/products/' + {{.Id }} });
+          $('#table0').bootstrapTable('refresh', { url: '/project/products/' + table0_id }); // {{.Id}}
           //打开新的dwg页面
           // window.open("/downloadattachment?id="+data.Id);
         },
@@ -2523,7 +2523,7 @@ h3 .share-icon {
         success: function(data, status) {
           alert("添加“" + data + "”成功！(status:" + status + ".)");
           $('#modalProdEditor').modal('hide');
-          $('#table0').bootstrapTable('refresh', { url: '/project/products/' + {{.Id }} });
+          $('#table0').bootstrapTable('refresh', { url: '/project/products/' + table0_id }); // {{.Id}}
         },
       });
     } else {
@@ -2581,7 +2581,7 @@ h3 .share-icon {
   $('#synchIP').click(function() {
     $.ajax({
       type: "get",
-      url: "/project/synchproducts/" + {{.Id }},
+      url: "/project/synchproducts/" + table0_id, // {{.Id}}
       // data: {ids:ids},
       success: function(data, status) {
         alert("同步成功！(status:" + status + ".)");
