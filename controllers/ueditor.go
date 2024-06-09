@@ -10,7 +10,7 @@ import (
 	"github.com/pborman/uuid"
 	// "image/png"
 	"io"
-	"log"
+	// "log"
 	// "net/http"
 	"os"
 	"path"
@@ -67,7 +67,8 @@ func (c *UeditorController) ControllerUE() {
 		// var configJson []byte // 当客户端请求/controller?action=config 返回的json内容
 		file, err := os.Open("conf/config.json")
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			logs.Error(err)
 			os.Exit(1)
 		}
 		defer file.Close()
@@ -288,9 +289,6 @@ func (c *UeditorController) ControllerUE() {
 		}
 		catchimage := Catchimage{"SUCCESS", list}
 
-		c.Data["json"] = catchimage
-		c.ServeJSON()
-
 		file, header, err := c.GetFile("source") // r.FormFile("upfile")
 		// beego.Info(header.Filename)
 		if err != nil {
@@ -308,7 +306,16 @@ func (c *UeditorController) ControllerUE() {
 		}
 		defer outFile.Close()
 		io.Copy(outFile, file)
+		c.Data["json"] = catchimage
+		c.ServeJSON()
 	}
+	c.Data["json"] = map[string]interface{}{
+		"state":    "ERROR",
+		"url":      "",
+		"title":    "",
+		"original": "",
+	}
+	c.ServeJSON()
 }
 
 // func UploadImage(w http.ResponseWriter, r *http.Request) { //这个没用

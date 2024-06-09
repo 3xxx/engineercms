@@ -118,6 +118,9 @@ func (c *ProdController) GetProjProd() {
 	// }
 	useridstring := strconv.FormatInt(uid, 10)
 	id := c.Ctx.Input.Param(":id")
+	if id == "" {
+		id = "0"
+	}
 	//id转成64位
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {

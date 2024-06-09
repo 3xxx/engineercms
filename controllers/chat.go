@@ -76,7 +76,9 @@ func (c *ChatController) HandleConnections() {
 	// Upgrade initial GET request to a websocket
 	ws, err := chat_upgrader.Upgrade(c.Ctx.ResponseWriter, c.Ctx.Request, nil)
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		// log.Printf("error: %v", err)
+		logs.Error(err)
 	}
 	// Make sure we close the connection when the function returns
 	defer ws.Close()

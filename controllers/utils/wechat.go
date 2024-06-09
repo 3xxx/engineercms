@@ -13,7 +13,7 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"io"
 	"io/ioutil"
-	"log"
+	// "log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -67,7 +67,7 @@ func init() {
 	AesKey = EncodingAESKey2AESKey(encodingAESKey)
 }
 
-//验证token时效性
+// 验证token时效性
 func GetAccessToken(app_version string) (accesstoken string, errcode float64, errmsg string, err error) {
 	// category := BM.Get("category")
 	//   if category == nil{
@@ -122,11 +122,12 @@ func GetAccessToken(app_version string) (accesstoken string, errcode float64, er
 	}
 }
 
-//请求获得accessToken
+// 请求获得accessToken
 func requestToken(appid, secret string) (accessToken string, errcode float64, errmsg string, err error) {
 	u, err := url.Parse("https://api.weixin.qq.com/cgi-bin/token")
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		logs.Error(err)
 	}
 	paras := &url.Values{}
 	//设置请求参数
@@ -346,7 +347,7 @@ type phrase1 struct {
 	Value string `json:"value"`
 }
 
-//注意下面是date，不是data
+// 注意下面是date，不是data
 type date2 struct {
 	Value string `json:"value"`
 }

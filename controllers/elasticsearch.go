@@ -108,7 +108,8 @@ func init() {
 	if openElasticsearch == "true" {
 		// beego.Info("建立index")
 		if err = setupIndex(indexName); err != nil { //这里建立索引（相当于表）
-			log.Fatalf("Error creating the client: %s", err)
+			// log.Fatalf("Error creating the client: %s", err)
+			logs.Error(err)
 		}
 	}
 	//rand.Seed(time.Now().UnixNano())
@@ -384,7 +385,8 @@ func (c *ElasticController) Upload() {
 	DiskDirectory = strings.Replace(DiskDirectory, "./attachment/", "/attachment/", -1)
 	f, err := os.Open(cwd + DiskDirectory + "/" + attachmentname)
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		logs.Error(err)
 	}
 	defer f.Close()
 
@@ -397,7 +399,8 @@ func (c *ElasticController) Upload() {
 
 	dom, err := goquery.NewDocumentFromReader(strings.NewReader(body))
 	if err != nil {
-		log.Fatalln(err)
+		// log.Fatalln(err)
+		logs.Error(err)
 	}
 
 	dom.Find("p").Each(func(i int, selection *goquery.Selection) {
@@ -424,7 +427,8 @@ func (c *ElasticController) Upload() {
 
 	err = Createitem(indexName, doc)
 	if err != nil {
-		log.Fatalln(err)
+		// log.Fatalln(err)
+		logs.Error(err)
 	}
 }
 
@@ -780,7 +784,8 @@ func (c *ElasticController) Tika() {
 	// Optionally pass a port as the second argument.
 	f, err := os.Open("./test.pdf")
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		logs.Error(err)
 	}
 	defer f.Close()
 
@@ -793,7 +798,8 @@ func (c *ElasticController) Tika() {
 
 	dom, err := goquery.NewDocumentFromReader(strings.NewReader(body))
 	if err != nil {
-		log.Fatalln(err)
+		// log.Fatalln(err)
+		logs.Error(err)
 	}
 
 	dom.Find("p").Each(func(i int, selection *goquery.Selection) {
@@ -904,7 +910,8 @@ func esindex() {
 		//es.Index.WithRefresh("true"),               // Refresh
 	)
 	if err != nil {
-		log.Fatalf("ERROR: %s", err)
+		// log.Fatalf("ERROR: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 
@@ -922,7 +929,8 @@ func esapiindexrequest() {
 	}
 	res, err := req.Do(context.Background(), es)
 	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
+		// log.Fatalf("Error getting response: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 
@@ -966,7 +974,8 @@ func esapigetrequest() {
 	}
 	res, err := req.Do(context.Background(), es)
 	if err != nil {
-		log.Fatalf("ERROR: %s", err)
+		// log.Fatalf("ERROR: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 
@@ -1035,7 +1044,8 @@ func esapideleterequest() {
 	}
 	res, err := req.Do(context.Background(), es)
 	if err != nil {
-		log.Fatalf("ERROR: %s", err)
+		// log.Fatalf("ERROR: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 
@@ -1061,7 +1071,8 @@ func esapibulkrequest() {
 	}
 	res, err := req.Do(context.Background(), es)
 	if err != nil {
-		log.Fatalf("ERROR: %s", err)
+		// log.Fatalf("ERROR: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 
@@ -1093,7 +1104,8 @@ func esapisearch() {
 // 一下作废，非官方用法
 func failOnError(err error, msg string) {
 	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
+		// log.Fatalf("%s: %s", msg, err)
+		logs.Error(err)
 	}
 }
 
@@ -1136,16 +1148,19 @@ func Index() {
 	// 1. Get cluster info
 	res, err := es.Info()
 	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
+		// log.Fatalf("Error getting response: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 	// Check response status
 	if res.IsError() {
-		log.Fatalf("Error: %s", res.String())
+		// log.Fatalf("Error: %s", res.String())
+		logs.Error(err)
 	}
 	// Deserialize the response into a map.
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		log.Fatalf("Error parsing the response body: %s", err)
+		// log.Fatalf("Error parsing the response body: %s", err)
+		logs.Error(err)
 	}
 	// Print client and server version numbers.
 	log.Printf("Client: %s", elasticsearch.Version)
@@ -1176,7 +1191,8 @@ func Index() {
 			// Perform the request with the client.
 			res, err := req.Do(context.Background(), es)
 			if err != nil {
-				log.Fatalf("Error getting response: %s", err)
+				// log.Fatalf("Error getting response: %s", err)
+				logs.Error(err)
 			}
 			defer res.Body.Close()
 
@@ -1209,7 +1225,8 @@ func Index() {
 		},
 	}
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
-		log.Fatalf("Error encoding query: %s", err)
+		// log.Fatalf("Error encoding query: %s", err)
+		logs.Error(err)
 	}
 
 	// Perform the search request.
@@ -1221,26 +1238,30 @@ func Index() {
 		es.Search.WithPretty(),
 	)
 	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
+		// log.Fatalf("Error getting response: %s", err)
+		logs.Error(err)
 	}
 	defer res.Body.Close()
 
 	if res.IsError() {
 		var e map[string]interface{}
 		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
-			log.Fatalf("Error parsing the response body: %s", err)
+			// log.Fatalf("Error parsing the response body: %s", err)
+			logs.Error(err)
 		} else {
 			// Print the response status and error information.
-			log.Fatalf("[%s] %s: %s",
-				res.Status(),
-				e["error"].(map[string]interface{})["type"],
-				e["error"].(map[string]interface{})["reason"],
-			)
+			// log.Fatalf("[%s] %s: %s",
+			// 	res.Status(),
+			// 	e["error"].(map[string]interface{})["type"],
+			// 	e["error"].(map[string]interface{})["reason"],
+			// )
+			logs.Error(err)
 		}
 	}
 
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		log.Fatalf("Error parsing the response body: %s", err)
+		// log.Fatalf("Error parsing the response body: %s", err)
+		logs.Error(err)
 	}
 	// Print the response status, number of results, and request duration.
 	log.Printf(

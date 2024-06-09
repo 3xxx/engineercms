@@ -8,7 +8,7 @@ import (
 	"github.com/pborman/uuid"
 	"image"
 	"io"
-	"log"
+	// "log"
 	"net/http"
 	"os"
 	"path"
@@ -61,7 +61,8 @@ func (c *FroalaController) ControllerFroala() {
 		// var configJson []byte // 当客户端请求/controller?action=config 返回的json内容
 		file, err := os.Open("conf/config.json")
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			logs.Error(err)
 			os.Exit(1)
 		}
 		defer file.Close()

@@ -49,10 +49,11 @@
 	$("#input-ke-2").fileinput({
     language:'zh',
     theme: "explorer",
-    uploadAsync: true,//异步上传
+    uploadAsync: true,//异步上传//false 同步上传，后台用数组接收，true 异步上传，每次上传一个file,会调用多次接口
     uploadUrl: "/v1/freecad/uploadmodelfile",
+    allowedFileExtensions: ['fcstd','stp','obj','glb','gltf','bin','jpg','png','bmp','jpeg','gif','svg'],
     minFileCount: 1,
-    maxFileCount: 1,
+    maxFileCount: 100,
     maxFileSize: 10000,
     removeFromPreviewOnError: true,
     overwriteInitial: false,
@@ -84,19 +85,26 @@
     },
     preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
        previewFileIconSettings: { // configure your icon file extensions
-      'doc': '<i class="fas fa-file-word text-primary"></i>',
-      'xls': '<i class="fas fa-file-excel text-success"></i>',
-      'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
-      'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
-      'zip': '<i class="fas fa-file-archive text-muted"></i>',
-      'htm': '<i class="fas fa-file-code text-info"></i>',
-      'txt': '<i class="fas fa-file-text text-info"></i>',
-      'mov': '<i class="fas fa-file-video text-warning"></i>',
-      'mp3': '<i class="fas fa-file-audio text-warning"></i>',
+      // 'doc': '<i class="fas fa-file-word text-primary"></i>',
+      // 'xls': '<i class="fas fa-file-excel text-success"></i>',
+      // 'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+      // 'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+      // 'zip': '<i class="fas fa-file-archive text-muted"></i>',
+      // 'htm': '<i class="fas fa-file-code text-info"></i>',
+      // 'txt': '<i class="fas fa-file-text text-info"></i>',
+      // 'mov': '<i class="fas fa-file-video text-warning"></i>',
+      // 'mp3': '<i class="fas fa-file-audio text-warning"></i>',
       // note for these file types below no extension determination logic 
       // has been configured (the keys itself will be used as extensions)
+      'fcstd': '<i class="fas fa-file-image text-danger"></i>',
+      'stp': '<i class="fas fa-file-image text-danger"></i>',
+      'obj': '<i class="fas fa-file-image text-danger"></i>',
+      'gltf': '<i class="fas fa-file-image text-danger"></i>',
+      'bin': '<i class="fas fa-file-image text-danger"></i>',
+      'glb': '<i class="fas fa-file-image text-danger"></i>',
       'jpg': '<i class="fas fa-file-image text-danger"></i>', 
-      'gif': '<i class="fas fa-file-image text-muted"></i>', 
+      'gif': '<i class="fas fa-file-image text-muted"></i>',
+      'svg': '<i class="fas fa-file-image text-muted"></i>',
       'png': '<i class="fas fa-file-image text-primary"></i>'    
     },
     previewFileExtSettings: { // configure the logic for determining icon file extensions

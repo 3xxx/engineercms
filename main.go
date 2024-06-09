@@ -16,7 +16,7 @@ import (
 	"github.com/kardianos/service"
 	_ "github.com/mattn/go-sqlite3"
 	"io"
-	"log"
+	// "log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -121,7 +121,8 @@ func main() {
 		os.Exit(1)
 	}
 	if err := s.Run(); err != nil {
-		log.Fatal("启动程序失败 ->", err)
+		// log.Fatal("启动程序失败 ->", err)
+		logs.Error("启动程序失败 ->", err)
 	}
 
 	// ********mindoc*********
@@ -145,9 +146,10 @@ func subsuffix(in string) string {
 }
 
 // GoLang 如何在网页显示当前环境的版本号
-// func main() {
-// 	server()
-// }
+//
+//	func main() {
+//		server()
+//	}
 func server() {
 	http.HandleFunc("/version", version)
 	http.ListenAndServe(":8080", nil)
@@ -156,7 +158,8 @@ func server() {
 func version(w http.ResponseWriter, r *http.Request) {
 	out, err := exec.Command("go", "version").Output()
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		logs.Error(err)
 	}
 	io.WriteString(w, fmt.Sprintf("%s", out))
 }

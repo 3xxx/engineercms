@@ -155,7 +155,7 @@ func (c *ProjController) GetProjects() {
 	var projid string
 	strMap := make(map[string]string)
 	if id == "" {
-		logs.Info(1)
+		// logs.Info(1)
 		// ****鲁班开始
 		// 根据用户角色，显示对应的项目显示全部
 		// 根据用户名查出用户角色——多个角色循环——角色对应的项目id——去重map——循环项目id取得项目细节
@@ -163,7 +163,7 @@ func (c *ProjController) GetProjects() {
 		// logs.Info(uid)
 		var count int64
 		if !isadmin {
-			logs.Info(2)
+			// logs.Info(2)
 			permissions, err := e.GetImplicitPermissionsForUser(strconv.FormatInt(uid, 10))
 			if err != nil {
 				logs.Error(err)
@@ -212,7 +212,7 @@ func (c *ProjController) GetProjects() {
 			c.Data["json"] = table
 			c.ServeJSON()
 		} else {
-			logs.Info(3)
+			// logs.Info(3)
 			projects, err := models.GetProjectsPage(limit1, offset, searchText)
 			if err != nil {
 				logs.Error(err)
@@ -252,7 +252,7 @@ func (c *ProjController) GetProjects() {
 		// elapsed := time.Since(start)
 		// beego.Info(elapsed)
 	} else {
-		logs.Info(4)
+		// logs.Info(4)
 		idNum, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
 			logs.Error(err)

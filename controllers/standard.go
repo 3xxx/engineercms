@@ -20,7 +20,7 @@ import (
 	"github.com/xuri/excelize/v2"
 	"io"
 	"io/ioutil"
-	"log"
+	// "log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -237,7 +237,8 @@ func (c *StandardController) ElasticSearch() { //(*SearchResults, error)
 	// *************
 	es, err := elasticsearch.NewDefaultClient()
 	if err != nil {
-		log.Fatalf("Error creating the client: %s", err)
+		// log.Fatalf("Error creating the client: %s", err)
+		logs.Error(err)
 	}
 	var results SearchResults
 	//Search returns results matching a query, paginated by after.
@@ -351,7 +352,8 @@ func (c *StandardController) WxElasticSearch() { //(*SearchResults, error)
 	// *************
 	es, err := elasticsearch.NewDefaultClient()
 	if err != nil {
-		log.Fatalf("Error creating the client: %s", err)
+		// log.Fatalf("Error creating the client: %s", err)
+		logs.Error(err)
 	}
 	var results SearchResults
 	//Search returns results matching a query, paginated by after.
@@ -1452,7 +1454,8 @@ func (c *StandardController) Upload() {
 	filepath = strings.Replace(filepath, "./attachment/", "/attachment/", -1)
 	f, err := os.Open(cwd + filepath)
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		logs.Error(err)
 	}
 	defer f.Close()
 
@@ -1465,7 +1468,8 @@ func (c *StandardController) Upload() {
 
 	dom, err := goquery.NewDocumentFromReader(strings.NewReader(body))
 	if err != nil {
-		log.Fatalln(err)
+		// log.Fatalln(err)
+		logs.Error(err)
 	}
 
 	dom.Find("p").Each(func(i int, selection *goquery.Selection) {

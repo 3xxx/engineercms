@@ -165,7 +165,8 @@ func (c *BookController) SaveBook() {
 	if !models.NewItemsets().Exist(itemId) {
 		c.JsonResult(6006, i18n.Tr(c.Lang, "message.project_space_not_exist"))
 	}
-	if editor != EditorMarkdown && editor != EditorCherryMarkdown && editor != EditorHtml && editor != EditorNewHtml {
+	// if editor != EditorMarkdown && editor != EditorCherryMarkdown && editor != EditorHtml && editor != EditorNewHtml {
+	if editor != EditorMarkdown && editor != EditorCherryMarkdown && editor != EditorHtml && editor != EditorNewHtml && editor != EditorFroala {
 		editor = EditorMarkdown
 	}
 

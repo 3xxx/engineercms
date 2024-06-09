@@ -4,7 +4,7 @@
 <link rel="bookmark" type="image/x-icon" href="/static/img/elastic.ico" />
 <!-- 网站显示页logo图标 -->
 <link rel="shortcut icon" href="/static/img/elastic.ico">
-<title>查阅规范、图集</title>
+<title>查阅标准、图集</title>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
 <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
@@ -17,7 +17,7 @@
 <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
 <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 </head>
-<div class="container-fill">{{template "navbar_pass" .}}</div>
+<div class="container-fill">{{template "navbar" .}}</div>
 
 <body>
   <div class="text-center">
@@ -61,7 +61,7 @@
       <br>
       {{/* <button id="ctlBtn" class="btn btn-default"><i class="glyphicon glyphicon-upload"></i>全文检索上传</button>*/}}
       <button onclick="window.open('/v1/wx/uploadstandard')" type="button" data-name="searchButton" id="searchButton" class="btn btn-default" title="全文检索">
-        <i class="fa fa-plus-circle">&nbsp;&nbsp;上传规范</i>
+        <i class="fa fa-plus-circle">&nbsp;&nbsp;上传标准</i>
       </button>
       <button onclick="window.open('/v1/wx/getelasticstandard')" type="button" data-name="searchButton" id="searchButton" class="btn btn-default" title="全文检索">
         <i class="fa fa-search-plus">&nbsp;&nbsp;全文检索</i>
@@ -71,11 +71,11 @@
     </div>
     <div class="col-xs-12 col-sm-12 col-lg-12">
       <p align="left">
-         1. 根据规范、图集编号或名称关键字检索；可以全文检索规范，有利于关联
+         1. 根据标准、图集编号或名称关键字检索；可以全文检索规范，有利于关联
         </p>
         <p align="left" class="large">
-          2. 可以上传共享规范和图集；上传规范基本要求<a href="javascript:void(0)" id="about"><i class="glyphicon glyphicon-question-sign"></i></a>。
-          <a href="javascript:void(0)" id="valid" title="管理有效版本库">《规范目录有效版本》</a>数据来自OA系统
+          2. 可以上传共享标准和图集；上传标准基本要求<a href="javascript:void(0)" id="about"><i class="glyphicon glyphicon-question-sign"></i></a>。
+          <a href="javascript:void(0)" id="valid" title="管理有效版本库">《标准目录有效版本》</a>数据来自OA系统
         </p>
         <p align="left" class="large">
           3. 如果涉及侵权，请联系我清理；如果遇到文件不清晰或未识别，请联系我处理；技术栈：elasticsearch+ik+tika全文检索,pdf.js分片下载
