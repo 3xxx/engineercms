@@ -1,0 +1,53 @@
+{
+  "name": "froala-editor",
+  "version": "4.0.0",
+  "description": "The next generation Javascript WYSIWYG HTML rich text editor made by devs for devs. High performance and modern design make it easy to use for developers and loved by users.",
+  "keywords": [
+    "froala",
+    "froala-editor",
+    "froala-wysiwyg",
+    "html",
+    "text",
+    "editor",
+    "wysiwyg",
+    "javascript-plugin",
+    "rich editor",
+    "rich text editor",
+    "rte",
+    "javascript",
+    "vanillajs"
+  ],
+  "homepage": "https://www.froala.com/wysiwyg-editor",
+  "license": "https://www.froala.com/wysiwyg-editor/pricing",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/froala/wysiwyg-editor-release.git"
+  },
+  "maintainers": [
+    {
+      "name": "Froala Labs"
+    }
+  ],
+  "filename": "js/froala_editor.min.js",
+  "main": "js/froala_editor.min.js",
+  "npmName": "froala-editor",
+  "npmFileMap": [
+    {
+      "basePath": "/",
+      "files": [
+        "js/plugins/*.min.js",
+        "js/third_party/*.min.js",
+        "js/froala_editor.min.js",
+        "js/froala_editor.pkgd.min.js",
+        "js/plugins.pkgd.min.js",
+        "css/froala_editor.min.css",
+        "css/froala_editor.pkgd.min.css",
+        "css/plugins.pkgd.min.css",
+        "css/froala_style.min.css",
+        "css/plugins/*.min.css",
+        "css/third_party/*.min.css",
+        "css/themes/*.min.css"
+      ]
+    }
+  ]
+}

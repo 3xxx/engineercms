@@ -3,8 +3,7 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/hex"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/bitly/go-simplejson"
+
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
@@ -58,7 +57,7 @@ func (this *RegistController) CheckUname() {
 	// return
 }
 
-//提交注册名称
+// 提交注册名称
 func (this *RegistController) Post() {
 	var user models.User //这里修改
 	// inputs := this.Input()
@@ -138,8 +137,8 @@ func (c *RegistController) WxRegist() {
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
-	logs.Info(user.Password)
-	logs.Info(user.Username)
+	// logs.Info(user.Password)
+	// logs.Info(user.Username)
 	err := models.ValidateUser(user)
 	if err == nil {
 		JSCODE := c.GetString("code")
@@ -198,10 +197,12 @@ func (c *RegistController) WxRegist() {
 			user, err = models.GetUserByUsername(user.Username)
 			if err != nil {
 				logs.Error(err)
+				c.Data["json"] = map[string]interface{}{"errNo": err, "msg": "", "data": "未查询到用户名存在！"}
+				c.ServeJSON()
 			} else {
 				uid = strconv.FormatInt(user.Id, 10)
 			}
-			_, err = models.AddUserOpenID(user.Id, openID)
+			_, err = models.AddUserOpenID(user.Id, openID) // 20240728防止用id为0存入了数据库中
 			if err != nil {
 				logs.Error(err)
 			}
@@ -435,7 +436,7 @@ func (c *RegistController) WxRegion() {
 	}
 }
 
-//post方法
+// post方法
 func (this *RegistController) GetUname() {
 	var user models.User //这里修改[]*models.User(uname string)
 	//fmt.Println(inputs)
@@ -456,7 +457,7 @@ func (this *RegistController) GetUname() {
 	// return uname1[0].Username
 }
 
-//get方法，用于x-editable的select2方法
+// get方法，用于x-editable的select2方法
 func (this *RegistController) GetUname1() {
 	var user models.User //这里修改[]*models.User(uname string)
 	//fmt.Println(inputs)

@@ -7,7 +7,7 @@ import (
 
 // var engine *xorm.Engine
 
-//公告记录
+// 公告记录
 type Bbs struct {
 	Id         int64
 	UserId     int64
@@ -20,7 +20,7 @@ func init() {
 	orm.RegisterModel(new(Bbs))
 }
 
-//打卡记录写入数据库
+// 打卡记录写入数据库
 func BbsBbs(UserId int64, Desc string, SelectDate time.Time) (id int64, err error) {
 	o := orm.NewOrm()
 	//查询数据库中有无打卡

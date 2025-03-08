@@ -1,43 +1,33 @@
 package models
 
 import (
-	//"database/sql"
-	//"github.com/astaxie/beedb"
-	//_ "github.com/ziutek/mymysql/godrv"
-	//"time"
-	// "fmt"
-	// "os"
-	// "path"
-	// beego "github.com/beego/beego/v2/adapter"
 	"strconv"
-	// "strings"
+
 	"time"
-	//"github.com/Unknwon/com
-	// "errors"
+
 	"github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/adapter/validation"
-	// _ "github.com/mattn/go-sqlite3"
 )
 
-// type Topic struct {
-// 	Id                int64
-// 	Uid               int64
-// 	Title             string
-// 	Tnumber           string //`orm:"unique"`
-// 	Category          string
-// 	CategoryId        int64
-// 	Content           string `orm:"sie(5000)"`
-// 	Attachment        string
-// 	Created           time.Time `orm:"auto_now_add;type(datetime)"`
-// 	Updated           time.Time `orm:"auto_now;type(datetime)"`
-// 	Views             int64
-// 	Author            string
-// 	ReplyTime         time.Time
-// 	ReplyCount        int64
-// 	ReplyLastUserName string
-// 	// Attachments     []*Attachment `orm:"reverse(many)"` // fk 的反向关系
-// }
-//文章点赞
+//	type Topic struct {
+//		Id                int64
+//		Uid               int64
+//		Title             string
+//		Tnumber           string //`orm:"unique"`
+//		Category          string
+//		CategoryId        int64
+//		Content           string `orm:"sie(5000)"`
+//		Attachment        string
+//		Created           time.Time `orm:"auto_now_add;type(datetime)"`
+//		Updated           time.Time `orm:"auto_now;type(datetime)"`
+//		Views             int64
+//		Author            string
+//		ReplyTime         time.Time
+//		ReplyCount        int64
+//		ReplyLastUserName string
+//		// Attachments     []*Attachment `orm:"reverse(many)"` // fk 的反向关系
+//	}
+//
+// 文章点赞
 type Like struct {
 	Id      int64
 	Tid     int64
@@ -45,7 +35,7 @@ type Like struct {
 	Created time.Time
 }
 
-//文章评论
+// 文章评论
 type Commenttopic struct {
 	Id       int64
 	Tid      int64
@@ -56,7 +46,7 @@ type Commenttopic struct {
 	Created  string `orm:"size(20)"`
 }
 
-//wiki评论
+// wiki评论
 type Commentwiki struct {
 	Id      int64
 	Tid     int64

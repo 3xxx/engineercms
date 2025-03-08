@@ -2,19 +2,15 @@
 package controllers
 
 import (
-	// "encoding/json"
-	// "github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
-	// "context"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web/pagination"
-	// "github.com/casbin/beego-orm-adapter"
+
 	beegoormadapter "github.com/casbin/beego-orm-adapter/v3"
-	// "github.com/casbin/beego-orm-adapter/v3.CasbinRule"
-	// "github.com/casbin/casbin"
+
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/beego/beego/v2/core/logs"
 	// "log"
@@ -362,9 +358,9 @@ func (c *ProjController) GetWxProjects() {
 		if err != nil {
 			logs.Error(err)
 		}
-		uid := strconv.FormatInt(user.Id, 10)
+		uidstring := strconv.FormatInt(user.Id, 10)
 		roleid := strconv.FormatInt(role.Id, 10)
-		hasrole, err := e.HasRoleForUser(uid, "role_"+roleid)
+		hasrole, err := e.HasRoleForUser(uidstring, "role_"+roleid)
 		if err != nil {
 			logs.Error(err)
 		}
@@ -474,7 +470,7 @@ func (c *ProjController) GetWxProjects() {
 				aa[0].Updated = v.Updated
 				projects1 = append(projects1, aa...)
 			}
-			count, err := models.GetProjectsCount(searchText)
+			count, err = models.GetProjectsCount(searchText)
 			if err != nil {
 				logs.Error(err)
 			}

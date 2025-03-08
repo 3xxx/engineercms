@@ -1,18 +1,17 @@
 package controllers
 
 import (
-	// "bytes"
 	"encoding/json"
 	"fmt"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"github.com/pborman/uuid"
 	"image"
 	"io"
-	// "log"
+
 	"net/http"
 	"os"
 	"path"
-	// "hydrocms/models"
+
 	"encoding/base64"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
@@ -22,7 +21,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io/ioutil"
-	// "path/filepath"
+
 	"bytes"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"regexp"
@@ -315,17 +314,20 @@ func (c *FroalaController) ControllerFroala() {
 		file, header, err := c.GetFile("source") // r.FormFile("upfile")
 		// beego.Info(header.Filename)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			logs.Error(err)
 		}
 		defer file.Close()
 		filename := strings.Replace(uuid.NewUUID().String(), "-", "", -1) + path.Ext(header.Filename)
 		err = os.MkdirAll(path.Join("static", "upload"), 0775)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			logs.Error(err)
 		}
 		outFile, err := os.Create(path.Join("static", "upload", filename))
 		if err != nil {
-			panic(err)
+			// panic(err)
+			logs.Error(err)
 		}
 		defer outFile.Close()
 		io.Copy(outFile, file)
@@ -336,17 +338,20 @@ func (c *FroalaController) ControllerFroala() {
 func UploadImg(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("upfile")
 	if err != nil {
-		panic(err)
+		// panic(err)
+		logs.Error(err)
 	}
 	defer file.Close()
 	filename := strings.Replace(uuid.NewUUID().String(), "-", "", -1) + path.Ext(header.Filename)
 	err = os.MkdirAll(path.Join("static", "upload"), 0775)
 	if err != nil {
-		panic(err)
+		// panic(err)
+		logs.Error(err)
 	}
 	outFile, err := os.Create(path.Join("static", "upload", filename))
 	if err != nil {
-		panic(err)
+		// panic(err)
+		logs.Error(err)
 	}
 	defer outFile.Close()
 	io.Copy(outFile, file)
@@ -357,7 +362,8 @@ func UploadImg(w http.ResponseWriter, r *http.Request) {
 		"state":    "SUCCESS",                                  //上传状态，成功时返回SUCCESS,其他任何值将原样返回至图片上传框中
 	})
 	if err != nil {
-		panic(err)
+		// panic(err)
+		logs.Error(err)
 	}
 	fmt.Println(string(b))
 	w.Write(b)

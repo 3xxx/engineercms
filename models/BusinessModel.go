@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"github.com/beego/beego/v2/core/logs"
+	// "github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
 	"time"
 )
@@ -14,8 +14,8 @@ type Business struct {
 	CreatedAt        time.Time `gorm:"autoCreateTime"`
 	UpdatedAt        time.Time
 	DeletedAt        *time.Time
-	ProjectID        int64 `json:"projectid" gorm:"column:project_id;foreignkey:ProjectId;"`
-	UserID           int64 `gorm:"column:user_id"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	ProjectID        int64 `json:"projectid" gorm:"column:project_id;"` // foreignkey:ProjectId;
+	UserID           int64 `gorm:"column:user_id"`                      // One-To-One (属于 - 本表的BillingAddressID作外键
 	Location         string
 	Lat              float64
 	Lng              float64
@@ -37,50 +37,42 @@ type Business struct {
 // 出差人员表
 type BusinessUser struct {
 	gorm.Model
-	// ID     int    `gorm:"primary_key"`
-	UserID     int64 // 外键 (属于), tag `index`是为该列创建索引
 	BusinessID uint  `json:"businessid"` //这个对应business表中的ID
-	// NickNames  NickName `gorm:"foreignkey:UserID"` //加不加这个references:UserID没所谓，奇怪
-	NickNames User `gorm:"foreignkey:UserID"`
+	UserID     int64 // 外键 (属于), tag `index`是为该列创建索引
+	User       User  `gorm:"foreignkey:Id;references:UserID;"`
+	// NickNames  NickName `gorm:"foreignkey:UserID"`
 }
 
 // 按道理，上面应该是`gorm:"foreignkey:ID;references:UserID"`，即主表businessuser中的USERID=
 // =从表中的ID啊
 // 这个是测试用的，实际用的是user
-type NickName struct {
-	gorm.Model
-	NickName string
-}
+// type NickName struct {
+// 	gorm.Model
+// 	NickName string
+// }
 
 // 出差每天打卡，还是另外一个功能吧，不要放一起
 type BusinessCheckin struct {
 	gorm.Model
 	BusinessID uint
-	UserID     int64
 	Location   string `json:"F_Location"`
 	Lat        float64
 	Lng        float64
 	CheckTime  time.Time `gorm:"autoCreateTime"`
 	SelectDate time.Time `gorm:"type:date"`
 	PhotoUrl   string
-	Users      User `gorm:"foreignkey:UserID"`
+	Allowance  int // 伙食补贴
+	UserID     int64
+	User       User `gorm:"foreignkey:Id;references:UserID;"` //重写外键，使用UserID作为外键——系统默认是UserID
 }
 
-//用户充值记录
-// type Recharge struct {
-// 	gorm.Model
-// 	UserID int64 `gorm:"column:user_id;foreignkey:UserId;"` // 外键 (属于), tag `index`是为该列创建索引
-// 	Amount int   `gorm:"column:amount"`
-// 	User   User  `gorm:"foreignkey:UserId"`
-// }
-
 func init() {
-	logs.Info("businessmod")
+	// logs.Info("businessmod")
 	// _db.AutoMigrate(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{})
 	// _db.CreateTable(&Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}) //当第一个存在后，后面的不建立！！！bug
-	// _db.CreateTable(&BusinessUser{})
-	// _db.CreateTable(&NickName{})
-	// _db.CreateTable(&BusinessCheckin{})
+	// _db.AutoMigrate(&BusinessUser{})
+	// _db.AutoMigrate(&NickName{})
+	// _db.AutoMigrate(&BusinessCheckin{})
 }
 
 // 登记出差活动
@@ -147,7 +139,7 @@ func GetAllBusiness(projectid, uid int64) (business []Business, err error) {
 	err = db.Order("business.updated_at desc").
 		Preload("BusinessUsers").
 		// Preload("BusinessUsers.NickNames", "id = ?", uid).//只预加载匹配的！
-		Preload("BusinessUsers.NickNames").
+		Preload("BusinessUsers.User").
 		Joins("left JOIN business_user on business_user.business_id = business.id").
 		Where("business_user.user_id = ?", uid).
 		Where("business.project_id = ?", projectid).
@@ -166,7 +158,7 @@ func GetBusinessById(businessid int64) (business Business, err error) {
 	err = db.
 		Preload("BusinessUsers").
 		// Preload("BusinessUsers.NickNames", "id = ?", uid).//只预加载匹配的！
-		Preload("BusinessUsers.NickNames").
+		Preload("BusinessUsers.User").
 		Joins("left JOIN business_user on business_user.business_id = business.id").
 		Where("business.id = ?", businessid).
 		Find(&business).Error
@@ -182,7 +174,7 @@ func GetAllBusiness2(projectid int64) (business []Business, err error) {
 	err = db.Order("business.updated_at desc").
 		Preload("BusinessUsers").
 		// Preload("BusinessUsers.NickNames", "id = ?", uid).//只预加载匹配的！
-		Preload("BusinessUsers.NickNames").
+		Preload("BusinessUsers.User").
 		Where("business.project_id = ?", projectid).
 		Where("business.end_date > ?", time.Now()).
 		Find(&business).Error
@@ -190,7 +182,8 @@ func GetAllBusiness2(projectid int64) (business []Business, err error) {
 }
 
 // 打卡记录写入数据库
-func BusinessCheck(businessid uint, userid int64, Lat, Lng float64, PhotoUrl, location string, SelectDate time.Time) (id uint, err error) {
+// 如果allowance不同，则更新
+func BusinessCheck(businessid uint, userid int64, Lat, Lng float64, PhotoUrl, location string, SelectDate time.Time, allowance int) (id uint, err error) {
 	db := _db //GetDB()
 	//查询数据库中有无打卡
 	// var businesscheckin BusinessCheckin
@@ -203,14 +196,37 @@ func BusinessCheck(businessid uint, userid int64, Lat, Lng float64, PhotoUrl, lo
 		Lng:        Lng,
 		SelectDate: SelectDate,
 		// PhotoUrl:PhotoUrl,
-		Location: location,
+		Location:  location,
+		Allowance: allowance,
 	}
+	// 通过 `Assign` 属性 更新记录
+	// db.Where(User{Name: "jinzhu"}).Assign(User{Age: 20}).FirstOrCreate(&user)
+	// SQL: SELECT * FROM users WHERE name = 'jinzhu';
+	// SQL: UPDATE users SET age=20 WHERE id = 111;
+	// user -> User{ID: 111, Name: "Jinzhu", Age: 20}
 	//判断是否有重名
-	err = db.Where("business_id = ? AND user_id = ? AND Select_date = ?", businessid, userid, SelectDate).FirstOrCreate(&businesscheckin).Error
-	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
-	// if err == orm.ErrNoRows {
-	// 没有找到记录
+	err = db.Where("business_id = ? AND user_id = ? AND Select_date = ?", businessid, userid, SelectDate).Assign(map[string]interface{}{"allowance": allowance}).FirstOrCreate(&businesscheckin).Error
+	// err = db.Where("business_id = ? AND user_id = ? AND Select_date = ?", businessid, userid, SelectDate).First(&businesscheckin).Error
+	// 通过 `Assign` 属性 更新记录
+	// db.Where(User{Name: "jinzhu"}).Assign(User{Age: 20}).FirstOrCreate(&user)
+	// 根据 `struct` 更新属性，只会更新非零值的字段
+	// db.Model(&user).Updates(User{Name: "hello", Age: 18, Active: false})
+	// 根据 `map` 更新属性
+	// db.Model(&user).Updates(map[string]interface{}{"name": "hello", "age": 18, "active": false})
+	// 检查 ErrRecordNotFound 错误
+	// if errors.Is(err, gorm.ErrRecordNotFound) {
+	// }
 	return businesscheckin.ID, err
+}
+
+// 删除用户某个出差打卡记录
+func DeleteBusinessCheck(businessid uint, userid int64, SelectDate time.Time) (err error) {
+	db := _db //GetDB()
+	result := db.Where("business_id = ? AND user_id = ? AND Select_date = ? ", businessid, userid, SelectDate).Delete(&BusinessCheckin{})
+	// user.ID             // 返回插入数据的主键
+	// result.Error        // 返回 error
+	// result.RowsAffected // 返回插入记录的条数
+	return result.Error
 }
 
 // 按月查询打卡记录-businessid是unint，换成int64也行？
@@ -227,7 +243,7 @@ func GetBusinessCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset in
 	db := _db //GetDB()
 	err = db.Order("business.updated_at desc").
 		Preload("BusinessCheckins", "select_date >= ? AND select_date <= ? ", selectmonth1, selectmonth2).
-		Preload("BusinessCheckins.Users").
+		Preload("BusinessCheckins.User").
 		// Joins("left JOIN business_checkin on business_checkin.business_id = business.id").
 		// Where("business_checkin.select_date >= ? AND business_checkin.select_date <= ?", selectmonth1, selectmonth2).
 		Where("business.start_date <= ? AND business.end_date >= ?", selectmonth2, selectmonth1).
@@ -239,7 +255,7 @@ func GetBusinessCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset in
 func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
 	db := _db //GetDB()
 	err = db.
-		Preload("NickNames").
+		Preload("User").
 		Where("business_id = ? ", businessid).
 		Find(&users).Error
 	return users, err
@@ -289,7 +305,7 @@ func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
 // type User struct {
 //   gorm.Model
 //   MemberNumber string
-//   CreditCards  []CreditCard `gorm:"foreignKey:UserNumber;references:MemberNumber"`// 写反了
+//   CreditCards  []CreditCard `gorm:"foreignKey:UserNumber;references:MemberNumber"`
 // }
 
 // type CreditCard struct {
@@ -298,15 +314,15 @@ func GetBusinessUsers(businessid uint) (users []*BusinessUser, err error) {
 //   UserNumber string——外键，这个值等于User表中的MemberNumber时，则查询到
 // }
 
-// 奶奶的，为啥和官网例子相反？？——官网是对的，外键是本表中的某个字段，即CategoryId字段
+// 奶奶的，为啥和官网例子相反？？——官网是对的，外键是外表中的某个字段，即Category中字段
 // 文章
 // type Topics struct {
 // 	Id         int        `gorm:"primary_key"`
 // 	Title      string     `gorm:"not null"`
 // 	UserId     int        `gorm:"not null"`
 // 	CategoryId int        `gorm:"not null"`
-// 	Category   Categories `gorm:"foreignkey:CategoryId"`//文章所属分类外键
-// 	User       Users      `gorm:"foreignkey:UserId"`//文章所属用户外键
+// 	Category   Categories `gorm:"foreignkey:Id"`//文章所属分类外键
+// 	User       Users      `gorm:"foreignkey:Id"`//文章所属用户外键
 // }
 
 // 用户

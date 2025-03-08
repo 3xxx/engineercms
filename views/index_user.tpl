@@ -65,6 +65,121 @@
       </table>
     </div>
   </div>
+
+  <!-- 文章列表 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalarticle">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">文章列表</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <!-- <div id="pdfs" style="display:none"> -->
+              <!-- <h3>工程目录分级</h3> -->
+              <table id="articles" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
+                <thead>
+                  <tr>
+                    <th data-width="10" data-checkbox="true"></th>
+                    <th data-formatter="index1">#</th>
+                    <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                    <th data-field="Subtext" data-align="center" data-valign="middle">副标题</th>
+                    <th data-field="Link" data-formatter="setArticlecontent" data-align="center" data-valign="middle">查看</th>
+                    <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                    <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
+                  </tr>
+                </thead>
+              </table>
+              <!-- </div> -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 除了**pdf**之外的附件列表 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalattach">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">非PDF附件列表</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <!-- <div id="pdfs" style="display:none"> -->
+              <!-- <h3>工程目录分级</h3> -->
+              <table id="attachs" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
+                <thead>
+                  <tr>
+                    <th data-width="10" data-checkbox="true"></th>
+                    <th data-formatter="index1">#</th>
+                    <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                    <th data-field="FileSize" data-align="center" data-valign="middle">大小</th>
+                    <th data-field="Link" data-formatter="setAttachlink" data-align="center" data-valign="middle">下载</th>
+                    <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                    <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
+                  </tr>
+                </thead>
+              </table>
+              <!-- </div> -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- pdf附件列表 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalpdf">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">pdf附件列表</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <!-- <div id="pdfs" style="display:none"> -->
+              <!-- <h3>工程目录分级</h3> -->
+              <table id="pdfs" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
+                <thead>
+                  <tr>
+                    <th data-width="10" data-checkbox="true"></th>
+                    <th data-formatter="index1">#</th>
+                    <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                    <th data-field="FileSize" data-align="center" data-valign="middle">大小</th>
+                    <th data-field="Link" data-formatter="setPdflink" data-align="center" data-valign="middle">下载</th>
+                    <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                    <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
+                  </tr>
+                </thead>
+              </table>
+              <!-- </div> -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script type="text/javascript">
   // 改变点击行颜色
   $(function() {
@@ -78,7 +193,7 @@
   $("#search").click(function() { //这里应该用button的id来区分按钮的哪一个,因为本页有好几个button
     var radio = $("input[type='radio']:checked").val();
     $.ajax({
-      type: "get", //这里是否一定要用post，是的，因为get会缓存？？
+      type: "get",
       url: "/v1/wx/searchproductdata", // /project/product/search?keyword={{.Key}}&productid={{.Pid}}
       data: { keyword: $("#keyword").val(), radiostring: radio },
       success: function(data, status) { //数据提交成功时返回数据
@@ -263,120 +378,6 @@
     $('#tree').treeview('revealNode', [checkableNodes, { silent: true }]);
   }
   </script>
-  <!-- 文章列表 -->
-  <div class="form-horizontal">
-    <div class="modal fade" id="modalarticle">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h3 class="modal-title">文章列表</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">
-              <!-- <div id="pdfs" style="display:none"> -->
-              <!-- <h3>工程目录分级</h3> -->
-              <table id="articles" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
-                <thead>
-                  <tr>
-                    <th data-width="10" data-checkbox="true"></th>
-                    <th data-formatter="index1">#</th>
-                    <th data-field="Title" data-align="center" data-valign="middle">名称</th>
-                    <th data-field="Subtext" data-align="center" data-valign="middle">副标题</th>
-                    <th data-field="Link" data-formatter="setArticlecontent" data-align="center" data-valign="middle">查看</th>
-                    <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
-                    <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
-                  </tr>
-                </thead>
-              </table>
-              <!-- </div> -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 除了**pdf**之外的附件列表 -->
-  <div class="form-horizontal">
-    <div class="modal fade" id="modalattach">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h3 class="modal-title">非PDF附件列表</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">
-              <!-- <div id="pdfs" style="display:none"> -->
-              <!-- <h3>工程目录分级</h3> -->
-              <table id="attachs" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
-                <thead>
-                  <tr>
-                    <th data-width="10" data-checkbox="true"></th>
-                    <th data-formatter="index1">#</th>
-                    <th data-field="Title" data-align="center" data-valign="middle">名称</th>
-                    <th data-field="FileSize" data-align="center" data-valign="middle">大小</th>
-                    <th data-field="Link" data-formatter="setAttachlink" data-align="center" data-valign="middle">下载</th>
-                    <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
-                    <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
-                  </tr>
-                </thead>
-              </table>
-              <!-- </div> -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- pdf附件列表 -->
-  <div class="form-horizontal">
-    <div class="modal fade" id="modalpdf">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h3 class="modal-title">pdf附件列表</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">
-              <!-- <div id="pdfs" style="display:none"> -->
-              <!-- <h3>工程目录分级</h3> -->
-              <table id="pdfs" data-toggle="table" data-page-size="5" data-page-list="[5, 25, 50, All]" data-unique-id="id" data-pagination="true" data-side-pagination="client" data-click-to-select="true">
-                <thead>
-                  <tr>
-                    <th data-width="10" data-checkbox="true"></th>
-                    <th data-formatter="index1">#</th>
-                    <th data-field="Title" data-align="center" data-valign="middle">名称</th>
-                    <th data-field="FileSize" data-align="center" data-valign="middle">大小</th>
-                    <th data-field="Link" data-formatter="setPdflink" data-align="center" data-valign="middle">下载</th>
-                    <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
-                    <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
-                  </tr>
-                </thead>
-              </table>
-              <!-- </div> -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 
 </html>

@@ -1,13 +1,6 @@
 package controllers
 
 import (
-	// json "encoding/json"
-	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/tealeg/xlsx"
-	// "github.com/bitly/go-simplejson"
-	// "io/ioutil"
-	// "github.com/beego/beego/v2/adapter/logs"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"

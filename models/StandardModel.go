@@ -1,22 +1,9 @@
 package models
 
 import (
-	//"database/sql"
-	//"github.com/astaxie/beedb"
-	//_ "github.com/ziutek/mymysql/godrv"
-	//"time"
-	// "fmt"
-	// "os"
-	// "path"
-	// beego "github.com/beego/beego/v2/adapter"
-	"strconv"
-	// "strings"
-	"time"
-	//"github.com/Unknwon/com
-	// "errors"
 	"github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/adapter/validation"
-	// _ "github.com/mattn/go-sqlite3"
+	"strconv"
+	"time"
 )
 
 //const (
@@ -58,7 +45,7 @@ func init() {
 	// orm.RegisterDataBase("default", "sqlite3", "database/standardms.db", 10)
 }
 
-//标准存入数据库
+// 标准存入数据库
 func SaveStandard(standard Standard) (sid int64, err error) {
 	o := orm.NewOrm()
 	//判断是否有重名
@@ -92,7 +79,7 @@ func SaveStandard(standard Standard) (sid int64, err error) {
 	// return uid, err
 }
 
-//有效版本库存入数据库
+// 有效版本库存入数据库
 func SaveLibrary(library Library) (lid int64, err error) {
 	o := orm.NewOrm()
 	//关闭写同步
@@ -153,7 +140,7 @@ func SaveLibrary(library Library) (lid int64, err error) {
 	// return uid, err
 }
 
-//由名字模糊搜索_作废
+// 由名字模糊搜索_作废
 func SearchStandardsName(name string, isDesc bool) ([]*Standard, error) {
 	o := orm.NewOrm()
 	Standards := make([]*Standard, 0)
@@ -171,7 +158,7 @@ func SearchStandardsName(name string, isDesc bool) ([]*Standard, error) {
 	return Standards, err
 }
 
-//由名字模糊搜索
+// 由名字模糊搜索
 func SearchStandardsNamePage(limit, offset int64, name string, isDesc bool) ([]*Standard, error) {
 	o := orm.NewOrm()
 	Standards := make([]*Standard, 0)
@@ -189,7 +176,7 @@ func SearchStandardsNamePage(limit, offset int64, name string, isDesc bool) ([]*
 	return Standards, err
 }
 
-//由编号模糊搜索_作废
+// 由编号模糊搜索_作废
 func SearchStandardsNumber(number string, isDesc bool) ([]*Standard, error) {
 	o := orm.NewOrm()
 	Standards := make([]*Standard, 0)
@@ -207,7 +194,7 @@ func SearchStandardsNumber(number string, isDesc bool) ([]*Standard, error) {
 	return Standards, err
 }
 
-//由编号模糊搜索
+// 由编号模糊搜索
 func SearchStandardsNumberPage(limit, offset int64, number string, isDesc bool) ([]*Standard, error) {
 	o := orm.NewOrm()
 	Standards := make([]*Standard, 0)
@@ -225,7 +212,7 @@ func SearchStandardsNumberPage(limit, offset int64, number string, isDesc bool) 
 	return Standards, err
 }
 
-//gorm查询规范，join用户
+// gorm查询规范，join用户
 type UserStandard struct {
 	Id       int64
 	Number   string //`orm:"unique"`
@@ -239,7 +226,7 @@ type UserStandard struct {
 	UserName string
 }
 
-//查询某个用户借阅记录
+// 查询某个用户借阅记录
 func GetUserStandard(limit, offset int, searchText string) (ustds []UserStandard, err error) {
 	db := _db //GetDB()
 	if searchText != "" {
@@ -259,7 +246,7 @@ func GetUserStandard(limit, offset int, searchText string) (ustds []UserStandard
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
 
-//查询规范记录总数
+// 查询规范记录总数
 func GetUserStandardCount(searchText string) (count int64, err error) {
 	//获取DB
 	db := _db //GetDB()
@@ -312,7 +299,7 @@ func GetAllStandards() ([]*Standard, error) {
 	return standards, err
 }
 
-//根据id取得规范
+// 根据id取得规范
 func GetStandard(id int64) (standard Standard, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Standard")
@@ -353,7 +340,7 @@ func DeleteStandard(id int64) error {
 	return err
 }
 
-//由法规名称精确搜索有效版本库
+// 由法规名称精确搜索有效版本库
 func SearchLiabraryName(Name string) ([]*Library, error) {
 	o := orm.NewOrm()
 	// library := new(Library)

@@ -258,7 +258,7 @@
             valign: "middle"
           },
           {
-            field: 'UserTemple.temptitle',
+            field: 'MathTemple.temptitle',
             title: '模板名称',
             halign: "center",
             align: "center",

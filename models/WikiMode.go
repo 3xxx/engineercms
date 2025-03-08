@@ -1,22 +1,9 @@
 package models
 
 import (
-	//"database/sql"
-	//"github.com/astaxie/beedb"
-	//_ "github.com/ziutek/mymysql/godrv"
-	//"time"
-	// "fmt"
-	// "os"
-	// "path"
-	// beego "github.com/beego/beego/v2/adapter"
-	"strconv"
-	// "strings"
-	"time"
-	//"github.com/Unknwon/com
-	// "errors"
 	"github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/adapter/validation"
-	// _ "github.com/mattn/go-sqlite3"
+	"strconv"
+	"time"
 )
 
 //const (
@@ -46,7 +33,7 @@ func init() {
 	// orm.RegisterDataBase("default", "sqlite3", "database/orm_test.db", 10)
 }
 
-//一对一模式
+// 一对一模式
 func AddWikiOne(title, content, uname string) (id int64, err error) {
 	o := orm.NewOrm()
 	// var wiki Wiki //下面这个filter放在wiki=&Wiki{后面用返回one(wiki)则查询出错！
@@ -66,7 +53,7 @@ func AddWikiOne(title, content, uname string) (id int64, err error) {
 	return id, err
 }
 
-//一对多模式
+// 一对多模式
 func AddWikiMany(title, uname, content, attachment string) (id int64, err error) {
 	o := orm.NewOrm()
 	// var wiki Wiki //下面这个filter放在wiki=&Wiki{后面用返回one(wiki)则查询出错！
@@ -115,7 +102,7 @@ func DeletWiki(tid string) error { //应该在controllers中显示警告
 	return err
 }
 
-//删除文章中的附件
+// 删除文章中的附件
 func DeletAttachment(aid string) error { //应该显示警告
 	aidNum, err := strconv.ParseInt(aid, 10, 64)
 	if err != nil {
@@ -159,7 +146,7 @@ func DeletAttachment(aid string) error { //应该显示警告
 	return err
 }
 
-//取出分页的wiki
+// 取出分页的wiki
 func ListWikisByOffsetAndLimit(set, postsPerPage int) ([]*Wiki, error) {
 	o := orm.NewOrm()
 	topics := make([]*Wiki, 0)
@@ -169,7 +156,7 @@ func ListWikisByOffsetAndLimit(set, postsPerPage int) ([]*Wiki, error) {
 	return topics, err
 }
 
-//缺少排序，由项目名称获取项目下所有成果，如果没有项目名称，则获取所有成果
+// 缺少排序，由项目名称获取项目下所有成果，如果没有项目名称，则获取所有成果
 func GetAllWikis(isDesc bool) ([]*Wiki, error) {
 	o := orm.NewOrm()
 	wikis := make([]*Wiki, 0)
@@ -207,7 +194,7 @@ func SearchWikis(tuming string, isDesc bool) ([]*Wiki, error) {
 	return wikis, err
 }
 
-//查看一个文章
+// 查看一个文章
 func GetWiki(tid string) (*Wiki, error) {
 	tidNum, err := strconv.ParseInt(tid, 10, 64)
 	if err != nil {
@@ -226,7 +213,7 @@ func GetWiki(tid string) (*Wiki, error) {
 	return wiki, err
 }
 
-//由用户名取得文章
+// 由用户名取得文章
 func Getwikisbyuname(uname string) ([]*Wiki, error) {
 	o := orm.NewOrm()
 	wikis := make([]*Wiki, 0)
@@ -238,7 +225,7 @@ func Getwikisbyuname(uname string) ([]*Wiki, error) {
 	return wikis, err
 }
 
-//只修改编号、名称和内容，不修改附件及分类树状目录
+// 只修改编号、名称和内容，不修改附件及分类树状目录
 func ModifyWiki(tid, title, content string) error {
 	tidNum, err := strconv.ParseInt(tid, 10, 64)
 	if err != nil {

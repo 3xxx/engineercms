@@ -1,23 +1,12 @@
 package controllers
 
 import (
-	// "encoding/json"
-	// "github.com/3xxx/engineercms/controllers/utils/filetil"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
 
-	// "io"
-	// "encoding/json"
-	// "net/http"
-	"github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/server/web"
-	// "bytes"
-	// "io/ioutil"
-	// "mime/multipart"
-	// "os"
-	// "path"
+	"github.com/beego/beego/v2/client/httplib"
+
 	"regexp"
 	// "strconv"
 	"strings"
@@ -204,7 +193,7 @@ func (c *MainController) Get() {
 	// 	c.Data["json"] = achdepart
 }
 
-//文档
+// 文档
 func (c *MainController) Getecmsdoc() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -295,7 +284,7 @@ func (c *MainController) Gethydrowsdoc() {
 	c.TplName = "hydrowsdoc.tpl"
 }
 
-//api
+// api
 func (c *MainController) Getecmsapi() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -391,6 +380,14 @@ func (c *MainController) Test() {
 	if err != nil {
 		logs.Error(err)
 	}
+	logs.Info("c.ServeJSON()后面的会执行，但不输出json,return后面不执行")
+	c.Data["json"] = map[string]interface{}{"info": "c.ServeJSON()后面的不会执行"}
+	c.ServeJSON()
+	return
+	logs.Info("return后面不执行")
+	// 后面的不会执行
+	c.Data["json"] = map[string]interface{}{"info": "http.StatusOK"}
+	c.ServeJSON()
 	if matched == true {
 		// beego.Info("移动端~")
 		c.TplName = "test1.tpl"
@@ -578,7 +575,7 @@ func (c *MainController) IsSubmitAgain(token string) bool {
 	return false
 }
 
-//升级数据库
+// 升级数据库
 func (c *MainController) UpdateDatabase() {
 	// beego.Info("ok")
 	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
@@ -612,7 +609,7 @@ func (c *MainController) UpdateDatabase() {
 	c.ServeJSON()
 }
 
-//删除数据表和字段测试
+// 删除数据表和字段测试
 func (c *MainController) ModifyDatabase() {
 	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
 	if !isadmin {
@@ -632,4 +629,90 @@ func (c *MainController) Autodesk() {
 
 func (c *MainController) Mapus() {
 	c.TplName = "supa-mapus/mapus.html"
+}
+
+func (c *MainController) Vue() {
+	c.TplName = "vue/vue.tpl"
+	c.Data["Title"] = "微信支付111"
+}
+
+func (c *MainController) VuePost() {
+	c.AllowCross() //允许跨域
+	// c.Data["json"] = map[string]interface{}{"status": 200, "message": "ok", "moreinfo": ""}
+	// c.ServeJSON()
+	result := make(map[string]interface{})
+	result["code"] = 0
+	result["msg"] = "success"
+	result["godata"] = "登录成功"
+	result["answer"] = "不要回答！"
+	result["amount"] = "100"
+	result["CodeUrl"] = "weixin://wxpay/bizpayurl/up?pr=NwY5Mz9&groupid=00"
+
+	c.Data["json"] = result
+	c.ServeJSON()
+}
+
+// 跨域
+func (c *MainController) AllowCross() {
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "http://localhost:8081")       //允许访问源
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS")    //允许post访问
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization") //header的类型
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Max-Age", "1728000")
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Ctx.ResponseWriter.Header().Set("content-type", "application/json") //返回数据格式是json
+}
+
+// @Title get legal_notices
+// @Description get legal_notices
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /legalnotices [get]
+// 法律声明
+func (c *MainController) LegalNotices() {
+	c.TplName = "ali/legal_notices.html"
+}
+
+// @Title get cookiespolicy
+// @Description get cookiespolicy
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /cookiespolicy [get]
+// cookie政策
+func (c *MainController) CookiesPolicy() {
+	c.TplName = "ali/cookies_police.html"
+}
+
+// @Title get Integrity
+// @Description get Integrity
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /integrity [get]
+// 廉政合规举报
+func (c *MainController) Integrity() {
+	c.TplName = "ali/integrity.html"
+}
+
+// @Title get Security reporting
+// @Description get Security reporting
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /security [get]
+// 安全举报
+func (c *MainController) Security() {
+	c.TplName = "ali/security_reporting.html"
+}
+
+// @Title get contact
+// @Description get Integrity
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /contact [get]
+// 联系我们
+func (c *MainController) Contact() {
+	c.TplName = "ali/contact.html"
 }

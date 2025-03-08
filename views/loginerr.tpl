@@ -17,18 +17,20 @@
         密码或用户名错误！或用户被禁止！
       </h3>
       <p class="well">请重新登陆。</p>
-      <form method="POST" action="/post">
+      <form method="POST" action="/loginpost">
         <input type="hidden" name="url" value="{{.Url}}" />
         <div class="form-group">
           <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-          <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
+          <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account" list="cars"></div>
         <div id='datalistDiv'>
           <datalist id="cars" name="cars">
           </datalist>
         </div>
         <div class="form-group">
           <label class="control-label" for="LoginForm-Password">密码</label>
-          <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
+          <!-- <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password" autocomplete="off"></div> -->
+          <form>
+            <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password" autocomplete="off" onkeypress="getKey()"></form>
         <div class="checkbox">
           <label>
             <input type="checkbox">自动登陆</label>

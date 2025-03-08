@@ -42,7 +42,7 @@ func main() {
 	//beego.TemplateRight = ">>>"
 	//web.TemplateLeft = "<<<"
 	//web.TemplateRight = ">>>"
-	//自动建表
+	//自动建表——坑：一定要放在main里，否则很多表建不了，casbin_rule表也建不了，出现错误
 	orm.RunSyncdb("default", false, true)
 	// orm.RunSyncdb("default", true, true)
 	models.InsertUser()
@@ -134,12 +134,12 @@ func main() {
 	// }()
 }
 
-//显示页面加载时间
+// 显示页面加载时间
 func loadtimes(t time.Time) int {
 	return int(time.Now().Sub(t).Nanoseconds() / 1e6)
 }
 
-//去除扩展名
+// 去除扩展名
 func subsuffix(in string) string {
 	fileSuffix := path.Ext(in)
 	return strings.TrimSuffix(in, fileSuffix)
@@ -164,7 +164,7 @@ func version(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, fmt.Sprintf("%s", out))
 }
 
-//初始化数据，来自commands install.go
+// 初始化数据，来自commands install.go
 func initialization() {
 	err := models.NewOption().Init()
 	if err != nil {

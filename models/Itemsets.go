@@ -5,14 +5,13 @@ import (
 	"github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/controllers/utils/cryptil"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"strings"
 	"time"
 )
 
-//项目空间
+// 项目空间
 type Itemsets struct {
 	ItemId      int       `orm:"column(item_id);pk;auto;unique" json:"item_id"`
 	ItemName    string    `orm:"column(item_name);size(500);description(项目空间名称)" json:"item_name"`
@@ -76,7 +75,7 @@ func (item *Itemsets) Exist(itemId int) bool {
 	return item.QueryTable().Filter("item_id", itemId).Exist()
 }
 
-//保存
+// 保存
 func (item *Itemsets) Save() (err error) {
 
 	item.ItemName = strings.TrimSpace(utils.StripTags(item.ItemName))
@@ -101,7 +100,7 @@ func (item *Itemsets) Save() (err error) {
 	return
 }
 
-//删除.
+// 删除.
 func (item *Itemsets) Delete(itemId int) (err error) {
 	if itemId <= 0 {
 		return ErrInvalidParameter
@@ -155,7 +154,7 @@ func (item *Itemsets) Include() (*Itemsets, error) {
 	return item, nil
 }
 
-//分页查询.
+// 分页查询.
 func (item *Itemsets) FindToPager(pageIndex, pageSize int) (list []*Itemsets, totalCount int, err error) {
 
 	offset := (pageIndex - 1) * pageSize
@@ -178,7 +177,7 @@ func (item *Itemsets) FindToPager(pageIndex, pageSize int) (list []*Itemsets, to
 	return
 }
 
-//根据项目空间名称查询.
+// 根据项目空间名称查询.
 func (item *Itemsets) FindItemsetsByName(name string, limit int) (*SelectMemberResult, error) {
 	result := SelectMemberResult{}
 
@@ -208,7 +207,7 @@ func (item *Itemsets) FindItemsetsByName(name string, limit int) (*SelectMemberR
 	return &result, err
 }
 
-//根据项目空间标识查询项目空间的项目列表.
+// 根据项目空间标识查询项目空间的项目列表.
 func (item *Itemsets) FindItemsetsByItemKey(key string, pageIndex, pageSize, memberId int) (books []*BookResult, totalCount int, err error) {
 	o := orm.NewOrm()
 

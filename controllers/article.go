@@ -6,7 +6,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/3xxx/flow"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/beego/beego/v2/adapter/httplib"
+	"github.com/beego/beego/v2/client/httplib"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"io"

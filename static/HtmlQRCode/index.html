@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成二维码</title>
+    <!-- <link rel="stylesheet" href="./css/base.css" /> -->
+	<!-- <script src="https://hm.baidu.com/hm.js?29d14c9fb6158fcbec79d1a0d1425404"></script> -->
+</head>
+
+<body>
+    <!-- <menu class="menu" id="menu">
+        <nav class="active">二维码生成</nav> | -->
+        <!-- <nav>二维码识别</nav> -->
+    <!-- </menu> -->
+
+    <!-- <h1 class="h1">纯前端 JS ：二维码：生成、扫描、识别 (HTML版)</h1> -->
+    <!-- <hr /> -->
+
+    <!-- <main class="main"> -->
+        <!-- <aside class="create"> -->
+            <input type="text" id="code" value="http://www.muguilin.com" placeholder="请在这里输入要生成的内容！" />
+            <input type="button" value="生成" onclick="create()" />
+            <div class="qrcode" id="qrcode"></div>
+        <!-- </aside> -->
+        <!-- <aside class="reader">
+            <button class="sweep" onclick="sweep()">扫一扫</button>
+            <button class="sweep">
+                <input type="file" id="file" onchange="upload()" />从相册选择
+            </button>
+            <div class="imgurl">
+                <img id="imgurl"
+                    src="https://raw.githubusercontent.com/MuGuiLin/QRCode/master/VueQRCode/src/assets/github.com.png"
+                    alt="当前识别的二维码" />
+            </div>
+            <textarea class="result" id="result" cols="32" rows="6" placeholder="二维码识别结果！"></textarea>
+            <canvas class="canvas" id="canvas"></canvas>
+        </aside> -->
+    <!-- </main> -->
+
+    <!-- 二维码生成 -->
+    <script src="./js/qrcode.js"></script>
+    <script>
+        const text = document.querySelector('#code');
+        const qrcode = new QRCode(document.querySelector('#qrcode'), {
+            text: "http://www.muguilin.com",
+            width: 300,
+            height: 300,
+            colorDark: "blue",
+            colorLight: "white",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // 生成
+        function create() {
+            qrcode.clear();
+            qrcode.makeCode(text.value);
+        };
+    </script>
+
+    <!-- 二维码识别 -->
+<!--     <script src="./js/jimp.js"></script>
+    <script src="./js/jsqr.min.js"></script>
+    <script src="./js/base.js"></script>
+    <script>
+        const result = document.querySelector('#result');
+        const QrCode = new QrCodeRecognition({
+            sweepId: '#canvas',
+            uploadId: '#file',
+            error: function (err) {
+                // 识别错误反馈
+                result.value = err;
+            },
+            seuccess: function (res) {
+                // 识别成功反馈
+                result.value = res.data;
+            }
+        });
+
+        // 扫一扫
+        function sweep() {
+            result.value = '';
+            QrCode.sweep();
+        };
+
+        // 从相册选择
+        function upload() {
+            result.value = '';
+            QrCode.upload();
+        };
+    </script> -->
+
+    <!-- Demo页面交互 -->
+<!--     <script>
+        const menu = [...document.querySelectorAll('nav')];
+        const aside = [...document.querySelectorAll('aside')];
+        menu.forEach((nav, n) => {
+            nav.onclick = () => {
+                aside.forEach((ele, a) => {
+                    ele.style.display = 'none';
+                    menu[a].classList.remove('active');
+                });
+                menu[n].classList.add('active');
+                aside[n].style.display = 'block';
+            }
+        });
+    </script> -->
+</body>
+
+</html>

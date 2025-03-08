@@ -2,22 +2,20 @@ package utils
 
 import (
 	"encoding/json"
-	// "encoding/xml"
-	// "errors"
+
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/cache"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"io"
 	"io/ioutil"
-	// "log"
+
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	// "strconv"
+
 	"context"
 	"strings"
 	"time"
@@ -41,7 +39,7 @@ type WxKeyword struct {
 	Value string `json:"value"`
 }
 
-var bm cache.Cache
+var Bm cache.Cache
 
 const (
 	//以下均为公众号管理后台设置项
@@ -59,7 +57,7 @@ func EncodingAESKey2AESKey(encodingKey string) []byte {
 
 func init() {
 	var err error
-	bm, err = cache.NewCache("memory", `{"interval":7200}`)
+	Bm, err = cache.NewCache("memory", `{"interval":7200}`)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -77,7 +75,7 @@ func GetAccessToken(app_version string) (accesstoken string, errcode float64, er
 	//   _ = json.Unmarshal(category.([]uint8), &data)
 	//   return data
 	// var accessToken cache.Cache
-	resultToken, err := bm.Get(context.TODO(), "access_token")
+	resultToken, err := Bm.Get(context.TODO(), "access_token")
 	if err != nil {
 		logs.Error(err)
 	}
@@ -107,7 +105,7 @@ func GetAccessToken(app_version string) (accesstoken string, errcode float64, er
 		// 重新获取，存入缓存，返回值
 		accessToken, errcode, errmsg, err := requestToken(APPID, SECRET)
 		if accessToken != "" {
-			bm.Put(context.TODO(), "access_token", accessToken, 7200*time.Second)
+			Bm.Put(context.TODO(), "access_token", accessToken, 7200*time.Second)
 			return accessToken, 0, "", nil
 		} else {
 			return "", errcode, errmsg, err

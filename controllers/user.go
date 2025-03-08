@@ -1,18 +1,17 @@
 package controllers
 
 import (
-	// m "github.com/beego/admin/src/models"
-	// "github.com/beego/beego/v2/adapter/orm"
 	"crypto/md5"
 	"encoding/hex"
 	m "github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// "github.com/beego/beego/v2/adapter/logs"
+
 	"github.com/tealeg/xlsx"
 	"html/template"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -182,7 +181,7 @@ func (c *UserController) User() {
 			logs.Error(err)
 		}
 		for _, w := range users {
-			w.Password = "0123456789abcdefghijklmnopqrstuv"
+			w.Password = "******"
 		}
 		//如果设置了role,用于onlyoffice/officeview的权限设置
 		role := c.GetString("role")
@@ -202,7 +201,7 @@ func (c *UserController) User() {
 		if err != nil {
 			logs.Error(err)
 		}
-		user := m.GetUserByUserId(idNum)
+		user, err := m.GetUserByUserId(idNum)
 		if err != nil {
 			logs.Error(err)
 		}
@@ -210,7 +209,7 @@ func (c *UserController) User() {
 		// var users1 []*m.User
 		users := make([]*m.User, 1)
 		users[0] = &user
-		users[0].Password = "0123456789abcdefghijklmnopqrstuv"
+		users[0].Password = "******"
 		// users = append(users, &user...)
 		c.Data["json"] = users //取到一个用户数据，不是数组，所以table无法显示
 		c.ServeJSON()
@@ -233,7 +232,10 @@ func (c *UserController) View() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	userid, _ := strconv.ParseInt(c.GetString("useid"), 10, 64)
-	user := m.GetUserByUserId(userid)
+	user, err := m.GetUserByUserId(userid)
+	if err != nil {
+		logs.Error(err)
+	}
 	c.Data["User"] = user
 	c.TplName = "admin_user_view.tpl"
 }
@@ -424,7 +426,10 @@ func (c *UserController) UpdateWxUser() {
 		logs.Error(err)
 	}
 	//取出用户旧密码
-	user := m.GetUserByUserId(id)
+	user, err := m.GetUserByUserId(id)
+	if err != nil {
+		logs.Error(err)
+	}
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(oldpass))
 	cipherStr := md5Ctx.Sum(nil)
@@ -448,7 +453,7 @@ func (c *UserController) UpdateWxUser() {
 
 // @Title update user
 // @Description add user
-// @Param pk query string false "The pk of user"
+// @Param pk query string false "The Primary key of editable object (e.g. record id in database) of user"
 // @Param name query string false "The name of user"
 // @Param value query string false "The value of user"
 // @Success 200 {object} models.User
@@ -464,25 +469,46 @@ func (c *UserController) UpdateUser() {
 	if err != nil {
 		logs.Error(err)
 	}
+
 	if isadmin || uid == id {
 		name := c.GetString("name")
 		value := c.GetString("value")
-		logs.Info(value)
+		logs.Info(name)
 		value = template.HTMLEscapeString(value) //过滤xss攻击
-		logs.Info(value)
+		// logs.Info(value)
+		// 判断用户名是否存在，唯一性检查
+		if name == "name" {
+			// 查询username
+			_, err := m.GetUserByUsername(value)
+			if err == nil {
+				c.Data["json"] = map[string]interface{}{"info": "ERROR", "status": "ERROR", "data": "用户名已存在！请更换"}
+				c.ServeJSON()
+				return
+			}
+		}
+		// 判断用户名是否存在，唯一性检查
+		if name == "Nickname" {
+			// 查询username
+			_, err := m.GetUserByNickname(value)
+			if err == nil {
+				c.Data["json"] = map[string]interface{}{"info": "ERROR", "status": "ERROR", "data": "昵称已存在！请更换"}
+				c.ServeJSON()
+				return
+			}
+		}
 		err = m.UpdateUser(id, name, value)
 		if err != nil {
 			logs.Error(err)
-			data := "写入数据错误!"
-			c.Ctx.WriteString(data)
+			c.Data["json"] = map[string]interface{}{"info": "ERROR", "status": "ERROR", "data": "写入数据错误"}
+			c.ServeJSON()
+			return
 		} else {
-			logs.Info("ok")
-			data := "ok!"
-			c.Ctx.WriteString(data)
+			c.Data["json"] = map[string]interface{}{"info": "SUCCESS", "status": "SUCCESS", "data": "修改成功！"}
+			c.ServeJSON()
 		}
 	} else {
-		data := "权限不足！"
-		c.Ctx.WriteString(data)
+		c.Data["json"] = map[string]interface{}{"info": "ERROR", "status": "ERROR", "data": "无修改权限，非管理员，也非本人！"}
+		c.ServeJSON()
 	}
 }
 
@@ -556,6 +582,30 @@ func (c *UserController) DeleteUser() {
 // @Success 200 {object} models.User
 // @Failure 400 Invalid page supplied
 // @Failure 404 user not found
+// @router /getuserbyuserid [get]
+// 用户查看自己，修改密码等
+func (c *UserController) GetUserByUserId() {
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	if islogin != true {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		return
+	}
+	c.TplName = "user/user_view.tpl"
+}
+
+// @Title get user
+// @Description get user
+// @Success 200 {object} models.User
+// @Failure 400 Invalid page supplied
+// @Failure 404 user not found
 // @router /getuserbyusername [get]
 // 用户查看自己，修改密码等
 func (c *UserController) GetUserByUsername() {
@@ -572,7 +622,7 @@ func (c *UserController) GetUserByUsername() {
 		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
-	c.TplName = "user_view.tpl"
+	c.TplName = "user/user_view.tpl"
 }
 
 // @Title get usermyself
@@ -607,6 +657,7 @@ func (c *UserController) Usermyself() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
+	logs.Info(uid)
 	//4.取得客户端用户名
 	// var uname string
 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
@@ -622,13 +673,14 @@ func (c *UserController) Usermyself() {
 	// 	// c.Redirect("/roleerr", 302)
 	// 	return
 	// }
-	user, err := m.GetUserByUsername(username)
+	// user, err := m.GetUserByUsername(username)
+	user, err := m.GetUserByUserId(uid)
 	if err != nil {
 		logs.Error(err)
 	}
 	users := make([]*m.User, 1)
 	users[0] = &user
-	users[0].Password = "0123456789abcdefghijklmnopqrstuv"
+	users[0].Password = "******"
 	c.Data["json"] = users
 	c.ServeJSON()
 }
@@ -794,4 +846,33 @@ func (this *UserController) Roleerr() {
 	}
 	this.Data["Url"] = url
 	this.TplName = "role_err.tpl"
+}
+
+// @Title get user recharge
+// @Description get user recharge
+// @Success 200 {object} models.Recharge
+// @Failure 400 Invalid page supplied
+// @Failure 404 recharge not found
+// @router /wxrecharge [get]
+// 用户充值页面
+func (c *UserController) WxRecharge() {
+	username, _, uid, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"state": "ERROR", "info": "ERROR", "data": "未登录~", "title": ""}
+		//这里要返回用户userid
+		c.ServeJSON()
+		return
+	}
+	c.Data["Uid"] = uid
+	c.Data["Username"] = username
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		logs.Error(err)
+	}
+	if matched == true {
+		c.TplName = "user/user_recharge.tpl"
+	} else {
+		c.TplName = "user/user_recharge.tpl"
+	}
 }

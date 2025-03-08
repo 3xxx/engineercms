@@ -308,7 +308,7 @@ $(document).ready(function() {
       });
     },
     eventDrop: function(event, delta, revertFunc) {
-      if (event.ip != { {.Ip } }) {
+      if (event.ip != {{.Ip }}) {
         alert("非本人创建，不能修改！");
         return;
       }
@@ -327,7 +327,7 @@ $(document).ready(function() {
       });
     },
     eventResize: function(event, delta, revertFunc) {
-      if (event.ip != { {.Ip } }) {
+      if (event.ip != {{.Ip }}) {
         alert("非本人创建，不能修改！");
         return;
       }
@@ -396,7 +396,7 @@ function getRandomColor() {
 }
 
 function save() {
-  var projectid = { {.ProjectId } };
+  var projectid = {{.ProjectId }};
   var title = $('#title').val();
   var content = $('#content').val();
   var start = $('#start').val();
@@ -445,7 +445,7 @@ function update() {
   var cid = $('#cid').val();
   var ip = $('#ip').val();
 
-  if (ip != { {.Ip } }) {
+  if (ip != {{.Ip }}) {
     alert("非本人创建，不能修改！");
     return;
   }

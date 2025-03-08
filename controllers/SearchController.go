@@ -4,22 +4,20 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/i18n"
 	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/models"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/controllers/utils/pagination"
 	"github.com/3xxx/engineercms/controllers/utils/sqltil"
-	
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/3xxx/engineercms/models"
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/i18n"
 )
 
 type MindocSearchController struct {
 	MindocBaseController
 }
 
-//搜索首页
+// 搜索首页
 func (c *MindocSearchController) Index() {
 	c.Prepare()
 	c.TplName = "search/index.tpl"
@@ -84,7 +82,7 @@ func (c *MindocSearchController) Index() {
 	}
 }
 
-//搜索用户
+// 搜索用户
 func (c *MindocSearchController) User() {
 	c.Prepare()
 	key := c.Ctx.Input.Param(":key")

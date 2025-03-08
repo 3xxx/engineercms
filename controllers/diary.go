@@ -5,14 +5,10 @@ import (
 	// "encoding/hex"
 	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/logs"
-	// "net"
-	// "net/http"
-	// "net/url"
+
 	"path"
 	"strconv"
 	"strings"
@@ -655,39 +651,29 @@ func createParaRun(doc *document.Document, s string) document.Run {
 }
 
 // golang的log.Fatal()和panic()函数的区别
-
 // 在讲两者区别之前我们先看一下os.Exit()函数的定义：
-
 // func Exit(code int)
-
 // Exit causes the current program to exit with the given status code.
 // Conventionally, code zero indicates success, non-zero an error.
 // The program terminates immediately; deferred functions are not run.
 // 注意两点：
-
 // 应用程序马上退出。
 // defer函数不会执行。
 // 再来看log.Fatal函数定义
-
 // func Fatal(v ...interface{})
-
 // Fatal is equivalent to Print() followed by a call to os.Exit(1).
 // 看源代码：go/src/log/log.go
-
 // // Fatal is equivalent to l.Print() followed by a call to os.Exit(1).
 // func (l *Logger) Fatal(v ...interface{}) {
 //     l.Output(2, fmt.Sprint(v...))
 //     os.Exit(1)
 // }
 // 总结起来log.Fatal函数完成：
-
 // 打印输出内容
 // 退出应用程序
 // defer函数不会执行
 // 和os.Exit()相比多了第一步。
-
 // 再来看内置函数panic()函数定义：
-
 // // The panic built-in function stops normal execution of the current
 // // goroutine. When a function F calls panic, normal execution of F stops
 // // immediately. Any functions whose execution was deferred by F are run in
@@ -701,7 +687,6 @@ func createParaRun(doc *document.Document, s string) document.Run {
 // // recover.
 // func panic(v interface{})
 // 注意几点：
-
 // 函数立刻停止执行 (注意是函数本身，不是应用程序停止)
 // defer函数被执行
 // 返回给调用者(caller)
@@ -712,23 +697,19 @@ func createParaRun(doc *document.Document, s string) document.Run {
 // ...(递归重复上述步骤，直到最上层函数)
 // 应用程序停止。
 // panic的行为
-// 简单的总结panic()就有点类似java语言的exception的处理，因而panic的行为和java的exception处理行为就非常类似，行为结合catch，和final语句块的处理流程。
-
+// 简单的总结panic()就有点类似java语言的exception的处理，因而panic的行为和java的exception处理行为就非常类似，行为结合catch，
+// 和final语句块的处理流程。
 // 下面给几个例子：
 
 // 例子1：log.Fatal
-
 // package main
-
 // import (
 //     "log"
 // )
-
 // func foo() {
 //     defer func () { log.Print("3333")} ()
 //     log.Fatal("4444")
 // }
-
 // func main() {
 //     log.Print("1111")
 //     defer func () { log.Print("2222")} ()
@@ -740,7 +721,7 @@ func createParaRun(doc *document.Document, s string) document.Run {
 // $ go build && ./main
 // 2018/08/20 17:48:44 1111
 // 2018/08/20 17:48:44 4444
-// 可见defer函数的内容并没有被执行，程序在log.Fatal(...)处直接就退出了。
+// 可见 defer 函数的内容并没有被执行，程序在log.Fatal(...)处直接就退出了。
 
 // 例子2：panic()函数
 
@@ -779,5 +760,3 @@ func createParaRun(doc *document.Document, s string) document.Run {
 
 // 作者：CodingCode
 // 链接：https://www.jianshu.com/p/f85ecae6e7df
-// 来源：简书
-// 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

@@ -22,9 +22,10 @@ import (
 )
 
 // CMSSHARE PRODUCT API
-// type ShareController struct {
-// 	beego.Controller
-// }
+//
+//	type ShareController struct {
+//		beego.Controller
+//	}
 const (
 	//single file.
 	SHARE_TYPE_FILE = "FILE"
@@ -107,8 +108,8 @@ func (c *ShareController) Create() {
 	expireInfinityStr := c.GetString("expireInfinityStr")
 	expireTimeStr := c.GetString("expireTimeStr")
 	if matterUuids == "" {
-		// panic(result.BadRequest("matterUuids cannot be null"))
-		logs.Error("matterUuids cannot be null")
+		panic(result.BadRequest("matterUuids cannot be null"))
+		// logs.Error("matterUuids cannot be null")
 	}
 	var expireTime time.Time
 	expireInfinity := false
@@ -117,22 +118,22 @@ func (c *ShareController) Create() {
 		expireTime = time.Now()
 	} else {
 		if expireTimeStr == "" {
-			// panic(result.BadRequest("time format error"))
-			logs.Error("time format error")
+			panic(result.BadRequest("time format error"))
+			// logs.Error("time format error")
 		} else {
 			expireTime = utils.ConvertDateTimeStringToTime(expireTimeStr)
 		}
 
 		if expireTime.Before(time.Now()) {
-			// panic(result.BadRequest("expire time cannot before now"))
-			logs.Error("expire time cannot before now")
+			panic(result.BadRequest("expire time cannot before now"))
+			// logs.Error("expire time cannot before now")
 		}
 	}
 	uuidArray := strings.Split(matterUuids, ",")
 
 	if len(uuidArray) == 0 {
-		// panic(result.BadRequest("share at least one file"))
-		logs.Error("share at least one file")
+		panic(result.BadRequest("share at least one file"))
+		// logs.Error("share at least one file")
 	} else if len(uuidArray) > SHARE_MAX_NUM {
 		// panic(result.BadRequestI18n(request, i18n.ShareNumExceedLimit, len(uuidArray), SHARE_MAX_NUM))
 		logs.Error("ShareNumExceedLimit")
@@ -260,6 +261,7 @@ func (c *ShareController) Detail() {
 	uuid := c.Ctx.Input.Param(":id")
 	if uuid == "" {
 		panic(result.BadRequest("uuid cannot be null"))
+		// logs.Info("uuid cannot be null")
 	}
 	share, err := models.CheckByUuidShare(uuid)
 	if err != nil {
@@ -379,8 +381,8 @@ func CheckShare(ctx *context.Context, shareUuid string, code string, user *model
 		} else {
 			if !share.ExpireInfinity {
 				if share.ExpireTime.Before(time.Now()) {
-					// panic(result.BadRequest("share expired"))
-					logs.Error("share expired")
+					panic(result.BadRequest("share expired"))
+					// logs.Error("share expired")
 					return nil, errors.New("share expired")
 				}
 			}
@@ -751,7 +753,7 @@ func (c *ShareController) DownloadZip() {
 	}
 }
 
-//删除文件夹下所有文件
+// 删除文件夹下所有文件
 func RemoveContents(dir string) error {
 	d, err := os.Open(dir)
 	if err != nil {
@@ -771,7 +773,7 @@ func RemoveContents(dir string) error {
 	return nil
 }
 
-//Copyfile
+// Copyfile
 func CopyFile(dstName, srcName string) (written int64, err error) {
 	src, err := os.Open(srcName)
 	if err != nil {
@@ -786,7 +788,7 @@ func CopyFile(dstName, srcName string) (written int64, err error) {
 	return io.Copy(dst, src)
 }
 
-//try to delete empty dir. true: delete an empty dir, false: delete nothing.
+// try to delete empty dir. true: delete an empty dir, false: delete nothing.
 func DeleteEmptyDir(dirPath string) bool {
 	dir, err := ioutil.ReadDir(dirPath)
 	if err != nil {

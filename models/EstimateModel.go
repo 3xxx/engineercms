@@ -1,13 +1,7 @@
 package models
 
 import (
-	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/jinzhu/gorm"
-	// "time"
-	// "errors"
 	"gorm.io/gorm"
-	// "github.com/casbin/beego-orm-adapter"
 )
 
 // 项目表
@@ -20,11 +14,11 @@ type EstimateProject struct {
 	Period  int    `json:"period"`  //  施工工期
 	UserID  int64
 	// User    User `json:"user" gorm:"foreignKey:UserID;references:Id;"` // 这个写法错误，所以无法建表
-	User User `json:"user" gorm:"foreignkey:Id;references:UserID;"`
+	User User `json:"user"` // gorm:"foreignkey:Id;references:UserID;"
 	// TotalInvestment    float64 `json:"totalinvestment"`
 	// EstimateCategoryID int `json:"estimatecategoryid"`
 	// EstimateCategory   EstimateCategory
-	EstimateProjPhase []EstimateProjPhase `json:"estimateprojphase" gorm:"foreignkey:EstimateProjectID;references:ID;"` // 阶段
+	EstimateProjPhase []EstimateProjPhase `json:"estimateprojphase"` // 阶段 gorm:"foreignkey:EstimateProjectID;references:ID;"
 	// Project       Project     `json:"project" gorm:"foreignKey:Id;references:ProjectId;"`
 }
 

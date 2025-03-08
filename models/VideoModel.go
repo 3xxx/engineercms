@@ -1,12 +1,9 @@
 package models
 
 import (
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"gorm.io/gorm/clause"
-	// _ "github.com/mattn/go-sqlite3"
-	// "strconv"
-	// "strings"
+
 	"time"
 )
 

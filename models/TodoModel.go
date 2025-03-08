@@ -1,22 +1,12 @@
 package models
 
 import (
-	// "database/sql"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
-	// _ "github.com/go-sql-driver/mysql"
-	// "github.com/go-xorm/xorm"
-	// _ "github.com/lib/pq"
-	// _ "github.com/mattn/go-sqlite3"
-	// "strconv"
-	// "strings"
-	// "fmt"
-	// "log"
-	// "os"
+
 	"time"
 )
 
-//待办事件
+// 待办事件
 type Todo struct {
 	Id        int64  `json:"todoid"`
 	ProjectId int64  `json:"projectid"`
@@ -27,7 +17,7 @@ type Todo struct {
 	Updated   time.Time `orm:"auto_now_add;type(date)"`
 }
 
-//操作记录
+// 操作记录
 type Todolog struct {
 	Id      int64
 	TodoId  int64
@@ -37,7 +27,7 @@ type Todolog struct {
 }
 
 func init() {
-	orm.RegisterModel(new(Todo), new(Todolog))
+	orm.RegisterModel(new(Todo)) //, new(Todolog)
 }
 
 func TodoCreate(projectid int64, name string, userid int64) (id int64, err error) {
@@ -63,7 +53,7 @@ func GetTodoUser(projectid int64, limit, offset int) ([]*TodoUser, error) {
 	return users, engine.Table("todo").Join("INNER", "user", "todo.user_id = user.id").Where("todo.project_id=?", projectid).Desc("todo.created").Limit(limit, offset).Find(&users)
 }
 
-//修改
+// 修改
 func UpdateTodo(todoid int64) error {
 	o := orm.NewOrm()
 	todo := &Todo{Id: todoid}
@@ -86,7 +76,7 @@ func UpdateTodo(todoid int64) error {
 // 	return status, err
 // }
 
-//删除待办
+// 删除待办
 func DeleteTodo(todoid int64) error {
 	o := orm.NewOrm()
 	todo := &Todo{Id: todoid}

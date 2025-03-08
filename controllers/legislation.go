@@ -1,12 +1,9 @@
 package controllers
 
 import (
-	// "bufio"
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// "io"
-	"github.com/3xxx/engineercms/models"
 	"regexp"
 	"strconv"
 	"strings"
@@ -27,7 +24,9 @@ type Legislationmore struct {
 }
 
 func (c *LegislationController) Index() {
-	_, _, _, isadmin, islogin := checkprodRole(c.Ctx)
+	username, _, _, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["IsLegislation"] = true
@@ -42,12 +41,12 @@ func (c *LegislationController) Index() {
 
 // 搜索规范或者图集的名称或编号
 func (c *LegislationController) Checklist() { //checklist用的是post方法
-	logs2 := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/test.log"}`)
-	logs.EnableFuncCallDepth(true)
+	// logs2 := logs.NewLogger(1000)
+	// logs.SetLogger("file", `{"filename":"log/test.log"}`)
+	// logs.EnableFuncCallDepth(true)
 
 	name := c.GetString("name")
-	// beego.Info(name)
+	// logs.Info(name)
 	array := strings.Split(name, "\n")
 	aa := make([]Legislationmore, len(array))
 	for i, v := range array {
@@ -56,24 +55,30 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 		if v != "" { //空行的处理
 			reg := regexp.MustCompile(`[《].*[》]`) //(`^\\<.*\\>`)
 			text2 := reg.FindAllString(v, -1)
-			// beego.Info(text2)
+			// logs.Info(text2)
 			if text2 != nil { //无书名号的处理。因为text2是数组，所以要用nil进行判断，而不能用""。
 				text3 := SubString(text2[0], 1, len([]rune(text2[0]))-2)
 				//2、根据名称搜索标准版本库，取得名称和版本号
 				library, err := models.SearchLiabraryName(text3)
 				if err != nil {
 					logs.Error(err)
+					c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "msg": "查询数据库出错", "data": "查询数据库出错"}
+					c.ServeJSON()
+					return
 				}
 				// logs.Info(len(library))
 				text4 := strconv.Itoa(i + 1)
 				Id1, err := strconv.ParseInt(text4, 10, 64)
 				if err != nil {
 					logs.Error(err)
+					c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "msg": "字符转换出错", "data": "字符转换出错"}
+					c.ServeJSON()
+					return
 				}
 				aa[i].Id = Id1
 
 				if len(library) != 0 { //如果找到，进行比对 library != nil这样不行，空数组不是nil
-					logs.Info(library)
+					// logs.Info(library)
 					//3、构造struct
 					for j, w := range library {
 						// logs.Info(w)
@@ -91,7 +96,7 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 					// 比较LibraryNumber是否一致
 					reg2 := regexp.MustCompile(`[（].*[）]`) //(`^\\<.*\\>`)
 					LibyNum := reg2.FindAllString(v, -1)
-					// logs.Info(LibyNum)
+					logs.Info(LibyNum)
 					if LibyNum != nil {
 						LibyNum2 := SubString(LibyNum[0], 1, len([]rune(LibyNum[0]))-2)
 						if aa[i].LibraryNumber != LibyNum2 {
@@ -101,12 +106,12 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 						aa[i].Color = "green"
 					}
 				} else { // 没找到
-					// beego.Info(library)
+					// logs.Info(library)
 					// aa[i].Number = library.Number //`orm:"unique"`
 					// aa[i].Title = text3
 					reg2 := regexp.MustCompile(`[（].*[）]`) //(`^\\<.*\\>`)
 					LibyNum := reg2.FindAllString(v, -1)
-					logs.Info(LibyNum)
+					// logs.Info(LibyNum)
 					if LibyNum != nil {
 						aa[i].LibraryNumber = SubString(LibyNum[0], 1, len([]rune(LibyNum[0]))-2)
 					}
@@ -121,8 +126,8 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 			}
 		}
 	}
-	c.Data["IsLegislation"] = true
-	c.TplName = "legislation.tpl"
+	// c.Data["IsLegislation"] = true
+	// c.TplName = "legislation.tpl"
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	// uname, _, _ := checkRoleread(c.Ctx) //login里的
 	// rolename, _ = strconv.Atoi(role)
@@ -195,7 +200,7 @@ func (c *LegislationController) Checklist() { //checklist用的是post方法
 	c.ServeJSON()
 
 	// logs.Info(c.Ctx.Input.IP() + " " + "SearchLegislationsName:" + name)
-	logs2.Close()
+	// logs2.Close()
 }
 
 // 上传文档供解析-替换（增加）标准号

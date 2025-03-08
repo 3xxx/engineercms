@@ -70,6 +70,43 @@
       -webkit-transform: rotate(0deg);
     }
   }
+
+  .results-container {
+    margin-top: 65px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /*box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 -1px 0px rgb(0 0 0 / 2%);*/
+    /*height: 48px;*/
+    /*width: 350px;*/
+    /*font-size: 15px;*/
+    /*border-radius: 5px;*/
+    /*position: fixed;*/
+    left: calc(calc(100% - 170px) / 2);
+    /*left: calc(calc(100% - 500px) / 2);*/
+    /*transform: translateX(calc(-50% + 338px));*/
+    /*top: 60px;*/
+    /*box-sizing: border-box;*/
+    position: absolute;
+    z-index: 9999;
+  }
+  
+  .results-container div {
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+  }
+  
+  .results-container div:last-child {
+    border-bottom: none;
+  }
+  .my-search-result-item:hover {
+    cursor: pointer;
+    background: var(--hover-grey);
+  }
   </style>
 </head>
 
@@ -139,6 +176,7 @@
     <div class="more-item" id="share-button">Share</div>
     <div class="more-item" id="sign-button">Sign</div>
     <div class="more-item" id="clear-button">Clear</div>
+    <div class="more-item" id="clear-coords-button">clearCoords</div>
     <a href="https://github.com/alyssaxuu/mapus" target="_blank" class="more-item">GitHub repo</a>
     <a href="https://zsj.itdos.net/docs/supa-mapus" target="_blank" class="more-item">About</a>
     <div class="more-item" id="logout">Log out</div>
@@ -215,6 +253,13 @@
     <input id="search-input" placeholder="Search for a place" />
     <img src="/static/supa-mapus/assets/search-icon.svg">
   </div>
+
+  <div id="searchResult" class="results-container" style="display: none;">
+    <div id="noData" style="display: none;">暂无数据</div>
+    <!-- 搜索结果将动态插入到这里 display: none; -->
+  </div>
+
+
   <div id="drawing-controls" class="noselect">
     <div id="cursor-tool" class="tool tool-active">
       <img src="/static/supa-mapus/assets/cursor-tool.svg">
@@ -326,16 +371,17 @@
   <!-- <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script> -->
   <!-- <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.3/leaflet.js"></script> -->
   <script src="/static/supa-mapus/leaflet.js" crossorigin=""></script>
-  <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
-  <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
+  <!-- <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script> -->
+  <!-- <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script> -->
+  <script src="/static/supa-mapus/proj4.js"></script>
+  <script src="/static/supa-mapus/proj4leaflet.min.js"></script>  
   <!-- <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script> -->
   <script src='/static/supa-mapus/turf.min.js'></script>
   <!-- <script src='/static/supa-mapus/turf.min.js'></script> -->
   <!-- <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script> -->
   <script src="/static/supa-mapus/leaflet-geoman.min.js"></script>
 
-  <script src="https://cdn.bootcss.com/proj4js/2.4.3/proj4.js"></script>
-  <script src="https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js"></script>
+
   <!-- <script src="https://unpkg.com/gcoord@0.3.2/dist/gcoord.js"></script> -->
   <script src="/static/supa-mapus/gcoord.js"></script>
 
@@ -348,7 +394,7 @@
   <script src="/static/supa-mapus/leaflet-topography.js"></script>
   <!-- <script src="https://unpkg.com/@raruto/leaflet-elevation@2.2.8/dist/leaflet-elevation.min.js"></script> -->
   <script src="/static/supa-mapus/leaflet-elevation.min.js"></script>
-  <script src="/static/supa-mapus/main-shen6.js"></script>
+  <script src="/static/supa-mapus/main-shen6.min.js"></script>
   <script src="/static/supa-mapus/layer/layer.js"></script> 
   <!-- <script src="/static/supa-mapus/main-shen3.min.js"></script> -->
   <script>

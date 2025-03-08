@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/adapter/httplib"
+	"github.com/beego/beego/v2/client/httplib"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/bitly/go-simplejson"
@@ -1738,7 +1738,8 @@ func (c *AdminController) GetWxProjectConfig() {
 	contents, _ := ioutil.ReadFile("./conf/" + id + ".json")
 	js, err := simplejson.NewJson([]byte(contents))
 	if err != nil {
-		panic("json format error")
+		// panic("json format error")
+		logs.Error(err)
 	}
 	c.Data["json"] = js
 	c.ServeJSON()
@@ -1835,7 +1836,8 @@ func (c *AdminController) ImportJson() {
 	contents, _ := ioutil.ReadFile(path)
 	js, err := simplejson.NewJson([]byte(contents))
 	if err != nil {
-		panic("json format error")
+		// panic("json format error")
+		logs.Error(err)
 	}
 	c.Data["json"] = js
 	c.ServeJSON()
@@ -1851,7 +1853,8 @@ func (c *AdminController) InitJson() {
 	// }
 	js, err := simplejson.NewJson([]byte(contents))
 	if err != nil {
-		panic("json format error")
+		// panic("json format error")
+		logs.Error(err)
 	}
 	c.Data["json"] = js
 	c.ServeJSON()

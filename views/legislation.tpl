@@ -2,16 +2,17 @@
 {{template "header"}}
 <title>首页 - 水利设计CMS系统</title>
 <!-- <meta charset="UTF-8"> -->
+<link type="text/css" href="/static/youdao/g3.css" rel="stylesheet">
+<link type="text/css" href="/static/youdao/fanyi.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
 <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
 <script src="/static/js/tableExport.js"></script>
 <script type="text/javascript" src="/static/js/moment.min.js"></script>
-<link type="text/css" href="/static/youdao/g3.css" rel="stylesheet">
-<link type="text/css" href="/static/youdao/fanyi.css" rel="stylesheet">
 <!-- <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script> -->
 <script type="text/javascript" src="/static/youdao/openapi.do" charset="utf-8"></script>
 <script type="text/javascript" src="/static/youdao/dict_req_web_1.1.js"></script>
@@ -43,14 +44,7 @@
               </div>
               <div class="row border content" id="inputContent">
                 <textarea id="inputText" class="text" dir="ltr" tabindex="1" wrap="SOFT" name="name" placeholder="将报告中的法规复制粘贴到这里，一行一条，《法规名称必须放在书名号中》；自动记录未查询到的法规，以便改进。"></textarea>
-                <!-- <div class="typo-suggest" style="display: none;">
-                                    您是不是要对标：
-                                    <a class="spell-corrected" href="/#"></a>
-                                </div> -->
               </div>
-              <!-- <div class="row">
-                                <a type="submit" id="translateBtn" href="/#" title="Enter自动对标" value="自动对标" name="action" class="button translateBtn"></a>
-                            </div> -->
               <span class="input-group-btn">
                 <button class="button translateBtn" type="button" id="checklist">
                   <i class="glyphicon glyphicon-search"></i>
@@ -97,7 +91,7 @@
                 </div>
                 <div class="read-mode" id="compareMode" style="display: block;">
                   <label class="compare-mode compare-disable" for="compare">
-                    <input id="compare" name="compare" type="checkbox"><!-- class="clog-js" data-clog="COMPARE_CLICK" data-pos="web.o.righttop" -->
+                    <input id="compare" name="compare" type="checkbox">
                     <span class="compare-message">法规显示大会通过</span>
                   </label>
                 </div>

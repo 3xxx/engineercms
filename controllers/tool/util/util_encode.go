@@ -6,7 +6,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//md5
+// md5
 func GetMd5(raw string) string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(raw)))
 }
@@ -16,7 +16,8 @@ func GetBcrypt(raw string) string {
 	password := []byte(raw)
 	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 	if err != nil {
-		panic(err)
+		// panic(err)
+		logs.Error(err)
 	}
 	return string(hashedPassword)
 }

@@ -32,10 +32,10 @@
       <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <form action="" method="POST" id="login-form">
         <p>
-          <span></span><input type="text" id="uname" placeholder="请输入用户名/警号" value="" />
+          <span></span><input type="text" id="username" placeholder="请输入用户名/警号" value="" />
         </p>
         <p>
-          <span></span><input type="password" id="pwd" placeholder="请输入密码" value="" onkeypress="getKey()" />
+          <span></span><input type="password" id="password" placeholder="请输入密码" value="" onkeypress="getKey()" />
         </p>
         <div id="warn"><span>!</span><span id="warnText"></span></div>
         <div class="submit" onclick="return login();">登录</div>
@@ -50,7 +50,24 @@
     </div>
     <div class="shade"></div>
   </div>
+
+  <script type="text/javascript" src="/static/js/jsencrypt.min.js"></script>
   <script>
+    let encryptor = new JSEncrypt();
+
+    // 获取公钥
+    async function getPublicKey() {
+      const response = await fetch('/v1/wx/publickeyhandler');
+      return await response.text();
+    }
+
+  // 加密处理
+  async function encryptData(data) {
+    const publicKey = await getPublicKey();
+    encryptor.setPublicKey(publicKey);
+    return encryptor.encrypt(data);
+  }
+
   $('#referrer').val(document.referrer);
 
   function checkInput() {
@@ -127,48 +144,97 @@
   //   }
   // });
 
-  function login() {
-    var warn = document.getElementById('warn');
-    var user = document.getElementById('uname');
-    var psw = document.getElementById('pwd');
-    var text = !user.value && !psw.value ? '请输入账号和密码！' : !user.value ? '请输入账号！' : !psw.value ? '请输入密码！' : "";
+  async function login() {
+    const username = document.getElementById('username').value;
+    // if (username.length == 0) {
+    //   alert("请输入账号");
+    //   return
+    // }
+
+    const password = document.getElementById('password').value;
+    // if (password.length == 0) {
+    //   alert("请输入密码");
+    //   return
+    // }
+
+    var text = !username && !password ? '请输入账号和密码！' : !username ? '请输入账号！' : !password ? '请输入密码！' : "";
     if (text) {
       document.getElementById("warnText").innerHTML = text;
       warn.style.display = 'block';
       return;
     }
-    var options = {
-      uname: user.value,
-      pwd: psw.value,
-      service: "{{.service}}",
-      renew: false,
-      returnurl: ""
-    };
-    if ($("#service").length > 0) {
-      options.service = $("#service").val();
-    }
-    if ($("#renew").length > 0) {
-      options.renew = $("#renew").val();
-    }
-    if ($("#returnurl").length > 0) {
-      options.returnurl = $("#returnurl").val();
-    } else {
-      warn.style.display = 'none';
-      $.post("/loginpost", options, function(data) {
-        $(".submit").html("登录");
-        if (data.islogin == 0) {
-          // console.log(data.service)
-          alert("登录成功，点确定跳转到首页……")
-          // location.href = "/index";
-          location.href = "{{.Url}}";
-          // window.location.reload();
-        } else if (data.islogin == 1) {
-          ShowMsg("用户名或密码错误！");
-        } else if (data.islogin == 2) {
-          ShowMsg("密码错误！");
-        }
+
+    try {
+      const encryptedUsername = await encryptData(username);
+      const encryptedPassword = await encryptData(password);
+
+      const response = await fetch('/v1/wx/loginpost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: encryptedUsername,
+          password: encryptedPassword
+        })
       });
+
+      const result = await response.json();
+      // alert(result.msg);
+      if (result.islogin == 1) {
+        // window.location.reload();
+        location.href = {{.Url}};
+      } else {
+        ShowMsg(result.msg);
+      }
+    } catch (error) {
+      console.error('登录失败:', error);
+      alert('登录失败，请检查控制台');
+      ShowMsg(error);
     }
+
+
+    // var warn = document.getElementById('warn');
+    // var user = document.getElementById('username');
+    // var psw = document.getElementById('password');
+    // var text = !user.value && !psw.value ? '请输入账号和密码！' : !user.value ? '请输入账号！' : !psw.value ? '请输入密码！' : "";
+    // if (text) {
+    //   document.getElementById("warnText").innerHTML = text;
+    //   warn.style.display = 'block';
+    //   return;
+    // }
+    // var options = {
+    //   uname: user.value,
+    //   pwd: psw.value,
+    //   service: "{{.service}}",
+    //   renew: false,
+    //   returnurl: ""
+    // };
+    // if ($("#service").length > 0) {
+    //   options.service = $("#service").val();
+    // }
+    // if ($("#renew").length > 0) {
+    //   options.renew = $("#renew").val();
+    // }
+    // if ($("#returnurl").length > 0) {
+    //   options.returnurl = $("#returnurl").val();
+    // } else {
+    //   warn.style.display = 'none';
+    //   $.post("/loginpost", options, function(data) {
+    //     $(".submit").html("登录");
+    //     if (data.islogin == 0) {
+    //       // console.log(data.service)
+    //       alert("登录成功，点确定跳转到首页……")
+    //       // location.href = "/index";
+    //       location.href = "{{.Url}}";
+    //       // window.location.reload();
+    //     } else if (data.islogin == 1) {
+    //       ShowMsg("用户名或密码错误！");
+    //     } else if (data.islogin == 2) {
+    //       ShowMsg("密码错误！");
+    //     }
+    //   });
+    // }
   }
 
   function ShowMsg(title) {

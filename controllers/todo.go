@@ -2,25 +2,12 @@ package controllers
 
 import (
 	"github.com/3xxx/engineercms/controllers/utils"
-	// "crypto/md5"
-	// "encoding/hex"
-	// "encoding/json"
+
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/logs"
-	// "net"
-	// "net/http"
-	// "net/url"
-	// "path"
+
 	"strconv"
-	// "strings"
-	// "fmt"
-	// "reflect"
-	// "sort"
-	// "time"
 )
 
 // CMSTODO API
@@ -99,7 +86,7 @@ func (c *TodoController) Create() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /gettodo [get]
-//取出所有未完成待办
+// 取出所有未完成待办
 func (c *TodoController) GetTodo() {
 	var offset, limit1, page1 int
 	var err error

@@ -2,21 +2,19 @@ package models
 
 import (
 	"errors"
-	"time"
-
-	// beego "github.com/beego/beego/v2/adapter"
+	"github.com/3xxx/engineercms/conf"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/3xxx/engineercms/conf"	
+	"time"
 )
 
-//团队.
+// 团队.
 type Team struct {
 	TeamId      int       `orm:"column(team_id);pk;auto;unique;" json:"team_id"`
-  TeamName    string    `orm:"column(team_name);size(255);description(团队名称)" json:"team_name"`
-  MemberId    int       `orm:"column(member_id);type(int);description(创建人id)" json:"member_id"`
-  IsDelete    bool      `orm:"column(is_delete);default(false);description(是否删除 false：否 true：是)" json:"is_delete"`
-  CreateTime  time.Time `orm:"column(create_time);type(datetime);auto_now_add;description(创建时间)" json:"create_time"`
+	TeamName    string    `orm:"column(team_name);size(255);description(团队名称)" json:"team_name"`
+	MemberId    int       `orm:"column(member_id);type(int);description(创建人id)" json:"member_id"`
+	IsDelete    bool      `orm:"column(is_delete);default(false);description(是否删除 false：否 true：是)" json:"is_delete"`
+	CreateTime  time.Time `orm:"column(create_time);type(datetime);auto_now_add;description(创建时间)" json:"create_time"`
 	MemberCount int       `orm:"-" json:"member_count"`
 	BookCount   int       `orm:"-" json:"book_count"`
 	MemberName  string    `orm:"-" json:"member_name"`
@@ -96,7 +94,7 @@ func (t *Team) Delete(id int) (err error) {
 	return
 }
 
-//分页查询团队.
+// 分页查询团队.
 func (t *Team) FindToPager(pageIndex, pageSize int) (list []*Team, totalCount int, err error) {
 	o := orm.NewOrm()
 
@@ -139,7 +137,7 @@ func (t *Team) Include() {
 	}
 }
 
-//更新或添加一个团队.
+// 更新或添加一个团队.
 func (t *Team) Save(cols ...string) (err error) {
 	if t.TeamName == "" {
 		return NewError(5001, "团队名称不能为空")

@@ -1,18 +1,7 @@
 package models
 
 import (
-	// "database/sql"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
-	// _ "github.com/go-sql-driver/mysql"
-	// "github.com/go-xorm/xorm"
-	// _ "github.com/lib/pq"
-	// _ "github.com/mattn/go-sqlite3"
-	// "strconv"
-	// "strings"
-	// "fmt"
-	// "log"
-	// "os"
 	"time"
 )
 
@@ -126,7 +115,7 @@ type Activity struct {
 	IfPhoto    bool
 }
 
-//报名活动
+// 报名活动
 type Apply struct {
 	Id         int64
 	ApplyerId  int64
@@ -146,7 +135,7 @@ type Apply struct {
 // 	SelectDate time.Time `orm:"auto_now_add;type(date)"`
 // }
 
-//打卡记录
+// 打卡记录
 type Checkin struct {
 	Id         int64
 	ActivityId int64
@@ -224,17 +213,17 @@ func CheckCreate(CreaterId, projectid int64, Caption, Desc, Location string, Lat
 	// return id, nil
 }
 
-// getall: function (user_id,callback) {
-//     var sql = 'SELECT * FROM v_apply_activity WHERE F_ApplyerId=? ';
-//     var params = [user_id];
-//     db.connection.query(sql,params,function (err,res) {
-//         if(err){
-//             console.log(err);
-//             return;
-//         }
-//         callback(res);
-//     })
-// },
+//	getall: function (user_id,callback) {
+//	    var sql = 'SELECT * FROM v_apply_activity WHERE F_ApplyerId=? ';
+//	    var params = [user_id];
+//	    db.connection.query(sql,params,function (err,res) {
+//	        if(err){
+//	            console.log(err);
+//	            return;
+//	        }
+//	        callback(res);
+//	    })
+//	},
 func GetAll(projectid int64) (activity []*Activity, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Activity")
@@ -252,18 +241,18 @@ func GetAll(projectid int64) (activity []*Activity, err error) {
 	return activity, err
 }
 
-// getallLike:function (str,callback) {
-//     var sql = 'SELECT * FROM T_activity WHERE F_Caption LIKE ? ';
-//     str = '%' + str + '%';
-//     var params = [str];
-//     db.connection.query(sql,params,function (err,res) {
-//         if(err){
-//             console.log(err);
-//             return;
-//         }
-//         callback(res);
-//     })
-// },
+//	getallLike:function (str,callback) {
+//	    var sql = 'SELECT * FROM T_activity WHERE F_Caption LIKE ? ';
+//	    str = '%' + str + '%';
+//	    var params = [str];
+//	    db.connection.query(sql,params,function (err,res) {
+//	        if(err){
+//	            console.log(err);
+//	            return;
+//	        }
+//	        callback(res);
+//	    })
+//	},
 func CheckLike(name string) (activity []*Activity, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Activity")
@@ -274,7 +263,7 @@ func CheckLike(name string) (activity []*Activity, err error) {
 	return activity, err
 }
 
-//打卡记录写入数据库
+// 打卡记录写入数据库
 func CheckCheck(ActivityId, UserId int64, Lat, Lng float64, PhotoUrl string, SelectDate time.Time) (id int64, err error) {
 	o := orm.NewOrm()
 	//查询数据库中有无打卡
@@ -320,8 +309,8 @@ func CheckGetCheck(ActivityId, UserId int64, SelectMonth1, SelectMonth2 time.Tim
 	return check, nil
 }
 
-//按月统计**************这个没用
-//查询check里的用户Distinct("check.user_id").Limit(limit, offset)
+// 按月统计**************这个没用
+// 查询check里的用户Distinct("check.user_id").Limit(limit, offset)
 func GetCheckUser(selectmonth1, selectmonth2 time.Time, activityid int64) ([]*Checkin, error) {
 	checks := make([]*Checkin, 0) //分配的空间是0，容量是8个字段
 	return checks, engine.Where("select_date >= ? AND select_date <=? AND activity_id", selectmonth1, selectmonth2, activityid).Distinct("user_id", "select_date").Find(&checks)
@@ -329,19 +318,20 @@ func GetCheckUser(selectmonth1, selectmonth2 time.Time, activityid int64) ([]*Ch
 }
 
 // GetPkgInfosByIDs returns a list of package info by given IDs.
-// func GetPkgInfosByIDs(ids []int64) ([]*PkgInfo, error) {
-// 	if len(ids) == 0 {
-// 		return []*PkgInfo{}, nil
-// 	}
-// 	pkgInfos := make([]*PkgInfo, 0, len(ids))
-// 	return pkgInfos, x.Where("id > 0").In("id", base.Int64sToStrings(ids)).Find(&pkgInfos)
-// }
+//
+//	func GetPkgInfosByIDs(ids []int64) ([]*PkgInfo, error) {
+//		if len(ids) == 0 {
+//			return []*PkgInfo{}, nil
+//		}
+//		pkgInfos := make([]*PkgInfo, 0, len(ids))
+//		return pkgInfos, x.Where("id > 0").In("id", base.Int64sToStrings(ids)).Find(&pkgInfos)
+//	}
 type CheckUser struct {
 	Checkin `xorm:"extends"`
 	User    `xorm:"extends"`
 }
 
-//按月统计**************
+// 按月统计**************
 func GetCheckUser2(selectmonth1, selectmonth2 time.Time, activityid int64, limit, offset int) ([]*CheckUser, error) {
 	// var users = make([]User, 0)
 	users := make([]*CheckUser, 0)
@@ -353,7 +343,7 @@ func GetCheckUser2(selectmonth1, selectmonth2 time.Time, activityid int64, limit
 	//distinct和limit不能和sql组合
 }
 
-//存储用户订阅消息模板id和用户openid
+// 存储用户订阅消息模板id和用户openid
 func AddWxSubscribeMessage(openid, tmplid string) (id int64, err error) {
 	o := orm.NewOrm()
 	//查询数据库中有无打卡

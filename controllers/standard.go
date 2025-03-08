@@ -1,20 +1,15 @@
 package controllers
 
 import (
+	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/3xxx/engineercms/models"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-
-	"context"
-	//"github.com/PuerkitoBio/goquery"
-	"encoding/json"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/elastic/go-elasticsearch/v8"
-	// "github.com/elastic/go-elasticsearch/v8/esapi"
-	// "github.com/3xxx/engineercms/controllers/utils"
 	"github.com/google/go-tika/tika"
 	"github.com/tealeg/xlsx"
 	"github.com/xuri/excelize/v2"

@@ -1,33 +1,18 @@
 package controllers
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
+	"crypto/sha1"
 	"encoding/json"
+	"fmt"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/logs"
-	// "net"
-	// "net/http"
-	// "net/url"
-	// "path"
-	"fmt"
+	"io"
+	"sort"
 	"strconv"
 	"strings"
-	// "reflect"
-	"sort"
 	"time"
-	// "github.com/xlstudio/wxbizdatacrypt"
-	"crypto/sha1"
-	// "encoding/xml"
-	// "fmt"
-	"io"
-	// "io/ioutil"
-	// "log"
 )
 
 // CMSCHECKIN API
@@ -254,7 +239,7 @@ type detail struct {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /activity/getall [post]
-//取出所有活动
+// 取出所有活动
 func (c *CheckController) Getall() {
 	// var user_id = req.body.userId;
 	//   var now = moment();
@@ -346,7 +331,7 @@ func (c *CheckController) Getall() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /activity/like [post]
-//搜索
+// 搜索
 func (c *CheckController) Like() {
 	//  * 模糊查询所有的活动
 	//  */
@@ -434,7 +419,7 @@ type datess struct {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /check/details [post]
-//活动详情
+// 活动详情
 func (c *CheckController) Details() {
 	// 	/router.get('/details',function (req,res,next) {
 	//     // var activity_id = req.body.id;
@@ -842,37 +827,39 @@ func (c *CheckController) Date() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /activity/apply [post]
-//报名某个活动
+// 报名某个活动
 func (c *CheckController) Apply() {
 	c.Data["json"] = map[string]interface{}{"userId": 1, "avatorUrl": "Filename"}
 	c.ServeJSON()
 }
 
-// getDateById: function getDateById(activity_id,callback) {
-//     var sql = 'SELECT DISTINCT F_CheckDate FROM v_check_detail WHERE F_ActivityId = ?';
-//     var params = [activity_id];
-//     db.connection.query(sql,params,function (err,res) {
-//         if(err){
-//             console.log(err);
-//             return;
-//         }
-//         console.log(res);
-//         callback(res);
-//     })
-// },
-// getCheckByDate: function getCheckByDate(check_date,callback) {
-//     var sql = 'SELECT * FROM v_check_detail WHERE F_CheckDate = ?'
-//     var params = [check_date];
-//     db.connection.query(sql,params,function (err,res) {
-//         if(err){
-//             console.log(err);
-//             return;
-//         }
-//         console.log(res);
-//         callback(res);
-//     })
-// },
-//********************统计**************
+//	getDateById: function getDateById(activity_id,callback) {
+//	    var sql = 'SELECT DISTINCT F_CheckDate FROM v_check_detail WHERE F_ActivityId = ?';
+//	    var params = [activity_id];
+//	    db.connection.query(sql,params,function (err,res) {
+//	        if(err){
+//	            console.log(err);
+//	            return;
+//	        }
+//	        console.log(res);
+//	        callback(res);
+//	    })
+//	},
+//
+//	getCheckByDate: function getCheckByDate(check_date,callback) {
+//	    var sql = 'SELECT * FROM v_check_detail WHERE F_CheckDate = ?'
+//	    var params = [check_date];
+//	    db.connection.query(sql,params,function (err,res) {
+//	        if(err){
+//	            console.log(err);
+//	            return;
+//	        }
+//	        console.log(res);
+//	        callback(res);
+//	    })
+//	},
+//
+// ********************统计**************
 // @Title get mothcheckin
 // @Description get monthcheck
 // @Param projectid query string true "The projectid of check"
@@ -886,7 +873,7 @@ func (c *CheckController) MonthCheckSum() {
 	c.Data["ProjectId"] = c.GetString("projectid")
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type monthCheckTable struct {
 	Rows  []map[int]interface{} `json:"rows"`
 	Page  int64                 `json:"page"`

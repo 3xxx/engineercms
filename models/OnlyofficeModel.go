@@ -1,11 +1,8 @@
 package models
 
 import (
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
-	// _ "github.com/mattn/go-sqlite3"
-	// "strconv"
-	// "strings"
+	// _ "github.com/go-sql-driver/mysql"
 	"time"
 )
 
@@ -22,7 +19,7 @@ type OnlyOffice struct {
 	Updated time.Time `orm:"auto_now;type(datetime)"`
 }
 
-//附件
+// 附件
 type OnlyAttachment struct {
 	Id        int64
 	FileName  string
@@ -34,7 +31,7 @@ type OnlyAttachment struct {
 	Updated time.Time `orm:"auto_now;type(datetime)"`
 }
 
-//历史版本
+// 历史版本
 type OnlyHistory struct {
 	Id            int64
 	AttachId      int64
@@ -48,7 +45,7 @@ type OnlyHistory struct {
 	Created       time.Time `orm:"type(datetime)"`
 }
 
-//修改情况
+// 修改情况
 type OnlyChanges struct {
 	Id         int64
 	HistoryKey string `orm:"sie(19)"`
@@ -61,7 +58,7 @@ func init() {
 	orm.RegisterModel(new(OnlyOffice), new(OnlyAttachment), new(OnlyHistory), new(OnlyChanges))
 }
 
-//取得所有项目
+// 取得所有项目
 func GetDocs() (docs []*OnlyOffice, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyOffice")
@@ -78,7 +75,7 @@ type OnlyOfficeAttach struct {
 	User           `xorm:"extends"`
 }
 
-//分页取得所有项目
+// 分页取得所有项目
 func GetDocList(offset, limit int) (docs []*OnlyOfficeAttach, err error) {
 	// docs := make([]OnlyOfficeAttach, 0)
 	engine.Table("OnlyOffice").Join("INNER", "user", "user.id = onlyoffice.uid").
@@ -94,9 +91,9 @@ func GetDocList(offset, limit int) (docs []*OnlyOfficeAttach, err error) {
 	return docs, err
 }
 
-//添加成果到项目侧栏某个id下
-//如果这个侧栏id下的这个成果编号已经存在，则返回id
-////应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
+// 添加成果到项目侧栏某个id下
+// 如果这个侧栏id下的这个成果编号已经存在，则返回id
+// //应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
 func AddDoc(code, title, label, principal string, end time.Time, uid int64) (id int64, err error) {
 	o := orm.NewOrm()
 	var prod OnlyOffice
@@ -124,7 +121,7 @@ func AddDoc(code, title, label, principal string, end time.Time, uid int64) (id 
 	return id, err
 }
 
-//根据docid获得docuid
+// 根据docid获得docuid
 func Getdocbyid(id int64) (doc OnlyOffice, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyOffice")
@@ -132,9 +129,9 @@ func Getdocbyid(id int64) (doc OnlyOffice, err error) {
 	return doc, err
 }
 
-//添加附件到成果id下
-//如果附件名称已经存在，则不再追加写入数据库
-//应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
+// 添加附件到成果id下
+// 如果附件名称已经存在，则不再追加写入数据库
+// 应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
 func AddOnlyAttachment(filename string, filesize, downloads, productid int64) (id int64, err1, err2 error) {
 	o := orm.NewOrm()
 	var attach OnlyAttachment
@@ -160,7 +157,7 @@ func AddOnlyAttachment(filename string, filesize, downloads, productid int64) (i
 	return id, err1, err2
 }
 
-//根据成果id取得所有附件
+// 根据成果id取得所有附件
 func GetOnlyAttachments(id int64) (attachments []*OnlyAttachment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyAttachment")
@@ -171,7 +168,7 @@ func GetOnlyAttachments(id int64) (attachments []*OnlyAttachment, err error) {
 	return attachments, err
 }
 
-//根据附件id查询附件
+// 根据附件id查询附件
 func GetOnlyAttachbyId(Id int64) (attach OnlyAttachment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyAttachment")
@@ -179,7 +176,7 @@ func GetOnlyAttachbyId(Id int64) (attach OnlyAttachment, err error) {
 	return attach, err
 }
 
-//根据附件id查询附件
+// 根据附件id查询附件
 func GetOnlyAttachbyName(name string) (attach OnlyAttachment, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyAttachment")
@@ -187,7 +184,7 @@ func GetOnlyAttachbyName(name string) (attach OnlyAttachment, err error) {
 	return attach, err
 }
 
-//修改附件的日期和changesurl修改记录地址
+// 修改附件的日期和changesurl修改记录地址
 func UpdateOnlyAttachment(cid int64, filename string) (err error) {
 	o := orm.NewOrm()
 	attachment := &OnlyAttachment{Id: cid}
@@ -207,7 +204,7 @@ func UpdateOnlyAttachment(cid int64, filename string) (err error) {
 	return err
 }
 
-//修改成果信息
+// 修改成果信息
 func UpdateDoc(cid int64, code, title, label, principal string, end time.Time) error {
 	o := orm.NewOrm()
 	product := &OnlyOffice{Id: cid}
@@ -226,7 +223,7 @@ func UpdateDoc(cid int64, code, title, label, principal string, end time.Time) e
 	return nil
 }
 
-//修改成果时间信息
+// 修改成果时间信息
 func UpdateDocTime(cid int64) error {
 	o := orm.NewOrm()
 	product := &OnlyOffice{Id: cid}
@@ -240,7 +237,7 @@ func UpdateDocTime(cid int64) error {
 	return nil
 }
 
-//删除_把附件也一并删除（在controllers中实现吧）
+// 删除_把附件也一并删除（在controllers中实现吧）
 func DeleteDoc(cid int64) error {
 	o := orm.NewOrm()
 	product := &OnlyOffice{Id: cid}
@@ -253,7 +250,7 @@ func DeleteDoc(cid int64) error {
 	return nil
 }
 
-//删除附件
+// 删除附件
 func DeleteOnlyAttachment(cid int64) error {
 	o := orm.NewOrm()
 	attachment := &OnlyAttachment{Id: cid}
@@ -266,7 +263,7 @@ func DeleteOnlyAttachment(cid int64) error {
 	return nil
 }
 
-//添加历史版本
+// 添加历史版本
 func AddOnlyHistory(onlyattachmentid, uid int64, serverversion string, version int, key, fileurl, changesurl string, expires, created time.Time) (id int64, err1, err2 error) {
 	o := orm.NewOrm()
 	var history OnlyHistory
@@ -309,7 +306,7 @@ func AddOnlyHistory(onlyattachmentid, uid int64, serverversion string, version i
 // 	return nil
 // }
 
-//根据附件id获取历史版本信息
+// 根据附件id获取历史版本信息
 func GetOnlyHistory(onlyattachmentid int64) (onlyhistories []*OnlyHistory, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyHistory")
@@ -331,7 +328,7 @@ func GetOnlyHistory(onlyattachmentid int64) (onlyhistories []*OnlyHistory, err e
 // 	return onlyhistory, err
 // }
 
-//获取附件id历史版本号
+// 获取附件id历史版本号
 func GetOnlyHistoryVersion(onlyattachmentid int64) (onlyhistories []OnlyHistory, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyHistory")
@@ -342,7 +339,7 @@ func GetOnlyHistoryVersion(onlyattachmentid int64) (onlyhistories []OnlyHistory,
 	return onlyhistories, err
 }
 
-//添加历史版本
+// 添加历史版本
 func AddOnlyChanges(key, uid, uname, created string) (id int64, err1, err2 error) {
 	o := orm.NewOrm()
 	var changes OnlyChanges
@@ -366,7 +363,7 @@ func AddOnlyChanges(key, uid, uname, created string) (id int64, err1, err2 error
 	return id, err1, err2
 }
 
-//根据附件历史版本key获取历史版本修改信息
+// 根据附件历史版本key获取历史版本修改信息
 func GetOnlyChanges(key string) (onlychanges []*OnlyChanges, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("OnlyChanges")

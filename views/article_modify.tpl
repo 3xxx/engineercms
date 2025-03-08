@@ -194,7 +194,7 @@ video {
   <script type="text/javascript" src="/static/froala/js/plugins/video.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/help.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/print.min.js"></script>
-  <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script> -->
   <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
   <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script>
   <script src="/static/froala/js/languages/zh_cn.js"></script>
@@ -215,6 +215,8 @@ video {
     //编辑器初始化并赋值
     // $('#edit').froalaEditor({
     new FroalaEditor("#edit", {
+      key: '1C%kZV[IX)_SL}UJHAEFZMUJOYGYQE[\\ZJ]RAe(+%$==',
+      attribution: false, // to hide "Powered by Froala"
       // enter: $.FroalaEditor.ENTER_P,
       placeholderText: '请输入内容',
       charCounterCount: true, //默认

@@ -2,12 +2,10 @@ package models
 
 import (
 	"errors"
-	"time"
-	//beego "github.com/beego/beego/v2/adapter"
+	"github.com/3xxx/engineercms/conf"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/3xxx/engineercms/conf"	
-
+	"time"
 )
 
 type TeamRelationship struct {
@@ -58,7 +56,7 @@ func (m *TeamRelationship) First(teamId int, cols ...string) (*TeamRelationship,
 	return m, err
 }
 
-//查找指定项目的指定团队.
+// 查找指定项目的指定团队.
 func (m *TeamRelationship) FindByBookId(bookId int, teamId int) (*TeamRelationship, error) {
 	if teamId <= 0 || bookId <= 0 {
 		return nil, ErrInvalidParameter
@@ -70,7 +68,7 @@ func (m *TeamRelationship) FindByBookId(bookId int, teamId int) (*TeamRelationsh
 	return m, err
 }
 
-//删除指定项目的指定团队.
+// 删除指定项目的指定团队.
 func (m *TeamRelationship) DeleteByBookId(bookId int, teamId int) error {
 	err := m.QueryTable().Filter("team_id", teamId).Filter("book_id", bookId).One(m)
 	if err != nil {
@@ -81,7 +79,7 @@ func (m *TeamRelationship) DeleteByBookId(bookId int, teamId int) error {
 	return m.Delete(m.TeamRelationshipId)
 }
 
-//保存团队项目.
+// 保存团队项目.
 func (m *TeamRelationship) Save(cols ...string) (err error) {
 	if m.TeamId <= 0 || m.BookId <= 0 {
 		return ErrInvalidParameter
@@ -113,7 +111,7 @@ func (m *TeamRelationship) Delete(teamRelId int) (err error) {
 	return
 }
 
-//分页查询团队项目.
+// 分页查询团队项目.
 func (m *TeamRelationship) FindToPager(teamId, pageIndex, pageSize int) (list []*TeamRelationship, totalCount int, err error) {
 	if teamId <= 0 {
 		err = ErrInvalidParameter
@@ -142,7 +140,7 @@ func (m *TeamRelationship) FindToPager(teamId, pageIndex, pageSize int) (list []
 	return
 }
 
-//加载附加数据.
+// 加载附加数据.
 func (m *TeamRelationship) Include() (*TeamRelationship, error) {
 	if m.BookId > 0 {
 		b, err := NewBook().Find(m.BookId, "book_name", "identify", "member_id")
@@ -173,7 +171,7 @@ func (m *TeamRelationship) Include() (*TeamRelationship, error) {
 	return m, nil
 }
 
-//查询未加入团队的项目.
+// 查询未加入团队的项目.
 func (m *TeamRelationship) FindNotJoinBookByName(teamId int, bookName string, limit int) (*SelectMemberResult, error) {
 	if teamId <= 0 {
 		return nil, ErrInvalidParameter
@@ -208,7 +206,7 @@ and book.book_name like ? order by book_id desc limit ?;`
 	return &result, err
 }
 
-//查找指定项目中未加入的团队.
+// 查找指定项目中未加入的团队.
 func (m *TeamRelationship) FindNotJoinBookByBookIdentify(bookId int, teamName string, limit int) (*SelectMemberResult, error) {
 	if bookId <= 0 || teamName == "" {
 		return nil, ErrInvalidParameter
@@ -243,7 +241,7 @@ order by team.team_id desc limit ?;`
 	return &result, err
 }
 
-//查询指定项目的团队.
+// 查询指定项目的团队.
 func (m *TeamRelationship) FindByBookToPager(bookId, pageIndex, pageSize int) (list []*TeamRelationship, totalCount int, err error) {
 
 	if bookId <= 0 {

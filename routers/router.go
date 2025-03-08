@@ -5,25 +5,16 @@
 package routers
 
 import (
-	// "github.com/3xxx/engineercms/conf"
 	"github.com/3xxx/engineercms/controllers"
-	// "githsub.com/3xxx/engineercms/controllers/checkin"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "crypto/tls"
-	// "log"
-	"net/http"
-	"net/http/httputil"
-	"net/url"
-	"strings"
-	// "github.com/beego/beego/v2/adapter/context"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
 	"github.com/beego/beego/v2/server/web/filter/cors" //这个坑
-	// "github.com/3xxx/engineercms/controllers"
-	// "github.com/3xxx/engineercms/controllers/utils"
-	// "github.com/3xxx/engineercms/models"
-	// "strconv"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"strings"
 )
 
 // ***********mindoc********
@@ -195,6 +186,8 @@ func init() {
 					&controllers.BusinessController{},
 					&controllers.LocationController{},
 					&controllers.SupaMapusController{},
+					&controllers.WechatPayController{},
+					&controllers.WechatLoginController{},
 				),
 			),
 			web.NSNamespace("/share",
@@ -238,12 +231,11 @@ func init() {
 					&controllers.FileinputController{},
 				),
 			),
-			web.NSNamespace("/pdfcpu",
-				// beego.NSBefore(FilterUser),
-				web.NSInclude(
-					&controllers.PdfCpuController{},
-				),
-			),
+			// web.NSNamespace("/pdfcpu",
+			// 	web.NSInclude(
+			// 		&controllers.PdfCpuController{},
+			// 	),
+			// ),
 			web.NSNamespace("/flv",
 				// beego.NSBefore(FilterUser),
 				web.NSInclude(
@@ -256,26 +248,32 @@ func init() {
 					&controllers.CartController{},
 				),
 			),
-			// web.NSNamespace("/mathcad",
-			// 	// beego.NSBefore(FilterUser),
-			// 	web.NSInclude(
-			// 		&controllers.MathcadController{},
-			// 		&controllers.WsMathcadController{},
-			// 	),
-			// ),
-			// web.NSNamespace("/ansys",
-			// 	// beego.NSBefore(FilterUser),
-			// 	web.NSInclude(
-			// 		&controllers.AnsysController{},
-			// 	),
-			// ),
-			// web.NSNamespace("/excel",
-			// 	// beego.NSBefore(FilterUser),
-			// 	web.NSInclude(
-			// 		&controllers.ExcelController{},
-			// 		&controllers.WsExcelcalController{},
-			// 	),
-			// ),
+			web.NSNamespace("/math",
+				// beego.NSBefore(FilterUser),
+				web.NSInclude(
+					&controllers.MathController{},
+					&controllers.WsMathController{},
+				),
+			),
+			web.NSNamespace("/ansys",
+				// beego.NSBefore(FilterUser),
+				web.NSInclude(
+					&controllers.AnsysController{},
+				),
+			),
+			web.NSNamespace("/excel",
+				// beego.NSBefore(FilterUser),
+				web.NSInclude(
+					&controllers.ExcelController{},
+					&controllers.WsExcelcalController{},
+				),
+			),
+			web.NSNamespace("/passproject",
+				// beego.NSBefore(FilterUser),
+				web.NSInclude(
+					&controllers.PassProjectController{},
+				),
+			),
 			web.NSNamespace("/chat",
 				web.NSInclude(
 					&controllers.ChatController{},
@@ -296,6 +294,11 @@ func init() {
 					&controllers.FreeCADController{},
 				),
 			),
+			web.NSNamespace("/estimate",
+				web.NSInclude(
+					&controllers.EstimateController{},
+				),
+			),
 			// beego.NSNamespace("/suggest",
 			// 	beego.NSInclude(
 			// 		&controllers.SearchController{},
@@ -304,9 +307,10 @@ func init() {
 		)
 	web.AddNamespace(ns)
 
-	web.Router("/debug/pprof", &controllers.ProfController{})
-	web.Router("/debug/pprof/:app([\\w]+)", &controllers.ProfController{})
-
+	// web.Router("/debug/pprof", &controllers.ProfController{})
+	// web.Router("/debug/pprof/:app([\\w]+)", &controllers.ProfController{})
+	web.Router("/vue", &controllers.MainController{}, "*:Vue")
+	web.Router("/vuepost", &controllers.MainController{}, "*:VuePost")
 	web.Router("/test", &controllers.MainController{}, "*:Test")
 	web.Router("/mapus", &controllers.MainController{}, "*:Mapus")
 	web.Router("/autodesk", &controllers.MainController{}, "*:Autodesk")
@@ -521,9 +525,9 @@ func init() {
 	web.Router("/admin/merit/meritlist/modifylink", &controllers.AdminController{}, "post:ModifyLink")
 
 	//用户修改自己密码
-	web.Router("/user", &controllers.UserController{}, "get:GetUserByUsername")
+	web.Router("/user", &controllers.UserController{}, "get:GetUserByUserId")
 	//用户登录后查看自己的资料
-	web.Router("/user/getuserbyusername", &controllers.UserController{}, "get:GetUserByUsername")
+	web.Router("/user/getuserbyuserid", &controllers.UserController{}, "get:GetUserByUserId")
 	//用户产看自己的table中数据填充
 	web.Router("/usermyself", &controllers.UserController{}, "get:Usermyself")
 
@@ -746,7 +750,7 @@ func init() {
 	// web.InsertFilter("/attachment/standard/", web.BeforeRouter, FilterUser)
 	// web.SetStaticPath("/attachment/standard/", "attachment/standard/")
 	//这个有哦何用？
-	web.SetStaticPath("/attachment/wiki", "attachment/wiki")
+	// web.SetStaticPath("/attachment/wiki", "attachment/wiki")
 	web.SetStaticPath("/swagger", "swagger")
 	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
 	web.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
@@ -841,7 +845,7 @@ func init() {
 
 	web.Router("/mindoc", &controllers.HomeController{}, "*:Index")
 
-	web.Router("/login", &controllers.AccountController{}, "*:Login")
+	web.Router("/mindoc/login", &controllers.AccountController{}, "*:Login")
 	web.Router("/auth2/redirect/:app", &controllers.AccountController{}, "*:Auth2Redirect")
 	web.Router("/auth2/callback/:app", &controllers.AccountController{}, "*:Auth2Callback")
 	web.Router("/auth2/account/bind/:app", &controllers.AccountController{}, "*:Auth2BindAccount")
@@ -986,8 +990,62 @@ func init() {
 
 	web.Router("/items", &controllers.ItemsetsController{}, "get:Index")
 	web.Router("/items/:key", &controllers.ItemsetsController{}, "get:List")
-
 }
+
+// ***********mindoc********
+
+// var FilterFunc = func(ctx *context.Context) {
+// 	// userName := ctx.Input.Session("userName")
+// 	// if userName == nil {
+// 	// 	ctx.Redirect()
+// 	// }
+// 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
+// 	// beego.Info(v)                          //qin.xc
+// 	var user models.User
+// 	var role string
+// 	var uid int64
+// 	var err error
+// 	if v != nil { //如果登录了
+// 		uname := v.(string)
+// 		user, err = models.GetUserByUsername(uname)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		} else {
+// 			uid := user.Id
+// 			role = user.Role
+// 		}
+// 	} else { //如果没登录
+// 		role = "anonymous"
+// 	}
+// }
+
+// var FilterAdmin = func(ctx *context.Context) {
+// 	// userName := ctx.Input.Session("userName")
+// 	// if userName == nil {
+// 	// 	ctx.Redirect()
+// 	// }
+// 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
+// 	// beego.Info(v)                          //qin.xc
+// 	var user models.User
+// 	var err error
+// 	if v != nil { //如果登录了
+// 		uname := v.(string)
+// 		user, err = models.GetUserByUsername(uname)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		} else {
+// 			role, err := models.GetRoleByRolename("admin")
+// 			if err != nil {
+// 				beego.Error(err)
+// 			}
+// 			userid := strconv.FormatInt(user.Id, 10)
+// 			roleid := strconv.FormatInt(role.Id, 10)
+// 			isadmin = e.HasRoleForUser(userid, "role_"+roleid)
+// 		}
+// 	} else { //如果没登录
+// 		role = "anonymous"
+// 	}
+// }
 
 // 那么Session在何时创建呢？当然还是在服务器端程序运行的过程中创建的，
 // 不同语言实现的应用程序有不同创建Session的方法，

@@ -1,17 +1,7 @@
 package models
 
 import (
-	// "database/sql"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
-
-	// "github.com/go-xorm/xorm"
-
-	// "strconv"
-	// "strings"
-	// "fmt"
-	// "log"
-	// "os"
 	"time"
 )
 
@@ -33,7 +23,7 @@ func init() {
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }
 
-//添加日记
+// 添加日记
 func AddDiary(title, content, diarydate string, projectid, uid int64) (id int64, err error) {
 	o := orm.NewOrm()
 	//查询数据库中有无打卡
@@ -70,7 +60,7 @@ func AddDiary(title, content, diarydate string, projectid, uid int64) (id int64,
 	return id, nil
 }
 
-//微信小程序，根据projectid取得所有设代日志
+// 微信小程序，根据projectid取得所有设代日志
 func GetWxDiaries(pid, limit, offset int64) (diaries []*Diary, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Diary")
@@ -81,7 +71,7 @@ func GetWxDiaries(pid, limit, offset int64) (diaries []*Diary, err error) {
 	return diaries, err
 }
 
-//获取日志总数
+// 获取日志总数
 func GetWxDiaryCount(pid int64) (count int64, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Diary")
@@ -97,13 +87,13 @@ type DiaryUser struct {
 	User  `xorm:"extends"`
 }
 
-//微信小程序，根据projectid取得所有设代日志
+// 微信小程序，根据projectid取得所有设代日志
 func GetWxDiaries2(pid int64, limit, offset int) ([]*DiaryUser, error) {
 	diaries := make([]*DiaryUser, 0)
 	return diaries, engine.Table("diary").Join("INNER", "user", "diary.user_id = user.id").Where("diary.project_id = ?", pid).Desc("diarydate").Limit(limit, offset).Find(&diaries)
 }
 
-//根据id取得日志
+// 根据id取得日志
 func GetDiary(id int64) (Diary1 *Diary, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Diary") //这个表名AchievementTopic需要用驼峰式，
@@ -131,7 +121,7 @@ func GetDiary(id int64) (Diary1 *Diary, err error) {
 	return diary, err
 }
 
-//修改
+// 修改
 func UpdateDiary(id int64, title, content string) error {
 	o := orm.NewOrm()
 	diary := &Diary{Id: id}
@@ -147,7 +137,7 @@ func UpdateDiary(id int64, title, content string) error {
 	return nil
 }
 
-//删除
+// 删除
 func DeleteDiary(id int64) error {
 	o := orm.NewOrm()
 	diary := &Diary{Id: id}

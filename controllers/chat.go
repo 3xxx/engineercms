@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/gorilla/websocket"
@@ -55,7 +54,7 @@ func init() {
 
 // @Title get chat
 // @Description get chat
-// @Success 200 {object} models.UserTemple
+// @Success 200 {object} models.MathTemple
 // @Failure 400 Invalid page supplied
 // @Failure 404 Page not found
 // @router /chat [get]

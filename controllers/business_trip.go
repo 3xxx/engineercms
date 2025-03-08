@@ -228,7 +228,12 @@ func (c *BusinessController) AddBusiness() {
 			if len(m) > 0 {
 				for _, v := range m {
 					// beego.Info(v.Name)
-					tripuser := models.GetUserByNickname(v.Name)
+					tripuser, err := models.GetUserByNickname(v.Name)
+					if err != nil {
+						logs.Error(err)
+						c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "查询用户昵称错误"}
+						c.ServeJSON()
+					}
 					// beego.Info(tripuser.Id)
 					// var businessuser models.BusinessUser
 					businessuser.UserID = tripuser.Id
@@ -301,7 +306,7 @@ func (c *BusinessController) UpdateBusiness() {
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
 		c.ServeJSON()
-		return
+		// return
 		// user.Id = 9
 	}
 
@@ -416,7 +421,7 @@ func (c *BusinessController) UpdateBusiness() {
 			// Worktime:  worktime.Hours(),
 			// Overtime:  0,
 		}
-		err := models.UpdateBusiness(business)
+		err = models.UpdateBusiness(business)
 		if err != nil {
 			logs.Error(err)
 			c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "更新出差数据错误"}
@@ -433,14 +438,19 @@ func (c *BusinessController) UpdateBusiness() {
 				for _, v := range m {
 					var nameisold bool
 					for _, w := range businessusers {
-						if v.Name == w.NickNames.Nickname {
+						if v.Name == w.User.Nickname {
 							nameisold = true
 							break
 						}
 					}
 					// beego.Info(v.Name)
 					if nameisold == false {
-						tripuser := models.GetUserByNickname(v.Name)
+						tripuser, err := models.GetUserByNickname(v.Name)
+						if err != nil {
+							logs.Error(err)
+							c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "查询用户昵称错误"}
+							c.ServeJSON()
+						}
 						// beego.Info(tripuser.Id)
 						var businessuser models.BusinessUser
 						businessuser.UserID = tripuser.Id
@@ -457,14 +467,14 @@ func (c *BusinessController) UpdateBusiness() {
 				for _, w := range businessusers {
 					var databasehasname bool
 					for _, v := range m {
-						if v.Name == w.NickNames.Nickname {
+						if v.Name == w.User.Nickname {
 							databasehasname = true
 							break
 						}
 					}
 					// beego.Info(v.Name)
 					if databasehasname == false {
-						err = models.DeleteUserBusiness(w.NickNames.Id, businessid)
+						err = models.DeleteUserBusiness(w.User.Id, businessid)
 						if err != nil {
 							logs.Error(err)
 							c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "删除同行人错误"}
@@ -507,7 +517,7 @@ func (c *BusinessController) GetBysiness() {
 	} else {
 		c.Data["json"] = map[string]interface{}{"info": "用户未登录", "id": 0}
 		c.ServeJSON()
-		return
+		// return
 		// user.Id = 9
 	}
 
@@ -582,9 +592,10 @@ func (c *BusinessController) GetBysinessById() {
 // @Param month query string true "The businessid of check"
 // @Param day query string true "The businessid of check"
 // @Param location query string true "The location of check"
+// @Param allowance query string true "The allowance of check"
 // @Success 200 {object} models.GetProductsPage
 // @Failure 400 Invalid page supplied
-// @Failure 404 articls not found
+// @Failure 404 Business not found
 // @router /businesscheck [post]
 // 打卡记录写入数据库
 func (c *BusinessController) BusinessCheck() {
@@ -642,7 +653,19 @@ func (c *BusinessController) BusinessCheck() {
 	if err != nil {
 		logs.Error(err)
 	}
-	_, err = models.BusinessCheck(BusinessId, UserId, Lat, Lng, PhotoUrl, location, SelectDate)
+	var Allowance int
+	allowance := c.GetString("allowance")
+	if allowance == "" {
+		Allowance = 0
+	} else {
+		//pid转成64为
+		Allowance, err = strconv.Atoi(allowance)
+		if err != nil {
+			logs.Error(err)
+		}
+	}
+	logs.Info(Allowance)
+	_, err = models.BusinessCheck(BusinessId, UserId, Lat, Lng, PhotoUrl, location, SelectDate, Allowance)
 	if err != nil {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"code": 2, "message": PhotoUrl}
@@ -653,10 +676,64 @@ func (c *BusinessController) BusinessCheck() {
 	}
 }
 
+// @Title post deletecheckin person
+// @Description post deletecheckin person
+// @Param userid query string true "The userid for person"
+// @Param businessid query string true "The businessid for Business"
+// @Param year query string true "The businessid of check"
+// @Param month query string true "The businessid of check"
+// @Param day query string true "The businessid of check"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 BusinessCheck not found
+// @router /deletebusinesscheck [post]
+// 打卡记录写入数据库
+func (c *BusinessController) DeleteBusinessCheck() {
+	userid := c.GetString("userid")
+	//pid转成64为
+	UserId, err := strconv.ParseInt(userid, 10, 64)
+	if err != nil {
+		logs.Error(err)
+	}
+	businessid := c.GetString("businessid")
+	businessidint, err := strconv.Atoi(businessid)
+	if err != nil {
+		logs.Error(err)
+	}
+	BusinessId := uint(businessidint)
+
+	// startdate := c.GetString("startDate")
+	// beego.Info(startdate)
+	const base_format = "2006-01-02"
+	year := c.GetString("year")
+	month := c.GetString("month")
+	if len(month) == 1 {
+		month = "0" + month
+	}
+	day := c.GetString("day")
+	if len(day) == 1 {
+		day = "0" + day
+	}
+	SelectDate, err := time.Parse(base_format, year+"-"+month+"-"+day)
+	if err != nil {
+		logs.Error(err)
+	}
+	err = models.DeleteBusinessCheck(BusinessId, UserId, SelectDate)
+	if err != nil {
+		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"code": 2, "message": ""}
+		c.ServeJSON()
+	} else {
+		c.Data["json"] = map[string]interface{}{"code": 1, "avatorUrl": ""}
+		c.ServeJSON()
+	}
+}
+
 type BusinessCheckDate struct {
-	Year  string `json:"year"`
-	Month string `json:"month"`
-	Day   string `json:"day"`
+	Year     string `json:"year"`
+	Month    string `json:"month"`
+	Day      string `json:"day"`
+	TodoText string `json:"todoText"`
 }
 
 // @Title get checkin check
@@ -707,6 +784,7 @@ func (c *BusinessController) GetBusinessCheck() {
 			checkdata[0].Year = v.SelectDate.Format("2006")
 			checkdata[0].Month = v.SelectDate.Format("01")
 			checkdata[0].Day = v.SelectDate.Format("02")
+			checkdata[0].TodoText = strconv.Itoa(v.Allowance)
 			checkdataslice = append(checkdataslice, checkdata...)
 		}
 		c.Data["json"] = map[string]interface{}{"code": 1, "data": checkdataslice}
@@ -822,7 +900,7 @@ func (c *BusinessController) BusinessMonthCheck() {
 			// map去重
 			strMap := make(map[string]string)
 			for _, v := range w.BusinessCheckins {
-				strMap[v.Users.Nickname] = v.Users.Nickname
+				strMap[v.User.Nickname] = v.User.Nickname
 			}
 			//strMap为：{"slice"："slice","int"："int","string"："string","boolean"：boolean"}
 			//如果想将map转换为slice，可利用数组的append函数
@@ -840,7 +918,7 @@ func (c *BusinessController) BusinessMonthCheck() {
 				}
 
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
-					if value == vv.Users.Nickname {
+					if value == vv.User.Nickname {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
@@ -911,7 +989,7 @@ func (c *BusinessController) BusinessMonthCheckSum2() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /businessmonthcheck2/:id [get]
-// 月度考勤统计-报税用
+// 月度考勤统计-伙食补助超过100元报税用
 func (c *BusinessController) BusinessMonthCheck2() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
@@ -983,7 +1061,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 	for _, w := range business {
 		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
 			for _, v := range w.BusinessCheckins {
-				strMap[v.Users.Nickname] = v.Users.Nickname
+				strMap[v.User.Nickname] = v.User.Nickname
 			}
 		}
 	}
@@ -1005,7 +1083,7 @@ func (c *BusinessController) BusinessMonthCheck2() {
 				// 	strMap[v.Users.Nickname] = v.Users.Nickname
 				// }
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
-					if value == vv.Users.Nickname {
+					if value == vv.User.Nickname {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
@@ -1026,10 +1104,247 @@ func (c *BusinessController) BusinessMonthCheck2() {
 						cityindex := UnicodeIndex(vv.Location, "市")
 						// logs.Info(cityindex)
 						if cityindex == 0 {
-							cityindex = UnicodeIndex(vv.Location, "自治州")
-							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+							cityindex = UnicodeIndex(vv.Location, "自治州") // 自治区不带市
+							if cityindex == 0 {
+								cityindex = UnicodeIndex(vv.Location, "地区") // 自治区不带市，带地区
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+1)
+							} else {
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+							}
 						} else {
 							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+							if strings.Contains(vv.Location, "自治区") {
+								city = SubString(vv.Location, provinceindex+1+2, cityindex-provinceindex-2) // 自治区带市
+							}
+						}
+						// logs.Info(city)
+						if province == "" && city == "" {
+							city = vv.Location
+						} else {
+							city = province + city
+						}
+						// if w.Subsidy > 100 {
+						// 	checkmap[dayint] = strconv.Itoa(w.Subsidy-100) + "-" + city //vv.CheckTime.Add(8 * h) //vv.Location
+						// }
+						if vv.Allowance > 100 {
+							checkmap[dayint] = strconv.Itoa(vv.Allowance-100) + "-" + city //vv.CheckTime.Add(8 * h) //vv.Location
+						}
+					}
+				}
+			}
+		}
+		// 1014]  广东省汕尾市海丰县S20
+		// 1016]  2
+		// 1027]  5
+		// 1034]  汕尾市
+		// 1014]  新疆维吾尔自治区喀什地区喀什市迎宾大道
+		// 1016]  0
+		// 1027]  14
+		// 1034]  治区喀什地区喀什市
+		// 1014]  新疆维吾尔自治区喀什地区巴楚县
+		// 1016]  0
+		// 1027]  0
+
+		// 1014]  新疆维吾尔自治区喀什地区喀什市迎宾大道
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市迎宾
+		// 1014]  新疆维吾尔自治区喀什地区喀什市月星路
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市月星
+		// 1014]  新疆维吾尔自治区喀什地区喀什市月星路
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市月星
+		// 1014]  新疆维吾尔自治区喀什地区喀什市月星路
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市月星
+		// 1014]  内蒙古自治区包头市土默特右旗欧美路
+		// 1016]  0
+		// 1027]  8
+		// 1040]  包头市土默
+		// 1014]  内蒙古自治区包头市土默特右旗
+		// 1016]  0
+		// 1027]  8
+		// 1040]  包头市土默
+		// 1014]  内蒙古自治区呼和浩特市玉泉区五塔寺东街1号
+		// 1016]  0
+		// 1027]  10
+		// 1040]  呼和浩特市玉泉
+		//排序map，按key
+		var keys []int
+		for k := range checkmap {
+			keys = append(keys, k)
+		}
+		sort.Ints(keys)
+		var checkmap2 = make(map[int]interface{}, dayssss+1)
+		for _, k := range keys {
+			checkmap2[k] = checkmap[k]
+		}
+		s = append(s, checkmap2)
+	}
+	b, err := json.Marshal(s)
+	if err != nil {
+		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
+		c.ServeJSON()
+	} else {
+		c.Ctx.WriteString(string(b))
+	}
+}
+
+// @Title get businessmothcheckin21
+// @Description get businessmonthcheck
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /businessmonthchecksum21 [get]
+// 报税用——旧版
+func (c *BusinessController) BusinessMonthCheckSum21() {
+	c.TplName = "businesscheck/check21.tpl"
+	c.Data["IsMonthCheck"] = true
+}
+
+// @Title get businessmothcheckin21
+// @Description get businessmonthcheck
+// @Param id path string true "The projectid of business"
+// @Param page query string false "The page of check"
+// @Param limit query string false "The size of check"
+// @Param year query string true "The year of check"
+// @Param month query string true "The month of check"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /businessmonthcheck21/:id [get]
+// 月度考勤统计-报税用——旧版
+func (c *BusinessController) BusinessMonthCheck21() {
+	// h, _ := time.ParseDuration("1h")
+	var offset, limit1, page1 int
+	var err error
+	var city, province string
+	limit := c.GetString("limit")
+	if limit == "" {
+		limit1 = 500
+	} else {
+		limit1, err = strconv.Atoi(limit)
+		if err != nil {
+			logs.Error(err)
+		}
+	}
+	page := c.GetString("page")
+	if page == "" {
+		// limit1 = 10
+		page1 = 1
+	} else {
+		page1, err = strconv.Atoi(page)
+		if err != nil {
+			logs.Error(err)
+		}
+	}
+
+	if page1 <= 1 {
+		offset = 0
+	} else {
+		offset = (page1 - 1) * limit1
+	}
+
+	//当月天数
+	const base_format = "2006-01-02"
+	year := c.GetString("year")
+	month := c.GetString("month")
+	if len(month) == 1 {
+		month = "0" + month
+	}
+	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
+	if err != nil {
+		logs.Error(err)
+	}
+	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
+	//建立一个动态月日数组
+	days := SelectMonth2.Sub(SelectMonth1) / 24
+	dayss := days.Hours()
+	daysss := strconv.FormatFloat(dayss, 'f', -1, 64) //float64转string
+	dayssss, err := strconv.Atoi(daysss)              //string转int
+
+	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
+	if err != nil {
+		logs.Error(err)
+	}
+	// beego.Info(SelectMonth1)
+	// beego.Info(SelectMonth2)
+	// beego.Info(business)
+	// c.Data["json"] = business
+	// c.ServeJSON()
+	pid := c.Ctx.Input.Param(":id")
+	//id转成64为
+	projectid, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		logs.Error(err)
+	}
+	s := []map[int]interface{}{}
+
+	// 将姓名过滤
+	strMap := make(map[string]string)
+	for _, w := range business {
+		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+			for _, v := range w.BusinessCheckins {
+				strMap[v.User.Nickname] = v.User.Nickname
+			}
+		}
+	}
+	// beego.Info(strMap)
+	//活动
+	for _, value := range strMap { //循环人名
+		var checkmap = make(map[int]interface{}, dayssss+1)
+		for i := 0; i <= dayssss; i++ {
+			if i == 0 {
+				checkmap[0] = value
+			} else {
+				checkmap[i] = ""
+			}
+		}
+		for _, w := range business {
+			if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+				// strMap := make(map[string]string)
+				// for _, v := range w.BusinessCheckins {
+				// 	strMap[v.Users.Nickname] = v.Users.Nickname
+				// }
+				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
+					if value == vv.User.Nickname {
+						day := vv.SelectDate.Format("02")
+						dayint, err := strconv.Atoi(day)
+						if err != nil {
+							logs.Error(err)
+						}
+						// logs.Info(vv.Location)
+						provinceindex := UnicodeIndex(vv.Location, "省") // 查找格这个字符的位置
+						// logs.Info(provinceindex)
+						if provinceindex == 0 {
+							provinceindex = UnicodeIndex(vv.Location, "自治区")
+							province = SubString(vv.Location, 0, provinceindex+1+2)
+						} else {
+							province = SubString(vv.Location, 0, provinceindex+1)
+						}
+						if province == "广东省" {
+							province = ""
+						}
+						cityindex := UnicodeIndex(vv.Location, "市")
+						// logs.Info(cityindex)
+						if cityindex == 0 {
+							cityindex = UnicodeIndex(vv.Location, "自治州") // 自治区不带市
+							if cityindex == 0 {
+								cityindex = UnicodeIndex(vv.Location, "地区") // 自治区不带市，带地区
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+1)
+							} else {
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+							}
+						} else {
+							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+							if strings.Contains(vv.Location, "自治区") {
+								city = SubString(vv.Location, provinceindex+1+2, cityindex-provinceindex-2) // 自治区带市
+							}
 						}
 						// logs.Info(city)
 						if province == "" && city == "" {
@@ -1044,6 +1359,46 @@ func (c *BusinessController) BusinessMonthCheck2() {
 				}
 			}
 		}
+		// 1014]  广东省汕尾市海丰县S20
+		// 1016]  2
+		// 1027]  5
+		// 1034]  汕尾市
+		// 1014]  新疆维吾尔自治区喀什地区喀什市迎宾大道
+		// 1016]  0
+		// 1027]  14
+		// 1034]  治区喀什地区喀什市
+		// 1014]  新疆维吾尔自治区喀什地区巴楚县
+		// 1016]  0
+		// 1027]  0
+
+		// 1014]  新疆维吾尔自治区喀什地区喀什市迎宾大道
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市迎宾
+		// 1014]  新疆维吾尔自治区喀什地区喀什市月星路
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市月星
+		// 1014]  新疆维吾尔自治区喀什地区喀什市月星路
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市月星
+		// 1014]  新疆维吾尔自治区喀什地区喀什市月星路
+		// 1016]  0
+		// 1027]  14
+		// 1040]  喀什地区喀什市月星
+		// 1014]  内蒙古自治区包头市土默特右旗欧美路
+		// 1016]  0
+		// 1027]  8
+		// 1040]  包头市土默
+		// 1014]  内蒙古自治区包头市土默特右旗
+		// 1016]  0
+		// 1027]  8
+		// 1040]  包头市土默
+		// 1014]  内蒙古自治区呼和浩特市玉泉区五塔寺东街1号
+		// 1016]  0
+		// 1027]  10
+		// 1040]  呼和浩特市玉泉
 		//排序map，按key
 		var keys []int
 		for k := range checkmap {
@@ -1078,8 +1433,8 @@ func (c *BusinessController) BusinessMonthCheckSum3() {
 	c.Data["IsMonthCheck"] = true
 }
 
-// @Title get businessmothcheckin
-// @Description get businessmonthcheck
+// @Title get businessmothcheckin3
+// @Description get businessmonthcheck3
 // @Param id path string true "The projectid of business"
 // @Param page query string false "The page of check"
 // @Param limit query string false "The size of check"
@@ -1089,7 +1444,7 @@ func (c *BusinessController) BusinessMonthCheckSum3() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /businessmonthcheck3/:id [get]
-// 月度考勤统计-报销用
+// 月度考勤统计-报销用-伙食补助
 func (c *BusinessController) BusinessMonthCheck3() {
 	// h, _ := time.ParseDuration("1h")
 	var offset, limit1, page1 int
@@ -1161,7 +1516,7 @@ func (c *BusinessController) BusinessMonthCheck3() {
 	for _, w := range business {
 		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
 			for _, v := range w.BusinessCheckins {
-				strMap[v.Users.Nickname] = v.Users.Nickname
+				strMap[v.User.Nickname] = v.User.Nickname
 			}
 		}
 	}
@@ -1182,12 +1537,39 @@ func (c *BusinessController) BusinessMonthCheck3() {
 				// 	strMap[v.Users.Nickname] = v.Users.Nickname
 				// }
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
-					if value == vv.Users.Nickname {
+					if value == vv.User.Nickname {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
 							logs.Error(err)
 						}
+						// provinceindex := UnicodeIndex(vv.Location, "省") // 查找格这个字符的位置
+						// logs.Info(provinceindex)
+						// if provinceindex == 0 {
+						// 	provinceindex = UnicodeIndex(vv.Location, "自治区")
+						// 	province = SubString(vv.Location, 0, provinceindex+1+2)
+						// } else {
+						// 	province = SubString(vv.Location, 0, provinceindex+1)
+						// }
+						// if province == "广东省" {
+						// 	province = ""
+						// }
+						// cityindex := UnicodeIndex(vv.Location, "市")
+						// // logs.Info(cityindex)
+						// if cityindex == 0 {
+						// 	cityindex = UnicodeIndex(vv.Location, "自治州")
+						// 	city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+						// } else {
+						// 	city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+						// }
+						// // beego.Info(city)
+						// if province == "" && city == "" {
+						// 	city = vv.Location
+						// } else {
+						// 	city = province + city
+						// }
+
+						// logs.Info(vv.Location)
 						provinceindex := UnicodeIndex(vv.Location, "省") // 查找格这个字符的位置
 						// logs.Info(provinceindex)
 						if provinceindex == 0 {
@@ -1202,12 +1584,208 @@ func (c *BusinessController) BusinessMonthCheck3() {
 						cityindex := UnicodeIndex(vv.Location, "市")
 						// logs.Info(cityindex)
 						if cityindex == 0 {
-							cityindex = UnicodeIndex(vv.Location, "自治州")
-							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+							cityindex = UnicodeIndex(vv.Location, "自治州") // 自治区不带市
+							if cityindex == 0 {
+								cityindex = UnicodeIndex(vv.Location, "地区") // 自治区不带市，带地区
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+1)
+							} else {
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+							}
 						} else {
 							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+							if strings.Contains(vv.Location, "自治区") {
+								city = SubString(vv.Location, provinceindex+1+2, cityindex-provinceindex-2) // 自治区带市
+							}
 						}
-						// beego.Info(city)
+						// logs.Info(city)
+						if province == "" && city == "" {
+							city = vv.Location
+						} else {
+							city = province + city
+						}
+
+						if w.Drivername == "" {
+							w.Drivername = "司机"
+						}
+						checkmap[dayint] = w.Projecttitle + "-" + city + "-" + w.Drivername + "-" + strconv.Itoa(w.Carfare) + "-" + strconv.Itoa(w.Hotelfee) + "-" + strconv.Itoa(vv.Allowance) //vv.CheckTime.Add(8 * h) //vv.Location
+					}
+				}
+			}
+		}
+		//排序map，按key
+		var keys []int
+		for k := range checkmap {
+			keys = append(keys, k)
+		}
+		sort.Ints(keys)
+		var checkmap2 = make(map[int]interface{}, dayssss+1)
+		for _, k := range keys {
+			checkmap2[k] = checkmap[k]
+		}
+		s = append(s, checkmap2)
+	}
+
+	b, err := json.Marshal(s)
+	if err != nil {
+		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"code": 2, "data": nil}
+		c.ServeJSON()
+	} else {
+		c.Ctx.WriteString(string(b))
+	}
+}
+
+// @Title get businessmothcheckin31
+// @Description get businessmonthcheck31
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /businessmonthchecksum31 [get]
+// 报销用
+func (c *BusinessController) BusinessMonthCheckSum31() {
+	c.TplName = "businesscheck/check31.tpl"
+	c.Data["IsMonthCheck"] = true
+}
+
+// @Title get businessmothcheckin31
+// @Description get businessmonthcheck31
+// @Param id path string true "The projectid of business"
+// @Param page query string false "The page of check"
+// @Param limit query string false "The size of check"
+// @Param year query string true "The year of check"
+// @Param month query string true "The month of check"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /businessmonthcheck31/:id [get]
+// 月度考勤统计-报销用——旧版
+func (c *BusinessController) BusinessMonthCheck31() {
+	// h, _ := time.ParseDuration("1h")
+	var offset, limit1, page1 int
+	var city, province string
+	var err error
+	limit := c.GetString("limit")
+	if limit == "" {
+		limit1 = 500
+	} else {
+		limit1, err = strconv.Atoi(limit)
+		if err != nil {
+			logs.Error(err)
+		}
+	}
+	page := c.GetString("page")
+	if page == "" {
+		// limit1 = 10
+		page1 = 1
+	} else {
+		page1, err = strconv.Atoi(page)
+		if err != nil {
+			logs.Error(err)
+		}
+	}
+
+	if page1 <= 1 {
+		offset = 0
+	} else {
+		offset = (page1 - 1) * limit1
+	}
+
+	//当月天数
+	const base_format = "2006-01-02"
+	year := c.GetString("year")
+	month := c.GetString("month")
+	if len(month) == 1 {
+		month = "0" + month
+	}
+	SelectMonth1, err := time.Parse(base_format, year+"-"+month+"-01")
+	if err != nil {
+		logs.Error(err)
+	}
+	SelectMonth2 := SelectMonth1.AddDate(0, 1, 0)
+	//建立一个动态月日数组
+	days := SelectMonth2.Sub(SelectMonth1) / 24
+	dayss := days.Hours()
+	daysss := strconv.FormatFloat(dayss, 'f', -1, 64) //float64转string
+	dayssss, err := strconv.Atoi(daysss)              //string转int
+
+	business, err := models.GetBusinessCheckUser(SelectMonth1, SelectMonth2, limit1, offset)
+	if err != nil {
+		logs.Error(err)
+	}
+	// beego.Info(SelectMonth1)
+	// beego.Info(SelectMonth2)
+	// beego.Info(business)
+	// c.Data["json"] = business
+	// c.ServeJSON()
+	pid := c.Ctx.Input.Param(":id")
+	//id转成64为
+	projectid, err := strconv.ParseInt(pid, 10, 64)
+	if err != nil {
+		logs.Error(err)
+	}
+	s := []map[int]interface{}{}
+
+	// 将姓名过滤
+	strMap := make(map[string]string)
+	for _, w := range business {
+		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+			for _, v := range w.BusinessCheckins {
+				strMap[v.User.Nickname] = v.User.Nickname
+			}
+		}
+	}
+
+	for _, value := range strMap { //循环人名
+		var checkmap = make(map[int]interface{}, dayssss+1)
+		for i := 0; i <= dayssss; i++ {
+			if i == 0 {
+				checkmap[0] = value
+			} else {
+				checkmap[i] = ""
+			}
+		}
+		for _, w := range business {
+			if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
+				// strMap := make(map[string]string)
+				// for _, v := range w.BusinessCheckins {
+				// 	strMap[v.Users.Nickname] = v.Users.Nickname
+				// }
+				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
+					if value == vv.User.Nickname {
+						day := vv.SelectDate.Format("02")
+						dayint, err := strconv.Atoi(day)
+						if err != nil {
+							logs.Error(err)
+						}
+						// logs.Info(vv.Location)
+						provinceindex := UnicodeIndex(vv.Location, "省") // 查找格这个字符的位置
+						// logs.Info(provinceindex)
+						if provinceindex == 0 {
+							provinceindex = UnicodeIndex(vv.Location, "自治区")
+							province = SubString(vv.Location, 0, provinceindex+1+2)
+						} else {
+							province = SubString(vv.Location, 0, provinceindex+1)
+						}
+						if province == "广东省" {
+							province = ""
+						}
+						cityindex := UnicodeIndex(vv.Location, "市")
+						// logs.Info(cityindex)
+						if cityindex == 0 {
+							cityindex = UnicodeIndex(vv.Location, "自治州") // 自治区不带市
+							if cityindex == 0 {
+								cityindex = UnicodeIndex(vv.Location, "地区") // 自治区不带市，带地区
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+1)
+							} else {
+								city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex+2)
+							}
+						} else {
+							city = SubString(vv.Location, provinceindex+1, cityindex-provinceindex)
+							if strings.Contains(vv.Location, "自治区") {
+								city = SubString(vv.Location, provinceindex+1+2, cityindex-provinceindex-2) // 自治区带市
+							}
+						}
+						// logs.Info(city)
 						if province == "" && city == "" {
 							city = vv.Location
 						} else {
@@ -1350,7 +1928,7 @@ func (c *BusinessController) BusinessMonthCheck4() {
 			// if len(w.BusinessCheckins) > 0 {
 			strMap := make(map[string]string)
 			for _, v := range w.BusinessCheckins {
-				strMap[v.Users.Nickname] = v.Users.Nickname
+				strMap[v.User.Nickname] = v.User.Nickname
 			}
 			//strMap为：{"slice"："slice","int"："int","string"："string","boolean"：boolean"}
 			//如果想将map转换为slice，可利用数组的append函数
@@ -1370,7 +1948,7 @@ func (c *BusinessController) BusinessMonthCheck4() {
 				}
 
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
-					if value == vv.Users.Nickname {
+					if value == vv.User.Nickname {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {
@@ -1512,7 +2090,7 @@ func (c *BusinessController) BusinessMonthCheck5() {
 	for _, w := range business {
 		if len(w.BusinessCheckins) > 0 && w.ProjectID == projectid {
 			for _, v := range w.BusinessCheckins {
-				strMap[v.Users.Nickname] = v.Users.Nickname
+				strMap[v.User.Nickname] = v.User.Nickname
 			}
 		}
 	}
@@ -1533,7 +2111,7 @@ func (c *BusinessController) BusinessMonthCheck5() {
 				// 	strMap[v.Users.Nickname] = v.Users.Nickname
 				// }
 				for _, vv := range w.BusinessCheckins { //循环这个人的考勤
-					if value == vv.Users.Nickname {
+					if value == vv.User.Nickname {
 						day := vv.SelectDate.Format("02")
 						dayint, err := strconv.Atoi(day)
 						if err != nil {

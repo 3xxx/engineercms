@@ -1,10 +1,8 @@
 package conf
 
 import (
-	//beego "github.com/beego/beego/v2/adapter"
-	"strings"
-
 	"github.com/beego/beego/v2/server/web"
+	"strings"
 )
 
 type SmtpConf struct {

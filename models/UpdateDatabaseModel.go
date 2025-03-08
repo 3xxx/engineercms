@@ -1,17 +1,8 @@
 package models
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
-	// "errors"
-	"strconv"
-	// "fmt"
-	// "log"
-	// "time"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/adapter/validation"
-	// . "github.com/beego/admin/src/lib"
+	"strconv"
 	"strings"
 )
 
@@ -71,7 +62,7 @@ func UpdateDatabase() (err1, err2, err3, err4, err5, err6, err7 error) {
 	return err1, err2, err3, err4, err5, err6, err7
 }
 
-//删除数据表和字段测试
+// 删除数据表和字段测试
 func ModifyDatabase() (err1 error) {
 	o := orm.NewOrm()
 	// _, err1 = o.Raw("ALTER TABLE user_role DROP user_id").Exec()

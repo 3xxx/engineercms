@@ -1,15 +1,12 @@
 package controllers
 
 import (
-	"math"
-
-
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/controllers/utils/pagination"
+	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/models"
-	"github.com/3xxx/engineercms/controllers/utils/pagination"
-	// beego "github.com/beego/beego/v2/adapter"
+	"math"
 )
 
 type LabelController struct {
@@ -26,7 +23,7 @@ func (c *LabelController) Prepare() {
 	}
 }
 
-//查看包含标签的文档列表.
+// 查看包含标签的文档列表.
 func (c *LabelController) Index() {
 	c.Prepare()
 	c.TplName = "label/index.tpl"

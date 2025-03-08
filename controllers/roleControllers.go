@@ -1,39 +1,24 @@
 package controllers
 
 import (
-	// "encoding/json"
-	// "crypto/md5"
-	// "encoding/hex"
 	"fmt"
 	m "github.com/3xxx/engineercms/models"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// "github.com/casbin/beego-orm-adapter"
-	// "github.com/casbin/casbin"
+
 	beegoormadapter "github.com/casbin/beego-orm-adapter/v3"
 	"github.com/casbin/casbin/v2"
-	// _ "github.com/go-sql-driver/mysql"
-	// "github.com/casbin/xorm-adapter"
+
 	"github.com/casbin/xorm-adapter/v2"
-	// "github.com/casbin/gorm-adapter/v3"
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
+
 	"path"
 	"regexp"
 	"strconv"
 	"strings"
-	// "engineercms/controllers/validator"
-	// "github.com/beego/beego/v2/adapter/context"
-	// "github.com/asofdate/hauth/core/groupcache"
-	// "github.com/asofdate/hauth/core/hrpc"
-	// "github.com/asofdate/hauth/core/models"
-	// "github.com/asofdate/hauth/utils"
-	// "github.com/asofdate/hauth/utils/hret"
-	// "github.com/asofdate/hauth/utils/i18n"
-	// "github.com/asofdate/hauth/utils/jwt"
-	// "github.com/asofdate/hauth/utils/logs"
-	// "github.com/asofdate/hauth/utils/validator"
 )
 
 type RoleController struct {
@@ -252,12 +237,13 @@ func init() {
 		logs.Error(err)
 		return
 	}
+	// logs.Info(role)
 	user, err := m.GetUserByUsername("admin")
 	if err != nil {
 		logs.Error(err)
 		return
 	}
-
+	// logs.Info(user)
 	// 将用户admin加入到角色admin里
 	e.AddGroupingPolicy(strconv.FormatInt(user.Id, 10), "role_"+strconv.FormatInt(role.Id, 10))
 }
@@ -473,7 +459,7 @@ func (c *RoleController) Get() {
 //   '200':
 //     description: success
 
-//添加角色
+// 添加角色
 func (c *RoleController) Post() {
 	// u := m.Role{}
 	// if err := c.ParseForm(&u); err != nil {
@@ -579,9 +565,9 @@ func (c *RoleController) Post() {
 // 	}
 // }
 
-//AddPolicy(sec string, ptype string, rule []string)
-//添加用户角色
-//先删除用户所有角色
+// AddPolicy(sec string, ptype string, rule []string)
+// 添加用户角色
+// 先删除用户所有角色
 func (c *RoleController) UserRole() {
 	//要支持批量分配角色，循环用户id
 	uid := c.GetString("uid") //secofficeid
@@ -617,8 +603,8 @@ func (c *RoleController) UserRole() {
 	c.ServeJSON()
 }
 
-//给角色赋项目目录的权限
-//先删除角色对于这个项目的所有权限
+// 给角色赋项目目录的权限
+// 先删除角色对于这个项目的所有权限
 func (c *RoleController) RolePermission() {
 	var success bool
 	var nodeidint int
@@ -782,9 +768,9 @@ func (c *RoleController) RolePermission() {
 	c.ServeJSON()
 }
 
-//迭代查出最高级的树状目录
-//nodesid是数组的序号
-//nodeid是节点号：0.0.1   0.0.1.0
+// 迭代查出最高级的树状目录
+// nodesid是数组的序号
+// nodeid是节点号：0.0.1   0.0.1.0
 func highest(nodeid, nodesid []string, i int) (nodesid1 []string, err error) {
 	if i == 0 {
 		nodesid = append(nodesid, "0")
@@ -812,7 +798,7 @@ func highest(nodeid, nodesid []string, i int) (nodesid1 []string, err error) {
 	return nodesid, err
 }
 
-//查询角色所具有的权限对应的项目目录
+// 查询角色所具有的权限对应的项目目录
 func (c *RoleController) GetRolePermission() {
 	roleid := c.GetString("roleid") //角色id
 	action := c.GetString("action")
@@ -884,15 +870,17 @@ func (c *RoleController) GetRolePermission() {
 // - text/xml
 // - text/html
 // parameters:
-// - name: domain_id
-//   in: query
-//   description: domain code number
-//   required: true
-//   type: string
-//   format:
+//   - name: domain_id
+//     in: query
+//     description: domain code number
+//     required: true
+//     type: string
+//     format:
+//
 // responses:
-//   '200':
-//     description: success
+//
+//	'200':
+//	  description: success
 func (c *RoleController) Delete() {
 	roleids := c.GetString("ids")
 	rolearray := strings.Split(roleids, ",")
@@ -926,15 +914,17 @@ func (c *RoleController) Delete() {
 // - text/xml
 // - text/html
 // parameters:
-// - name: domain_id
-//   in: query
-//   description: domain code number
-//   required: true
-//   type: string
-//   format:
+//   - name: domain_id
+//     in: query
+//     description: domain code number
+//     required: true
+//     type: string
+//     format:
+//
 // responses:
-//   '200':
-//     description: success
+//
+//	'200':
+//	  description: success
 func (c *RoleController) Update() {
 	var role m.Role
 	roleid := c.GetString("roleid")

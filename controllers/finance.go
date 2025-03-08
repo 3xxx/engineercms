@@ -1,18 +1,10 @@
 package controllers
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
-	// "encoding/json"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/logs"
-	// "net"
-	// "net/http"
-	// "net/url"
+
 	"path"
 	"strconv"
 	"strings"
@@ -25,7 +17,6 @@ import (
 	"github.com/unidoc/unioffice/common"
 	"github.com/unidoc/unioffice/document"
 	"github.com/unidoc/unioffice/measurement"
-	// "github.com/unidoc/unioffice/schema/soo/wml"
 )
 
 // CMSWXDIARY API
@@ -33,12 +24,12 @@ type FinanceController struct {
 	web.Controller
 }
 
-//日志列表页
+// 日志列表页
 func (c *FinanceController) Get() {
 	c.TplName = "wxfinance.tpl"
 }
 
-//财务登记页面——作废
+// 财务登记页面——作废
 func (c *FinanceController) GetWxFinance2() {
 	c.TplName = "wxfinance.tpl"
 	var err error
@@ -175,7 +166,7 @@ func (c *FinanceController) AddWxFinance() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /getwxfinancelist/:id [get]
-//小程序取得日志列表，分页,通用
+// 小程序取得日志列表，分页,通用
 func (c *FinanceController) GetWxFinanceList() {
 	id := c.Ctx.Input.Param(":id")
 	// id := web.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
@@ -232,7 +223,7 @@ func (c *FinanceController) GetWxFinanceList() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articls not found
 // @router /getwxfinance2/:id [get]
-//网页页面取得日志列表，返回page rows total
+// 网页页面取得日志列表，返回page rows total
 func (c *FinanceController) GetWxfinance2() {
 	id := c.Ctx.Input.Param(":id")
 	// id := web.AppConfig.String("wxfinanceprojectid") //"26159" //25002珠三角设代日记id26159
@@ -304,7 +295,7 @@ type WxFinance struct {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /getwxfinance/:id [get]
-//根据id查看一篇微信文章
+// 根据id查看一篇微信文章
 func (c *FinanceController) GetWxFinance() {
 	var err error
 	id := c.Ctx.Input.Param(":id")
@@ -381,7 +372,7 @@ func (c *FinanceController) GetWxFinance() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /updatewxfinance [post]
-//编辑设代日记id下微信小程序文章_珠三角设代plus用_editor方式
+// 编辑设代日记id下微信小程序文章_珠三角设代plus用_editor方式
 func (c *FinanceController) UpdateWxFinance() {
 	// pid := web.AppConfig.String("wxcatalogid") //"26159"
 	//hotqinsessionid携带过来后，用下面的方法获取用户登录存储在服务端的session
@@ -461,7 +452,7 @@ func (c *FinanceController) UpdateWxFinance() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 articl not found
 // @router /deletewxfinance [post]
-//根据id删除_没删除文章中的图片
+// 根据id删除_没删除文章中的图片
 func (c *FinanceController) DeleteWxFinance() {
 	var openID string
 	openid := c.GetSession("openID")

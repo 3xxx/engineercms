@@ -6,7 +6,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"net/http"
 	"os"
 	"strconv"
@@ -27,7 +27,7 @@ type ReplyController struct {
 // @Failure 400 Invalid page supplied
 // @Failure 404 article not found
 // @router /addwxrelease/:id [post]
-//添加文章评论
+// 添加文章评论
 func (c *ReplyController) AddWxRelease() {
 	openID := c.GetSession("openID")
 	if openID == nil {
@@ -98,7 +98,7 @@ func (c *ReplyController) AddWxRelease() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 article not found
 // @router /deletewxrelease/:id [post]
-//删除文章评论
+// 删除文章评论
 func (c *ReplyController) DeleteWxRelease() {
 	id := c.Ctx.Input.Param(":id")
 	//id转成64为
@@ -122,7 +122,7 @@ func (c *ReplyController) DeleteWxRelease() {
 // @Failure 400 Invalid page supplied
 // @Failure 404 article not found
 // @router /addwxlike/:id [post]
-//添加文章点赞
+// 添加文章点赞
 func (c *ReplyController) AddWxLike() {
 	// tid := c.GetString("tid") //tid是文章id
 	id := c.Ctx.Input.Param(":id")
@@ -233,7 +233,7 @@ func (c *ReplyController) AddWxLike() {
 // 	}
 // }
 
-//添加wiki评论
+// 添加wiki评论
 func (c *ReplyController) AddWiki() {
 	tid := c.GetString("tid") //tid是文章id
 	username, _, _, _, _ := checkprodRole(c.Ctx)
@@ -255,7 +255,7 @@ func (c *ReplyController) AddWiki() {
 	}
 }
 
-//删除wiki评论
+// 删除wiki评论
 func (c *ReplyController) DeleteWiki() {
 	if !checkAccount(c.Ctx) {
 		return

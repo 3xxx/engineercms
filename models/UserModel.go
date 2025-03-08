@@ -5,22 +5,18 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/validation"
+	"github.com/go-pay/util"
 	"log"
 	"strconv"
 	"time"
-	// beego "github.com/beego/beego/v2/adapter"
-	. "github.com/beego/admin/src/lib"
-	"github.com/beego/beego/v2/adapter/validation"
-	"github.com/beego/beego/v2/client/orm"
-	// "github.com/casbin/casbin"
 )
-
-// var e *casbin.Enforcer
 
 // 用户表
 type User struct {
 	Id            int64
-	Username      string `json:"name",orm:"unique"` //这个拼音的简写
+	Username      string `json:"name",orm:"unique"` // 唯一。这个拼音的简写
 	Nickname      string //中文名，注意这里，很多都要查询中文名才行`orm:"unique;size(32)" form:"Nickname" valid:"Required;MaxSize(20);MinSize(2)"`
 	Password      string `orm:"size(50)"`
 	Repassword    string `form:"Repassword"`
@@ -43,9 +39,10 @@ type User struct {
 
 // 用户和openid对应表,一个用户对应多个openid
 type UserOpenID struct {
-	Id     int64
-	Uid    int64
-	OpenID string
+	Id         int64
+	Uid        int64
+	OpenID     string
+	Createtime time.Time `orm:"null;type(datetime);auto_now_add" `
 }
 
 // 用户和AvatorUrl对应表,一个用户对应多个AvatorUrl
@@ -117,7 +114,7 @@ func AddUserOpenID(userid int64, openid string) (id int64, err error) {
 	o := orm.NewOrm()
 	var useropenid UserOpenID
 	//判断是否有重名
-	err = o.QueryTable("UserOpenID").Filter("openid", openid).One(&useropenid, "Id")
+	err = o.QueryTable("UserOpenID").Filter("open_i_d", openid).One(&useropenid, "Id")
 	if err == orm.ErrNoRows { //Filter("tnumber", tnumber).One(topic, "Id")==nil则无法建立
 		// 没有找到记录
 		useropenid.Uid = userid
@@ -174,17 +171,211 @@ func AddUserAppreciation(userid int64, appreciationurl string) (id int64, err er
 // 根据openid查user
 func GetUserByOpenID(openid string) (user User, err error) {
 	o := orm.NewOrm()
-	var useropenid UserOpenID
+	// var useropenid UserOpenID
 	qs := o.QueryTable("UserOpenID")
-	//进行编号唯一性检查
-	err = qs.Filter("openid", openid).One(&useropenid)
+
+	// // user := User{Name: "slene"}
+	useropenid := UserOpenID{OpenID: openid}
+	// // Three return values：Is Created，Object Id，Error
+	// if created, id, err := o.ReadOrCreate(&useropenid, "OpenId"); err == nil {
+	// 	if created {
+	// 		fmt.Println("New Insert an object. Id:", id)
+	// 	} else {
+	// 		fmt.Println("Get an object. Id:", id)
+	// 	}
+	// }
+
+	// 查出第一个openid
+	err = qs.Filter("open_i_d", openid).One(&useropenid)
 	if err != nil {
 		return user, err
 	}
-	//查询user
+	// 如果不存在，则新建openid
+
+	// 查询出user所有信息
 	user = User{Id: useropenid.Uid}
 	o.Read(&user) //这里是默认主键查询。=(&user,"Id")
+	// 如果不存在，则随机存入用户名
+
 	return user, err
+}
+
+// 根据openid插入或查询user
+func GetwxUserByOpenID(openid, nickname string) (user User, id int64, err error) {
+	// db := _db //GetDB()
+	o := orm.NewOrm()
+	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
+	qs2 := o.QueryTable("UserOpenID")
+	var useropenid UserOpenID
+	err = qs.Filter("nickname", nickname).One(&user)
+	// 没找到记录err == orm.ErrNoRows，或找到多条记录err == orm.ErrMultiRows
+	err2 := qs2.Filter("open_i_d", openid).One(&useropenid)
+	//这里要加密
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(util.RandomString(6)))
+	cipherStr := md5Ctx.Sum(nil)
+
+	// 没找到nickname也没找到openid，则新建
+	if err != nil && err2 != nil {
+		// 新建用户和openid
+		user.Nickname = nickname
+		user.Username = util.RandomString(6)
+		user.Status = 1
+		user.Password = hex.EncodeToString(cipherStr)
+		id, err := o.Insert(&user)
+		if err != nil {
+			return user, id, err
+		}
+		// 新建openid
+		useropenid.Uid = id
+		useropenid.OpenID = openid
+		id2, err := o.Insert(&useropenid)
+		if err != nil {
+			return user, id2, err
+		}
+		return user, id, nil
+	} else if err == nil && err2 != nil {
+		// 找到nickname，没找到openid，则用nickname的id来新建openid，同时也要查询username是否是空，空则随机赋值
+		// 新建openid
+		useropenid.Uid = user.Id
+		useropenid.OpenID = openid
+		id2, err := o.Insert(&useropenid)
+		if err != nil {
+			return user, id2, err
+		}
+		if user.Username == "" {
+			user.Username = util.RandomString(6)
+			_, err := o.Update(&user, "Username", "Updated")
+			if err != nil {
+				return user, user.Id, err
+			}
+		}
+		return user, user.Id, nil
+	} else if err == nil && err2 == nil {
+		// 找到nickname，找到openid
+		if user.Username == "" {
+			user.Username = util.RandomString(6)
+			_, err := o.Update(&user, "Username", "Updated")
+			if err != nil {
+				return user, user.Id, err
+			}
+		}
+		// 返回user
+		return user, user.Id, nil
+	} else if err != nil && err2 == nil {
+		// 没找到nickname，找到openid
+		// 查出openid对应的用户，
+		err = qs.Filter("id", useropenid.Uid).One(&user)
+		if err != nil {
+			// return user, err
+			// 新建用户表，随机username
+			user.Nickname = nickname
+			user.Username = util.RandomString(6)
+			user.Status = 1
+			user.Password = hex.EncodeToString(cipherStr)
+			id, err := o.Insert(&user)
+			if err != nil {
+				return user, id, err
+			}
+		}
+		return user, user.Id, nil
+	}
+	return user, id, err
+}
+
+// 用户修改自己的某个字段
+func UpdateUser(cid int64, fieldname, value string) error {
+	o := orm.NewOrm()
+	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
+	var user User
+	err := o.QueryTable("user").Filter("Id", cid).One(&user)
+	if err == nil {
+		const lll = "2006-01-02"
+		user.Updated = time.Now()
+		switch fieldname {
+		case "name":
+			user.Username = value
+			// 查询是否存在，做唯一性判断
+			err = qs.Filter("username", value).One(&user)
+			if err == orm.ErrMultiRows {
+				//		// 多条的时候报错
+				//		fmt.Printf("Returned Multi Rows Not One")
+				return err
+			} else if err == orm.ErrNoRows {
+				// 没有找到记录 说明这个用户名没有重名，可以更新
+				// fmt.Printf("Not row found")
+				_, err = o.Update(&user, "Username", "Updated")
+				return err
+			}
+		case "Nickname":
+			// 判断是否存在相同的昵称
+			err = qs.Filter("nickname", value).One(&user)
+			if err != nil { // 没查到记录
+				user.Nickname = value
+				_, err = o.Update(&user, "Nickname", "Updated")
+				return err
+			} else {
+				return err
+			}
+		case "Password":
+			//这里要加密
+			md5Ctx := md5.New()
+			md5Ctx.Write([]byte(value))
+			cipherStr := md5Ctx.Sum(nil)
+			user.Password = hex.EncodeToString(cipherStr)
+			_, err = o.Update(&user, "Password", "Updated")
+			return err
+		case "Email":
+			user.Email = value
+			_, err = o.Update(&user, "Email", "Updated")
+			return err
+		case "Sex":
+			user.Sex = value
+			_, err = o.Update(&user, "Sex", "Updated")
+			return err
+		case "IsPartyMember":
+			if value == "true" {
+				user.IsPartyMember = true
+			} else {
+				user.IsPartyMember = false
+			}
+			_, err = o.Update(&user, "IsPartyMember", "Updated")
+			return err
+		case "Department":
+			user.Department = value
+			_, err = o.Update(&user, "Department", "Updated") //这里不能用&user
+			return err
+		case "Secoffice":
+			user.Secoffice = value
+			_, err = o.Update(&user, "Secoffice", "Updated") //这里不能用&user
+			return err
+		case "Ip":
+			user.Ip = value
+			_, err = o.Update(&user, "Ip", "Updated") //这里不能用&user
+			return err
+		case "Port":
+			user.Port = value
+			_, err = o.Update(&user, "Port", "Updated") //这里不能用&user
+			return err
+		case "Status":
+			//转成int
+			user.Status, err = strconv.Atoi(value)
+			if err != nil {
+				return err
+			}
+			_, err = o.Update(&user, "Status", "Updated") //这里不能用&user
+			return err
+		case "role":
+			user.Role = value
+			_, err = o.Update(&user, "Role", "Updated") //这里不能用&user
+			return err
+		}
+		// 指定多个字段
+		// o.Update(&user, "Field1", "Field2", ...)这个试验没成功
+	} else {
+		return err
+	}
+	return nil
 }
 
 type UserAvatarUrl struct {
@@ -213,17 +404,13 @@ func ValidateUser(user User) error {
 	cond := orm.NewCondition()
 	cond1 := cond.Or("status", 1).Or("status", 2)
 	cond2 := cond.AndCond(cond1).And("username", user.Username).And("password", user.Password)
-	// _, err = qs.Distinct().OrderBy("-created").All(&proj) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	orm := orm.NewOrm()
 	var u User
-	// user = new(User)
 	qs := orm.QueryTable("user")
 	qs = qs.SetCond(cond2)
 	err := qs.One(&u)
 	if err != nil {
 		return err
-
-		// orm.Where("username=? and pwd=?", user.Username, user.Pwd).Find(&u)
 	} else if u.Username == "" {
 		return errors.New("用户名或密码错误！或用户被禁止！")
 	} else {
@@ -234,16 +421,11 @@ func ValidateUser(user User) error {
 func CheckUname(user User) error {
 	orm := orm.NewOrm()
 	var u User
-	// user = new(User)
 	qs := orm.QueryTable("user")
-	err := qs.Filter("username", user.Username).One(&u)
+	err := qs.Filter("Username", user.Username).One(&u)
 	if err != nil {
 		return err
 	}
-	// orm.Where("username=? and pwd=?", user.Username, user.Pwd).Find(&u)
-	// if u.Username == "" {
-	// 	return errors.New("用户名或密码错误！")
-	// }
 	return nil
 }
 
@@ -257,27 +439,6 @@ func GetUname(user User) ([]*User, error) {
 	}
 	return users, err
 }
-
-// func SearchTopics(tuming string, isDesc bool) ([]*Topic, error) {
-// 	o := orm.NewOrm()
-// 	topics := make([]*Topic, 0)
-// 	qs := o.QueryTable("topic")
-// 	var err error
-// 	if isDesc {
-// 		if len(tuming) > 0 {
-// 			qs = qs.Filter("Title__contains", tuming) //这里取回
-// 		}
-// 		_, err = qs.OrderBy("-created").All(&topics)
-// 	} else {
-// 		_, err = qs.Filter("Title__contains", tuming).OrderBy("-created").All(&topics)
-// 		//o.QueryTable("user").Filter("name", "slene").All(&users)
-// 	}
-// 	return topics, err
-// }
-
-// func (u *User) TableName() string {
-// 	return beego.AppConfig.String("rbac_user_table")
-// }
 
 func (u *User) Valid(v *validation.Validation) {
 	if u.Password != u.Repassword {
@@ -442,7 +603,10 @@ func AddUser(u *User) (int64, error) {
 	o := orm.NewOrm()
 	user := new(User)
 	user.Username = u.Username
-	user.Password = Strtomd5(u.Password)
+	// user.Password = Strtomd5(u.Password)
+	h := md5.New()
+	h.Write([]byte(u.Password))
+	user.Password = hex.EncodeToString(h.Sum(nil))
 	user.Nickname = u.Nickname
 	user.Email = u.Email
 	user.Remark = u.Remark
@@ -484,145 +648,6 @@ func AddUser(u *User) (int64, error) {
 // 	num, err := o.QueryTable(table).Filter("Id", u.Id).Update(user)
 // 	return num, err
 // }
-
-// 用户修改一个用户的某个字段
-func UpdateUser(cid int64, fieldname, value string) error {
-	o := orm.NewOrm()
-	var user User
-	// user := &User{Id: cid}
-	err := o.QueryTable("user").Filter("Id", cid).One(&user)
-	// err:=o.Read(user).One()
-	if err == nil {
-		type Duration int64
-		const (
-			Nanosecond  Duration = 1
-			Microsecond          = 1000 * Nanosecond
-			Millisecond          = 1000 * Microsecond
-			Second               = 1000 * Millisecond
-			Minute               = 60 * Second
-			Hour                 = 60 * Minute
-		)
-		// hours := 8
-
-		const lll = "2006-01-02"
-		user.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
-		switch fieldname {
-		case "name":
-			user.Username = value
-			_, err := o.Update(&user, "Username", "Updated")
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Nickname":
-			user.Nickname = value
-			_, err := o.Update(&user, "Nickname", "Updated")
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Password":
-			//这里要加密
-			md5Ctx := md5.New()
-			md5Ctx.Write([]byte(value))
-			cipherStr := md5Ctx.Sum(nil)
-			user.Password = hex.EncodeToString(cipherStr)
-			_, err := o.Update(&user, "Password", "Updated")
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Email":
-			user.Email = value
-			_, err := o.Update(&user, "Email", "Updated")
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Sex":
-			user.Sex = value
-			_, err := o.Update(&user, "Sex", "Updated")
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "IsPartyMember":
-			if value == "true" {
-				user.IsPartyMember = true
-			} else {
-				user.IsPartyMember = false
-			}
-			_, err := o.Update(&user, "IsPartyMember", "Updated")
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Department":
-			user.Department = value
-			_, err := o.Update(&user, "Department", "Updated") //这里不能用&user
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Secoffice":
-			user.Secoffice = value
-			_, err := o.Update(&user, "Secoffice", "Updated") //这里不能用&user
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Ip":
-			user.Ip = value
-			_, err := o.Update(&user, "Ip", "Updated") //这里不能用&user
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Port":
-			user.Port = value
-			_, err := o.Update(&user, "Port", "Updated") //这里不能用&user
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "Status":
-			//转成int
-			user.Status, err = strconv.Atoi(value)
-			if err != nil {
-				return err
-			}
-			_, err := o.Update(&user, "Status", "Updated") //这里不能用&user
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		case "role":
-			user.Role = value
-			_, err := o.Update(&user, "Role", "Updated") //这里不能用&user
-			if err != nil {
-				return err
-			} else {
-				return nil
-			}
-		}
-		// 指定多个字段
-		// o.Update(&user, "Field1", "Field2", ...)这个试验没成功
-	} else {
-		return o.Read(&user)
-	}
-	return nil
-}
 
 //这个作废，用在线修改代替
 // func UpdateUser(userid, nickname, email, password string) error {
@@ -699,20 +724,58 @@ func GetUserByIp(ip string) (user User, err error) {
 }
 
 // 根据用户nickname取得用户
-func GetUserByNickname(nickname string) (user User) {
+func GetUserByNickname(nickname string) (user User, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
 	//进行编号唯一性检查
-	qs.Filter("nickname", nickname).One(&user)
-	return user
+	// user = User{Nickname: nickname}
+	// // useropenid := UserOpenID{OpenID: openid}
+	// // Three return values：Is Created，Object Id，Error
+	// if created, id, err := o.ReadOrCreate(&user, "Nickname"); err == nil {
+	// 	if created {
+	// 		// fmt.Println("New Insert an object. Id:", id)
+	// 		return user, id, err
+	// 	} else {
+	// 		// fmt.Println("Get an object. Id:", id)
+	// 		return user, id, err
+	// 	}
+	// }
+
+	err = qs.Filter("Nickname", nickname).One(&user)
+	if err != nil {
+		return user, err
+	}
+	return user, err
+}
+
+// wx根据用户nickname取得用户
+func GetwxUserByNickname(nickname string) (user User, userid int64, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
+	//进行编号唯一性检查
+	user = User{Nickname: nickname}
+	// useropenid := UserOpenID{OpenID: openid}
+	// Three return values：Is Created，Object Id，Error
+	if created, id, err := o.ReadOrCreate(&user, "Nickname"); err == nil {
+		if created {
+			// fmt.Println("New Insert an object. Id:", id)
+			return user, id, err
+		} else {
+			// fmt.Println("Get an object. Id:", id)
+			return user, id, err
+		}
+	}
+
+	qs.Filter("Nickname", nickname).One(&user)
+	return user, user.Id, err
 }
 
 // 取到一个用户数据，不是数组，所以table无法显示
-func GetUserByUserId(userid int64) (user User) {
+func GetUserByUserId(userid int64) (user User, err error) {
 	user = User{Id: userid}
 	o := orm.NewOrm()
-	o.Read(&user) //这里是默认主键查询。=(&user,"Id")
-	return user
+	err = o.Read(&user) //这里是默认主键查询。=(&user,"Id")
+	return user, err
 }
 
 // *********初始化数据库中的用户********

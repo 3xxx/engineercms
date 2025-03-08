@@ -7,11 +7,10 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/context"
+
 	"database/sql"
 	"github.com/3xxx/flow"
-	"github.com/beego/beego/v2/adapter/httplib"
+	"github.com/beego/beego/v2/client/httplib"
 	// "log"
 	"io/ioutil"
 	"net/http"
@@ -94,18 +93,6 @@ type prodTableserver2 struct {
 	Page  int64                       `json:"page"`
 	Total int64                       `json:"total"` //string或int64都行！
 }
-
-// var db *sql.DB
-
-// func init() {
-// 	driver, connStr := "mysql", "travis@/flow?charset=utf8&parseTime=true"
-// 	tdb := fatal1(sql.Open(driver, connStr)).(*sql.DB)
-// 	// flow.RegisterDB(tdb)
-// 	if tdb == nil {
-// 		log.Fatal("given database handle is `nil`")
-// 	}
-// 	db = tdb
-// }
 
 // 根据项目侧栏id查看这个id下的成果页面，table中的数据填充用GetProducts
 // 任何一级目录下都可以放成果
@@ -1271,7 +1258,10 @@ func (c *ProdController) Getpermission() {
 		// if err != nil {
 		// 	logs.Error(err)
 		// }
-		users := e.GetFilteredPolicy(1, "/officeview/"+strconv.FormatInt(w.Id, 10))
+		users, err := e.GetFilteredPolicy(1, "/officeview/"+strconv.FormatInt(w.Id, 10))
+		if err != nil {
+			logs.Error(err)
+		}
 		// beego.Info(users)
 		for _, v := range users {
 			rolepermission1 := make([]Rolepermission, 1)
@@ -1298,7 +1288,10 @@ func (c *ProdController) Getpermission() {
 				if err != nil {
 					logs.Error(err)
 				}
-				user := models.GetUserByUserId(uidNum)
+				user, err := models.GetUserByUserId(uidNum)
+				if err != nil {
+					logs.Error(err)
+				}
 				rolepermission1[0].Id = uidNum
 				rolepermission1[0].Name = user.Nickname
 				rolepermission1[0].Permission = v[2]
@@ -1406,8 +1399,11 @@ func (c *ProdController) OfficeView() {
 			return
 		}*/
 
-		myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-		if uid != 0 {                           //无论是登录还是ip查出了用户id
+		myResall, err := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+		if err != nil {
+			logs.Error(err)
+		}
+		if uid != 0 { //无论是登录还是ip查出了用户id
 			// uname = v.(string)
 			// c.Data["Uname"] = v.(string)
 			// user, err := models.GetUserByUsername(uname)
@@ -1415,7 +1411,10 @@ func (c *ProdController) OfficeView() {
 			// 	logs.Error(err)
 			// }
 			// useridstring = strconv.FormatInt(user.Id, 10)
-			myRes = e.GetPermissionsForUser(useridstring)
+			myRes, err = e.GetPermissionsForUser(useridstring)
+			if err != nil {
+				logs.Error(err)
+			}
 			if product.Uid == uid || isadmin { //isme or isadmin
 				Permission = "1"
 			} else { //如果是登录用户，则设置了权限的文档根据权限查看
@@ -1437,7 +1436,10 @@ func (c *ProdController) OfficeView() {
 					logs.Error(err)
 				}
 				for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
-					roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+					roleRes, err = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+					if err != nil {
+						logs.Error(err)
+					}
 					for _, k := range roleRes {
 						// beego.Info(k)
 						if id == path.Base(k[1]) {

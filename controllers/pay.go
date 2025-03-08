@@ -4,7 +4,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"regexp"
 	"strconv"
 )
@@ -329,7 +329,10 @@ func (c *PayController) GetUserPay() {
 		c.ServeJSON()
 		return
 	}
-	user := models.GetUserByUserId(uid)
+	user, err := models.GetUserByUserId(uid)
+	if err != nil {
+		logs.Error(err)
+	}
 	c.Data["UserNickname"] = user.Nickname
 	c.Data["IsAdmin"] = isadmin
 	u := c.Ctx.Input.UserAgent()
@@ -344,7 +347,7 @@ func (c *PayController) GetUserPay() {
 	}
 }
 
-//后端分页的模板列表数据结构
+// 后端分页的模板列表数据结构
 type MathPayTable struct {
 	Rows  []*models.PayMath `json:"rows"`
 	Page  int64             `json:"page"`
@@ -506,7 +509,7 @@ func (c *PayController) GetUserMoney() {
 
 // @Title post userpay by mathtempleid
 // @Description post userpay by mathtempid
-// @Param usertempleid query string  true "The id of mathtemple"
+// @Param mathtempleid query string  true "The id of mathtemple"
 // @Param amount query string  true "The amout of pays"
 // @Success 200 {object} models.Pay
 // @Failure 400 Invalid page supplied
@@ -521,13 +524,13 @@ func (c *PayController) AddUserPays() {
 		return
 	}
 	var templeid uint
-	usertempleid := c.GetString("usertempleid")
+	mathtempleid := c.GetString("mathtempleid")
 	//id转成uint为
-	usertempleidint, err := strconv.Atoi(usertempleid)
+	mathtempleidint, err := strconv.Atoi(mathtempleid)
 	if err != nil {
 		logs.Error(err)
 	}
-	templeid = uint(usertempleidint)
+	templeid = uint(mathtempleidint)
 
 	amount := c.GetString("amount")
 	amountint, err := strconv.Atoi(amount)
@@ -656,7 +659,7 @@ func (c *PayController) GetApplyRecharge() {
 	}
 }
 
-//后端分页的用户申请充值数据结构
+// 后端分页的用户申请充值数据结构
 type ApplyRechargeTable struct {
 	Rows  []models.Recharge `json:"rows"`
 	Page  int               `json:"page"`

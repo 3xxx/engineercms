@@ -1,15 +1,10 @@
 package utils
 
 import (
-	// "crypto/md5"
-	"errors"
-	"fmt"
-	// "github.com/3xxx/go-sso/models"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/orm"
 	"encoding/base64"
 	"encoding/json"
-	// "github.com/dgrijalva/jwt-go"
+	"errors"
+	"fmt"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/golang-jwt/jwt"
@@ -54,7 +49,7 @@ type MyCustomClaims struct {
 	jwt.StandardClaims
 }
 
-//使用这个生成token
+// 使用这个生成token
 func CreateToken(userName string) (tokenString string, err error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
@@ -527,7 +522,7 @@ func getHeaderTokenValue(tokenString string) string {
 	return fmt.Sprintf("Bearer %s", tokenString)
 }
 
-//如果不够length，返回全部长度范围
+// 如果不够length，返回全部长度范围
 func SubString(str string, begin, length int) (substr string) {
 	// 将字符串的转换成[]rune
 	rs := []rune(str)
@@ -698,7 +693,7 @@ var (
 //在调用Parse时，会进行加密验证，同时如果提供了exp，会进行过期验证；
 //如果提供了iat，会进行发行时间验证;如果提供了nbf，会进行发行时间验证．
 
-//创建 tokenString
+// 创建 tokenString
 func createJwt() (string, error) {
 	//  token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 	//      "foo": "bar",
@@ -718,7 +713,7 @@ func createJwt() (string, error) {
 	return tokenString, err
 }
 
-//解析tokenString
+// 解析tokenString
 func parseJwt(tokenString string) jwt.MapClaims {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:

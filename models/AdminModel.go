@@ -99,7 +99,7 @@ type AdminCarousel struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	logs.Info("adminmode")
+	// logs.Info("adminmode")
 
 	var dns string
 	var err error
@@ -206,22 +206,38 @@ func init() {
 	)
 	orm.RegisterModelWithPrefix("share_", new(Bridge), new(Share))
 
+	// beego orm自动建表
+	// orm.RunSyncdb("default", false, true)
 	gob.Register(Blog{})
 	gob.Register(Document{})
 	gob.Register(Template{})
 
-	//gorm
-	_db.AutoMigrate(&Article{}, &Business{}, &BusinessUser{}, &NickName{}, &BusinessCheckin{}, &Location{}, &LocationNavigate{})
+	// gorm表迁移，不是自动建表，也不会更新表字段！
+	// 对于写在一行李的，当第一个存在后，后面的不建立！！！
+	_db.AutoMigrate(&Article{}, &Location{}, &LocationNavigate{})
+	_db.AutoMigrate(&BusinessCheckin{})
+	_db.AutoMigrate(&BusinessUser{})
+	_db.AutoMigrate(&Business{})
 	_db.AutoMigrate(&AnsysApdl{}, &AnsysInputs{}, &AnsysOutputs{}, &AnsysHistory{}, &AnsysHistoryInputValue{}, &AnsysHistoryOutputValue{}, &AnsysArticle{})
 	_db.AutoMigrate(&ExcelTemple{}, &ExcelInputs{}, &ExcelOutputs{}, &ExcelHistory{}, &ExcelHistoryInputValue{}, &ExcelHistoryOutputValue{}, &ExcelArticle{})
-	_db.AutoMigrate(&UserTemple{}, &TempleInputs{}, &TempleOutputs{}, &UserHistory{}, &HistoryInputValue{}, &HistoryOutputValue{}, &MathArticle{})
+	_db.AutoMigrate(&MathTemple{})
+	_db.AutoMigrate(&MathInputs{})
+	_db.AutoMigrate(&MathOutputs{})
+	_db.AutoMigrate(&MathHistory{})
+	_db.AutoMigrate(&MathHistoryInputValue{})
+	_db.AutoMigrate(&MathHistoryOutputValue{})
+	_db.AutoMigrate(&MathArticle{})
 	_db.AutoMigrate(&Pay{}, &Money{}, &Recharge{}, &PayMath{}, &PayMathPdf{}, &PayExcel{}, &PayExcelPdf{})
+	// _db.AutoMigrate(&WxPayMathCAD{}, &WxPayExcel{})
 	_db.AutoMigrate(&PassProject{})
+
 	_db.AutoMigrate(&PhotoData{})
 	_db.AutoMigrate(&FreecadModel{}, &FreecadInputs{})
+
+	_db.AutoMigrate(&EstimateProjPhase{})
 	_db.AutoMigrate(&EstimateProject{})
-	_db.AutoMigrate(&EstimateProjPhase{}) // &EstimateProfessional{}, &EstimateSecondary{}, &EstimateTertiary{},
-	_db.AutoMigrate(&EstimateCostArchi{}, EstimateCostElect{}, EstimateCostMetal{}, EstimateCostTemp{})
+	// &EstimateProfessional{}, &EstimateSecondary{}, &EstimateTertiary{},
+	_db.AutoMigrate(&EstimateCostArchi{}, &EstimateCostElect{}, &EstimateCostMetal{}, &EstimateCostTemp{})
 }
 
 //获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。

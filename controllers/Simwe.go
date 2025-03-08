@@ -1,21 +1,7 @@
 package controllers
 
 import (
-	// "encoding/json"
-	// "github.com/3xxx/engineercms/models"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// "github.com/bitly/go-simplejson"
-	// "io/ioutil"
-	// "net"
-	// "net/http"
-	// "net/url"
-	// "os"
-	// "path"
-	// "strconv"
-	// "strings"
-	// "time"
 )
 
 // CMSSIMWE API

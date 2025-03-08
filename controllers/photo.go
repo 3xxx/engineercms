@@ -4,20 +4,12 @@ import (
 	// "encoding/json"
 	"github.com/3xxx/engineercms/controllers/utils/filetil"
 	"github.com/3xxx/engineercms/models"
-	// "github.com/3xxx/engineercms/vendor/github.com/minio/minio-go/v7"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
 
 	"io"
-	// "encoding/json"
-	// "net/http"
-	// "github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/server/web"
-	// "bytes"
-	// "io/ioutil"
-	// "mime/multipart"
-	// "bytes"
+
 	"context"
 	"fmt"
 	"github.com/minio/minio-go/v7"

@@ -1,17 +1,8 @@
 package models
 
 import (
-	// "database/sql"
-	// beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 
-	// "github.com/go-xorm/xorm"
-
-	// "strconv"
-	// "strings"
-	// "fmt"
-	// "log"
-	// "os"
 	"time"
 )
 
@@ -33,7 +24,7 @@ func init() {
 	orm.RegisterModel(new(Finance)) //, new(Finance)
 }
 
-//添加财务记录
+// 添加财务记录
 func AddFinance(amount int, content, financedate string, projectid, uid int64, consider bool) (id int64, err error) {
 	o := orm.NewOrm()
 	//查询数据库中有无打卡
@@ -71,7 +62,7 @@ func AddFinance(amount int, content, financedate string, projectid, uid int64, c
 	return id, nil
 }
 
-//微信小程序，根据projectid取得所有设代日志
+// 微信小程序，根据projectid取得所有设代日志
 func GetWxFinance(pid, limit, offset int64) (finance []*Finance, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Finance")
@@ -82,7 +73,7 @@ func GetWxFinance(pid, limit, offset int64) (finance []*Finance, err error) {
 	return finance, err
 }
 
-//获取日志总数
+// 获取日志总数
 func GetWxFinanceCount(pid int64) (count int64, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Finance")
@@ -98,13 +89,13 @@ type FinanceUser struct {
 	User    `xorm:"extends"`
 }
 
-//微信小程序，根据projectid取得所有设代日志
+// 微信小程序，根据projectid取得所有设代日志
 func GetWxFinance2(pid int64, limit, offset int) ([]*FinanceUser, error) {
 	finance := make([]*FinanceUser, 0)
 	return finance, engine.Table("finance").Join("INNER", "user", "finance.user_id = user.id").Where("finance.project_id = ?", pid).Desc("financedate").Limit(limit, offset).Find(&finance)
 }
 
-//根据id取得日志
+// 根据id取得日志
 func GetFinance(id int64) (Finance1 *Finance, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Finance") //这个表名AchievementTopic需要用驼峰式，
@@ -132,7 +123,7 @@ func GetFinance(id int64) (Finance1 *Finance, err error) {
 	return finance, err
 }
 
-//修改
+// 修改
 func UpdateFinance(id int64, amount int, content, financedate string, consider bool) error {
 	o := orm.NewOrm()
 	finance := &Finance{Id: id}
@@ -150,7 +141,7 @@ func UpdateFinance(id int64, amount int, content, financedate string, consider b
 	return nil
 }
 
-//删除
+// 删除
 func DeleteFinance(id int64) error {
 	o := orm.NewOrm()
 	finance := &Finance{Id: id}

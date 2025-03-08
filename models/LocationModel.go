@@ -1,24 +1,20 @@
 package models
 
 import (
-	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "gorm.io/gorm"
 	"errors"
-	// "github.com/jinzhu/gorm"
 	"gorm.io/gorm"
 	"time"
 )
 
-//定位组表
+// 定位组表
 type Location struct {
 	// gorm.Model
 	ID                uint      `json:"id" gorm:"primary_key"`
 	CreatedAt         time.Time `gorm:"autoCreateTime"`
 	UpdatedAt         time.Time
 	DeletedAt         *time.Time
-	ProjectID         int64  `json:"projectid" gorm:"column:project_id;foreignkey:ProjectId;"`
-	UserID            int64  `gorm:"column:user_id"` // One-To-One (属于 - 本表的BillingAddressID作外键
+	ProjectID         int64  `json:"projectid" gorm:"column:project_id;"` // foreignkey:ProjectId;
+	UserID            int64  `gorm:"column:user_id"`                      // One-To-One (属于 - 本表的BillingAddressID作外键
 	Title             string `json:"title"`
 	Describe          string `json:"describe"`
 	Sort              int
@@ -62,7 +58,7 @@ func CreateLocation(location Location) (id uint, err error) {
 	// result.RowsAffected // 返回插入记录的条数
 }
 
-//定位导航写入数据库
+// 定位导航写入数据库
 func CreateLocationNavigate(locationnavigate LocationNavigate) (id uint, err error) {
 	db := _db //GetDB()
 	//判断是否有重名
@@ -132,7 +128,7 @@ func GetAllLocation2(projectid int64) (location []Location, err error) {
 	return location, err
 }
 
-//按月统计**************
+// 按月统计**************
 func GetLocationCheckUser(selectmonth1, selectmonth2 time.Time, limit, offset int) (location []Location, err error) {
 	db := _db //GetDB()
 	err = db.Order("location.updated_at desc").

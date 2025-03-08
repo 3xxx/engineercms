@@ -6,14 +6,10 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/orm"
-	// "github.com/casbin/beego-orm-adapter"
-	// "baliance.com/gooxml/document"
-	// "github.com/unidoc/unioffice/common"
+
 	"github.com/3xxx/engineercms/controllers/utils/ziptil"
 	"github.com/unidoc/unioffice/document"
-	// "github.com/unidoc/unioffice/measurement"
+
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -24,14 +20,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	// "mime/multipart"
+
 	"bytes"
-	"github.com/beego/beego/v2/adapter/httplib"
-	// "github.com/beego/beego/v2/adapter/utils/pagination"
-	// "crypto/aes"
-	// "crypto/cipher"
-	// "io"
-	// "github.com/beego/beego/v2/adapter/session"
+	"github.com/beego/beego/v2/client/httplib"
 )
 
 var OnlyUsers []string
@@ -493,11 +484,16 @@ func (c *OnlyController) GetData() {
 
 	var myRes, roleRes [][]string
 	if useridstring != "0" {
-		myRes = e.GetPermissionsForUser(useridstring)
+		myRes, err = e.GetPermissionsForUser(useridstring)
+		if err != nil {
+			logs.Error(err)
+		}
 		// beego.Info(myRes)
 	}
-	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-
+	myResall, err := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+	if err != nil {
+		logs.Error(err)
+	}
 	docs, err := models.GetDocs()
 	if err != nil {
 		logs.Error(err)
@@ -514,7 +510,10 @@ func (c *OnlyController) GetData() {
 		linkarr[0].End = w.End
 		linkarr[0].Principal = w.Principal
 		linkarr[0].Uid = w.Uid
-		user := models.GetUserByUserId(w.Uid)
+		user, err := models.GetUserByUserId(w.Uid)
+		if err != nil {
+			logs.Error(err)
+		}
 		linkarr[0].Uname = user.Nickname
 		linkarr[0].Created = w.Created
 		linkarr[0].Updated = w.Updated
@@ -555,7 +554,10 @@ func (c *OnlyController) GetData() {
 						logs.Error(err)
 					}
 					for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
-						roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+						roleRes, err = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+						if err != nil {
+							logs.Error(err)
+						}
 						for _, k := range roleRes {
 							// beego.Info(k)
 							if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
@@ -714,8 +716,11 @@ func (c *OnlyController) OnlyOffice() {
 	}
 	// v := c.GetSession("uname")
 	// var role, userrole int
-	myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-	if uid != 0 {                           //无论是登录还是ip查出了用户id
+	myResall, err := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+	if err != nil {
+		logs.Error(err)
+	}
+	if uid != 0 { //无论是登录还是ip查出了用户id
 		// uname = v.(string)
 		// c.Data["Uname"] = v.(string)
 		// user, err := models.GetUserByUsername(uname)
@@ -723,7 +728,10 @@ func (c *OnlyController) OnlyOffice() {
 		// 	logs.Error(err)
 		// }
 		// useridstring = strconv.FormatInt(user.Id, 10)
-		myRes = e.GetPermissionsForUser(useridstring)
+		myRes, err = e.GetPermissionsForUser(useridstring)
+		if err != nil {
+			logs.Error(err)
+		}
 		if doc.Uid == uid || isadmin { //isme or isadmin
 			Permission = "1"
 		} else { //如果是登录用户，则设置了权限的文档根据权限查看
@@ -745,7 +753,10 @@ func (c *OnlyController) OnlyOffice() {
 				logs.Error(err)
 			}
 			for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
-				roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+				roleRes, err = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+				if err != nil {
+					logs.Error(err)
+				}
 				for _, k := range roleRes {
 					// beego.Info(k)
 					if id == path.Base(k[1]) {
@@ -858,7 +869,10 @@ func (c *OnlyController) OnlyOffice() {
 		aa[0].User.Id = strconv.FormatInt(v.UserId, 10) //
 
 		if v.UserId != 0 {
-			user := models.GetUserByUserId(v.UserId)
+			user, err := models.GetUserByUserId(v.UserId)
+			if err != nil {
+				logs.Error(err)
+			}
 			aa[0].User.Name = user.Nickname
 		}
 		aa[0].ServerVersion = v.ServerVersion
@@ -1405,7 +1419,10 @@ func (c *OnlyController) DownloadDoc() {
 	}
 
 	//1.管理员或者没有设置权限的文档直接可以下载。
-	police := e.GetFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
+	police, err := e.GetFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
+	if err != nil {
+		logs.Error(err)
+	}
 	// beego.Info(police)
 	if isadmin || len(police) == 0 {
 		// c.Ctx.Output.Download(filePath) //这个能保证下载文件名称正确
@@ -1414,7 +1431,10 @@ func (c *OnlyController) DownloadDoc() {
 	}
 
 	//2.取得用户权限
-	police = e.GetFilteredPolicy(0, strconv.FormatInt(uid, 10), "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
+	police, err = e.GetFilteredPolicy(0, strconv.FormatInt(uid, 10), "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
+	if err != nil {
+		logs.Error(err)
+	}
 	// beego.Info(police)
 	for _, v2 := range police {
 		// beego.Info(v2)
@@ -1439,7 +1459,10 @@ func (c *OnlyController) DownloadDoc() {
 	// userrole := make([]Userrole, 0)
 	// var canidown bool
 	for _, v1 := range userroles {
-		police := e.GetFilteredPolicy(0, v1, "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
+		police, err := e.GetFilteredPolicy(0, v1, "/onlyoffice/"+strconv.FormatInt(downloadfile.Id, 10))
+		if err != nil {
+			logs.Error(err)
+		}
 		// beego.Info(police)
 		for _, v2 := range police {
 			// beego.Info(v2)
@@ -1583,7 +1606,10 @@ func (c *OnlyController) Download() {
 
 	filePath := "attachment/onlyoffice/" + attachments[0].FileName
 	//管理员或者没有设置权限的文档直接可以下载。
-	police := e.GetFilteredPolicy(1, "/onlyoffice/"+docid)
+	police, err := e.GetFilteredPolicy(1, "/onlyoffice/"+docid)
+	if err != nil {
+		logs.Error(err)
+	}
 	if isadmin || len(police) == 0 {
 		c.Ctx.Output.Download(filePath) //这个能保证下载文件名称正确
 		return
@@ -1599,7 +1625,10 @@ func (c *OnlyController) Download() {
 	// var canidown bool
 
 	for _, v1 := range userroles {
-		police := e.GetFilteredPolicy(0, v1, "/onlyoffice/"+docid)
+		police, err := e.GetFilteredPolicy(0, v1, "/onlyoffice/"+docid)
+		if err != nil {
+			logs.Error(err)
+		}
 		// beego.Info(police)
 		for _, v2 := range police {
 			// beego.Info(v2)
@@ -1969,7 +1998,10 @@ func (c *OnlyController) Getpermission() {
 		// if err != nil {
 		// 	logs.Error(err)
 		// }
-		users := e.GetFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(w.Id, 10))
+		users, err := e.GetFilteredPolicy(1, "/onlyoffice/"+strconv.FormatInt(w.Id, 10))
+		if err != nil {
+			logs.Error(err)
+		}
 		// beego.Info(users)
 		for _, v := range users {
 			rolepermission1 := make([]Rolepermission, 1)
@@ -1996,7 +2028,10 @@ func (c *OnlyController) Getpermission() {
 				if err != nil {
 					logs.Error(err)
 				}
-				user := models.GetUserByUserId(uidNum)
+				user, err := models.GetUserByUserId(uidNum)
+				if err != nil {
+					logs.Error(err)
+				}
 				rolepermission1[0].Id = uidNum
 				rolepermission1[0].Name = user.Nickname
 				rolepermission1[0].Permission = v[2]
@@ -2347,7 +2382,10 @@ func (c *OnlyController) CommandInfo() {
 				logs.Error(err)
 				return
 			}
-			user := models.GetUserByUserId(useridint64)
+			user, err := models.GetUserByUserId(useridint64)
+			if err != nil {
+				logs.Error(err)
+			}
 			onlyuserstable[0].UserNickname = user.Nickname
 			onlyuserstable[0].UserId = strconv.FormatInt(user.Id, 10)
 			onlyuserstable[0].Key = commandsend.Key

@@ -1,11 +1,11 @@
 package models
 
 import (
-	"github.com/beego/beego/v2/adapter/logs"
 	"github.com/beego/beego/v2/client/orm"
-	// _ "github.com/mattn/go-sqlite3"
+	"github.com/beego/beego/v2/core/logs"
+
 	"strconv"
-	// "strings"
+
 	"context"
 	"fmt"
 	"time"

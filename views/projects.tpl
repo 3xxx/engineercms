@@ -687,19 +687,10 @@
     });
 
     //填充select选项
-    $(document).ready(function() {
-      //   $(array).each(function(index){
-      //     alert(this);
-      // });
-      // $.each(array,function(index){
-      //     alert(this);
-      // });
+    $(function() {
       $("#admincategory").append('<option value="a">项目模板</option>');
       if ({{.Select2 }}) { //20171021从meirit修改而来
         $.each({{.Select2 }}, function(i, d) {
-          // alert(this);
-          // alert(i);
-          // alert(d);
           $("#admincategory").append('<option value="' + i + '">' + d + '</option>');
         });
       }
@@ -897,7 +888,7 @@
                 <div class="form-group must">
                   <label class="col-sm-3 control-label">类别</label>
                   <div class="col-sm-7">
-                    <select name="admincategory" id="admincategory" class="form-control" required onchange="refreshtable()">
+                    <select name="admincategory" id="admincategory" title="项目类别" class="form-control" required onchange="refreshtable()">
                       <option>选择类别：</option>
                       <!-- <option value="1">SL</option>
                     <option value="2">DL</option>

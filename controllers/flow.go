@@ -8,7 +8,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
 	_ "github.com/go-sql-driver/mysql"
 	"io"
 	"log"
@@ -102,7 +101,7 @@ func (c *FlowController) FlowType() {
 	}
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type doctypelist struct {
 	Doctype []*flow.DocType `json:"doctypes"`
 	Page    int64           `json:"page"`
@@ -310,7 +309,7 @@ func (c *FlowController) FlowStateDelete() {
 	c.ServeJSON()
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type docstatelist struct {
 	Docstate []*flow.DocState `json:"docstates"`
 	Page     int64            `json:"page"`
@@ -447,7 +446,7 @@ func (c *FlowController) FlowActionDelete() {
 
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type docactionlist struct {
 	Docaction []*flow.DocAction `json:"docactions"`
 	Page      int64             `json:"page"`
@@ -630,7 +629,7 @@ func (c *FlowController) FlowTransitionDelete() {
 	c.ServeJSON()
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type transitionlist struct {
 	Transisions []*flow.Transitionstruct `json:"transitions"`
 	Page        int64                    `json:"page"`
@@ -735,7 +734,7 @@ func (c *FlowController) FlowWorkflow() {
 	//略
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type workflowlist struct {
 	Workflows []*flow.Workflow `json:"workflows"`
 	Page      int64            `json:"page"`
@@ -850,7 +849,7 @@ func (c *FlowController) FlowAccessContextUpdate() {
 	c.ServeJSON()
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type accesscontextlist struct {
 	AccessContexts []*flow.AccessContext `json:"accesscontexts"`
 	Page           int64                 `json:"page"`
@@ -1137,7 +1136,7 @@ func (c *FlowController) FlowUser() {
 	// _, err = flow.Groups.NewSingleton(tx, uID4)
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type userlist struct {
 	Users []*flow.User `json:"users"`
 	Page  int64        `json:"page"`
@@ -1227,7 +1226,7 @@ func (c *FlowController) FlowGroup() {
 	// gID2 := fatal1(flow.Groups.New(tx, "校核人员组", "G")).(flow.GroupID)
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type grouplist struct {
 	Groups []*flow.Group `json:"groups"`
 	Page   int64         `json:"page"`
@@ -1424,7 +1423,7 @@ func (c *FlowController) FlowRole() {
 	// roleID2 := fatal1(flow.Roles.New(tx, "校核人员角色")).(flow.RoleID)
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type rolelist struct {
 	Roles []*flow.Role `json:"roles"`
 	Page  int64        `json:"page"`
@@ -1655,7 +1654,7 @@ func (c *FlowController) FlowGroupRole() {
 	// }
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type grouprolelist struct {
 	GroupRoles []*flow.GroupRolesstruct `json:"grouproles"`
 	Page       int64                    `json:"page"`
@@ -1879,7 +1878,7 @@ func (c *FlowController) WxFlowDoc() {
 	}
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type Documentlist struct {
 	Docs  []*flow.Document `json:"docs"`
 	Page  int64            `json:"page"`
@@ -2088,7 +2087,7 @@ func (c *FlowController) FlowDocumentList2() {
 	c.ServeJSON()
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type Doclist struct {
 	Docs  []*flow.Documentstruct `json:"docs"`
 	Page  int64                  `json:"page"`
@@ -2879,7 +2878,7 @@ func (c *FlowController) WxFlowNext() {
 	}
 }
 
-//后端分页的数据结构
+// 后端分页的数据结构
 type mailboxlist struct {
 	Notification []*flow.Notification `json:"notification"`
 	Page         int64                `json:"page"`

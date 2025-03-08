@@ -2,22 +2,23 @@ package commands
 
 import (
 	// "errors"
-	"flag"
 	"fmt"
-	"github.com/3xxx/engineercms/conf"
-	"github.com/3xxx/engineercms/controllers/utils"
-	"github.com/3xxx/engineercms/models"
+	"os"
+	// "time"
+
+	"flag"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	// "github.com/beego/beego/v2/server/web"
 	// "github.com/beego/i18n"
-	"os"
-	// "time"
+	"github.com/3xxx/engineercms/conf"
+	"github.com/3xxx/engineercms/controllers/utils"
+	"github.com/3xxx/engineercms/models"
 )
 
-//系统安装.
+// 系统安装.
 func Install() {
-
 	fmt.Println("Initializing...")
 
 	err := orm.RunSyncdb("default", false, true)
@@ -38,7 +39,7 @@ func Version() {
 	}
 }
 
-//修改用户密码
+// 修改用户密码
 func ModifyPassword() {
 	var account, password string
 

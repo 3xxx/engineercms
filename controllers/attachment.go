@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
-	"github.com/beego/beego/v2/adapter/httplib"
+	"github.com/beego/beego/v2/client/httplib"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/context"
@@ -1649,7 +1649,7 @@ func (c *AttachController) Attachment() {
 	}
 	// logs.Info(matched)
 	// 这里设计不合理，只要是注册人员均可查阅计算稿历史，不好。
-	if array[1] == "standard" || (array[1] == "mathcad" && fileext == ".pdf") || (array[1] == "pass_excel" && fileext == ".pdf") || (array[1] == "pass_ansys" && fileext == ".pdf") {
+	if array[1] == "standard" || (array[1] == "math" && fileext == ".pdf") || (array[1] == "pass_excel" && fileext == ".pdf") || (array[1] == "pass_ansys" && fileext == ".pdf") {
 		if !islogin {
 			// beego.Info(!islogin)
 			route := c.Ctx.Request.URL.String()
@@ -1917,7 +1917,7 @@ func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Sect
 // 网页阅览pdf文件，并带上上一页和下一页
 func (c *AttachController) Pdf() {
 	_, _, uid, _, _ := checkprodRole(c.Ctx)
-	logs.Info(uid)
+	// logs.Info(uid)
 	if uid == 0 {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -2169,10 +2169,10 @@ func (c *AttachController) GetWxPdf() {
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
-// @router /getmathpdf/:id [get]
+// @router /mathpdf/:id [get]
 // 下载mathcad pdf计算书
 // 重复下载不扣费
-func (c *AttachController) GetMathPdf() {
+func (c *AttachController) MathPdf() {
 	// 加权限判断
 	var err error
 	var uintid uint
@@ -2194,7 +2194,7 @@ func (c *AttachController) GetMathPdf() {
 		uintid = uint(idint)
 	}
 	//根据history uint查出路径
-	history, err := models.GetHistory(uintid)
+	history, err := models.GetMathHistoryByID(uintid)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -2209,18 +2209,18 @@ func (c *AttachController) GetMathPdf() {
 		// beego.Info(userpaymathpdf)
 
 		// 查询余额
-		money, err := models.GetUserMoney(uid)
-		if err != nil {
-			logs.Error(err)
-			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "查询余额错误！"}
-			c.ServeJSON()
-			return
-		}
-		if money.Amount <= 0 {
-			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户余额不足，请联系管理员充值！"}
-			c.ServeJSON()
-			return
-		}
+		// money, err := models.GetUserMoney(uid)
+		// if err != nil {
+		// 	logs.Error(err)
+		// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "查询余额错误！"}
+		// 	c.ServeJSON()
+		// 	return
+		// }
+		// if money.Amount <= 0 {
+		// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户余额不足，请联系管理员充值！"}
+		// 	c.ServeJSON()
+		// 	return
+		// }
 
 		matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 		if err != nil {
@@ -2232,13 +2232,13 @@ func (c *AttachController) GetMathPdf() {
 			return
 		}
 		// 账户扣除2元，下载pdf扣除2元
-		err = models.AddUserPayMathPdf(filename, history.PdfUrl, uid, 2)
-		if err != nil {
-			logs.Error(err)
-			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
-			c.ServeJSON()
-			return
-		}
+		// err = models.AddUserPayMathPdf(filename, history.PdfUrl, uid, 2)
+		// if err != nil {
+		// 	logs.Error(err)
+		// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
+		// 	c.ServeJSON()
+		// 	return
+		// }
 	}
 	// pdflink = strings.Replace(pdflink, "/attachment", "attachment", -1)
 	// c.Ctx.Output.Download(pdflink)
@@ -2252,9 +2252,9 @@ func (c *AttachController) GetMathPdf() {
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
-// @router /getwxmathpdf/:id [get]
+// @router /wxmathpdf/:id [get]
 // 下载mathcad pdf计算书
-func (c *AttachController) GetWxMathPdf() {
+func (c *AttachController) WxMathPdf() {
 	// 加权限判断
 	var user models.User
 	var err error
@@ -2285,7 +2285,7 @@ func (c *AttachController) GetWxMathPdf() {
 		uintid = uint(idint)
 	}
 	//根据history uint查出路径
-	history, err := models.GetHistory(uintid)
+	history, err := models.GetMathHistoryByID(uintid)
 	if err != nil {
 		logs.Error(err)
 	}
@@ -2303,18 +2303,18 @@ func (c *AttachController) GetWxMathPdf() {
 		logs.Error(err)
 
 		// 查询余额
-		money, err := models.GetUserMoney(user.Id)
-		if err != nil {
-			logs.Error(err)
-			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "查询余额错误！"}
-			c.ServeJSON()
-			return
-		}
-		if money.Amount <= 0 {
-			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户余额不足，请联系管理员充值！"}
-			c.ServeJSON()
-			return
-		}
+		// money, err := models.GetUserMoney(user.Id)
+		// if err != nil {
+		// 	logs.Error(err)
+		// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "查询余额错误！"}
+		// 	c.ServeJSON()
+		// 	return
+		// }
+		// if money.Amount <= 0 {
+		// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "用户余额不足，请联系管理员充值！"}
+		// 	c.ServeJSON()
+		// 	return
+		// }
 
 		matched, err := regexp.MatchString("\\.*[m|M][c|C][d|D]", fileext)
 		if err != nil {
@@ -2341,13 +2341,13 @@ func (c *AttachController) GetWxMathPdf() {
 		}
 
 		// 账户扣除2元，下载pdf扣除2元
-		err = models.AddUserPayMathPdf(filename, history.PdfUrl, user.Id, 2)
-		if err != nil {
-			logs.Error(err)
-			c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
-			c.ServeJSON()
-			return
-		}
+		// err = models.AddUserPayMathPdf(filename, history.PdfUrl, user.Id, 2)
+		// if err != nil {
+		// 	logs.Error(err)
+		// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": "扣费发生错误！"}
+		// 	c.ServeJSON()
+		// 	return
+		// }
 	}
 	// 微信必须要下面这一步进行替换，否则无法下载，并且返回是404
 	pdflink := strings.Replace(history.PdfUrl, "/attachment", "attachment", -1)
@@ -2360,9 +2360,9 @@ func (c *AttachController) GetWxMathPdf() {
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
-// @router /getwxtemppdf/:id [get]
+// @router /wxmathtemppdf/:id [get]
 // 下载mathcad模板 pdf阅览
-func (c *AttachController) GetWxTempPdf() {
+func (c *AttachController) WxMathTempPdf() {
 	// 加权限判断
 	openID := c.GetSession("openID")
 	if openID != nil {
@@ -2376,7 +2376,7 @@ func (c *AttachController) GetWxTempPdf() {
 		}
 	} else {
 		hotqinsessionid := c.GetString("hotqinsessionid")
-		logs.Info(hotqinsessionid)
+		// logs.Info(hotqinsessionid)
 		//这里用security.go里的方法
 		requestUrl := "http://127.0.0.1:8082/v1/wx/passlogin?hotqinsessionid=" + hotqinsessionid
 		resp, err := http.Get(requestUrl)
@@ -2417,28 +2417,28 @@ func (c *AttachController) GetWxTempPdf() {
 	}
 
 	id := c.Ctx.Input.Param(":id")
-	var usertempleid uint
+	var mathtempleid uint
 	if id != "" {
 		//id转成uint为
 		idint, err := strconv.Atoi(id)
 		if err != nil {
 			logs.Error(err)
 		}
-		usertempleid = uint(idint)
+		mathtempleid = uint(idint)
 	}
 
-	usertemple, err := models.GetMathTemple(usertempleid)
+	mathtemple, err := models.GetMathTemple(mathtempleid)
 	if err != nil {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "state": "ERROR", "data": "查询数据库错误！"}
 		c.ServeJSON()
 		return
 	}
-	// beego.Info(usertemple)
+	// beego.Info(mathtemple)
 	// 去除文件名
-	filepath := path.Dir(usertemple.TempPath)
+	filepath := path.Dir(mathtemple.TempPath)
 	// 文件名
-	filename := usertemple.TempTitle //path.Base(usertemple.TempPath)
+	filename := mathtemple.TempTitle //path.Base(mathtemple.TempPath)
 	// 文件后缀
 	filesuffix := path.Ext(filename)
 	filenameOnly := strings.TrimSuffix(filename, filesuffix) //只留下文件名，无后缀
@@ -2453,7 +2453,7 @@ func (c *AttachController) GetWxTempPdf() {
 	// 	return
 	// }
 	pdflink := filepath + "/" + filenameOnly + ".pdf"
-	logs.Info(pdflink)
+	// logs.Info(pdflink)
 	c.Ctx.Output.Download(pdflink)
 }
 
@@ -2463,10 +2463,10 @@ func (c *AttachController) GetWxTempPdf() {
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
-// @router /getexcelpdf/:id [get]
+// @router /excelpdf/:id [get]
 // 下载excel pdf计算书
 // 重复下载不扣费
-func (c *AttachController) GetExcelPdf() {
+func (c *AttachController) ExcelPdf() {
 	// 加权限判断
 	var err error
 	var uintid uint
@@ -2546,9 +2546,9 @@ func (c *AttachController) GetExcelPdf() {
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 pdf not found
-// @router /getwxexcelpdf/:id [get]
+// @router /wxexcelpdf/:id [get]
 // 小程序端下载mexcel pdf计算书
-func (c *AttachController) GetWxExcelPdf() {
+func (c *AttachController) WxExcelPdf() {
 	// 加权限判断
 	var user models.User
 	var err error
@@ -2655,7 +2655,7 @@ func (c *AttachController) GetWxExcelPdf() {
 // @Failure 404 pdf not found
 // @router /getwxexceltemppdf/:id [get]
 // 小程序下载excel模板 pdf阅览
-func (c *AttachController) GetWxExcelTempPdf() {
+func (c *AttachController) WxExcelTempPdf() {
 	// 加权限判断
 	openID := c.GetSession("openID")
 	if openID != nil {
@@ -2674,25 +2674,25 @@ func (c *AttachController) GetWxExcelTempPdf() {
 	}
 
 	id := c.Ctx.Input.Param(":id")
-	var usertempleid uint
+	var mathtempleid uint
 	if id != "" {
 		//id转成uint为
 		idint, err := strconv.Atoi(id)
 		if err != nil {
 			logs.Error(err)
 		}
-		usertempleid = uint(idint)
+		mathtempleid = uint(idint)
 	}
 
-	usertemple, err := models.GetExcelTemple(usertempleid)
+	mathtemple, err := models.GetExcelTemple(mathtempleid)
 	if err != nil {
 		logs.Error(err)
 	}
-	// beego.Info(usertemple)
+	// beego.Info(mathtemple)
 	// 去除文件名
-	filepath := path.Dir(usertemple.Path)
+	filepath := path.Dir(mathtemple.Path)
 	// 文件名
-	filename := usertemple.Title //path.Base(usertemple.TempPath)
+	filename := mathtemple.Title //path.Base(mathtemple.TempPath)
 	// 文件后缀
 	filesuffix := path.Ext(filename)
 	filenameOnly := strings.TrimSuffix(filename, filesuffix) //只留下文件名，无后缀
@@ -2717,10 +2717,10 @@ func (c *AttachController) GetWxExcelTempPdf() {
 // @Success 200 {object} models.GetAttachbyId
 // @Failure 400 Invalid page supplied
 // @Failure 404 data not found
-// @router /getansysdata/:id [get]
+// @router /ansysdata/:id [get]
 // ansys data数据
 // 重复下载不扣费
-func (c *AttachController) GetAnsysData() {
+func (c *AttachController) AnsysData() {
 	// 加权限判断
 	var err error
 	var uintid uint
@@ -2757,11 +2757,11 @@ func (c *AttachController) GetAnsysData() {
 		// fileext := path.Ext(history.PdfUrl)
 		filename := filepath.Base(history.PdfUrl)
 		// logs.Info(filename)
-		// beego.Info(usertemple)
+		// beego.Info(mathtemple)
 		// 去除文件名
 		filepath := path.Dir(history.PdfUrl)
 		// 文件名
-		// filename := usertemple.Title //path.Base(usertemple.TempPath)
+		// filename := mathtemple.Title //path.Base(mathtemple.TempPath)
 		// 文件后缀
 		filesuffix := path.Ext(history.PdfUrl)
 		filenameOnly := strings.TrimSuffix(filename, filesuffix) //只留下文件名，无后缀

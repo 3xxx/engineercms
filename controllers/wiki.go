@@ -1,16 +1,10 @@
 package controllers
 
 import (
-	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/adapter/logs"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/pagination"
-	// "github.com/tealeg/xlsx"
-	// "os"
-	// "path"
-	// "path/filepath"
+
 	"github.com/3xxx/engineercms/models"
 	// "regexp"
 	"strconv"
@@ -99,7 +93,7 @@ func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate�
 	//	}
 }
 
-//根据用户名查看wiki
+// 根据用户名查看wiki
 func (c *WikiController) Viewbyuname() {
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -181,7 +175,7 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 	c.TplName = "wiki_add.tpl"
 }
 
-//这个提交添加wiki的方法
+// 这个提交添加wiki的方法
 func (c *WikiController) AddWiki() {
 	c.Data["IsWiki"] = true
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
@@ -212,7 +206,7 @@ func (c *WikiController) AddWiki() {
 	// c.Redirect("/wiki", 302)
 }
 
-//这个是微信小程序添加wiki的方法
+// 这个是微信小程序添加wiki的方法
 func (c *WikiController) AddPic() {
 	// c.Data["IsWiki"] = true
 	// username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
@@ -377,7 +371,7 @@ func (c *WikiController) View() {
 	c.Data["Replies"] = replies
 }
 
-//修改wiki页面
+// 修改wiki页面
 func (c *WikiController) Modify() { //这个也要登陆验证
 	// username, role := checkprodRole(c.Ctx)
 	// roleint, err := strconv.Atoi(role)
@@ -429,7 +423,6 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 		return
 	}
 
-	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	c.TplName = "wiki_modify.html"
 
 	c.Data["Wiki"] = wiki
@@ -454,7 +447,7 @@ func (c *WikiController) Post() { //这个post属于wiki_modify.html提交修改
 	// c.Redirect("/wiki/view/"+tid, 302) //回到修改后的文章
 }
 
-//删除文章
+// 删除文章
 func (c *WikiController) Delete() { //应该显示警告
 	url := c.GetString("url")
 	c.Data["IsWiki"] = true
@@ -497,7 +490,7 @@ func (c *WikiController) Delete() { //应该显示警告
 	c.Redirect(url, 302) //这里增加wiki
 }
 
-//删除文章中的附件，保持页面不跳转怎么办？
+// 删除文章中的附件，保持页面不跳转怎么办？
 func (c *WikiController) DeleteAttachment() { //应该显示警告
 	//2.取得文章的作者
 	wiki, err := models.GetWiki(c.GetString("tid"))

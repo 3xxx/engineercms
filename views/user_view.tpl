@@ -191,12 +191,26 @@
             valign: 'middle',
             align: 'center',
             sortable: 'true',
-            // editable: {
-            //     type: 'text',
-            //     pk: 1,
-            //     url: '/v1/wx/updateuser',
-            //     title: 'Enter ProjectNumber' 
-            // }
+            editable: {
+                type: 'text',
+                pk: 1,
+                url: '/v1/wx/updateuser',
+                title: 'Enter UserName',
+                // mode: "popup",
+                // emptytext: "--"
+                success: function(response, newValue) {
+                  // console.log(response.data)
+                  if(response.info=='ERROR'){
+                    return response.data;
+                  }
+                  // if(response=='7'){
+                  //   return "对不起，您无此操作权限！";
+                  // }
+                  if(response.status =='error') {
+                    return response.msg;
+                  }
+                }
+            }
           }, {
             field: 'Nickname',
             title: '昵称',
@@ -206,7 +220,7 @@
               type: 'text',
               pk: 1,
               url: '/v1/wx/updateuser',
-              title: 'Enter ProjectName'
+              title: 'Enter NickName'
             }
           }, {
             field: 'Password',
@@ -296,7 +310,7 @@
               // source: {{.Select2}},//["$1", "$2", "$3"],
               pk: 1,
               url: '/v1/wx/updateuser',
-              title: 'Enter Category'
+              title: 'Enter Secoffice'
             }
           }, {
             field: 'Ip',
@@ -307,7 +321,7 @@
               type: 'text',
               pk: 1,
               url: '/v1/wx/updateuser',
-              title: 'Enter Count'
+              title: 'Enter IP'
             }
           }, {
             field: 'Port',
@@ -381,7 +395,30 @@
             //   title: 'Enter Status'  
             // }
           }
-        ]
+        ],
+        // onEditableSave: function (field, row, oldValue, $el) {
+        //   $.ajax({
+        //     type: "post",
+        //     url: "/v1/wx/updateuser",
+        //     data: {"pk":row.id,
+                        // "name":field,
+                        // "oldValue":oldValue,
+                        // "newValue":row[field]},
+        //     dataType: 'JSON',
+        //     success: function (data, status) {
+        //       if (status == "success" && data.info == "SUCCESS") {
+        //         alert('修改成功');
+        //       }else if (status == "success" && data.info == "ERROR"){
+        //         alert(data.data);
+        //       }
+        //     },
+        //     error: function () {
+        //       alert('返回失败，编辑失败');
+        //     },
+        //     complete: function () {
+        //     }
+        //   });
+        // }
       });
     });
 

@@ -1,23 +1,11 @@
 package controllers
 
 import (
-	//"bytes"
-	//"context"
-	//"encoding/json"
-	//"fmt"
-	//"log"
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/elastic/go-elasticsearch/esapi"
-	//"github.com/beego/beego/v2/adapter/logs"
-	"regexp"
 
-	// "bytes"
-	// "context"
-	// "encoding/json"
-	// "log"
+	"regexp"
 	"strconv"
 	//"strings"
 	"sync"
@@ -31,20 +19,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
-	// "strconv"
-	// "sync/atomic"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/google/go-tika/tika"
 
-	//"github.com/cenkalti/backoff/v4"
-	// "github.com/dustin/go-humanize"
-
+	"crypto/tls"
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
-	// "github.com/elastic/go-elasticsearch/v8/esutil"
-	"crypto/tls"
 	"io"
 	"math/rand"
 	"net"

@@ -1,12 +1,7 @@
 package controllers
 
 import (
-	// "github.com/3xxx/engineercms/controllers/utils"
-	// "github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "strconv"
-	// "strings"
 )
 
 // CMSFLV API

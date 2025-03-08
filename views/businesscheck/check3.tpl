@@ -175,7 +175,7 @@
       $.ajax({
         type: "GET", //这里是否一定要用post？？？
         // url: "/v1/wx/getbusiness/25001",
-        url: "/v1/project/getwxprojects",
+        url: "/v1/project/getprojects",
         dataType: 'json', //dataType:JSON,这种是jquerylatest版本的表达方法。不支持新版jquery。
         success: function(data, status) {
           console.log(data)

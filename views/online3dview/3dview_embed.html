@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link rel="icon" type="image/png" href="/static/online3dview/assets/images/3dviewer_net_favicon.ico">
+  <title>Online 3D Viewer Embedded</title>
+  <!-- meta start -->
+  <!-- meta end -->
+  <!-- website start -->
+  <link rel="stylesheet" type="text/css" href="/static/online3dview/build/website_dev/o3dv.website.min.css">
+  <script type="text/javascript" src="/static/online3dview/build/website_dev/o3dv.website.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/iframe-resizer/iframeResizer.contentWindow.min.js"></script> -->
+  <!-- website end -->
+  <!-- analytics start -->
+  <script type="text/javascript">
+  OV.SetWebsiteEventHandler((eventName, eventLabel, eventParams) => {
+    console.log({
+      eventName: eventName,
+      eventLabel: eventLabel,
+      eventParams: eventParams
+    });
+  });
+  </script>
+  <!-- analytics end -->
+  <!-- embed init start -->
+  <script type="text/javascript">
+  OV.StartEmbed('/static/online3dview/libs');
+  </script>
+  <!-- embed init end -->
+  <style>
+  html,
+  body {
+    background: transparent;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="embed_viewer" id="embed_viewer">
+    <a id="website_link" href="https://3dviewer.net" target="_blank" title="Open in 3dviewer.net">
+      <img class="embed_logo" src="/static/online3dview/assets/images/3dviewer_net_logo.png" />
+    </a>
+  </div>
+</body>
+
+</html>

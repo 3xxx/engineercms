@@ -498,7 +498,7 @@
     $("#search2").click(function() { //这里应该用button的id来区分按钮的哪一个,因为本页有好几个button
       var title = $('#name').val();
       if (title.length >= 2) {
-        $('#table').bootstrapTable('refresh', { url: '/standard/search' });
+        $('#table').bootstrapTable('refresh', { url: '/standard/search?searchText='+ title });
         // $.ajax({
         //   type: "get",
         //   url: "/standard/search",
@@ -835,7 +835,7 @@
     var title = $('#name').val();
     if (event.keyCode == 13) {
       if (title.length >= 2) {
-        $('#table').bootstrapTable('refresh', { url: '/standard/search' });
+        $('#table').bootstrapTable('refresh', { url: '/standard/search?searchText='+ title });
         // $.ajax({
         //   type: "get",
         //   url: "/standard/search",

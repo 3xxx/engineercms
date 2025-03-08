@@ -23,12 +23,12 @@ a.navbar-brand {
 <nav class="navbar navbar-default navbar-static-top" style="margin-bottom: 5px;" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#target-menu">
-      <span class="sr-only">qieh</span>
+      <span class="sr-only">3xxx</span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a id="11" class="navbar-brand">水利设计</a>
+    <a id="11" class="navbar-brand">EngineerCMS</a>
   </div>
   <div class="collapse navbar-collapse" id="target-menu">
     <ul class="nav navbar-nav">
@@ -39,131 +39,12 @@ a.navbar-brand {
         <a href="/project/" id="project">项目</a>
       </li>
       <!-- **********定制导航条菜单开始******** -->
-      <!-- /project/id——此处id为app.conf里的navigationid1~navigationid9 -->
-      <!-- <li {{if .IsNav1}}class="active"{{end}}>
-        <a href="/project/25002">设计单位</a>
-      </li> -->
-      <!-- <li {{if .IsNav3}}class="active"{{end}}>
-        <a href="/project/25003">施工专业</a>
-      </li> -->
-      <!-- <li {{if .IsNav1}} class="dropdown active" {{end}}>
-        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-          试验段 <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li {{if .IsNav1}} class="active" {{end}}>
-            <a href="/project/25002">设计</a>
-          </li>
-          <li>
-            <a href="/project/25005">建设</a>
-          </li>
-          <li>
-            <a href="/project/25004">监理</a>
-          </li>
-          <li>
-            <a href="/project/25003">施工</a>
-          </li>
-        </ul>
-      </li>
-      <li {{if .IsNav2}} class="dropdown active" {{end}}>
-        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-          顺德部<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li {{if .IsNav2}} class="active" {{end}}>
-            <a href="/project/26177">设计</a>
-          </li>
-          <li>
-            <a href="/project/26178">建设</a>
-          </li>
-          <li>
-            <a href="/project/26179">监理</a>
-          </li>
-          <li>
-            <a href="/project/26180">施工</a>
-          </li>
-        </ul>
-      </li>
-      <li {{if .IsNav3}} class="dropdown active" {{end}}>
-        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-          南沙部<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li {{if .IsNav3}} class="active" {{end}}>
-            <a href="/project/26342">设计</a>
-          </li>
-          <li>
-            <a href="/project/26343">建设</a>
-          </li>
-          <li>
-            <a href="/project/26344">监理</a>
-          </li>
-          <li>
-            <a href="/project/26345">施工</a>
-          </li>
-        </ul>
-      </li>
-      <li {{if .IsNav4}} class="dropdown active" {{end}}>
-        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-          东莞部<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li {{if .IsNav4}} class="active" {{end}}>
-            <a href="/project/26507">设计</a>
-          </li>
-          <li>
-            <a href="/project/26508">建设</a>
-          </li>
-          <li>
-            <a href="/project/26509">监理</a>
-          </li>
-          <li>
-            <a href="/project/26510">施工</a>
-          </li>
-        </ul>
-      </li>
-      <li {{if .IsNav5}} class="dropdown active" {{end}}>
-        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-          罗田部<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li {{if .IsNav5}} class="active" {{end}}>
-            <a href="/project/26672">设计</a>
-          </li>
-          <li>
-            <a href="/project/26673">建设</a>
-          </li>
-          <li>
-            <a href="/project/26674">监理</a>
-          </li>
-          <li>
-            <a href="/project/26675">施工</a>
-          </li>
-        </ul>
-      </li> -->
+
       <!-- **********定制导航条菜单结束******** -->
       <li {{if .IsOnlyOffice}} class="active" {{end}}>
         <a href="/onlyoffice">OnlyOffice</a>
       </li>
-      <!-- <li {{if or .IsDesignGant .IsConstructGant}}class="dropdown active"{{end}}>
-        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-          进度 <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li {{if .IsDesignGant}}class="active"{{end}}>
-            <a href="/projectgant">设计进度</a>
-          </li>
-          <li {{if .IsConstructGant}}class="active"{{end}}>
-            <a href="/projectgant">施工进度</a>
-          </li>
-        </ul>
-      </li> -->
-      <!-- <form class="navbar-form navbar-left" role="search" method="get" action="/search">
-        <div class="form-group">
-          <input type="text" class="form-control" class="search-query span2" placeholder="Search Products" name="keyword" id="keyword"></div>
-        <input type="hidden" name="productid" id="productid" value="{{.Category.Id}}">
-        <button type="submit" class="btn btn-default" id="search">Submit</button>
-      </form> -->
+
       <li {{if or .IsStandard .IsLegislation}} class="dropdown active" {{end}} class="dropdown">
         <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           规范 <b class="caret"></b>
@@ -183,12 +64,7 @@ a.navbar-brand {
           </li>
         </ul>
       </li>
-      <!-- <li {{if .IsMonthCheck}}class="active"{{end}}>
-        <a href="/v1/checkin/monthchecksum">考勤</a>
-      </li>
-      <li>
-        <a href="/diary">日志</a>
-      </li> -->
+
       <li {{if or .IsMeetingroomCalendar .IsCarCalendar .IsOrderCalendar .IsAttendanceCalendar}} class="dropdown active" {{end}}>
         <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
           预订 <b class="caret"></b>
@@ -221,26 +97,23 @@ a.navbar-brand {
         <a href="/v1/wx/video" title="视频点播" target="_blank">视频</a>
       </li>
       <li {{if .IsPhotoWipe}} class="active" {{end}}>
-        <!-- <a href="/v1/wx/photoswipe" title="相册" target="_blank">相册</a> -->
         <a href="/v1/wx/photo" title="相册" target="_blank">相册</a>
       </li>
-      <li {{if .IsPhotoWipe}} class="active" {{end}}>
-        <a href="http://192.168.100.37:8080/merit" title="价值" target="_blank">价值</a>
-      </li>
+
       <li {{if .IsMath}} class="active" {{end}}>
-        <a href="/v1/mathcad/getmath/1" title="Mathcad">Mathcad</a>
+        <a href="/v1/math/templeclass/26997" title="Math">Math</a>
       </li>
-      <li {{if .IsAnsys}} class="active" {{end}}>
-        <a href="/v1/ansys/getansys/1" title="Ansys">Ansys</a>
+<!--       <li {{if .IsAnsys}} class="active" {{end}}>
+        <a href="/v1/ansys/getansys/27004" title="Ansys">Ansys</a>
       </li>
       <li {{if .IsExcel}} class="active" {{end}}>
-        <a href="/v1/excel/getexcel/1" title="Excel">Excel</a>
-      </li>
-      <li {{if .IsPassProject}} class="active" {{end}}>
+        <a href="/v1/excel/getexcel/27011" title="Excel">Excel</a>
+      </li> -->
+      <!-- <li {{if .IsPassProject}} class="active" {{end}}>
         <a href="/v1/passproject/getpassproject" title="项目" target="_blank">项目</a>
-      </li>
+      </li> -->
       <li {{if .IsFreeCAD}} class="active" {{end}}>
-        <a href="/v1/freecad/freecad" title="FreeCAD" target="_blank">FreeCAD</a>
+        <a href="/v1/freecad/modellist" title="FreeCAD" target="_blank">FreeCAD</a>
       </li>
       <li {{if .IsEstimate}} class="active" {{end}}>
         <a href="/v1/estimate/getestimateprojects" title="Estimate" target="_blank">概预算</a>
@@ -253,14 +126,10 @@ a.navbar-brand {
         <li class="dropdown">
           <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
+            <li><a href="/user" title="个人中心">个人中心</a></li>
             <li><a href="/admin" title="管理">进入后台</a></li>
-            <li><a href="/cms/#/flow/usertobeprocessed" title="邮箱"><i class="fa fa-envelope">&nbsp; 邮箱</i></a></li>
-            <li><a href="/v1/cart/getcart" title="购物车"><i class="fa fa-shopping-cart">&nbsp; 购物车</i></a></li>
             <li><a href="javascript:void(0)" id="login">重新登录</a></li>
             <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
-            <li><a href="/project/gettimeline/25001" title="大事记">大事记</a></li>
-            <li><a href="/project/getcalendar/25001" title="项目日历"><i class="fa fa-calendar">&nbsp; 项目日历</i></a></li>
-            <li><a href="/calendar" title="日程安排"><i class="fa fa-calendar-plus-o">&nbsp; 日程安排</i></a></li>
             <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
           </ul>
         </li>
@@ -268,14 +137,8 @@ a.navbar-brand {
         <li class="dropdown">
           <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="/cms/#/flow/usertobeprocessed" title="邮箱"><i class="fa fa-envelope">&nbsp; 邮箱</i></a></li>
-            <li><a href="/v1/cart/getcart" title="购物车"><i class="fa fa-shopping-cart">&nbsp; 购物车</i></a></li>
-            <li><a href="/user" title="用户资料">用户资料</a></li>
+            <li><a href="/user" title="个人中心">个人中心</a></li>
             <li><a href="javascript:void(0)" id="login">重新登录</a></li>
-            <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
-            <li><a href="/project/gettimeline/25001" title="大事记">大事记</a></li>
-            <li><a href="/project/gettimeline/25001" title="项目日历"><i class="fa fa-calendar">&nbsp; 项目日历</i></a></li>
-            <li><a href="/calendar" title="日程安排"><i class="fa fa-calendar-plus-o">&nbsp; 日程安排</i></a></li>
             <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
           </ul>
         </li>
@@ -283,33 +146,12 @@ a.navbar-brand {
         <li class="dropdown">
           <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="javascript:void(0)" id="login">登陆</a></li>
+            <li><a href="/v1/wx/wxlogin" title="微信扫码登录">微信扫码登陆</a></li>
+            <li><a href="javascript:void(0)" id="login">用户名密码登陆</a></li>
             <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
           </ul>
         </li>
         {{end}}
-        <li {{if .IsChat}} class="active" {{end}}>
-          <a href="/v1/chat/chat">Chat</a>
-        </li>
-        <li {{if .IsWiki}} class="active" {{end}}>
-          <a href="/wiki">Wiki</a>
-        </li>
-        <li class="dropdown">
-          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-            帮助 <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/doc/ecms" title="工程师知识管理系统">EngineerCMS</a>
-            </li>
-            <li>
-              <a href="/doc/meritms" title="价值和成果管理系统">MeritMS</a>
-            </li>
-            <li>
-              <a href="/doc/hydrows" title="水利供水管线设计工具">HydroWS</a>
-            </li>
-          </ul>
-        </li>
       </ul>
     </div>
   </div>
@@ -329,23 +171,27 @@ a.navbar-brand {
         <div class="modal-body">
           <div class="modal-body-content">
             <div class="form-group" style="width: 100%;">
-              <label class="col-sm-3 control-label">用户名 或 邮箱</label>
+                <label class="col-sm-3 control-label">用户名</label>
               <div class="col-sm-7">
-                <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account" list="cars" onkeypress="getKey()"></div>
+                <input id="username" name="username" type="text" value="" class="form-control" placeholder="Enter Account" list="cars" onkeypress="getKey()"></div>
             </div>
             <div class="form-group" style="width: 100%;">
               <label class="col-sm-3 control-label">密码</label>
               <div class="col-sm-7">
-                <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password" onkeypress="getKey()"></div>
+                <form>
+                <input id="password" name="password" type="password" value="" class="form-control" placeholder="Enter Password"  autocomplete="off" onkeypress="getKey()"></div></form>
             </div>
             <div class="form-group" style="width: 100%;">
               <label class="col-sm-3 control-label"><input type="checkbox">自动登陆</label>
+            </div>
+            <div class="form-group" style="width: 100%;">
+              <label class="col-sm-3 control-label"><a href="/regist">  没有账号？注册</a></label>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" class="btn btn-primary" onclick="login()">登录</button>
+          <button type="button" class="btn btn-primary" onclick="handleLogin()">登录</button>
         </div>
       </div>
     </div>
@@ -373,248 +219,303 @@ a.navbar-brand {
     </div>
   </div>
 </div>
-
-
+<!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
+<script type="text/javascript" src="/static/js/jsencrypt.min.js"></script>
 <script type="text/javascript">
-$(function() {
-  // console.log(window.localStorage.getItem('projectid'))
-  var projectid = window.localStorage.getItem('projectid')
-  // console.log(projectid)
-  if (projectid == null) {
-    document.getElementById('chooseProject').innerText = '选择项目';
-  } else {
-    // $('#project').attr('href', '/project/' + projectid);
-  }
-})
+  let encryptor = new JSEncrypt();
 
-// 弹出登录模态框
-$("#login").click(function() {
-  $('#modalNav').modal({
-    show: true,
-    backdrop: 'static'
-  });
-})
-
-//登陆功能
-function login() {
-  var uname = document.getElementById("uname");
-  if (uname.value.length == 0) {
-    alert("请输入账号");
-    return
-  }
-  var pwd = document.getElementById("pwd");
-  if (pwd.value.length == 0) {
-    alert("请输入密码");
-    return
+  // 获取公钥
+  async function getPublicKey() {
+    const response = await fetch('/v1/wx/publickeyhandler');
+    return await response.text();
   }
 
-  $.ajax({
-    type: 'post',
-    url: '/loginpost',
-    data: {
-      "uname": $("#uname").val(),
-      "pwd": $("#pwd").val()
-    },
-    success: function(result) {
-      if (result.islogin == 0) {
-        $("#status").html("登陆成功");
-        $('#modalNav').modal('hide');
-        window.location.reload();
-      } else if (result.islogin == 1) {
-        $("#status").html("用户名或密码错误！")
-      } else if (result.islogin == 2) {
-        $("#status").html("密码错误")
-      }
+  // 加密处理
+  async function encryptData(data) {
+    const publicKey = await getPublicKey();
+    encryptor.setPublicKey(publicKey);
+    return encryptor.encrypt(data);
+  }
+
+  // 弹出登录模态框
+  $("#login").click(function() {
+    $('#modalNav').modal({
+      show: true,
+      backdrop: 'static'
+    });
+  })
+  // 登录处理
+  async function handleLogin() {
+    const username = document.getElementById('username').value;
+    if (username.length == 0) {
+      alert("请输入账号");
+      return
+    }
+
+    const password = document.getElementById('password').value;
+    if (password.length == 0) {
+      alert("请输入密码");
+      return
+    }
+    try {
+      const encryptedUsername = await encryptData(username);
+      const encryptedPassword = await encryptData(password);
+
+      const response = await fetch('/v1/wx/loginpost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: encryptedUsername,
+          password: encryptedPassword
+        })
+      });
+
+      const result = await response.json();
+      // alert(result.msg);
+      if (result.islogin == 1) {
+          $("#status").html(result.msg);
+          $('#modalNav').modal('hide');
+          window.location.reload();
+        } else if (result.islogin == 0) {
+          $("#status").html(result.msg)
+        } else if (result.islogin == 2) {
+          $("#status").html(result.msg)
+        }
+    } catch (error) {
+      console.error('登录失败:', error);
+      alert('登录失败，请检查控制台');
+    }
+  }
+
+  $(function() {
+    var projectid = window.localStorage.getItem('projectid')
+    if (projectid == null) {
+      document.getElementById('chooseProject').innerText = '选择项目';
+    } else {
+  
     }
   })
-}
-//登出功能
-function logout() {
-  $.ajax({
-    type: 'get',
-    url: '/logout',
-    data: {},
-    success: function(result) {
-      if (!result.islogin) {
-        // $("#status").html("登出成功");
-        alert("登出成功");
-        window.location.reload();
-      } else {
-        // $("#status").html("登出失败");
-        alert("登出失败")
-      }
+  
+  //登陆功能_作废！
+  function login_back() {
+    var uname = document.getElementById("uname");
+    if (uname.value.length == 0) {
+      alert("请输入账号");
+      return
     }
-  })
-}
-
-function getKey() {
-  if (event.keyCode == 13) {
-    login()
-  }
-}
-
-$(function() {
-  var projectid = window.localStorage.getItem('projectid')
-  // 初始化【未接受】工作流表格
-  $("#Navtable2").bootstrapTable({
-    url: '/project/getprojects',
-    method: 'get',
-    search: 'true',
-    showRefresh: 'true',
-    showToggle: 'true',
-    showColumns: 'true',
-    // toolbar:'#toolbar1',
-    pagination: 'true',
-    sidePagination: "server",
-    queryParamsType: '',
-    //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
-    // limit, offset, search, sort, order 否则, 需要包含:
-    // pageSize, pageNumber, searchText, sortName, sortOrder.
-    // 返回false将会终止请求。
-    pageSize: 15,
-    pageNumber: 1,
-    pageList: [15, 20, 50, 100],
-    singleSelect: "true",
-    clickToSelect: "true",
-    selectItemName: "project",
-    queryParams: function queryParams(params) { //设置查询参数
-      var param = {
-        limit: params.pageSize, //每页多少条数据
-        pageNo: params.pageNumber, // 页码
-        searchText: params.searchText // $(".search .form-control").val()
-      };
-      //搜索框功能
-      //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
-      // if (null != searchText) {
-      //   try {
-      //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
-      //   } catch (Exception e) {
-      //     e.printStackTrace();
-      //   }
-      // }
-      return param;
-    },
-    columns: [{
-        title: '选择',
-        radio: 'true',
-        width: '10',
-        align: "center",
-        valign: "middle",
-        formatter: function(value, row, index) {
-          return {checked: row.Id==projectid}
-        },
+    var pwd = document.getElementById("pwd");
+    if (pwd.value.length == 0) {
+      alert("请输入密码");
+      return
+    }
+  
+    $.ajax({
+      type: 'post',
+      url: '/loginpost',
+      data: {
+        "uname": $("#uname").val(),
+        "pwd": $("#pwd").val()
       },
-      {
-        // field: 'Number',
-        title: '序号',
-        formatter: function(value, row, index) {
-          return index + 1
-        },
-        align: "center",
-        valign: "middle"
-      },
-      {
-        field: 'Code',
-        title: '编号',
-        // formatter:setCode,
-        align: "center",
-        valign: "middle"
-      },
-      {
-        field: 'Title',
-        title: '名称',
-        // formatter:setTitle,
-        align: "center",
-        valign: "middle"
-      },
-      // {
-      //   field: 'Label',
-      //   title: '标签',
-      //   formatter:setLable,
-      //   align:"center",
-      //   valign:"middle"
-      // },
-      {
-        field: 'Principal',
-        title: '负责人',
-        align: "center",
-        valign: "middle"
-      },
-      // {
-      //   field: 'Number',
-      //   title: '成果数量',
-      //   formatter:setCode,
-      //   align:"center",
-      //   valign:"middle"
-      // },
-      // {
-      //   field: 'action',
-      //   title: '时间轴',
-      //   formatter:actionFormatter,
-      //   events:actionEvents,
-      //   align:"center",
-      //   valign:"middle"
-      // },
-      {
-        field: 'Created',
-        title: '建立时间',
-        formatter: localDateFormatter,
-        align: "center",
-        valign: "middle"
+      success: function(result) {
+        if (result.islogin == 1) {
+          $("#status").html("登陆成功");
+          $('#modalNav').modal('hide');
+          window.location.reload();
+        } else if (result.islogin == 0) {
+          $("#status").html("用户名或密码错误！")
+        } else if (result.islogin == 2) {
+          $("#status").html("密码错误")
+        }
       }
-      // {
-      // field: 'dContMainEntity.createTime',
-      // title: '发起时间',
-      // formatter: function (value, row, index) {
-      // return new Date(value).toLocaleString().substring(0,9);
-      // }
-      // },
-      // {
-      // field: 'dContMainEntity.operate',
-      // title: '操作',
-      // formatter: operateFormatter
-      // }
-    ]
-  });
-});
-
-// 切换项目
-function chooseProjectButton() {
-  if (!{{.IsLogin }}) {
-    alert("请登录！");
-    return;
+    })
   }
-
-  // $('#project').$("input[name='types']").attr('checked','true');
-
-  $('#NavmodalTable').modal({
-    show: true,
-    backdrop: 'static'
-  });
-}
-
-// 将选择的项目id存入浏览器内存
-function setlocalstorage() {
-  var selectRow2 = $('#Navtable2').bootstrapTable('getSelections');
-  if (selectRow2.length < 1) {
-    alert("请先勾选项目！");
-    return;
+  //登出功能
+  function logout() {
+    $.ajax({
+      type: 'get',
+      url: '/logout',
+      data: {},
+      success: function(result) {
+        if (!result.islogin) {
+          alert("登出成功");
+          window.location.reload();
+        } else {
+          alert("登出失败")
+        }
+      }
+    })
   }
-  console.log(selectRow2[0].Id)
-  window.localStorage.setItem('projectid', selectRow2[0].Id);
-  $('#NavmodalTable').modal('hide');
-  // window.location.reload();
-}
-
-// $(function() {
-//   $("#NavmodalTable").draggable({ handle: ".modal-header" }); //为模态对话框添加拖拽
-//   $("#myModal").css("overflow", "hidden"); //禁止模态对话框的半透明背景滚动
-// })
-
-function localDateFormatter(value) {
-  return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
-}
-</script>
+  
+  function getKey() {
+    if (event.keyCode == 13) {
+      handleLogin()
+    }
+  }
+  
+  $(function() {
+    var projectid = window.localStorage.getItem('projectid')
+    // 初始化【未接受】工作流表格
+    $("#Navtable2").bootstrapTable({
+      url: '/project/getprojects',
+      method: 'get',
+      search: 'true',
+      showRefresh: 'true',
+      showToggle: 'true',
+      showColumns: 'true',
+      // toolbar:'#toolbar1',
+      pagination: 'true',
+      sidePagination: "server",
+      queryParamsType: '',
+      //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+      // limit, offset, search, sort, order 否则, 需要包含:
+      // pageSize, pageNumber, searchText, sortName, sortOrder.
+      // 返回false将会终止请求。
+      pageSize: 15,
+      pageNumber: 1,
+      pageList: [15, 20, 50, 100],
+      singleSelect: "true",
+      clickToSelect: "true",
+      selectItemName: "project",
+      queryParams: function queryParams(params) { //设置查询参数
+        var param = {
+          limit: params.pageSize, //每页多少条数据
+          pageNo: params.pageNumber, // 页码
+          searchText: params.searchText // $(".search .form-control").val()
+        };
+        //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+        return param;
+      },
+      columns: [{
+          title: '选择',
+          radio: 'true',
+          width: '10',
+          align: "center",
+          valign: "middle",
+          formatter: function(value, row, index) {
+            return {checked: row.Id==projectid}
+          },
+        },
+        {
+          // field: 'Number',
+          title: '序号',
+          formatter: function(value, row, index) {
+            return index + 1
+          },
+          align: "center",
+          valign: "middle"
+        },
+        {
+          field: 'Code',
+          title: '编号',
+          // formatter:setCode,
+          align: "center",
+          valign: "middle"
+        },
+        {
+          field: 'Title',
+          title: '名称',
+          // formatter:setTitle,
+          align: "center",
+          valign: "middle"
+        },
+        // {
+        //   field: 'Label',
+        //   title: '标签',
+        //   formatter:setLable,
+        //   align:"center",
+        //   valign:"middle"
+        // },
+        {
+          field: 'Principal',
+          title: '负责人',
+          align: "center",
+          valign: "middle"
+        },
+        // {
+        //   field: 'Number',
+        //   title: '成果数量',
+        //   formatter:setCode,
+        //   align:"center",
+        //   valign:"middle"
+        // },
+        // {
+        //   field: 'action',
+        //   title: '时间轴',
+        //   formatter:actionFormatter,
+        //   events:actionEvents,
+        //   align:"center",
+        //   valign:"middle"
+        // },
+        {
+          field: 'Created',
+          title: '建立时间',
+          formatter: localDateFormatter,
+          align: "center",
+          valign: "middle"
+        }
+        // {
+        // field: 'dContMainEntity.createTime',
+        // title: '发起时间',
+        // formatter: function (value, row, index) {
+        // return new Date(value).toLocaleString().substring(0,9);
+        // }
+        // },
+        // {
+        // field: 'dContMainEntity.operate',
+        // title: '操作',
+        // formatter: operateFormatter
+        // }
+      ]
+    });
+  });
+  
+  // 切换项目
+  function chooseProjectButton() {
+    if (!{{.IsLogin }}) {
+      alert("请登录！");
+      return;
+    }
+  
+    // $('#project').$("input[name='types']").attr('checked','true');
+  
+    $('#NavmodalTable').modal({
+      show: true,
+      backdrop: 'static'
+    });
+  }
+  
+  // 将选择的项目id存入浏览器内存
+  function setlocalstorage() {
+    var selectRow2 = $('#Navtable2').bootstrapTable('getSelections');
+    if (selectRow2.length < 1) {
+      alert("请先勾选项目！");
+      return;
+    }
+    console.log(selectRow2[0].Id)
+    window.localStorage.setItem('projectid', selectRow2[0].Id);
+    $('#NavmodalTable').modal('hide');
+    // window.location.reload();
+  }
+  
+  // $(function() {
+  //   $("#NavmodalTable").draggable({ handle: ".modal-header" }); //为模态对话框添加拖拽
+  //   $("#myModal").css("overflow", "hidden"); //禁止模态对话框的半透明背景滚动
+  // })
+  
+  function localDateFormatter(value) {
+    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  }
+  </script>
 {{end}}
 <!--前端递归解析json 数据
  $(function () {
@@ -677,5 +578,7 @@ $(function () {
 });
 
 js代码
+
+
 
 -->

@@ -401,9 +401,7 @@
       // multiSelect: true
     });
 
-
     $('#tree').on('nodeSelected', function(event, data) {
-
       if (data.id == "010") {
         $(".breadcrumb").html("<i class='fa fa-home'></i>后台&gt;日历")
       } else if (data.id == "011") {

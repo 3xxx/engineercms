@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://bootstrap.sbox.cn/docs/5.3/examples/cheatsheet/ -->
+<html lang="en" data-bs-theme="auto">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="/static/bootstrap5.3/color-modes.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.101.0">
+  <title>3D Editor</title>
+  <!-- Cheatsheet · Bootstrap v5.3 -->
+  <!-- <link rel="canonical" href="https://bootstrap.sbox.cn/docs/5.3/examples/cheatsheet/"> -->
+  <link href="/static/bootstrap5.3/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <link href="/static/bootstrap5.3/bootstrap-table.min.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css" />
+  <!-- <script type="text/javascript" src="/static/x-editable-develop5.0/dist/bootstrap5-editable/css/bootstrap-editable.css"></script> -->
+  
+  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="/static/x-editable-develop5.0/dist/bootstrap5-editable/css/bootstrap-icons.min.css">
+
+  <!-- <link href="/static/bootstrap5.3/cheatsheet.css" rel="stylesheet"> -->
+
+  <style>
+    #carousel-example-generic img{
+      width: 100%;
+    }
+
+    #abc{
+      /*display: flex;*/
+      /*flex-wrap: nowrap;*/
+      /*padding-bottom: 10rem;*/
+      margin-top: 63px;
+      /* overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;*/
+    }
+
+    #boostraptable{
+      /*display: flex;*/
+      /*flex-wrap: nowrap;*/
+      /*padding-bottom: 10rem;*/
+      margin-top: 63px;
+      /* overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;*/
+    }
+
+    .carousel-inner{
+      
+      background: #000;/*#fff;coral;*/
+    }
+
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+
+
+    @media (min-width: 1200px) {
+    .bd-header {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+        grid-column: 1 / span 3;
+    }
+    }
+
+    .bg-dark {
+        --bs-bg-opacity: 1;
+        background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+    }
+    .py-3 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+    .align-items-stretch {
+        align-items: stretch !important;
+    }
+    .border-dark {
+        --bs-border-opacity: 1;
+        border-color: rgba(var(--bs-dark-rgb), var(--bs-border-opacity)) !important;
+    }
+    .border-bottom {
+        border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+    }
+    .d-flex {
+        display: flex !important;
+    }
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check2" viewBox="0 0 16 16">
+      <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+    </symbol>
+    <symbol id="circle-half" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"></path>
+    </symbol>
+    <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+      <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+      <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
+    </symbol>
+    <symbol id="sun-fill" viewBox="0 0 16 16">
+      <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+    </symbol>
+  </svg>
+  <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+    <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="切换主题 (light)">
+      <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
+        <use href="#sun-fill"></use>
+      </svg>
+      <span class="visually-hidden" id="bd-theme-text">切换主题</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+      <li>
+        <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light" aria-pressed="true">
+          <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+            <use href="#sun-fill"></use>
+          </svg>
+          Light
+          <svg class="bi ms-auto d-none" width="1em" height="1em">
+            <use href="#check2"></use>
+          </svg>
+        </button>
+      </li>
+      <li>
+        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+          <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+            <use href="#moon-stars-fill"></use>
+          </svg>
+          Dark
+          <svg class="bi ms-auto d-none" width="1em" height="1em">
+            <use href="#check2"></use>
+          </svg>
+        </button>
+      </li>
+      <li>
+        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
+          <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+            <use href="#circle-half"></use>
+          </svg>
+          Auto
+          <svg class="bi ms-auto d-none" width="1em" height="1em">
+            <use href="#check2"></use>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+  <header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
+    <div class="container-fluid d-flex align-items-center">
+      <h1 class="d-flex align-items-center fs-4 text-white mb-0">
+        <img src="/static/bootstrap5.3/bootstrap-logo-white.svg" width="38" height="30" class="me-3" alt="Bootstrap">
+        三维模型编辑
+      </h1>
+      <a href="https://zsj.itdos.net/docs/freecad/freecad-023-002" class="ms-auto link-light" hreflang="ar">帮助</a>
+    </div>
+  </header>
+
+  <div class="text-center">
+    <div class="row">
+      <div class="col-8">
+        <div class="container" id="abc">
+          <div id="carouselExampleCaptions" class="carousel slide"><!-- carousel-dark  -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-label="Slide 1" aria-current="true"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+            </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <div id="viewer" class="online_3d_viewer bd-placeholder-img bd-placeholder-img-lg d-block w-100" style="height: 800px" model="{{.Model}}" backgroundcolor="33,37,41">
+                </div>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>First 3d model</h5>
+                  <p>三维模型.</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img width="100%" height="100%" src="{{.DxfSvgUrl}}">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>Second svg工程图</h5>
+                  <p>工程图.</p>
+                </div>
+              </div>
+              <div class="carousel-item" style="text-align: center;">
+                <img src="{{.RenderImgUrl}}" style="display:inline-block">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>Third 渲染图</h5>
+                  <p>渲染图.</p>
+                </div>
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-4" id="boostraptable">
+          <!-- <button id="submit1" type="button" class="btn btn-primary">提交修改</button> -->
+          <!-- <a href="" target="_blank" id="glblink" >查看glb</a> -->
+        <div id="toolbar" class="btn-group">
+
+          <div class="input-group">
+            <select class="form-select" id="inputGroupSelect" aria-label="Select with button addon" required onchange="refreshtable()">
+              <option selected>Choose...</option>
+              <option value="1">PN2.5-10</option>
+              <option value="2">PN2.5-100</option>
+              <option value="3">PN2.5-200</option>
+              <option value="4">PN2.5-500</option>
+              <option value="5">PN2.5-1000</option>
+              <option value="6">PN2.5-2000</option>
+            </select>
+
+            <!-- <select name="admincategory" id="admincategory" title="项目类别" class="form-control" required onchange="refreshtable()">
+              <option>选择类别：</option>
+            </select> -->
+
+            <!-- <button class="btn btn-outline-secondary" type="button">Button</button> -->
+            <button type="button" data-name="submit1" id="submit1" class="btn btn-success"><i class="fa fa-arrow-up">提交</i></button>
+            <button type="button" data-name="glblink" id="glblink" class="btn btn-danger" disabled><i class="fa fa-download">下载</i></button>
+          </div>
+
+          <!-- <button data-name="addButton" id="addButton" class="btn btn-primary"><i class="fa fa-plus">切换</i></button> -->
+          <!-- <button data-name="submit1" id="submit1" class="btn btn-success"><i class="fa fa-plus">提交</i></button> -->
+          <!-- <button data-name="glblink" id="glblink" class="btn btn-danger" disabled><i class="fa fa-trash">下载</i></button> -->
+        </div>
+        <table class="table table-striped" id="table" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-striped="true" data-toolbar="#toolbar" data-query-params="queryParams" data-page-size="20" data-page-list="[10, 20, 50, All]" data-unique-id="ID" data-pagination="true" data-side-pagination="client" ata-show-export="true"></table>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/bootstrap5.3/jquery.min.js"></script>
+  <script src="/static/bootstrap5.3/bootstrap-table.min.js"></script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/toolbar/bootstrap-table-toolbar.min.js"></script> -->
+  <!-- <script src="/static/bootstrap5.3/bootstrap-table-toolbar.min.js"></script> -->
+  <script src="/static/bootstrap5.3/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="/static/bootstrap5.3/cheatsheet.js"></script>
+  <script type="text/javascript" src="/static/online3dview/build/engine_dev/o3dv.min.js"></script>
+  <script type="text/javascript" src="/static/x-editable-develop5.0/dist/bootstrap5-editable/js/bootstrap-editable.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-table-editable.js"></script>
+  <script type='text/javascript'>
+
+    window.addEventListener('load', () => {
+    //   // OV.Init3DViewerElements();
+    //   // get the parent element of the viewer
+      let parentDiv = document.getElementById ('viewer');
+  
+      // initialize the viewer with the parent element and some parameters
+      let viewer = new OV.EmbeddedViewer (parentDiv, {
+        // Camera (eye, center, up, fov)
+        // camera : new OV.Camera (
+        //   new OV.Coord3D (-1.5, 2.0, 3.0),
+        //   new OV.Coord3D (0.0, 0.0, 0.0),
+        //   new OV.Coord3D (0.0, 1.0, 0.0),
+        //   45.0
+        // ),
+        backgroundColor : new OV.RGBAColor (0, 0, 0, 0),
+        defaultColor : new OV.RGBColor (200, 200, 200),
+        edgeSettings : new OV.EdgeSettings (false, new OV.RGBColor (0, 0, 0), 1),
+        // EnvironmentSettings (textureNames, backgroundIsEnvMap)，环境图片列表，是否将环境图片作为背景
+        environmentSettings : new OV.EnvironmentSettings (
+          [
+            '/static/online3dview/assets/envmaps/fishermans_bastion/posx.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/negx.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/posy.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/negy.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/posz.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/negz.jpg'
+          ],
+          true
+        )
+      });
+
+    //   // load a model providing model urls
+      viewer.LoadModelFromUrlList ([
+        {{.Model}}
+        // 'model.obj',
+        // 'model.mtl'
+      ]);
+    });
+
+  // 获得黏贴到textarea里的excel数据列和行
+  var paste_data = [];
+
+  function postFCparameter() {
+    // if ({{.IslogIn }}) {
+    //   alert("请登录！");
+    //   return;
+    // }
+    $('#postFCparameter').attr("disabled", true);
+    $.ajax({
+      type: "post",
+      url: "/v1/freecad/editfcmodelbatch",
+      data: { modelid: {{.ID }}, inputdata: JSON.stringify(paste_data) },
+      success: function(data, status) {
+        if (data.info == "ERROR") {
+          alert("错误！(status:" + data.data + ".)");
+          $('#postFCparameter').attr("disabled", false);
+        } else if (data.info == "SUCCESS") {
+          alert("修改成功！(status:" + status + ".)");
+
+          for (var i = 0; i < data.glblink_batch.length; i++) {
+            var _card_ = '<a href="/v1/freecad/online3dview#model=' + data.glblink_batch[i] + '" target="_blank" id="glblink_batch">查看glb_' + i + '</a>'
+            $(".gap-2").append(_card_)
+          }
+          $('#postFCparameter').attr("disabled", false);
+        }
+      },
+      error: function(data, status) {
+        alert(data);
+        $('#postFCparameter').attr("disabled", false);
+        $("#glblink_batch").css("display", "none");
+      }
+    });
+  }
+
+  // 获得黏贴到textarea里的excel数据列和行
+  document.addEventListener("paste", e => {
+    // e.preventDefault(); //阻止默认粘贴事件
+    e.stopPropagation(); //阻止事件冒泡
+    // var data=[];
+    let paste = (e.clipboardData || window.clipboardData).getData("text"); //以text方式接收粘贴内容
+
+    let rows = paste.split('\r\n') // \t是制表符，\r是换行，\n是回车
+    // console.log(rows);
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i]) {
+        paste_data[i] = []
+        // console.log(rows[i])
+        let columns = rows[i].split("\t"); // 按列划分
+        // data.push(columns);
+        // console.log(columns);
+        for (let j = 0; j < columns.length; j++) {
+          paste_data[i][j] = columns[j]
+          //   console.log(columns[j]);
+        }
+      }
+    }
+    // console.log(paste_data);
+    // console.log(JSON.stringify(paste_data))
+  })
+
+  $(function() {
+    let $table = $('#table');
+    let $button = $('#button');
+    let $getTableData = $('#submit1');
+    // $button.click(function() {
+    //   $table.bootstrapTable('insertRow', {
+    //     index: 0,
+    //     row: {
+    //       id: '',
+    //       name: '',
+    //       price: ''
+    //     }
+    //   });
+    // });
+    $table.bootstrapTable({
+      url: '/v1/freecad/getfcparameter/{{.ID}}',
+      toolbar: '#toolbar',
+      clickEdit: true,
+      // showToggle: true,
+      pagination: true, //显示分页条
+      // showColumns: true,
+      // showPaginationSwitch: true, //显示切换分页按钮
+      showRefresh: true, //显示刷新按钮
+      //clickToSelect: true,  //点击row选中radio或CheckBox
+      columns: [{
+        field: 'number',
+        title: 'No.',
+        halign: 'center',
+        align: 'center',
+        valign: 'middle',
+        visible: false,
+      }, {
+        field: 'name',
+        title: '名称',
+        halign: 'center',
+        align: 'center',
+        valign: 'middle'
+      }, {
+        field: 'symbol',
+        title: '符号',
+        halign: 'center',
+        align: 'center',
+        valign: 'middle',
+        visible: false,
+      }, {
+        field: 'unit',
+        title: '单位',
+        halign: 'center',
+        align: 'center',
+        valign: 'middle'
+      }, {
+        field: 'inputvalue',
+        title: '数值',
+        halign: 'center',
+        align: 'center',
+        valign: 'middle',
+        editable: {
+          type: 'text',
+          // type: 'select',
+          // source: ["规划", "项目建议书", "可行性研究", "初步设计", "招标设计", "施工图"],
+          pk: 1,
+          url: '/v1/wx/updateuser',
+          title: 'Enter Value'
+        }
+      }, {
+        field: 'remark',
+        title: '备注',
+        halign: 'center',
+        align: 'center',
+        valign: 'middle',
+        visible: false,
+      }],
+      /**
+       * @param {点击列的 field 名称} field
+       * @param {点击列的 value 值} value
+       * @param {点击列的整行数据} row
+       * @param {td 元素} $element
+       */
+      // onClickCell: function(field, value, row, $element) {
+      //   $element.attr('contenteditable', true);
+      //   $element.blur(function() {
+      //     let index = $element.parent().data('index');
+      //     let tdValue = $element.html();
+
+      //     saveData(index, field, tdValue*1);
+      //   })
+      // }
+    });
+
+    //计时器
+    var intDiff = parseInt(0); //倒计时总秒数量
+    function timer(intDiff) {
+      time = window.setInterval(function() {
+        var minute = 0,
+          second = 1; //时间默认值
+        if (intDiff > 0) {
+          second = Math.floor(intDiff);
+        }
+        if (second <= 9) second = '0' + second;
+        $('#second').html('<s></s>' + second + '秒');
+        intDiff++;
+      }, 1000);
+    }
+
+    // 提交参数
+    $getTableData.click(function() {
+      // alert(JSON.stringify($table.bootstrapTable('getData')));
+      // if ({{.IslogIn }}) {
+      //   alert("请登录！");
+      //   return;
+      // }
+      $('#Submit1').attr("disabled", true);
+      $("#glblink").css("display", "none");
+      var data = JSON.stringify($table.bootstrapTable('getData'))
+      // 坑：x-editable修改数值后，只能是text等的string，见它的源码Type of input. Can be <code>text|textarea|select|date|checklist</code>
+      // 需要转成数值，jquery中只要*1即可将文本转为数值
+      // for(var i=0;i<data.length;i++){
+      //   data[i].realvalue=data[i].realvalue*1;
+      // }
+      // 全部按string传到服务端
+      // var data2 = JSON.stringify(data)
+      // var data = str*1;
+      $.ajax({
+        type: "post",
+        url: "/v1/freecad/editfcmodel",
+        data: { modelid: {{.ID }}, inputdata: data },
+        success: function(data, status) {
+          if (data.info == "ERROR") {
+            clearInterval(time),
+              function() {
+                timer();
+              }
+            alert("错误！(status:" + data.data + ".)");
+            $('#Submit1').attr("disabled", false);
+          } else if (data.info == "SUCCESS") {
+            alert("修改成功！(status:" + status + ".)");
+            // var _card_ = '<div class="carousel-item "><div class="online_3d_viewer bd-placeholder-img bd-placeholder-img-lg d-block w-100" style="height: 800px;" model="'+data.glblink+'" backgroundcolor="33,37,41"><canvas id="viewer" data-engine="three.js r158" width="0" height="0" style="width: 0px; height: 0px; display: inherit;"></canvas></div><div class="carousel-caption d-none d-md-block"><h5>First 3d model</h5><p>三维模型(NEW!).</p></div></div>'
+            // $(".carousel-inner").append(_card_)
+            // for (var i = 0; i < data.data.length; i++) {
+            //   // alert(data.data[i].ID);
+            //   // alert(data.data[i].realvalue);
+            //   $('#table2').bootstrapTable('updateByUniqueId', {
+            //     id: data.data[i].outputalias,
+            //     row: {
+            //       outputvalue: data.data[i].outputvalue
+            //     }
+            //   });
+            // }
+            $("#glblink").css("display", "block");
+            $("#glblink").attr("disabled", false);
+
+            $("#glblink").attr("href", "/v1/freecad/online3dview#model=" + data.glblink);
+
+            $('#Submit1').attr("disabled", false);
+            // clearInterval(time),
+            // function() {
+            //   timer();
+            // }
+          }
+        },
+        error: function(data, status) {
+          alert(data);
+          $('#Submit1').attr("disabled", false);
+          $("#glblink").css("display", "none");
+          // revertFunc();
+        }
+      });
+    });
+
+    // 下载模型
+    $('#glblink').click(function() {
+      var button = document.getElementById('glblink')
+      var url=button.getAttribute('href');
+      window.location.href=url;
+    })
+
+    function saveData(index, field, value) {
+      $table.bootstrapTable('updateCell', {
+        index: index, //行索引
+        field: field, //列名
+        value: value //cell值
+      })
+    }
+  });
+
+    //填充select选项
+    $(function() {
+      $("#admincategory").append('<option value="a">项目模板</option>');
+      if ({{.Select2 }}) {
+        $.each({{.Select2 }}, function(i, d) {
+          $("#admincategory").append('<option value="' + i + '">' + d + '</option>');
+        });
+      }
+    });
+
+    //根据选择，刷新表格
+    function refreshtable() {
+      var options=$("#inputGroupSelect option:selected"); //获取选中的项
+      // alert(options.val()); //拿到选中项的值
+      // alert(options.text()); //拿到选中项的文本
+      // alert(options.attr('url')); //拿到选中项的url值
+
+      let parentDiv = document.getElementById ('viewer');
+  
+      // initialize the viewer with the parent element and some parameters
+      let viewer = new OV.EmbeddedViewer (parentDiv, {
+        // Camera (eye, center, up, fov)
+        // camera : new OV.Camera (
+        //   new OV.Coord3D (-1.5, 2.0, 3.0),
+        //   new OV.Coord3D (0.0, 0.0, 0.0),
+        //   new OV.Coord3D (0.0, 1.0, 0.0),
+        //   45.0
+        // ),
+        backgroundColor : new OV.RGBAColor (0, 0, 0, 0),
+        defaultColor : new OV.RGBColor (200, 200, 200),
+        edgeSettings : new OV.EdgeSettings (false, new OV.RGBColor (0, 0, 0), 1),
+        // EnvironmentSettings (textureNames, backgroundIsEnvMap)，环境图片列表，是否将环境图片作为背景
+        environmentSettings : new OV.EnvironmentSettings (
+          [
+            '/static/online3dview/assets/envmaps/fishermans_bastion/posx.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/negx.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/posy.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/negy.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/posz.jpg',
+            '/static/online3dview/assets/envmaps/fishermans_bastion/negz.jpg'
+          ],
+          true
+        )
+      });
+
+      // load a model providing model urls
+      viewer.LoadModelFromUrlList ([
+        {{.Model}}
+        // 'model.obj',
+        // 'model.mtl'
+      ]);
+
+      var newcategory = $("#admincategory option:selected").text();
+      // alert("你选的是"+newcategory);
+      if (newcategory == "项目模板") {
+        //根据名字，查到id，或者另外写个categoryname的方法
+        // $('#table2').bootstrapTable('refresh', {url:'/admin/categorytitle?title='+newcategory});
+        $("#details").hide();
+        $("#details1").show();
+        // $('#table2').bootstrapTable('refresh', {url:'/project/getprojects'});
+      } else {
+        //根据名字，查到id，或者另外写个categoryname的方法
+        $('#table1').bootstrapTable('refresh', { url: '/admin/categorytitle?title=' + newcategory });
+        $("#details1").hide();
+        $("#details").show();
+      }
+    }
+
+  </script>
+</body>
+
+</html>
+<!-- 
+// 创建包含所有轮播图的数组
+var carouselImages = ["image1.jpg", "image2.jpg", "image3.jpg"];
+
+// 获取轮播图的数量
+var carouselImageCount = carouselImages.length;
+
+// 在需要时使用carouselImageCount变量进行引用
+console.log("轮播图的数量为：" + carouselImageCount);
+
+
+
+// 用户输入要设置的轮播图数量
+var carouselImageCount = prompt("请输入要设置的轮播图数量：");
+
+// 创建一个空数组来存储轮播图
+var carouselImages = [];
+
+// 使用循环将轮播图添加到数组中，直到达到所需的数量
+for (var i = 0; i < carouselImageCount; i++) {
+  carouselImages.push("image" + (i + 1) + ".jpg");
+}
+
+// 更新轮播图的数量变量
+carouselImageCount = carouselImages.length;
+
+// 在需要时使用carouselImageCount变量进行引用
+console.log("轮播图的数量为：" + carouselImageCount);
+
+
+
+// 获取当前页面的URL
+var currentPageURL = window.location.href;
+
+// 根据不同的页面设置不同的轮播图数量
+var carouselImageCount;
+
+if (currentPageURL.includes("homepage")) {
+  carouselImageCount = 3; // 设置首页的轮播图数量为3
+} else if (currentPageURL.includes("about")) {
+  carouselImageCount = 5; // 设置关于页面的轮播图数量为5
+} else if (currentPageURL.includes("gallery")) {
+  carouselImageCount = 10; // 设置图库页面的轮播图数量为10
+} else {
+  carouselImageCount = 0; // 设置其他页面的轮播图数量为0
+}
+
+// 在需要时使用carouselImageCount变量进行引用
+console.log("当前页面的轮播图数量为：" + carouselImageCount);
+ -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+     
+        ul, li, ol {
+            list-style: none;
+        }
+     
+        .slider {
+            width: 590px;
+            height: 470px;
+            border: 1px solid #eee;
+            margin: 100px auto;
+            padding: 5px;
+            position: relative;
+        }
+     
+        .inner {
+            width: 590px;
+            height: 470px;
+            background: pink;
+            position: relative;
+            overflow: hidden;
+        }
+     
+        .inner img {
+            display: block;
+            width: 590px;
+            height: 470px;
+        }
+     
+        .inner ul {
+            width: 800%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+     
+        .inner li {
+            float: left;
+        }
+     
+        .slider ol {
+            position: absolute;
+            left: 50%;
+            margin-left: -80px;
+            bottom: 10px;
+        }
+     
+        .slider ol li {
+            float: left;
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            margin-right: 10px;
+            text-align: center;
+            line-height: 18px;
+        }
+     
+        .slider ol li.current {
+            background: coral;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider" id="slider">
+        <div class="inner">
+            <ul>
+                <li><a href="#"><img src="../../images/1.jpg" alt=""></a></li>
+                <li><a href="#"><img src="../../images/2.jpg" alt=""></a></li>
+                <li><a href="#"><img src="../../images/3.jpg" alt=""></a></li>
+                <li><a href="#"><img src="../../images/4.jpg" alt=""></a></li>
+                <li><a href="#"><img src="../../images/1.jpg" alt=""></a></li>
+                <li><a href="#"><img src="../../images/2.jpg" alt=""></a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    // 获得元素
+    var slider = document.getElementById("slider");
+    var ul = slider.children[0].children[0];
+    var ullis = ul.children;
+ 
+    // 1、动态复制最后一张图
+    ul.appendChild(ullis[0].cloneNode(true));
+ 
+    // 2、动态生成小圆点
+    var ol = document.createElement("ol");
+    slider.appendChild(ol);
+    for (var i = 0; i < ullis.length - 1; i++) {
+        var li = document.createElement("li");
+        li.innerHTML = i + 1;
+        ol.appendChild(li);
+    }
+    ol.children[0].setAttribute("class", "current");
+ 
+    // 3、鼠标经过小圆点  圆点事件
+    var ollis = ol.children;
+    for (var i = 0; i < ollis.length; i++) {
+        ollis[i].index = i; // 自定义属性
+        ollis[i].onmouseover = function () {
+            for (var j = 0; j < ollis.length; j++) { // 去掉所有小圆点的class
+                ollis[j].removeAttribute("class");
+            }
+            ollis[this.index].setAttribute("class", "current"); // 保留当前小圆点的class
+ 
+            // 图片动画
+            animate(ul, -this.index * ullis[0].offsetWidth);
+ 
+            key = point = this.index; // 从当前开始动画
+        }
+    }
+ 
+    // 缓动动画函数
+    var leader = 0;//缓动动画变量
+    function animate(obj, target) {
+        clearInterval(obj.timer); // 清除定时器
+        /*定时任务，缓动轮播 30毫秒到target位置*/
+        obj.timer = setInterval(function () {
+            leader = leader + (target - leader) / 10;//缓动动画公式
+            obj.style.left = leader + "px";
+        }, 10);
+    }
+ 
+    // 4、轮播图定时器
+    var timer = null;
+    timer = setInterval(autoplay, 3000);
+    var key = 0; // 控制播放张数
+    var point = 0; // 控制小圆点
+    function autoplay() {
+        // 播放张数
+        key++;
+        if (key > ullis.length - 1) { // 判断是否播放完
+            leader = 0; // 迅速跳回
+            key = 1; // 下次播放第二张
+        }
+        animate(ul, -key * ullis[0].offsetWidth);
+ 
+        // 小圆点
+        point++;
+        if (point > ollis.length - 1) {
+            point = 0;
+        }
+        for (var i = 0; i < ollis.length; i++) { // 先清除所有的
+            ollis[i].removeAttribute("class");
+        }
+        ollis[point].setAttribute("class", "current") // 再保留现在的
+    }
+ 
+    // 5、鼠标经过事件
+    slider.onmouseover = function () {
+        clearInterval(timer);
+    }
+    slider.onmouseout = function () {
+        timer = setInterval(autoplay, 3000);
+    }
+</script>
+</html> -->

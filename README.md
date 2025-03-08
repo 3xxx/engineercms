@@ -17,7 +17,13 @@
 # go包自动安装
 # 设置go代理
 # go env -w GO111MODULE=on
-# go env -w GOPROXY=https://goproxy.cn,direct
+# go env -w GOPROXY=https://goproxy.io,direct
+
+# 升级某个依赖
+# 无需 clone 仓库中的代码，直接在项目目录中执行
+# go get -u github.com/wechatpay-apiv3/wechatpay-go
+# 来升级/添加依赖，自动完成 go.mod 修改与依赖的下载。
+# 由于go.sum未更新，则运行go mod tidy更新go.sum文件
 
 # 初始化mod：
 # go mod init
@@ -116,6 +122,28 @@
 # To https://github.com/3xxx/engineercms
 #  - [deleted]         v2.0.2
 # 如果有人想知道如何一次删除多个标签，你可以用空格简单地列出它们，例如git push --delete origin tag1 tag2。本地标签删除git tag -d tag1 tag2同样有效。
+```
+
+```bash
+# 升级gorm——进入Git cmd
+# D:\gowork\src\github.com\3xxx\engineercms>go get gorm.io/gorm
+# go: downloading gorm.io/gorm v1.25.12
+# go: upgraded gorm.io/gorm v1.24.3 => v1.25.12
+# 
+# D:\gowork\src\github.com\3xxx\engineercms>go get gorm.io/driver/sqlite
+# go: downloading gorm.io/driver/sqlite v1.5.6
+# go: warning: github.com/mattn/go-sqlite3@v2.0.3+incompatible: retracted by module author: Accidental; no major changes or features.
+# go: to switch to the latest unretracted version, run:
+#         go get github.com/mattn/go-sqlite3@latest
+# go: upgraded gorm.io/driver/sqlite v1.4.4 => v1.5.6
+# 
+# D:\gowork\src\github.com\3xxx\engineercms>go get github.com/mattn/go-sqlite3@latest
+# go: downloading github.com/mattn/go-sqlite3 v1.14.24
+# go: downloading github.com/onsi/ginkgo v1.7.0
+# go: downloading github.com/onsi/gomega v1.4.3
+# go: downloading gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15
+# go: removed github.com/casbin/beego-orm-adapter/v3 v3.0.2
+# go: downgraded github.com/mattn/go-sqlite3 v2.0.3+incompatible => v1.14.24
 ```
 一 特性：
 1. 本系统采用go语言（基于[beego](https://github.com/astaxie/beego)框架）开发，运行文件为编译后的二进制可执行文件，所以无需像其他语言（php、nodejs、java等语言）编写的web应用那样，需要配置运行服务环境。

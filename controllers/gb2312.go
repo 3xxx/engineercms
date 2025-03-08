@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	// "logs"
 	"os"
 	"regexp"
 	"strconv"
@@ -93,9 +94,10 @@ func nearbyutf8(buf []byte, tlen int, plen int) string {
 
 // param: input: input bytes array
 // return: output: output bytes array
-//         err: error if there are errors when convert
-//         ic: input has been converted
-//         oc: output has been converted
+//
+//	err: error if there are errors when convert
+//	ic: input has been converted
+//	oc: output has been converted
 func ConvertGB2312(input []byte) (output []byte, err error, ic int, oc int) {
 	ilen := len(input)
 	output = make([]byte, (ilen/2)*3+3)
@@ -401,15 +403,18 @@ func readcp936(fp string) {
 	f, err := os.Open(fp)
 	if err != nil {
 		fmt.Println(err.Error())
+		// logs.Error(err)
 		return
 	}
 	sf, err := os.Create("./gbk2utf8.tmp")
 	if err != nil {
 		panic(err.Error())
+		// logs.Error(err)
 	}
 	sf2, err2 := os.Create("./gbk2unicode.tmp")
 	if err2 != nil {
 		panic(err2.Error())
+		// logs.Error(err)
 	}
 
 	sf.WriteString("package gogb2312\n\nvar gb2312toutf8=map[int]int{")

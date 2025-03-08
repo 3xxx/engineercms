@@ -18,18 +18,20 @@ import (
 	"context"
 	"fmt"
 	"github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/core/logs"
+	// _ "github.com/go-sql-driver/mysql"
 	"time"
 )
 
 // CREATE TABLE users_master (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     first_name VARCHAR(30) NOT NULL,
-//     last_name VARCHAR(30) NOT NULL,
-//     email VARCHAR(100) NOT NULL,
-//     active TINYINT(1) NOT NULL,
-//     PRIMARY KEY (id),
-//     UNIQUE (email)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	first_name VARCHAR(30) NOT NULL,
+//	last_name VARCHAR(30) NOT NULL,
+//	email VARCHAR(100) NOT NULL,
+//	active TINYINT(1) NOT NULL,
+//	PRIMARY KEY (id),
+//	UNIQUE (email)
+//
 // );
 type users_master struct {
 	Id         int64
@@ -40,15 +42,17 @@ type users_master struct {
 }
 
 // CREATE TABLE wf_ac_group_hierarchy (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     ac_id INT NOT NULL,
-//     group_id INT NOT NULL,
-//     reports_to INT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (ac_id) REFERENCES wf_access_contexts(id),
-//     FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
-//     FOREIGN KEY (reports_to) REFERENCES wf_groups_master(id),
-//     UNIQUE (ac_id, group_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	ac_id INT NOT NULL,
+//	group_id INT NOT NULL,
+//	reports_to INT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (ac_id) REFERENCES wf_access_contexts(id),
+//	FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
+//	FOREIGN KEY (reports_to) REFERENCES wf_groups_master(id),
+//	UNIQUE (ac_id, group_id)
+//
 // );
 type wf_ac_group_hierarchy struct {
 	Id         int64
@@ -58,14 +62,16 @@ type wf_ac_group_hierarchy struct {
 }
 
 // CREATE TABLE wf_ac_group_roles (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     ac_id INT NOT NULL,
-//     group_id INT NOT NULL,
-//     role_id INT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (ac_id) REFERENCES wf_access_contexts(id),
-//     FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
-//     FOREIGN KEY (role_id) REFERENCES wf_roles_master(id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	ac_id INT NOT NULL,
+//	group_id INT NOT NULL,
+//	role_id INT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (ac_id) REFERENCES wf_access_contexts(id),
+//	FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
+//	FOREIGN KEY (role_id) REFERENCES wf_roles_master(id)
+//
 // );
 type wf_ac_group_roles struct {
 	Id    int64
@@ -81,11 +87,13 @@ type wf_ac_group_roles struct {
 // JOIN wf_role_docactions rdas ON ac_grs.role_id = rdas.role_id;
 
 // CREATE TABLE wf_access_contexts (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(100) NOT NULL,
-//     active TINYINT(1) NOT NULL,
-//     PRIMARY KEY (id),
-//     UNIQUE (name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(100) NOT NULL,
+//	active TINYINT(1) NOT NULL,
+//	PRIMARY KEY (id),
+//	UNIQUE (name)
+//
 // );
 type wf_access_contexts struct {
 	Id     int64
@@ -94,11 +102,13 @@ type wf_access_contexts struct {
 }
 
 // CREATE TABLE wf_docactions_master (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(100) NOT NULL,
-//     reconfirm TINYINT(1) NOT NULL,
-//     PRIMARY KEY (id),
-//     UNIQUE (name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(100) NOT NULL,
+//	reconfirm TINYINT(1) NOT NULL,
+//	PRIMARY KEY (id),
+//	UNIQUE (name)
+//
 // );
 type wf_docactions_master struct {
 	Id        int64  `orm:"pk"`
@@ -107,17 +117,19 @@ type wf_docactions_master struct {
 }
 
 // CREATE TABLE wf_docevent_application (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     doc_id INT NOT NULL,
-//     from_state_id INT NOT NULL,
-//     docevent_id INT NOT NULL,
-//     to_state_id INT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (from_state_id) REFERENCES wf_docstates_master(id),
-//     FOREIGN KEY (docevent_id) REFERENCES wf_docevents(id),
-//     FOREIGN KEY (to_state_id) REFERENCES wf_docstates_master(id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	doc_id INT NOT NULL,
+//	from_state_id INT NOT NULL,
+//	docevent_id INT NOT NULL,
+//	to_state_id INT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (from_state_id) REFERENCES wf_docstates_master(id),
+//	FOREIGN KEY (docevent_id) REFERENCES wf_docevents(id),
+//	FOREIGN KEY (to_state_id) REFERENCES wf_docstates_master(id)
+//
 // );
 type wf_docevent_application struct {
 	Id         int64
@@ -129,20 +141,22 @@ type wf_docevent_application struct {
 }
 
 // CREATE TABLE wf_docevents (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     doc_id INT NOT NULL,
-//     docstate_id INT NOT NULL,
-//     docaction_id INT NOT NULL,
-//     group_id INT NOT NULL,
-//     data TEXT,
-//     ctime TIMESTAMP NOT NULL,
-//     status ENUM('A', 'P') NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (docstate_id) REFERENCES wf_docstates_master(id),
-//     FOREIGN KEY (docaction_id) REFERENCES wf_docactions_master(id),
-//     FOREIGN KEY (group_id) REFERENCES wf_groups_master(id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	doc_id INT NOT NULL,
+//	docstate_id INT NOT NULL,
+//	docaction_id INT NOT NULL,
+//	group_id INT NOT NULL,
+//	data TEXT,
+//	ctime TIMESTAMP NOT NULL,
+//	status ENUM('A', 'P') NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (docstate_id) REFERENCES wf_docstates_master(id),
+//	FOREIGN KEY (docaction_id) REFERENCES wf_docactions_master(id),
+//	FOREIGN KEY (group_id) REFERENCES wf_groups_master(id)
+//
 // );
 type wf_docevents struct {
 	Id        int64
@@ -157,17 +171,19 @@ type wf_docevents struct {
 }
 
 // CREATE TABLE wf_docstate_transitions (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     from_state_id INT NOT NULL,
-//     docaction_id INT NOT NULL,
-//     to_state_id INT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (from_state_id) REFERENCES wf_docstates_master(id),
-//     FOREIGN KEY (docaction_id) REFERENCES wf_docactions_master(id),
-//     FOREIGN KEY (to_state_id) REFERENCES wf_docstates_master(id),
-//     UNIQUE (doctype_id, from_state_id, docaction_id, to_state_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	from_state_id INT NOT NULL,
+//	docaction_id INT NOT NULL,
+//	to_state_id INT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (from_state_id) REFERENCES wf_docstates_master(id),
+//	FOREIGN KEY (docaction_id) REFERENCES wf_docactions_master(id),
+//	FOREIGN KEY (to_state_id) REFERENCES wf_docstates_master(id),
+//	UNIQUE (doctype_id, from_state_id, docaction_id, to_state_id)
+//
 // );
 type wf_docstate_transitions struct {
 	Id            int64
@@ -178,10 +194,12 @@ type wf_docstate_transitions struct {
 }
 
 // CREATE TABLE wf_docstates_master (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(100) NOT NULL,
-//     PRIMARY KEY (id),
-//     UNIQUE (name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(100) NOT NULL,
+//	PRIMARY KEY (id),
+//	UNIQUE (name)
+//
 // );
 // INSERT INTO wf_docstates_master(name)
 // VALUES('__RESERVED_CHILD_STATE__');
@@ -191,10 +209,12 @@ type wf_docstates_master struct {
 }
 
 // CREATE TABLE wf_doctypes_master (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(100) NOT NULL,
-//     PRIMARY KEY (id),
-//     UNIQUE (name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(100) NOT NULL,
+//	PRIMARY KEY (id),
+//	UNIQUE (name)
+//
 // );
 type wf_doctypes_master struct {
 	Id   int64  `orm:"pk"`
@@ -202,15 +222,17 @@ type wf_doctypes_master struct {
 }
 
 // CREATE TABLE wf_document_blobs (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     doc_id INT NOT NULL,
-//     sha1sum CHAR(40) NOT NULL,
-//     name TEXT NOT NULL,
-//     path TEXT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     UNIQUE (doctype_id, doc_id, sha1sum)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	doc_id INT NOT NULL,
+//	sha1sum CHAR(40) NOT NULL,
+//	name TEXT NOT NULL,
+//	path TEXT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	UNIQUE (doctype_id, doc_id, sha1sum)
+//
 // );
 type wf_document_blobs struct {
 	Id      int64
@@ -222,13 +244,15 @@ type wf_document_blobs struct {
 }
 
 // CREATE TABLE wf_document_tags (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     doc_id INT NOT NULL,
-//     tag VARCHAR(50) NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     UNIQUE (doctype_id, doc_id, tag)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	doc_id INT NOT NULL,
+//	tag VARCHAR(50) NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	UNIQUE (doctype_id, doc_id, tag)
+//
 // );
 type wf_document_tags struct {
 	Id      int64
@@ -238,12 +262,14 @@ type wf_document_tags struct {
 }
 
 // CREATE TABLE wf_group_users (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     group_id INT NOT NULL,
-//     user_id INT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
-//     UNIQUE (group_id, user_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	group_id INT NOT NULL,
+//	user_id INT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
+//	UNIQUE (group_id, user_id)
+//
 // );
 type wf_group_users struct {
 	Id      int64
@@ -252,11 +278,13 @@ type wf_group_users struct {
 }
 
 // CREATE TABLE wf_groups_master (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(100) NOT NULL,
-//     group_type ENUM('G', 'S'),
-//     PRIMARY KEY (id),
-//     UNIQUE (name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(100) NOT NULL,
+//	group_type ENUM('G', 'S'),
+//	PRIMARY KEY (id),
+//	UNIQUE (name)
+//
 // );
 type wf_groups_master struct {
 	Id         int64
@@ -265,15 +293,17 @@ type wf_groups_master struct {
 }
 
 // CREATE TABLE wf_mailboxes (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     group_id INT NOT NULL,
-//     message_id INT NOT NULL,
-//     unread TINYINT(1) NOT NULL,
-//     ctime TIMESTAMP NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
-//     FOREIGN KEY (message_id) REFERENCES wf_messages(id),
-//     UNIQUE (group_id, message_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	group_id INT NOT NULL,
+//	message_id INT NOT NULL,
+//	unread TINYINT(1) NOT NULL,
+//	ctime TIMESTAMP NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (group_id) REFERENCES wf_groups_master(id),
+//	FOREIGN KEY (message_id) REFERENCES wf_messages(id),
+//	UNIQUE (group_id, message_id)
+//
 // );
 type wf_mailboxes struct {
 	Id      int64
@@ -284,16 +314,18 @@ type wf_mailboxes struct {
 }
 
 // CREATE TABLE wf_messages (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     doc_id INT NOT NULL,
-//     docevent_id INT NOT NULL,
-//     title VARCHAR(250) NOT NULL,
-//     data TEXT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (docevent_id) REFERENCES wf_docevents(id),
-//     UNIQUE (doctype_id, doc_id, docevent_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	doc_id INT NOT NULL,
+//	docevent_id INT NOT NULL,
+//	title VARCHAR(250) NOT NULL,
+//	data TEXT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (docevent_id) REFERENCES wf_docevents(id),
+//	UNIQUE (doctype_id, doc_id, docevent_id)
+//
 // );
 type wf_messages struct {
 	Id       int64
@@ -305,15 +337,17 @@ type wf_messages struct {
 }
 
 // CREATE TABLE wf_role_docactions (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     role_id INT NOT NULL,
-//     doctype_id INT NOT NULL,
-//     docaction_id INT NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (role_id) REFERENCES wf_roles_master(id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (docaction_id) REFERENCES wf_docactions_master(id),
-//     UNIQUE (role_id, doctype_id, docaction_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	role_id INT NOT NULL,
+//	doctype_id INT NOT NULL,
+//	docaction_id INT NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (role_id) REFERENCES wf_roles_master(id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (docaction_id) REFERENCES wf_docactions_master(id),
+//	UNIQUE (role_id, doctype_id, docaction_id)
+//
 // );
 type wf_role_docactions struct {
 	Id        int64
@@ -323,10 +357,12 @@ type wf_role_docactions struct {
 }
 
 // CREATE TABLE wf_roles_master (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(50) NOT NULL,
-//     PRIMARY KEY (id),
-//     UNIQUE (name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(50) NOT NULL,
+//	PRIMARY KEY (id),
+//	UNIQUE (name)
+//
 // );
 type wf_roles_master struct {
 	Id   int64
@@ -343,20 +379,22 @@ type wf_roles_master struct {
 // FROM users_master;
 
 // CREATE TABLE wf_workflow_nodes (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     doctype_id INT NOT NULL,
-//     docstate_id INT NOT NULL,
-//     ac_id INT,
-//     workflow_id INT NOT NULL,
-//     name VARCHAR(100) NOT NULL,
-//     type ENUM('begin', 'end', 'linear', 'branch', 'joinany', 'joinall') NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (docstate_id) REFERENCES wf_docstates_master(id),
-//     FOREIGN KEY (ac_id) REFERENCES wf_access_contexts(id),
-//     FOREIGN KEY (workflow_id) REFERENCES wf_workflows(id),
-//     UNIQUE (doctype_id, docstate_id),
-//     UNIQUE (workflow_id, name)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	doctype_id INT NOT NULL,
+//	docstate_id INT NOT NULL,
+//	ac_id INT,
+//	workflow_id INT NOT NULL,
+//	name VARCHAR(100) NOT NULL,
+//	type ENUM('begin', 'end', 'linear', 'branch', 'joinany', 'joinall') NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (docstate_id) REFERENCES wf_docstates_master(id),
+//	FOREIGN KEY (ac_id) REFERENCES wf_access_contexts(id),
+//	FOREIGN KEY (workflow_id) REFERENCES wf_workflows(id),
+//	UNIQUE (doctype_id, docstate_id),
+//	UNIQUE (workflow_id, name)
+//
 // );
 type wf_workflow_nodes struct {
 	Id       int64
@@ -369,16 +407,18 @@ type wf_workflow_nodes struct {
 }
 
 // CREATE TABLE wf_workflows (
-//     id INT NOT NULL AUTO_INCREMENT,
-//     name VARCHAR(100) NOT NULL,
-//     doctype_id INT NOT NULL,
-//     docstate_id INT NOT NULL,
-//     active TINYINT(1) NOT NULL,
-//     PRIMARY KEY (id),
-//     FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
-//     FOREIGN KEY (docstate_id) REFERENCES wf_docstates_master(id),
-//     UNIQUE (name),
-//     UNIQUE (doctype_id)
+//
+//	id INT NOT NULL AUTO_INCREMENT,
+//	name VARCHAR(100) NOT NULL,
+//	doctype_id INT NOT NULL,
+//	docstate_id INT NOT NULL,
+//	active TINYINT(1) NOT NULL,
+//	PRIMARY KEY (id),
+//	FOREIGN KEY (doctype_id) REFERENCES wf_doctypes_master(id),
+//	FOREIGN KEY (docstate_id) REFERENCES wf_docstates_master(id),
+//	UNIQUE (name),
+//	UNIQUE (doctype_id)
+//
 // );
 type wf_workflows struct {
 	Id       int64

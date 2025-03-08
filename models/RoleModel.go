@@ -1,29 +1,20 @@
 package models
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
-	// "errors"
 	"fmt"
 	"log"
 	// "strconv"
 	"time"
-	// beego "github.com/beego/beego/v2/adapter"
+
 	"github.com/beego/beego/v2/client/orm"
-	// "github.com/beego/beego/v2/adapter/validation"
-	// . "github.com/beego/admin/src/lib"
-	// "github.com/casbin/beego-orm-adapter"
-	// "github.com/casbin/casbin"
-	// "github.com/3xxx/engineercms/controllers"
-	// "github.com/casbin/casbin"
 )
 
 // var e *casbin.Enforcer
 
-//角色表-20201225修改json status为role
+// 角色表-20201225修改json status为role
 type Role struct {
 	Id         int64
-	Rolename   string `json:"name",orm:"unique"` //这个拼音的简写
+	Rolename   string `json:"name",orm:"unique"`
 	Rolenumber string
 	Status     string    `json:"role",orm:"default('0');size(2)"` //,form:"Status",valid:"Range('0','1','2','3','4')"`
 	Createtime time.Time `orm:"type(datetime);auto_now_add" `
@@ -42,7 +33,7 @@ func init() {
 	// InsertRole()
 }
 
-//添加权限
+// 添加权限
 func SaveRole(role Role) (rid int64, err error) {
 	o := orm.NewOrm()
 	var role1 Role
@@ -78,7 +69,7 @@ func SaveRole(role Role) (rid int64, err error) {
 	return rid, err
 }
 
-//取出所有角色
+// 取出所有角色
 func GetRoles() (roles []*Role, err error) {
 	o := orm.NewOrm()
 	role := new(Role)
@@ -97,7 +88,7 @@ func GetRoles() (roles []*Role, err error) {
 	return roles, err
 }
 
-//由rolename取得角色
+// 由rolename取得角色
 func GetRoleByRolename(name string) (role Role, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Role")
@@ -108,7 +99,7 @@ func GetRoleByRolename(name string) (role Role, err error) {
 	return role, err
 }
 
-//取到一个角色数据，不是数组，所以table无法显示
+// 取到一个角色数据，不是数组，所以table无法显示
 func GetRoleByRoleId(roleid int64) (role Role) {
 	role = Role{Id: roleid}
 	o := orm.NewOrm()
@@ -116,7 +107,7 @@ func GetRoleByRoleId(roleid int64) (role Role) {
 	return role
 }
 
-//由用户id取得所拥有的角色
+// 由用户id取得所拥有的角色
 func GetRoleByUserId(id int64) (roles []*UserRole, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("UserRole")
@@ -127,7 +118,7 @@ func GetRoleByUserId(id int64) (roles []*UserRole, err error) {
 	return roles, err
 }
 
-//由用户id取得所拥有的角色rolename
+// 由用户id取得所拥有的角色rolename
 func GetRolenameByUserId(id int64) (roles []*Role, err error) {
 	engine.Table("user_role").Join("INNER", "role", "role.id = user_role.role_id").Where("user_role.user_id = ?", id).Find(&roles)
 	return roles, err
@@ -155,8 +146,8 @@ func DeleteRole(Id int64) (int64, error) {
 	return status, err
 }
 
-//将userid和roleid存入对应数据库
-//如果存在，
+// 将userid和roleid存入对应数据库
+// 如果存在，
 func AddUserRole(uid, rid int64) error {
 	//重复性检查
 	o := orm.NewOrm()

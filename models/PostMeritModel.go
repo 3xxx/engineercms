@@ -1,14 +1,11 @@
-//提交给merit的成果记录表
+// 提交给merit的成果记录表
 package models
 
 import (
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/client/orm"
-	// _ "github.com/mattn/go-sqlite3"
-	"strconv"
-	// "strings"
 	"crypto/md5"
 	"encoding/hex"
+	"github.com/beego/beego/v2/client/orm"
+	"strconv"
 	"time"
 )
 
@@ -42,7 +39,7 @@ type PostMerit struct {
 	State         int       //1编写状态，未提交；2编写者提交，
 }
 
-//附件链接表
+// 附件链接表
 type CatalogLink struct {
 	Id        int64
 	CatalogId int64
@@ -51,7 +48,7 @@ type CatalogLink struct {
 	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
-//用户表
+// 用户表
 type MeritBasic struct {
 	Id         int64  `PK`
 	Username   string `orm:"unique"` //这个拼音的简写
@@ -88,7 +85,7 @@ func init() {
 // 	return nil
 // }
 
-//删除成果列表
+// 删除成果列表
 func DeletePostMerit(cid int64) error {
 	o := orm.NewOrm()
 	product := &PostMerit{Id: cid}
@@ -101,7 +98,7 @@ func DeletePostMerit(cid int64) error {
 	return nil
 }
 
-//添加成果列表
+// 添加成果列表
 func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 	// orm := orm.NewOrm()
 	// fmt.Println(user)
@@ -128,7 +125,7 @@ func AddPostMerit(catalog PostMerit) (cid int64, err error, news string) {
 	}
 }
 
-//用户修改一条成果的某个字段
+// 用户修改一条成果的某个字段
 func ModifyCatalog(cid int64, fieldname, value string) error {
 	o := orm.NewOrm()
 	var catalog PostMerit
@@ -319,7 +316,7 @@ func ModifyCatalog(cid int64, fieldname, value string) error {
 	return nil
 }
 
-//添加附件链接表
+// 添加附件链接表
 func AddCatalogLink(cid int64, link string) (id int64, err error) {
 	o := orm.NewOrm()
 	cataloglink := &CatalogLink{
@@ -335,7 +332,7 @@ func AddCatalogLink(cid int64, link string) (id int64, err error) {
 	return id, err
 }
 
-//根据成果id查出附件链接表
+// 根据成果id查出附件链接表
 func GetCatalogLinks(cid int64) (links []*CatalogLink, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("CatalogLink")
@@ -346,7 +343,7 @@ func GetCatalogLinks(cid int64) (links []*CatalogLink, err error) {
 	return links, err
 }
 
-//修改links
+// 修改links
 func ModifyCatalogLink(id, cid int64, fieldname, value string) error {
 	o := orm.NewOrm()
 	var cataloglink CatalogLink
@@ -377,7 +374,7 @@ func ModifyCatalogLink(id, cid int64, fieldname, value string) error {
 	return nil
 }
 
-//用户修改一个用户的某个字段
+// 用户修改一个用户的某个字段
 func UpdatePostMerit(id int64, fieldname, value string) error {
 	o := orm.NewOrm()
 	var merit PostMerit
@@ -452,7 +449,7 @@ func UpdatePostMerit(id int64, fieldname, value string) error {
 // 	return products, err
 // }
 
-//查出所有成果
+// 查出所有成果
 func GetPostMerits(status int) (postmerit []*PostMerit, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("PostMerit") //这个表名AchievementTopic需要用驼峰式，
@@ -463,7 +460,7 @@ func GetPostMerits(status int) (postmerit []*PostMerit, err error) {
 	return postmerit, err
 }
 
-//根据成果id取得成果
+// 根据成果id取得成果
 func GetPostMerit(id int64) (postmerit PostMerit, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("PostMerit") //这个表名AchievementTopic需要用驼峰式，
@@ -474,8 +471,8 @@ func GetPostMerit(id int64) (postmerit PostMerit, err error) {
 	return postmerit, err
 }
 
-//查出merit基本信息
-//取到一个数据，不是数组，所以table无法显示
+// 查出merit基本信息
+// 取到一个数据，不是数组，所以table无法显示
 func GetMeritBasic() (meritbasic MeritBasic, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("MeritBasic") //这个表名AchievementTopic需要用驼峰式，
@@ -486,7 +483,7 @@ func GetMeritBasic() (meritbasic MeritBasic, err error) {
 	return meritbasic, err
 }
 
-//用户修改一个用户的某个字段
+// 用户修改一个用户的某个字段
 func UpdateMeritBasic(cid int64, fieldname, value string) error {
 	o := orm.NewOrm()
 	var merit MeritBasic

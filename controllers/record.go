@@ -2,24 +2,9 @@ package controllers
 
 //识别档案号，对档案号进行正则判别，如果符合正则表达式，则进行提取
 import (
-	// "github.com/nfnt/resize"
-	// "image"
-	// "image/draw"
-	// "image/jpeg"
-	// "image/png"
-	// "io/ioutil"
-	// "log"
-	// "math/rand"
-	// "os"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "github.com/beego/beego/v2/core/logs"
-	// "github.com/beego/beego/v2/server/web"
 	"path"
 	"regexp"
-	// "strconv"
-	// "fmt"
 	"strings"
-	// "time"
 )
 
 // 分离图号图名
@@ -525,7 +510,7 @@ func SubStrings(filenameWithSuffix string) (substr1, substr2 string) {
 	return fulleFilename1, fulleFilename2
 }
 
-// 取得usertemple名称，日期和版本
+// 取得mathtemple名称，日期和版本
 func MathcadName(filenameWithSuffix string) (Suffix, FileNumber, FileName, Version string) {
 	// beego.Info("文件名：", filenameWithSuffix)
 	FileSuffix := path.Ext(filenameWithSuffix) //只留下后缀名

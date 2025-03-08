@@ -11,22 +11,24 @@
   <link rel="shortcut icon" href="/static/img/elastic.ico">
   <!-- KRAJEE EXPLORER THEME (ADVANCED) -->
   <title>标准上传</title>
-  <!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
+  
 <link href="/static/bootstrap-fileinput/css/all.css" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/assets/prod/all-krajee.min.css?ver=201903112143" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/assets/1d958cec/css/fileinput.css?ver=201909132002" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/assets/1d958cec/themes/explorer/theme.min.css?ver=201908311938" rel="stylesheet">
 <link href="/static/bootstrap-fileinput/assets/fc69cbca/css/dropdown.min.css" rel="stylesheet">
-<script src="/static/bootstrap-fileinput/js/buttons.js" async></script>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
 
+<script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+<script src="/static/bootstrap-fileinput/js/buttons.js" async></script>
 <script src="/static/bootstrap-fileinput/assets/1d958cec/js/plugins/purify.min.js"></script>
 <script src="/static/bootstrap-fileinput/js/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
 
-<!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
+<script src="/static/bootstrap5.3/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
 <script src="/static/bootstrap-fileinput/assets/prod/all-krajee.min.js?ver=201903112143"></script>
 <script src="/static/bootstrap-fileinput/assets/1d958cec/js/plugins/sortable.min.js"></script>
 <script src="/static/bootstrap-fileinput/assets/1d958cec/js/plugins/piexif.min.js"></script>

@@ -1,4 +1,4 @@
-<!-- 具体一个项目的侧栏，右侧为project_products.tpl,显示任意侧栏下的成果 -->
+<!-- 2024年5月15日，将project_product合并到此一页中，方便了很多 -->
 <!DOCTYPE html>
 <title>项目详细-EngiCMS</title>
 <meta name="renderer" content="webkit">
@@ -13,7 +13,7 @@
 <!-- <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css"> -->
 <link rel="stylesheet" href="/static/css/jquery.mCustomScrollbar.min.css">
 <link rel="stylesheet" href="/static/css/custom.css">
-<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" /> -->
 <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
 <link rel="stylesheet" href="/static/froala/css/codemirror.min.css">
 <link rel="stylesheet" href="/static/froala/css/froala_editor.css">
@@ -35,25 +35,25 @@
 <!-- <link rel="stylesheet" href="/static/froala/css/third_party/spell_checker.css"> -->
 <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
 <link rel="stylesheet" type="text/css" href="/static/css/select2.css" />
+
 <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-treeview.js"></script>
+<script type="text/javascript"src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/bootstrap-treeview.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
-<script src="/static/js/tableExport.js"></script>
+<script type="text/javascript" src="/static/js/tableExport.js"></script>
 <script type="text/javascript" src="/static/js/moment.min.js"></script>
 <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
-<script src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/static/js/custom.js"></script>
-<!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
-<!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
 <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script>
 <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
 <script type="text/javascript" src="/static/js/clipboard.min.js"></script>
 <script type="text/javascript" src="/static/js/select2.js"></script>
+
 <script type="text/javascript" src="/static/froala/js/froala_editor.min.js"></script>
 <script type="text/javascript" src="/static/froala/js/plugins/align.min.js"></script>
 <script type="text/javascript" src="/static/froala/js/plugins/char_counter.min.js"></script>
@@ -86,7 +86,7 @@
 <!-- <script type="text/javascript" src="/static/froala/js/third_party/spell_checker.min.js"></script> -->
 <script type="text/javascript" src="/static/froala/js/plugins/special_characters.min.js"></script>
 <script type="text/javascript" src="/static/froala/js/plugins/word_paste.min.js"></script>
-<script src="/static/froala/js/languages/zh_cn.js"></script>
+<script type="text/javascript" src="/static/froala/js/languages/zh_cn.js"></script>
 <style type="text/css">
 #imgmodalDialog .modal-header {
   cursor: move;
@@ -1124,7 +1124,6 @@ h3 .share-icon {
       url: '/project/products/'+table0_id, // {{.Id}}
       method: 'get',
       search: 'true',
-      classes: "table table-striped", //这里设置表格样式
       classes: "table table-striped", //这里设置表格样式
       showRefresh: 'true',
       showColumns: 'true',

@@ -1,28 +1,66 @@
 package controllers
 
 import (
-	// "context"
 	"crypto/md5"
+	crand "crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/base64"
 	"encoding/hex"
-	// "fmt"
-	// beego "github.com/beego/beego/v2/adapter"
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web/context" //用这个context，不是adapter
-	// "net/url"
+	"encoding/json"
+	"encoding/pem"
+	"fmt"
 	"github.com/3xxx/engineercms/controllers/utils"
 	"github.com/3xxx/engineercms/models"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"strconv"
-	// "github.com/beego/beego/v2/adapter/session"
-	"encoding/json"
-	// "github.com/casbin/beego-orm-adapter"
-	// "github.com/casbin/casbin"
+	"github.com/beego/beego/v2/server/web/context" //用这个context，不是adapter
+	mrand "math/rand"
 	"net/http"
-	// "strings"
-	"math/rand"
 	"regexp"
+	"strconv"
 	"time"
 )
+
+var privateKey *rsa.PrivateKey
+
+func init() {
+	// 生成RSA密钥对（实际生产环境应使用预先生成的密钥）
+	var err error
+	privateKey, err = rsa.GenerateKey(crand.Reader, 2048)
+	if err != nil {
+		logs.Error("密钥生成失败:", err)
+	}
+}
+
+// @Title get login publickey...
+// @Description get login publickey..
+// @Failure 400 Invalid page supplied
+// @Failure 404 data not found
+// @router /publickeyhandler [get]
+// 获取公钥接口
+func (c *LoginController) PublicKeyHandler() {
+	publicKeyBytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
+	if err != nil {
+		logs.Error(err, "内部服务器错误", http.StatusInternalServerError)
+		return
+	}
+	pemData := pem.EncodeToMemory(&pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyBytes,
+	})
+	c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/x-pem-file")
+	c.Ctx.ResponseWriter.Write(pemData)
+}
+
+// RSA解密函数
+func decrypt(ciphertext []byte) (string, error) {
+	plaintext, err := rsa.DecryptPKCS1v15(crand.Reader, privateKey, ciphertext)
+	if err != nil {
+		return "", fmt.Errorf("解密失败: %v", err)
+	}
+	return string(plaintext), nil
+}
 
 // CMSWX login API
 type LoginController struct {
@@ -36,60 +74,6 @@ type SuccessController struct {
 type ServiceValidateController struct {
 	web.Controller
 }
-
-// func (c *LoginController) Get() {
-// 	isExit := c.GetString("exit") == "true"
-// 	// secofficeshow?secid=1643&level=3&key=modify
-// 	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
-// 	url2 := c.GetString("level")
-// 	url3 := c.GetString("key")
-// 	var url string
-// 	if url2 == "" {
-// 		url = url1
-// 	} else {
-// 		url = url1 + "&level=" + url2 + "&key=" + url3
-// 	}
-// 	c.Data["Url"] = url
-// 	if isExit {
-// 		// c.Ctx.SetCookie("uname", "", -1, "/")
-// 		// c.Ctx.SetCookie("pwd", "", -1, "/")
-// 		// c.DelSession("gosessionid")
-// 		// c.DelSession("uname")//这个不行
-// 		// c.Destroy/Session()
-// 		// c.Ctx.Input.CruSession.Delete("gosessionid")这句与上面一句重复
-// 		// c.Ctx.Input.CruSession.Flush()
-// 		// beego.GlobalSessions.SessionDestroy(c.Ctx.ResponseWriter, c.Ctx.Request)
-// 		v := c.GetSession("uname")
-// 		// islogin := false
-// 		if v != nil {
-// 			//删除指定的session
-// 			c.DelSession("uname")
-// 			//销毁全部的session
-// 			c.DestroySession()
-// 		}
-// 		// sess.Flush()//这个不灵
-// 		c.Redirect("/", 302)
-// 		return
-// 	}
-// 	c.TplName = "login.tpl"
-// }
-
-// func (c *LoginController) Loginerr() {
-// 	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
-// 	url2 := c.GetString("level")
-// 	url3 := c.GetString("key")
-// 	var url string
-// 	if url2 == "" {
-// 		url = url1
-// 	} else {
-// 		url = url1 + "&level=" + url2 + "&key=" + url3
-// 	}
-// 	// port := strconv.Itoa(c.Ctx.Input.Port())
-// 	// url := c.Ctx.Input.Site() + ":" + port + c.Ctx.Request.URL.String()
-// 	c.Data["Url"] = url
-// 	// beego.Info(url)
-// 	c.TplName = "loginerr.tpl"
-// }
 
 // 登录页面
 func (c *LoginController) Login() {
@@ -124,7 +108,6 @@ func (c *LoginController) Login() {
 
 // login页面输入用户名和密码后登陆提交
 func (c *LoginController) Post() {
-	// uname := c.GetString("uname")
 	// url := c.GetString("returnUrl")
 	url1 := c.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
 	url2 := c.GetString("level")
@@ -148,15 +131,17 @@ func (c *LoginController) Post() {
 	user.Password = hex.EncodeToString(cipherStr)
 	err := models.ValidateUser(user)
 	if err == nil {
-		//将session存入名称为hotqinsessionid（config里设置的名称）的session里，下次取名称为hotqinsessionid的session即可得到uname和pwd
-		c.SetSession("uname", user.Username)
-		c.SetSession("pwd", user.Password)
+		// c.SetSession("pwd", user.Password)
 		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
 		User, err := models.GetUserByUsername(user.Username)
 		if err != nil {
 			logs.Error(err)
 			utils.FileLogs.Error(user.Username + " 查询用户 " + err.Error())
 		}
+		//将session存入名称为hotqinsessionid（config里设置的名称）的session里，下次取名称为hotqinsessionid的session即可得到uname和pwd
+		c.SetSession("uname", user.Username)
+		userid_str := strconv.FormatInt(user.Id, 10)
+		c.SetSession("userid", userid_str)
 		if User.Ip == "" {
 			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
 			if err != nil {
@@ -253,7 +238,7 @@ func GetRandomString(length int) []byte {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)
 	result := []byte{}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	r := mrand.New(mrand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < length; i++ {
 		result = append(result, bytes[r.Intn(len(bytes))])
 	}
@@ -262,47 +247,91 @@ func GetRandomString(length int) []byte {
 
 // @Title post user login...
 // @Description post login..
-// @Param uname query string  true "The name of user"
-// @Param pwd query string  true "The password of user"
-// @Success 200 {object} models.GetProductsPage
+// @Success 200 {object} login
 // @Failure 400 Invalid page supplied
 // @Failure 404 data not found
 // @router /loginpost [post]
-// login弹框输入用户名和密码后登陆提交//微信用户注册登录用register
+// login弹框输入用户名和密码后登陆提交
+// 微信用户注册登录用register
 func (c *LoginController) LoginPost() {
+	var request struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(c.Ctx.Request.Body).Decode(&request); err != nil {
+		logs.Error("无效的请求格式")
+		return
+	}
+
+	// Base64解码
+	usernameCipher, err := base64.StdEncoding.DecodeString(request.Username)
+	if err != nil {
+		logs.Error("用户名解码失败")
+		return
+	}
+
+	passwordCipher, err := base64.StdEncoding.DecodeString(request.Password)
+	if err != nil {
+		logs.Error("密码解码失败")
+		return
+	}
+
+	// RSA解密
+	username, err := decrypt(usernameCipher)
+	if err != nil {
+		logs.Error("用户名解密失败")
+		return
+	}
+
+	password, err := decrypt(passwordCipher)
+	if err != nil {
+		logs.Error("密码解密失败")
+		return
+	}
+
+	// 验证逻辑（示例）
+	logs.Info("解密凭证: 用户名=%s 密码=%s", username, password)
+
 	var user models.User
-	user.Username = c.GetString("uname")
-	// beego.Info(user.Username)
-	// uname := c.GetString("uname")
-	// Pwd1 := c.GetString("pwd")
-	Pwd1 := c.GetString("pwd")
-	// beego.Info(Pwd1)
-	// autoLogin := c.GetString("autoLogin") == "on"
 	islogin := 0
-	// maxAge := 0
-	// if autoLogin {
-	// 	maxAge = 1<<31 - 1
-	// }
-	// c.Ctx.SetCookie("uname", uname, maxAge, "/")
-	// c.Ctx.SetCookie("pwd", pwd, maxAge, "/")
+	user.Username = username // c.GetString("uname")
+	if user.Username == "" {
+		c.Data["json"] = map[string]interface{}{"islogin": islogin, "info": "ERROR", "state": "ERROR", "msg": "用户名不能为空！", "data": "用户名不能为空"}
+		c.ServeJSON()
+	}
+	// logs.Info(user.Username)
+	Pwd1 := password // c.GetString("pwd")
+	if Pwd1 == "" {
+		c.Data["json"] = map[string]interface{}{"islogin": islogin, "info": "ERROR", "state": "ERROR", "msg": "密码不能为空！", "data": "密码不能为空"}
+		c.ServeJSON()
+	}
+
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
-	// beego.Info(user.Password)
-	// beego.Info(islogin)
-	err := models.ValidateUser(user)
-	if err == nil {
-		c.SetSession("uname", user.Username)
-		c.SetSession("pwd", user.Password) //这个没用
+	logs.Info(user.Password)
+	logs.Info(islogin)
+	err = models.ValidateUser(user)
+	if err != nil {
+		logs.Error(err)
+		c.Data["json"] = map[string]interface{}{"islogin": islogin, "info": "ERROR", "state": "ERROR", "msg": "用户名或密码错误！", "data": "用户名或密码错误！"}
+		c.ServeJSON()
+		return
+	} else {
+		// c.SetSession("pwd", user.Password) //这个没用
 		utils.FileLogs.Info(user.Username + " " + "login" + " 成功")
-		User, err := models.GetUserByUsername(user.Username)
+		user, err = models.GetUserByUsername(user.Username)
 		if err != nil {
 			logs.Error(err)
 			utils.FileLogs.Error(user.Username + " 查询用户 " + err.Error())
 		}
-		if User.Ip == "" {
-			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
+		c.SetSession("uname", user.Username)
+		userid_str := strconv.FormatInt(user.Id, 10)
+		c.SetSession("userid", userid_str)
+		if user.Ip == "" {
+			err = models.UpdateUser(user.Id, "Ip", c.Ctx.Input.IP())
 			if err != nil {
 				logs.Error(err)
 				utils.FileLogs.Error(user.Username + " 添加用户ip " + err.Error())
@@ -315,27 +344,28 @@ func (c *LoginController) LoginPost() {
 				utils.FileLogs.Error(user.Username + " 更新用户登录时间 " + err.Error())
 			}
 		}
-		// beego.Info(islogin)
-	} else {
 		islogin = 1
+		c.Data["json"] = map[string]interface{}{"islogin": islogin, "info": "SUCCESS", "state": "SUCCESS", "msg": "用户登录成功！", "data": "用户登录成功"}
+		c.ServeJSON()
 	}
-	// beego.Info(islogin)
-	// if name == "admin" && pwd == "123456" {
-	// 	c.SetSession("loginuser", "adminuser")
-	// 	fmt.Println("当前的session:")
-	// 	fmt.Println(c.CruSession)
-	c.Data["json"] = map[string]interface{}{"islogin": islogin}
-	c.ServeJSON()
 }
 
 // 退出登录
 func (c *LoginController) Logout() {
 	// site := c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port())
-	v := c.GetSession("uname")
-	if v != nil {
+	u := c.GetSession("userid")
+	logs.Info(u)
+	if u != nil {
 		//删除指定的session
 		c.DelSession("uname")
-		c.DelSession("uid") //删除mindoc的用户登录信息
+		c.DelSession("uid")    //删除mindoc的用户登录信息
+		c.DelSession("userid") // 删除engineercms的登录信息
+		c.DelSession("openID")
+		c.DelSession("nickname")
+		// logs.Info(c.GetSession("userid"))
+		// 删除openid
+		// openID
+		// nickname
 		//销毁全部的session
 		// c.DestroySession()
 		c.Ctx.SetCookie("token", "", "3600", "/") //cookie置空，即删除https://blog.csdn.net/yang731227/article/details/82263125
@@ -513,7 +543,7 @@ func (c *LoginController) WxLogin() {
 			}
 			sessionId := c.Ctx.Input.Cookie(sessionname) //这一步什么意思？hotqinsessionid
 			// 返回请求中的 cookie 数据，例如 Cookie("username")，就可以获取请求头中携带的 cookie 信息中 username 对应的值
-			// beego.Info(sessionId) //32f6966c2ba2a1144d453fe8969c822e
+			// logs.Info(sessionId) //32f6966c2ba2a1144d453fe8969c822e
 			// 解释以上的意思：小程序请求带上这个sessionid，服务端就能获取到openId。原理是什么？openid := c.GetSession("openID")
 			tokenString, err := utils.CreateToken(user.Username)
 			if err != nil {
@@ -554,42 +584,17 @@ func (c *LoginController) WxHasSession() {
 	}
 }
 
-// [login.go:224] 0716J5410OfFLF1Daw610f6a4106J54e
-// [login.go:247] map[session_key:3NaIB1t/AOjCQKitWx1fr
-// Q== openid:oRgfy5MQlRRxyyNrENpZWnhniO-I]
-// 2018/09/09 18:57:04.791 [C] [asm_amd64.s:509] the request url is  /wx/wxlogin
-// 2018/09/09 18:57:04.807 [C] [asm_amd64.s:509] Handler crashed with error interfa
-// ce conversion: interface {} is nil, not string
-// 2018/09/09 18:57:04.807 [C] [asm_amd64.s:509] D:/gowork/src/github.com/3xxx/engi
-// neercms/controllers/login.go:260
 // 判断用户是否登录
 func checkAccount(ctx *context.Context) bool {
-	var user models.User
-	//（4）获取当前的请求会话，并返回当前请求会话的对象
-	//但是我还是建议大家采用 SetSession、GetSession、DelSession 三个方法来操作，避免自己在操作的过程中资源没释放的问题
-	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	// defer sess.SessionRelease(ctx.ResponseWriter)
-	v := ctx.Input.Session("uname")
+	v := ctx.Input.Session("userid")
 	if v == nil {
 		return false
-		//     this.SetSession("asta", int(1))
-		//     this.Data["num"] = 0
 	} else {
-		//     this.SetSession("asta", v.(int)+1)
-		//     this.Data["num"] = v.(int)
-		user.Username = v.(string)
-		// v = ctx.Input.CruSession.Get("pwd")
-		v = ctx.Input.Session("pwd")
-		user.Password = v.(string) //ck.Value
-		err := models.ValidateUser(user)
-		if err == nil {
-			return true
-		} else {
-			return false
-		}
+		return true
 	}
 }
 
+// 没有用
 func checkRole(ctx *context.Context) (role string, err error) { //这里返回用户的role
 	v := ctx.Input.Session("uname")
 	var user models.User
@@ -609,13 +614,20 @@ func checkRole(ctx *context.Context) (role string, err error) { //这里返回�
 // 	Password string
 // }
 
-func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
-	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的数据??。
-	// beego.Info(v)                          //qin.xc
+// @Title get haslogin
+// @Description get usersession
+// @Success 200 {object} success
+// @Failure 400 Invalid page supplied
+// @Failure 404 user not found
+// @router /authorizer [get]
+// 微信小程序根据小程序自身存储的session，检查ecms里的openid session是否有效
+// 没有用
+func Authorizer(c *LoginController) (uname, role string, uid int64) {
+	v := c.GetSession("userid")
 	var user models.User
 	var err error
 	if v != nil { //如果登录了
-		uname = v.(string)
+		uname = c.GetSession("uname").(string)
 		user, err = models.GetUserByUsername(uname)
 		if err != nil {
 			logs.Error(err)
@@ -633,73 +645,71 @@ func Authorizer(ctx *context.Context) (uname, role string, uid int64) {
 // 用户登录，则role是1则是admin，其余没有意义!!!
 // ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
-	v := ctx.Input.Session("uname") //用来获取存储在服务器端中的session数据。
+	// v := ctx.Input.Session("uname") //用来获取存储在服务器端中的session数据。
+	u := ctx.Input.Session("userid")
+	// logs.Info(u)
 	var userid, roleid, userrole string
 	var user models.User
 	var err error
 	var iprole int
-	if v != nil { //如果登录了
+	Role, err := models.GetRoleByRolename("admin")
+	if err != nil {
+		logs.Error(err)
+	}
+
+	if u != nil { //如果登录了
 		islogin = true
-		uname = v.(string)
-		user, err = models.GetUserByUsername(uname)
+		// uname = v.(string)
+		uid_str := u.(string)
+		uid, err = strconv.ParseInt(uid_str, 10, 64)
 		if err != nil {
 			logs.Error(err)
+		}
+		// user, err = models.GetUserByUsername(uname)
+		// if err != nil {
+		// 	logs.Error(err)
+		user, err = models.GetUserByUserId(uid)
+		if err != nil {
+			logs.Error(err)
+		}
+		uname = user.Username
+		userid = strconv.FormatInt(user.Id, 10)
+		roleid = strconv.FormatInt(Role.Id, 10)
+		isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
+		if err != nil {
+			logs.Error(err)
+		}
+		if user.Role == "0" {
+			userrole = "4"
 		} else {
-			//查询admin角色的id
-			//重新获取roleid
-			role, err := models.GetRoleByRolename("admin")
-			if err != nil {
-				logs.Error(err)
-			}
-			userid = strconv.FormatInt(user.Id, 10)
-			roleid = strconv.FormatInt(role.Id, 10)
-			isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
-			if err != nil {
-				logs.Error(err)
-			}
-			uid = user.Id
-			if user.Role == "0" {
-				// isadmin = false
-				userrole = "4"
-				// } else if user.Role == "1" {
-				// isadmin = true
-				// userrole = user.Role
-			} else {
-				// isadmin = false
-				userrole = user.Role
-			}
+			userrole = user.Role
 		}
 	} else { //如果没登录,查询ip对应的用户
 		islogin = false
 		isadmin = false
 		uid = 0
 		uname = ctx.Input.IP()
-		// beego.Info(uname)
 		user, err = models.GetUserByIp(uname)
 		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
-			// beego.Error(err)
 			iprole = Getiprole(ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
 			userrole = strconv.Itoa(iprole)
 		} else { //如果查到，则role和用户名
 			//查询admin角色的id
 			//重新获取roleid
-			role, err := models.GetRoleByRolename("admin")
-			if err != nil {
-				logs.Error(err)
-			}
-			userid = strconv.FormatInt(user.Id, 10)
-			roleid = strconv.FormatInt(role.Id, 10)
-			isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
-			if err != nil {
-				logs.Error(err)
-			}
-			// if user.Role == "1" {
-			// 	isadmin = true
+			// role, err := models.GetRoleByRolename("admin")
+			// if err != nil {
+			// 	logs.Error(err)
 			// }
-			uid = user.Id
-			userrole = user.Role
-			uname = user.Username
-			islogin = true
+			// userid = strconv.FormatInt(user.Id, 10)
+			// roleid = strconv.FormatInt(role.Id, 10)
+			// isadmin, err = e.HasRoleForUser(userid, "role_"+roleid)
+			// if err != nil {
+			// 	logs.Error(err)
+			// }
+			// uid = user.Id
+			// userrole = user.Role
+			// uname = user.Username
+			// islogin = true
 		}
 	}
 	return uname, userrole, uid, isadmin, islogin
@@ -789,53 +799,38 @@ func (c *LoginController) Islogin() {
 	var islogin, isadmin bool
 	var uname string
 	var uid int64
-	v := c.GetSession("uname")
-	// v := c.Ctx.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
-	var userrole string
+	v := c.GetSession("userid")
+	// v := c.Ctx.CruSession.Get("uname") // 用来获取存储在服务器端中的数据??。
+	// var userrole string
 	var user models.User
 	var err error
-	var iprole int
-	if v != nil { //如果登录了
+	var role string
+	role = "4"
+	if v != nil { // 如果登录了
 		islogin = true
-		uname = v.(string)
-		user, err = models.GetUserByUsername(uname)
+		userid := v.(string)
+		uid, err = strconv.ParseInt(userid, 10, 64)
+		user, err = models.GetUserByUserId(uid)
 		if err != nil {
 			logs.Error(err)
 		} else {
-			uid = user.Id
+			uname = user.Username
 			if user.Role == "0" {
 				isadmin = false
-				userrole = "4"
 			} else if user.Role == "1" {
 				isadmin = true
-				userrole = user.Role
+				role = "1"
 			} else {
 				isadmin = false
-				userrole = user.Role
 			}
 		}
-	} else { //如果没登录,查询ip对应的用户
+	} else { // 如果没登录,查询ip对应的用户
 		islogin = false
 		isadmin = false
 		uid = 0
 		uname = c.Ctx.Input.IP()
-		// beego.Info(uname)
-		user, err = models.GetUserByIp(uname)
-		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
-			// beego.Error(err)
-			iprole = Getiprole(c.Ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
-			userrole = strconv.Itoa(iprole)
-		} else { //如果查到，则role和用户名
-			if user.Role == "1" {
-				isadmin = true
-			}
-			uid = user.Id
-			userrole = user.Role
-			uname = user.Username
-			islogin = true
-		}
 	}
-	c.Data["json"] = map[string]interface{}{"uname": uname, "role": userrole, "uid": uid, "islogin": islogin, "isadmin": isadmin}
+	c.Data["json"] = map[string]interface{}{"uname": uname, "role": role, "uid": uid, "islogin": islogin, "isadmin": isadmin}
 	c.ServeJSON()
 }
 

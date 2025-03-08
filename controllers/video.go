@@ -4,11 +4,7 @@ import (
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	// beego "github.com/beego/beego/v2/adapter"
-	// "io/ioutil"
-	// "net"
-	// "net/http"
-	// "net/url"
+
 	"context"
 	"fmt"
 	"github.com/disintegration/imaging"
@@ -18,7 +14,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
-	// "github.com/minio/minio-go/v7/pkg/credentials"
+
 	"bytes"
 	"io"
 	"regexp"
