@@ -32,12 +32,6 @@
 # go mod tidy——下载新增的依赖包
 # go mod vendor——更新
 
-# linux系统上编译：拷贝go.mod go.sum 其他文件，然后执行go mod vendor，
-
-# 再执行bee generate docs
-# bee generate routers
-# 再执行bee run -gendoc=true -downdoc=true
-
 # 将新增的依赖包自动写入当前项目的 vendor 目录：
 # go mod vendor
 # 如果 go.mod 发生变化，应当重新执行 go mod vendor！
@@ -46,19 +40,29 @@
 # go命令不检查vendor中的依赖库是否被修改
 # 关闭——这个看情况，go mod vendor时，提示Get https://sum.golang.org/lookup/xxxxxx: dial tcp 216.58.200.49:443: i/o timeout
 # go env -w GOSUMDB=off
+```
+
+```bash
+# linux系统上编译：拷贝go.mod go.sum 以及其他文件，然后执行go mod vendor，
+
+# 再执行bee generate docs
+# bee generate routers
+# 再执行bee run -gendoc=true -downdoc=true
 
 # 编译(sqlite需要CGO支持)
 # go build -ldflags "-w"
 # 数据库初始化(此步骤执行之前，需配置`conf/app.conf`)
 # ./engineercms install
 
-# linux上执行，先杀死进程，再拷贝新的执行文件和路由文件
+# linux上升级，先杀死engineercms.exe进程，再拷贝新的engineercms.exe执行文件和路由swagger文件：
 # killall engineercms
-# 拷贝engineercms和swagger里的swagger.yml和swagger.json到对应文件夹里
+# 拷贝engineercms和swagger里的swagger.yml和swagger.json到服务器上对应文件夹里
 # $ chmod +x engineercms 
 # $ nohup ./engineercms &
-# $ systemctl stop firewalld.service关闭防火墙
+# $ systemctl stop firewalld.service // 关闭防火墙
+```
 
+```bash
 # beego 2.0.0 升级指南
 # 获取最新版本的 bee 工具 go install github.com/beego/bee/v2@latest
 # 更新 beego 框架 go get -u github.com/beego/beego/v2
@@ -69,9 +73,7 @@
 # github.com/beego/beego/v2/server/web/context
 # 而不是
 # ~ github.com/beego/beego/v2/adapter/context ~
-
 # 目前来说因为你所有的包都切换过去了beego/beego/v2，所以你对应的context要使用beego/beego/v2/server/web/context下的这个。
-
 # 我教你一个小技巧。当你发现依赖找不到的时候，你把import里面对应的东西删掉，IDE会帮你补全，或者给你提示。如果你用的GOLANG IDE，那么会自动帮你把对应依赖引入。
 
 # 记住一个核心原则：如果你用的是adapter的包，那么所有的包都应该是adapter的；如果你用的是beego/beego/v2（非adapter)，那么所有的都应该是beego/beego/v2下的。
@@ -82,8 +84,6 @@
 # go get 是拉取远程包的命令，还是继续使用的
 # go install 是对项目进行编译并自动拉取所需包并生成 可执行文件的。
 
-# 还好，你说的编译一下，生成可执行命令了，感谢！
-
 # 解决步骤：
 # 1 go get -u github.com/beego/bee/v2
 # 2 cd 到这个bee/v2版本中
@@ -91,7 +91,9 @@
 # 4 go install
 # 此时在 GOPATH目录bin文件夹下生成了bee.exe 。
 # 测试 ./bee.exe new hello 已正常创建项目，自己将bin目录加入到全局即可。
+```
 
+```bash
 # https://www.cnblogs.com/cqlb/p/13396107.html
 # 一、创建标签
 # 在Git中打标签非常简单，首先，切换到需要打标签的分支上：
@@ -112,12 +114,19 @@
 # git push --tags
 # $ git push origin <tagname>
 
-# Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
+# git add .
+# git commit -m "message"
+# git push origin master
+# 只不过20年10月之后的版本master一词都改成了main
+```
+
+```bash
+#  /d/engineercms (master|REBASE-i)
 # $ git push --delete origin v2.0.0
 # To https://github.com/3xxx/engineercms
 #  - [deleted]         v2.0.0
 
-# Administrator@DESK-20210217SN MINGW64 /d/engineercms (master|REBASE-i)
+#  /d/engineercms (master|REBASE-i)
 # $ git push --delete origin v2.0.2
 # To https://github.com/3xxx/engineercms
 #  - [deleted]         v2.0.2
@@ -152,24 +161,23 @@
 4. 对onlyoffice document server的二次开发，实现企业的实时文档协作，非常方便，避免了文档的汇总等繁琐事物，效率大大提高，协作更加优雅有趣。除了支持office的docx，xlsx及pptx格式外，还支持国产wps，et和dps格式。
 5. ~在线直接预览dwg文件，避免了图纸转换成pdf的麻烦，也避免了先下载附件然后用本机电脑打开图纸的麻烦，方便设计人员查阅图纸。~
 6. 采用最新的froala富文本编辑器，支持word图文直接粘贴发布，word中的图片自动上传，发布文章轻松快捷，文章支持视频和文件附件。
-7. 微信小程序客户端访问和添加图文，打开微信，搜索“水务设计”即可看到小程序了，小程序端也[开源](https://github.com/3xxx/wechatengineercms)。
+7. 微信小程序客户端访问和添加图文，打开微信，搜索“设计与管理”即可，小程序端也[开源](https://github.com/3xxx/wechatengineercms)。
 8. web端和微信小程序多项目切换。
-8. swagger API自动化文档。
-9. 可在conf里定制9个导航条菜单。
+9. 可在conf里定制9个快捷导航条菜单。
 10. 后台查看日志。
 11. 通用的文档流程设置。文档审批，文档校审，合同评审流程，图纸校审流程，……
 12. 整合了[mindoc](https://github.com/mindoc-org/mindoc)，实现了在线创作、查阅、分享、导入、导出电子书籍。
 13. 文件分享提取码。
 14. 全文检索：上传office文档、pdf等，调用tika解析后存入elasticsearch（中文分词ik），实现全文检索。
-15. 新增supa-mapus地图协作，部分代替91地图功能，方便工程师查看现场定位建筑物。
+15. supa-mapus地图协作，部分代替91地图功能，方便工程师查看现场定位、导航到建筑物。
 16. 支持minio分布式文件存储，可集群部署文件存储服务。
 17. 后台预定义工程目录类型和分层级别，支持无限级；目录采用懒加载模式；
-18. 建立项目时选择已有项目作为模板，继承已有项目权限，或选择后台预定义的项目类型和目录层级，瞬间自动建立成百上千的树形目录，支持无限级目录；目录采用懒加载显示；项目支持公开和私有；
+18. 建立项目时选择已有项目作为模板，继承已有项目权限，或选择后台预定义的项目类型和目录层级，瞬间自动建立成百上千的树形目录，支持无限级目录；项目支持公开和私有；
 19. 任意层级目录下可以添加任意成果；可对任意目录进行权限设置；
 20. 成果包含文章、pdf附件和非pdf附件，并将它们分别列出；一个成果如果包含一个pdf文件则直接打开，如果多于一个则打开列表，非pdf附件也是一样；文章采用富文本编辑器froala，支持图文word直接黏贴，自动上传图片；
 21. 成果间的关联：比如先出的施工图，然后一段时间后再出了对这个图纸的修改通知单，那么修改单关联上这个图纸后，每次看这个图纸，就知道这个图纸有修改了，需要引起注意；
 22. 每个项目提供一个项目日程和大事记时间轴；
-23. 成果统计，避免领导询问进度和周报月报；
+23. 成果统计，方便领导询问进度和填报周报月报；
 
 二 应用案例：
 
@@ -205,10 +213,7 @@
 
 √mapus地图协作，现场定位工程建筑物；
 
-
 二 todo:
-
-× 规范标准库编辑；
 
 × 读取文件属性——完成时间，作为月度统计依据，或提供选择，以上传时间为统计口径，生成某个目录下月度成果报表，与上个月对比柱状图；
 
@@ -227,18 +232,19 @@
 
 Linux系统下请将执行文件engineercms(linux)放入engineercms文件夹内（即win系统下运行的整个解压包）；swagger文件夹下的swagger.json和swagger.yml两个文件拷贝到engineercms目录里的swagger文件夹里
 进入执行文件所在文件夹，运行engineercms如下：
+
 ```bash
-[root@localhost engineercms]# nohup ./engineercms &
-如果出现：
--bash: ./ engineercms: Permission denied
-则说明需要修改权限，用下列命令：
-[root@……5 ~]# chmod +x engineercms
-—如果出现端口被占用，需要去conf文件夹内修改app.conf里的端口号，保存后重新运行。
-[root@……5 ~]# systemctl stop firewalld.service关闭防火墙，否则其他电脑访问不了。
-停止engineercms进程的命令
-killall engineercms
-查看进程的命令：
-ps aux
+# [root@localhost engineercms]# nohup ./engineercms &
+# 如果出现：
+# -bash: ./ engineercms: Permission denied
+# 则说明需要修改权限，用下列命令：
+# [root@……5 ~]# chmod +x engineercms
+# —如果出现端口被占用，需要去conf文件夹内修改app.conf里的端口号，保存后重新运行。
+# [root@……5 ~]# systemctl stop firewalld.service关闭防火墙，否则其他电脑访问不了。
+# 停止engineercms进程的命令
+# killall engineercms
+# 查看进程的命令：
+# ps aux
 ```
 
 不清楚的，可以加我QQ504284或者微信hotqin999聊，也可参考[quickstart](https://github.com/3xxx/engineercms/blob/master/quickstart%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.txt)。

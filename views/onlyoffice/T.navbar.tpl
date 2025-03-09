@@ -105,8 +105,7 @@ a.navbar-brand {
             <div class="form-group" style="width: 100%;">
               <label class="col-sm-3 control-label">密码</label>
               <div class="col-sm-7">
-                <form>
-                <input id="password" name="password" type="password" value="" class="form-control" placeholder="Enter Password"  autocomplete="off" onkeypress="getKey()"></div></form>
+                <input id="password" name="password" type="password" value="" class="form-control" placeholder="Enter Password"  autocomplete="off" onkeypress="getKey()"></div>
             </div>
             <div class="form-group" style="width: 100%;">
               <label class="col-sm-3 control-label"><input type="checkbox">自动登陆</label>
@@ -118,7 +117,7 @@ a.navbar-brand {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" class="btn btn-primary" onclick="handleLogin()">登录</button>
+          <button type="button" class="btn btn-primary" id="submit" onclick="handleLogin()">登录</button>
         </div>
       </div>
     </div>
@@ -149,6 +148,17 @@ a.navbar-brand {
 <!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
 <script type="text/javascript" src="/static/js/jsencrypt.min.js"></script>
 <script type="text/javascript">
+  // $(document).keydown(function(event){
+  //   if(event.keyCode==13){
+  //     document.getElementById("submit").click();
+  //   }
+  // })
+  function getKey() {
+    if (event.keyCode == 13) {
+      handleLogin()
+    }
+  }
+
   let encryptor = new JSEncrypt();
 
   // 获取公钥
@@ -273,12 +283,6 @@ a.navbar-brand {
         }
       }
     })
-  }
-  
-  function getKey() {
-    if (event.keyCode == 13) {
-      handleLogin()
-    }
   }
   
   $(function() {

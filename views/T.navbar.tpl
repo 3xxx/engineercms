@@ -4,6 +4,7 @@
 为了防止导航栏与页面主体中的其他内容
 的顶部相交错，需要向 <body> 标签添加内边距，内边距的值至少是导航栏的高度。
 -->
+
 <style type="text/css">
 a.navbar-brand {
   display: none;
@@ -115,6 +116,9 @@ a.navbar-brand {
       <li {{if .IsFreeCAD}} class="active" {{end}}>
         <a href="/v1/freecad/modellist" title="FreeCAD" target="_blank">FreeCAD</a>
       </li>
+      <li {{if .IsMapus}} class="active" {{end}}>
+        <a href="/mapus" title="Mapus" target="_blank">地图协作</a>
+      </li>
       <li {{if .IsEstimate}} class="active" {{end}}>
         <a href="/v1/estimate/getestimateprojects" title="Estimate" target="_blank">概预算</a>
       </li>
@@ -139,6 +143,7 @@ a.navbar-brand {
           <ul class="dropdown-menu">
             <li><a href="/user" title="个人中心">个人中心</a></li>
             <li><a href="javascript:void(0)" id="login">重新登录</a></li>
+            <li><a href="/v1/wx/ssologin" title="单点登录">SSO单点登陆</a></li>
             <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
           </ul>
         </li>
@@ -171,15 +176,14 @@ a.navbar-brand {
         <div class="modal-body">
           <div class="modal-body-content">
             <div class="form-group" style="width: 100%;">
-                <label class="col-sm-3 control-label">用户名</label>
+              <label class="col-sm-3 control-label">用户名</label>
               <div class="col-sm-7">
                 <input id="username" name="username" type="text" value="" class="form-control" placeholder="Enter Account" list="cars" onkeypress="getKey()"></div>
             </div>
             <div class="form-group" style="width: 100%;">
               <label class="col-sm-3 control-label">密码</label>
               <div class="col-sm-7">
-                <form>
-                <input id="password" name="password" type="password" value="" class="form-control" placeholder="Enter Password"  autocomplete="off" onkeypress="getKey()"></div></form>
+                <input id="password" name="password" type="password" value="" class="form-control" placeholder="Enter Password"  autocomplete="off" onkeypress="getKey()"></div>
             </div>
             <div class="form-group" style="width: 100%;">
               <label class="col-sm-3 control-label"><input type="checkbox">自动登陆</label>
@@ -222,8 +226,18 @@ a.navbar-brand {
 <!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
 <script type="text/javascript" src="/static/js/jsencrypt.min.js"></script>
 <script type="text/javascript">
-  let encryptor = new JSEncrypt();
+  // $(document).keydown(function(event){
+  //   if(event.keyCode==13){
+  //     document.getElementById("submit").click();
+  //   }
+  // })
+  function getKey() {
+    if (event.keyCode == 13) {
+      handleLogin()
+    }
+  }
 
+  let encryptor = new JSEncrypt();
   // 获取公钥
   async function getPublicKey() {
     const response = await fetch('/v1/wx/publickeyhandler');
@@ -346,12 +360,6 @@ a.navbar-brand {
         }
       }
     })
-  }
-  
-  function getKey() {
-    if (event.keyCode == 13) {
-      handleLogin()
-    }
   }
   
   $(function() {

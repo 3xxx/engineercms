@@ -367,20 +367,21 @@ func (c *PhotoController) UploaVideoData() {
 
 			// reader := ExampleReadFrameAsJpeg(file, 5)
 			// logs.Info(imagepath)
+			videoarr := make([]models.Video, 1)
+			temptime := time.Now()
 			reader := ExampleReadFrameAsJpeg(imagepath, 1)
 			img, err := imaging.Decode(reader)
 			if err != nil {
 				logs.Error(err)
+			} else {
+				err = imaging.Save(img, DiskDirectory+strconv.Itoa(year)+month.String()+"/"+nanoname+".jpg")
+				if err != nil {
+					logs.Error(err)
+				} else {
+					videoarr[0].CoverUrl = "/attachment/video/" + strconv.Itoa(year) + month.String() + "/" + nanoname + ".jpg"
+				}
 			}
-			err = imaging.Save(img, DiskDirectory+strconv.Itoa(year)+month.String()+"/"+nanoname+".jpg")
-			if err != nil {
-				logs.Error(err)
-			}
-
-			videoarr := make([]models.Video, 1)
-			temptime := time.Now()
 			videoarr[0].Url = "/attachment/video/" + strconv.Itoa(year) + month.String() + "/" + newname
-			videoarr[0].CoverUrl = "/attachment/video/" + strconv.Itoa(year) + month.String() + "/" + nanoname + ".jpg"
 			videoarr[0].Created = temptime
 			videoarr[0].Updated = temptime
 			videolist = append(videolist, videoarr...)
@@ -410,7 +411,7 @@ func ExampleReadFrameAsJpeg(inFileName string, frameNum int) io.Reader {
 		WithOutput(buf, os.Stdout).
 		Run()
 	if err != nil {
-		panic(err)
+		logs.Error(err)
 	}
 	return buf
 

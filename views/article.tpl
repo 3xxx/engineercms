@@ -244,14 +244,14 @@
 <body class="wpcomblog" style="padding-top: 40px; position: relative;">
   <header class="toolbar wpcom-masterbar wpcom-header" id="yeeId_3">
     <div class="wpcom-navigation site-navigation wpcom-nav" role="navigation">
-      <h1 class="wpcom-title"><a class="wpcom-logo" href="https://zsj.itdos.com/"><span>EngineerCMS.com</span></a></h1>
+      <h1 class="wpcom-title"><a class="wpcom-logo" href="https://zsj.itdos.net/"><span>EngineerCMS</span></a></h1>
       <nav class="wpcom-pages">
         <a class="menu-toggle">Menu</a>
         <ul class="pages-menu">
           <li class="menu-features">
-            <a href="https://zsj.itdos.com/index" title="Features">首页</a>
+            <a href="/index" title="Features">首页</a>
           </li>
-          <li class="menu-themes">
+<!--           <li class="menu-themes">
             <a href="https://zsj.itdos.com/project" title="WordPress Themes for Blogs at WordPress.com">项目</a>
           </li>
           <li class="menu-plans">
@@ -268,7 +268,7 @@
           </li>
           <li class="menu-login">
             <a href="https://zsj.itdos.com/login" title="Log In" class="login-link">登录</a>
-          </li>
+          </li> -->
         </ul>
       </nav>
     </div>

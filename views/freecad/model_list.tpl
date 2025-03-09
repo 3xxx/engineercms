@@ -196,7 +196,7 @@
   }
 
   .page-btn:hover:not(.active) {
-    background: #f8f9fa;
+    background: #007bff;/*#f8f9fa*/
   }
 
   /* 新增链接样式 */
