@@ -3,21 +3,16 @@ package controllers
 
 import (
 	"fmt"
-	"os"
-	"path"
-
-	"strconv"
-
 	"github.com/3xxx/engineercms/models"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-
 	"github.com/xuri/excelize/v2"
-
-	"regexp"
-	"strings"
-
 	"html/template"
+	"os"
+	"path"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 // CMSexcel API

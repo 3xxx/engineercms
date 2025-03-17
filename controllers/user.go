@@ -176,6 +176,7 @@ func (c *UserController) User() {
 			offset = (page1 - 1) * limit1
 		}
 		searchText := c.GetString("searchText")
+		searchText = template.HTMLEscapeString(searchText) //过滤xss攻击
 		users, count, err := m.GetUsersPage(limit1, offset, "Username", searchText)
 		if err != nil {
 			logs.Error(err)
@@ -185,6 +186,7 @@ func (c *UserController) User() {
 		}
 		//如果设置了role,用于onlyoffice/officeview的权限设置
 		role := c.GetString("role")
+		role = template.HTMLEscapeString(role) //过滤xss攻击
 		if role != "" {
 			for _, v := range users {
 				v.Role = role
@@ -258,11 +260,20 @@ func (c *UserController) View() {
 // @router /adduser [post]
 // 添加用户
 func (c *UserController) AddUser() {
+	_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"erro": "ERROR", "msg": "非管理员权限，无法添加用户！", "data": "请登录管理员。"}
+		c.ServeJSON()
+	}
 	var user m.User
-	user.Username = c.GetString("username")
-	user.Nickname = c.GetString("nickname")
-
+	user_name := c.GetString("username")
+	user_name = template.HTMLEscapeString(user_name) //过滤xss攻击
+	user.Username = user_name
+	nick_name := c.GetString("nickname")
+	nick_name = template.HTMLEscapeString(nick_name) //过滤xss攻击
+	user.Nickname = nick_name
 	Pwd1 := c.GetString("password")
+	Pwd1 = template.HTMLEscapeString(Pwd1) //过滤xss攻击
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
@@ -273,27 +284,43 @@ func (c *UserController) AddUser() {
 	// md5Ctx.Write([]byte(Pwd1))
 	// cipherStr := md5Ctx.Sum(nil)
 	// user.Password = hex.EncodeToString(cipherStr)
-
-	user.Email = c.GetString("email")
-	user.Sex = c.GetString("sex")
+	email := c.GetString("email")
+	email = template.HTMLEscapeString(email) //过滤xss攻击
+	user.Email = email
+	sex := c.GetString("sex")
+	sex = template.HTMLEscapeString(sex) //过滤xss攻击
+	user.Sex = sex
 	ispartymember := c.GetString("ispartymember")
+	ispartymember = template.HTMLEscapeString(ispartymember) //过滤xss攻击
 	if ispartymember == "true" {
 		user.IsPartyMember = true
 	} else {
 		user.IsPartyMember = false
 	}
-	user.Department = c.GetString("department")
-	user.Secoffice = c.GetString("secoffice")
-	user.Ip = c.GetString("ip")
-	user.Port = c.GetString("port")
-	statusint, err := strconv.Atoi(c.GetString("status"))
+	department := c.GetString("department")
+	department = template.HTMLEscapeString(department) //过滤xss攻击
+	user.Department = department
+	secoffice := c.GetString("secoffice")
+	department = template.HTMLEscapeString(secoffice) //过滤xss攻击
+	user.Secoffice = secoffice
+	ip := c.GetString("ip")
+	ip = template.HTMLEscapeString(ip) //过滤xss攻击
+	user.Ip = ip
+	port := c.GetString("port")
+	port = template.HTMLEscapeString(port) //过滤xss攻击
+	user.Port = port
+	status := c.GetString("status")
+	status = template.HTMLEscapeString(status) //过滤xss攻击
+	statusint, err := strconv.Atoi(status)
 	if err != nil {
 		logs.Error(err)
 		c.Data["json"] = map[string]interface{}{"info": "ERROR", "message": err}
 		c.ServeJSON()
 	}
 	user.Status = statusint
-	user.Role = c.GetString("role")
+	role := c.GetString("role")
+	role = template.HTMLEscapeString(role) //过滤xss攻击
+	user.Role = role
 	id, err := m.SaveUser(user)
 	if err == nil && id > 0 {
 		// c.Rsp(true, "Success")
@@ -357,10 +384,14 @@ func (c *UserController) AddWxUser() {
 		return
 		// user.Id = 9
 	}
-	user.Username = c.GetString("uname")
-	user.Nickname = c.GetString("nickname")
-	// beego.Info(user.Username)
+	user_name := c.GetString("username")
+	user_name = template.HTMLEscapeString(user_name) //过滤xss攻击
+	user.Username = user_name
+	nick_name := c.GetString("nickname")
+	nick_name = template.HTMLEscapeString(nick_name) //过滤xss攻击
+	user.Nickname = nick_name
 	Pwd1 := c.GetString("password")
+	Pwd1 = template.HTMLEscapeString(Pwd1) //过滤xss攻击
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
@@ -420,7 +451,9 @@ func (c *UserController) AddWxUser() {
 // 小程序修改用户密码
 func (c *UserController) UpdateWxUser() {
 	oldpass := c.GetString("oldpass")
+	oldpass = template.HTMLEscapeString(oldpass) //过滤xss攻击
 	uid := c.GetString("uid")
+	uid = template.HTMLEscapeString(uid) //过滤xss攻击
 	id, err := strconv.ParseInt(uid, 10, 64)
 	if err != nil {
 		logs.Error(err)
@@ -464,7 +497,8 @@ func (c *UserController) UpdateWxUser() {
 func (c *UserController) UpdateUser() {
 	//进行权限判断isme or isadmin
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
-	pk := c.GetString("pk") //这个其实就是userid
+	pk := c.GetString("pk")            //这个其实就是userid
+	pk = template.HTMLEscapeString(pk) //过滤xss攻击
 	id, err := strconv.ParseInt(pk, 10, 64)
 	if err != nil {
 		logs.Error(err)
@@ -472,8 +506,10 @@ func (c *UserController) UpdateUser() {
 
 	if isadmin || uid == id {
 		name := c.GetString("name")
+		name = template.HTMLEscapeString(name) //过滤xss攻击
+		name = template.HTMLEscapeString(name) //过滤xss攻击
 		value := c.GetString("value")
-		logs.Info(name)
+		// logs.Info(name)
 		value = template.HTMLEscapeString(value) //过滤xss攻击
 		// logs.Info(value)
 		// 判断用户名是否存在，唯一性检查
@@ -559,6 +595,11 @@ func (c *UserController) UpdateUser() {
 // @router /deleteuser [post]
 // 删除用户
 func (c *UserController) DeleteUser() {
+	_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"msg": "非管理员权限，无法查询用户信息！", "data": "请登录管理员。"}
+		c.ServeJSON()
+	}
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
 	for _, v := range array {
@@ -657,7 +698,7 @@ func (c *UserController) Usermyself() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	logs.Info(uid)
+	// logs.Info(uid)
 	//4.取得客户端用户名
 	// var uname string
 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
@@ -694,6 +735,11 @@ func (c *UserController) Usermyself() {
 // 上传excel文件，导入到数据库
 // 引用来自category的查看成果类型里的成果
 func (c *UserController) ImportUsers() {
+	_, _, _, isadmin, _ := CheckprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"msg": "非管理员权限，无法查询用户信息！", "data": "请登录管理员。"}
+		c.ServeJSON()
+	}
 	//获取上传的文件
 	_, h, err := c.GetFile("usersexcel")
 	if err != nil {
@@ -835,9 +881,12 @@ func (c *UserController) ImportUsers() {
 
 func (this *UserController) Roleerr() {
 	// url := this.GetString("url")
-	url1 := this.GetString("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
+	url1 := this.GetString("url")          //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
+	url1 = template.HTMLEscapeString(url1) //过滤xss攻击
 	url2 := this.GetString("level")
+	url2 = template.HTMLEscapeString(url2) //过滤xss攻击
 	url3 := this.GetString("key")
+	url3 = template.HTMLEscapeString(url3) //过滤xss攻击
 	var url string
 	if url2 == "" {
 		url = url1

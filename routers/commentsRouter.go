@@ -2889,6 +2889,15 @@ func init() {
 
     beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:OnlyController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:OnlyController"],
         beego.ControllerComments{
+            Method: "JwtEncode",
+            Router: `/jwtencode`,
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:OnlyController"] = append(beego.GlobalControllerRouter["github.com/3xxx/engineercms/controllers:OnlyController"],
+        beego.ControllerComments{
             Method: "OnlyOffice",
             Router: `/onlyoffice`,
             AllowHTTPMethods: []string{"get"},

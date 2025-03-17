@@ -61,82 +61,63 @@
       "onError": onError,
     },
 
+  const config = {
     "document": {
       "fileType": "{{.fileType}}",
       "key": "{{.Key}}", //"Khirz6zTPdfd7"
       "title": "{{.Doc.FileName}}",
-      "url": Url,
-
-      "permissions": {
-        "comment": {{.Comment }}, //true,
-        "download": {{.Download }}, //true,
-        "edit": {{.Edit }},
-        "print": {{.Print }}, //true,
-        "review": {{.Review }} //true
-      },
+      "url": "{{.Engineercmsapi_url}}/{{.FilePath}}?hotqinsessionid={{.Sessionid}}",
     },
     "documentType": "{{.documentType}}",
     "editorConfig": {
       "callbackUrl": "{{.Engineercmsapi_url}}/officeviewcallback?id={{.AttachId}}",
+      "customization": {
+        "uiTheme": "theme-dark",
+        "unit": "cm",
+        "wordHeadingsColor": "#00ff00",
+        "zoom": 100,
+      },
       "user": {
         "id": {{.Uid }},
         "name": "{{.Username}}"
       },
-      "customization": {
-        "chat": true,
-        "commentAuthorOnly": false,
-        "compactToolbar": false,
-        "customer": {
-          "address": "116# Tianshou Road,Guangzhou China",
-          "info": "QQ504284",
-          "logo": "{{.Engineercmsapi_url}}/static/img/user.jpg", //logo-big.png
-          "mail": "xc-qin@163.com",
-          "name": "Qin Xiao Chuan",
-          "www": "github.com/3xxx"
-        },
-        "feedback": {
-          "url": "{{.Engineercmsapi_url}}/onlyoffice",
-          "visible": true
-        },
-        "forcesave": false,
-        "goback": {
-          "text": "Go to Documents",
-          "url": "{{.Engineercmsapi_url}}/onlyoffice"
-        },
-        "logo": {
-          "image": "{{.Engineercmsapi_url}}/static/img/oo.png", //logo.png
-          "imageEmbedded": "{{.Engineercmsapi_url}}/static/img/oo.png", //logo_em.png
-          "url": "{{.Engineercmsapi_url}}/onlyoffice"
-        },
-        "showReviewChanges": false,
-        "zoom": 100,
-      },
-      "embedded": {
-        "embedUrl": "https://example.com/embedded?doc=exampledocument1.docx",
-        "fullscreenUrl": "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
-        "saveUrl": "https://example.com/download?doc=exampledocument1.docx",
-        "shareUrl": "https://example.com/view?doc=exampledocument1.docx",
-        "toolbarDocked": "top"
-      },
       "lang": "zh-CN", //"en-US",
       "mode": {{.Mode }}, //"view",//edit
-      "recent": [{
-          "folder": "Example Files",
-          "title": "exampledocument1.docx",
-          "url": "https://example.com/exampledocument1.docx"
-        },
-        {
-          "folder": "Example Files",
-          "title": "exampledocument2.docx",
-          "url": "https://example.com/exampledocument2.docx"
-        }
-      ]
+      "region": "zh-CN",
     },
     "height": "100%",
-    // "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
     "type": {{.Type }}, //"desktop",embedded,mobile访问文档的平台类型 网页嵌入
     "width": "100%"
-  });
+  }
+  // window.docEditor = new DocsAPI.DocEditor("placeholder", config);
+
+  // const config = {
+  //   "document": {
+  // };
+  $(function () {
+    const configJsonStr = JSON.stringify(config);
+    $.ajax({
+      type: "POST",
+      url: "/v1/onlyoffice/jwtencode",
+      contentType: "application/json",
+      // data: JSON.stringify({
+      //   "jsonStr":configJsonStr
+      // }),
+      data: configJsonStr,
+      dataType: "json",
+      success: function (data) {
+        console.log("成功")
+        console.log(data)
+        if(data.jwt){
+          config.token = data.jwt;
+        }  
+        var docEditor = new DocsAPI.DocEditor("placeholder", config);
+      },
+      error: function (err) {
+        console.error(err);
+      }
+    })
+  })
   </script>
 </body>
 

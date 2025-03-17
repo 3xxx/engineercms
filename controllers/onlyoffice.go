@@ -10,6 +10,7 @@ import (
 	"github.com/3xxx/engineercms/controllers/utils/ziptil"
 	"github.com/unidoc/unioffice/document"
 
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -23,6 +24,7 @@ import (
 
 	"bytes"
 	"github.com/beego/beego/v2/client/httplib"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 var OnlyUsers []string
@@ -77,44 +79,6 @@ type changesurl struct {
 	ChangesUrl string `json:"changesurl"`
 }
 
-// type Callback2 struct {
-// 	Key         string    `json:"key"`
-// 	Status      int       `json:"status"`
-// 	Url         string    `json:"url"`
-// 	Changesurl  string    `json:"changesurl"`
-// 	History     history2  `json:"history"`
-// 	Users       []string  `json:"users"`
-// 	Actions     []action  `json:"actions"`
-// 	Lastsave    time.Time `json:"lastsave"`
-// 	Notmodified bool      `json:"notmodified"`
-// }
-
-// type history2 struct {
-// 	ServerVersion string    `json:"serverVersion"`
-// 	Changes       []change2 `json:"changes"`
-// 	Created       time.Time `json:"created"`
-// 	Key           string    `json:"key"`
-// 	User          User1     `json:"user"`
-// 	Version       int       `json:"version"`
-// }
-
-// type change2 struct {
-// 	Created string `json:"created"` //time.Time
-// 	User    User2  `json:"user"`
-// }
-
-// type User2 struct {
-// 	Id   string `json:"id"` //必须大写才能在tpl中显示{{.json}}
-// 	Name string `json:"name"`
-// }
-
-// type FileNode struct {
-// 	Id        int64       `json:"id"`
-// 	Title     string      `json:"text"`
-// 	Code      string      `json:"code"` //分级目录代码
-// 	FileNodes []*FileNode `json:"nodes"`
-// }
-
 type Onlyoffice1 struct {
 	Id      int64
 	Code    string
@@ -157,20 +121,6 @@ type Rolepermission struct {
 	Rolenumber string
 	Permission string `json:"role"`
 }
-
-// type XlsxLink struct {
-// 	Id    int64
-// 	Title string
-// 	Created time.Time
-// 	Updated time.Time
-// }
-
-// type PptxLink struct {
-// 	Id    int64
-// 	Title string
-// 	Created time.Time
-// 	Updated time.Time
-// }
 
 // 文档管理页面
 func (c *OnlyController) Get() {
@@ -283,175 +233,6 @@ func (c *OnlyController) Get() {
 	//     window.location.href ="pc.html";
 	// };
 }
-
-// @Title get only documents list
-// @Description get documents by page & limit
-// @Param page query string  true "The page for document list"
-// @Param limit query string  true "The limit for document list"
-// @Success 200 {object} models.GetProductsPage
-// @Failure 400 Invalid page supplied
-// @Failure 404 articls not found
-// @router /getonlydocs [get]
-//vue文档列表数据
-// func (c *ArticleController) GetOnlyDocs() {
-// 	var offset, limit1, page1 int
-// 	var err error
-// 	limit := c.GetString("limit")
-// 	if limit == "" {
-// 		limit1 = 0
-// 	} else {
-// 		limit1, err = strconv.Atoi(limit)
-// 		if err != nil {
-// 			logs.Error(err)
-// 		}
-// 	}
-// 	page := c.GetString("page")
-// 	if page == "" {
-// 		limit1 = 0
-// 		page1 = 1
-// 	} else {
-// 		page1, err = strconv.Atoi(page)
-// 		if err != nil {
-// 			logs.Error(err)
-// 		}
-// 	}
-
-// 	if page1 <= 1 {
-// 		offset = 0
-// 	} else {
-// 		offset = (page1 - 1) * limit1
-// 	}
-
-// 	username, role, uid := Authorizer(c.Ctx)
-
-// 	//这里用jion，取得uname和attachment和permission
-// 	docs, err := models.GetDocList(offset, limit1)
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-
-// 	//1.anonymous，首先查permission表，
-// 	//所有均为4
-// 	//permission表中针对anonymous的权限，以它为准
-// 	//设置了权限的文档，anonymous则为4（下面这条包含了）
-// 	//permission表中没有设置权限的文档，开放
-
-// 	//2.isme
-// 	//如果设置了isme权限，以它为准
-// 	//如果没有，则为1
-
-// 	//3.everyone
-// 	//如果设置了，则以它为准
-// 	//如果没有设置，则没有
-
-// 	//4.全部文档AllDocs
-// 	for _, v := range Attachments {
-// 		// beego.Info(v.FileName)
-// 		// fileext := path.Ext(v.FileName)
-// 		docxarr := make([]DocxLink, 1)
-// 		docxarr[0].Permission = "1"
-// 		//查询v.Id是否和myres的V1路径后面的id一致，如果一致，则取得V2（权限）
-// 		//查询用户具有的权限
-// 		// beego.Info(useridstring)
-// 		if useridstring != "0" { //如果是登录用户，则设置了权限的文档不能看
-// 			// beego.Info(myRes)
-// 			// myRes1 := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-// 			if w.Uid != uid { //如果不是作者本人
-// 				for _, k := range myResall { //所有设置了权限的都不能看
-// 					// beego.Info(k)
-// 					if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
-// 						docxarr[0].Permission = "4"
-// 					}
-// 				}
-
-// 				for _, k := range myRes { //如果与登录用户对应上，则赋予权限
-// 					// beego.Info(k)
-// 					if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
-// 						docxarr[0].Permission = k[2]
-// 					}
-// 				}
-// 				roles := e.GetRolesForUser(useridstring) //取出用户的所有角色
-// 				for _, w1 := range roles {               //2018.4.30修改这个bug，这里原先w改为w1
-// 					roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
-// 					for _, k := range roleRes {
-// 						// beego.Info(k)
-// 						if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
-// 							// docxarr[0].Permission = k[2]
-// 							int1, err := strconv.Atoi(k[2])
-// 							if err != nil {
-// 								logs.Error(err)
-// 							}
-// 							int2, err := strconv.Atoi(docxarr[0].Permission)
-// 							if err != nil {
-// 								logs.Error(err)
-// 							}
-// 							if int1 < int2 {
-// 								docxarr[0].Permission = k[2] //按最小值权限
-// 							}
-// 							//补充everyone
-// 						}
-// 					}
-// 				}
-// 			} //如果是用户自己的文档，则permission为1，默认
-// 		} else { //如果用户没登录，则设置了权限的文档不能看
-// 			for _, k := range myResall { //所有设置了权限的不能看
-// 				// beego.Info(k)
-// 				if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
-// 					// beego.Info(i)
-// 					// beego.Info(strconv.FormatInt(v.Id, 10))
-// 					// beego.Info(path.Base(k[1]))
-// 					docxarr[0].Permission = "4"
-// 					// beego.Info(strconv.FormatInt(v.Id, 10))
-// 					// beego.Info(path.Base(k[1]))
-// 				}
-// 				//如果有everyone权限，则按everyone的
-// 			}
-// 		}
-
-// 		docxarr[0].Id = v.Id
-// 		docxarr[0].Title = v.FileName
-// 		if path.Ext(v.FileName) == ".docx" || path.Ext(v.FileName) == ".DOCX" || path.Ext(v.FileName) == ".doc" || path.Ext(v.FileName) == ".DOC" {
-// 			docxarr[0].Suffix = "docx"
-// 		} else if path.Ext(v.FileName) == ".wps" || path.Ext(v.FileName) == ".WPS" {
-// 			docxarr[0].Suffix = "docx"
-// 		} else if path.Ext(v.FileName) == ".XLSX" || path.Ext(v.FileName) == ".xlsx" || path.Ext(v.FileName) == ".XLS" || path.Ext(v.FileName) == ".xls" {
-// 			docxarr[0].Suffix = "xlsx"
-// 			// xlsxarr := make([]XlsxLink, 1)
-// 			// xlsxarr[0].Id = v.Id
-// 			// xlsxarr[0].Title = v.FileName
-// 			// Xlsxslice = append(Xlsxslice, xlsxarr...)
-// 		} else if path.Ext(v.FileName) == ".ET" || path.Ext(v.FileName) == ".et" {
-// 			docxarr[0].Suffix = "xlsx"
-// 		} else if path.Ext(v.FileName) == ".pptx" || path.Ext(v.FileName) == ".PPTX" || path.Ext(v.FileName) == ".ppt" || path.Ext(v.FileName) == ".PPT" {
-// 			docxarr[0].Suffix = "pptx"
-// 			// pptxarr := make([]PptxLink, 1)
-// 			// pptxarr[0].Id = v.Id
-// 			// pptxarr[0].Title = v.FileName
-// 			// Pptxslice = append(Pptxslice, pptxarr...)
-// 		} else if path.Ext(v.FileName) == ".DPS" || path.Ext(v.FileName) == ".dps" {
-// 			docxarr[0].Suffix = "pptx"
-// 		} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
-// 			docxarr[0].Suffix = "pdf"
-// 		} else if path.Ext(v.FileName) == ".txt" || path.Ext(v.FileName) == ".TXT" {
-// 			docxarr[0].Suffix = "txt"
-// 		}
-// 		Docxslice = append(Docxslice, docxarr...)
-// 	}
-// 	linkarr[0].Docxlink = Docxslice
-// 	// linkarr[0].Xlsxlink = Xlsxslice
-// 	// linkarr[0].Pptxlink = Pptxslice
-// 	Docxslice = make([]DocxLink, 0) //再把slice置0
-// 	// Xlsxslice = make([]XlsxLink, 0) //再把slice置0
-// 	// Pptxslice = make([]PptxLink, 0)
-// 	//无权限的不显示
-// 	//如果permission=4，则不赋值给link
-// 	if linkarr[0].Docxlink[0].Permission != "4" {
-// 		link = append(link, linkarr...)
-// 	}
-
-// 	c.Data["json"] = link //products
-// 	c.ServeJSON()
-// }
 
 // 提供给列表页的table中json数据
 func (c *OnlyController) GetData() {
@@ -639,31 +420,6 @@ func (c *OnlyController) GetData() {
 	c.ServeJSON()
 }
 
-// WPS文字：wps,wpt,doc,dot,rtf
-// WPS演示：dps,dpt,ppt,pot,pps
-// WPS表格：et,ett,xls,xlt
-//取得changesurl
-// func (c *OnlyController) ChangesUrl() {
-// 	version := c.GetString("version")
-
-// 	versionint, err := strconv.Atoi(version)
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-// 	attachmentid := c.GetString("attachmentid")
-// 	idNum, err := strconv.ParseInt(attachmentid, 10, 64)
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-// 	changesurl, err := models.GetOnlyChangesUrl(idNum, versionint)
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-// 	beego.Info(changesurl.ChangesUrl)
-// 	c.Data["json"] = changesurl.ChangesUrl
-// 	c.ServeJSON()
-// }
-
 // @Title get onlyoffce
 // @Description get onlyoffice
 // @Param id query string true "The id of office"
@@ -673,7 +429,6 @@ func (c *OnlyController) GetData() {
 // @router /onlyoffice [get]
 // 协作页面的显示——路由是/onlyoffce/onlyoffice/123
 // 补充权限判断
-// 补充token
 func (c *OnlyController) OnlyOffice() {
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
@@ -916,44 +671,48 @@ func (c *OnlyController) OnlyOffice() {
 		}
 	}
 	c.Data["currentversion"] = first
-	// beego.Info(first)
+	// documentType: word,cell,slide,pdf
+	// fileType:.csv, .djvu, .doc, .docm, .docx, .docxf, .dot, .dotm, .dotx, .epub, .fb2, .fodp, .fods, .fodt,
+	// .htm, .html, .hwp, .hwpx, .key, .mht, .numbers, .odp, .ods, .odt, .oform, .otp, .ots, .ott, .oxps, .pages,
+	// .pdf, .pot, .potm, .potx, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf, .txt, .xls, .xlsb, .xlsm, .xlsx, .xlt,
+	// .xltm, .xltx, .xml, .xps.
 
 	if path.Ext(onlyattachment.FileName) == ".docx" || path.Ext(onlyattachment.FileName) == ".DOCX" {
 		c.Data["fileType"] = "docx"
-		c.Data["documentType"] = "text" //word
+		c.Data["documentType"] = "word" //word
 	} else if path.Ext(onlyattachment.FileName) == ".wps" || path.Ext(onlyattachment.FileName) == ".WPS" {
 		c.Data["fileType"] = "docx"
-		c.Data["documentType"] = "text"
+		c.Data["documentType"] = "word"
 	} else if path.Ext(onlyattachment.FileName) == ".XLSX" || path.Ext(onlyattachment.FileName) == ".xlsx" {
 		c.Data["fileType"] = "xlsx"
-		c.Data["documentType"] = "spreadsheet" //cell
+		c.Data["documentType"] = "cell" //cell
 	} else if path.Ext(onlyattachment.FileName) == ".ET" || path.Ext(onlyattachment.FileName) == ".et" {
 		c.Data["fileType"] = "xlsx"
-		c.Data["documentType"] = "spreadsheet"
+		c.Data["documentType"] = "cell"
 	} else if path.Ext(onlyattachment.FileName) == ".pptx" || path.Ext(onlyattachment.FileName) == ".PPTX" {
 		c.Data["fileType"] = "pptx"
-		c.Data["documentType"] = "presentation" //slide
+		c.Data["documentType"] = "slide" //slide
 	} else if path.Ext(onlyattachment.FileName) == ".dps" || path.Ext(onlyattachment.FileName) == ".DPS" {
 		c.Data["fileType"] = "pptx"
-		c.Data["documentType"] = "presentation"
+		c.Data["documentType"] = "slide"
 	} else if path.Ext(onlyattachment.FileName) == ".doc" || path.Ext(onlyattachment.FileName) == ".DOC" {
 		c.Data["fileType"] = "doc"
-		c.Data["documentType"] = "text"
+		c.Data["documentType"] = "word"
 	} else if path.Ext(onlyattachment.FileName) == ".txt" || path.Ext(onlyattachment.FileName) == ".TXT" {
 		c.Data["fileType"] = "txt"
-		c.Data["documentType"] = "text" //word
+		c.Data["documentType"] = "word" //word
 	} else if path.Ext(onlyattachment.FileName) == ".XLS" || path.Ext(onlyattachment.FileName) == ".xls" {
 		c.Data["fileType"] = "xls"
-		c.Data["documentType"] = "spreadsheet"
+		c.Data["documentType"] = "cell"
 	} else if path.Ext(onlyattachment.FileName) == ".csv" || path.Ext(onlyattachment.FileName) == ".CSV" {
 		c.Data["fileType"] = "csv"
-		c.Data["documentType"] = "spreadsheet"
+		c.Data["documentType"] = "cell"
 	} else if path.Ext(onlyattachment.FileName) == ".ppt" || path.Ext(onlyattachment.FileName) == ".PPT" {
 		c.Data["fileType"] = "ppt"
-		c.Data["documentType"] = "presentation"
+		c.Data["documentType"] = "slide"
 	} else if path.Ext(onlyattachment.FileName) == ".pdf" || path.Ext(onlyattachment.FileName) == ".PDF" {
 		c.Data["fileType"] = "pdf"
-		c.Data["documentType"] = "text" //word
+		c.Data["documentType"] = "pdf" //word
 		c.Data["Mode"] = "view"
 	}
 
@@ -983,6 +742,123 @@ func (c *OnlyController) OnlyOffice() {
 	c.Data["Engineercmsapi_url"] = engineercmsapi_url
 
 	c.TplName = "onlyoffice/onlyoffice.tpl"
+}
+
+type onlyofficeJwtManager struct {
+	key []byte
+}
+
+func (j onlyofficeJwtManager) Sign(payload interface {
+	Valid() error
+}) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	ss, err := token.SignedString(j.key)
+
+	if err != nil {
+		return "", errors.New("could not generate a new jwt")
+	}
+
+	return ss, nil
+}
+
+type OnlyofficeClaims struct {
+	Document             OnlyDocument     `json:"document"`
+	DocumentType         string           `json:"documentType"`
+	EditorConfig         OnlyEditorConfig `json:"editorConfig"`
+	Height               string           `json:"height"`
+	Type                 string           `json:"type"`
+	Width                string           `json:"width"`
+	jwt.RegisteredClaims                  // 只要结构体里放上这个就算是inteface{}，并且符合作为claims的要求了。
+}
+
+type OnlyDocument struct {
+	FileType string `json:"fileType"`
+	Key      string `json:"key"`
+	Title    string `json:"title"`
+	Url      string `json:"url"`
+}
+
+type OnlyEditorConfig struct {
+	CallbackUrl   string     `json:"callbackUrl"`
+	Customization OnlyCustom `json:"customization"`
+	User          OnlyUser   `json:"user"`
+	Lang          string     `json:"lang"`
+	Mode          string     `json:"mode"`
+	Region        string     `json:"region"`
+}
+
+type OnlyCustom struct {
+	UiTheme           string `json:"uiTheme"`
+	Unit              string `json:"unit"`
+	WordHeadingsColor string `json:"wordHeadingsColor"`
+	Zoom              int    `json:"zoom"`
+}
+
+type OnlyUser struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// @Title post onlyoffce jwtencode token
+// @Description post onlyoffice jwtencode token
+// @Success 200 {object} models.Ollyoffice
+// @Failure 400 Invalid page supplied
+// @Failure 404 office not found
+// @router /jwtencode [post]
+// 生成token
+func (c *OnlyController) JwtEncode() {
+	content := c.Ctx.Input.RequestBody
+	var onlyofficeconfig OnlyofficeClaims
+	err := json.Unmarshal(content, &onlyofficeconfig)
+	if err != nil {
+		logs.Error(err)
+	}
+	logs.Info(onlyofficeconfig) // {"document":{"fileType":"doc","key":"1558683150313208200","title":"xml.doc","url":"http://192.168.100.37/attachment/onlyoffice/测试v3.docx"},"documentType":"word","editorConfig":{"callbackUrl":"http://192.168.137.1:8081/url-to-callback?id=10","customization":{"uiTheme":"theme-dark","unit":"cm","wordHeadingsColor":"#00ff00","zoom":100},"user":{"id":"0","name":"127.0.0.1"},"lang":"zh-CN","mode":"edit","region":"zh-CN"},"height":"100%","type":"desktop","width":"100%"}
+	// var onlyofficeClaims OnlyofficeClaims
+	// err = json.Unmarshal([]byte(onlyofficeconfig.JsonStr), &onlyofficeClaims)
+	// if err != nil {
+	// 	logs.Error(err)
+	// }
+	// logs.Info(onlyofficeClaims.Document)
+	jwt_enabled, err := web.AppConfig.String("JWT_ENABLED")
+	if err != nil {
+		logs.Error(err)
+	}
+	if jwt_enabled == "true" {
+		jwt_secret, err := web.AppConfig.String("onlyoffice_token_secret")
+		if err != nil {
+			logs.Error(err)
+		}
+		key := onlyofficeJwtManager{[]byte(jwt_secret)}
+		logs.Info(key)
+		// claims := OnlyofficeClaims{
+		// 	Document:     onlyofficeconfig.Document,
+		// 	DocumentType: onlyofficeconfig.DocumentType,
+		// 	EditorConfig: onlyofficeconfig.EditorConfig,
+		// 	Height:       onlyofficeconfig.Height,
+		// 	Type:         onlyofficeconfig.Type,
+		// 	Width:        onlyofficeconfig.Width,
+		// 	// jwt.RegisteredClaims{
+		// 	// 	ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+		// 	// 	IssuedAt:  jwt.NewNumericDate(time.Now()),
+		// 	// 	NotBefore: jwt.NewNumericDate(time.Now()),
+		// 	// 	Issuer:    "test",
+		// 	// 	Subject:   "somebody",
+		// 	// 	ID:        "1",
+		// 	// 	Audience:  []string{"somebody_else"},
+		// 	// },
+		// }
+
+		token, err := key.Sign(onlyofficeconfig)
+		if err != nil {
+			logs.Error(err)
+		}
+		c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "info": "SUCCESS", "jwt": token}
+		c.ServeJSON()
+		return
+	}
+	c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "info": "SUCCESS", "jwt": onlyofficeconfig}
+	c.ServeJSON()
 }
 
 // 协作页面的保存和回调
@@ -2692,4 +2568,247 @@ func (c *OnlyController) CommandBuilder() {
 // 			}
 // 		}
 // 	}
+// }
+
+// type Callback2 struct {
+// 	Key         string    `json:"key"`
+// 	Status      int       `json:"status"`
+// 	Url         string    `json:"url"`
+// 	Changesurl  string    `json:"changesurl"`
+// 	History     history2  `json:"history"`
+// 	Users       []string  `json:"users"`
+// 	Actions     []action  `json:"actions"`
+// 	Lastsave    time.Time `json:"lastsave"`
+// 	Notmodified bool      `json:"notmodified"`
+// }
+
+// type history2 struct {
+// 	ServerVersion string    `json:"serverVersion"`
+// 	Changes       []change2 `json:"changes"`
+// 	Created       time.Time `json:"created"`
+// 	Key           string    `json:"key"`
+// 	User          User1     `json:"user"`
+// 	Version       int       `json:"version"`
+// }
+
+// type change2 struct {
+// 	Created string `json:"created"` //time.Time
+// 	User    User2  `json:"user"`
+// }
+
+// type User2 struct {
+// 	Id   string `json:"id"` //必须大写才能在tpl中显示{{.json}}
+// 	Name string `json:"name"`
+// }
+
+// type FileNode struct {
+// 	Id        int64       `json:"id"`
+// 	Title     string      `json:"text"`
+// 	Code      string      `json:"code"` //分级目录代码
+// 	FileNodes []*FileNode `json:"nodes"`
+// }
+// type XlsxLink struct {
+// 	Id    int64
+// 	Title string
+// 	Created time.Time
+// 	Updated time.Time
+// }
+
+// type PptxLink struct {
+// 	Id    int64
+// 	Title string
+// 	Created time.Time
+// 	Updated time.Time
+// }
+// @Title get only documents list
+// @Description get documents by page & limit
+// @Param page query string  true "The page for document list"
+// @Param limit query string  true "The limit for document list"
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /getonlydocs [get]
+//vue文档列表数据
+// func (c *ArticleController) GetOnlyDocs() {
+// 	var offset, limit1, page1 int
+// 	var err error
+// 	limit := c.GetString("limit")
+// 	if limit == "" {
+// 		limit1 = 0
+// 	} else {
+// 		limit1, err = strconv.Atoi(limit)
+// 		if err != nil {
+// 			logs.Error(err)
+// 		}
+// 	}
+// 	page := c.GetString("page")
+// 	if page == "" {
+// 		limit1 = 0
+// 		page1 = 1
+// 	} else {
+// 		page1, err = strconv.Atoi(page)
+// 		if err != nil {
+// 			logs.Error(err)
+// 		}
+// 	}
+
+// 	if page1 <= 1 {
+// 		offset = 0
+// 	} else {
+// 		offset = (page1 - 1) * limit1
+// 	}
+
+// 	username, role, uid := Authorizer(c.Ctx)
+
+// 	//这里用join，取得uname和attachment和permission
+// 	docs, err := models.GetDocList(offset, limit1)
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+
+// 	//1.anonymous，首先查permission表，
+// 	//所有均为4
+// 	//permission表中针对anonymous的权限，以它为准
+// 	//设置了权限的文档，anonymous则为4（下面这条包含了）
+// 	//permission表中没有设置权限的文档，开放
+
+// 	//2.isme
+// 	//如果设置了isme权限，以它为准
+// 	//如果没有，则为1
+
+// 	//3.everyone
+// 	//如果设置了，则以它为准
+// 	//如果没有设置，则没有
+
+// 	//4.全部文档AllDocs
+// 	for _, v := range Attachments {
+// 		// beego.Info(v.FileName)
+// 		// fileext := path.Ext(v.FileName)
+// 		docxarr := make([]DocxLink, 1)
+// 		docxarr[0].Permission = "1"
+// 		//查询v.Id是否和myres的V1路径后面的id一致，如果一致，则取得V2（权限）
+// 		//查询用户具有的权限
+// 		// beego.Info(useridstring)
+// 		if useridstring != "0" { //如果是登录用户，则设置了权限的文档不能看
+// 			// beego.Info(myRes)
+// 			// myRes1 := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+// 			if w.Uid != uid { //如果不是作者本人
+// 				for _, k := range myResall { //所有设置了权限的都不能看
+// 					// beego.Info(k)
+// 					if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+// 						docxarr[0].Permission = "4"
+// 					}
+// 				}
+
+// 				for _, k := range myRes { //如果与登录用户对应上，则赋予权限
+// 					// beego.Info(k)
+// 					if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+// 						docxarr[0].Permission = k[2]
+// 					}
+// 				}
+// 				roles := e.GetRolesForUser(useridstring) //取出用户的所有角色
+// 				for _, w1 := range roles {               //2018.4.30修改这个bug，这里原先w改为w1
+// 					roleRes = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+// 					for _, k := range roleRes {
+// 						// beego.Info(k)
+// 						if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+// 							// docxarr[0].Permission = k[2]
+// 							int1, err := strconv.Atoi(k[2])
+// 							if err != nil {
+// 								logs.Error(err)
+// 							}
+// 							int2, err := strconv.Atoi(docxarr[0].Permission)
+// 							if err != nil {
+// 								logs.Error(err)
+// 							}
+// 							if int1 < int2 {
+// 								docxarr[0].Permission = k[2] //按最小值权限
+// 							}
+// 							//补充everyone
+// 						}
+// 					}
+// 				}
+// 			} //如果是用户自己的文档，则permission为1，默认
+// 		} else { //如果用户没登录，则设置了权限的文档不能看
+// 			for _, k := range myResall { //所有设置了权限的不能看
+// 				// beego.Info(k)
+// 				if strconv.FormatInt(v.Id, 10) == path.Base(k[1]) {
+// 					// beego.Info(i)
+// 					// beego.Info(strconv.FormatInt(v.Id, 10))
+// 					// beego.Info(path.Base(k[1]))
+// 					docxarr[0].Permission = "4"
+// 					// beego.Info(strconv.FormatInt(v.Id, 10))
+// 					// beego.Info(path.Base(k[1]))
+// 				}
+// 				//如果有everyone权限，则按everyone的
+// 			}
+// 		}
+
+// 		docxarr[0].Id = v.Id
+// 		docxarr[0].Title = v.FileName
+// 		if path.Ext(v.FileName) == ".docx" || path.Ext(v.FileName) == ".DOCX" || path.Ext(v.FileName) == ".doc" || path.Ext(v.FileName) == ".DOC" {
+// 			docxarr[0].Suffix = "docx"
+// 		} else if path.Ext(v.FileName) == ".wps" || path.Ext(v.FileName) == ".WPS" {
+// 			docxarr[0].Suffix = "docx"
+// 		} else if path.Ext(v.FileName) == ".XLSX" || path.Ext(v.FileName) == ".xlsx" || path.Ext(v.FileName) == ".XLS" || path.Ext(v.FileName) == ".xls" {
+// 			docxarr[0].Suffix = "xlsx"
+// 			// xlsxarr := make([]XlsxLink, 1)
+// 			// xlsxarr[0].Id = v.Id
+// 			// xlsxarr[0].Title = v.FileName
+// 			// Xlsxslice = append(Xlsxslice, xlsxarr...)
+// 		} else if path.Ext(v.FileName) == ".ET" || path.Ext(v.FileName) == ".et" {
+// 			docxarr[0].Suffix = "xlsx"
+// 		} else if path.Ext(v.FileName) == ".pptx" || path.Ext(v.FileName) == ".PPTX" || path.Ext(v.FileName) == ".ppt" || path.Ext(v.FileName) == ".PPT" {
+// 			docxarr[0].Suffix = "pptx"
+// 			// pptxarr := make([]PptxLink, 1)
+// 			// pptxarr[0].Id = v.Id
+// 			// pptxarr[0].Title = v.FileName
+// 			// Pptxslice = append(Pptxslice, pptxarr...)
+// 		} else if path.Ext(v.FileName) == ".DPS" || path.Ext(v.FileName) == ".dps" {
+// 			docxarr[0].Suffix = "pptx"
+// 		} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
+// 			docxarr[0].Suffix = "pdf"
+// 		} else if path.Ext(v.FileName) == ".txt" || path.Ext(v.FileName) == ".TXT" {
+// 			docxarr[0].Suffix = "txt"
+// 		}
+// 		Docxslice = append(Docxslice, docxarr...)
+// 	}
+// 	linkarr[0].Docxlink = Docxslice
+// 	// linkarr[0].Xlsxlink = Xlsxslice
+// 	// linkarr[0].Pptxlink = Pptxslice
+// 	Docxslice = make([]DocxLink, 0) //再把slice置0
+// 	// Xlsxslice = make([]XlsxLink, 0) //再把slice置0
+// 	// Pptxslice = make([]PptxLink, 0)
+// 	//无权限的不显示
+// 	//如果permission=4，则不赋值给link
+// 	if linkarr[0].Docxlink[0].Permission != "4" {
+// 		link = append(link, linkarr...)
+// 	}
+
+// 	c.Data["json"] = link //products
+// 	c.ServeJSON()
+// }
+// WPS文字：wps,wpt,doc,dot,rtf
+// WPS演示：dps,dpt,ppt,pot,pps
+// WPS表格：et,ett,xls,xlt
+//取得changesurl
+// func (c *OnlyController) ChangesUrl() {
+// 	version := c.GetString("version")
+
+// 	versionint, err := strconv.Atoi(version)
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	attachmentid := c.GetString("attachmentid")
+// 	idNum, err := strconv.ParseInt(attachmentid, 10, 64)
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	changesurl, err := models.GetOnlyChangesUrl(idNum, versionint)
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	beego.Info(changesurl.ChangesUrl)
+// 	c.Data["json"] = changesurl.ChangesUrl
+// 	c.ServeJSON()
 // }

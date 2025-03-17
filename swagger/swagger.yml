@@ -6252,6 +6252,23 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
+  /onlyoffice/jwtencode:
+    post:
+      tags:
+      - onlyoffice
+      description: |-
+        post onlyoffice jwtencode token
+        <br>
+      operationId: OnlyController.post onlyoffce jwtencode token
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Ollyoffice'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: office not found
   /onlyoffice/onlyoffice:
     get:
       tags:

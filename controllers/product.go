@@ -1318,6 +1318,14 @@ func (c *ProdController) OfficeView() {
 	// c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
 	// c.Ctx.ResponseWriter.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	// c.Ctx.ResponseWriter.Header().Set("content-type", "application/json")             //返回数据格式是json
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/login?url="+route, 302)
+		return
+	}
+
 	id := c.Ctx.Input.Param(":id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -1358,264 +1366,253 @@ func (c *ProdController) OfficeView() {
 	// beego.Info(fileurl + "/" + attachment.FileName)
 	var useridstring, Permission string
 	var myRes, roleRes [][]string
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	useridstring = strconv.FormatInt(uid, 10)
 	var usersessionid string //客户端sesssionid
-	if islogin {
-		usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
-
-		/* 20230622注释这里
-		res, err := e.Enforce(useridstring, projurl, "POST", fileext)
-		if err != nil {
-			logs.Error(err)
-		}
-		res2, err := e.Enforce(useridstring, projurl, "PUT", fileext)
-		if err != nil {
-			logs.Error(err)
-		}
-		if res || res2 || isadmin {
-			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
-			// c.Redirect(url+"/"+attachment.FileName, 302)
-			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-			c.Data["Mode"] = "edit"
-			c.Data["Edit"] = true
-			c.Data["Review"] = true
-			c.Data["Comment"] = true
-			c.Data["Download"] = true
-			c.Data["Print"] = true
-			c.Data["Print"] = true
-		} else if res, _ := e.Enforce(useridstring, projurl, "GET", fileext); res {
-			c.Data["Mode"] = "view"
-			c.Data["Edit"] = false
-			c.Data["Review"] = false
-			c.Data["Comment"] = false
-			c.Data["Download"] = false
-			c.Data["Print"] = false
-		} else {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
-			return
-		}*/
-
-		myResall, err := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-		if err != nil {
-			logs.Error(err)
-		}
-		if uid != 0 { //无论是登录还是ip查出了用户id
-			// uname = v.(string)
-			// c.Data["Uname"] = v.(string)
-			// user, err := models.GetUserByUsername(uname)
-			// if err != nil {
-			// 	logs.Error(err)
-			// }
-			// useridstring = strconv.FormatInt(user.Id, 10)
-			myRes, err = e.GetPermissionsForUser(useridstring)
-			if err != nil {
-				logs.Error(err)
-			}
-			if product.Uid == uid || isadmin { //isme or isadmin
-				Permission = "1"
-			} else { //如果是登录用户，则设置了权限的文档根据权限查看
-				Permission = "1"
-				for _, k := range myResall {
-					if strconv.FormatInt(attachment.Id, 10) == path.Base(k[1]) {
-						Permission = "4"
-						// Permission = "3"
-					}
-				}
-				for _, k := range myRes {
-					if strconv.FormatInt(attachment.Id, 10) == path.Base(k[1]) {
-						Permission = k[2]
-					}
-				}
-
-				roles, err := e.GetRolesForUser(useridstring) //取出用户的所有角色
-				if err != nil {
-					logs.Error(err)
-				}
-				for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
-					roleRes, err = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
-					if err != nil {
-						logs.Error(err)
-					}
-					for _, k := range roleRes {
-						// beego.Info(k)
-						if id == path.Base(k[1]) {
-							// docxarr[0].Permission = k[2]
-							int1, err := strconv.Atoi(k[2])
-							if err != nil {
-								logs.Error(err)
-							}
-							int2, err := strconv.Atoi(Permission)
-							if err != nil {
-								logs.Error(err)
-							}
-							if int1 < int2 {
-								Permission = k[2] //按最小值权限
-							}
-							//补充everyone权限，如果登录用户权限大于everyone，则用小的
-						}
-					}
-				}
-			}
-			// c.Data["Uid"] = user.Id
-			// userrole = user.Role
-		} else { //如果用户没登录，则设置了权限的文档不能看
-			Permission = "1"
-			for _, k := range myResall { //所有设置了权限的不能看
-				if strconv.FormatInt(attachment.Id, 10) == path.Base(k[1]) {
-					// Permission = "3"
-					Permission = "4"
-				}
-				//如果设置了everyone用户权限，则按everyone的权限
-			}
-			// c.Data["Uname"] = c.Ctx.Input.IP()
-			// c.Data["Uid"] = 0
-		}
-
-		// var myRes [][]string
-		// if useridstring != "" {
-		// 	myRes = e.GetPermissionsForUser(useridstring)
-		// }
-		// myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
-		// Permission = "1"
-		// if useridstring != "" {
-		// 	for _, k := range myResall {
-		// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
-		// 			Permission = "4"
-		// 		}
-		// 	}
-		// 	for _, k := range myRes {
-		// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
-		// 			Permission = k[2]
-		// 		}
-		// 	}
-		// } else { //如果用户没登录，则设置了权限的文档不能看
-		// 	for _, k := range myResall { //所有设置了权限的不能看
-		// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
-		// 			Permission = "4"
-		// 		}
-		// 	}
-		// }
-		// beego.Info(Permission)
-		// In case edit is set to "false" and review is set to "true",
-		// the document will be available in review mode only.
-		if Permission == "1" {
-			c.Data["Mode"] = "edit"
-			c.Data["Edit"] = true
-			c.Data["Review"] = true
-			c.Data["Comment"] = true
-			c.Data["Download"] = true
-			c.Data["Print"] = true
-		} else if Permission == "2" {
-			c.Data["Mode"] = "edit"
-			c.Data["Edit"] = false
-			c.Data["Review"] = true
-			c.Data["Comment"] = true
-			c.Data["Download"] = false
-			c.Data["Print"] = false
-		} else if Permission == "3" {
-			c.Data["Mode"] = "view"
-			c.Data["Edit"] = false
-			c.Data["Review"] = false
-			c.Data["Comment"] = false
-			c.Data["Download"] = false
-			c.Data["Print"] = false
-		} else if Permission == "4" {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
-			// c.Redirect("/roleerr", 302)
-			return
-		}
-
-		c.Data["FilePath"] = fileurl + "/" + attachment.FileName
-		c.Data["Username"] = username
-		c.Data["Ip"] = c.Ctx.Input.IP()
-		c.Data["role"] = role
-		c.Data["IsAdmin"] = isadmin
-		c.Data["IsLogin"] = islogin
-		c.Data["Uid"] = uid
-		c.Data["Doc"] = attachment
-		c.Data["AttachId"] = idNum
-		c.Data["Key"] = strconv.FormatInt(attachment.Updated.UnixNano(), 10)
-		c.Data["Sessionid"] = usersessionid
-
-		if path.Ext(attachment.FileName) == ".docx" || path.Ext(attachment.FileName) == ".DOCX" {
-			c.Data["fileType"] = "docx"
-			c.Data["documentType"] = "text"
-		} else if path.Ext(attachment.FileName) == ".wps" || path.Ext(attachment.FileName) == ".WPS" {
-			c.Data["fileType"] = "docx"
-			c.Data["documentType"] = "text"
-		} else if path.Ext(attachment.FileName) == ".XLSX" || path.Ext(attachment.FileName) == ".xlsx" {
-			c.Data["fileType"] = "xlsx"
-			c.Data["documentType"] = "spreadsheet"
-		} else if path.Ext(attachment.FileName) == ".ET" || path.Ext(attachment.FileName) == ".et" {
-			c.Data["fileType"] = "xlsx"
-			c.Data["documentType"] = "spreadsheet"
-		} else if path.Ext(attachment.FileName) == ".pptx" || path.Ext(attachment.FileName) == ".PPTX" {
-			c.Data["fileType"] = "pptx"
-			c.Data["documentType"] = "presentation"
-		} else if path.Ext(attachment.FileName) == ".dps" || path.Ext(attachment.FileName) == ".DPS" {
-			c.Data["fileType"] = "pptx"
-			c.Data["documentType"] = "presentation"
-		} else if path.Ext(attachment.FileName) == ".doc" || path.Ext(attachment.FileName) == ".DOC" {
-			c.Data["fileType"] = "doc"
-			c.Data["documentType"] = "text"
-		} else if path.Ext(attachment.FileName) == ".txt" || path.Ext(attachment.FileName) == ".TXT" {
-			c.Data["fileType"] = "txt"
-			c.Data["documentType"] = "text"
-		} else if path.Ext(attachment.FileName) == ".XLS" || path.Ext(attachment.FileName) == ".xls" {
-			c.Data["fileType"] = "xls"
-			c.Data["documentType"] = "spreadsheet"
-		} else if path.Ext(attachment.FileName) == ".csv" || path.Ext(attachment.FileName) == ".CSV" {
-			c.Data["fileType"] = "csv"
-			c.Data["documentType"] = "spreadsheet"
-		} else if path.Ext(attachment.FileName) == ".ppt" || path.Ext(attachment.FileName) == ".PPT" {
-			c.Data["fileType"] = "ppt"
-			c.Data["documentType"] = "presentation"
-		} else if path.Ext(attachment.FileName) == ".pdf" || path.Ext(attachment.FileName) == ".PDF" {
-			c.Data["fileType"] = "pdf"
-			c.Data["documentType"] = "text"
-			c.Data["Mode"] = "view"
-		}
-
-		u := c.Ctx.Input.UserAgent()
-		matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
-		if err != nil {
-			logs.Error(err)
-		}
-		if matched == true {
-			// beego.Info("移动端~")
-			// c.TplName = "onlyoffice/onlyoffice.tpl"
-			c.Data["Type"] = "mobile"
-		} else {
-			// beego.Info("电脑端！")
-			// c.TplName = "onlyoffice/onlyoffice.tpl"
-			c.Data["Type"] = "desktop"
-		}
-		onlyofficeapi_url, err := web.AppConfig.String("onlyofficeapi_url")
-		if err != nil {
-			logs.Error(err)
-		}
-		c.Data["Onlyofficeapi_url"] = onlyofficeapi_url
-
-		engineercmsapi_url, err := web.AppConfig.String("engineercmsapi_url")
-		if err != nil {
-			logs.Error(err)
-		}
-		c.Data["Engineercmsapi_url"] = engineercmsapi_url
-
-		c.TplName = "onlyoffice/officeview.tpl"
+	usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
+	/* 20230622注释这里
+	res, err := e.Enforce(useridstring, projurl, "POST", fileext)
+	if err != nil {
+		logs.Error(err)
+	}
+	res2, err := e.Enforce(useridstring, projurl, "PUT", fileext)
+	if err != nil {
+		logs.Error(err)
+	}
+	if res || res2 || isadmin {
+		// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
+		// c.Redirect(url+"/"+attachment.FileName, 302)
+		// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+		c.Data["Mode"] = "edit"
+		c.Data["Edit"] = true
+		c.Data["Review"] = true
+		c.Data["Comment"] = true
+		c.Data["Download"] = true
+		c.Data["Print"] = true
+		c.Data["Print"] = true
+	} else if res, _ := e.Enforce(useridstring, projurl, "GET", fileext); res {
+		c.Data["Mode"] = "view"
+		c.Data["Edit"] = false
+		c.Data["Review"] = false
+		c.Data["Comment"] = false
+		c.Data["Download"] = false
+		c.Data["Print"] = false
 	} else {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 302)
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}*/
+
+	myResall, err := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+	if err != nil {
+		logs.Error(err)
+	}
+	if uid != 0 { //无论是登录还是ip查出了用户id
+		// uname = v.(string)
+		// c.Data["Uname"] = v.(string)
+		// user, err := models.GetUserByUsername(uname)
+		// if err != nil {
+		// 	logs.Error(err)
+		// }
+		// useridstring = strconv.FormatInt(user.Id, 10)
+		myRes, err = e.GetPermissionsForUser(useridstring)
+		if err != nil {
+			logs.Error(err)
+		}
+		if product.Uid == uid || isadmin { //isme or isadmin
+			Permission = "1"
+		} else { //如果是登录用户，则设置了权限的文档根据权限查看
+			Permission = "1"
+			for _, k := range myResall {
+				if strconv.FormatInt(attachment.Id, 10) == path.Base(k[1]) {
+					Permission = "4"
+					// Permission = "3"
+				}
+			}
+			for _, k := range myRes {
+				if strconv.FormatInt(attachment.Id, 10) == path.Base(k[1]) {
+					Permission = k[2]
+				}
+			}
+
+			roles, err := e.GetRolesForUser(useridstring) //取出用户的所有角色
+			if err != nil {
+				logs.Error(err)
+			}
+			for _, w1 := range roles { //2018.4.30修改这个bug，这里原先w改为w1
+				roleRes, err = e.GetPermissionsForUser(w1) //取出角色的所有权限，改为w1
+				if err != nil {
+					logs.Error(err)
+				}
+				for _, k := range roleRes {
+					// beego.Info(k)
+					if id == path.Base(k[1]) {
+						// docxarr[0].Permission = k[2]
+						int1, err := strconv.Atoi(k[2])
+						if err != nil {
+							logs.Error(err)
+						}
+						int2, err := strconv.Atoi(Permission)
+						if err != nil {
+							logs.Error(err)
+						}
+						if int1 < int2 {
+							Permission = k[2] //按最小值权限
+						}
+						//补充everyone权限，如果登录用户权限大于everyone，则用小的
+					}
+				}
+			}
+		}
+		// c.Data["Uid"] = user.Id
+		// userrole = user.Role
+	} else { //如果用户没登录，则设置了权限的文档不能看
+		Permission = "1"
+		for _, k := range myResall { //所有设置了权限的不能看
+			if strconv.FormatInt(attachment.Id, 10) == path.Base(k[1]) {
+				// Permission = "3"
+				Permission = "4"
+			}
+			//如果设置了everyone用户权限，则按everyone的权限
+		}
+		// c.Data["Uname"] = c.Ctx.Input.IP()
+		// c.Data["Uid"] = 0
+	}
+
+	// var myRes [][]string
+	// if useridstring != "" {
+	// 	myRes = e.GetPermissionsForUser(useridstring)
+	// }
+	// myResall := e.GetPermissionsForUser("") //取出所有设置了权限的数据
+	// Permission = "1"
+	// if useridstring != "" {
+	// 	for _, k := range myResall {
+	// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+	// 			Permission = "4"
+	// 		}
+	// 	}
+	// 	for _, k := range myRes {
+	// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+	// 			Permission = k[2]
+	// 		}
+	// 	}
+	// } else { //如果用户没登录，则设置了权限的文档不能看
+	// 	for _, k := range myResall { //所有设置了权限的不能看
+	// 		if strconv.FormatInt(onlyattachment.Id, 10) == path.Base(k[1]) {
+	// 			Permission = "4"
+	// 		}
+	// 	}
+	// }
+	// beego.Info(Permission)
+	// In case edit is set to "false" and review is set to "true",
+	// the document will be available in review mode only.
+	if Permission == "1" {
+		c.Data["Mode"] = "edit"
+		c.Data["Edit"] = true
+		c.Data["Review"] = true
+		c.Data["Comment"] = true
+		c.Data["Download"] = true
+		c.Data["Print"] = true
+	} else if Permission == "2" {
+		c.Data["Mode"] = "edit"
+		c.Data["Edit"] = false
+		c.Data["Review"] = true
+		c.Data["Comment"] = true
+		c.Data["Download"] = false
+		c.Data["Print"] = false
+	} else if Permission == "3" {
+		c.Data["Mode"] = "view"
+		c.Data["Edit"] = false
+		c.Data["Review"] = false
+		c.Data["Comment"] = false
+		c.Data["Download"] = false
+		c.Data["Print"] = false
+	} else if Permission == "4" {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
 		// c.Redirect("/roleerr", 302)
 		return
 	}
+
+	c.Data["FilePath"] = fileurl + "/" + attachment.FileName
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	c.Data["Doc"] = attachment
+	c.Data["AttachId"] = idNum
+	c.Data["Key"] = strconv.FormatInt(attachment.Updated.UnixNano(), 10)
+	c.Data["Sessionid"] = usersessionid
+
+	if path.Ext(attachment.FileName) == ".docx" || path.Ext(attachment.FileName) == ".DOCX" {
+		c.Data["fileType"] = "docx"
+		c.Data["documentType"] = "word" //word
+	} else if path.Ext(attachment.FileName) == ".wps" || path.Ext(attachment.FileName) == ".WPS" {
+		c.Data["fileType"] = "docx"
+		c.Data["documentType"] = "word"
+	} else if path.Ext(attachment.FileName) == ".XLSX" || path.Ext(attachment.FileName) == ".xlsx" {
+		c.Data["fileType"] = "xlsx"
+		c.Data["documentType"] = "cell" //cell
+	} else if path.Ext(attachment.FileName) == ".ET" || path.Ext(attachment.FileName) == ".et" {
+		c.Data["fileType"] = "xlsx"
+		c.Data["documentType"] = "cell"
+	} else if path.Ext(attachment.FileName) == ".pptx" || path.Ext(attachment.FileName) == ".PPTX" {
+		c.Data["fileType"] = "pptx"
+		c.Data["documentType"] = "slide" //slide
+	} else if path.Ext(attachment.FileName) == ".dps" || path.Ext(attachment.FileName) == ".DPS" {
+		c.Data["fileType"] = "pptx"
+		c.Data["documentType"] = "slide"
+	} else if path.Ext(attachment.FileName) == ".doc" || path.Ext(attachment.FileName) == ".DOC" {
+		c.Data["fileType"] = "doc"
+		c.Data["documentType"] = "word"
+	} else if path.Ext(attachment.FileName) == ".txt" || path.Ext(attachment.FileName) == ".TXT" {
+		c.Data["fileType"] = "txt"
+		c.Data["documentType"] = "word" //word
+	} else if path.Ext(attachment.FileName) == ".XLS" || path.Ext(attachment.FileName) == ".xls" {
+		c.Data["fileType"] = "xls"
+		c.Data["documentType"] = "cell"
+	} else if path.Ext(attachment.FileName) == ".csv" || path.Ext(attachment.FileName) == ".CSV" {
+		c.Data["fileType"] = "csv"
+		c.Data["documentType"] = "cell"
+	} else if path.Ext(attachment.FileName) == ".ppt" || path.Ext(attachment.FileName) == ".PPT" {
+		c.Data["fileType"] = "ppt"
+		c.Data["documentType"] = "slide"
+	} else if path.Ext(attachment.FileName) == ".pdf" || path.Ext(attachment.FileName) == ".PDF" {
+		c.Data["fileType"] = "pdf"
+		c.Data["documentType"] = "pdf" //word
+		c.Data["Mode"] = "view"
+	}
+
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		logs.Error(err)
+	}
+	if matched == true {
+		// beego.Info("移动端~")
+		// c.TplName = "onlyoffice/onlyoffice.tpl"
+		c.Data["Type"] = "mobile"
+	} else {
+		// beego.Info("电脑端！")
+		// c.TplName = "onlyoffice/onlyoffice.tpl"
+		c.Data["Type"] = "desktop"
+	}
+	onlyofficeapi_url, err := web.AppConfig.String("onlyofficeapi_url")
+	if err != nil {
+		logs.Error(err)
+	}
+	c.Data["Onlyofficeapi_url"] = onlyofficeapi_url
+
+	engineercmsapi_url, err := web.AppConfig.String("engineercmsapi_url")
+	if err != nil {
+		logs.Error(err)
+	}
+	c.Data["Engineercmsapi_url"] = engineercmsapi_url
+	c.TplName = "onlyoffice/officeview.tpl"
 }
 
 // @Title get OfficeViewCallback...

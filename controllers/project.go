@@ -16,6 +16,7 @@ import (
 	// "log"
 	"github.com/holys/initials-avatar"
 	// "io"
+	"html/template"
 	"net/url"
 	"os"
 	"path"
@@ -1394,15 +1395,14 @@ func (c *ProjController) GetProjNav() {
 
 // 添加项目和项目目录、文件夹
 func (c *ProjController) AddProject() {
-	c.Data["IsProjects"] = true
-	_, _, uid, _, isLogin := checkprodRole(c.Ctx)
-	logs.Info(uid)
-	if !isLogin {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "非管理员", "error": "ERROR"}
+		c.ServeJSON()
 		return
 	}
+	// var count int64
+	c.Data["IsProjects"] = true
 	// rows := c.GetString("rows2[0][0]")
 	// beego.Info(rows)
 	projcode := c.GetString("code")
@@ -1416,7 +1416,7 @@ func (c *ProjController) AddProject() {
 	if err != nil {
 		logs.Error(err)
 	}
-	logs.Info(Id)
+	// logs.Info(Id)
 	_, err = models.AddProjectUser(Id, uid)
 	if err != nil {
 		logs.Error(err)
@@ -1474,12 +1474,10 @@ func (c *ProjController) AddProject() {
 
 // 根据项目模板添加项目
 func (c *ProjController) AddProjTemplet() {
-	_, _, uid, _, isLogin := checkprodRole(c.Ctx)
-	if !isLogin {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
+	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "非管理员", "error": "ERROR"}
+		c.ServeJSON()
 		return
 	}
 
@@ -1619,14 +1617,12 @@ func (c *ProjController) AddProjTemplet() {
 // @router /quickaddwxproject [post]
 // 根据项目模板添加项目
 func (c *ProjController) QuickAddWxProjTemplet() {
-	//content去验证
-	// app_version := c.GetString("app_version")
-	// accessToken, _, _, err := utils.GetAccessToken(app_version)
-	// if err != nil {
-	// 	logs.Error(err)
-	// 	c.Data["json"] = map[string]interface{}{"info": "ERROR", "data": err}
-	// 	c.ServeJSON()
-	// }
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	if !isadmin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "非管理员", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	var user models.User
 	var err error
 	openID := c.GetSession("openID")
@@ -1643,9 +1639,13 @@ func (c *ProjController) QuickAddWxProjTemplet() {
 	}
 
 	projcode := c.GetString("projectcode")
+	projcode = template.HTMLEscapeString(projcode) //过滤xss攻击
 	projname := c.GetString("projecttitle")
+	projname = template.HTMLEscapeString(projname) //过滤xss攻击
 	tempprojid := c.GetString("tempprojid")
+	tempprojid = template.HTMLEscapeString(tempprojid) //过滤xss攻击
 	istemppermission := c.GetString("istemppermission")
+	istemppermission = template.HTMLEscapeString(istemppermission) //过滤xss攻击
 	// beego.Info(istemppermission)
 	if istemppermission == "" {
 		istemppermission = "true"
@@ -2084,6 +2084,12 @@ func (c *ProjController) DeleteProject() {
 // *******项目日历*****
 // 添加日历
 func (c *ProjController) AddCalendar() {
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	var starttime, endtime time.Time
 	projectid := c.Ctx.Input.Param(":id")
 	pid, err := strconv.ParseInt(projectid, 10, 64)
@@ -2193,6 +2199,12 @@ func (c *ProjController) Calendar() {
 
 // 修改
 func (c *ProjController) UpdateCalendar() {
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	var starttime, endtime time.Time
 	cid := c.GetString("cid")
 	//pid转成64为
@@ -2279,6 +2291,12 @@ func (c *ProjController) UpdateCalendar() {
 
 // 拖曳
 func (c *ProjController) DropCalendar() {
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	id := c.GetString("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -2307,6 +2325,12 @@ func (c *ProjController) DropCalendar() {
 
 // resize
 func (c *ProjController) ResizeCalendar() {
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	id := c.GetString("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
@@ -2337,6 +2361,12 @@ func (c *ProjController) ResizeCalendar() {
 
 // 删除，如果有下级，一起删除
 func (c *ProjController) DeleteCalendar() {
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	cid := c.GetString("cid")
 	//pid转成64为
 	cidNum, err := strconv.ParseInt(cid, 10, 64)
@@ -2513,6 +2543,12 @@ func (c *ProjController) Timeline() {
 
 // 应该将日历改为froala，那么这个就可以淘汰了。
 func (c *ProjController) UploadImage() {
+	_, _, _, _, islogin := checkprodRole(c.Ctx)
+	if !islogin {
+		c.Data["json"] = map[string]interface{}{"data": "WRONG", "info": "用户未登录", "error": "ERROR"}
+		c.ServeJSON()
+		return
+	}
 	id := c.GetString("pid")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
