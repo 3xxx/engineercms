@@ -499,21 +499,10 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 				// err := o.Begin()
 				const lll = "2006-01-02 15:04:05.000"
 				date := time.Now().Format(lll)
-				sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
-					" values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
-				// res, err := o.Raw(sql).Exec()
-				// if err != nil {
-				// 	o.Rollback()
-				// 	// beego.Info("插入t_studentInfo表出错,事务回滚")
-				// } else {
-				// 	// o.Commit()
-				// 	// beego.Info("插入t_studenInfo表成功,事务提交")
-				// 	// num, _ = res.RowsAffected()
-				// 	Id, _ = res.LastInsertId()
-				// }
-
+				// sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
+				// " values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
 				err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
-					res, err2 := txOrm.Raw(sql).Exec() //这里应该是txOrm吧？？？
+					res, err2 := txOrm.Raw(`insert into Project values(?,?,?,?,?,?,?,?,?,?),code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date`).Exec() //这里应该是txOrm吧？？？
 					Id, _ = res.LastInsertId()
 					return err2
 				})
@@ -560,23 +549,11 @@ func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []
 		// err := o.Begin()
 		const lll = "2006-01-02 15:04:05.000"
 		date := time.Now().Format(lll)
-		sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
-			" values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
-		// res, err := o.Raw(sql).Exec()
-		// if err != nil {
-		// 	o.Rollback()
-		// 	// beego.Info("插入t_studentInfo表出错,事务回滚")
-		// } else {
-		// 	// o.Commit()
-		// 	// beego.Info("插入t_studenInfo表成功,事务提交")
-		// 	// num, _ = res.RowsAffected()
-		// 	Id, _ = res.LastInsertId()
-		// 	parentidpath1 = parentidpath + "$" + strconv.FormatInt(Id, 10) + "#"
-		// 	parenttitlepath1 = parenttitlepath + "-" + v1.Title
-		// }
+		// sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
+		// " values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
 
 		err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
-			res, err2 := txOrm.Raw(sql).Exec() //这里应该是txOrm吧？？？
+			res, err2 := txOrm.Raw(`insert into Project values(?,?,?,?,?,?,?,?,?,?),code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date`).Exec() //这里应该是txOrm吧？？？
 			Id, _ = res.LastInsertId()
 			parentidpath1 = parentidpath + "$" + strconv.FormatInt(Id, 10) + "#"
 			parenttitlepath1 = parenttitlepath + "-" + v1.Title
