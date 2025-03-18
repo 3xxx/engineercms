@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"context"
-	"fmt"
+	// "fmt"
 	"time"
 )
 
@@ -502,7 +502,7 @@ func Insertproj(pid []Pidstruct, nodes []*AdminCategory, igrade, height int) (ci
 				// sql := fmt.Sprintf("insert into Project (Code, Title, Label, Principal, Parent_id, Parent_id_path, Parent_title_path, Grade,Created,Updated)"+
 				// " values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
 				err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
-					res, err2 := txOrm.Raw(`insert into Project values(?,?,?,?,?,?,?,?,?,?),code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date`).Exec() //这里应该是txOrm吧？？？
+					res, err2 := txOrm.Raw(`insert into Project values(?,?,?,?,?,?,?,?,?,?)`, code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date).Exec() //这里应该是txOrm吧？？？
 					Id, _ = res.LastInsertId()
 					return err2
 				})
@@ -553,7 +553,7 @@ func Insertprojtemplet(pid int64, parentidpath, parenttitlepath string, nodes []
 		// " values('%s','%s','%s','%s',%d,'%s','%s',%d,'%s','%s')", code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date)
 
 		err := o.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
-			res, err2 := txOrm.Raw(`insert into Project values(?,?,?,?,?,?,?,?,?,?),code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date`).Exec() //这里应该是txOrm吧？？？
+			res, err2 := txOrm.Raw(`insert into Project values(?,?,?,?,?,?,?,?,?,?)`, code, title, "", "", parentid, parentidpath, parenttitlepath, grade, date, date).Exec() //这里应该是txOrm吧？？？
 			Id, _ = res.LastInsertId()
 			parentidpath1 = parentidpath + "$" + strconv.FormatInt(Id, 10) + "#"
 			parenttitlepath1 = parenttitlepath + "-" + v1.Title
