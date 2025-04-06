@@ -13,6 +13,8 @@
   <!-- KRAJEE EXPLORER THEME (ADVANCED) -->
   <title>视频上传</title>
   <!-- <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script> -->
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+  <script src="static/js/bootstrap.bundle.min.js"></script>
   <link href="/static/bootstrap-fileinput/css/all.css" rel="stylesheet">
   <link href="/static/bootstrap-fileinput/assets/prod/all-krajee.min.css?ver=201903112143" rel="stylesheet">
   <link href="/static/bootstrap-fileinput/assets/1d958cec/css/fileinput.css?ver=201909132002" rel="stylesheet">
@@ -23,8 +25,8 @@
   <script src="/static/bootstrap-fileinput/assets/1d958cec/js/plugins/purify.min.js"></script>
   <script src="/static/bootstrap-fileinput/js/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
   <!-- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
+  <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
   <script src="/static/bootstrap-fileinput/assets/prod/all-krajee.min.js?ver=201903112143"></script>
   <script src="/static/bootstrap-fileinput/assets/1d958cec/js/plugins/sortable.min.js"></script>
   <script src="/static/bootstrap-fileinput/assets/1d958cec/js/plugins/piexif.min.js"></script>

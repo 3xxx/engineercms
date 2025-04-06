@@ -48,39 +48,6 @@ type EstimateProjPhase struct {
 	StaticInvestment  float64 `json:"staticinvestment"` // 静态投资
 }
 
-// 作废！项目——阶段——工程专业部分professional建筑工程，机电设备及安装……
-type EstimateProfessional struct {
-	gorm.Model
-	EstimateProjPhaseID uint `json:"estimateprojphaseid"`
-	// ParentID            uint   `json:"parentid"`
-	Number    string `json:"number"`
-	Component string `json:"component"`
-	// CostName  string  `json:"costname"`
-	// Unit      string  `json:"unit"`
-	// Quantity  float64 `json:"quantity"`
-	// UnitPrice float64 `json:"unitprice"`
-	Total float64 `json:"total"`
-}
-
-// 作废！工程专业部分——工程二级Secondary
-type EstimateSecondary struct {
-	gorm.Model
-	EstimateProfessionalID uint    `json:"estimateprofessionalid"`
-	Number                 string  `json:"number"`
-	Component              string  `json:"component"`
-	Total                  float64 `json:"total"`
-}
-
-// 作废！工程二级——工程三~六级
-type EstimateTertiary struct {
-	gorm.Model
-	EstimateSecondaryID uint    `json:"estimatesecondaryid"`
-	ParentID            uint    `json:"parentid"`
-	Number              string  `json:"number"`
-	Component           string  `json:"component"`
-	Total               float64 `json:"total"`
-}
-
 // 建筑工程费用表Architectural
 type EstimateCostArchi struct {
 	gorm.Model
@@ -212,63 +179,6 @@ func AddEstimatePhase(projectid uint, phasename, information string, totalinvest
 	// if err == orm.ErrNoRows {
 	// 没有找到记录
 	return estimatephase.ID, err
-}
-
-// 作废！一级专业部分（建筑工程）写入数据库
-func AddEstimateProfessional(estimateprojphaseid uint, component string, total float64) (id uint, err error) {
-	db := _db //GetDB()
-	//查询数据库中有无打卡
-	// var businesscheckin BusinessCheckin
-	estimateprofessional := &EstimateProfessional{
-		EstimateProjPhaseID: estimateprojphaseid,
-		Component:           component,
-		Total:               total,
-	}
-	//判断是否有重名
-	err = db.Where("estimate_proj_phase_id = ? AND component = ?", estimateprojphaseid, component).FirstOrCreate(&estimateprofessional).Error
-	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
-	// if err == orm.ErrNoRows {
-	// 没有找到记录
-	return estimateprofessional.ID, err
-}
-
-// 作废！二级工程部分（一）写入数据库
-func AddEstimateSecondary(estimateprofessionalid uint, number, component string, total float64) (id uint, err error) {
-	db := _db //GetDB()
-	//查询数据库中有无打卡
-	// var businesscheckin BusinessCheckin
-	estimatesecondary := &EstimateSecondary{
-		EstimateProfessionalID: estimateprofessionalid,
-		Number:                 number,
-		Component:              component,
-		Total:                  total,
-	}
-	//判断是否有重名
-	err = db.Where("estimate_professional_id = ? AND component = ?", estimateprofessionalid, component).FirstOrCreate(&estimatesecondary).Error
-	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
-	// if err == orm.ErrNoRows {
-	// 没有找到记录
-	return estimatesecondary.ID, err
-}
-
-// 作废！三~五级工程部分（ (一) 1 (1) ）写入数据库
-func AddEstimateTertiary(estimatesecondaryid, parentid uint, number, component string, total float64) (id uint, err error) {
-	db := _db //GetDB()
-	//查询数据库中有无打卡
-	// var businesscheckin BusinessCheckin
-	estimatetertiary := &EstimateTertiary{
-		EstimateSecondaryID: estimatesecondaryid,
-		ParentID:            parentid,
-		Number:              number,
-		Component:           component,
-		Total:               total,
-	}
-	//判断是否有重名
-	err = db.Where("estimate_secondary_id = ? AND component = ?", estimatesecondaryid, component).FirstOrCreate(&estimatetertiary).Error
-	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
-	// if err == orm.ErrNoRows {
-	// 没有找到记录
-	return estimatetertiary.ID, err
 }
 
 // cost写入数据库——建筑工程
@@ -458,7 +368,7 @@ func GetEstimateProjectsCount() (count int64, err error) {
 	return count, err
 }
 
-// 查询建筑工程投资
+// 查询建筑工程投资——经典的递归查询，无限极
 func GetEstimateCostArchi(estimateProjPhaseID uint, limit, offset int) (estimateCost []*EstimateCostArchi, err error) {
 	db := _db
 	// err = db.Raw("with RECURSIVE temp(id,parent_id,number,cost_name) as ( select id,parent_id,number,cost_name from estimate_cost where estimate_proj_phase_id = ? union all select t.* from estimate_cost t,temp where temp.id = t.parent_id ) select * from temp", estimateProjPhaseID).Scan(&estimateCost).Error
@@ -613,4 +523,94 @@ func GetEstimateCostTempCount(estimateProjPhaseID uint) (count int64, err error)
 		`
 	err = db.Raw(q, estimateProjPhaseID).Count(&count).Error
 	return count, err
+}
+
+// 作废！项目——阶段——工程专业部分professional建筑工程，机电设备及安装……
+type EstimateProfessional struct {
+	gorm.Model
+	EstimateProjPhaseID uint `json:"estimateprojphaseid"`
+	// ParentID            uint   `json:"parentid"`
+	Number    string `json:"number"`
+	Component string `json:"component"`
+	// CostName  string  `json:"costname"`
+	// Unit      string  `json:"unit"`
+	// Quantity  float64 `json:"quantity"`
+	// UnitPrice float64 `json:"unitprice"`
+	Total float64 `json:"total"`
+}
+
+// 作废！工程专业部分——工程二级Secondary
+type EstimateSecondary struct {
+	gorm.Model
+	EstimateProfessionalID uint    `json:"estimateprofessionalid"`
+	Number                 string  `json:"number"`
+	Component              string  `json:"component"`
+	Total                  float64 `json:"total"`
+}
+
+// 作废！工程二级——工程三~六级
+type EstimateTertiary struct {
+	gorm.Model
+	EstimateSecondaryID uint    `json:"estimatesecondaryid"`
+	ParentID            uint    `json:"parentid"`
+	Number              string  `json:"number"`
+	Component           string  `json:"component"`
+	Total               float64 `json:"total"`
+}
+
+// 作废！一级专业部分（建筑工程）写入数据库
+func AddEstimateProfessional(estimateprojphaseid uint, component string, total float64) (id uint, err error) {
+	db := _db //GetDB()
+	//查询数据库中有无打卡
+	// var businesscheckin BusinessCheckin
+	estimateprofessional := &EstimateProfessional{
+		EstimateProjPhaseID: estimateprojphaseid,
+		Component:           component,
+		Total:               total,
+	}
+	//判断是否有重名
+	err = db.Where("estimate_proj_phase_id = ? AND component = ?", estimateprojphaseid, component).FirstOrCreate(&estimateprofessional).Error
+	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
+	// if err == orm.ErrNoRows {
+	// 没有找到记录
+	return estimateprofessional.ID, err
+}
+
+// 作废！二级工程部分（一）写入数据库
+func AddEstimateSecondary(estimateprofessionalid uint, number, component string, total float64) (id uint, err error) {
+	db := _db //GetDB()
+	//查询数据库中有无打卡
+	// var businesscheckin BusinessCheckin
+	estimatesecondary := &EstimateSecondary{
+		EstimateProfessionalID: estimateprofessionalid,
+		Number:                 number,
+		Component:              component,
+		Total:                  total,
+	}
+	//判断是否有重名
+	err = db.Where("estimate_professional_id = ? AND component = ?", estimateprofessionalid, component).FirstOrCreate(&estimatesecondary).Error
+	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
+	// if err == orm.ErrNoRows {
+	// 没有找到记录
+	return estimatesecondary.ID, err
+}
+
+// 作废！三~五级工程部分（ (一) 1 (1) ）写入数据库
+func AddEstimateTertiary(estimatesecondaryid, parentid uint, number, component string, total float64) (id uint, err error) {
+	db := _db //GetDB()
+	//查询数据库中有无打卡
+	// var businesscheckin BusinessCheckin
+	estimatetertiary := &EstimateTertiary{
+		EstimateSecondaryID: estimatesecondaryid,
+		ParentID:            parentid,
+		Number:              number,
+		Component:           component,
+		Total:               total,
+	}
+	//判断是否有重名
+	err = db.Where("estimate_secondary_id = ? AND component = ?", estimatesecondaryid, component).FirstOrCreate(&estimatetertiary).Error
+	// err = o.QueryTable("business_checkin").Filter("ActivityId", ActivityId).Filter("UserId", UserId).Filter("SelectDate", SelectDate).One(&check1, "Id")
+	// if err == orm.ErrNoRows {
+	// 没有找到记录
+	return estimatetertiary.ID, err
 }

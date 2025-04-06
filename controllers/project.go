@@ -2683,29 +2683,6 @@ type FileNode struct {
 	FileNodes []*FileNode `json:"nodes"`
 }
 
-//递归构造项目树状目录——反复查询数据库，速度太慢，淘汰
-// func walk(id int64, node *FileNode) {
-// 	//列出当前id下子节点，不要列出孙节点……
-// 	files, err := models.GetProjSonbyId(id)
-// 	if err != nil {
-// 		logs.Error(err)
-// 	}
-// 	// 遍历目录
-// 	for _, proj := range files {
-// 		id := proj.Id
-// 		title := proj.Title
-// 		code := proj.Code
-// 		// 将当前名和id作为子节点添加到目录下
-// 		child := FileNode{id, title, code, []*FileNode{}}
-// 		node.FileNodes = append(node.FileNodes, &child)
-// 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
-// 		if models.Projhasson(proj.Id) {
-// 			walk(proj.Id, &child)
-// 		}
-// 	}
-// 	return
-// }
-
 // 递归构造项目树状目录_带成果数量_懒加载只显示一层
 func maketreejson3(cates, categories []*models.Project, products []*models.Product, node *FileNode2) {
 	// 遍历目录
@@ -3000,6 +2977,29 @@ func ProjectAvatar(text, filename string) error {
 	// check(err1)
 	// fmt.Printf("写入 %d 个字节n", n)
 }
+
+//递归构造项目树状目录——反复查询数据库，速度太慢，淘汰
+// func walk(id int64, node *FileNode) {
+// 	//列出当前id下子节点，不要列出孙节点……
+// 	files, err := models.GetProjSonbyId(id)
+// 	if err != nil {
+// 		logs.Error(err)
+// 	}
+// 	// 遍历目录
+// 	for _, proj := range files {
+// 		id := proj.Id
+// 		title := proj.Title
+// 		code := proj.Code
+// 		// 将当前名和id作为子节点添加到目录下
+// 		child := FileNode{id, title, code, []*FileNode{}}
+// 		node.FileNodes = append(node.FileNodes, &child)
+// 		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+// 		if models.Projhasson(proj.Id) {
+// 			walk(proj.Id, &child)
+// 		}
+// 	}
+// 	return
+// }
 
 // {
 //   "id": 33,

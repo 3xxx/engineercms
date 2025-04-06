@@ -10,7 +10,8 @@
 <meta http-equiv="Content-Type"content="text/html; charset=utf-8"/>
 <link rel="shortcut icon" href="/static/photo/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" href="/static/photo/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="/static/photo/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"> -->
 <link rel="stylesheet" type="text/css" href="/static/photo/shadowbox.css">
 <link rel="stylesheet" type="text/css" href="/static/photo/style.css" />
 <script src="/static/photo/jquery-2.1.0.min.js"></script>
@@ -32,9 +33,8 @@
           <div class="categoryTab" pandaTab tabHeight='45px' transitionTime='500' rebound='true' navigatorWidth="30px">
             <div class="menu-menu-1-container">
               <ul id="menu-menu-1" class="menu">
-                <li ><a href="/"  title="网站首页">首页</a></li>
-                <li class=""><a href="/article/"> 文章插图 </a></li>
-                <li class=""><a href="/diary/"> 日志插图 </a></li>
+                <li><a href="/" title="网站首页">首页</a></li>
+                <li class=""><a href="/v1/wx/video"> 视频 </a></li>
               </ul>
             </div>
           </div>

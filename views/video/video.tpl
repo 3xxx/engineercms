@@ -11,7 +11,8 @@
   <meta name="author" content="order by">
   <link rel="shortcut icon" href="/static/photo/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" href="/static/photo/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="/static/photo/font-awesome.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="/static/photo/font-awesome.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
   <link rel="stylesheet" type="text/css" href="/static/photo/shadowbox.css">
   <link rel="stylesheet" type="text/css" href="/static/photo/style.css">
   <script src="/static/photo/jquery-2.1.0.min.js"></script>
@@ -42,8 +43,7 @@
                     <div></div>
                   </li>
                   <li style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/" title="网站首页">首页</a></li>
-                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/article/"> 文章视频 </a></li>
-                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/diary/"> 日志视频 </a></li>
+                  <li class="" style="display: inline-block; height: 45px; margin: 0px; position: relative; z-index: 1; list-style: none; vertical-align: top; word-spacing: normal;"><a href="/v1/wx/photo"> 相册 </a></li>
                 </ul>
               </div>
             </div>
@@ -73,8 +73,7 @@
               <div class="menu-menu-1-container">
                 <ul id="menu-menu-2" class="menu">
                   <li><a href="/" title="网站首页">首页</a></li>
-                  <li class=""><a href="/article/"> 文章视频 </a></li>
-                  <li class=""><a href="/diary/"> 日志视频 </a></li>
+                  <li class=""><a href="/v1/wx/photo"> 相册 </a></li>
                 </ul>
               </div>
             </div>
@@ -120,7 +119,24 @@
       加载数据……
     </div>
   </div>
-  <div id="footer" class="container"><span class="text">Copyright © 2016~2024 工程视频 <a href="https://zsj.itdos.net/" target="_blank">水务设计</a> <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a> <a href="/sitemap.xml" target="_blank">XML地图</a> <a href="https://zsj.itdos.net/" target="_blank">工程视频</a></span></div>
+  <div id="footer">
+    <div class="col-lg-12">
+      <br>
+      <hr />
+      <div class="about-link-wrap">
+        <a href="/v1/wx/legalnotices" class="ali-about-link" target="_blank">法律声明</a>
+        <a href="/v1/wx/cookiespolicy" class="ali-about-link" target="_blank">Cookies政策</a>
+        <a href="/v1/wx/integrity" class="ali-about-link" target="_blank">廉正举报</a>
+        <a href="/v1/wx/security" class="ali-about-link" target="_blank">安全举报</a>
+        <a href="/v1/wx/contact" class="ali-about-link" target="_blank">联系我们</a>
+        <a href="https://github.com/3xxx/engineercms" class="ali-about-link" target="_blank"><i class="fa fa-github">源码仓库</i></a>
+      </div>
+      <div class="about-link-wrap">
+        <a target="_blank" href="https://beian.miit.gov.cn/"><img src="/static/img/beiantubiaobianhao.png" class="ali-report-img" alt="粤ICP备2024338992号" loading="lazy"><span class="ali-report-link-text">备案号：粤ICP备2024338992号</span></a>
+      </div>
+    </div>
+  </div>
+  <!-- <div id="footer" class="container"><span class="text">Copyright © 2016~2024 工程视频 <a href="https://zsj.itdos.net/" target="_blank">水务设计</a> <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">粤ICP备XXXXXXXX号</a> <a href="/sitemap.xml" target="_blank">XML地图</a> <a href="https://zsj.itdos.net/" target="_blank">工程视频</a></span></div> -->
   <script type="text/javascript" src="/static/photo/theme.js"></script>
   <script type="text/javascript" src="/static/photo/wp-embed.min.js?ver=4.8"></script>
   <script type="text/javascript">

@@ -182,8 +182,12 @@
       const result = await response.json();
       // alert(result.msg);
       if (result.islogin == 1) {
-        // window.location.reload();
-        location.href = {{.Url}};
+        ShowMsg(result.msg);
+        if ({{.Url}}){
+          location.href = {{.Url}};
+        }else{
+          window.location.reload();
+        }
       } else {
         ShowMsg(result.msg);
       }

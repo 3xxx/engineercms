@@ -8,6 +8,14 @@
 ——基于engineercms的设代资料管理平台（真实应用环境）
 
 ```bash
+# linux
+# /root/gocode/src/github.com/3xxx/engineercms编译
+# /usr/src/engineercms运行
+# /root/gocode/src/github.com/3xxx/engineercms/vendor下载的包
+# 1.更新包：go mod vendor
+# 2.改名go-pay的utils里的slice.go为slice.go.back
+# 3. bee run -gendoc=true -downdoc=true
+
 # go mod使用
 # https://www.jianshu.com/p/760c97ff644c
 
