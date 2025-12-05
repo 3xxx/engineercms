@@ -16,13 +16,9 @@ require (
 	github.com/casbin/casbin/v2 v2.100.0
 	github.com/disintegration/gift v1.2.1
 	github.com/disintegration/imaging v1.6.2
-	github.com/dlclark/regexp2 v1.7.0
 	github.com/elastic/go-elasticsearch/v8 v8.13.1
 	github.com/go-ldap/ldap/v3 v3.4.8
-	github.com/go-ole/go-ole v1.2.6
-	github.com/go-pay/gopay v1.5.106
 	github.com/go-pay/util v0.0.4
-	github.com/go-pay/xlog v0.0.3
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/google/go-tika v0.3.0
@@ -43,7 +39,6 @@ require (
 	github.com/tealeg/xlsx v1.0.5
 	github.com/u2takey/ffmpeg-go v0.5.0
 	github.com/unidoc/unioffice v1.21.1
-	github.com/wechatpay-apiv3/wechatpay-go v0.2.20
 	github.com/xuri/excelize/v2 v2.9.0
 	golang.org/x/crypto v0.28.0
 	golang.org/x/net v0.30.0
@@ -71,9 +66,6 @@ require (
 	github.com/go-asn1-ber/asn1-ber v1.5.5 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-pay/crypto v0.0.1 // indirect
-	github.com/go-pay/errgroup v0.0.2 // indirect
-	github.com/go-pay/xtime v0.0.2 // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -105,7 +97,7 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
-	github.com/sirupsen/logrus v1.9.0 // indirect
+	github.com/sirupsen/logrus v1.9.1 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
