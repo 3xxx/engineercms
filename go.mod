@@ -18,7 +18,7 @@ require (
 	github.com/go-ldap/ldap/v3 v3.4.8
 	github.com/go-pay/util v0.0.4
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/go-tika v0.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/holys/initials-avatar v0.0.0-20180809162153-a82edcad3408
