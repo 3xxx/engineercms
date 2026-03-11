@@ -18,7 +18,7 @@ require (
 	github.com/go-ldap/ldap/v3 v3.4.8
 	github.com/go-pay/util v0.0.4
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/go-tika v0.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/holys/initials-avatar v0.0.0-20180809162153-a82edcad3408
@@ -95,7 +95,7 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
-	github.com/sirupsen/logrus v1.9.0 // indirect
+	github.com/sirupsen/logrus v1.9.1 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
