@@ -1,6 +1,6 @@
 module github.com/3xxx/engineercms
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/3xxx/flow v0.9.0
@@ -38,9 +38,9 @@ require (
 	github.com/u2takey/ffmpeg-go v0.5.0
 	github.com/unidoc/unioffice v1.21.1
 	github.com/xuri/excelize/v2 v2.9.0
-	golang.org/x/crypto v0.36.0
-	golang.org/x/net v0.38.0
-	golang.org/x/text v0.23.0
+	golang.org/x/crypto v0.45.0
+	golang.org/x/net v0.47.0
+	golang.org/x/text v0.31.0
 	google.golang.org/appengine v1.6.7
 	gorm.io/driver/sqlite v1.4.4
 	gorm.io/gorm v1.24.3
@@ -105,7 +105,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
