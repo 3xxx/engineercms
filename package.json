@@ -22,7 +22,7 @@
     "stream-browserify": "3.0.0"
   },
   "devDependencies": {
-    "axios": "1.16.0",
+    "axios": "1.18.0",
     "babel-plugin-istanbul": "4.1.6",
     "d3": "3.5.17",
     "eslint-plugin-import": "^2.17.2",
